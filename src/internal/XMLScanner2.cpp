@@ -563,6 +563,13 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
     toFill.reset();
 
     //
+    // Get attribute def - to check to see if it's declared externally or not
+    //
+    bool  added = false;
+    const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+
+    //
     //  Loop through the chars of the source value and normalize it according
     //  to the type.
     //
@@ -597,13 +604,22 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
         {
             if (!escaped)
             {
-                //
-                //  NOTE: Yes this is a little redundant in that a 0x20 is
-                //  replaced with an 0x20. But its faster to do this (I think)
-                //  than checking for 9, A, and D separately.
-                //
-                if (XMLReader::isWhitespace(nextCh))
+                if ((nextCh == 0x09) || (nextCh == 0x0A) || (nextCh == 0x0D))
+                {
+                    //
+                    // Check Validity Constraint for Standalone document declaration
+                    // XML 1.0, Section 2.9
+                    //
+                    if (fValidate && fStandalone && isAttExternal)
+                    {
+                         //
+                         // Can't have a standalone document declaration of "yes" if  attribute
+                         // values are subject to normalisation
+                         //
+                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                    }
                     nextCh = chSpace;
+                }
             }
         }
          else
@@ -619,25 +635,10 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                 }
                  else
                 {
-                    srcPtr++;
-                    continue;
-                }
-            }
-             else if (curState == InContent)
-            {
-                if (XMLReader::isWhitespace(nextCh))
-                {
                     //
                     // Check Validity Constraint for Standalone document declaration
                     // XML 1.0, Section 2.9
                     //
-                    //
-                    // Get attribute def - to check to see if it's declared externally or not
-                    //
-                    bool  added = false;
-                    const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-                    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
-
                     if (fValidate && fStandalone && isAttExternal)
                     {
                          //
@@ -646,8 +647,31 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                          //
                          fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
                     }
+                    srcPtr++;
+                    continue;
+                }
+            }
+             else if (curState == InContent)
+            {
+                if (XMLReader::isWhitespace(nextCh))
+                {
                     curState = InWhitespace;
                     srcPtr++;
+                    if (!firstNonWS || (nextCh != chSpace))
+                    {
+                        //
+                        // Check Validity Constraint for Standalone document declaration
+                        // XML 1.0, Section 2.9
+                        //
+                        if (fValidate && fStandalone && isAttExternal)
+                        {
+                             //
+                             // Can't have a standalone document declaration of "yes" if  attribute
+                             // values are subject to normalisation
+                             //
+                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                        }
+                    }
                     continue;
                 }
                 firstNonWS = true;
@@ -1564,6 +1588,13 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
     const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
 
     //
+    // Get attribute def - to check to see if it's declared externally or not
+    //
+    bool  added = false;
+    const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+
+    //
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
     //  handler on every round.
@@ -1696,7 +1727,21 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                 if (!escaped)
                 {
                     if ((nextCh == 0x09) || (nextCh == 0x0A) || (nextCh == 0x0D))
+                    {
+                        //
+                        // Check Validity Constraint for Standalone document declaration
+                        // XML 1.0, Section 2.9
+                        //
+                        if (fValidate && fStandalone && isAttExternal)
+                        {
+                             //
+                             // Can't have a standalone document declaration of "yes" if  attribute
+                             // values are subject to normalisation
+                             //
+                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                        }
                         nextCh = chSpace;
+                    }
                 }
             }
              else
@@ -1712,24 +1757,10 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                     }
                      else
                     {
-                        continue;
-                    }
-                }
-                 else if (curState == InContent)
-                {
-                    if (XMLReader::isWhitespace(nextCh))
-                    {
                         //
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
                         //
-                        //
-                        // Get attribute def - to check to see if it's declared externally or not
-                        //
-                        bool  added = false;
-                        const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-                        bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
-
                         if (fValidate && fStandalone && isAttExternal)
                         {
                              //
@@ -1738,7 +1769,29 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                              //
                              fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
                         }
+                        continue;
+                    }
+                }
+                 else if (curState == InContent)
+                {
+                    if (XMLReader::isWhitespace(nextCh))
+                    {
                         curState = InWhitespace;
+                        if (!firstNonWS || (nextCh != chSpace))
+                        {
+                            //
+                            // Check Validity Constraint for Standalone document declaration
+                            // XML 1.0, Section 2.9
+                            //
+                            if (fValidate && fStandalone && isAttExternal)
+                            {
+                                 //
+                                 // Can't have a standalone document declaration of "yes" if  attribute
+                                 // values are subject to normalisation
+                                 //
+                                 fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                            }
+                        }
                         continue;
                     }
                     firstNonWS = true;
