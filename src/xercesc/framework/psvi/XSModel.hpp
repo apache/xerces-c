@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/21 17:25:09  knoaman
+ * Use XSObjectFactory to create various components.
+ *
  * Revision 1.6  2003/11/15 21:18:39  neilg
  * fixes for compilation under gcc
  *
@@ -114,6 +117,7 @@ class XSModelGroupDefinition;
 class XSNamespaceItem;
 class XSNotationDeclaration;
 class XSTypeDefinition;
+class XSObjectFactory;
 
 class XMLPARSER_EXPORT XSModel : public XMemory
 {
@@ -287,6 +291,9 @@ public:
 
     //@{
     XMLStringPool*  getURIStringPool();
+
+    XSNamespaceItem* getNamespaceItem(const XMLCh* const key);
+
     //@}
 private:
 
@@ -297,7 +304,8 @@ private:
     XSModel & operator=(const XSModel &);
 
 protected:
-    friend class XSObject;
+    friend class PSVIUtil;
+
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
@@ -308,7 +316,6 @@ protected:
     StringList*                             fNamespaceStringList;
     XSNamespaceItemList*                    fXSNamespaceItemList;
 
-    RefVectorOf<XSObject>*                  fDeleteVector;
     RefVectorOf<XSElementDeclaration>*      fElementDeclarationVector;
     RefVectorOf<XSAttributeDeclaration>*    fAttributeDeclarationVector;
 
@@ -333,13 +340,28 @@ protected:
     // the mapping of Xerces Object to XS Objects
     //  facets, mulitvaluefacets and xsattributegroupdefinitions are not stored in the 
     //  the mapping
-    RefHashTableOf<XSObject>*               fXercesToXSMap;
     XMLStringPool*                          fURIStringPool;
-
     XSAnnotationList*                       fXSAnnotationList;
-
     RefHashTableOf<XSNamespaceItem>*        fHashNamespace;
+    XSObjectFactory*                        fObjFactory;
 };
+
+inline XMLStringPool*  XSModel::getURIStringPool()
+{
+    return fURIStringPool;
+}
+
+inline StringList *XSModel::getNamespaces()
+{
+    return fNamespaceStringList;
+}
+
+inline XSNamespaceItemList *XSModel::getNamespaceItems()
+{
+    return fXSNamespaceItemList;
+}
+
+
 
 XERCES_CPP_NAMESPACE_END
 
