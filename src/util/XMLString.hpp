@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:41:28  roddey
  * Support for the new transcoder system, where even intrinsic encodings are
  * done via the same transcoder abstraction as external ones.
@@ -284,6 +288,13 @@ public:
         , const XMLCh* const    src
     );
 
+    static bool copyNString
+    (
+                XMLCh* const    target
+        , const XMLCh* const    src
+        , const unsigned int    maxChars
+    );
+
     static unsigned int hash
     (
         const   XMLCh* const    toHash
@@ -342,12 +353,7 @@ public:
 
     static void trim(XMLCh* const toTrim);
 
-
-protected :
-    // -----------------------------------------------------------------------
-    //  Declare our friends
-    // -----------------------------------------------------------------------
-    friend class XMLPlatformUtils;
+    static void upperCase(XMLCh* const toUpperCase);
 
 
 private :
@@ -359,8 +365,9 @@ private :
 
 
     // -----------------------------------------------------------------------
-    //  Initialization, called from PlatformInit class
+    //  Initialization, called from XMLPlatformUtils class
     // -----------------------------------------------------------------------
+    friend class XMLPlatformUtils;
     static void initString(XMLLCPTranscoder* const defToUse);
 };
 

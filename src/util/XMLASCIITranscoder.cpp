@@ -68,9 +68,10 @@
 // ---------------------------------------------------------------------------
 //  XMLASCIITranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLASCIITranscoder::XMLASCIITranscoder(const unsigned int blockSize) :
+XMLASCIITranscoder::XMLASCIITranscoder( const   XMLCh* const    encodingName
+                                        , const unsigned int    blockSize) :
 
-    XMLTranscoder(XMLUni::fgUSASCIIEncodingString, blockSize)
+    XMLTranscoder(encodingName, blockSize)
 {
 }
 

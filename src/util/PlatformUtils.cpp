@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:41:28  roddey
  * Support for the new transcoder system, where even intrinsic encodings are
  * done via the same transcoder abstraction as external ones.
@@ -145,10 +149,13 @@ void XMLPlatformUtils::Initialize()
     if (!fgTransService)
         panic(Panic_NoTransService);
 
+    // Initialize the transcoder service
+    fgTransService->initTransService();
+
     //
-    //  Try to create a default transcoder. This is the one that will be
-    //  used internally by the XMLString class. If we cannot create one, then
-    //  call the panic method.
+    //  Try to create a default local code page transcoder. This is the one
+    //  that will be used internally by the XMLString class. If we cannot
+    //  create one, then call the panic method.
     //
     XMLLCPTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
     if (!defXCode)

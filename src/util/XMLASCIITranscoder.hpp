@@ -77,7 +77,8 @@ public :
     // -----------------------------------------------------------------------
     XMLASCIITranscoder
     (
-        const   unsigned int    blockSize
+        const   XMLCh* const    encodingName
+        , const unsigned int    blockSize
     );
 
     virtual ~XMLASCIITranscoder();

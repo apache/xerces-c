@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:41:29  roddey
  * Support for the new transcoder system, where even intrinsic encodings are
  * done via the same transcoder abstraction as external ones.
@@ -101,7 +105,7 @@ const XMLCh XMLUni::fgCDATAString[] =
 
 const XMLCh XMLUni::fgDefaultEBCDICEncodingString[] =
 {
-    chLatin_e, chLatin_b, chLatin_c, chLatin_d, chLatin_i, chLatin_c, chDash, chLatin_c, chLatin_p, chDash, chLatin_u, chLatin_s, chNull
+    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
 };
 
 const XMLCh XMLUni::fgDefaultString[] =
@@ -117,6 +121,11 @@ const XMLCh XMLUni::fgDocTypeString[] =
 const XMLCh XMLUni::fgEBCDICEncodingString[] =
 {
     chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chNull
+};
+
+const XMLCh XMLUni::fgEBCDICEncodingString2[] =
+{
+    chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
 };
 
 const XMLCh XMLUni::fgElemString[] =
@@ -241,6 +250,21 @@ const XMLCh XMLUni::fgISO88591EncodingString5[] =
     chLatin_I, chLatin_B, chLatin_M, chDigit_8, chDigit_1, chDigit_9, chNull
 };
 
+const XMLCh XMLUni::fgISO88591EncodingString6[] =
+{
+    chLatin_L, chLatin_A, chLatin_T, chLatin_I, chLatin_N, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString7[] =
+{
+    chLatin_L, chLatin_A, chLatin_T, chLatin_I, chLatin_N, chDash, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString8[] =
+{
+    chLatin_L, chLatin_A, chLatin_T, chLatin_I, chLatin_N, chUnderscore, chDigit_1, chNull
+};
+
 const XMLCh XMLUni::fgNoString[] =
 {
     chLatin_n, chLatin_o, chNull
@@ -321,24 +345,34 @@ const XMLCh XMLUni::fgUCS4EncodingString[] =
     chLatin_U, chLatin_C, chLatin_S, chDigit_4, chNull
 };
 
+const XMLCh XMLUni::fgUCS4EncodingString2[] =
+{
+    chLatin_U, chLatin_C, chLatin_S, chDash, chDigit_4, chNull
+};
+
+const XMLCh XMLUni::fgUCS4EncodingString3[] =
+{
+    chLatin_U, chLatin_C, chLatin_S, chUnderscore, chDigit_4, chNull
+};
+
 const XMLCh XMLUni::fgUCS4BEncodingString[] =
 {
-    chLatin_U, chLatin_C, chLatin_S, chDigit_4, chSpace, chOpenParen, chLatin_B, chLatin_E, chCloseParen, chNull
+    chLatin_U, chLatin_C, chLatin_S, chDash, chDigit_4, chSpace, chOpenParen, chLatin_B, chLatin_E, chCloseParen, chNull
 };
 
 const XMLCh XMLUni::fgUCS4BEncodingString2[] =
 {
-    chLatin_U, chLatin_C, chLatin_S, chDigit_4, chLatin_B, chLatin_E, chNull
+    chLatin_U, chLatin_C, chLatin_S, chDash, chDigit_4, chLatin_B, chLatin_E, chNull
 };
 
 const XMLCh XMLUni::fgUCS4LEncodingString[] =
 {
-    chLatin_U, chLatin_C, chLatin_S, chDigit_4, chSpace, chOpenParen, chLatin_L, chLatin_E, chCloseParen, chNull
+    chLatin_U, chLatin_C, chLatin_S, chDash, chDigit_4, chSpace, chOpenParen, chLatin_L, chLatin_E, chCloseParen, chNull
 };
 
 const XMLCh XMLUni::fgUCS4LEncodingString2[] =
 {
-    chLatin_U, chLatin_C, chLatin_S, chDigit_4, chLatin_L, chLatin_E, chNull
+    chLatin_U, chLatin_C, chLatin_S, chDash, chDigit_4, chLatin_L, chLatin_E, chNull
 };
 
 const XMLCh XMLUni::fgUSASCIIEncodingString[] =

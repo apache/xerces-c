@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:41:29  roddey
  * Support for the new transcoder system, where even intrinsic encodings are
  * done via the same transcoder abstraction as external ones.
@@ -212,6 +216,7 @@ public :
     static const XMLCh fgDocTypeString[];
     static const XMLCh fgDefaultEBCDICEncodingString[];
     static const XMLCh fgEBCDICEncodingString[];
+    static const XMLCh fgEBCDICEncodingString2[];
     static const XMLCh fgElemString[];
     static const XMLCh fgEmptyString[];
     static const XMLCh fgEncodingString[];
@@ -234,6 +239,9 @@ public :
     static const XMLCh fgISO88591EncodingString3[];
     static const XMLCh fgISO88591EncodingString4[];
     static const XMLCh fgISO88591EncodingString5[];
+    static const XMLCh fgISO88591EncodingString6[];
+    static const XMLCh fgISO88591EncodingString7[];
+    static const XMLCh fgISO88591EncodingString8[];
     static const XMLCh fgNoString[];
     static const XMLCh fgNotationString[];
     static const XMLCh fgNDATAString[];
@@ -250,6 +258,8 @@ public :
     static const XMLCh fgSysIDString[];
     static const XMLCh fgUnknownURIName[];
     static const XMLCh fgUCS4EncodingString[];
+    static const XMLCh fgUCS4EncodingString2[];
+    static const XMLCh fgUCS4EncodingString3[];
     static const XMLCh fgUCS4BEncodingString[];
     static const XMLCh fgUCS4BEncodingString2[];
     static const XMLCh fgUCS4LEncodingString[];

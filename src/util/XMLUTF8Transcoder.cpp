@@ -103,9 +103,10 @@ static const XMLUInt32 gUTFOffsets[6] =
 // ---------------------------------------------------------------------------
 //  XMLUTF8Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLUTF8Transcoder::XMLUTF8Transcoder(const unsigned int blockSize) :
+XMLUTF8Transcoder::XMLUTF8Transcoder(const  XMLCh* const    encodingName
+                                    , const unsigned int    blockSize) :
 
-    XMLTranscoder(XMLUni::fgUTF8EncodingString, blockSize)
+    XMLTranscoder(encodingName, blockSize)
     , fSpareCh(0)
 {
 }

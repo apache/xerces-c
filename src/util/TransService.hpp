@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:41:28  roddey
  * Support for the new transcoder system, where even intrinsic encodings are
  * done via the same transcoder abstraction as external ones.
@@ -73,8 +77,12 @@
 
 #include <util/XML4CDefs.hpp>
 
-class XMLUTIL_EXPORT XMLLCPTranscoder;
-class XMLUTIL_EXPORT XMLTranscoder;
+
+// Forward references
+class XMLPlatformUtils;
+class XMLLCPTranscoder;
+class XMLTranscoder;
+
 
 //
 //  This class is an abstract base class which are used to abstract the
@@ -109,6 +117,17 @@ public :
 
 
     // -----------------------------------------------------------------------
+    //  Non-virtual API
+    // -----------------------------------------------------------------------
+    XMLTranscoder* makeNewTranscoderFor
+    (
+        const   XMLCh* const            encodingName
+        ,       XMLTransService::Codes& resValue
+        , const unsigned int            blockSize
+    );
+
+
+    // -----------------------------------------------------------------------
     //  The virtual transcoding service API
     // -----------------------------------------------------------------------
     virtual int compareIString
@@ -128,12 +147,7 @@ public :
 
     virtual XMLLCPTranscoder* makeNewLCPTranscoder() = 0;
 
-    virtual XMLTranscoder* makeNewTranscoderFor
-    (
-        const   XMLCh* const            encodingName
-        ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
-    ) = 0;
+    virtual void upperCase(XMLCh* const toUpperCase) const = 0;
 
 
 protected :
@@ -143,12 +157,30 @@ protected :
     XMLTransService();
 
 
+    // -----------------------------------------------------------------------
+    //  Protected virtual methods.
+    // -----------------------------------------------------------------------
+    virtual XMLTranscoder* makeNewXMLTranscoder
+    (
+        const   XMLCh* const            encodingName
+        ,       XMLTransService::Codes& resValue
+        , const unsigned int            blockSize
+    ) = 0;
+
+
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLTransService(const XMLTransService&);
     void operator=(const XMLTransService&);
+
+
+    // -----------------------------------------------------------------------
+    //  Hidden init method for platform utils to call
+    // -----------------------------------------------------------------------
+    friend class XMLPlatformUtils;
+    void initTransService();
 };
 
 

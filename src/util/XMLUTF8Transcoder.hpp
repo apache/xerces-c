@@ -76,7 +76,8 @@ public :
     // -----------------------------------------------------------------------
     XMLUTF8Transcoder
     (
-        const   unsigned int    blockSize
+        const   XMLCh* const    encodingName
+        , const unsigned int    blockSize
     );
 
     virtual ~XMLUTF8Transcoder();

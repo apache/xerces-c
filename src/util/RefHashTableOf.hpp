@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:01  twl
- * Initial revision
+ * Revision 1.2  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:01  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:12  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -87,7 +91,10 @@ template <class TVal> class RefHashTableOfEnumerator;
 template <class TVal> struct RefHashTableBucketElem;
 
 
-
+//
+//  This should really be a nested class, but some of the compilers we
+//  have to support cannot deal with that!
+//
 template <class TVal> struct RefHashTableBucketElem
 {
     RefHashTableBucketElem(TVal* const value, RefHashTableBucketElem<TVal>* next) :
@@ -100,7 +107,6 @@ template <class TVal> struct RefHashTableBucketElem
     TVal*                           fData;
     RefHashTableBucketElem<TVal>*   fNext;
 };
-
 
 
 template <class TVal> class RefHashTableOf

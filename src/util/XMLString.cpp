@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:18:10  roddey
+ * More changes to support the new, completely orthagonal support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:41:28  roddey
  * Support for the new transcoder system, where even intrinsic encodings are
  * done via the same transcoder abstraction as external ones.
@@ -547,7 +551,7 @@ void XMLString::trim(char* const toTrim)
 
 
 // ---------------------------------------------------------------------------
-//  Unicode versions of most of the string methods
+//  Wide char versions of most of the string methods
 // ---------------------------------------------------------------------------
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       XMLCh* const    toFill
@@ -717,6 +721,7 @@ void XMLString::catString(XMLCh* const target, const XMLCh* const src)
 int XMLString::compareIString(  const   XMLCh* const    str1
                                 , const XMLCh* const    str2)
 {
+    // Refer this one to the transcoding service
     return XMLPlatformUtils::fgTransService->compareIString(str1, str2);
 }
 
@@ -759,6 +764,7 @@ int XMLString::compareNIString( const   XMLCh* const    str1
                                 , const XMLCh* const    str2
                                 , const unsigned int    maxChars)
 {
+    // Refer this oneto the transcoding service
     return XMLPlatformUtils::fgTransService->compareNIString(str1, str2, maxChars);
 }
 
@@ -801,6 +807,25 @@ void XMLString::copyString(XMLCh* const target, const XMLCh* const src)
 
     // Capp off the target where we ended
     *pszOut = 0;
+}
+
+
+bool XMLString::copyNString(        XMLCh* const    target
+                            , const XMLCh* const    src
+                            , const unsigned int    maxChars)
+{
+    XMLCh* outPtr = target;
+    const XMLCh* srcPtr = src;
+    const XMLCh* endPtr = src + maxChars;
+
+    while (*srcPtr && (srcPtr < endPtr))
+        *outPtr++ = *srcPtr++;
+
+    // Cap it off here
+    *outPtr = 0;
+
+    // Return whether we copied it all or hit the max
+    return (*srcPtr == 0);
 }
 
 
@@ -979,6 +1004,14 @@ void XMLString::trim(XMLCh* const toTrim)
             toTrim[index++] = toTrim[skip++];
     }
 }
+
+
+void XMLString::upperCase(XMLCh* const toUpperCase)
+{
+    // Refer this one to the transcoding service
+    XMLPlatformUtils::fgTransService->upperCase(toUpperCase);
+}
+
 
 
 
