@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/10/10 21:07:55  peiyongz
+ * load resource files using environement vars and base name
+ *
  * Revision 1.2  2002/09/30 22:20:40  peiyongz
  * Build with ICU MsgLoader
  *
@@ -156,14 +159,17 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fRootBundle
-    //      bundle to the 'root' of the specified locale_country
+    //  fLocaleBundle
+    //      pointer to the required locale specific resource bundle,
+	//           or to the default locale resrouce bundle in case the required
+	//              locale specific resource bundle unavailable.
     //
     //  fDomainBundle
-    //      bundle to the resource for the corresponding domain 
+    //      pointer to the domain specific resource bundle with in the 
+	//              required locale specific (or default locale) resource bundle.
     //
     // -----------------------------------------------------------------------
-    UResourceBundle*      fRootBundle;
+    UResourceBundle*      fLocaleBundle;
     UResourceBundle*      fDomainBundle;
 };
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/10/10 21:07:55  peiyongz
+ * load resource files using environement vars and base name
+ *
  * Revision 1.3  2002/10/02 17:08:50  peiyongz
  * XMLString::equals() to replace XMLString::compareString()
  *
@@ -120,7 +123,7 @@
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------
 ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain) 
-:fRootBundle(0)
+:fLocaleBundle(0)
 ,fDomainBundle(0)
 {
     // validation on msgDomain
@@ -131,28 +134,31 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
 
-    //
-    // we hardcode the path for "root.res" for now
-    // assuming that Makefile would copy root.res from $ICUROOT/bin to $XERCESCROOT/bin
-    //
     char tempBuf[1024];
-    strcpy(tempBuf, getenv("XERCESCROOT"));
-    strcat(tempBuf, "/bin/root.res");
-   
+    memset(tempBuf, 0, sizeof tempBuf);
+	char *location  = getenv("XERCESC_RESBUND_PKG_PATH");
+
+    if (location)
+		strcpy(tempBuf, location);
+  
+    strcat(tempBuf, U_FILE_SEP_STRING);
+    strcat(tempBuf, "XercescErrMsg");
+
     UErrorCode err = U_ZERO_ERROR;
-    fRootBundle = ures_open(tempBuf, 0, &err);
-    if (!U_SUCCESS(err) || fRootBundle == NULL)
+    fLocaleBundle = ures_open(tempBuf, getenv("XERCESC_RESBUND_PKG_LOCALE"), &err);
+    if (!U_SUCCESS(err) || fLocaleBundle == NULL)
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     
-     //strip off path information, if any
+    /***
+        get the resource bundle for the domain
+        strip off path information, if any
+    ***/
      int   index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
      char *domainName = XMLString::transcode(&(msgDomain[index + 1]));
-
-     // get the resource bundle for the domain
-     fDomainBundle = ures_getByKey(fRootBundle, domainName, NULL, &err);
-
+	 err = U_ZERO_ERROR;
+     fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
      delete [] domainName;
  
      if (!U_SUCCESS(err) || fDomainBundle == NULL)
@@ -165,7 +171,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 ICUMsgLoader::~ICUMsgLoader()
 {
     ures_close(fDomainBundle);
-    ures_close(fRootBundle);
+    ures_close(fLocaleBundle);
 }
 
 
