@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/02/15 19:43:04  amassari
+ * Removed cause for warnings in VC 7.1
+ *
  * Revision 1.4  2003/06/03 21:42:42  neilg
  * update name of test in usage info
  *
@@ -157,25 +160,25 @@ class SAXErrorHandler : public ErrorHandler
 public:
     SAXErrorHandler() {};
     ~SAXErrorHandler() {};
-    void warning(const SAXParseException &exception )
+    void warning(const SAXParseException &exc )
     {
         char *message = 0;
         XERCES_STD_QUALIFIER cerr << "SAX warning received!  Text:  " <<
-            (message = XMLString::transcode(exception.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
+            (message = XMLString::transcode(exc.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
         XMLString::release(&message);
     }
-    void error(const SAXParseException &exception )
+    void error(const SAXParseException &exc )
     {
         char *message = 0;
         XERCES_STD_QUALIFIER cerr << "SAX error received!  Text:  " <<
-            (message = XMLString::transcode(exception.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
+            (message = XMLString::transcode(exc.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
         XMLString::release(&message);
     }
-    void fatalError(const SAXParseException &exception )
+    void fatalError(const SAXParseException &exc )
     {
         char *message = 0;
         XERCES_STD_QUALIFIER cerr << "SAX fatalError received!  Text:  " <<
-            (message = XMLString::transcode(exception.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
+            (message = XMLString::transcode(exc.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
         XMLString::release(&message);
     }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/02/15 19:43:15  amassari
+ * Removed cause for warnings in VC 7.1
+ *
  * Revision 1.9  2002/11/05 21:46:20  tng
  * Explicit code using namespace in application.
  *
@@ -160,9 +163,9 @@ public:
     // -----------------------------------------------------------------------
     //  Implementations of the SAX ErrorHandler interface
     // -----------------------------------------------------------------------
-    void warning(const SAXParseException& exception);
-    void error(const SAXParseException& exception);
-    void fatalError(const SAXParseException& exception);
+    void warning(const SAXParseException& exc);
+    void error(const SAXParseException& exc);
+    void fatalError(const SAXParseException& exc);
 
 
 

@@ -96,7 +96,6 @@
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream.h>
 
 XERCES_CPP_NAMESPACE_USE
 
