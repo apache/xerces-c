@@ -97,23 +97,29 @@ XMLElementDecl::setElementName(const XMLCh* const       prefix
                             , const XMLCh* const        localPart
                             , const int                 uriId )
 {
-   delete fElementName;
-   fElementName = new QName(prefix, localPart, uriId);
+    if (fElementName)
+        fElementName->setName(prefix, localPart, uriId);
+    else
+        fElementName = new QName(prefix, localPart, uriId);
 }
 
 void
 XMLElementDecl::setElementName(const XMLCh* const       rawName
                             , const int                 uriId )
 {
-   delete fElementName;
-   fElementName = new QName(rawName, uriId);
+    if (fElementName)
+        fElementName->setName(rawName, uriId);
+    else
+        fElementName = new QName(rawName, uriId);
 }
 
 void
 XMLElementDecl::setElementName(const QName* const    elementName)
 {
-   delete fElementName;
-   fElementName = new QName(*elementName);
+    if (fElementName)
+        fElementName->setValues(*elementName);
+    else
+        fElementName = new QName(*elementName);
 }
 
 // ---------------------------------------------------------------------------
