@@ -283,6 +283,33 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
     }
 }
 
+//Copy constructor
+XMLUri::XMLUri(const XMLUri& toCopy)
+{
+    try {
+        initialize(toCopy);
+    }
+    catch (...)
+    {
+        cleanUp();
+        throw;
+    }
+
+}
+
+XMLUri& XMLUri::operator=(const XMLUri& toAssign)
+{
+    try {
+        initialize(toAssign);
+    }
+    catch (...)
+    {
+        cleanUp();
+        throw;
+    }
+    return *this;
+}  
+
 XMLUri::~XMLUri()
 {
     cleanUp();

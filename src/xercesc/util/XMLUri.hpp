@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/11/21 15:42:39  gareth
+ * Implemented copy constructor and operator =. Patch by Jennifer Schachter.
+ *
  * Revision 1.5  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -152,6 +155,12 @@ public:
      */
     XMLUri(const XMLUri* const     baseURI
          , const XMLCh* const      uriSpec);
+
+    /**
+     * Copy constructor
+     */
+    XMLUri(const XMLUri& toCopy);
+    XMLUri& operator=(const XMLUri& toAssign);
 
     virtual ~XMLUri();
 
@@ -317,12 +326,6 @@ private:
 
     //helper method for getUriText
     void buildFullText();
-
-    /**
-     * Unimplemented copy ctor
-     */
-    XMLUri(const XMLUri& toCopy);
-    XMLUri& operator=(const XMLUri& toAssign);
 
     // -----------------------------------------------------------------------
     //  Private helper methods
