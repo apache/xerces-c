@@ -20,16 +20,8 @@
 <s1 title="Feedback Procedures">
     <s2 title="Questions or Comments">
 
-        <p>Please browse through this bundled documentation completely.  Most of
-        the common questions have been answered in the FAQ's. Specifically, do
-        read the answer to "<jump href="faq-other.html#faq-4"> Is there any kind
-        of support available for &XercesCName;?</jump>". Browsing this
-        documentation, may be the quickest way to get an answer. Of course, if
-        all else fails, as mentioned in the link above, you can post a question
-        to the <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.</p>
+      &feedback-bug-report;
 
-        <p>See <jump href="bug-report.html">Bug Reporting</jump> if you would like
-		to report a defect (greatly appreciated!).</p>
 
     </s2>
 

@@ -79,8 +79,7 @@ tar &XercesCSrcInstallDir;.tar
         <p>This creates a &apos;&XercesCSrcInstallDir;&apos; sub-directory
 		containing the &XercesCName; source distribution. </p>
 
-        <note>On Solaris, please use <code>gtar</code> instead of tar.  See
-        <jump href="faq-distrib.html#faq-11">FAQ</jump> for more information.</note>
+        <note>On Solaris, please use <code>gtar</code> instead of tar. &install-faq-distrib11;</note>
 
         <p>If you need to build the &XercesCName; source after installation,
         please follow the <jump href="build.html">Build Instructions</jump>.</p>
@@ -97,8 +96,7 @@ tar -xvf &XercesCInstallDir;-linux.tar
         <p>This will create an '&XercesCInstallDir;-linux' sub-directory
 		containing the &XercesCName; binary distribution. </p>
 
-        <note>On Solaris, please use <code>gtar</code> instead of tar.  See
-        <jump href="faq-distrib.html#faq-11">FAQ</jump> for more information.</note>
+        <note>On Solaris, please use <code>gtar</code> instead of tar. &install-faq-distrib11;</note>
 
         <p>You will need to add the
         &XercesCInstallDir;-linux/bin directory to your PATH environment variable:</p>

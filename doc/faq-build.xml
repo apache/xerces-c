@@ -120,9 +120,7 @@
       <p>Please check the following:</p>
       <ol>
         <li>If you're using the binary build of &XercesCName;, make sure that the OS and compiler are
-            the same version as the ones used to build the binary (please refer to
-            <jump href="faq-distrib.html#faq-1">FAQ: What platforms / compilers are
-            being used to build the binary distribution kits?</jump>).  Different OS and
+            the same version as the ones used to build the binary &faq-build-faq-distrib1;.  Different OS and
             compiler versions might cause unresolved linking problems or compilation
             errors. If the versions are different, rebuild the &XercesCName; library on
             your system before building your application. If you're using ICU (which is
@@ -376,8 +374,7 @@ catch (const XMLException&amp; toCatch) {
     <q>"Cannot load message domain, Xerces Panic Error"?</q>
     <a>
       <p>If the parser is built with icu message loader (like IBM XML4C binaries), 
-         you need to make sure that the message library, (for exact name
-         see <jump href="faq-distrib.html#faq-3">FAQ: Which DLL's do I need to distribute with my application?</jump>)
+         you need to make sure that the message library &faq-build-faq-distrib3;
          is located in a directory which is on the library search path.
          Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to        
          XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable 

@@ -27,12 +27,9 @@
                  We consider this implementation complete except for the limitations cited below.
                </p>
 
-               <p>We would very much appreciate feedback on the package via the &XercesCName; mailing list
-                 <jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress; </jump>, and we
-                 encourage the submission of bugs as described in
-                 <jump href="bug-report.html">Bug-Reporting</jump> page.
-                 Please read this document before using this package.
-               </p>
+               &schema-feedback-info;
+
+
        </s2>
        <anchor name="limitation"/>
        <s2 title="Limitations">

@@ -24,7 +24,6 @@
        <jump href="http://xml.apache.org/xerces-c/pdf/xerces-c.pdf.tar.gz">xerces-c.pdf.tar.gz</jump>), for
 	printing and offline reference.</p>
 	<note>A word of caution! The tools to create the PDF documentation are still experimental.
-	So the resulting PDF document is not perfect. We would be glad to receive your comments on
-	the <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.</note>
+	So the resulting PDF document is not perfect.</note>
 	</s2>
 </s1>

@@ -17,20 +17,23 @@
 
 <!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
 
-<book title="&XercesCName; Documentation" copyright="2003 The Apache Software Foundation">
-  <external href="../index.html"  label="Home"/>
+<book title="&XercesCName; Documentation" copyright="1999-2004 The Apache Software Foundation">
+
+  &home;
+
 
   <separator/>
 
      <document id="index"       label="Readme"             source="readme.xml"/>
      <document id="releases"    label="Release Info"     source="releases.xml"/>
      <hidden id="releases_archive"                   source="releases_archive.xml"/>
-     <hidden id="releases_plan"                      source="releases_plan.xml"/>
+     &releases_plan;
+
 
   <separator/>
 
      <document id="install"     label="Installation"       source="install.xml"/>
-     <external href="http://&XercesDistDir;/"              label="Download"/>
+     <external href="http://&XercesDistDir;"              label="Download"/>
      <document id="build"       label="Build Instructions" source="build.xml"/>
      <hidden   id="build-winunix" source="build-winunix.xml"/>
      <hidden   id="build-other" source="build-other.xml"/>
@@ -39,11 +42,11 @@
   <separator/>
 
      <group    id="faqs"        label="FAQs">
-        <entry id="faq-distrib" source="faq-distrib.xml"/>
+        &faq-distrib;
         <entry id="faq-build"   source="faq-build.xml"/>
         <entry id="faq-parse"   source="faq-parse.xml"/>
         <entry id="faq-other"   source="faq-other.xml"/>
-        <entry id="faq-contributing" source="faq-contributing.xml"/>
+        &faq-contributing;
      </group>
 
      <document id="samples"     label="Samples"      source="samples.xml"/>
@@ -89,6 +92,7 @@
 
   <separator/>
 
-  <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"/>
-  <external href="http://marc.theaimsgroup.com/?l=xerces-c-dev"              label="Mail Archive"/>
+   &cvs_repository;
+   &mail_archive;
+
 </book>

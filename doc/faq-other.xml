@@ -105,31 +105,8 @@ SUCH DAMAGE.</source>
     </a>
   </faq>
 
-  <faq title="Is there any kind of support available for &XercesCName;?">
-
-    <q>Is there any kind of support available for &XercesCName;?</q>
-
-    <a>
-
-    <p>&XercesCName; comes with <em>no</em> formal support.</p>
-
-      <p>Every volunteer project obtains its strength from the people involved in
-        it. Mailing lists provide a simple and effective communication mechanism. You
-        are welcome to join any of these mailing lists (or all of them if you wish).
-        You can choose to lurk, or to actively participate. It's up to you. Before you
-        join these lists, you should look over the resources in the Reference Library
-        section</p>
-
-      <p>Instructions for subscribing are at
-        <jump
-         href="http://xml.apache.org/mail.html">http://xml.apache.org/mail.html</jump>.
-        Archives of the lists are available from
-        <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
-        http://marc.theaimsgroup.com/?l=xerces-c-dev</jump>
-        </p>
-
-    </a>
-  </faq>
+  <!-- see entities.ent for the content for faq-other-support -->
+  &faq-other-support;
 
   <faq title="I found a defect -- how do I report it?">
 
@@ -143,24 +120,8 @@ SUCH DAMAGE.</source>
     </a>
   </faq>
 
-  <faq title="I have a patch to the &XercesCName; source code. How do I submit it?">
-
-    <q>I have a patch to the &XercesCName; source code. How do I submit it?</q>
-
-    <a>
-
-      <p>Mail it to the <jump href="mailto:&XercesCEmailAddress;">&XercesCName;
-        mailing list</jump>. There are no set rules about
-        how or what must be included -- if you've fixed a problem or enhanced the code
-        in some way, we really would like to get your changes, and will take them in
-        any reasonable form.</p>
-
-      <p>Generally a diff of the changed files against the current sources from
-        CVS is good, along with some kind of description of what the change is.
-        (Working with the current sources is important!)</p>
-
-    </a>
-  </faq>
+  <!-- see entities.ent for the content for faq-other-patch -->
+  &faq-other-patch;
 
   <faq title="Where can I get predefined character entity definitions?">
 
