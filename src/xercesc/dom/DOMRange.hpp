@@ -537,6 +537,20 @@ public:
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this Range is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     * (release() will call detach() where appropriate)
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void release() = 0;
+    //@}
 };
 
 

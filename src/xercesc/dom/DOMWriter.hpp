@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/06/25 16:04:49  tng
+ * DOM L3: add function release().
+ *
  * Revision 1.5  2002/06/06 20:53:07  tng
  * Documentation Fix: Update the API Documentation for DOM headers
  *
@@ -571,6 +574,21 @@ public:
     virtual XMLCh*     writeToString(const DOMNode &nodeToWrite) = 0;
 
     //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this Writer is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void              release() = 0;
+    //@}
+
 
 };
 

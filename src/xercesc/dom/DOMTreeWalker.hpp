@@ -142,7 +142,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNodeFilter*		getFilter()= 0;
+    virtual DOMNodeFilter*	   getFilter()= 0;
 
     /**
      * The value of this flag determines whether the children of entity
@@ -161,14 +161,14 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual bool getExpandEntityReferences()= 0;
+    virtual bool              getExpandEntityReferences()= 0;
 
     /**
      * Return the node at which the DOMTreeWalker is currently positioned.
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		getCurrentNode()= 0;
+    virtual DOMNode*          getCurrentNode()= 0;
 
     // -----------------------------------------------------------------------
     //  Query methods
@@ -184,7 +184,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		parentNode()= 0;
+    virtual DOMNode*          parentNode()= 0;
 
     /**
      * Moves the <code>DOMTreeWalker</code> to the first visible child of the
@@ -196,7 +196,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		firstChild()= 0;
+    virtual DOMNode*          firstChild()= 0;
 
     /**
      * Moves the <code>DOMTreeWalker</code> to the last visible child of the
@@ -208,7 +208,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		lastChild()= 0;
+    virtual DOMNode*          lastChild()= 0;
 
     /**
      * Moves the <code>DOMTreeWalker</code> to the previous sibling of the
@@ -220,7 +220,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		previousSibling()= 0;
+    virtual DOMNode*          previousSibling()= 0;
 
     /**
      * Moves the <code>DOMTreeWalker</code> to the next sibling of the current
@@ -231,7 +231,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		nextSibling()= 0;
+    virtual DOMNode*          nextSibling()= 0;
 
     /**
      * Moves the <code>DOMTreeWalker</code> to the previous visible node in
@@ -245,7 +245,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		previousNode()= 0;
+    virtual DOMNode*          previousNode()= 0;
 
     /**
      * Moves the <code>DOMTreeWalker</code> to the next visible node in document
@@ -258,7 +258,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual DOMNode*		nextNode()= 0;
+    virtual DOMNode*          nextNode()= 0;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -280,7 +280,21 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual void			setCurrentNode(DOMNode* currentNode)= 0;
+    virtual void              setCurrentNode(DOMNode* currentNode)= 0;
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this TreeWalker is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void              release() = 0;
     //@}
 };
 

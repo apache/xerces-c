@@ -116,7 +116,7 @@ public:
      * when it was created.
      * @since DOM Level 2
      */
-    virtual DOMNode*          getRoot() = 0;
+    virtual DOMNode*           getRoot() = 0;
     /**
      * Return which node types are presented via the iterator.
      * This attribute determines which node types are presented via the
@@ -128,7 +128,7 @@ public:
      * @since DOM Level 2
      *
      */
-    virtual unsigned long       getWhatToShow() = 0;
+    virtual unsigned long      getWhatToShow() = 0;
 
     /**
      * The <code>DOMNodeFilter</code> used to screen nodes.
@@ -158,7 +158,7 @@ public:
      *
      * @since DOM Level 2
      */
-    virtual bool getExpandEntityReferences() = 0;
+    virtual bool               getExpandEntityReferences() = 0;
 
     // -----------------------------------------------------------------------
     //  Query methods
@@ -198,7 +198,22 @@ public:
      * INVALID_STATE_ERR.
      * @since DOM Level 2
      */
-    virtual void                 detach() = 0;
+    virtual void               detach() = 0;
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this NodeIterator is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     * (release() will call detach() where appropriate)
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void               release() = 0;
     //@}
 };
 

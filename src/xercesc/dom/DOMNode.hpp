@@ -654,6 +654,26 @@ public:
     virtual void*             getUserData(const XMLCh* key) const = 0;
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this Node (and its associated children) is no longer in use
+     * and that the implementation may relinquish any resources associated with it and
+     * its associated children.
+     *
+     * If this is a document, any nodes it owns are also released.
+     *
+     * Access to a released object will lead to unexpected result.
+     *
+     * @exception DOMException
+     *   INVALID_ACCESS_ERR: Raised if this Node has a parent and thus should not be released yet.
+     */
+    virtual void              release() = 0;
+    //@}
+
 
 };
 
