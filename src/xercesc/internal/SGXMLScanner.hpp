@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/04/07 14:14:08  peiyongz
+ * make resolveSystemId virutal
+ *
  * Revision 1.16  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -207,13 +210,13 @@ private :
     virtual void scanDocTypeDecl();
     virtual void scanReset(const InputSource& src);
     virtual void sendCharData(XMLBuffer& toSend);
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId);
 
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
     void commonInit();
     void cleanUp();
-    InputSource* resolveSystemId(const XMLCh* const sysId); // return owned by caller
 
     // Spaces are not allowed in URI, so %20 is used instead.
     // Convert %20 to spaces before resolving the URI
