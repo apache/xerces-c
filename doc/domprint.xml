@@ -37,7 +37,7 @@ gmake</source>
           <p>The following parameters may be set from the command line </p>
 <source>Usage: DOMPrint [options] file
 
-This program invokes the Xerces-C DOM parser and builds the DOM
+This program invokes the &XercesCName; DOM parser and builds the DOM
 tree. It then traverses the DOM tree and prints the contents
 of the tree. Options are NOT case sensitive.
 

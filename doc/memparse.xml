@@ -50,7 +50,7 @@ MemParse -v</source>
 ]&gt;
 
 &lt;company&gt;
-  &lt;product&gt;&XercesCName;&lt;/product&gt;
+  &lt;product&gt;XML4C&lt;/product&gt;
   &lt;category idea='great'&gt;XML Parsing Tools&lt;/category&gt;
   &lt;developedAt&gt;
     IBM Center for Java Technology, Silicon Valley, Cupertino, CA

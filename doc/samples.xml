@@ -36,7 +36,7 @@
 
     <s2 title="Building the Samples for OS2">
 
-    <p>Building the Xerces-C samples using IBM Visual Age C++ Professional 4.0
+    <p>Building the &XercesCName; samples using IBM Visual Age C++ Professional 4.0
     for OS/2 (VAC++).</p>
 
      <ul>

@@ -21,7 +21,7 @@
         build ICU with a threaded version of the xlC compiler and
         build &XercesCName; with a non-threaded one.</note>
 
-        <p>There are two options to build Xerces-C with ICU. One is to use the
+        <p>There are two options to build &XercesCName; with ICU. One is to use the
         MSDEV GUI environment, and the other is to invoke the compiler from the
         command line.</p>
 
@@ -36,12 +36,12 @@
         <li>zip.exe</li>
         </ul>
 
-        <p>Extract Xerces-C source files from the .zip archive using WinZip, say
+        <p>Extract &XercesCName; source files from the .zip archive using WinZip, say
         in the root directory (an arbitrary drive x:). It should create a directory like
         '<code>x:\&XercesCSrcInstallDir;</code>'.</p>
 
         <p>Extract the ICU files, using WinZip, in root directory of the disk
-        where you have installed Xerces-C, sources. After extraction, there
+        where you have installed &XercesCName;, sources. After extraction, there
         should be a new directory '<code>x:\icu</code>' which contains all the ICU
         source files.</p>
 
@@ -62,7 +62,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 
         <p>If everything is setup right and works right, then you should see a
         binary drop created in the target directory specified above. This script
-        will build both ICU and Xerces-C, copy the files (relevant to the binary
+        will build both ICU and &XercesCName;, copy the files (relevant to the binary
         drop) to the target directory.</p>
 
         <p>For a description of options available, you can enter:</p>
@@ -202,7 +202,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         the best to follow, since that is where the main
         development is done.</li>
 
-        <li>Next, edit the file <code>XML4CDefs.hpp</code>, which is where all
+        <li>Next, edit the file <code>XercesDefs.hpp</code>, which is where all
             of the fundamental stuff comes into the system. You will
             see conditional sections in there where the above
             per-platform and per-environment headers are brought in.
@@ -214,7 +214,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
             compiler. These definitions are based on known platform
             and compiler defines.
             <br/>
-            <code>AutoSense.hpp</code> is included in <code>XML4CDefs.hpp</code> and the
+            <code>AutoSense.hpp</code> is included in <code>XercesDefs.hpp</code> and the
             canonical platform and compiler settings thus defined will
             make the particular platform and compiler headers to be
             the included at compilation.
@@ -246,6 +246,20 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
             implementations done, you should be able to start
             debugging the system using the demo programs.</li>
       </ol>
+
+      <p>Other concerns are:</p>
+
+      <ul>
+        <li>Does ICU compile on your platform? If not, then you'll need to
+            create a transcoder implementation that uses your local transcoding
+            services. The Iconv transcoder should work for you, though perhaps
+            with some modifications.</li>
+        <li>What message loader will you use? To get started, you can use the
+            "in memory" one, which is very simple and easy. Then, once you get
+            going, you may want to adapt the message catalog message loader, or
+            write one of your own that uses local services.</li>
+      </ul>
+
       <p>That is the work required in a nutshell!</p>
     </a>
     </faq>
@@ -257,7 +271,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         <p>XMLCh should be defined to be a type suitable for holding a
            utf-16 encoded (16 bit) value, usually an <code>unsigned short</code>. </p>
 
-        <p>All XML data is handled within xerces-c as strings of
+        <p>All XML data is handled within &XercesCName; as strings of
            XMLCh characters.  Regardless of the size of the
            type chosen, the data stored in variables of type XMLCh
            will always be utf-16 encoded values. </p>

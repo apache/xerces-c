@@ -2,6 +2,25 @@
 <!DOCTYPE faqs SYSTEM "dtd/faqs.dtd">
 <faqs title="Other &XercesCName; Questions">
 
+  <faq title="How do I determine the version of &XercesCName; I am using?">
+        <q>How do I determine the version of &XercesCName; I am using?</q>
+        <a>
+
+           <p>The version string for &XercesCName; is in one of the header files. Look
+           inside the file <code>src/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
+           something similar). This is the version of &XercesCName; you are using.</p>
+
+           <p>If you don't have the header files, you have to find the version
+           information from the shared library name. On Windows NT/95/98 right click on
+           the DLL name &XercesCWindowsLib;.dll in the bin directory and look up
+           properties. The version information may be found on the Version tab.</p>
+
+           <p>On AIX, just look for the library name &XercesCUnixLib;.a (or
+           &XercesCUnixLib;.so on Solaris/Linux and &XercesCUnixLib;.sl on HP-UX). The
+           version number is coded in the name of the library.</p>
+        </a>
+  </faq>
+
   <faq title="I can't use C++. Do you have a Java version?">
 
     <q>I can't use C++. Do you have a Java version?</q>
@@ -16,19 +35,6 @@
     </a>
   </faq>
 
-  <faq title="What are the differences between &XercesCName; and IBM XML4C?">
-
-    <q>What are the differences between &XercesCName; and IBM XML4C?</q>
-
-    <a>
-
-      <p>XML4C from IBM is based on the &XercesCName; code. The only difference
-        between &XercesCName; and XML4C is that XML4C is bundled with IBM's ICU classes
-        for Unicode support, which allows it to support a wider range of character set
-        encodings.</p>
-
-    </a>
-  </faq>
 
   <faq title="Where can I find additional information on XML?">
 
@@ -44,43 +50,9 @@
     </a>
   </faq>
 
-  <faq title="How do I port &XercesCName; to a new platform?">
+  <faq title="Is there any kind of support available for &XercesCName;?">
 
-    <q>How do I port &XercesCName; to a new platform?</q>
-
-    <a>
-
-      <p>(from Dean Roddey)</p>
-
-      <p>The primary work of a port involves:</p>
-
-      <ol>
-        <li>Creating a new compiler header for the compiler.</li>
-        <li>Creating a new platform utilities file that implements the little bit
-          of system access we need, and an associated header.</li>
-        <li>Updating <code>XercesDefs.hpp</code> and <code>AutoSense.hpp</code> to include your new headers when compiled under your OS and
-          compiler.</li>
-      </ol>
-
-      <p>Other concerns are:</p>
-
-      <ul>
-        <li>Does ICU compile on your platform? If not, then you'll need to create
-          a transcoder implementation that uses your local transcoding services. The
-          Iconv transcoder should work for you, though perhaps with some
-          modifications.</li>
-        <li>What message loader will you use? To get started, you can use the "in
-          memory" one, which is very simple and easy. Then, once you get going, you may
-          want to adapt the message catalog message loader, or write one of your own that
-          uses local services.</li>
-      </ul>
-
-    </a>
-  </faq>
-
-  <faq title="Is there any kind of support available for &XercesCName;/XML4C?">
-
-    <q>Is there any kind of support available for &XercesCName;/XML4C?</q>
+    <q>Is there any kind of support available for &XercesCName;?</q>
 
     <a>
 
@@ -100,9 +72,6 @@
         <jump href="http://archive.covalent.net">http://archive.covalent.net</jump>
         </p>
 
-      <p>IBM also maintains a newsgroup for discussion of XML4C. The news server
-        is "news.alphaworks.ibm.com" and the group is "XML-for-C++".</p>
-
     </a>
   </faq>
 
@@ -113,16 +82,16 @@
     <a>
 
       <p>Check the bug list at the
-        <jump href="http://xml.apache.org/xerces-c/index.html">Apache &XercesCName; Web
+        <jump href="http://xml.apache.org/xerces-c/index.html">Apache Xerces-C Web
         site</jump>. The problem may already be known, or even fixed. </p>
 
-      <p>Otherwise, send the bugs to either the xerces-c-dev mailing list
-        (preferred) or the IBM Alphaworks news group, as described above. The more
+      <p>Otherwise, send the bugs to the <jump href="mailto:&XercesCEmailAddress;">
+        Xerces-C mailing list</jump>. The more
         information that you provide, the better our chance of understanding what
         happened, or what the problem really is. Please include:</p>
 
       <ul>
-        <li>The version of &XercesCName; or XML4C</li>
+        <li>The version of &XercesCName;</li>
         <li>What kind of machine</li>
         <li>Operating system and OS version number</li>
         <li>Whether you built the &XercesCName; library yourself or used the
@@ -141,7 +110,8 @@
 
     <a>
 
-      <p>Mail it to the xerces-c-dev mailing list at Apache. (You must be a
+      <p>Mail it to the <jump href="mailto:&XercesCEmailAddress;">Xerces-C
+        mailing list</jump> at Apache. (You must be a
         subscriber to post to this list. But if you're considering changing the code
         you really want to be a subscriber, in any case.) There are no set rules about
         how or what must be included -- if you've fixed a problem or enhanced the code

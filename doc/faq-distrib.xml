@@ -3,6 +3,45 @@
 
 <faqs title="Distributing &XercesCName;">
 
+  <faq title="What compilers are being used on the supported platforms?">
+
+    <q>What compilers are being used on the supported platforms?</q>
+
+    <a>
+
+      <p>&XercesCProjectName; binaries has been built on the following platforms with
+        these compilers</p>
+
+      <table>
+        <tr>
+          <td><em>Operating System</em></td>
+          <td><em>Compiler</em></td>
+        </tr>
+        <tr>
+          <td>Windows NT 4.0 SP5/98</td>
+          <td>MSVC 6.0 SP3</td>
+        </tr>
+        <tr>
+          <td>Redhat Linux 6.1</td>
+          <td>egcs-2.91.66 and glibc-2.1.2-11</td>
+        </tr>
+        <tr>
+          <td>AIX 4.2.1</td>
+          <td>xlC 3.6.4</td>
+        </tr>
+        <tr>
+          <td>Solaris 2.6</td>
+          <td>CC Workshop 4.2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
+      </table>
+
+    </a>
+  </faq>
+
     <faq title="What are the differences between Xerces-C and XML4C?">
         <q>What are the differences between Xerces-C and XML4C?</q>
         <a>
@@ -49,7 +88,7 @@
             Alphaworks Site</jump>.</p>
 
             <p>If you are using the binaries from the <jump
-            href="http://xml.apache.org/dist">Apache download
+            href="http://xml.apache.org/dist/xerces-c/">Apache download
             site</jump> site, then you only need to distribute
             <em>one</em> file:<br></br>
 
@@ -59,7 +98,7 @@
             &XercesCUnixLib;.sl for HP-UX.</p>
 
             <p>However, if you are using the XML4C binaries then in
-            <em>addition</em> to the &XercesCName; library file
+            <em>addition</em> to the library file
             mentioned above, you also need to ship:</p>
 
             <ol>
@@ -126,9 +165,8 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
             them. Moreover, we have limited resources and hence cannot
             publish binaries for every platform. If you wish to
             contribute your time and effort in building binaries for a
-            specific platform/environment then please send a mail to
-            <jump
-            href="mailto:xerces-dev@xml.apache.org">xerces-dev@xml.apache.org</jump>.
+            specific platform/environment then please send a mail to the
+            <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>.
             We can definitely use any extra help in this open source
             project</p>
         </a>
@@ -144,7 +182,7 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
           many platforms as there are. Again, due to limited resources
           we cannot do all the ports. We will help you make this port
           happen. Here are some <jump
-          href="http://build.html#PortingGuide">Porting
+          href="build-misc.html#faq-4">Porting
           Guidelines</jump>.</p>
 
             <p>We strongly encourage you to submit the changes that
@@ -152,8 +190,8 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
             incorporate these changes in the source code base and make
             them available in the future releases.</p>
 
-            <p>All porting changes may be sent to: <jump
-            href="mailto:xerces-dev@xml.apache.org">xerces-dev@xml.apache.org</jump>
+            <p>All porting changes may be sent to the
+            <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>
             .</p>
         </a>
     </faq>
@@ -163,10 +201,9 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
         <q>How can I port &XercesCProjectName; to my favourite platform?</q>
         <a>
           <p>Some porting information is mentioned on the <jump
-          href="build.html#PortingGuide">build</jump> page.</p>
+          href="build-misc.html#faq-4">build</jump> page.</p>
         </a>
     </faq>
-
 
 
 
@@ -181,43 +218,43 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
             <jump href="http://xml.apache.org/">Apache</jump> open source website as
             <jump href="http://xml.apache.org/cocoon/index.html">Cocoon</jump>.</p>
 
-            <p>The API documentation is created using
-            <jump href="http://www.zib.de/Visual/software/doc++/index.html">DOC++</jump>.</p>
+	    <p>The API documentation is automatically generated using
+		<jump href="http://www.stack.nl/~dimitri/doxygen/">doxygen</jump> and
+		<jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
+
         </a>
     </faq>
 
-    <faq title="Source code for the C++ Builder TreeViewer?">
-        <q>Can I get the source code for the C++ Builder TreeViewer application?</q>
-        <a>
-            <p>In view of the numerous requests that we have received for
-            the TreeViewer sample application (written using C++
-            Builder), we have decided to make it available as an
-            independent download from the IBM
-            <jump href="http://www.alphaworks.ibm.com/tech/xml4c/">AlphaWorks</jump>
-            portal. The archive to get from the 'Download' page is
-            'DOMSampleTreeViewer.zip'. Please note, this is provided on a
-            "as-is, no support" basis. This sample works with XML4C 2.3.1
-            and we have not verified if it works with XML4C 3.x releases.</p>
-
-            <p>TreeViewer parses the XML file, using &XercesCProjectName;,
-            and displays the data as a tree.</p>
-
-            <p>We welcome your additional feedback at: &lt;
-            <jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt;</p>
-        </a>
-
-    </faq>
 
     <faq title="Can I use &XercesCProjectName; in my product?">
         <q>Can I use &XercesCProjectName; in my product?</q>
         <a>
             <p>Yes! Read the license agreement first and if you still
-            have further questions, then please address them to
-            &lt;<jump
-            href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt;
+            have further questions, then please address them to the
+            <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>
             .</p>
 
         </a>
 </faq>
+
+
+   <faq title="How do I uninstall &XercesCName;?">
+       <q>How do I uninstall &XercesCName;?</q>
+       <a>
+          <p>&XercesCName; only installs itself in a single directory and does not
+          set any registry entries. Thus, to uninstall, you only need to remove the
+          directory where you installed it, and all &XercesCName; related files will be
+          removed.</p>
+       </a>
+   </faq>
+   <faq title="I am getting a tar checksum error on Solaris. What's the problem?">
+      <q>I am getting a tar checksum error on Solaris. What's the problem?</q>
+      <a>
+         <p>The problem has to do with how Solaris handles long pathnames. Either use gnu
+            tar to extract the files, or try using the -i switch with Sun's native tar.
+            The -i switch is supposed to make tar ignore checksum errors.
+         </p>
+      </a>
+   </faq>
 </faqs>
 

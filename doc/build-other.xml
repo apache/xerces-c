@@ -29,7 +29,7 @@
             find and edit the VAC++ configuration file <code>project_options.icc</code>.</li>
 
             <li>Change the directory on the first line <code>'BASE_DIR = "..."'</code>
-            to match the base directory of the Xerces-C sources on your system.
+            to match the base directory of the &XercesCName; sources on your system.
             Note that the directory path must use double backslashes <code>"\\"</code>!</li>
 
             <li>Save <code>project_options.icc</code></li>
@@ -123,7 +123,7 @@
                 <p><em>Recommendations:</em></p>
 
                 <ul>
-                <li>There are a couple of options when building the XML4C parser on AS/400.
+                <li>There are a couple of options when building the &XercesCName; parser on AS/400.
                 For messaging support, you can use the in memory message option or the
                 message file support. For code page translation, you can use the AS/400
                 native <code>Iconv400</code> support or ICU. If you choose ICU, follow the instructions
@@ -391,8 +391,8 @@ gmake -e</source>
             were written. So, these instructions are not upto date.
             But it will give you a jump start if you are struggling to get it
             to work for the first time. We will be glad to get your changes.
-            Please respond to <jump href="mailto:&XercesCEmailAddress;">
-            &XercesCEmailAddress;</jump> with your comments and corrections.</note>
+            Please respond to the <jump href="mailto:&XercesCEmailAddress;">Xerces-C
+            mailing list</jump> with your comments and corrections.</note>
 
         </s3>
     </a>

@@ -10,8 +10,7 @@
         not covered here - who may I contact?</jump>". Browsing this
         documentation, may be the quickest way to get an answer. Of course, if
         all else fails, as mentioned in the link above, you can post a question
-        to the <jump href="mailto:xerces-c-dev@xml.apache.org">Xerces-C-dev
-        mailing list</jump>.</p>
+        to the <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>.</p>
 
         <p>If you are reporting a defect (greatly appreciated!), please provide
         the following information:</p>
@@ -75,6 +74,7 @@
             <li>Andy Levine</li>
             <li>Jeff Lewis</li>
             <li>Sean MacRoibeaird</li>
+            <li>Jordan Naftolin</li>
             <li>Tinny Ng</li>
             <li>David Nickerson</li>
             <li>Khaled Noaman</li>
@@ -96,6 +96,7 @@
             <li>Rick J. Stevens</li>
             <li>Linda M. Swan</li>
             <li>Pieter Van-Dyck</li>
+            <li>Curtis Walker</li>
             <li>Tom Watson</li>
             <li>Roger Webster</li>
             <li>Robert Weir</li>

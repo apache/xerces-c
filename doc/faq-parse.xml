@@ -43,49 +43,6 @@
     </a>
   </faq>
 
-  <faq title="What compilers are being used on the supported platforms?">
-
-    <q>What compilers are being used on the supported platforms?</q>
-
-    <a>
-
-      <p>&XercesCProjectName; has been built on the following platforms with
-        these compilers</p>
-
-      <table>
-        <tr>
-          <td><em>Operating System</em></td>
-          <td><em>Compiler</em></td>
-        </tr>
-        <tr>
-          <td>Windows NT 4.0 SP5/98</td>
-          <td>MSVC 6.0 SP3</td>
-        </tr>
-        <tr>
-          <td>Redhat Linux 6.1</td>
-          <td>egcs-2.91.66 and glibc-2.1.2-11</td>
-        </tr>
-        <tr>
-          <td>AIX 4.2.1 and higher</td>
-          <td>xlC 3.6.4</td>
-        </tr>
-        <tr>
-          <td>Solaris 2.6</td>
-          <td>CC Workshop 4.2</td>
-        </tr>
-        <tr>
-          <td>HP-UX 10.2</td>
-          <td>CC A.10.36</td>
-        </tr>
-        <tr>
-          <td>HP-UX 11.0</td>
-          <td>aCC A.03.13 with pthreads</td>
-        </tr>
-      </table>
-
-    </a>
-  </faq>
-
   <faq title="I cannot run the sample applications. What is wrong?">
 
     <q>I cannot run the sample applications. What is wrong?</q>
@@ -230,7 +187,7 @@ catch (const XMLException&amp; toCatch) {
       <p>For most applications, the use of <code>Terminate()</code> is optional. The system will recover all memory when the application
         process shuts down. The exception to this is the use of &XercesCName; from DLLs
         that will be repeatedly loaded and unloaded from within the same process. To
-        avoid memory leaks with this kind of use, <code>Terminate()</code> must be called before unloading the xerces-c library</p>
+        avoid memory leaks with this kind of use, <code>Terminate()</code> must be called before unloading the &XercesCName; library</p>
 
     </a>
   </faq>
@@ -293,8 +250,8 @@ catch (const XMLException&amp; toCatch) {
     <a>
 
       <p>On Solaris there are a few things that need to be done before you
-        execute your application using &XercesCName; / XML4C. In case you're using the
-        binary build of &XercesCName; / XML4C make sure that the OS and compiler are
+        execute your application using &XercesCName;. In case you're using the
+        binary build of &XercesCName; make sure that the OS and compiler are
         the same version as the ones used to build the binary. Different OS and
         compiler versions might cause unresolved linking problems or compilation
         errors. If the versions are different, rebuild the &XercesCName; library on
@@ -308,41 +265,6 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="How do I determine the version of &XercesCName; I am using?">
-
-    <q>How do I determine the version of &XercesCName; I am using?</q>
-
-    <a>
-
-      <p>The version string for &XercesCName; is in one of the header files. Look
-        inside the file <code>src/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
-        something similar). This is the version of &XercesCName; you are using.</p>
-
-      <p>If you don't have the header files, you have to find the version
-        information from the shared library name. On Windows NT/95/98 right click on
-        the DLL name &XercesCWindowsLib;.dll in the bin directory and look up
-        properties. The version information may be found on the Version tab.</p>
-
-      <p>On AIX, just look for the library name &XercesCUnixLib;.a (or
-        &XercesCUnixLib;.so on Solaris/Linux and &XercesCUnixLib;.sl on HP-UX). The
-        version number is coded in the name of the library.</p>
-
-    </a>
-  </faq>
-
-  <faq title="How do I uninstall &XercesCName;?">
-
-    <q>How do I uninstall &XercesCName;?</q>
-
-    <a>
-
-     <p>&XercesCName; only installs itself in a single directory and does not
-       set any registry entries. Thus, to uninstall, you only need to remove the
-       directory where you installed it, and all &XercesCName; related files will be
-       removed.</p>
-
-    </a>
-  </faq>
 
   <faq title="How are entity reference nodes handled in DOM?">
 
@@ -426,15 +348,15 @@ catch (const XMLException&amp; toCatch) {
       <p>Most commonly, the XML <code>encoding =</code> declaration is either incorrect or missing. Without a declaration, XML
         defaults to the use utf-8 character encoding, which is not compatible with the
         default text file encoding on most systems.</p>
-  
+
       <p>The XML declaration should look something like this:</p>
-  
+
       <p><code>&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;</code></p>
-  
+
       <p>Make sure to specify the encoding that is actually used by file. The
         encoding for "plain" text files depends both on the operating system and the
         locale (country and language) in use.</p>
-  
+
       <p>Another common source of problems is that some characters are not
         allowed in XML documents, according to the XML spec. Typical disallowed
         characters are control characters, even if you escape them using the Character
@@ -445,20 +367,20 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="What encodings are supported by &XercesCName; / XML4C?">
+  <faq title="What encodings are supported by Xerces-C / XML4C?">
 
-    <q>What encodings are supported by &XercesCName; / XML4C?</q>
+    <q>What encodings are supported by Xerces-C / XML4C?</q>
 
     <a>
 
-      <p>&XercesCName; has intrinsic support for ASCII, UTF-8, UTF-16 (Big/Small
+      <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16 (Big/Small
         Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and IBM1140
         encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can
         parse input XML files in these above mentioned encodings.</p>
-  
-      <p>XML4C -- the version of &XercesCName; available from IBM -- extends this
+
+      <p>XML4C -- the version of Xerces-C available from IBM -- extends this
         set to include the encodings listed in the table below.</p>
-  
+
       <table>
         <tr>
           <td><em>Common Name</em></td>
@@ -533,8 +455,8 @@ catch (const XMLException&amp; toCatch) {
           <td>euc-kr</td>
         </tr>
       </table>
-  
-      <p>Some implementations or ports of &XercesCName; provide support for
+
+      <p>Some implementations or ports of Xerces-C provide support for
         additional encodings. The exact set will depend on the supplier of the parser
         and on the character set transcoding services in use.</p>
 
@@ -550,7 +472,7 @@ catch (const XMLException&amp; toCatch) {
 
       <p>The best choice in most cases is either utf-8 or utf-16. Advantages of
         these encodings include:</p>
-  
+
       <ul>
         <li>The best portability. These encodings are more widely supported by
           XML processors than any others, meaning that your documents will have the best
@@ -563,22 +485,22 @@ catch (const XMLException&amp; toCatch) {
           more efficient for encoding Asian languages. But both encodings cover all
           languages without loss.</li>
       </ul>
-  
+
       <p>The only drawback of utf-8 or utf-16 is that they are not the native
         text file format for most systems, meaning that common text file editors and
         viewers can not be directly used.</p>
-  
+
       <p>A second choice of encoding would be any of the others listed in the
         table above. This works best when the xml encoding is the same as the default
         system encoding on the machine where the XML document is being prepared,
         because the document will then display correctly as a plain text file. For UNIX
         systems in countries speaking Western European languages, the encoding will
         usually be iso-8859-1.</p>
-  
+
       <p>The versions of Xerces distributed by IBM, both C and Java (known
         respectively as XML4C and XML4J), include all of the encodings listed in the
         above table, on all platforms.</p>
-  
+
       <p>A word of caution for Windows users: The default character set on
         Windows systems is windows-1252, not iso-8859-1. While &XercesCName; does
         recognize this Windows encoding, it is a poor choice for portable XML data
@@ -591,16 +513,16 @@ catch (const XMLException&amp; toCatch) {
   </faq>
 
   <faq
-  title="I find memory leaks in &XercesCName; / XML4C. How do I eliminate it?">
+  title="I find memory leaks in &XercesCName;. How do I eliminate it?">
 
-    <q>I find memory leaks in &XercesCName; / XML4C. How do I eliminate it?</q>
+    <q>I find memory leaks in &XercesCName;. How do I eliminate it?</q>
 
     <a>
 
       <p>The "leaks" that are reported through a leak-detector or heap-analysis
         tools aren't really leaks in most application, in that the memory usage does
         not grow over time as the XML parser is used and re-used.</p>
-  
+
       <p>What you are seeing as leaks are actually lazily evaluated data
         allocated into static variables. This data gets released when the application
         ends. You can make a call to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated variables before you exit your
@@ -619,21 +541,47 @@ catch (const XMLException&amp; toCatch) {
         data, the preferred encoding is ibm1140. Also supported is ibm037 (and its
         alternate name, ebcdic-cp-us); this encoding is almost the same as ibm1140, but
         it lacks the Euro symbol.</p>
-  
+
       <p>These two encodings, ibm1140 and ibm037, are available on both
-        &XercesCName; and IBM XML4C, on all platforms.</p>
-  
+        Xerces-C and IBM XML4C, on all platforms.</p>
+
       <p>On IBM System 390, XML4C also supports two alternative forms,
         ibm037-s390 and ibm1140-s390. These are similar to the base ibm037 and ibm1140
         encodings, but with alternate mappings of the EBCDIC new-line character, which
         allows them to appear as normal text files on System 390s. These encodings are
         not supported on other platforms, and should not be used for portable data.</p>
-  
+
       <p>XML4C on System 390 and AS/400 also provides additional EBCDIC
         encodings, including those for the character sets of different countries. The
         exact set supported will be platform dependent, and these encodings are not
         recommended for portable XML data.</p>
 
+    </a>
+  </faq>
+
+  <faq title="How to write out a DOM tree into an XML file?">
+     <q>How to write out a DOM tree into an XML file?</q>
+     <a>
+      <p>This feature is not yet availabe in the parser. Take a look at the DOMPrint sample
+         for an example on parsing  XML file, then writing it out back to the screen. You
+         can use that code.</p>
+    </a>
+  </faq>
+
+  <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
+    <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
+    <a>
+      <p>No.  XMLPlatformUtils::Initialize() can only be called once per process. Call
+         Initialize() when you start and Terminate() when you end.</p>
+    </a>
+  </faq>
+
+  <faq title="Why does deleting a transcoded string result in assertion on windows?">
+    <q>Why does deleting a transcoded string result in assertion on windows?</q>
+    <a>
+      <p>You are mixing runtimes in your process. If you build your program with debug, link
+         to the debug version of the parser. If you build your program for release, link to
+         the release version of the parser.</p>
     </a>
   </faq>
 
