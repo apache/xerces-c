@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/18 21:32:21  aruna1
+ * XMLCh assigned to wchar_t
+ *
  * Revision 1.5  1999/12/14 23:53:25  rahulj
  * Removed the offending Ctrl-M's from the commit message
  * logs which was giving packaging problems.
@@ -99,7 +102,11 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-typedef unsigned short XMLCh;
+#ifndef INCLUDE_THIS_FILE
+#define INCLUDE_THIS_FILE
+#include <wchar.h>
+#endif
+typedef wchar_t XMLCh;
 typedef unsigned short UTF16Ch;
 
 
