@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/11/23 02:00:12  rahulj
+ * Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ *
  * Revision 1.3  1999/11/12 20:36:57  rahulj
  * Changed library name to xerces-c.lib.
  *
@@ -87,6 +91,14 @@
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
+typedef unsigned short UTF16Ch;
+
+
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short  XMLUInt16;
+typedef unsigned int    XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
@@ -95,14 +107,6 @@ typedef unsigned short XMLCh;
 // ---------------------------------------------------------------------------
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
-
-
-// ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
-// ---------------------------------------------------------------------------
-#if 0
-#define XML4C_DEBUG
-#endif
 
 
 // ---------------------------------------------------------------------------

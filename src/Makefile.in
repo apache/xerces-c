@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.5  1999/11/23 01:59:25  rahulj
+# Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+#
 # Revision 1.4  1999/11/12 21:14:32  rahulj
 # fixed ver number.
 #
@@ -108,14 +112,15 @@ ALL_OBJECTS = $(wildcard ${ALL_OBJECTS_DIR}/*.o)
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM = @platform@
-COMPILER = @compiler@
+CC  = @cc@
+CXX = @cxx@
 PREFIX = @prefix@
 MESSAGELOADER=@messageloader@
 TRANSCODER=@transcoder@
 
 PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
-BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${COMPILER}-${PRODUCTVERSION}
+BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
 all: Prepare Util Sax Internal Framework Parsers Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
 

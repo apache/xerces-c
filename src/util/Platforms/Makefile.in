@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.3  1999/11/23 02:00:28  rahulj
+# Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+#
 # Revision 1.2  1999/11/17 22:36:37  rahulj
 # Code works with ICU transcoding service
 #
@@ -67,7 +71,8 @@
 #
 
 PLATFORM = @platform@
-COMPILER = @compiler@
+CC  = @cc@
+CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

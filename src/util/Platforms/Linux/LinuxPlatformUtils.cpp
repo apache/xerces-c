@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/11/23 02:00:48  rahulj
+ * Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ *
  * Revision 1.2  1999/11/17 22:35:33  rahulj
  * Replaced default attr mutexes with recursive mutexes. Also code works with ICU transcoding service
  *
@@ -193,10 +197,9 @@ void XMLPlatformUtils::platformInit()
     // Here you would also set the fgLibLocation global variable
     // XMLPlatformUtils::fgLibLocation is the variable to be set
 
-    static const char *sharedLibEnvVar = "LD_LIBRARY_PATH";
-    static const char * libraryPath = 0;
-
-    char libName[256];
+    static const char*  sharedLibEnvVar = "LD_LIBRARY_PATH";
+    char*               libraryPath = 0;
+    char                libName[256];
 
     // Construct the library name from the global variables
 
@@ -209,7 +212,7 @@ void XMLPlatformUtils::platformInit()
 
     if (libEnvVar == NULL)
     {
-        panic( XMLPlatformUtils::Panic_NoTransService );
+        panic(XMLPlatformUtils::Panic_CantFindLib);
     }
 
     //
@@ -255,7 +258,7 @@ void XMLPlatformUtils::platformInit()
 
     if (XMLPlatformUtils::fgLibLocation == NULL)
     {
-        panic( XMLPlatformUtils::Panic_NoTransService );
+        panic(XMLPlatformUtils::Panic_CantFindLib);
     }
 }
 
@@ -284,7 +287,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
     catch(...)
     {
-        panic( XMLPlatformUtils::Panic_NoDefTranscoder );
+        panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -322,7 +325,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
         }
 
         ICUTransService::setICUPath(intlPath);
-        if (intlPath != NULL) delete intlPath;
+        delete intlPath;
 
         return new ICUTransService;
     }
@@ -332,13 +335,8 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     //  converter files are stored relative to the Xerces-C library.
     //
 
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".so");
-
     unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
-                         strlen(libName) + strlen("/icu/data/") + 1;
+                         strlen("/icu/data/") + 1;
     intlPath = new char[lent];
     strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
     strcat(intlPath, "/icu/data/");
@@ -509,7 +507,8 @@ XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-     char* tmpPath = dirname((char*)newSrc);
+    // Note #1186: dirName() is not thread safe.
+    char* tmpPath = dirname(newSrc);
     if (!tmpPath)
     {
         ThrowXML(XMLPlatformUtilsException,
@@ -519,7 +518,8 @@ XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
     char* newXMLString = new char [strlen(tmpPath) +2];
     ArrayJanitor<char> newJanitor(newXMLString);
     strcpy(newXMLString, tmpPath);
-        strcat(newXMLString , "/");
+    strcat(newXMLString , "/");
+
     // Return a copy of the path, in Unicode format
     return XMLString::transcode(newXMLString);
 }

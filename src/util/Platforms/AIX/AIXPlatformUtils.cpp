@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:11  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 02:00:34  rahulj
+ * Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:11  twl
+ * Initial checkin
  *
  * Revision 1.6  1999/11/08 20:45:29  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -145,7 +149,7 @@ void XMLPlatformUtils::platformInit()
     // Here you would also set the fgLibLocation global variable
     // XMLPlatformUtils::fgLibLocation is the variable to be set
 
-    static const char * libraryPath = 0;
+    char * libraryPath = 0;
 
     char libName[256];
     strcpy(libName, XML4C_DLLName);

@@ -11,20 +11,15 @@ AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 dnl Checks for libraries
 AC_CHECK_LIB(m, floor)
 
+dnl
+dnl Do not know how to use this macro, so comment it out.
+dnl
 dnl special pthread handling (AIX uses pthreads instead of pthread)
-AC_CHECK_LIB(pthread, pthread_create)
-if test $ac_cv_lib_pthread_pthread_create = no; then
-AC_CHECK_LIB(pthreads, pthread_create)
-fi
-
-dnl Checks for header files
-AC_CHECK_HEADERS(inttypes.h)
-if test $ac_cv_header_inttypes_h = no; then
-HAVE_INTTYPES_H=0
-else
-HAVE_INTTYPES_H=1
-fi
-AC_SUBST(HAVE_INTTYPES_H)
+dnl AC_CHECK_LIB(pthread, pthread_create)
+dnl if test $ac_cv_lib_pthread_pthread_create = no; then
+dnl AC_CHECK_LIB(pthreads, pthread_create)
+dnl fi
+dnl
 
 dnl Checks for typedefs
 AC_CHECK_TYPE(XMLByte,unsigned char)
@@ -48,12 +43,13 @@ case "${host}" in
 esac
 AC_SUBST(platform)
 
-compiler=${CXX}
-AC_SUBST(compiler)
+cxx=${CXX}
+AC_SUBST(cxx)
 
-# prefix=${prefix}
+cc=${CC}
+AC_SUBST(cc)
+
 AC_SUBST(prefix)
-
 AC_SUBST(osver)
 
 cxxflags=${CXXFLAGS}

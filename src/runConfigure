@@ -58,6 +58,10 @@
 # 
 #
 # $Log$
+# Revision 1.5  1999/11/23 01:59:33  rahulj
+# Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+#
 # Revision 1.4  1999/11/17 22:36:33  rahulj
 # Code works with ICU transcoding service
 #
@@ -73,8 +77,18 @@
 #
 
 #
-# runConfigure : This script will run the "configure" script for the appropriate platform
-# Only supported platforms are recognized
+# runConfigure:
+#    This script will run the "configure" script for the appropriate
+#    platform. Only supported platforms are recognized.
+#
+# The following variables are defined and exported at the end of this
+# script.
+#
+# LIBS
+# LDFLAGS
+# CXXFLAGS
+# TRANSCODER
+#
 
 usage()
 {
@@ -125,7 +139,7 @@ fi
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
-msgloader=iconv          # by default use native transcoder
+msgloader=inmem          # by default use native transcoder
 netaccessor=fileonly     # by default use fileonly
 
 for i in $*
@@ -176,19 +190,16 @@ echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
 echo "Extra compile options: $compileroption"
 echo "Extra link options: $linkeroption"
-if test $debug = "off"; then
-    echo "Debug is OFF"
-    debugflag="-w -O";
-else
-    echo "Debug is ON"
-    debugflag="-g";
-fi
 echo "Message Loader: $msgloader"
 echo "Net Accessor: $netaccessor"
 echo "Transcoder: $transcoder"
 echo "Thread option: $thread"
 
+
+#
 # Now check if the options are correct or not, bail out if incorrect
+#
+
 case $platform in
    aix | linux | solaris | hp-10 | hp-11)
        # platform has been recognized
@@ -198,8 +209,54 @@ case $platform in
       exit -1;;
 esac
 
-# Now check for the transcoder
-transcoderoption="-DXML_USE_NATIVE_TRANSCODER"
+
+#
+# Enable debugging or not...
+#
+
+if test $debug = "off"; then
+    echo "Debug is OFF"
+    debugflag="-O";
+else
+    echo "Debug is ON"
+    debugflag="-g";
+fi
+
+
+
+#
+# Check for the threading option only for hp-11
+#
+
+threadingLibs="-lpthread"
+if test $platform = "hp-11"; then
+    if test $thread; then
+    case $thread in
+       pthread)
+           ;;
+    
+       dce)
+           threadingLibs="-lcma";
+           threadingDefines="-D_PTHREADS_DRAFT4 -DXML_USE_DCE" ;;
+    
+       *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+           exit -1;;
+    esac
+    fi
+elif test $platform = "aix"; then
+    threadingLibs="-lpthreads"
+elif test $platform = "hp-10"; then
+    threadingLibs="-lcma"
+    threadingDefines="-DXML_USE_DCE"
+fi
+
+
+#
+# Now check for what kind of transcoding service is desired.
+#
+
+transcodingDefines="-DXML_USE_NATIVE_TRANSCODER"
 TRANSCODER=NATIVE
 
 if test $transcoder; then
@@ -209,12 +266,12 @@ case $transcoder in
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
            exit -1;
        fi
-       transcoderoption="-DXML_USE_ICU_TRANSCODER" ;
+       transcodingDefine="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include" ;
+       transcodingLibs="-L${ICUROOT}/lib -licu-uc";
        TRANSCODER=ICU ;;
 
    native)
-       transcoderoption="-DXML_USE_NATIVE_TRANSCODER" ;
-       TRANSCODER=NATIVE ;;
+       ;;
 
    *)
       echo "I do not recognize the transcoder option '$transcoder'. Please type '${0} -h' for help."
@@ -224,9 +281,13 @@ fi
 
 export TRANSCODER
 
+
+#
 # Now check for the message loader
-MESSAGELOADER=INMEM;   # By default use in-memory
-msgloaderoption="-DXML_USE_INMEM_MESSAGELOADER"
+#
+
+MESSAGELOADER=INMEM;         # By default use in-memory
+msgloaderDefines="-DXML_USE_INMEM_MESSAGELOADER"
 
 if test $msgloader ; then
 case $msgloader in
@@ -236,15 +297,14 @@ case $msgloader in
            exit -1;
        fi
        MESSAGELOADER=ICU;
-       msgloaderoption="-DXML_USE_ICU_MESSAGELOADER" ;;
+       msgloaderDefines="-DXML_USE_ICU_MESSAGELOADER" ;;
 
    inmem)
-       MESSAGELOADER=INMEM;
-       msgloaderoption="-DXML_USE_INMEM_MESSAGELOADER" ;;
+       ;;
 
    iconv)
        MESSAGELOADER=ICONV;
-       msgloaderoption="-DXML_USE_ICONV_MESSAGELOADER" ;;
+       msgloaderDefines="-DXML_USE_ICONV_MESSAGELOADER" ;;
 
    *)
       echo "I do not recognize the message loader option '$msgloader'. Please type '${0} -h' for help."
@@ -254,66 +314,26 @@ fi
 
 export MESSAGELOADER
 
-# Check for the threading option only for hp-11
-if test $platform = "hp-11"; then
-    if test $thread; then
-    case $thread in
-       pthread)
-           threadingoption="-DXML_USE_PTHREAD" ;;
-    
-       dce)
-           threadingoption="-DXML_USE_DCE" ;;
-    
-       *)
-          echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-          exit -1;;
-    esac
-    else
-          echo "You must provide a thread option for HPUX-11". Cannot proceed any further.
-          exit -1;
-    fi
-fi
 
-# Set the C compiler and C++ compiler environment variables
-CC=$ccompiler; export CC
-CXX=$cppcompiler; export CXX
 
-case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lpp/xlC/lib"; export LIBS ;;
 
-   g++ | c++)
-       LDFLAGS="-lc"; export LDFLAGS
-       LIBS="-L/usr/local/lib"; export LIBS ;;
-
-   cc | CC)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lib -L/usr/ccs/lib"; export LIBS ;;
-
-   acc | aCC)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lib -L/opt/aCC/lib"; export LIBS ;;
-
-   *)
-      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..." 
-      ;;
-esac
-
-USELIBWWW=0;   # By default use file-only
+#
 # Check for the type of net accessor
+#
+
+USELIBWWW=0;                   # By default use file-only
 if test $netaccessor ; then
 case $netaccessor in
    fileonly)
-       netaccessoroption="" ;;
+       netaccessorDefines="" ;;
 
    libwww)
        if test -z ${LIBWWWROOT} ; then
            echo "You have not defined your LIBWWWROOT environment variable. Cannot proceed further ..."
            exit -1;
        fi
-       netaccessoroption="-DXML_USE_NETACCESSOR_LIBWWW -I${LIBWWWROOT}/include" ;
-       LIBS="$LIBS -L${LIBWWWROOT}/lib -lwww";
+       netaccessorDefines="-DXML_USE_NETACCESSOR_LIBWWW -I${LIBWWWROOT}/include" ;
+       netaccessorLibs="-L${LIBWWWROOT}/lib -lwww";
        USELIBWWW=1;; 
 
    *)
@@ -324,9 +344,34 @@ fi
 
 export USELIBWWW;
 
+
+
+#
+# Set the C compiler and C++ compiler environment variables
+#
+
+case $cppcompiler in
+   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC)
+      ;;
+
+   *)
+      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..." 
+      ;;
+esac
+
+export CC=$ccompiler
+export CXX=$cppcompiler
+
+
+
+#
 # Set the extra C and C++ compiler flags
-CXXFLAGS="$debugflag $compileroption $transcoderoption $msgloaderoption $threadingoption $netaccessoroption"; export CXXFLAGS
-CFLAGS="$debugflag $compileroption $transcoderoption $msgloaderoption $threadingoption $netaccessoroption"; export CFLAGS
+#
+
+export CXXFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+export CFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+export LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
+
 
 echo
 rm -f config.cache

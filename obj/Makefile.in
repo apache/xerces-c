@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.3  1999/11/23 01:59:16  rahulj
+# Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+#
 # Revision 1.2  1999/11/12 20:38:43  rahulj
 # Replaced XML4CROOT with XERCESCROOT.
 #
@@ -77,8 +81,11 @@
 ###################################################################
 
 PLATFORM = @platform@
-COMPILER = @compiler@
+CC  = @cc@
+CXX = @cxx@
 PREFIX = @prefix@
+LDFLAGS = @ldflags@
+LIBS = @libs@
 
 include ../src/Makefile.incl
 
@@ -106,7 +113,7 @@ ALL_OBJECTS=$(wildcard $(ALL_OBJECTS_DIR)/*.o)
 #######################################################
 
 ifeq (${PLATFORM},HPUX)
-  ifeq (${COMPILER},CC)
+  ifeq (${CXX},CC)
     ######  Start HP-UX  CC compiler specific stuff #######
     DUMMYEXE=$(XML_LIB_DIR)/dummyExe
     TEMPLATESOBJS=$(wildcard $(TEMPLATESREPOSITORY)/*.o)
@@ -115,7 +122,7 @@ ifeq (${PLATFORM},HPUX)
 	\rm -f $(DUMMYEXE)
 
     $(DUMMYEXE): $(ALL_OBJECTS)
-	${MAKE_SHARED} -o ${@} $(PLATFORM_LIBRARIES) $^ $(ALLLIBS)
+	${MAKE_SHARED} -o ${@} $^ $(PLATFORM_LIBRARIES) $(ALLLIBS)
 
     ######  End HP-UX  CC compiler specific stuff #######
   else
@@ -144,14 +151,14 @@ endif
 
 ${THISLIB}${VER}${SHLIBSUFFIX}:	$(ALL_OBJECTS)
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
-	${MAKE_SHARED} -o ${@} $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $^ $(TEMPLATESOBJS) $(ALLLIBS)
+	${MAKE_SHARED} -o ${@} $^ $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
 ## OS390
 ifeq (${PLATFORM},OS390)
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
 ${BATCH_TARGET}:        $(ALL_OBJECTS)
 	@echo Building ${BATCH_TARGET}
-	${MAKE_SHARED} -o ${@} $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $^ $(TEMPLATESOBJS) $(ALLLIBS)
+	${MAKE_SHARED} -o ${@} $^ $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
 else
 	$(CP) ${LIBNAME}${VER}${OS390SIDEDECK} ${LIB}
 endif

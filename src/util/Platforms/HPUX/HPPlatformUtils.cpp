@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:05  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 02:00:44  rahulj
+ * Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:05  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:29  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -84,23 +88,26 @@
 #include    <libgen.h>
 #include    <string.h>
 #include    <unistd.h>
-
 #include    <util/XMLString.hpp>
 #include    <util/XMLUni.hpp>
 
-#if defined (XML_USE_ICU_TRANSCODER)
+
+#if defined(XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>
-#else   // use native transcoder
+#else
+    // Use native transcoder. Same as -DXML_USE_NATIVE_TRANSCODER
     #include <util/Transcoders/Iconv/IconvTransService.hpp>
 #endif
 
-#if defined (XML_USE_ICU_MESSAGELOADER)
+
+#if defined(XML_USE_ICU_MESSAGELOADER)
     #include <util/MsgLoaders/ICU/ICUMsgLoader.hpp>
-#elif defined (XML_USE_ICONV_MESSAGELOADER)
-    #include <util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
-#else   // use In-memory message loader
+
+#else
+    // Same as -DXML_USE_INMEM_MESSAGELOADER
     #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #endif
+
 
 
 #if !defined(XML_HPUX_KAICC)
@@ -191,6 +198,44 @@ void XMLPlatformUtils::platformInit()
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
     atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+
+
+    // Here you would also set the fgLibLocation global variable
+    // XMLPlatformUtils::fgLibLocation is the variable to be set
+
+    char*           libraryPath = 0;
+    char            libName[256];
+    shl_descriptor* desc = NULL;
+    int             ret = 0;
+    int             index = 1;
+
+    strcpy(libName, XML4C_DLLName);
+    strcat(libName, gXML4CVersionStr);
+    strcat(libName, ".sl");
+
+    ret = shl_get(index, &desc);
+    while (ret != -1)
+    {
+       char* fileName = desc->filename;
+       if (strstr(fileName, libName) != NULL)
+       {
+           char* lastSlash = strrchr(fileName, '/');
+           size_t chars_to_extract = lastSlash - fileName;
+           libraryPath = new char[chars_to_extract + 1];
+           strncpy(libraryPath, fileName, chars_to_extract);
+           libraryPath[chars_to_extract] = 0;
+           break;
+       }
+       index++;
+       ret = shl_get(index, &desc);
+    }
+
+    XMLPlatformUtils::fgLibLocation = libraryPath;
+
+    if (XMLPlatformUtils::fgLibLocation == NULL)
+    {
+        panic(XMLPlatformUtils::Panic_CantFindLib);
+    }
 }
 
 
@@ -211,15 +256,14 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
         retVal = new ICUMsgLoader(msgDomain);
-#elif defined (XML_USE_ICONV_MESSAGELOADER)
-        retVal = new MsgCatalogLoader(msgDomain);
 #else
+        // same as -DXML_USE_INMEM_MESSAGELOADER
         retVal = new InMemMsgLoader(msgDomain);
 #endif
     }
     catch(...)
     {
-        panic(XMLPlatformUtils::Panic_NoDefTranscoder);
+        panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -240,6 +284,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     //
 
     static const char * xml4cIntlDirEnvVar = "ICU_DATA";
+    char *              intlPath        = 0;
 
     //
     // Check if environment variable 'ICU_DATA' is set.
@@ -250,7 +295,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     if (envVal != NULL)
     {
         unsigned int pathLen  = strlen(envVal);
-        char*        intlPath = new char[pathLen + 2];
+        intlPath = new char[pathLen + 2];
 
         strcpy((char *) intlPath, envVal);
         if (envVal[pathLen - 1] != '/')
@@ -265,63 +310,31 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     }
 
     //
-    //  If we did not find the environment var, so lets try to go the auto
-    //  search route.
+    //  If the environment variable ICU_DATA is not set, assume that the
+    //  converter files are stored relative to the Xerces-C library.
     //
 
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".sl");
+    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
+                         strlen("/icu/data/") + 1;
+    intlPath = new char[lent];
+    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
+    strcat(intlPath, "/icu/data/");
 
-    shl_descriptor* desc = NULL;
-    int             ret = 0;
-    int             index = 1;
+    ICUTransService::setICUPath(intlPath);
+    delete intlPath;
 
-    ret = shl_get(index, &desc);
-    while (ret != -1)
-    {
-       char* fileName = desc->filename;
-       if (strstr(fileName, libName) != NULL)
-       {
-           char* lastSlash = strrchr(fileName, '/');
-           size_t chars_to_extract = lastSlash - fileName;
-           char *libPathName = new char[chars_to_extract + 1];
-           strncpy(libPathName, fileName, chars_to_extract);
-           libPathName[chars_to_extract] = 0;
-           fgIntlPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
-           strcpy((char *) fgIntlPath, libPathName);
-           strcat((char *) fgIntlPath, "/icu/data/");
-           delete libPathName;
-           break;
-       }
-       index++;
-       ret = shl_get(index, &desc);
-    }
-
-    if (fgIntlPath == NULL)
-    {
-        fprintf(stderr,
-                "Fatal error: Could not find /icu/data relative to %s \n",
-                libName);
-        fprintf(stderr, 
-                "             while trying to auto detect the location ");
-        fprintf(stderr, "of the converter files.\n");
-        fprintf(stderr,
-                "             And the environment variable 'ICU_DATA' is ");
-        fprintf(stderr, "not defined.\n");
-        panic(XMLPlatformUtils::Panic_NoTransService);
-    }
-
-    ICUTransService::setICUPath(fgIntlPath);
     return new ICUTransService;
 
-#else // Use Native transcoding service
+#else
 
+    // Use native transcoding services.
+    // same as -DXML_USE_INMEM_MESSAGELOADER
     return new IconvTransService;
 
 #endif
-}
+
+} // XMLPlatformUtils::makeTransService
+
 
 
 // ---------------------------------------------------------------------------
@@ -332,22 +345,23 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     //
     //  We just print a message and exit
     //
+    
     fprintf(stderr,
-            "The XML4C system could not be initialized.\n");
+        "The Xerces-C system could not be initialized.\n");
     fprintf(stderr,
-            "The most likely reason for this failure is the inability to find\n");
+        "If you are using ICU, then the most likely reason for this failure\n");
     fprintf(stderr,
-            "the ICU coverter files, if you are using ICU. The converter files\n");
+        "is the inability to find the ICU coverter files. The converter files\n");
     fprintf(stderr,
-            "have the extension .cnv and exist in a directory 'icu/data' relative\n");
+        "have the extension .cnv and exist in a directory 'icu/data' relative\n");
     fprintf(stderr,
-            "to the XML4C shared library. If you have installed the converter files\n");
+        "to the Xerces-C shared library. If you have installed the converter files\n");
     fprintf(stderr,
-            "in a different location, you need to set up the environment variable\n");
+        "in a different location, you need to set up the environment variable\n");
     fprintf(stderr,
-            "'ICU_DATA' to point directly to the directory containing the\n");
+        "'ICU_DATA' to point directly to the directory containing the\n");
     fprintf(stderr,
-            "converter files.\n");
+        "converter files.\n");
     
     exit(-1);
 }
@@ -477,12 +491,12 @@ XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
     //  as Unicode always
     //
     char* newSrc = XMLString::transcode(srcPath);
+    ArrayJanitor<char>  janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path.
     // Note #1186: dirName() is not thread safe.
 
     char* tmpPath = dirname(newSrc); // dirname() never returns NULL.
-    delete [] newSrc;
 
     char* newXMLString = new char[strlen(tmpPath) + 2];
     ArrayJanitor<char> newJanitor(newXMLString);
@@ -516,8 +530,36 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 //  Mutex methods 
 // -----------------------------------------------------------------------
 
-#if !defined (APP_NO_THREADS)
+#if !defined(APP_NO_THREADS)
 
+void* XMLPlatformUtils::makeMutex()
+{
+    pthread_mutex_t* mutex = new pthread_mutex_t;
+    pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
+
+#if defined(XML_USE_DCE)
+    pthread_mutexattr_create(attr);
+    pthread_mutexattr_setkind_np(attr, MUTEX_RECURSIVE_NP);
+    if (pthread_mutex_init(mutex, *attr))
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XML4CExcepts::Mutex_CouldNotCreate);
+    }
+    pthread_mutexattr_delete(attr);
+#else
+    pthread_mutexattr_init(attr);
+    pthread_mutexattr_settype(attr, PTHREAD_MUTEX_RECURSIVE);
+    if (pthread_mutex_init(mutex, attr))
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XML4CExcepts::Mutex_CouldNotCreate);
+    }
+    pthread_mutexattr_destroy(attr);
+#endif
+    delete attr;
+
+    return (void*) mutex;
+}
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
@@ -541,18 +583,6 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
                      XML4CExcepts::Mutex_CouldNotLock);
         }
     }
-}
-
-void* XMLPlatformUtils::makeMutex()
-{
-    pthread_mutex_t* mutex = new pthread_mutex_t;
-
-    if (pthread_mutex_init(mutex, pthread_mutexattr_default))
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::Mutex_CouldNotCreate);
-    }
-    return (void*) mutex;
 }
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
