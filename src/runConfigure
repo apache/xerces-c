@@ -56,6 +56,9 @@
 #
 #
 # $Log$
+# Revision 1.23  2000/03/14 22:40:15  abagchi
+# Now actually uses the compiler option -z
+#
 # Revision 1.22  2000/02/25 03:42:56  rahulj
 # Changed xlC to xlC_r in the help message.
 #
@@ -262,10 +265,10 @@ for i in $*
         thread=$2; shift 2;;
 
    -l)
-        linkeroption=$2; shift 2;;
+        linkeroptions=$2; shift 2;;
 
    -z)
-        compileroption=$2; shift 2;;
+        compileroptions=$2; shift 2;;
 
    -h)
         usage
@@ -280,8 +283,8 @@ echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
-echo "Extra compile options: $compileroption"
-echo "Extra link options: $linkeroption"
+echo "Extra compile options: $compileroptions"
+echo "Extra link options: $linkeroptions"
 echo "Message Loader: $msgloader"
 echo "Net Accessor: $netaccessor"
 echo "Transcoder: $transcoder"
@@ -481,10 +484,10 @@ export CXX
 # Set the extra C and C++ compiler flags
 #
 
-CXXFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+CXXFLAGS="$compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
 export CXXFLAGS
 
-CFLAGS="$debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+CFLAGS="$compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
 export CFLAGS
 
 LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
