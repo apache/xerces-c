@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.21  2000/03/20 19:17:00  abagchi
+# Added XML256TableTranscoder
+#
 # Revision 1.20  2000/03/02 20:33:44  abagchi
 # Changed XML4CDefs to XercesDefs
 #
@@ -213,6 +216,7 @@ UTIL_CPP_PUBHEADERS = \
 	ValueStackOf.hpp \
 	ValueVectorOf.hpp \
 	XercesDefs.hpp \
+	XML256TableTranscoder.hpp \
 	XML88591Transcoder.hpp \
 	XMLASCIITranscoder.hpp \
 	XMLChTranscoder.hpp \
@@ -263,6 +267,7 @@ UTIL_CPP_OBJECTS = \
 	TextOutputStream.$(TO) \
 	XMLURL.$(TO) \
 	TransService.$(TO) \
+	XML256TableTranscoder.$(TO) \
 	XML88591Transcoder.$(TO) \
 	XMLASCIITranscoder.$(TO) \
 	XMLChTranscoder.$(TO) \
