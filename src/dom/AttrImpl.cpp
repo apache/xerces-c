@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/04/04 17:38:16  lehors
+ * got rid of ownerElement attribute, use parentNode instead
+ *
  * Revision 1.6  2000/03/02 19:53:51  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -87,6 +90,7 @@
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 #include "TextImpl.hpp"
+#include "ElementImpl.hpp"
 
 
 #define null 0
@@ -95,7 +99,6 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
 :  NodeImpl (ownerDoc, aName, DOM_Node::ATTRIBUTE_NODE, false, DOMString())
 {
     specified = true;
-    ownerElement = null;    //DOM Level 2
 };
 
 //DOM Level 2
@@ -104,14 +107,12 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
 :  NodeImpl (ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ATTRIBUTE_NODE, false, DOMString())
 {
     specified = true;
-    ownerElement = null;    //DOM Level 2
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
 : NodeImpl(other, deep)
 {
     specified = false;
-    ownerElement = null;    //DOM Level 2
 };
 
 
@@ -139,6 +140,13 @@ DOMString AttrImpl::getNodeValue()
     return getValue();
 };
 
+
+// parentNode is used to store the ownerElement but Attr nodes do not actually
+// have a parent
+NodeImpl * AttrImpl::getParentNode()
+{
+    return null;
+};
 
 
 bool AttrImpl::getSpecified() 
@@ -229,12 +237,14 @@ DOMString AttrImpl::toString()
 
 ElementImpl *AttrImpl::getOwnerElement()
 {
-    return ownerElement;
+    return (ElementImpl*) parentNode;
 }
 
 
 //internal use by parser only
 void AttrImpl::setOwnerElement(ElementImpl *ownerElem)
 {
-    ownerElement = ownerElem;
+    // we use the parentNode, which is always null for Attr nodes, to store
+    // the ownerElement
+    parentNode = ownerElem;
 }

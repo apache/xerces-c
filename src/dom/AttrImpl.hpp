@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/04/04 17:38:16  lehors
+ * got rid of ownerElement attribute, use parentNode instead
+ *
  * Revision 1.5  2000/03/02 19:53:51  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -107,9 +110,6 @@ class CDOM_EXPORT AttrImpl: public NodeImpl {
 public:
     bool specified;
 
-    //Introduced in DOM Level 2
-    ElementImpl *ownerElement;    
-    
 public:
     AttrImpl(DocumentImpl *ownerDocument, const DOMString &aName);
     AttrImpl(DocumentImpl *ownerDocument,   //DOM Level 2
@@ -119,6 +119,7 @@ public:
     virtual NodeImpl *cloneNode(bool deep=false);
     virtual DOMString getName();
     virtual DOMString getNodeValue();
+    virtual NodeImpl * getParentNode();
     virtual bool getSpecified();
     virtual DOMString getValue();
     virtual bool isAttrImpl();
