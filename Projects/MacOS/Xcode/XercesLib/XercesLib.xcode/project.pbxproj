@@ -3497,6 +3497,34 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		902D87FB062EE279003C92EB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = IdentityConstraintHandler.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		902D87FC062EE279003C92EB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = IdentityConstraintHandler.hpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		902D87FD062EE279003C92EB = {
+			fileRef = 902D87FB062EE279003C92EB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		902D87FE062EE279003C92EB = {
+			fileRef = 902D87FC062EE279003C92EB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		902F729A05417B7700353415 = {
 			buildPhases = (
 				902F729B05417B7700353415,
@@ -4031,6 +4059,7 @@
 				909229710573B03C00C9F477,
 				909229770573B0C400C9F477,
 				9003BCCC05C456BB003A34FC,
+				902D87FE062EE279003C92EB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7252,6 +7281,7 @@
 				909229760573B0C400C9F477,
 				9003BCCB05C456BB003A34FC,
 				9019C4BD05EDC7A5007EE4FE,
+				902D87FD062EE279003C92EB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13749,6 +13779,8 @@
 				F5A6C8F601B9677A01000102,
 				F5A6C8F701B9677A01000102,
 				F5A6C8F801B9677A01000102,
+				902D87FB062EE279003C92EB,
+				902D87FC062EE279003C92EB,
 				F5A6C8F901B9677A01000102,
 				F5A6C8FA01B9677A01000102,
 				F5A6C8FB01B9677A01000102,
