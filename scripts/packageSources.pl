@@ -254,6 +254,7 @@ sub remove_export_clauses()
                 $line =~ s/SAX_EXPORT//g;
                 $line =~ s/CDOM_EXPORT//g;
                 $line =~ s/XMLPARSER_EXPORT//g;
+                $line =~ s/XMLUTIL_EXPORT//g;
                 print FIZZLEOUT $line;
         }
         close (FIZZLEOUT);
