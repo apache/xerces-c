@@ -366,6 +366,14 @@ SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLEBCDICTranscoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLEBCDICTranscoder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLEnumerator.hpp
 # End Source File
 # Begin Source File
