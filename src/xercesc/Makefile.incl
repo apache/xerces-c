@@ -305,6 +305,8 @@ else
     ALLLIBS = ${LIBS}
 endif
 SHLIBSUFFIX=.so
+## Compiler switch to embed a library name
+LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
 
 #=============== IRIX SPECIFIC OPTIONS ============================

@@ -339,21 +339,22 @@ if test $platform = "freebsd"; then
     if test -n "${XERCESCROOT}"; then
        # try lookup the configuration results
        . "${XERCESCROOT}/version.incl"
-       if test -f "${XERCESCROOT}/src/config.log" ; then
-           if grep XML_USE_LIBICONV "${XERCESCROOT}/src/config.log" \
+       SOLIBNAME=libxerces-c.so.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+       if test -f "${XERCESCROOT}/src/xercesc/config.log" ; then
+           if grep XML_USE_LIBICONV "${XERCESCROOT}/src/xercesc/config.log" \
               > /dev/null 2>&1 ; then
                transcodingLibs=" -L/usr/local/lib -liconv "
                transcodingDefines=" -DXML_USE_LIBICONV -I/usr/local/include "
            fi
-       elif test -f "${XERCESCROOT}/obj/IconvFBSDTransService.o" ; then
-           if nm "${XERCESCROOT}/obj/IconvFBSDTransService.o" | \
-              grep XML_USE_LIBICONV > /dev/null 2>&1 ; then
+       elif test -f "${XERCESCROOT}/obj/FREEBSD/IconvFBSDTransService.o" ; then
+           if nm "${XERCESCROOT}/obj/FREEBSD/IconvFBSDTransService.o" | \
+              grep iconv_open > /dev/null 2>&1 ; then
                transcodingLibs=" -L/usr/local/lib -liconv "
                transcodingDefines=" -DXML_USE_LIBICONV -I/usr/local/include "
            fi
-       elif test -f "${XERCESCROOT}/lib/libxerces-c${VER}.so" ; then
-           if nm "${XERCESCROOT}/lib/libxerces-c${VER}.so" | \
-              grep XML_USE_LIBICONV > /dev/null 2>&1 ; then
+       elif test -f "${XERCESCROOT}/lib/${SOLIBNAME}" ; then
+           if nm "${XERCESCROOT}/lib/${SOLIBNAME}" | \
+              grep iconv_open > /dev/null 2>&1 ; then
                transcodingLibs=" -L/usr/local/lib -liconv "
                transcodingDefines=" -DXML_USE_LIBICONV -I/usr/local/include "
            fi

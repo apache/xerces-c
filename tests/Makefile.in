@@ -87,7 +87,10 @@ ifeq (${PLATFORM},HPUX)
       all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
   endif
 else
-    all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+    all::	bindir domidtest dommemtest idommemtest domtest idomtest encodingtest traversal itraversal rangetest irangetest inittermtest
+  ifneq (${THREADS},none)
+    all::	threadtest
+  endif
 endif
 
 bindir::
