@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/01/10 17:44:49  knoaman
+ * Fix for bug 5786.
+ *
  * Revision 1.5  2001/08/09 15:24:37  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -112,7 +115,7 @@ public :
     void insertElementAt(const TElem& toInsert, const unsigned int insertAt);
     void removeElementAt(const unsigned int removeAt);
     void removeAllElements();
-    bool containsElement(const TElem& toCheck);
+    bool containsElement(const TElem& toCheck, const unsigned int startIndex = 0);
 
 
     // -----------------------------------------------------------------------

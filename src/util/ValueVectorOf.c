@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2002/01/10 17:44:49  knoaman
+ * Fix for bug 5786.
+ *
  * Revision 1.4  2001/08/09 15:24:37  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -207,9 +210,10 @@ template <class TElem> void ValueVectorOf<TElem>::removeAllElements()
 }
 
 template <class TElem> 
-bool ValueVectorOf<TElem>::containsElement(const TElem& toCheck) {
+bool ValueVectorOf<TElem>::containsElement(const TElem& toCheck,
+                                           const unsigned int startIndex) {
 
-    for (unsigned int i = 0; i < fCurCount; i++) {
+    for (unsigned int i = startIndex; i < fCurCount; i++) {
         if (fElemList[i] == toCheck) {
             return true;
         }

@@ -190,6 +190,7 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fEmptyNamespaceURI(-1)
     , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
     , fAnonXSTypeCount(0)
+    , fCircularCheckIndex(0)
     , fFinalDefault(0)
     , fBlockDefault(0)
     , fScopeCount(0)
@@ -1113,6 +1114,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // Create a new instance
     // -----------------------------------------------------------------------
     ComplexTypeInfo* typeInfo = new ComplexTypeInfo();
+    unsigned int previousCircularCheckIndex = fCircularCheckIndex;
     int previousScope = fCurrentScope;
     fCurrentScope = fScopeCount++;
 
@@ -1210,6 +1212,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     fCurrentScope = previousScope;
     fCurrentComplexType = saveTypeInfo;
+    fCircularCheckIndex = previousCircularCheckIndex;
     resetCurrentTypeNameStack(0);
 
 
@@ -5393,6 +5396,8 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
     if (childElem != 0) {
 
+        fCircularCheckIndex = fCurrentTypeNameStack->size();
+
         // --------------------------------------------------------------------
         // GROUP, ALL, SEQUENCE or CHOICE, followed by attributes, if specified.
         // Note that it's possible that only attributes are specified.
@@ -5617,7 +5622,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
 
         // Circular check
         if (baseComplexTypeInfo &&
-            fCurrentTypeNameStack->containsElement(fStringPool->addOrFind(fullBaseName))) {
+            fCurrentTypeNameStack->containsElement(fStringPool->addOrFind(fullBaseName), fCircularCheckIndex)) {
 
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, fullBaseName);
             throw TraverseSchema::InvalidComplexTypeInfo;

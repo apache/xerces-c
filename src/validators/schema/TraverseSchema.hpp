@@ -777,8 +777,9 @@ private:
     int                                           fCurrentScope;
     int                                           fFinalDefault;
     int                                           fBlockDefault;
-    int                                           fScopeCount;
+    int                                           fScopeCount;    
     unsigned int                                  fAnonXSTypeCount;
+    unsigned int                                  fCircularCheckIndex;
     const XMLCh*                                  fTargetNSURIString;
     DatatypeValidatorFactory*                     fDatatypeRegistry;
     GrammarResolver*                              fGrammarResolver;
