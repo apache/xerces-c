@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2003/01/29 19:48:06  gareth
+# updated for PSVIDefs.hpp
+#
 # Revision 1.6  2002/09/17 21:24:39  peiyongz
 # RPM for Xerces2.1.0, patch from Thomas Woerner (thomas@linux.de)
 #
@@ -157,6 +160,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	ComplexTypeInfo.hpp \
 	GeneralAttributeCheck.hpp \
 	NamespaceScope.hpp \
+	PSVIDefs.hpp \
 	SchemaAttDef.hpp \
 	SchemaAttDefList.hpp \
 	SchemaElementDecl.hpp \
