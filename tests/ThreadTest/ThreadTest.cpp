@@ -157,6 +157,26 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 
 //------------------------------------------------------------------------------
 //
+//  struct InFileInfo   One of these structs will be set up for each file listed
+//                      on the command line.  Once set, the data is unchanging
+//                      and can safely be referenced by the test threads without
+//                      use of synchronization.
+//
+//------------------------------------------------------------------------------
+struct InFileInfo
+{
+    char    *fileName;
+    char    *fileContent;    // If doing an in-memory parse, this field points
+                             //   to an allocated string containing the entire file
+                             //   contents.  Otherwise it's 0.
+    size_t  fileSize;        // The file length.  Only initialized when doing
+                             //   an in-memory test.
+    int     checkSum;        // The XML checksum.  Set up by the main thread for
+                             //   each file before the worker threads are started.
+};
+
+//------------------------------------------------------------------------------
+//
 //  struct runInfo     Holds the info extracted from the command line.
 //                     There is only one of these, and it is static, and
 //                     unchanging once the command line has been parsed.
@@ -164,30 +184,20 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 //                     any synchronization.
 //
 //------------------------------------------------------------------------------
-struct inFileInfo
-{
-    char    *fileName;
-    char    *fileContent;
-    size_t  fileSize;
-    int     checkSum;
-};
-
 const int MAXINFILES = 25;
-const char* kInMemoryName = "In Memory";
-
 struct RunInfo
 {
-    bool    quiet;
-    bool    verbose;
-    int     numThreads;
-    bool    validating;
-    bool    dom;
-    bool    reuseParser;
-	bool	inMemory;
-    bool    dumpOnErr;
-    int     totalTime;
-    int     numInputFiles;
-    inFileInfo   files[MAXINFILES];
+    bool        quiet;
+    bool        verbose;
+    int         numThreads;
+    bool        validating;
+    bool        dom;
+    bool        reuseParser;
+	bool	    inMemory;
+    bool        dumpOnErr;
+    int         totalTime;
+    int         numInputFiles;
+    InFileInfo  files[MAXINFILES];
 };
 
 
@@ -247,7 +257,8 @@ public:                               //  This is the API used by the rest of th
     ThreadParser();
     ~ThreadParser();
 
-    int parse(int fileNum);           // Parse the specified file.
+    int parse(int fileNum);           // Parse the specified file.  fileNum is an index
+                                      //   into the gRunInfo.files array.
                                       //  return the XML checksum, or
                                       //  0 if a parse error occured.
 
@@ -278,17 +289,16 @@ public:                               // Not really public,
     void resetDocument() {};
 
     void warning(const SAXParseException& exception)     {
-		fprintf(stderr, "*** Warning!\n");
-		fflush(stderr);
-		throw exception;};
+		fprintf(stderr, "*** Warning ");
+		throw;};
+
     void error(const SAXParseException& exception)       {
-		fprintf(stderr, "*** Error!\n");
-		fflush(stderr);
-		throw exception;};
+		fprintf(stderr, "*** Error ");
+		throw;};
+
     void fatalError(const SAXParseException& exception)  {
-		fprintf(stderr, "***** Fatal error!\n");
-		fflush(stderr);
-		throw exception;};
+		fprintf(stderr, "***** Fatal error ");
+		throw;};
 };
 
 
@@ -335,7 +345,7 @@ ThreadParser::~ThreadParser()
 int ThreadParser::parse(int fileNum)
 {
     MemBufInputSource *mbis = 0;
-    inFileInfo        *fInfo = &gRunInfo.files[fileNum];
+    InFileInfo        *fInfo = &gRunInfo.files[fileNum];
 
     fCheckSum = 0;
 
@@ -369,8 +379,8 @@ int ThreadParser::parse(int fileNum)
     
     catch (const XMLException& e)
     {
-        errStrm << "\nError during parsing: '" << fInfo->fileName << "'\n"
-            << "Exception message is:  \n"
+        errStrm << "  during parsing: '" << fInfo->fileName << "'\n"
+            << "Exception message is:  "
             << e.getMessage() << "\n" << EndLn;
         fCheckSum = 0;
     }
@@ -509,7 +519,7 @@ int ThreadParser::reCheck()
 }
 
 //
-// domPrint  -  Dump the contents of a DOM node to a file.
+// domPrint  -  Dump the contents of a DOM node.
 //              For debugging failures, when all else fails.
 //                 Works recursively - initially called with a document node.
 //
@@ -629,10 +639,8 @@ void parseCommandLine(int argc, char **argv)
                 gRunInfo.reuseParser = true;
             else if (strcmp(argv[argnum], "-dump") == 0)
                 gRunInfo.dumpOnErr = true;
-			else if (strcmp(argv[argnum], "-mem") == 0) {
+			else if (strcmp(argv[argnum], "-mem") == 0) 
 				gRunInfo.inMemory = true;
-				gRunInfo.files[0].fileName = (char *) kInMemoryName;
-			}
             else if (strcmp(argv[argnum], "-threads") == 0)
             {
                 ++argnum;
@@ -672,7 +680,7 @@ void parseCommandLine(int argc, char **argv)
         
         // We've made it through the command line.
         //  Verify that at least one input file to be parsed was specified.
-        if (gRunInfo.numInputFiles == 0 && (! gRunInfo.inMemory))
+        if (gRunInfo.numInputFiles == 0)
         {
             fprintf(stderr, "No input XML file specified on command line.\n");
             throw 1;
@@ -691,7 +699,7 @@ void parseCommandLine(int argc, char **argv)
             "     -threads nnn   Number of threads.  Default is 2. \n"
             "     -time nnn      Total time to run, in seconds.  Default is forever.\n"
             "     -dump          Dump DOM tree on error.\n"
-			"     -mem           Read files into memory once only, and parse from there.\n"
+			"     -mem           Read files into memory once only, and parse them from there.\n"
             );
         exit(1);
     }
@@ -718,7 +726,7 @@ void ReadFilesIntoMemory()
     {
         for (fileNum = 0; fileNum <gRunInfo.numInputFiles; fileNum++)
         {
-            inFileInfo *fInfo = &gRunInfo.files[fileNum];
+            InFileInfo *fInfo = &gRunInfo.files[fileNum];
             fileF = fopen( fInfo->fileName, "rb" );
             if (fileF == 0) {
                 fprintf(stderr, "Can not open file \"%s\".\n", fInfo->fileName);
@@ -757,13 +765,18 @@ void ReadFilesIntoMemory()
 
 void threadMain (void *param)
 {
-	ThreadInfo *thInfo = (ThreadInfo *)param;
+	ThreadInfo   *thInfo = (ThreadInfo *)param;
     ThreadParser *thParser = 0;
 
     if (gRunInfo.verbose)
         printf("Thread #%d: starting\n", thInfo->fThreadNum);
 
     int docNum = gRunInfo.numInputFiles;
+
+    //
+    // Each time through this loop, one file will be parsed and its checksum
+    // computed and compared with the precomputed value for that file.
+    //
     while (true)
     {
         
@@ -775,10 +788,10 @@ void threadMain (void *param)
         if (docNum >= gRunInfo.numInputFiles)
             docNum = 0;
         
-        char *fileName = gRunInfo.files[docNum].fileName;
+        InFileInfo *fInfo = &gRunInfo.files[docNum];
         
         if (gRunInfo.verbose )
-            printf("Thread #%d: starting file %s\n", thInfo->fThreadNum, fileName);
+            printf("Thread #%d: starting file %s\n", thInfo->fThreadNum, fInfo->fileName);
         
         
         int checkSum = 0;
@@ -787,8 +800,7 @@ void threadMain (void *param)
         if (checkSum != gRunInfo.files[docNum].checkSum)
         {
             fprintf(stderr, "\nThread %d: Parse Check sum error on file  \"%s\".  Expected %x,  got %x\n",
-                thInfo->fThreadNum, gRunInfo.files[docNum].fileName,
-                gRunInfo.files[docNum].checkSum, checkSum);
+                thInfo->fThreadNum, fInfo->fileName, fInfo->checkSum, checkSum);
             
             // Revisit - let the loop continue to run?
             int secondTryCheckSum = thParser->reCheck();
@@ -834,8 +846,7 @@ int main (int argc, char **argv)
     }
     catch (...)
     {
-        fprintf(stderr, "Exception from XMLPlatfromUtils::Initialize.\n"
-                        "  Usually means that the international converter files can not be located.\n");
+        fprintf(stderr, "Exception from XMLPlatfromUtils::Initialize.\n");
         return 1;
     }
 
@@ -922,7 +933,8 @@ int main (int argc, char **argv)
                     break;
                 };
             }
-            fputc(c, stderr);
+            fputc(c, stdout);
+            fflush(stdout);
             if (c == '+')
                 for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
                     gThreadInfo[threadNum].fHeartBeat = false;
