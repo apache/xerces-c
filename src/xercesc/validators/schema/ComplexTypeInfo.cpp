@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2005/03/07 20:10:21  knoaman
+ * Eliminate lazy creation of attribute lists.
+ *
  * Revision 1.32  2004/10/28 20:21:06  peiyongz
  * Data member reshuffle
  *
@@ -361,7 +364,8 @@ ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
     , fLocator(0)
     , fMemoryManager(manager)
 {
-
+    fAttDefs = new (fMemoryManager) RefHash2KeysTableOf<SchemaAttDef>(29, true, fMemoryManager);
+    fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs,fMemoryManager);
 }
 
 
@@ -392,18 +396,12 @@ ComplexTypeInfo::~ComplexTypeInfo()
 // ---------------------------------------------------------------------------
 void ComplexTypeInfo::addAttDef(SchemaAttDef* const toAdd) {
 
-    // Fault in the att list if required
-    if (!fAttDefs)
-        faultInAttDefList();
-
     // Tell this guy the element id of its parent (us)
     toAdd->setElemId(getElementId());
 
     fAttDefs->put((void*)(toAdd->getAttName()->getLocalPart()),
                           toAdd->getAttName()->getURI(), toAdd);
     // update and/or create fAttList
-    if(!fAttList)
-        ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs,fMemoryManager);
     fAttList->addAttDef(toAdd);
 }
 
@@ -432,17 +430,11 @@ void ComplexTypeInfo::setLocator(XSDLocator* const aLocator) {
 // ---------------------------------------------------------------------------
 XMLAttDefList& ComplexTypeInfo::getAttDefList() const
 {
-    if (!fAttList)
-    {
-        // If the att def list is not made yet, then fault it in too
-        if (!fAttDefs)
-            faultInAttDefList();
-
-        ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs, fMemoryManager);
-    }
-
-    // Reset it before we return it
-    fAttList->Reset();
+    // NOTE: if users plan on using nextElement() to access attributes
+    //       they need to call Reset() explicitly (i.e attList.Reset()).
+    //       It's better to get the attribute count and use an index to
+    //       access attributes (especially if same grammar is used in
+    //       multiple threads).
     return *fAttList;
 }
 
@@ -473,19 +465,11 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const
                                      , const XMLElementDecl::LookupOpts   options
                                      , bool&              wasAdded) const
 {
-    SchemaAttDef* retVal = 0;
-
-    // If no att list faulted in yet, then it cannot exist
-    if (fAttDefs)
-        retVal = fAttDefs->get(baseName, uriId);
+    SchemaAttDef* retVal = fAttDefs->get(baseName, uriId);
 
     // Fault it in if not found and ask to add it
     if (!retVal && (options == XMLElementDecl::AddIfNotFound))
     {
-        // Fault in the list itself if not already
-        if (!fAttDefs)
-            faultInAttDefList();
-
         // And add a default attribute for this name
         retVal = new (fMemoryManager) SchemaAttDef
         (
@@ -499,9 +483,7 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const
         retVal->setElemId(getElementId());
         fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 
-        // update and/or create fAttList
-        if(!fAttList)
-            ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs,fMemoryManager);
+        // update fAttList
         fAttList->addAttDef(retVal);
         wasAdded = true;
     }
@@ -514,15 +496,9 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const
 
 bool ComplexTypeInfo::resetDefs() {
 
-    // If the collection hasn't been faulted in, then no att defs
-    if (!fAttDefs)
-        return false;
-
-    //
     //  Ok, run through them and clear the 'provided' flag on each of them.
     //  This lets the scanner use them to track which has been provided and
     //  which have not.
-    //
     RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs, false, fMemoryManager);
     while (enumDefs.hasMoreElements())
         enumDefs.nextElement().setProvided(false);

@@ -328,20 +328,12 @@ inline SchemaAttDef* ComplexTypeInfo::getAttWildCard() {
 inline const SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
                                                       const int uriId) const {
 
-    // If no list, then return a null
-    if (!fAttDefs)
-        return 0;
-
     return fAttDefs->get(baseName, uriId);
 }
 
 inline SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
                                                 const int uriId)
 {
-    // If no list, then return a null
-    if (!fAttDefs)
-        return 0;
-
     return fAttDefs->get(baseName, uriId);
 }
 
@@ -540,18 +532,10 @@ inline void ComplexTypeInfo::setAnonymous() {
 // ---------------------------------------------------------------------------
 inline bool ComplexTypeInfo::hasAttDefs() const
 {
-    // If the collection hasn't been faulted in, then no att defs
-    if (!fAttDefs)
-        return false;
-
     return !fAttDefs->isEmpty();
 }
 
 inline bool ComplexTypeInfo::contains(const XMLCh* const attName) {
-
-    if (!fAttDefs) {
-        return false;
-    }
 
     RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs, false, fMemoryManager);
 
