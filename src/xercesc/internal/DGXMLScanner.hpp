@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/07/24 09:19:09  gareth
+ * Patch for bug  #20530 - Attributes which have the same expanded name are not considered duplicates. Patch by cargilld.
+ *
  * Revision 1.7  2003/07/10 19:47:23  peiyongz
  * Stateless Grammar: Initialize scanner with grammarResolver,
  *                                creating grammar through grammarPool
@@ -192,7 +195,7 @@ private :
         , const XMLCh* const attrLocalName
         , const XMLCh* const attrValue
     );
-    void scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount);
+    void scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount, XMLElementDecl* elemDecl);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods

@@ -1411,6 +1411,23 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
                 }
             }
 
+            // check for duplicate namespace attributes:
+            // by checking for qualified names with the same local part and with prefixes 
+            // which have been bound to namespace names that are identical. 
+            XMLAttr* loopAttr;
+            for (unsigned int attrIndex=0; attrIndex < attCount; attrIndex++) {
+                loopAttr = fAttrList->elementAt(attrIndex);
+                if (curAtt->getURIId() == loopAttr->getURIId() &&
+                    XMLString::equals(curAtt->getName(), loopAttr->getName())) {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , curAtt->getName()
+                        , elemDecl->getFullName()
+                    );
+                }
+            }  
+
             // increment attribute count
             attCount++;
 

@@ -1442,7 +1442,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
 
     //  Make an initial pass through the list and find any xmlns attributes.
     if (fDoNamespaces && attCount)
-      scanAttrListforNameSpaces(fAttrList, attCount);
+      scanAttrListforNameSpaces(fAttrList, attCount, elemDecl);
 
     //  Now lets get the fAttrList filled in. This involves faulting in any
     //  defaulted and fixed attributes and normalizing the values of any that
@@ -2256,7 +2256,8 @@ void DGXMLScanner::updateNSMap(const    XMLCh* const attrPrefix
     );
 }
 
-void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount)
+void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount, 
+                                                XMLElementDecl*       elemDecl)
 {
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
@@ -2287,6 +2288,23 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
         {
             updateNSMap(attPrefix, XMLUni::fgZeroLenString, curAttr->getValue());
         }
+		
+        // check for duplicate namespace attributes:
+        // by checking for qualified names with the same local part and with prefixes 
+        // which have been bound to namespace names that are identical. 
+        XMLAttr* loopAttr;
+        for (int attrIndex=0; attrIndex < index; attrIndex++) {
+            loopAttr = theAttrList->elementAt(attrIndex);
+            if (loopAttr->getURIId() == curAttr->getURIId() &&
+                XMLString::equals(loopAttr->getName(), curAttr->getName())) {
+                emitError
+                ( 
+                    XMLErrs::AttrAlreadyUsedInSTag
+                    , curAttr->getName()
+                    , elemDecl->getFullName()
+                );
+            }
+        }  
     }
 }
 

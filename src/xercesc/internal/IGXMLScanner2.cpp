@@ -457,6 +457,25 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  to the handler. We reuse its existing elements but expand it as
         //  required.
         XMLAttr* curAttr;
+
+        // check for duplicate namespace attributes:
+        // by checking for qualified names with the same local part and with prefixes 
+        // which have been bound to namespace names that are identical. 
+        if (fGrammarType == Grammar::DTDGrammarType) {
+            for (unsigned int attrIndex=0; attrIndex < retCount; attrIndex++) {
+                curAttr = toFill.elementAt(attrIndex);
+                if (uriId == curAttr->getURIId() &&
+                    XMLString::equals(suffPtr, curAttr->getName())) {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , curAttr->getName()
+                        , elemDecl->getFullName()
+                    );
+                }
+            }  
+        }
+
         if (retCount >= curAttListSize)
         {
             curAttr = new (fMemoryManager) XMLAttr
