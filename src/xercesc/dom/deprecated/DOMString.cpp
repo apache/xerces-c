@@ -270,6 +270,7 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
     retPtr = freeListPtr;
     freeListPtr = *(void **)freeListPtr;
 
+    XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringHandleCount);
     return retPtr;
 };
 
@@ -282,6 +283,7 @@ void DOMStringHandle::operator delete(void *pMem)
 {
     XMLMutexLock   lock(&getMutex());    // Lock the DOMStringHandle mutex for the
     //    duration of this function.
+    XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringHandleCount);
     *(void **)pMem = freeListPtr;
     freeListPtr = pMem;
 
@@ -315,7 +317,6 @@ void DOMStringHandle::removeRef()
     if (result==0)
     {
         fDSData->removeRef();
-        XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringHandleCount);
 //        delete this;
         DOMStringHandle* ptr = this;
         delete ptr;
@@ -326,7 +327,6 @@ void DOMStringHandle::removeRef()
 DOMStringHandle *DOMStringHandle::createNewStringHandle(unsigned int bufLength)
 {
     DOMStringHandle  *h = new DOMStringHandle;
-    XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringHandleCount);
     XMLPlatformUtils::atomicIncrement(DOMString::gTotalStringHandleCount);
     h -> fLength = 0;
     h -> fRefCount = 1;
@@ -338,7 +338,6 @@ DOMStringHandle *DOMStringHandle::createNewStringHandle(unsigned int bufLength)
 DOMStringHandle *DOMStringHandle::cloneStringHandle()
 {
     DOMStringHandle *h = new DOMStringHandle;
-    XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringHandleCount);
     h->fLength   = fLength;
     h->fRefCount = 1;
     h->fDSData   = fDSData;
