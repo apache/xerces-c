@@ -1,0 +1,571 @@
+#!/bin/sh
+#
+# The Apache Software License, Version 1.1
+#
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+# reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+#
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written
+#    permission, please contact apache\@apache.org.
+#
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+#
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+#
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+#
+#
+# $Id$
+#
+#
+
+#
+# runConfigure:
+#    This script will run the "configure" script for the appropriate
+#    platform. Only supported platforms are recognized.
+#
+# The following variables are defined and exported at the end of this
+# script.
+#
+# LIBS
+# LDFLAGS
+# CXXFLAGS
+# TRANSCODER
+#
+
+usage()
+{
+    echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
+    echo "Usage: runConfigure \"options\""
+    echo "       where options may be any of the following:"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
+            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64', 'macosx' )"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
+    echo "       -d (specifies that you want to build debug version)"
+    echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'"
+    echo "       -l <extra linker options>"
+    echo "       -z <extra compiler options>"
+    echo "       -P <install-prefix>"
+    echo "       -C <any one extra configure options>"
+    echo "       -h (to get help on the above commands)"
+}
+
+ERROR_EXIT_CODE=1
+
+if test ${1}o = "o"; then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+if test ${XERCESCROOT}o = "o"; then
+   echo ERROR : You have not set your XERCESCROOT environment variable
+   echo Though this environment variable has nothing to do with creating makefiles,
+   echo this is just a general warning to prevent you from pitfalls in future. Please
+   echo set an environment variable called XERCESCROOT to indicate where you installed
+   echo the XERCES-C files, and run this command again to proceed. See the documentation
+   echo for an example if you are still confused.
+   exit ${ERROR_EXIT_CODE}
+fi
+
+if test $1 = "-h"; then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+# Check the command line parameters
+if test -x /usr/bin/getopt; then
+getoptErr=`getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
+else
+getoptErr=`getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
+fi
+if [ $? != 0 ]
+   then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+# Now get the command line parameters
+if test -x /usr/bin/getopt; then
+set -- `getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
+else
+set -- `getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
+fi
+
+# Set up the default values for each parameter
+debug=off                # by default debug is off
+transcoder=native        # by default use native transcoder
+msgloader=inmem          # by default use inmem message loader
+netaccessor=socket       # by default use socket (can do HTTP URL's)
+thread=pthread           # by default use POSIX threads
+configureoptions=""
+
+while [ $# -gt 0 ]
+   do
+   case $1 in
+   -p)
+        platform=$2; shift 2;;
+
+   -c)
+        ccompiler=$2; shift 2;;
+
+   -x)
+        cppcompiler=$2; shift 2;;
+
+   -d)
+        debug=on; shift;;
+
+   -m)
+        msgloader=$2; shift 2;;
+
+   -n)
+        netaccessor=$2; shift 2;;
+
+   -t)
+        transcoder=$2; shift 2;;
+
+   -r)
+        thread=$2; shift 2;;
+
+   -l)
+        linkeroptions="$linkeroptions $2"; shift 2;;
+
+   -z)
+        compileroptions="$compileroptions $2"; shift 2;;
+
+   -P)
+        configureoptions="$configureoptions --prefix=$2"; shift 2;;
+
+   -C)
+        configureoptions="$configureoptions $2"; shift 2;;
+
+   -h)
+        usage
+        exit ${ERROR_EXIT_CODE};;
+
+   --)
+        shift; break;;
+
+   *)
+       echo "unknown option $1"
+       usage
+       exit ${ERROR_EXIT_CODE};;
+   esac
+done
+
+echo "Generating makefiles with the following options ..."
+echo "Platform: $platform"
+echo "C Compiler: $ccompiler"
+echo "C++ Compiler: $cppcompiler"
+echo "Extra compile options: $compileroptions"
+echo "Extra link options: $linkeroptions"
+echo "Message Loader: $msgloader"
+echo "Net Accessor: $netaccessor"
+echo "Transcoder: $transcoder"
+echo "Thread option: $thread"
+echo "Extra configure options: $configureoptions"
+
+
+#
+# Now check if the options are correct or not, bail out if incorrect
+#
+
+case $platform in
+   aix | linux | freebsd | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64 | macosx)
+       # platform has been recognized
+       ;;
+   *)
+      echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
+      exit ${ERROR_EXIT_CODE};;
+esac
+
+#
+# Enable debugging or not...
+#
+
+if test $debug = "off"; then
+    echo "Debug is OFF"
+    if test ${SYSOVR}o = "o"; then
+      if test $platform = "os400"; then
+         echo "NATIVE OS400 BUILD"
+         debugflag="";
+      elif test $platform = "irix"; then
+         debugflag="-O2";
+      elif test $platform = "aix"; then
+         debugflag="-O2";
+      else
+         debugflag="-O";
+      fi
+    else
+      echo "OVERRIDE FOR OS400 ON AIX"
+      debugflag="";
+    fi
+else
+    echo "Debug is ON"
+    debugflag="-g";
+fi
+
+
+#
+# Check for the threading option
+#
+if test $thread = "none"; then
+    THREADS=none
+    threadingLibs=""
+    threadingDefines="-DAPP_NO_THREADS -DXML_USE_NO_THREADS"
+else
+    THREADS=pthread
+    threadingDefines="-DXML_USE_PTHREADS"
+    threadingLibs="-lpthread"
+    if test $platform = "hp-11"; then
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingLibs="-lcma" ;
+               threadingDefines="-D_PTHREADS_DRAFT4 -D_THREAD_SAFE -DXML_USE_DCE" ;;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "freebsd"; then
+	threadingLibs="-pthread -lc_r"
+	threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
+    elif test $platform = "aix"; then
+        aix_version=`./config.guess`;
+        echo Found host system to be $aix_version
+        case $aix_version in
+           *4.3*)
+              ## Linkflags control the use of libpthreads on AIX
+              threadingLibs="-lpthreads_compat";;
+           *)
+              threadingLibs="-lpthreads";;
+        esac
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingDefines="-DXML_USE_DCE"
+               case $aix_version in
+                  *4.3*)
+                     ## Linkflags control the use of libpthreads on AIX
+                     threadingLibs="-ldcelibc_r -ldcepthreads -lpthreads_compat";;
+                  *)
+                     threadingLibs="-lC_r -lC -ldcelibc_r -ldcepthreads";;
+               esac
+               ;;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "ptx"; then
+        threadingLibs=" "
+        if test -z $XMLINSTALL; then
+            XMLINSTALL=$ICUROOT         ## use either the -C or the -P option now.
+        fi
+    elif test $platform = "hp-10"; then
+        THREADS=dce
+        threadingLibs="-lcma"
+        threadingDefines="-DXML_USE_DCE"
+    elif test $platform = "unixware"; then
+        threadingLibs="" ## Linkflags control the use of threads on UnixWare
+    elif test $platform = "solaris"; then
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingLibs="-ldce";
+               threadingDefines="-DXML_USE_DCE";;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "irix"; then
+        if test $thread; then
+        case $thread in
+        pthread)
+            ;;
+
+        sproc)
+            threadingLibs=" ";
+            threadingDefines="-DXML_USE_SPROC" ;;
+        *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+            exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    fi
+fi
+
+export THREADS
+
+
+#
+# Now check for what kind of transcoding service is desired.
+#
+
+transcodingDefines="-DXML_USE_NATIVE_TRANSCODER"
+TRANSCODER=NATIVE
+
+if test $transcoder; then
+case $transcoder in
+   icu)
+       if test ${ICUROOT}o = "o"; then
+           echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+           exit ${ERROR_EXIT_CODE};
+       fi
+       transcodingDefines="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include";
+       transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+       TRANSCODER=ICU;;
+   Iconv400)
+       transcodingDefines="-DXML_USE_ICONV400_TRANSCODER" ;
+       TRANSCODER=Iconv400 ;;
+   Iconv390)
+       transcodingDefines="-DXML_USE_ICONV390_TRANSCODER" ;
+       TRANSCODER=Iconv390 ;;
+   IconvFBSD)
+       TRANSCODER=IconvFBSD ;
+       transcodingDefines="-DXML_USE_LIBICONV -I/usr/local/include" ;;
+   native)
+       if test $platform = "freebsd"; then
+           TRANSCODER=IconvFBSD ;
+       fi ;;
+   *)
+      echo "I do not recognize the transcoder option '$transcoder'. Please type '${0} -h' for help."
+      exit ${ERROR_EXIT_CODE};;
+esac
+fi
+
+export TRANSCODER
+
+
+#
+# Now check for the message loader
+#
+
+MESSAGELOADER=INMEM         # By default use in-memory
+msgloaderDefines="-DXML_USE_INMEM_MESSAGELOADER"
+
+if test $msgloader ; then
+case $msgloader in
+   icu)
+       if test ${ICUROOT}o = "o" ; then
+           echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+           exit ${ERROR_EXIT_CODE};
+       fi
+       MESSAGELOADER=ICU;
+       msgloaderDefines="-DXML_USE_ICU_MESSAGELOADER" ;;
+
+   inmem)
+       ;;
+   MsgFile)
+       MESSAGELOADER=MSGFILE;
+       msgloaderDefines="-DXML_USE_MSGFILE_MESSAGELOADER" ;;
+
+
+   iconv)
+       MESSAGELOADER=ICONV;
+       msgloaderDefines="-DXML_USE_ICONV_MESSAGELOADER" ;;
+
+   *)
+      echo "I do not recognize the message loader option '$msgloader'. Please type '${0} -h' for help.";
+      exit ${ERROR_EXIT_CODE};;
+esac
+fi
+
+export MESSAGELOADER
+
+
+
+
+#
+# Check for the type of net accessor
+#
+
+NETACCESSOR=Socket               # By default use socket (does HTTP URL's)
+if test $netaccessor ; then
+case $netaccessor in
+   fileonly)
+       NETACCESSOR=FileOnly
+       netaccessorDefines="" ;;
+
+   socket)
+       NETACCESSOR=Socket
+       netaccessorDefines="-DXML_USE_NETACCESSOR_SOCKET"
+       case $platform in
+           unixware)
+               netaccessorLibs="-lnsl -lsocket";;
+           hp-11)
+               netaccessorLibs="-lnsl";;
+           aix)
+               netaccessorLibs="-lbsd";;
+           solaris)
+               netaccessorLibs="-lnsl -lsocket"
+             if test $thread = "dce"; then
+                 netaccessorLibs=""
+             fi
+             ;;
+           *)
+               ;;
+       esac;;
+
+   libwww)
+       NETACCESSOR=LibWWW
+       if test -z "`libwww-config --libs 2>/dev/null`" ; then
+           echo "Netaccessor is libwww, but libwww-config is not found. Cannot proceed further."
+           exit ${ERROR_EXIT_CODE};
+       fi
+       netaccessorDefines="-DXML_USE_NETACCESSOR_LIBWWW `libwww-config --cflags`"
+       netaccessorLibs="`libwww-config --libs`"
+       USELIBWWW=1;;
+
+   native)
+       NETACCESSOR=NATIVE
+       netaccessorDefines="-DXML_USE_NETACCESSOR_NATIVE"
+       netaccessorLibs=""
+       ;;
+
+   *)
+       echo "I do not recognize the netaccessor option '$netaccessor'. Please type '${0} -h' for help."
+       exit ${ERROR_EXIT_CODE};;
+esac
+fi
+
+export NETACCESSOR
+
+
+
+#
+# Set the C compiler and C++ compiler environment variables
+#
+
+case $cppcompiler in
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
+      ;;
+
+   *)
+      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
+      ;;
+esac
+
+CC="$ccompiler"
+export CC
+
+CXX="$cppcompiler"
+export CXX
+
+#
+# Set the extra C and C++ compiler flags
+#
+#
+# include the user defined CXXFLAGS/CFLAGS first in case they have
+# set an platform spefic flags
+#
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+export CXXFLAGS
+
+CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+export CFLAGS
+
+# gcc crashes if optimisation is turned on in a Tru64 environment
+if [ $platform = "tru64" -a $CXX = "g++" ]; then
+    CXXFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    CFLAGS=`echo $CFLAGS | sed -e 's/-O[0-9]*//g'`
+    export CXXFLAGS CFLAGS
+fi
+
+LDFLAGS="$LDFLAGS $linkeroptions"
+export LDFLAGS
+
+LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
+export LIBS
+
+
+echo
+rm -f config.cache
+rm -f config.log
+rm -f config.status
+if test $platform = "os400"; then
+./configure --host AS400-OS400 $configureoptions
+elif test $platform = "ptx"; then
+./configure --prefix=$XMLINSTALL
+else
+sh ./configure $configureoptions
+fi
+# exit if configure failed
+if test $? != 0; then
+  exit 1
+fi
+
+echo
+echo In future, you may also directly type the following commands to create the Makefiles.
+echo
+echo export TRANSCODER=\"$TRANSCODER\"
+echo export MESSAGELOADER=\"$MESSAGELOADER\"
+echo export NETACCESSOR=\"$NETACCESSOR\"
+echo export THREADS=\"$THREADS\"
+echo export CC=\"$CC\"
+echo export CXX=\"$CXX\"
+echo export CXXFLAGS=\"$CXXFLAGS\"
+echo export CFLAGS=\"$CFLAGS\"
+echo export LDFLAGS=\"$LDFLAGS\"
+echo export LIBS=\"$LIBS\"
+echo configure $configureoptions
+
+echo
+echo If the result of the above commands look OK to you, go to the directory
+echo ${XERCESCROOT}/src and type \"gmake\" to make the XERCES-C system.
+
+exit  0;

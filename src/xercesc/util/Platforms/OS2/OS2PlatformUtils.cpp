@@ -1,0 +1,542 @@
+/*
+ * The Apache Software License, Version 1.1
+ * 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ * 
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ * 
+ * 4. The names "Xerces" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache\@apache.org.
+ * 
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ * 
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation, and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com .  For more information
+ * on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
+
+/*
+ * $Id$
+ */
+
+
+
+// ---------------------------------------------------------------------------
+//  Includes
+// ---------------------------------------------------------------------------
+
+#define INCL_DOSSEMAPHORES
+#define INCL_DOSERRORS
+#define INCL_DOSMISC
+#define INCL_DOSFILEMGR
+
+#include    <xercesc/util/XercesDefs.hpp>
+#include    <xercesc/util/PlatformUtils.hpp>
+#include    <xercesc/util/RuntimeException.hpp>
+#include    <xercesc/util/Janitor.hpp>
+#include    <xercesc/util/XMLString.hpp>
+#include    <xercesc/util/XMLUniDefs.hpp>
+
+#include    <stdio.h>
+#include    <stdlib.h>
+#include    <io.h>
+#if defined(XML_USE_ICU_TRANSCODER)
+  #include  <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
+#elif defined(XML_USE_ICONV_TRANSCODER)
+  #include  <xercesc/util/Transcoders/Iconv/IconvTransService.hpp>
+#else
+  #error A transcoding service must be chosen
+#endif
+
+#if defined(XML_USE_INMEMORY_MSGLOADER)
+  #include  <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#else
+  #error A message loading service must be chosen
+#endif
+
+#if defined(XML_IBMVAOS2)
+#include    <builtin.h>
+#endif
+#include    <OS2.h>
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Platform init and term methods
+// ---------------------------------------------------------------------------
+void XMLPlatformUtils::platformInit()
+{
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
+}
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: File Methods
+// ---------------------------------------------------------------------------
+unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
+{
+    // Get the current position
+    int curPos = ftell( (FILE*)theFile);
+    if (curPos == -1)
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
+
+    return (unsigned int)curPos;
+}
+
+void XMLPlatformUtils::closeFile(FileHandle theFile)
+{
+    if (fclose((FILE*)theFile))
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+}
+
+unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
+{
+    return (unsigned int)filelength(fileno((FILE *)theFile));
+}
+
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+
+    if (retVal == NULL)
+        return 0;
+    return retVal;
+}
+
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
+
+    if (retVal == NULL)
+        return 0;
+    return retVal;
+}
+
+FileHandle XMLPlatformUtils::openStdInHandle()
+{
+    return (FileHandle)fdopen(dup(0), "rb");
+}
+
+unsigned int XMLPlatformUtils::readFileBuffer ( FileHandle      theFile
+                            , const unsigned int    toRead
+                            ,       XMLByte* const  toFill )
+{
+    size_t noOfItemsRead = fread( (void*) toFill, 1, toRead, (FILE*)theFile);
+
+    if(ferror((FILE*)theFile))
+    {
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+    }
+
+    return (unsigned int)noOfItemsRead;
+}
+
+void XMLPlatformUtils::resetFile(FileHandle theFile)
+{
+    // Seek to the start of the file
+    if (fseek((FILE*)theFile, 0, SEEK_SET) )
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
+}
+
+
+
+// -----------------------------------------------------------------------
+//  File system methods
+// -----------------------------------------------------------------------
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+{
+    // Transcode the incoming string
+    char* tmpSrcPath = XMLString::transcode(srcPath);
+    ArrayJanitor<char> janSrcPath(tmpSrcPath);
+
+    char tmpPath[CCHMAXPATH];
+    _fullpath(tmpPath, tmpSrcPath, CCHMAXPATH);
+
+    return XMLString::transcode(tmpPath);
+}
+
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+{
+    // Check for pathological case of an empty path
+    if (!toCheck[0])
+        return false;
+
+    //
+    //  If it starts with a drive, then it cannot be relative. Note that
+    //  we checked the drive not being empty above, so worst case it's one
+    //  char long and the check of the 1st char will fail because it's really
+    //  a null character.
+    //
+    if (toCheck[1] == chColon)
+    {
+        if (((toCheck[0] >= chLatin_A) && (toCheck[0] <= chLatin_Z))
+        ||  ((toCheck[0] >= chLatin_a) && (toCheck[0] <= chLatin_z)))
+        {
+            return false;
+        }
+    }
+
+    //
+    //  If it starts with a double slash, then it cannot be relative since
+    //  its a remote file.
+    //
+    if ((toCheck[0] == chBackSlash) && (toCheck[1] == chBackSlash))
+        return false;
+
+    // Else assume its a relative path
+    return true;
+}
+
+XMLCh* XMLPlatformUtils::weavePaths( const   XMLCh* const    basePath
+                                   , const XMLCh* const    relativePath )
+{
+    // Create a buffer as large as both parts and empty it
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+                              + XMLString::stringLen(relativePath)
+                              + 2];
+    *tmpBuf = 0;
+
+    //
+    //  If we have no base path, then just take the relative path as
+    //  is.
+    //
+    if (!basePath || !*basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
+    if ((*basePtr != chForwardSlash)
+    &&  (*basePtr != chBackSlash))
+    {
+        while ((basePtr >= basePath)
+        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+        {
+            basePtr--;
+        }
+    }
+
+    // There is no relevant base path, so just take the relative part
+    if (basePtr < basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    const XMLCh* pathPtr = relativePath;
+    while (true)
+    {
+        // If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
+            break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
+        {
+            pathPtr++;
+            periodCount++;
+        }
+
+        // Has to be followed by a \ or / or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
+            break;
+        }
+        if (*pathPtr)
+            pathPtr++;
+
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePath)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
+
+            if (basePtr < basePath)
+            {
+                // The base cannot provide enough levels, so its in error
+                // <TBD>
+            }
+        }
+    }
+
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePath;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
+
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Orphan the buffer and return it
+    janBuf.orphan();
+    return tmpBuf;
+}
+
+
+
+// -----------------------------------------------------------------------
+//  Timing methods
+// -----------------------------------------------------------------------
+unsigned long XMLPlatformUtils::getCurrentMillis()
+{
+    APIRET  retr;
+    ULONG   timerBuf = 0;
+
+    retr =  DosQuerySysInfo( QSV_MS_COUNT, QSV_MS_COUNT, (PVOID) &timerBuf,
+                             sizeof( ULONG ) );
+//  if ( retr != NO_ERROR )
+//     return (timerBuf);
+
+
+    return (timerBuf);
+}
+
+
+
+// -----------------------------------------------------------------------
+//  Mutex methods
+// -----------------------------------------------------------------------
+void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+{
+#if ! defined(APP_NO_THREADS)
+    if (mtxHandle == NULL)
+      return;
+
+    if (DosCloseMutexSem( (HMTX)mtxHandle))
+    {
+      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
+    }
+#endif
+}
+
+void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+{
+#if ! defined(APP_NO_THREADS)
+    if (mtxHandle == NULL)
+      return;
+
+    if (DosRequestMutexSem( (HMTX)mtxHandle,(ULONG) SEM_INDEFINITE_WAIT) )
+    {
+      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
+    }
+#endif
+}
+
+void* XMLPlatformUtils::makeMutex()
+{
+#if ! defined(APP_NO_THREADS)
+    HMTX hRet; // Mutex Handle
+
+    if (DosCreateMutexSem(NULL, &hRet, 0, FALSE))
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
+    return (void*)hRet;
+#else
+    return 0;
+#endif
+}
+
+void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+{
+#if ! defined(APP_NO_THREADS)
+    if (mtxHandle == NULL)
+       return;
+
+    if (DosReleaseMutexSem( (HMTX)mtxHandle))
+    {
+      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
+    }
+#endif
+}
+
+
+
+// -----------------------------------------------------------------------
+//  Miscellaneous synchronization methods
+// -----------------------------------------------------------------------
+void* XMLPlatformUtils::compareAndSwap ( void**      toFill
+                                       , const void* const newValue
+                                       , const void* const toCompare )
+{
+#if defined(XML_IBMVA4_OS2)
+    return (void *)__smp_cmpxchg4((unsigned int *)toFill,
+                                  (unsigned int)newValue,
+                                  (unsigned int)toCompare);
+#elif defined(__GNUG__)
+    char ret;
+    long int readval;
+    long int * p    = (long **)toFill;
+
+    __asm__ __volatile__ ("lock; cmpxchgl %3, %1\n\tsete %0"
+                          : "=q" (ret), "=m" (*p), "=a" (readval)
+                          : "r" (newValue), "m" (*p), "a" (toCompare)
+                          : "memory");
+    return (void *)(long)ret;
+#else
+    void * retVal = *toFill;
+    if (*toFill == toCompare)
+      *toFill = (void *)newValue;
+    return
+#endif
+}
+
+
+
+// -----------------------------------------------------------------------
+//  Atomic Increment and Decrement
+//
+//  The function return value is positive if the result of the operation
+//  was positive. Zero if the result of the operation was zero. Negative
+//  if the result of the operation was negative. Except for the zero
+//  case, the value returned may differ from the actual result of the
+//  operation - only the sign and zero/nonzero state is guaranteed to be
+//  correct.
+// -----------------------------------------------------------------------
+int XMLPlatformUtils::atomicIncrement(int& location)
+{
+#if defined(XML_IBMVA4_OS2)
+    return __smp_inc4(&location);
+#elif defined(__GNUG__)
+    __asm__ __volatile__ ("lock; incl %0" : "=m" (location) : );
+    return location;
+#else
+    return ++location;
+#endif
+}
+
+int XMLPlatformUtils::atomicDecrement(int& location)
+{
+#if defined(XML_IBMVA4_OS2)
+    return __smp_dec4(&location);
+#elif defined(__GNUG__)
+    __asm__ __volatile__ ("lock; decl %0" : "=m" (location) : );
+    return location;
+#else
+    return --location;
+#endif
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: The panic method
+// ---------------------------------------------------------------------------
+void XMLPlatformUtils::panic(const PanicReasons reason)
+{
+    const char* reasonStr = "Unknown reason";
+    switch (reason)
+    {
+    case Panic_NoTransService:
+        reasonStr = "Could not load a transcoding service";
+        break;
+    case Panic_NoDefTranscoder:
+        reasonStr = "Could not load a local code page transcoder";
+        break;
+    case Panic_CantFindLib:
+        reasonStr = "Could not find the xerces-c DLL";
+        break;
+    case Panic_UnknownMsgDomain:
+        reasonStr = "Unknown message domain";
+        break;
+    case Panic_CantLoadMsgDomain:
+        reasonStr = "Cannot load message domain";
+        break;
+    case Panic_SynchronizationErr:
+        reasonStr = "Cannot synchronize system or mutex";
+        break;
+    case Panic_SystemInit:
+        reasonStr = "Cannot initialize the system or mutex";
+        break;
+    }
+
+    fprintf(stderr, "%s\n", reasonStr);
+
+    exit(-1);
+}
+
+
+// -----------------------------------------------------------------------
+//  Private static methods. These are provided by the per-platform
+//  implementation files.
+// -----------------------------------------------------------------------
+XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
+{
+#if defined(XML_USE_INMEMORY_MSGLOADER)
+    return new InMemMsgLoader(msgDomain);
+#else
+    return 0;
+#endif
+}
+
+XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
+{
+  return 0;
+}
+
+XMLTransService* XMLPlatformUtils::makeTransService()
+{
+#if defined(XML_USE_ICU_TRANSCODER)
+    return new ICUTransService;
+#elif defined(XML_USE_ICONV_TRANSCODER)
+    return new IconvTransService;
+#else
+    return 0;
+#endif
+}
+
