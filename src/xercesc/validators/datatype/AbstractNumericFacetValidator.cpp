@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/11/26 22:19:15  peiyongz
+ * Schema Errata E2-16 maxExclusive
+ *
  * Revision 1.5  2002/11/04 14:53:27  tng
  * C++ Namespace Support.
  *
@@ -527,6 +530,28 @@ void AbstractNumericFacetValidator::inspectFacetBase()
                                  , thisMaxExclusive
                                  , XMLExcepts::FACET_maxExcl_base_maxExcl)
             }
+
+            /**
+             * Schema Errata 
+             * E2-16 maxExclusive
+             *             
+             *   derived type's maxExclusive must either be
+             *   1) equal to base' maxExclusive or
+             *   2) from the base type value space
+             *  
+             */
+            if (result != 0)
+            {
+                FROM_BASE_VALUE_SPACE(thisMaxExclusive
+                        , DatatypeValidator::FACET_MAXEXCLUSIVE
+                        , XMLExcepts::FACET_maxExcl_notFromBase)
+            }
+        }
+        else  // base has no maxExclusive
+        {
+            FROM_BASE_VALUE_SPACE(thisMaxExclusive
+                        , DatatypeValidator::FACET_MAXEXCLUSIVE
+                        , XMLExcepts::FACET_maxExcl_notFromBase)
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
@@ -589,6 +614,30 @@ void AbstractNumericFacetValidator::inspectFacetBase()
                                  , thisMinExclusive
                                  , XMLExcepts::FACET_minExcl_base_minExcl)
             }
+
+            /**
+             * Schema Errata 
+             * E2-16 maxExclusive
+             *             
+             *   derived type's minExclusive must either be
+             *   1) equal to base' minxExclusive or
+             *   2) from the base type value space
+             *
+             *  Note: deduced from, not explicitly expressed in the Errata
+             */
+            if (result != 0)
+            {
+                FROM_BASE_VALUE_SPACE(thisMinExclusive
+                        , DatatypeValidator::FACET_MINEXCLUSIVE
+                        , XMLExcepts::FACET_minExcl_notFromBase)
+            }
+        }
+        else // base has no minExclusive
+        {
+
+            FROM_BASE_VALUE_SPACE(thisMinExclusive
+                        , DatatypeValidator::FACET_MINEXCLUSIVE
+                        , XMLExcepts::FACET_minExcl_notFromBase)
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
@@ -713,17 +762,9 @@ void AbstractNumericFacetValidator::inspectFacetBase()
                         , DatatypeValidator::FACET_MAXINCLUSIVE
                         , XMLExcepts::FACET_maxIncl_notFromBase)
 
-    FROM_BASE_VALUE_SPACE(thisMaxExclusive
-                        , DatatypeValidator::FACET_MAXEXCLUSIVE
-                        , XMLExcepts::FACET_maxExcl_notFromBase)
-
     FROM_BASE_VALUE_SPACE(thisMinInclusive
                         , DatatypeValidator::FACET_MININCLUSIVE
                         , XMLExcepts::FACET_minIncl_notFromBase)
-
-    FROM_BASE_VALUE_SPACE(thisMinExclusive
-                        , DatatypeValidator::FACET_MINEXCLUSIVE
-                        , XMLExcepts::FACET_minExcl_notFromBase)
 
 } //end of inspectFacetBase
 
