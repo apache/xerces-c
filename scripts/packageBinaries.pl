@@ -90,7 +90,7 @@ print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n"
 
 #Construct the name of the zip file by extracting the last directory name
 $zipfiles = $targetdir;
-$zipfiles =~ s/.*\/([\w-\.]*)$/$1/g;
+$zipfiles =~ s/.*(\/|\\)([\w-\.]*)$/$2/g;
 $zipfiles = $zipfiles . "/*";
 
 $buildmode = "Release";         # Universally, why do you want to package Debug builds anyway?
