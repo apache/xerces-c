@@ -304,6 +304,10 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\WFXMLScanner.obj \
     $(TARGETPATH)\obj\XMLScannerResolver.obj \
     $(TARGETPATH)\obj\DOMTypeInfoImpl.obj \
+    $(TARGETPATH)\obj\DOMConfigurationImpl.obj \
+    $(TARGETPATH)\obj\XMemory.obj \
+    $(TARGETPATH)\obj\DOMNormalizer.obj \
+    $(TARGETPATH)\obj\MemoryManagerImpl.obj \
     $(DEPRDOM_OBJFILES)
 RESFILES = $(TARGETPATH)\obj\Version.res
 MAINSOURCE = XercesLib.cpp

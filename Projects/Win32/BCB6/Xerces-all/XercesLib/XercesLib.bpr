@@ -54,6 +54,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\QName.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\StringPool.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\TransService.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMemory.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XML256TableTranscoder.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XML88591Transcoder.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLAbstractDoubleFloat.obj
@@ -103,11 +104,13 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\SGXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttributesImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttrListImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\WFXMLScanner.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLGrammarPoolImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLReader.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScannerResolver.obj
@@ -169,6 +172,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DTDGrammar.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DTDScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DTDValidator.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDTDDescriptionImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\FieldActivator.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\FieldValueMap.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Field.obj
@@ -202,6 +206,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSDErrorReporter.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSDLocator.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XUtil.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLSchemaDescriptionImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\sax2Dummy.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMAttrImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMAttrMapImpl.obj
@@ -210,6 +215,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMCharacterDataImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMChildNode.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMCommentImpl.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMConfigurationImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDeepNodeListImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDocumentFragmentImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDocumentImpl.obj
@@ -228,6 +234,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeIteratorImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeListImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeVector.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNormalizer.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNotationImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMParentNode.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMProcessingInstructionImpl.obj
@@ -328,7 +335,7 @@
       -DPROJ_PARSERS -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS 
       -DXML_SINGLEDLL -DXML_USE_WIN32_TRANSCODER -DXML_USE_WIN32_MSGLOADER 
       -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -boa"/>
-    <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b -k -y -v -vi- -tWD -tWM -c"/>
+    <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
       -N0..\..\..\..\..\Build\Win32\BCB6\obj -$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
@@ -395,6 +402,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\QName.cpp" FORMNAME="" UNITNAME="QName" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\StringPool.cpp" FORMNAME="" UNITNAME="StringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\TransService.cpp" FORMNAME="" UNITNAME="TransService" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMemory.cpp" FORMNAME="" UNITNAME="XMemory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.cpp" FORMNAME="" UNITNAME="XML256TableTranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XML88591Transcoder.cpp" FORMNAME="" UNITNAME="XML88591Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLAbstractDoubleFloat.cpp" FORMNAME="" UNITNAME="XMLAbstractDoubleFloat" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -444,11 +452,13 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ElemStack.cpp" FORMNAME="" UNITNAME="ElemStack" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp" FORMNAME="" UNITNAME="IGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp" FORMNAME="" UNITNAME="IGXMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp" FORMNAME="" UNITNAME="MemoryManagerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp" FORMNAME="" UNITNAME="ReaderMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp" FORMNAME="" UNITNAME="SGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp" FORMNAME="" UNITNAME="VecAttributesImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp" FORMNAME="" UNITNAME="VecAttrListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp" FORMNAME="" UNITNAME="WFXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp" FORMNAME="" UNITNAME="XMLGrammarPoolImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLReader.cpp" FORMNAME="" UNITNAME="XMLReader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp" FORMNAME="" UNITNAME="XMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp" FORMNAME="" UNITNAME="XMLScannerResolver" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -510,6 +520,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\DTD\DTDGrammar.cpp" FORMNAME="" UNITNAME="DTDGrammar" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\DTD\DTDScanner.cpp" FORMNAME="" UNITNAME="DTDScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\DTD\DTDValidator.cpp" FORMNAME="" UNITNAME="DTDValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\DTD\XMLDTDDescriptionImpl.cpp" FORMNAME="" UNITNAME="XMLDTDDescriptionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\FieldActivator.cpp" FORMNAME="" UNITNAME="FieldActivator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\FieldValueMap.cpp" FORMNAME="" UNITNAME="FieldValueMap" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Field.cpp" FORMNAME="" UNITNAME="IC_Field" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -543,6 +554,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\XSDErrorReporter.cpp" FORMNAME="" UNITNAME="XSDErrorReporter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\XSDLocator.cpp" FORMNAME="" UNITNAME="XSDLocator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\XUtil.cpp" FORMNAME="" UNITNAME="XUtil" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\XMLSchemaDescriptionImpl.cpp" FORMNAME="" UNITNAME="XMLSchemaDescriptionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax2\sax2Dummy.cpp" FORMNAME="" UNITNAME="sax2Dummy" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMAttrImpl.cpp" FORMNAME="" UNITNAME="DOMAttrImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMAttrMapImpl.cpp" FORMNAME="" UNITNAME="DOMAttrMapImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -551,6 +563,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMCharacterDataImpl.cpp" FORMNAME="" UNITNAME="DOMCharacterDataImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMChildNode.cpp" FORMNAME="" UNITNAME="DOMChildNode" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.cpp" FORMNAME="" UNITNAME="DOMCommentImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.cpp" FORMNAME="" UNITNAME="DOMConfigurationImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp" FORMNAME="" UNITNAME="DOMDeepNodeListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentFragmentImpl.cpp" FORMNAME="" UNITNAME="DOMDocumentFragmentImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentImpl.cpp" FORMNAME="" UNITNAME="DOMDocumentImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -569,6 +582,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNodeIteratorImpl.cpp" FORMNAME="" UNITNAME="DOMNodeIteratorImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNodeListImpl.cpp" FORMNAME="" UNITNAME="DOMNodeListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNodeVector.cpp" FORMNAME="" UNITNAME="DOMNodeVector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.cpp" FORMNAME="" UNITNAME="DOMNormalizer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNotationImpl.cpp" FORMNAME="" UNITNAME="DOMNotationImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMParentNode.cpp" FORMNAME="" UNITNAME="DOMParentNode" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMProcessingInstructionImpl.cpp" FORMNAME="" UNITNAME="DOMProcessingInstructionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

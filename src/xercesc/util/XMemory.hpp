@@ -109,7 +109,7 @@ public :
     void operator delete(void* p);
 
      //The HP compiler is complaining about duplicate overloading of delete
-#if !defined(XML_HPUX)
+#if !defined(XML_HPUX) && !defined(XML_BORLAND)
     /**
       * This method provide a matching delete for the placement new
       *
@@ -139,6 +139,12 @@ protected :
     {
     }
     //@}
+
+#if defined(XML_BORLAND)
+    virtual ~XMemory()
+    {
+    }
+#endif
 
 private:
     // -----------------------------------------------------------------------
