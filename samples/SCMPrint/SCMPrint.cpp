@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/01/18 19:09:20  cargilld
+ * Delete memory for parser and grammarpool.  Fix from Steve Dulin.
+ *
  * Revision 1.6  2005/01/12 21:00:47  cargilld
  * Fix for xercesc-1219.
  *
@@ -282,17 +285,19 @@ int main(int argC, char* argV[])
         return 1;
     }
     
+    XMLGrammarPool *grammarPool;
+    SAX2XMLReaderImpl* parser;
     try
     {        
-        XMLGrammarPool *grammarPool = new XMLGrammarPoolImpl(XMLPlatformUtils::fgMemoryManager);
+        grammarPool = new XMLGrammarPoolImpl(XMLPlatformUtils::fgMemoryManager);
 
-        SAX2XMLReaderImpl* parser = new SAX2XMLReaderImpl(XMLPlatformUtils::fgMemoryManager, grammarPool);
+        parser = new SAX2XMLReaderImpl(XMLPlatformUtils::fgMemoryManager, grammarPool);
         parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
         parser->setFeature(XMLUni::fgXercesSchema, true);
         parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
         parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, false);
-	    parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-	    parser->setFeature(XMLUni::fgXercesDynamic, true);
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgXercesDynamic, true);
         parser->setProperty(XMLUni::fgXercesScannerName, (void *)XMLUni::fgSGXMLScanner);
 
         SCMPrintHandler handler;    
@@ -398,6 +403,8 @@ int main(int argC, char* argV[])
         errorCode = 5;        
     }
     
+    delete parser;
+    delete grammarPool;
     XMLPlatformUtils::Terminate();
     
     return errorCode;
