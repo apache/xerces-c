@@ -947,7 +947,7 @@ int XMLString::compareString(   const   XMLCh* const    str1
             return int(*psz1) - int(*psz2);
 
         // If either has ended, then they both ended, so equal
-        if (!*psz1 || !*psz2)
+        if (!*psz1)
             break;
 
         // Move upwards for the next round
