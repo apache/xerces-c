@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:39  twl
- * Initial revision
+ * Revision 1.2  1999/12/02 19:02:57  roddey
+ * Get rid of a few statically defined XMLMutex objects, and lazy eval them
+ * using atomic compare and swap. I somehow let it get by me that we don't
+ * want any static/global objects at all.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:39  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:19  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -79,15 +84,10 @@
 // ---------------------------------------------------------------------------
 //  Local data
 //
-//  gMsgMutex
-//      This is a mutex that is used to synchronize access to our one and
-//      only exception text message loader.
-//
 //  gDefErrMsg
 //      For now, if we cannot load an exception message, we load up the
 //      default.
 // ---------------------------------------------------------------------------
-static XMLMutex     gMsgMutex;
 static const XMLCh  gDefErrMsg[] = 
 {
         chLatin_C, chLatin_o, chLatin_u, chLatin_l, chLatin_d
@@ -96,6 +96,30 @@ static const XMLCh  gDefErrMsg[] =
     ,   chLatin_m, chLatin_e, chLatin_s, chLatin_s, chLatin_a
     ,   chLatin_g, chLatin_e, chNull
 };
+
+
+// ---------------------------------------------------------------------------
+//  Local, static functions
+// ---------------------------------------------------------------------------
+
+//
+//  We need to fault in this mutex. But, since its used for synchronization
+//  itself, we have to do this the low level way using a compare and swap.
+//
+static XMLMutex& gMsgMutex()
+{
+    static XMLMutex* msgMutex = 0;
+    if (!msgMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&msgMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+    }
+    return *msgMutex;
+}
 
 
 
@@ -221,7 +245,7 @@ void XMLException::loadExceptText(const XML4CExcepts::Codes toLoad)
 
     // Lock the message loader mutex and load the text
     {
-        XMLMutexLock lockInit(&gMsgMutex);
+        XMLMutexLock lockInit(&gMsgMutex());
         if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize))
         {
             fMsg = XMLString::replicate(gDefErrMsg);
@@ -250,7 +274,7 @@ XMLException::loadExceptText(const  XML4CExcepts::Codes toLoad
 
     // Lock the message loader mutex and load the text
     {
-        XMLMutexLock lockInit(&gMsgMutex);
+        XMLMutexLock lockInit(&gMsgMutex());
         if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
         {
             fMsg = XMLString::replicate(gDefErrMsg);
@@ -279,7 +303,7 @@ XMLException::loadExceptText(const  XML4CExcepts::Codes toLoad
 
     // Lock the message loader mutex and load the text
     {
-        XMLMutexLock lockInit(&gMsgMutex);
+        XMLMutexLock lockInit(&gMsgMutex());
         if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
         {
             fMsg = XMLString::replicate(gDefErrMsg);

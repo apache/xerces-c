@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/02 19:02:57  roddey
+ * Get rid of a few statically defined XMLMutex objects, and lazy eval them
+ * using atomic compare and swap. I somehow let it get by me that we don't
+ * want any static/global objects at all.
+ *
  * Revision 1.2  1999/11/30 20:23:13  roddey
  * Added changes to handle exceptions thrown from the user's handlers for
  * emitError().
@@ -109,8 +114,31 @@
 //  Local static data
 // ---------------------------------------------------------------------------
 static XMLUInt32       gScannerId;
-static XMLMutex        gScannerMutex;
 static XMLMsgLoader*   gMsgLoader;
+
+
+// ---------------------------------------------------------------------------
+//  Local, static functions
+// ---------------------------------------------------------------------------
+
+//
+//  We need to fault in this mutex. But, since its used for synchronization
+//  itself, we have to do this the low level way using a compare and swap.
+//
+static XMLMutex& gScannerMutex()
+{
+    static XMLMutex* scannerMutex = 0;
+    if (!scannerMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&scannerMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+    }
+    return *scannerMutex;
+}
 
 
 // ---------------------------------------------------------------------------
@@ -570,7 +598,7 @@ void XMLScanner::commonInit()
     //  use the mutex to protect it.
     //
     {
-        XMLMutexLock lockInit(&gScannerMutex);
+        XMLMutexLock lockInit(&gScannerMutex());
 
         // If we haven't loaded our message yet, then do that
         if (!gMsgLoader)
@@ -634,7 +662,7 @@ void XMLScanner::emitError(const XML4CErrs::Codes toEmit)
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gScannerMutex);
+            XMLMutexLock lockInit(&gScannerMutex());
             if (!gMsgLoader->loadMsg(toEmit, errText, msgSize))
             {
                 // <TBD> Probably should load a default msg here
@@ -685,7 +713,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gScannerMutex);
+            XMLMutexLock lockInit(&gScannerMutex());
             if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
             {
                 // <TBD> Should probably load a default message here
@@ -736,7 +764,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gScannerMutex);
+            XMLMutexLock lockInit(&gScannerMutex());
             if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
             {
                 // <TBD> Should probably load a default message here
