@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/08/20 16:53:56  tng
+ * [Bug 6251] Info during compilation.
+ *
  * Revision 1.3  2002/06/06 20:38:45  tng
  * Document Fix: document that the returned object from resolveEntity is owned by the parser
  *
@@ -705,8 +708,8 @@ public:
 // ---------------------------------------------------------------------------
 //  HandlerBase: Inline default implementations
 // ---------------------------------------------------------------------------
-inline void DefaultHandler::characters(const   XMLCh* const    chars
-                                       ,const   unsigned int    length)
+inline void DefaultHandler::characters(const   XMLCh* const
+                                       ,const   unsigned int)
 {
 }
 
@@ -714,13 +717,13 @@ inline void DefaultHandler::endDocument()
 {
 }
 
-inline void DefaultHandler::endElement(const	XMLCh* const uri
-										, const XMLCh* const localname
-										, const XMLCh* const qname)
+inline void DefaultHandler::endElement(const	XMLCh* const
+										, const XMLCh* const
+										, const XMLCh* const)
 {
 }
 
-inline void DefaultHandler::error(const SAXParseException& exception)
+inline void DefaultHandler::error(const SAXParseException&)
 {
 }
 
@@ -730,20 +733,20 @@ inline void DefaultHandler::fatalError(const SAXParseException& exception)
 }
 
 inline void
-DefaultHandler::ignorableWhitespace( const   XMLCh* const	chars
-                                    , const unsigned int	length)
+DefaultHandler::ignorableWhitespace( const   XMLCh* const
+                                    , const unsigned int)
 {
 }
 
-inline void DefaultHandler::notationDecl(  const   XMLCh* const name
-											, const XMLCh* const publicId
-											, const XMLCh* const systemId)
+inline void DefaultHandler::notationDecl(  const   XMLCh* const
+											, const XMLCh* const
+											, const XMLCh* const)
 {
 }
 
 inline void
-DefaultHandler::processingInstruction( const   XMLCh* const target
-										, const XMLCh* const data)
+DefaultHandler::processingInstruction( const   XMLCh* const
+										, const XMLCh* const)
 {
 }
 
@@ -760,21 +763,21 @@ inline void DefaultHandler::resetDocType()
 }
 
 inline InputSource*
-DefaultHandler::resolveEntity( const   XMLCh* const publicId
-								, const XMLCh* const systemId)
+DefaultHandler::resolveEntity( const   XMLCh* const
+								, const XMLCh* const)
 {
     return 0;
 }
 
 inline void
-DefaultHandler::unparsedEntityDecl(const   XMLCh* const name
-									, const XMLCh* const publicId
-									, const XMLCh* const systemId
-									, const XMLCh* const notationName)
+DefaultHandler::unparsedEntityDecl(const   XMLCh* const
+									, const XMLCh* const
+									, const XMLCh* const
+									, const XMLCh* const)
 {
 }
 
-inline void DefaultHandler::setDocumentLocator(const Locator* const locator)
+inline void DefaultHandler::setDocumentLocator(const Locator* const)
 {
 }
 
@@ -783,33 +786,33 @@ inline void DefaultHandler::startDocument()
 }
 
 inline void
-DefaultHandler::startElement(  const     XMLCh* const  uri
-								, const   XMLCh* const  localname
-								, const   XMLCh* const  qname
-								, const   Attributes&		attrs
+DefaultHandler::startElement(  const     XMLCh* const
+								, const   XMLCh* const
+								, const   XMLCh* const
+								, const   Attributes&
 )
 {
 }
 
-inline void DefaultHandler::warning(const SAXParseException& exception)
+inline void DefaultHandler::warning(const SAXParseException&)
 {
 }
 
-inline void DefaultHandler::startPrefixMapping ( const	XMLCh* const	prefix
-												,const	XMLCh* const	uri)
+inline void DefaultHandler::startPrefixMapping ( const	XMLCh* const
+												,const	XMLCh* const)
 {
 }
 
-inline void DefaultHandler::endPrefixMapping ( const	XMLCh* const	prefix )
+inline void DefaultHandler::endPrefixMapping ( const	XMLCh* const)
 {
 }
 
-inline void DefaultHandler::skippedEntity ( const	XMLCh* const	name )
+inline void DefaultHandler::skippedEntity ( const	XMLCh* const)
 {
 }
 
-inline void DefaultHandler::comment(  const   XMLCh* const    chars
-                                       , const unsigned int    length)
+inline void DefaultHandler::comment(  const   XMLCh* const
+                                       , const unsigned int)
 {
 }
 
@@ -821,7 +824,7 @@ inline void DefaultHandler::endDTD ()
 {
 }
 
-inline void DefaultHandler::endEntity (const XMLCh* const name)
+inline void DefaultHandler::endEntity (const XMLCh* const)
 {
 }
 
@@ -829,13 +832,13 @@ inline void DefaultHandler::startCDATA ()
 {
 }
 
-inline void DefaultHandler::startDTD(  const   XMLCh* const    name
-                                        , const   XMLCh* const publicId
-                                        , const   XMLCh* const systemId)
+inline void DefaultHandler::startDTD(  const   XMLCh* const
+                                        , const   XMLCh* const
+                                        , const   XMLCh* const)
 {
 }
 
-inline void DefaultHandler::startEntity (const XMLCh* const name)
+inline void DefaultHandler::startEntity (const XMLCh* const)
 {
 }
 

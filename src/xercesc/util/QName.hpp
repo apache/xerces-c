@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:11  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/20 16:54:25  tng
+ * [Bug 6251] Info during compilation.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/12/06 17:48:36  tng
  * Performance Enhancement.  Added setNPrefix and setNLocalPart methods that allow code to take advantage of the fact that it knows the length of the prefix and local name, when possible.  That can avoid a copy of the prefix into a null-terminated temporary variable before copying into the fPrefix.
@@ -131,8 +134,7 @@ public :
     const XMLCh* getLocalPart() const;
     XMLCh* getLocalPart();
 
-    const unsigned int getURI() const;
-    unsigned int getURI();
+    unsigned int getURI() const;
 
     const XMLCh* getRawName() const;
     XMLCh* getRawName();
@@ -234,12 +236,7 @@ inline XMLCh* QName::getLocalPart()
 	return fLocalPart;
 }
 
-inline const unsigned int QName::getURI() const
-{
-	return fURIId;
-}
-
-inline unsigned int QName::getURI()
+inline unsigned int QName::getURI() const
 {
 	return fURIId;
 }

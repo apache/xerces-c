@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/20 16:55:33  tng
+ * [Bug 6251] Info during compilation.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+ * sane_include
  *
  * Revision 1.18  2001/08/21 16:06:10  tng
  * Schema: Unique Particle Attribution Constraint Checking.
@@ -327,7 +330,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       *         object. Any previous object is destroyed.
       */
     virtual void setContentSpec(ContentSpecNode* toAdopt) = 0;
-    
+
     /** Get a pointer to the abstract content model
       *
       * This method will return a const pointer to the content model object
@@ -339,8 +342,8 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return A pointer to the element's content model, via the basic
       * abstract content model type.
       */
-    virtual XMLContentModel* getContentModel() = 0;    
-    
+    virtual XMLContentModel* getContentModel() = 0;
+
     /** Set the content model object for this element type
       *
       * This method will adopt the based content model object. This is called
@@ -352,8 +355,8 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @param  newModelToAdopt This method will adopt the passed content model
       *         object. Any previous object is destroyed.
       */
-    virtual void setContentModel(XMLContentModel* const newModelToAdopt) = 0;    
-    
+    virtual void setContentModel(XMLContentModel* const newModelToAdopt) = 0;
+
     /** Geta formatted string of the content model
       *
       * This method is a convenience method which will create a formatted
@@ -366,7 +369,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       *         content model. The caller does not own this buffer and should
       *         copy it if it needs to be kept around.
       */
-    virtual const XMLCh* getFormattedContentModel ()   const = 0;    
+    virtual const XMLCh* getFormattedContentModel ()   const = 0;
 
     //@}
 
@@ -394,7 +397,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       *
       * @return The URI Id of the element decl, or the emptyNamespaceId if not applicable.
       */
-    const unsigned int getURI() const;
+    unsigned int getURI() const;
 
     /** Get the QName of this element type.
       *
@@ -603,7 +606,7 @@ inline XMLCh* XMLElementDecl::getBaseName()
     return fElementName->getLocalPart();
 }
 
-inline const unsigned int XMLElementDecl::getURI() const
+inline unsigned int XMLElementDecl::getURI() const
 {
     return fElementName->getURI();
 }

@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.4  2002/08/20 16:54:11  tng
+  * [Bug 6251] Info during compilation.
+  *
   * Revision 1.3  2002/07/11 18:55:44  knoaman
   * Add a flag to the preContentValidation method to indicate whether to validate
   * default/fixed attributes or not.
@@ -432,7 +435,7 @@ public:
       */
     bool checkRootElement
     (
-        const   unsigned int    elemId
+        const   unsigned int
     ) { return true;};
 
     // -----------------------------------------------------------------------
