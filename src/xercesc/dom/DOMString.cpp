@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/04/01 21:01:07  tng
+ * DOMString problem with Asian codepages.
+ *
  * Revision 1.5  2002/03/15 16:27:58  tng
  * DOMString Thread safe Fix: should lock the entire deleter function where freeListPtr and blockListPtr are modified.
  *
@@ -553,10 +556,9 @@ DOMString::DOMString(const char *srcString)
         // The charsNeeded normally is same as srcLen.  To enhance performance,
         // we start with this estimate, and if overflow, then call calcRequiredSize for actual size
         fHandle = DOMStringHandle::createNewStringHandle(srcLen + 1);
-        fHandle->fLength = srcLen;
         XMLCh *strData = fHandle->fDSData->fData;
 
-        if (!uniConverter->transcode(srcString, strData, srcLen))
+        if (!uniConverter->transcode(srcString, strData, srcLen) || (XMLString::stringLen(strData) != srcLen))
         {
             // conversion failed, so try again
             if (fHandle)
@@ -564,18 +566,17 @@ DOMString::DOMString(const char *srcString)
 
             fHandle = 0;
 
-            const unsigned int charsNeeded =
-                   uniConverter->calcRequiredSize(srcString);
+            srcLen = uniConverter->calcRequiredSize(srcString);
 
-            fHandle = DOMStringHandle::createNewStringHandle(charsNeeded + 1);
-            fHandle->fLength = charsNeeded;
+            fHandle = DOMStringHandle::createNewStringHandle(srcLen + 1);
             XMLCh *strData2 = fHandle->fDSData->fData;
 
-            if (!uniConverter->transcode(srcString, strData2, charsNeeded))
+            if (!uniConverter->transcode(srcString, strData2, srcLen))
             {
                 // <TBD> We should throw something here?
             }
         }
+        fHandle->fLength = srcLen;
     }
 };
 
@@ -1104,15 +1105,15 @@ char *DOMString::transcode() const
     //
     //  The charsNeeded normally is same as fHandle->fLength.  To enhance performance,
     //  we start with this estimate, and if overflow, then call calcRequiredSize for actual size
-    const unsigned int charsNeeded = fHandle->fLength;
+    unsigned int charsNeeded = fHandle->fLength;
     char* retP = new char[charsNeeded + 1];
 
-    if (!getDomConverter()->transcode(srcP, retP, charsNeeded))
+    if (!getDomConverter()->transcode(srcP, retP, charsNeeded) || (XMLString::stringLen(retP) != charsNeeded))
     {
         delete [] retP;
-        const unsigned int charsNeeded2 = getDomConverter()->calcRequiredSize(srcP);
-        retP = new char[charsNeeded2 + 1];
-        if (!getDomConverter()->transcode(srcP, retP, charsNeeded2))
+        charsNeeded = getDomConverter()->calcRequiredSize(srcP);
+        retP = new char[charsNeeded + 1];
+        if (!getDomConverter()->transcode(srcP, retP, charsNeeded))
         {
             // <TBD> We should throw something here?
         }
