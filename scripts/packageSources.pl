@@ -256,13 +256,14 @@ sub deleteCVSdirs {
 			next if $_ eq '.';
 			next if $_ eq '..';
 			$name = "$dir/$_";
+                       $localName = "$_";
 			# print $name, "\n";
 			next if $subcount == 0;
 
 			($dev,$ino,$mode,$nlink) = lstat($_);
 			next unless -d _;
 
-			if ($name =~ m/CVS/i) {
+			if ($localName =~ m/CVS/i) {
 				print ("Removing $name ...\n");
 				system("$RM -rf $name");
 				next;
