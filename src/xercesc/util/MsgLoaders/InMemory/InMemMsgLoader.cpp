@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/12/12 19:14:00  peiyongz
+ * InMem Message file name changed.
+ *
  * Revision 1.5  2002/11/12 17:26:53  tng
  * DOM Message: add new domain for DOM Messages.
  *
@@ -105,7 +108,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include "InMemMsgLoader.hpp"
-#include "CppErrMsgs_EN_US.hpp"
+#include "XercesMessages_en_US.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 

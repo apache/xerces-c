@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2002/12/12 19:14:00  peiyongz
+# InMem Message file name changed.
+#
 # Revision 1.2  2002/07/26 16:49:27  tng
 # [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
 #
@@ -117,7 +120,7 @@ SUBMODULE = MsgLoaders/InMemory
 include ../../../Makefile.incl
 
 CPP_PUBHEADERS = \
-	CppErrMsgs_EN_US.hpp \
+	XercesMessages_en_US.hpp \
 	InMemMsgLoader.hpp
 
 CPP_OBJECTS = InMemMsgLoader.$(TO)
