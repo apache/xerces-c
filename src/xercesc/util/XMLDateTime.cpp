@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2003/12/16 22:48:52  peiyongz
+ * exception thrown upon invalid number, thanks Gareth Reakes.
+ *
  * Revision 1.17  2003/12/11 21:38:12  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -132,6 +135,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/NumberFormatException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1405,7 +1409,7 @@ int XMLDateTime::parseInt(const int start, const int end) const
     for (int i=start; i < end; i++) {
 
         if (fBuffer[i] < chDigit_0 || fBuffer[i] > chDigit_9)
-            break;
+            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
         retVal = (retVal * 10) + (unsigned int) (fBuffer[i] - chDigit_0);
     }
