@@ -151,7 +151,7 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
     while (srcPtr < srcEnd)
     {
         // If its legal, take it and jump back to top
-        if (*srcPtr < 0x256)
+        if (*srcPtr < 256)  
         {
             *destPtr++ = XMLByte(*srcPtr++);
             continue;
