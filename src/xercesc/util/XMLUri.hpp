@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/10/01 00:20:41  knoaman
+ * Add a static method to check whether a given string is a valid URI.
+ *
  * Revision 1.11  2003/09/25 22:23:25  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -144,7 +147,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *
  */
 
- class XMLUTIL_EXPORT XMLUri : public XSerializable, public XMemory
+class XMLUTIL_EXPORT XMLUri : public XSerializable, public XMemory
 {
 public:
 
@@ -366,6 +369,12 @@ public:
      */
     static bool isURIString(const XMLCh* const uric);
 
+    /**
+     * Determine whether a given string is a valid URI
+     */
+    static bool isValidURI( const XMLUri* const baseURI
+                          , const XMLCh* const uriStr);
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -452,7 +461,7 @@ private:
      *
      * @return true if the string is a syntactically valid IPv4 address
      */
-     static bool isWellFormedIPv4Address(const XMLCh* const addr, const int& length);
+     static bool isWellFormedIPv4Address(const XMLCh* const addr, const int length);
      
     /**
      * Determines whether a string is an IPv6 reference as defined
@@ -467,7 +476,7 @@ private:
      *
      * @return true if the string is a syntactically valid IPv6 reference
      */
-     static bool isWellFormedIPv6Reference(const XMLCh* const addr, const int& length);
+     static bool isWellFormedIPv6Reference(const XMLCh* const addr, const int length);
      
     /**
      * Helper function for isWellFormedIPv6Reference which scans the 
@@ -553,6 +562,14 @@ private:
       *
       */
      void cleanUp();
+
+    static bool isConformantSchemeName(const XMLCh* const scheme,
+                                       const int schemeLen);
+    static bool processScheme(const XMLCh* const uriStr, int& index);
+    static bool processAuthority(const XMLCh* const uriStr, const int authLen);
+    static bool isWellFormedAddress(const XMLCh* const addr, const int addrLen);
+    static bool processPath(const XMLCh* const pathStr, const int pathStrLen,
+                            const bool isSchemePresent);
 
     // -----------------------------------------------------------------------
     //  Data members
