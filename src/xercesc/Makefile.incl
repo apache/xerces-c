@@ -547,7 +547,7 @@ else
             #
             LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
             SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
-            REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+            REAL_NAME=${CYGNAME}${VER}${SHLIBSUFFIX}
         else
             #
             # LINK_NAME=libxerces-c.so

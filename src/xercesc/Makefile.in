@@ -87,6 +87,9 @@ PARSERS_DIR = parsers
 VALIDATORS_DIR = validators
 
 LIBNAME = libxerces-c
+ifeq (${PLATFORM},CYGWIN)
+CYGNAME = cygxerces-c
+endif
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM = @platform@

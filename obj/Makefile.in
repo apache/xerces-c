@@ -89,6 +89,9 @@ ifeq (${OS390BATCH},1)
 BATCH_TARGET = "//'${LOADMOD}(IXM4C50)'"
 endif
 ifneq (${PLATFORM}, OS400)
+ifeq (${PLATFORM}, CYGWIN)
+CYGNAME=cygxerces-c
+endif
 LIBNAME=libxerces-c
 else
 LIBNAME=libxercesc
@@ -149,10 +152,17 @@ endif
 ${FQ_REAL_NAME}:	$(ALL_OBJECTS)
 	@echo Building ${FQ_REAL_NAME}
 	${MAKE_SHARED} ${LD_SONAME} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
+ifeq (${PLATFORM}, CYGWIN)
+	@echo symlink ${FQ_SO_NAME}.a
+	rm -rf ${FQ_SO_NAME}.a   && ln -s ${XML_LIB_DIR}/${LIBNAME}${VER}${SHLIBSUFFIX}.a ${FQ_SO_NAME}.a
+	@echo symlink ${FQ_LINK_NAME}.a
+	rm -rf ${FQ_LINK_NAME}.a && ln -s ${FQ_SO_NAME}.a ${FQ_LINK_NAME}.a
+else
 	@echo symlink ${FQ_SO_NAME}
 	rm -rf ${FQ_SO_NAME}   && ln -s ${FQ_REAL_NAME} ${FQ_SO_NAME}
 	@echo symlink ${FQ_LINK_NAME}
 	rm -rf ${FQ_LINK_NAME} && ln -s ${FQ_SO_NAME} ${FQ_LINK_NAME}
+endif
 
 ## Start OS390 ##
 ifeq (${PLATFORM},OS390)
@@ -178,6 +188,13 @@ ifneq ($(strip $(TEMPLATESREPOSITORY)),)
 	-rm -f $(TEMPLATESREPOSITORY)/*.cs
 	-rm -f $(TEMPLATESREPOSITORY)/*.he
 endif
+ifeq (${PLATFORM}, CYGWIN)
+	-rm -f ${FQ_SO_NAME}.a
+	-rm -f ${FQ_LINK_NAME}.a
+else
+	-rm -f ${FQ_SO_NAME}
+	-rm -f ${FQ_LINK_NAME}
+endif
 
 
 distclean:	clean
@@ -197,9 +214,7 @@ ifeq (${PLATFORM}, CYGWIN)
 	-mkdir -p ${DESTDIR}${PREFIX}/bin
 	$(CP) ${FQ_REAL_NAME} ${DESTDIR}${PREFIX}/bin
 	$(CP) $(XML_LIB_DIR)/${LIBNAME}${VER}.dll.a ${DESTDIR}${PREFIX}/lib
-	rm -rf ${DESTDIR}${PREFIX}/lib/${LIBNAME}.dll.a ${DESTDIR}${PREFIX}/lib/libxerces.dll.a
-	ln -s ${DESTDIR}${PREFIX}/lib/${LIBNAME}${VER}.dll.a ${DESTDIR}${PREFIX}/lib/${LIBNAME}.dll.a
-	ln -s ${DESTDIR}${PREFIX}/lib/${LIBNAME}${VER}.dll.a ${DESTDIR}${PREFIX}/lib/libxerces.dll.a
+	(cd ${DESTDIR}$(PREFIX)/lib; rm -f ${LIBNAME}.dll.a libxerces.dll.a; ln -s ${LIBNAME}${VER}.dll.a ${LIBNAME}.dll.a; ln -s ${LIBNAME}${VER}.dll.a libxerces.dll.a)
 else
 	$(CP) ${FQ_REAL_NAME} ${DESTDIR}$(PREFIX)/lib
 	(cd ${DESTDIR}$(PREFIX)/lib; ln -s ${REAL_NAME} ${SO_NAME}; ln -s ${REAL_NAME} ${LINK_NAME})
