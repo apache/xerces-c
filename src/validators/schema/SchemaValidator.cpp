@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/07/11 21:39:58  peiyongz
+ * fix to normalizeWhiteSpace: synchronize fDatatypeBuffer with toFill.
+ *
  * Revision 1.8  2001/05/17 18:14:32  tng
  * Schema Fix: if nillable, it's an error to have default value
  *
@@ -871,7 +874,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         toFill.append(nextCh);
 
         // stored the content for validation later
-        fDatatypeBuffer.append(nextCh);
+        //fDatatypeBuffer.append(nextCh);
 
         // And move up to the next character in the source
         srcPtr++;
@@ -880,4 +883,6 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     nextCh = *srcPtr;
     if (XMLReader::isWhitespace(nextCh))
         fTrailing = true;
+
+    fDatatypeBuffer.set(toFill.getRawBuffer());
 }
