@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/09/13 21:23:00  peiyongz
+ * getDatatypeValidator()
+ *
  * Revision 1.11  2004/09/08 13:56:09  peiyongz
  * Apache License Version 2.0
  *
@@ -365,6 +368,11 @@ public:
      */
     bool derivedFromType(const XSTypeDefinition* const ancestorType);
 
+    /**
+     * 
+     */
+    inline DatatypeValidator* getDatatypeValidator() const;
+
     //@}
 
     //----------------------------------
@@ -475,6 +483,12 @@ inline void
 XSSimpleTypeDefinition::setPrimitiveType(XSSimpleTypeDefinition* const toSet)
 {
     fPrimitiveOrItemType = toSet;
+}
+
+inline DatatypeValidator* 
+XSSimpleTypeDefinition::getDatatypeValidator() const
+{
+    return fDatatypeValidator;
 }
 
 XERCES_CPP_NAMESPACE_END
