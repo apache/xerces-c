@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/04/07 14:13:42  peiyongz
+ * systemId (to replace rootElemName) as DTDGrammar Key
+ *
  * Revision 1.19  2004/03/01 23:18:28  peiyongz
  * Instantiate XSerializeEngine with GrammarPool
  *
@@ -310,9 +313,9 @@ SchemaGrammar* XMLGrammarPoolImpl::createSchemaGrammar()
 	return new (getMemoryManager()) SchemaGrammar(getMemoryManager()); 
 }
 
-XMLDTDDescription*  XMLGrammarPoolImpl::createDTDDescription(const XMLCh* const rootName)
+XMLDTDDescription*  XMLGrammarPoolImpl::createDTDDescription(const XMLCh* const systemId)
 { 
-	return new (getMemoryManager()) XMLDTDDescriptionImpl(rootName, getMemoryManager()); 
+	return new (getMemoryManager()) XMLDTDDescriptionImpl(systemId, getMemoryManager()); 
 }
 								   
 XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* const targetNamespace)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/04/07 14:09:22  peiyongz
+ * systemId (to replace rootElemName) as DTDGrammar Key
+ *
  * Revision 1.11  2003/11/25 15:10:44  jberry
  * Eliminate some compiler warnings concerning comments inside of comments
  *
@@ -233,7 +236,7 @@ public :
       * createDTDDescription
       *
       */	
-    virtual XMLDTDDescription*     createDTDDescription(const XMLCh* const rootName) = 0;
+    virtual XMLDTDDescription*     createDTDDescription(const XMLCh* const systemId) = 0;
     /**
       * createSchemaDescription
       *

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/04/07 14:10:04  peiyongz
+ * systemId (to replace rootElemName) as DTDGrammar Key
+ *
  * Revision 1.3  2004/03/03 23:04:38  peiyongz
  * deallocate fRootName when loaded
  *
@@ -80,24 +83,28 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XMLDTDDescriptionImpl: constructor and destructor
 // ---------------------------------------------------------------------------
-XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(const XMLCh* const   rootName
-                                           , MemoryManager* const memMgr)
+XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(const XMLCh*          const  systemId
+                                           ,       MemoryManager*  const  memMgr  )
 :XMLDTDDescription(memMgr)
+,fSystemId(0)
 ,fRootName(0)
 {
-    if (rootName)
-        fRootName = XMLString::replicate(rootName, memMgr);
+    if (systemId)
+        fSystemId = XMLString::replicate(systemId, memMgr);
 }
 
 XMLDTDDescriptionImpl::~XMLDTDDescriptionImpl()
 {
+    if (fSystemId)
+        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fSystemId);
+
     if (fRootName)
         XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);
 }
              
 const XMLCh* XMLDTDDescriptionImpl::getGrammarKey() const
 {
-    return getRootName();
+    return getSystemId();
 }
               
 const XMLCh* XMLDTDDescriptionImpl::getRootName() const
@@ -105,12 +112,33 @@ const XMLCh* XMLDTDDescriptionImpl::getRootName() const
     return fRootName; 
 }
 
+const XMLCh* XMLDTDDescriptionImpl::getSystemId() const
+{ 
+    return fSystemId; 
+}
+
 void XMLDTDDescriptionImpl::setRootName(const XMLCh* const rootName)
 {
     if (fRootName)
-        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);   
+    {
+        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);
+        fRootName = 0;
+    }
 
-    fRootName = XMLString::replicate(rootName, XMLGrammarDescription::getMemoryManager()); 
+    if (rootName)
+        fRootName = XMLString::replicate(rootName, XMLGrammarDescription::getMemoryManager()); 
+}        
+
+void XMLDTDDescriptionImpl::setSystemId(const XMLCh* const systemId)
+{
+    if (fSystemId)
+    {
+        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fSystemId);
+        fSystemId = 0;
+    }
+
+    if (systemId)
+        fSystemId = XMLString::replicate(systemId, XMLGrammarDescription::getMemoryManager()); 
 }        
 
 /***
@@ -142,6 +170,7 @@ void XMLDTDDescriptionImpl::serialize(XSerializeEngine& serEng)
 
 XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(MemoryManager* const memMgr)
 :XMLDTDDescription(memMgr)
+,fSystemId(0)
 ,fRootName(0)
 {
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/04/07 14:10:04  peiyongz
+ * systemId (to replace rootElemName) as DTDGrammar Key
+ *
  * Revision 1.2  2003/10/14 15:20:42  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -81,7 +84,7 @@ public :
     // -----------------------------------------------------------------------
     //@{
     XMLDTDDescriptionImpl(
-                          const XMLCh* const   rootName 
+                          const XMLCh* const   systemId 
                         , MemoryManager* const memMgr
                           );
 
@@ -104,16 +107,18 @@ public :
     // -----------------------------------------------------------------------
     //@{
     /**
-      * getRootName
+      * Getter
       *
       */
-    virtual const XMLCh*           getRootName() const ;
+    virtual const XMLCh*          getRootName() const;
+    virtual const XMLCh*          getSystemId() const;
 
     /**
-      * setRootName
+      * Setter
       *
       */
-    virtual void                   setRootName(const XMLCh* const rootName);
+    virtual void                  setRootName(const XMLCh* const);
+    virtual void                  setSystemId(const XMLCh* const);
     //@}
     
     /***
@@ -134,12 +139,17 @@ private :
 
     // -----------------------------------------------------------------------
     //
+    // fSystemId:
+    //     SYSTEM ID of the grammar
+    //
     // fRootName: 
     //      root name of the grammar
     //
     // -----------------------------------------------------------------------
 
+    const XMLCh*      fSystemId;
     const XMLCh*      fRootName;    
+
 };
 
 

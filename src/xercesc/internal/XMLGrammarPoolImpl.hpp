@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/04/07 14:13:42  peiyongz
+ * systemId (to replace rootElemName) as DTDGrammar Key
+ *
  * Revision 1.14  2003/12/19 23:02:43  cargilld
  * Fix compiler messages on OS390.
  *
@@ -228,7 +231,7 @@ public :
       * createDTDDescription
       *
       */	
-    virtual XMLDTDDescription*     createDTDDescription(const XMLCh* const rootName);
+    virtual XMLDTDDescription*     createDTDDescription(const XMLCh* const systemId);
     /**
       * createSchemaDescription
       *

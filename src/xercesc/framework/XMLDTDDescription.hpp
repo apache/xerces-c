@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/04/07 14:09:22  peiyongz
+ * systemId (to replace rootElemName) as DTDGrammar Key
+ *
  * Revision 1.2  2003/10/14 15:17:47  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -106,17 +109,18 @@ public :
     // -----------------------------------------------------------------------
     //@{      
     /**
-      * getRootName
+      * Getter
       *
       */
     virtual const XMLCh*          getRootName() const = 0;
+    virtual const XMLCh*          getSystemId() const = 0;
 
     /**
-      * setRootName
+      * Setter
       *
       */
     virtual void                  setRootName(const XMLCh* const) = 0;
-
+    virtual void                  setSystemId(const XMLCh* const) = 0;
     //@}
     
     /***
