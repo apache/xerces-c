@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/07/19 18:47:26  andyh
+ * More Macintosh port tweaks, submitted by James Berry.
+ *
  * Revision 1.4  2000/03/02 19:54:42  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -80,7 +83,7 @@
 #define NAMEIDPOOL_HPP
 
 #include <util/XercesDefs.hpp>
-#include <memory.h>
+#include <string.h>
 #include <util/XMLEnumerator.hpp>
 #include <util/XMLString.hpp>
 

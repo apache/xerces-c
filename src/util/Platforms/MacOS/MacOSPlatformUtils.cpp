@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/07/19 18:47:34  andyh
+ * More Macintosh port tweaks, submitted by James Berry.
+ *
  * Revision 1.5  2000/07/18 18:26:09  andyh
  * Mac OS update.
  * Contributed by James Berry <jberry@criticalpath.com>
@@ -147,7 +150,7 @@ static bool  TrapAvailable(UInt16 trapWord);
 //   uses long unicode names. Note that once a file is opened with
 //   the fork calls, only fork calls may be used to access it.
 //----------------------------------------------------------------------------
-static bool gGestaltAvail   = false;
+static bool gGestaltAvail     = false;
 static bool gFileSystemCompatible = false;
 static bool gHasFSSpecAPIs   = false;
 static bool gHasFS2TBAPIs   = false;
@@ -162,10 +165,10 @@ unsigned int XMLMacFile::currPos()
 {
     OSErr err = noErr;
     unsigned int pos = 0;
-    
+
     if (!mFileValid)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
-    
+
     if (gHasHFSPlusAPIs)
     {
         SInt64 bigPos = 0;
@@ -180,10 +183,10 @@ unsigned int XMLMacFile::currPos()
         if (err == noErr)
             pos = longPos;
     }
-    
+
     if (err != noErr)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
-    
+
     return pos;
 }
 
@@ -193,14 +196,14 @@ void XMLMacFile::close()
     OSErr err = noErr;
     if (!mFileValid)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
-    
+
     if (gHasHFSPlusAPIs)
         err = FSCloseFork(mFileRefNum);
     else
         err = FSClose(mFileRefNum);
-    
+
     mFileValid = false;
-    
+
     if (err != noErr)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
@@ -211,10 +214,10 @@ XMLMacFile::size()
 {
     OSErr err = noErr;
     unsigned int len = 0;
-    
+
     if (!mFileValid)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
-    
+
     if (gHasHFSPlusAPIs)
     {
         SInt64 bigLen = 0;
@@ -229,10 +232,10 @@ XMLMacFile::size()
         if (err == noErr)
             len = longLen;
     }
-    
+
     if (err != noErr)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
-    
+
     return len;
 }
 
@@ -240,20 +243,20 @@ XMLMacFile::size()
 void XMLMacFile::open(const XMLCh* const fileName)
 {
     OSErr err = noErr;
-    
+
     if (mFileValid)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
-    
+
     if (gHasHFSPlusAPIs)
     {
         FSRef ref;
         if (!XMLParsePathToFSRef(fileName, ref))
             err = fnfErr;
-        
+
         HFSUniStr255 forkName;
         if (err == noErr)
             err = FSGetDataForkName(&forkName);
-        
+
         if (err == noErr)
             err = FSOpenFork(&ref, forkName.length, forkName.unicode, fsRdWrPerm, &mFileRefNum);
     }
@@ -262,14 +265,14 @@ void XMLMacFile::open(const XMLCh* const fileName)
         FSSpec spec;
         if (!XMLParsePathToFSSpec(fileName, spec))
             err = fnfErr;
-        
+
         if (err == noErr)
             err = FSpOpenDF(&spec, fsRdWrPerm, &mFileRefNum);
     }
-    
+
     if (err != noErr)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
-    
+
     mFileValid = true;
 }
 
@@ -277,10 +280,10 @@ unsigned int XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
 {
     unsigned int bytesRead = 0;
     OSErr err = noErr;
-    
+
     if (!mFileValid)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-    
+
     if (gHasHFSPlusAPIs)
     {
         ByteCount actualCount;
@@ -293,10 +296,10 @@ unsigned int XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
         err = FSRead(mFileRefNum, &byteCount, toFill);
         bytesRead = byteCount;
     }
-    
+
     if (err != noErr && err != eofErr)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-    
+
     return bytesRead;
 }
 
@@ -305,15 +308,15 @@ void
 XMLMacFile::reset()
 {
     OSErr err = noErr;
-    
+
     if (!mFileValid)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
-    
+
     if (gHasHFSPlusAPIs)
         err = FSSetForkPosition(mFileRefNum, fsFromStart, 0);
     else
         err = SetFPos(mFileRefNum, fsFromStart, 0);
-    
+
     if (err != noErr)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
@@ -348,18 +351,18 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
         reasonStr = "Failed to complete platform dependent initialization";
     else
         reasonStr = "Unknown error source";
-    
+
     //
     //  This isn't real friendly and should be cleaned up.
     // Replace this code to do whatever you need to do.
     //
     char text[200];
     sprintf(text, "Xerces Panic Error: %s", reasonStr);
-    
+
     Str255 pasText;
     CopyCStringToPascal(text, pasText);
     DebugStr(pasText);
-    
+
     exit(-1);
 }
 
@@ -396,12 +399,12 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
-    
+
     XMLMacFile* file = new XMLMacFile();
     Janitor<XMLMacAbstractFile> janFile(file);
     file->open(fileName);
     janFile.orphan();
-    
+
     return file;
 }
 
@@ -434,7 +437,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
     XMLCh* path = NULL;
-    
+
     if (gHasHFSPlusAPIs)
     {
         FSRef ref;
@@ -447,7 +450,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
         if (!XMLParsePathToFSSpec(srcPath, spec) || (path = XMLCreateFullPathFromSpec(spec)) == NULL)
             path = XMLString::replicate(srcPath);
     }
-    
+
     return path;
 }
 
@@ -461,7 +464,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                                     , const XMLCh* const    relativePath)
-                                    
+
 {
     // Code from Windows largely unmodified for the Macintosh,
     // with the exception of removing support for '\' path
@@ -469,14 +472,14 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
     //
     // Note that there is no support currently for Macintosh
     // path separators ':'.
-    
+
     // Create a buffer as large as both parts and empty it
     XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
         + XMLString::stringLen(relativePath)
         + 2];
     ArrayJanitor<XMLCh> janBuf(tmpBuf);
     *tmpBuf = 0;
-    
+
     //
     //  If we have no base path, then just take the relative path as
     //  is.
@@ -487,21 +490,21 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
         janBuf.orphan();
         return tmpBuf;
     }
-    
+
     if (!*basePath)
     {
         XMLString::copyString(tmpBuf, relativePath);
         janBuf.orphan();
         return tmpBuf;
     }
-    
+
     const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
     if (*basePtr != chForwardSlash)
     {
         while ((basePtr >= basePath) && (*basePtr != chForwardSlash))
             basePtr--;
     }
-    
+
     // There is no relevant base path, so just take the relative part
     if (basePtr < basePath)
     {
@@ -509,18 +512,18 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
         janBuf.orphan();
         return tmpBuf;
     }
-    
-    
+
+
     //  We have some path part, so we need to check to see if we have to
     //  weave any of the parts together.
     const XMLCh* pathPtr = relativePath;
-    
+
     while (true)
     {
         // If it does not start with some period, then we are done
         if (*pathPtr != chPeriod)
             break;
-        
+
         unsigned int periodCount = 1;
         pathPtr++;
         if (*pathPtr == chPeriod)
@@ -528,36 +531,36 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
             pathPtr++;
             periodCount++;
         }
-        
+
         // Has to be followed by a / or the null to mean anything
         if ((*pathPtr != chForwardSlash) &&  *pathPtr)
             break;
-        
+
         if (*pathPtr)
             pathPtr++;
-        
+
         // If it's one period, just eat it, else move backwards in the base
         if (periodCount == 2)
         {
             basePtr--;
             while ((basePtr >= basePath) && (*basePtr != chForwardSlash))
                 basePtr--;
-            
+
             // The base cannot provide enough levels, so it's in error/
             if (basePtr < basePath)
                 ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_BasePathUnderflow);
         }
     }
-    
+
     // Copy the base part up to the base pointer
     XMLCh* bufPtr = tmpBuf;
     const XMLCh* tmpPtr = basePath;
     while (tmpPtr <= basePtr)
         *bufPtr++ = *tmpPtr++;
-    
+
     // And then copy on the rest of our path
     XMLString::copyString(bufPtr, pathPtr);
-    
+
     // Orphan the buffer and return it
     janBuf.orphan();
     return tmpBuf;
@@ -646,12 +649,12 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
 {
     // Replace *toFill with newValue iff *toFill == toCompare,
     // returning previous value of *toFill
-    
+
     Boolean success = CompareAndSwap(
         reinterpret_cast<UInt32>(toCompare),
         reinterpret_cast<UInt32>(newValue),
         reinterpret_cast<UInt32*>(toFill));
-    
+
     return (success) ? const_cast<void*>(toCompare) : *toFill;
 }
 
@@ -678,27 +681,27 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 void XMLPlatformUtils::platformInit()
 {
     long value;
-    
+
     // Figure out if we have the gestalt manager
     // --we better have by now...this is a pre-system 7 feature!
     gGestaltAvail =
 #if TARGET_API_MAC_CARBON
         true;
 #else
-    TrapAvailable(_Gestalt);
+      TrapAvailable(_Gestalt);
 #endif
-    
+
     // Figure out which functions we have available
     if (gGestaltAvail)
     {
         if (Gestalt(gestaltFSAttr, &value) == noErr)
         {
-            gHasFSSpecAPIs = (value & gestaltHasFSSpecCalls) != 0;
-            gHasFS2TBAPIs = (value & gestaltFSSupports2TBVols) != 0;
-            gHasHFSPlusAPIs = (value & gestaltHasHFSPlusAPIs) != 0;
+             gHasFSSpecAPIs = (value & gestaltHasFSSpecCalls) != 0;
+             gHasFS2TBAPIs = (value & gestaltFSSupports2TBVols) != 0;
+             gHasHFSPlusAPIs = (value & gestaltHasHFSPlusAPIs) != 0;
         }
     }
-    
+
     gFileSystemCompatible = gHasFSSpecAPIs;
 }
 
@@ -763,13 +766,13 @@ static bool
 TrapAvailable (UInt16 trapWord)
 {
     TrapType trType;
-    
+
     // first determine whether it is an Operating System or Toolbox routine
     if ((trapWord & 0x0800) == 0)
         trType = OSTrap;
     else
         trType = ToolTrap;
-    
+
     // filter cases where older systems mask with 0x1FF rather than 0x3FF
     if (trType == ToolTrap && ((trapWord & 0x03FF) >= 0x200) &&
         (GetToolboxTrapAddress(0xA86E) == GetToolboxTrapAddress(0xAA6E)))
@@ -786,23 +789,23 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 {
     const XMLCh* p = pathName;
     const XMLCh* pEnd;
-    
+
     OSErr err = noErr;
-    
+
     if (*p == L'/')
     {
         // Absolute name: grab the first component as volume name
-        
+
         // Find the end of the path segment
         for (pEnd = ++p; *pEnd && *pEnd != L'/'; ++pEnd) ;
         size_t segLen = pEnd - p;
-        
+
         // Try to find a volume that matches this name
         for (ItemCount volIndex = 1; err == noErr; ++volIndex)
         {
             HFSUniStr255 hfsStr;
             hfsStr.length = 0;
-            
+
             // Get the volume name
             err = FSGetVolumeInfo(
                 0,
@@ -813,23 +816,16 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
                 &hfsStr,
                 &ref
                 );
-            
+
             // Compare against our path segment
             if (err == noErr && segLen == hfsStr.length)
             {
-                const UniChar* a = hfsStr.unicode;
-                const XMLCh* b = p;
-                while (b != pEnd && *a == *b)
-                {
-                    ++a;
-                    ++b;
-                }
-                
-                if (b == pEnd)
+              // Case-insensitive compare
+              if (XMLString::compareNIString(hfsStr.unicode, p, segLen) == 0)
                     break;  // we found our volume
             }
         }
-        
+
         p = pEnd;
     }
     else
@@ -840,7 +836,7 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
         if (err == noErr)
             err = FSpMakeFSRef(&spec, &ref);
     }
-    
+
     // ref now refers to the a parent directory: parse the rest of the path
     while (err == noErr && *p)
     {
@@ -849,7 +845,7 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
         case L'/':   // Just skip any number of path separators
             ++p;
             break;
-            
+
         case L'.':   // Potentially "current directory" or "parent directory"
             if (p[1] == L'/' || p[1] == 0)       // "current directory"
             {
@@ -859,7 +855,7 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
             else if (p[1] == L'.' && (p[2] == L'/' || p[2] == 0)) // "parent directory"
             {
                 p += 2;  // Get the parent of our parent
-                
+
                 FSCatalogInfo catalogInfo;
                 err = FSGetCatalogInfo(
                     &ref,
@@ -869,20 +865,20 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
                     static_cast<FSSpec*>(NULL),
                     &ref
                     );
-                
+
                 // Check that we didn't go too far
                 if (err != noErr || catalogInfo.parentDirID == fsRtParID)
                     return false;
-                
+
                 break;
             }
             else // some other sequence of periods...fall through and treat as segment
                 ;
-            
+
         default:
             // Find the end of the path segment
             for (pEnd = p; *pEnd && *pEnd != L'/'; ++pEnd) ;
-            
+
             // pEnd now points either to '/' or NUL
             // Create a new ref using this path segment
             err = FSMakeFSRefUnicode(
@@ -892,12 +888,12 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
                 kTextEncodingUnknown,
                 &ref
                 );
-            
+
             p = pEnd;
             break;
         }
     }
-    
+
     return err == noErr;
 }
 
@@ -909,23 +905,23 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
     const char* p = XMLString::transcode(pathName);
     ArrayJanitor<const char> janPath(p);
     const char* pEnd;
-    
+
     OSErr err = noErr;
     Str255 name;  // Must be long enough for a partial pathname consisting of two segments (64 bytes)
-    
+
     if (*p == '/')
     {
         // Absolute name: grab the first component as volume name
-        
+
         // Find the end of the path segment
         for (pEnd = ++p; *pEnd && *pEnd != '/'; ++pEnd) ;
         size_t segLen = pEnd - p;
-        
+
         // Try to find a volume that matches this name
         for (ItemCount volIndex = 1; err == noErr; ++volIndex)
         {
             FSVolumeRefNum volRefNum;
-            
+
             if (gHasFS2TBAPIs)
             {
                 XVolumeParam xVolParam;
@@ -951,19 +947,12 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
                 err = nsvErr;
 #endif
             }
-            
+
             // Compare against our path segment
             if (err == noErr && segLen == StrLength(name))
             {
-                ConstStringPtr a = name + 1;
-                const char* b = p;
-                while (b != pEnd && (*a == *b))
-                {
-                    ++a;
-                    ++b;
-                }
-                
-                if (b == pEnd)
+              // Case-insensitive compare
+              if (XMLString::compareNIString(reinterpret_cast<char*>(&name[1]), p, segLen) == 0)
                 {
                     // we found our volume: fill in the spec
                     err = FSMakeFSSpec(volRefNum, fsRtDirID, NULL, &spec);
@@ -971,7 +960,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
                 }
             }
         }
-        
+
         p = pEnd;
     }
     else
@@ -979,7 +968,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
         // Relative name, so get the default directory as parent spec
         err = FSMakeFSSpec(0, 0, NULL, &spec);
     }
-    
+
     // We now have a parent directory in the spec.
     while (err == noErr && *p)
     {
@@ -988,7 +977,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
         case '/':   // Just skip any number of path separators
             ++p;
             break;
-            
+
         case L'.':   // Potentially "current directory" or "parent directory"
             if (p[1] == '/' || p[1] == 0)      // "current directory"
             {
@@ -998,57 +987,57 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
             else if (p[1] == '.' && (p[2] == '/' || p[2] == 0)) // "parent directory"
             {
                 p += 2;  // Get the parent of our parent
-                
+
                 CInfoPBRec catInfo;
                 catInfo.dirInfo.ioNamePtr = NULL;
                 catInfo.dirInfo.ioVRefNum = spec.vRefNum;
                 catInfo.dirInfo.ioFDirIndex = -1;
                 catInfo.dirInfo.ioDrDirID = spec.parID;
                 err = PBGetCatInfoSync(&catInfo);
-                
+
                 // Check that we didn't go too far
                 if (err != noErr || catInfo.dirInfo.ioDrParID == fsRtParID)
                     return false;
-                
+
                 // Update our spec
                 if (err == noErr)
                     err = FSMakeFSSpec(spec.vRefNum, catInfo.dirInfo.ioDrParID, NULL, &spec);
-                
+
                 break;
             }
             else // some other sequence of periods...fall through and treat as segment
                 ;
-            
+
         default:
             {
                 // Find the end of the path segment
                 for (pEnd = p; *pEnd && *pEnd != '/'; ++pEnd) ;
-                
+
                 // Check for name length overflow
                 if (pEnd - p > 31)
                     return false;
-                
+
                 // Make a partial pathname from our current spec to the new object
                 unsigned char* partial = &name[1];
-                
+
                 *partial++ = ':';       // Partial leads with :
                 const unsigned char* specName = spec.name; // Copy in spec name
                 for (int specCnt = *specName++; specCnt > 0; --specCnt)
                     *partial++ = *specName++;
-                
+
                 *partial++ = ':';       // Separator
                 while (p != pEnd)       // Copy in new element
                     *partial++ = *p++;
-                
+
                 name[0] = partial - &name[1];    // Set the name length
-                
+
                 // Update the spec
                 err = FSMakeFSSpec(spec.vRefNum, spec.parID, name, &spec);
             }
             break;
         }
     }
-    
+
     return err == noErr;
 }
 
@@ -1060,18 +1049,18 @@ XMLCreateFullPathFromRef(const FSRef& startingRef)
     FSCatalogInfo catalogInfo;
     HFSUniStr255 name;
     FSRef ref = startingRef;
-    
+
     const size_t kBufSize = 512;
     XMLCh buf[kBufSize];
     size_t bufPos   = kBufSize;
     size_t bufCnt   = 0;
-    
+
     XMLCh* result = NULL;
     size_t resultLen = 0;
-    
+
     buf[--bufPos] = L'\0';
     ++bufCnt;
-    
+
     try  // help in cleaning up since ArrayJanitor doesn't handle assignment ;(
     {
         do
@@ -1084,7 +1073,7 @@ XMLCreateFullPathFromRef(const FSRef& startingRef)
                 static_cast<FSSpec*>(NULL),
                 &ref
                 );
-            
+
             if (err == noErr)
             {
                 // If there's not room in our static buffer for the new
@@ -1092,22 +1081,22 @@ XMLCreateFullPathFromRef(const FSRef& startingRef)
                 if (bufPos < name.length + 1)
                 {
                     XMLCh* temp = new XMLCh[bufCnt + resultLen];
-                    
+
                     // Copy in the static buffer
                     memcpy(temp, &buf[bufPos], bufCnt * sizeof(XMLCh));
-                    
+
                     // Copy in the old buffer
                     if (resultLen > 0)
                         memcpy(temp + bufCnt, result, resultLen);
-                    
+
                     delete [] result;
                     result = temp;
                     resultLen += bufCnt;
-                    
+
                     bufPos = kBufSize;
                     bufCnt = 0;
                 }
-                
+
                 // Prepend our new name and a '/'
                 bufPos -= name.length;
                 memcpy(&buf[bufPos], name.unicode, name.length * sizeof(UniChar));
@@ -1116,17 +1105,17 @@ XMLCreateFullPathFromRef(const FSRef& startingRef)
             }
         }
         while (err == noErr && catalogInfo.parentDirID != fsRtParID);
-        
+
         // Composite existing buffer with any previous result buffer
         XMLCh* temp = new XMLCh[bufCnt + resultLen];
-        
+
         // Copy in the static buffer
         memcpy(temp, &buf[bufPos], bufCnt * sizeof(XMLCh));
-        
+
         // Copy in the old buffer
         if (resultLen > 0)
             memcpy(temp + bufCnt, result, resultLen * sizeof(XMLCh));
-        
+
         delete [] result;
         result = temp;
     }
@@ -1135,7 +1124,7 @@ XMLCreateFullPathFromRef(const FSRef& startingRef)
         delete [] result;
         throw;
     }
-    
+
     return result;
 }
 
@@ -1145,18 +1134,18 @@ XMLCreateFullPathFromSpec(const FSSpec& startingSpec)
 {
     OSErr err = noErr;
     FSSpec spec = startingSpec;
-    
+
     const size_t kBufSize = 512;
     char buf[kBufSize];
     size_t bufPos   = kBufSize;
     size_t bufCnt   = 0;
-    
+
     char* result = NULL;
     size_t resultLen = 0;
-    
+
     buf[--bufPos] = '\0';
     ++bufCnt;
-    
+
     try  // help in cleanup since array janitor can't handle assignment ;(
     {
         short index = 0;
@@ -1168,57 +1157,57 @@ XMLCreateFullPathFromSpec(const FSSpec& startingSpec)
             catInfo.dirInfo.ioFDirIndex = index;
             catInfo.dirInfo.ioDrDirID = spec.parID;
             err = PBGetCatInfoSync(&catInfo);
-            
+
             if (err == noErr)
             {
                 size_t nameLen = StrLength(spec.name);
-                
+
                 // If there's not room in our static buffer for the new
                 // name plus separator, dump it to the dynamic result buffer.
                 if (bufPos < nameLen + 1)
                 {
                     char* temp = new char[bufCnt + resultLen];
-                    
+
                     // Copy in the static buffer
                     memcpy(temp, &buf[bufPos], bufCnt);
-                    
+
                     // Copy in the old buffer
                     if (resultLen > 0)
                         memcpy(temp + bufCnt, result, resultLen);
-                    
+
                     delete [] result;
                     result = temp;
                     resultLen += bufCnt;
-                    
+
                     bufPos = kBufSize;
                     bufCnt = 0;
                 }
-                
+
                 // Prepend our new name and a '/'
                 bufPos -= nameLen;
                 memcpy(&buf[bufPos], &spec.name[1], nameLen);
                 buf[--bufPos] = '/';
                 bufCnt += (nameLen + 1);
-                
+
                 // From here on out, ignore the input file name
                 index = -1;
-                
+
                 // Move up to the parent
                 spec.parID = catInfo.dirInfo.ioDrParID;
             }
         }
         while (err == noErr && spec.parID != fsRtParID);
-        
+
         // Composite existing buffer with any previous result buffer
         char* temp = new char[bufCnt + resultLen];
-        
+
         // Copy in the static buffer
         memcpy(temp, &buf[bufPos], bufCnt);
-        
+
         // Copy in the old buffer
         if (resultLen > 0)
             memcpy(temp + bufCnt, result, resultLen);
-        
+
         delete [] result;
         result = temp;
         resultLen += bufCnt;
@@ -1228,7 +1217,7 @@ XMLCreateFullPathFromSpec(const FSSpec& startingSpec)
         delete [] result;
         throw;
     }
-    
+
     // Cleanup and transcode to unicode
     ArrayJanitor<char> jan(result);
     return XMLString::transcode(result);
@@ -1245,17 +1234,17 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 {
     FileHandle file = 0;
     int isRes = 0;
-    
+
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemReady)
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
     //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile(const char* const) -- File system not ready."
     //          "  Maybe missing gestalt or no support for FSSpec's.");
-    
+
     if (strlen(fileName) >= strlen(resBaseStr))
         if (strstr(fileName, resBaseStr) == fileName)
             isRes = 1;
-        
+
         if (isRes == 0)
         {
             file = new XMLMacFile();
@@ -1286,32 +1275,32 @@ void XMLResFile::open(const char* const resInfo)
     int optEnd = 0, sep;
     int mode = -1;
     int typeValid = 0;
-    
+
     if (!strchr(&resInfo[cmdStart], '/'))
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::URL_MalformedURL);
-    
+
     while(resInfo[cmdEnd] != '/')
     {
         if (strchr(&resInfo[cmdStart], '&') < strchr(&resInfo[cmdStart], '/') && strchr(&resInfo[cmdStart], '&') != 0)
             cmdEnd = strchr(&resInfo[cmdStart], '&') - resInfo - 1;
         else
             cmdEnd = strchr(&resInfo[cmdStart], '/') - resInfo - 1;
-        
+
         if (cmdEnd - cmdStart > 68)
             ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
         //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- resource option too long (>68 chars)");
-        
+
         memcpy(command, &resInfo[cmdStart], cmdEnd - cmdStart + 1);
         command[cmdEnd - cmdStart + 1] = 0;
         if (!strchr(command, '='))
             ThrowXML(XMLPlatformUtilsException, XML4CExcepts::URL_MalformedURL);
         //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Malformed resource locater");
-        
+
         sep = strchr(command, '=') - command;
         memcpy(option, command, sep);
         option[sep] = 0;
         memcpy(value, &command[sep+1], strlen(command) - sep);
-        
+
         if (!strcmp(option, "mode"))
         {
             if (!strcmp(value, "by_id"))
@@ -1325,7 +1314,7 @@ void XMLResFile::open(const char* const resInfo)
             else
                 ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
             //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- 'mode' has to be 'by_id' or 'by_id1' or 'by_name' or 'by_name1'");
-            
+
         }
         if (!strcmp(option, "type"))
         {
@@ -1339,18 +1328,18 @@ void XMLResFile::open(const char* const resInfo)
             type += value[2] << 8;
             type += value[3];
         }
-        
+
         cmdStart = cmdEnd + 2;
         cmdEnd++;
     }
-    
+
     if (mode == 0)
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
     //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Malformed resource locater requires a 'mode'");
     if (typeValid == 0)
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
     //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Malformed resource locater requires a 'type'");
-    
+
     switch(mode)
     {
     case 1: case 2:
@@ -1360,7 +1349,7 @@ void XMLResFile::open(const char* const resInfo)
         else
             data = Get1Resource(type, id);
         break;
-        
+
     case 3: case 4:
         if (strlen(&resInfo[cmdEnd]) >= 255)
             ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
@@ -1373,32 +1362,32 @@ void XMLResFile::open(const char* const resInfo)
             data = Get1NamedResource(type, name);
         break;
     }
-    
+
     if (ResError() != noErr)
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
     //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Error opening resource");
-    
+
     GetResInfo(data, &id, &type, name);
     len = GetResourceSizeOnDisk(data);
     if (ResError() != noErr)
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotOpenFile);
     //throw XMLPlatformUtilsException("XMLPlatformUtils::openFile -- Error loading resource info");
-    
+
     valid = 1;
  }
-                                                
+
  unsigned int XMLResFile::read(const unsigned int buffLen, XMLByte* const buff)
  {
      unsigned int totAvail = len - pos;
      unsigned int numRead = (buffLen >= totAvail) ? totAvail : buffLen;
-     
+
      HLock(data);
      memcpy(buff, *data, numRead);
      HUnlock(data);
      pos += numRead;
      return numRead;
  }
- 
+
  void XMLResFile::close()
  {
      if (!valid)
@@ -1407,7 +1396,7 @@ void XMLResFile::open(const char* const resInfo)
      ReleaseResource(data);
      valid = 0;
  }
- 
+
  unsigned int XMLResFile::currPos()
  {
      if (!valid)
@@ -1415,7 +1404,7 @@ void XMLResFile::open(const char* const resInfo)
      //throw XMLPlatformUtilsException("XMLPlatformUtils::curFilePos -- Not a valid file");
      return pos;
  }
- 
+
  void XMLResFile::reset()
  {
      if (!valid)
@@ -1423,7 +1412,7 @@ void XMLResFile::open(const char* const resInfo)
      //throw XMLPlatformUtilsException("XMLPlatformUtils::resetFile -- Not a valid file");
      pos = 0;
  }
- 
+
  unsigned int XMLResFile::size()
  {
      if (!valid)
@@ -1431,7 +1420,7 @@ void XMLResFile::open(const char* const resInfo)
      //throw XMLPlatformUtilsException("XMLPlatformUtils::fileSize -- Not a valid file");
      return len;
  }
- 
+
  XMLResFile::~XMLResFile()
  {
      if (valid)
