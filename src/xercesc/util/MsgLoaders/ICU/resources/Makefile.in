@@ -116,8 +116,11 @@ $(RESTARGET): $(RESFILES)
 	@echo symlink ${FQ_RESLIB_SO_NAME}
 	ln -s ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
 	@echo symlink ${FQ_RESLIB_LINK_NAME}
-	ln -s ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}	
-
+	ln -s ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}
+	@echo create DOTA library
+	cp ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_REAL_DOTA}	
+	ln -s ${FQ_RESLIB_REAL_DOTA} ${FQ_RESLIB_SO_DOTA}
+	ln -s ${FQ_RESLIB_SO_DOTA} ${FQ_RESLIB_LINK_DOTA}
 	
 res-install: $(RESTARGET)
 	$(PKGDATA) --name $(RESNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST) --install $(shell icu-config --libdir)
