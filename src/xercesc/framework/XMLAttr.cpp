@@ -79,6 +79,8 @@ XMLAttr::XMLAttr(MemoryManager* const manager) :
     , fValue(0)
     , fAttName(0)
     , fMemoryManager(manager)
+    , fDatatypeValidator(0)
+    , fIsSchemaValidated(false)
 {
     fAttName = new (fMemoryManager) QName(fMemoryManager);
 }
@@ -89,7 +91,9 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        attrValue
                     , const XMLAttDef::AttTypes type
                     , const bool                specified
-                    , MemoryManager* const      manager) :
+                    , MemoryManager* const      manager 
+                    , DatatypeValidator * datatypeValidator
+                    , const bool isSchema ):
 
       fSpecified(specified)
     , fType(type)
@@ -97,6 +101,8 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     , fValue(0)
     , fAttName(0)
     , fMemoryManager(manager)
+    , fDatatypeValidator(datatypeValidator)
+    , fIsSchemaValidated(isSchema)
 {
     try
     {
@@ -122,7 +128,9 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        attrValue
                     , const XMLAttDef::AttTypes type
                     , const bool                specified
-                    , MemoryManager* const      manager) :
+                    , MemoryManager* const      manager 
+                    , DatatypeValidator * datatypeValidator
+                    , const bool isSchema ):
 
       fSpecified(specified)
     , fType(type)
@@ -130,6 +138,8 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     , fValue(0)
     , fAttName(0)
     , fMemoryManager(manager)
+    , fDatatypeValidator(datatypeValidator)
+    , fIsSchemaValidated(isSchema)
 {
     try
     {
