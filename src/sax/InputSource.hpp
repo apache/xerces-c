@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/11/21 16:14:32  tng
+ * Schema: New method InputSource::get/setIssueFatalErrorIfNotFound to tell the parser whether to issue fatal error or not if cannot find it (the InputSource).  This is required for schema processing as it shouldn't be a fatal error if the schema is not found.
+ *
  * Revision 1.9  2000/03/02 19:54:35  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -124,7 +127,7 @@ class BinInputStream;
   *
   * <p>An InputSource object belongs to the application: the parser never
   * modifies them in any way. They are always passed by const reference so
-  * the parser will make a copy of any input sources that it must keep 
+  * the parser will make a copy of any input sources that it must keep
   * around beyond the call.</p>
   *
   * @see Parser#parse
@@ -198,6 +201,16 @@ public:
     */
     const XMLCh* getSystemId() const;
 
+  /**
+    * Get the flag that indicates if the parser should issue fatal error if this input source
+    * is not found.
+    *
+    * @return True if the parser should issue fatal error if this input source is not found.
+    *         False if the parser issue warning message instead.
+    * @see #setIssueFatalErrorIfNotFound
+    */
+    const bool getIssueFatalErrorIfNotFound() const;
+
     //@}
 
 
@@ -250,6 +263,17 @@ public:
     */
     void setSystemId(const XMLCh* const systemId);
 
+  /**
+    * Indicates if the parser should issue fatal error if this input source
+    * is not found.  If set to false, the parser issue warning message instead.
+    *
+    * @param  True if the parser should issue fatal error if this input source is not found.
+    *         If set to false, the parser issue warning message instead.  (Default: true)
+    *
+    * @see #getIssueFatalErrorIfNotFound
+    */
+    void setIssueFatalErrorIfNotFound(const bool flag);
+
     //@}
 
 
@@ -267,7 +291,7 @@ protected :
       */
     InputSource(const XMLCh* const systemId);
 
-    /** Constructor with a system and public identifiers 
+    /** Constructor with a system and public identifiers
       * @param systemId The system identifier (URI).
       * @param publicId The public identifier as in the entity definition.
       */
@@ -276,13 +300,13 @@ protected :
         const   XMLCh* const    systemId
         , const XMLCh* const    publicId
     );
-    
-    /** Constructor witha system identifier as string 
+
+    /** Constructor witha system identifier as string
       * @param systemId The system identifier (URI).
       */
     InputSource(const char* const systemId);
-    
-    /** Constructor witha system and public identifiers. Both as string 
+
+    /** Constructor witha system and public identifiers. Both as string
       * @param systemId The system identifier (URI).
       * @param publicId The public identifier as in the entity definition.
       */
@@ -291,22 +315,22 @@ protected :
         const   char* const systemId
         , const char* const publicId
     );
-    
+
     //@}
 
 
-    
+
 
 
 private:
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     InputSource(const InputSource&);
     void operator=(const InputSource&);
 
 
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fEncoding
@@ -321,29 +345,45 @@ private:
     //  fSystemId
     //      This is the system id for the input source. This is what is
     //      actually used to open the source.
-    // -----------------------------------------------------------------------    
+    //
+    //  fFatalErrorIfNotFound
+    // -----------------------------------------------------------------------
     XMLCh*  fEncoding;
     XMLCh*  fPublicId;
     XMLCh*  fSystemId;
+    bool    fFatalErrorIfNotFound;
 };
 
 
 // ---------------------------------------------------------------------------
 //  InputSource: Getter methods
 // ---------------------------------------------------------------------------
-inline const XMLCh* InputSource::getEncoding() const 
+inline const XMLCh* InputSource::getEncoding() const
 {
     return fEncoding;
 }
 
-inline const XMLCh* InputSource::getPublicId() const 
+inline const XMLCh* InputSource::getPublicId() const
 {
     return fPublicId;
 }
 
-inline const XMLCh* InputSource::getSystemId() const 
+inline const XMLCh* InputSource::getSystemId() const
 {
     return fSystemId;
+}
+
+inline const bool InputSource::getIssueFatalErrorIfNotFound() const
+{
+    return fFatalErrorIfNotFound;
+}
+
+// ---------------------------------------------------------------------------
+//  InputSource: Setter methods
+// ---------------------------------------------------------------------------
+inline void InputSource::setIssueFatalErrorIfNotFound(const bool flag)
+{
+    fFatalErrorIfNotFound = flag;
 }
 
 #endif
