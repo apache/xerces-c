@@ -339,54 +339,23 @@ gmake </source>
 			<p><em>Installing &XercesCName; for use with CodeWarrior:</em>
 			</p>
 			
-			<p>For compatibility with CodeWarrior, it is necessary to adjust some of the
-			file names (and referencing include statements). To do this, it is necessary
-			to perform the following steps on a unix (or Mac OS X) machine that
-			has support for long file names (a Windows machine may also work):
+			<p>Note: versions of CodeWarrior prior to 8.0 did not support HFS+ long file names,
+			and thus required special steps to alter the file names prior to use. This restriction
+			has been removed for CodeWarrior 8.0, and the projects now directly reference the unaltered
+			source tree. The project files in this release require CodeWarrior v8.0 or higher.
 			</p>
 			
-			<ul>
-				<li>Retrieve &XercesCName; from CVS, or untar a packaged build. Note that these
-				steps should not be performed in a Classic Mac OS environment, as file
-				names would then be mangled at this point!
-				</li>
-					
-				<li>&XercesCName; comes with a tool that will shorten file names as appropriate,
-				and fix up referencing include statements. Duplicate the file
-				Projects/MacOS/ShortenFiles.pl to the xercesc main directory (the same
-				directory that contains the Projects directory). Executing this perl
-				script from this location will create a new directory MacSrc that
-				contains patched up versions of files from the src directory.
-				</li>
-			</ul>
+			<p>It is extemely important to ensure that you retrieve and unpack the sources
+			with a tool that does not truncate file names. The command line tar utility on Mac OS X
+			will do the right thing; current versions of StuffIt seem to truncate names as they
+			unpack tar archives. Failure to do this properly will result in broken projects.
+			</p>
 			
-<source>cd &lt;xercescroot&gt;
-cp Projects/MacOS/ShortenFiles.pl .
-perl ShortenFiles.pl</source>
-
-			<ul>
-				<li>The source files will likely not now have proper Mac OS type/creator
-				attribution. CodeWarrior badly wants this to be correct. So set the
-				type/creator of these files somehow. The following should work from
-				Mac OS X (but if you're not going to keep building on a Mac OS X
-				machine, you may well need to perform this step in some other way once
-				you get the files onto your classic machine).
-				</li>
-			</ul>
-			
-<source>find . \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" -or \
--name "*.xml" -or -name "*.r" \) -print0 | xargs -0 /Developer/Tools/SetFile -c CWIE -t TEXT</source>
-
-			<ul>
-				<li>Move the entire directory structure to your Mac OS machine.
-				</li>
-			</ul>
-		
 			<p><em>Building &XercesCName; with CodeWarrior:</em>
 			</p>
 		
 			<ul>
-				<li>Run CodeWarrior (tested with latest CW Pro 7.0).
+				<li>Run CodeWarrior (requires CodeWarrior 8.0 with support for long file names).
 				</li>
 				
 				<li>Import the project Projects/MacOS/CodeWarrior/XercesLib/XercesLib.mcp.xml,
