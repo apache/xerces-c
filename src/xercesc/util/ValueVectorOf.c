@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2003/11/21 15:44:12  amassari
+ * insertElementAt was not checking if there was room for the new element (bug#24714)
+ *
  * Revision 1.7  2003/05/29 13:26:44  knoaman
  * Fix memory leak when using deprecated dom.
  *
@@ -221,6 +224,7 @@ insertElementAt(const TElem& toInsert, const unsigned int insertAt)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
     // Make room for the newbie
+    ensureExtraCapacity(1);
     for (unsigned int index = fCurCount; index > insertAt; index--)
         fElemList[index] = fElemList[index-1];
 
