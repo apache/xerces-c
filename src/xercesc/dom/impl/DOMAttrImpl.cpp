@@ -143,33 +143,44 @@ const XMLCh * DOMAttrImpl::getValue() const
     if (fParent.fFirstChild == 0) {
         return XMLUni::fgZeroLenString; // return "";
     }
+
+    // Simple case where attribute value is just a single text node
     DOMNode *node = castToChildImpl(fParent.fFirstChild)->nextSibling;
-    if (node == 0) {
+    if (node == 0 && fParent.fFirstChild->getNodeType() == DOMNode::TEXT_NODE) {
         return fParent.fFirstChild->getNodeValue();
     }
-    int             length = 0;
-    for (node = fParent.fFirstChild; node != 0; node = castToChildImpl(node)->nextSibling)
-        length += XMLString::stringLen(node->getNodeValue());
 
-    // revisit - Come up with some way of not allocating a new string each
-    //                time we do this.  But it's not an immediate pressing problem,
-    //                becuase we only allocate a new string when we have attribute
-    //                values that contain entity reference nodes.  And the parser
-    //                does not ever produce such a thing.
+    //
+    // Complicated case whre attribute value is a DOM tree
+    //
+    // According to the spec, the child nodes of the Attr node may be either
+    // Text or EntityReference nodes.
+    //
+    // The parser will not create such thing, this is for those created by users.
+    //
+    // In such case, we have to visit each child to retrieve the text
+    //
 
-    //XMLCh * retString = new (this->getOwnerDocument()) XMLCh[length+1];
-    length = sizeof(XMLCh) * (length+1);
-    length = (length % 4) + length;
-    XMLCh * retString = (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->allocate(length);
-    retString[0] = 0;
-    for (node = fParent.fFirstChild; node != 0; node = castToChildImpl(node)->nextSibling)
-    {
-        XMLString::catString(retString, node->getNodeValue());
-    };
+    XMLBuffer buf;
+    getTextValue(fParent.fFirstChild, buf);
 
-    return retString;
+    return (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(buf.getRawBuffer());
 };
 
+void DOMAttrImpl::getTextValue(DOMNode* node, XMLBuffer& buf) const
+{
+    if (node->getNodeType() == DOMNode::TEXT_NODE)
+        buf.append(node->getNodeValue());
+    else if (node->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE)
+    {
+        for (node = node->getFirstChild(); node != 0; node = castToChildImpl(node)->nextSibling)
+        {
+            getTextValue(node, buf);
+        }
+    }
+
+    return;
+}
 
 
 void DOMAttrImpl::setNodeValue(const XMLCh *val)

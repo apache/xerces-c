@@ -76,6 +76,7 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 
 class DOMElementImpl;
 
@@ -106,6 +107,9 @@ public:
 
    // helper function for DOM Level 3 renameNode
    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+
+private:
+    void getTextValue(DOMNode* node, XMLBuffer& buf) const;
 };
 
 #endif
