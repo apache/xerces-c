@@ -159,86 +159,90 @@ $set 3
 $set 2
   2  The index is beyond the array bounds  
   3  The new size is less than the old one
-  4  The bit index was beyond the set size
-  5  The pointer has not been set
-  6  The enumerator contains no more elements
-  7  Could not open file: {0}
-  8  Could not query the current file position
-  9  Could not close the file
- 10  Could not seek to end of file
- 11  Could not seek to required position in file
- 12  Could not duplicate the handle
- 13  Could not read data from file
- 14  Could not reset file to beginning
- 15  Could not acertain the file size
- 16  Could not determine base pathname of the file
- 17  The hash modulus cannot be zero
- 18  Hashing the key returned an invalid bad hash value
- 19  The key '{0}' could not be found in the hash table
- 20  Could not create mutex
- 21  Could not close mutex
- 22  Could not lock mutex
- 23  Could not unlock mutex
- 24  Could not destroy mutex
- 25  The element {0} already exists
- 26  Hashing the key returned an invalid bad hash value
- 27  The passed id is not valid for this pool
- 28  The modulus value cannot be zero
- 29  The index is past the top of stack
- 30  The stack is empty, cannot access members
- 31  The target buffer cannot have a max size of zero
- 32  The given radix is not supported. Use 2, 8, 10, or 16
- 33  The target buffer is too small to accept the results
- 34  The start index is past the end of the string
- 35  Could not write to standard err
- 36  Could not write to standard out
- 37  Could not write to console
- 38  String pool id was not legal
- 39  The URL was not correctly formed
- 40  The URL used an unsupported protocol
- 41  Unsupported URL protocol: '{0}'
- 42  Only localhost is supported at this time
- 43  No protocol prefix present
- 44  Expected // after protocol
- 45  % must be followed by two hex digits
- 46  Unterminated host component
- 47  The passed index is past the end of the vector
- 48  Parse may not be called while parsing
- 49  A DOCTYPE was seen but the installed validator does not understand DTDs
- 50  Could not open DTD file '{0}'
- 51  Could not open external entity '{0}'
- 52  The end of input was not expected
- 53  The index given was beyond the max attribute index
- 54  The element stack is empty
- 55  The element stack index given was beyond the stack top
- 56  The element stack was already empty when a pop request occured
- 57  A parent operation was requested, but only one element is on the stack
- 58  The indicated reader id was never found
- 59  The auto encoding enum has an unknown value
- 60  Could not create a converter for encoding: {0}
- 61  Could not decode first line of entity: {0}
- 62  End of input was hit in the middle of a multibyte sequence
- 63  This encoding ({0})should have had a transcoder
- 64  Invalid second byte of a UTF-8 character sequence
- 65  Invalid surrogate character found in UTF-8 data
- 66  The primary document entity could not be opened. Id={0}
- 67  Unbalanced start/end tags found, cannot continue
- 68  The passed AttTypes value is not known
- 69  The passed DefAttTypes value is not known
- 70  The buffer manager cannot provide any more buffers
- 71  The passed buffer was not found in this manager's pool
- 72  The passed recognizer encoding was not known
- 73  The block of XML data could not be transcoded
- 74  Could not create a default transcoder
- 75  The binary operation node had a unary node type
- 76  The content type must be mixed or children
- 77  PCDATA nodes are not valid here
- 78  The {0} operation is invalid for the spec type
- 79  The unary operation node had a binary node type
- 80  Unknown content model type
- 81  Unknown content spec type
- 82  The element id was invalid
- 83  When reusing the validator, no internal subset is allowed
- 84  The call to scanNext() is illegal at this time
+  4  The index given was beyond the max attribute index
+  5  The passed AttTypes value is not known
+  6  The passed DefAttTypes value is not known
+  7  The bit index was beyond the set size
+  8  The buffer manager cannot provide any more buffers
+  9  The passed buffer was not found in this manager's pool
+ 10  The pointer has not been set
+ 11  The binary operation node had a unary node type
+ 12  The content type must be mixed or children
+ 13  PCDATA nodes are not valid here
+ 14  The {0} operation is invalid for the spec type
+ 15  The unary operation node had a binary node type
+ 16  Unknown content model type
+ 17  Unknown content spec type
+ 18  The element stack is empty
+ 19  The element stack index given was beyond the stack top
+ 20  The element stack was already empty when a pop request occured
+ 21  A parent operation was requested, but only one element is on the stack
+ 22  The enumerator contains no more elements
+ 23  Could not open file: {0}
+ 24  Could not query the current file position
+ 25  Could not close the file
+ 26  Could not seek to end of file
+ 27  Could not seek to required position in file
+ 28  Could not duplicate the handle
+ 29  Could not read data from file
+ 30  Could not reset file to beginning
+ 31  Could not acertain the file size
+ 32  Could not determine base pathname of the file
+ 33  Parse may not be called while parsing
+ 34  A DOCTYPE was seen but the installed validator does not understand DTDs
+ 35  Could not open DTD file '{0}'
+ 36  Could not open external entity '{0}'
+ 37  The end of input was not expected
+ 38  The hash modulus cannot be zero
+ 39  Hashing the key returned an invalid bad hash value
+ 40  The key '{0}' could not be found in the hash table
+ 41  Could not create mutex
+ 42  Could not close mutex
+ 43  Could not lock mutex
+ 44  Could not unlock mutex
+ 45  Could not destroy mutex
+ 46  The element {0} already exists
+ 47  Hashing the key returned an invalid bad hash value
+ 48  The passed id is not valid for this pool
+ 49  The modulus value cannot be zero
+ 50  The indicated reader id was never found
+ 51  The auto encoding enum has an unknown value
+ 52  Could not create a converter for encoding: {0}
+ 53  Could not decode first line of entity: {0}
+ 54  End of input was hit in the middle of a multibyte sequence
+ 55  This encoding ({0})should have had a transcoder
+ 56  Invalid second byte of a UTF-8 character sequence
+ 57  Invalid surrogate character found in UTF-8 data
+ 58  The current transcoding service does not support source offset information
+ 59  The primary document entity could not be opened. Id={0}
+ 60  Unbalanced start/end tags found, cannot continue
+ 61  The call to scanNext() is illegal at this time
+ 62  The index is past the top of stack
+ 63  The stack is empty, cannot access members
+ 64  The target buffer cannot have a max size of zero
+ 65  The given radix is not supported. Use 2, 8, 10, or 16
+ 66  The target buffer is too small to accept the results
+ 67  The start index is past the end of the string
+ 68  Could not write to standard err
+ 69  Could not write to standard out
+ 70  Could not write to console
+ 71  String pool id was not legal
+ 72  The block of XML data could not be transcoded
+ 73  Could not create a default transcoder
+ 74  The maximum size to xlat is larger than the declared block size
+ 75  Got an representable code point for encoding {0}
+ 76  A source character was not in the code point set for encoding {0}
+ 77  The URL was not correctly formed
+ 78  The URL used an unsupported protocol
+ 79  Unsupported URL protocol: '{0}'
+ 80  Only localhost is supported at this time
+ 81  No protocol prefix present
+ 82  Expected // after protocol
+ 83  % must be followed by two hex digits
+ 84  Unterminated host component
+ 85  The passed index is past the end of the vector
+ 86  The element id was invalid
+ 87  When reusing the validator, no internal subset is allowed
+ 88  The passed recognizer encoding was not known
 
 
