@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/10/09 20:53:22  peiyongz
+ * Optimization: save get***() to temp var
+ *
  * Revision 1.18  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
  *
@@ -240,17 +243,20 @@ void DecimalDatatypeValidator::inheritAdditionalFacet()
     if (!numBase)
         return;
 
+    int thisFacetsDefined = getFacetsDefined();  
+    int baseFacetsDefined = numBase->getFacetsDefined();
+
     // inherit totalDigits         
-    if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&          
-        (( getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) == 0) )              
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&          
+        (( thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) == 0) )              
     {          
         setTotalDigits(numBase->fTotalDigits);              
         setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);              
     }
           
     // inherit fractionDigits          
-    if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&          
-        (( getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )              
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&          
+        (( thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )              
     {          
         setFractionDigits(numBase->fFractionDigits);              
         setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);              
@@ -259,9 +265,11 @@ void DecimalDatatypeValidator::inheritAdditionalFacet()
 
 void DecimalDatatypeValidator::checkAdditionalFacetConstraints() const
 {
+    int thisFacetsDefined = getFacetsDefined();
+
     // check 4.3.12.c1 must: fractionDigits <= totalDigits
-    if ( ((getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
-        ((getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) )
+    if ( ((thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
+         ((thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) )
     {
         if ( fFractionDigits > fTotalDigits )
         {
@@ -443,8 +451,10 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
     if (pBase)
         pBase->checkContent(content, true);
 
+    int thisFacetsDefined = getFacetsDefined();
+
     // we check pattern first
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
         if (getRegex() ==0) {
@@ -491,7 +501,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
 
         boundsCheck(theData);
 
-        if ( (getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
+        if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
         {
             if ( theData->getScale() > fFractionDigits )
             {
@@ -507,7 +517,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             }
         }
 
-        if ( (getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
+        if ( (thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
         {
             if ( theData->getTotalDigit() > fTotalDigits )
             {
