@@ -123,11 +123,12 @@ public :
       , IC_KeyRefOutOfScope                = 106
       , IC_KeyNotFound                     = 107
       , NonWSContent                       = 108
-      , E_HighBounds                       = 109
-      , W_LowBounds                        = 110
-      , W_HighBounds                       = 111
-      , F_LowBounds                        = 112
-      , F_HighBounds                       = 113
+      , EmptyElemNotationAttr              = 109
+      , E_HighBounds                       = 110
+      , W_LowBounds                        = 111
+      , W_HighBounds                       = 112
+      , F_LowBounds                        = 113
+      , F_HighBounds                       = 114
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

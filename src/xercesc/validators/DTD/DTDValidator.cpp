@@ -522,9 +522,15 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
         //      valid for their type.
         //  3) That for any notation types, that their lists
         //      of possible values refer to declared notations.
+        //  4) XML1.0(3rd edition)
+        //     No Notation on Empty Element
+        //     For compatibility, an attribute of type NOTATION MUST NOT 
+        //     be declared on an element declared EMPTY.
         //
+
         XMLAttDefList& attDefList = curElem.getAttDefList();
         bool seenId = false;
+        bool elemEmpty = (curElem.getModelType() == DTDElementDecl::Empty);
         for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
             const XMLAttDef& curAttDef = attDefList.getAttDef(i);
@@ -543,56 +549,70 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
 
                 seenId = true;
             }
-             else if (curAttDef.getType() == XMLAttDef::Notation && curAttDef.getEnumeration())
+             else if (curAttDef.getType() == XMLAttDef::Notation)
             {
-                //
-                //  We need to verify that all of its possible values
-                //  (in the enum list) refer to valid notations.
-                //
-                XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), getScanner()->getMemoryManager());
-                ArrayJanitor<XMLCh> janList(list, getScanner()->getMemoryManager());
-
-                //
-                //  Search forward for a space or a null. If a null,
-                //  we are done. If a space, cap it and look it up.
-                //
-                bool    breakFlag = false;
-                XMLCh*  listPtr = list;
-                XMLCh*  lastPtr = listPtr;
-                while (true)
+                // no notation attribute on empty element
+                if (elemEmpty)
                 {
-                    while (*listPtr && (*listPtr != chSpace))
-                        listPtr++;
-
-                    //
-                    //  If at the end, indicate we need to break after
-                    //  this one. Else, cap it off here.
-                    //
-                    if (!*listPtr)
-                        breakFlag = true;
-                    else
-                        *listPtr = chNull;
-
-                    if (!fDTDGrammar->getNotationDecl(lastPtr))
-                    {
-                        emitError
-                        (
-                            XMLValid::UnknownNotRefAttr
-                            , curAttDef.getFullName()
-                            , lastPtr
-                        );
-                    }
-
-                    // Break out if we hit the end last time
-                    if (breakFlag)
-                        break;
-
-                    // Else move upwards and try again
-                    listPtr++;
-                    lastPtr = listPtr;
+                    emitError
+                   (
+                      XMLValid::EmptyElemNotationAttr
+                    , curElem.getElementName()->getRawName()
+                    , curAttDef.getFullName()
+                    );
                 }
-            }
 
+                if (curAttDef.getEnumeration())
+                {
+
+                    //
+                    //  We need to verify that all of its possible values
+                    //  (in the enum list) refer to valid notations.
+                    //
+                    XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), getScanner()->getMemoryManager());
+                    ArrayJanitor<XMLCh> janList(list, getScanner()->getMemoryManager());
+
+                    //
+                    //  Search forward for a space or a null. If a null,
+                    //  we are done. If a space, cap it and look it up.
+                    //
+                    bool    breakFlag = false;
+                    XMLCh*  listPtr = list;
+                    XMLCh*  lastPtr = listPtr;
+                    while (true)
+                    {
+                        while (*listPtr && (*listPtr != chSpace))
+                            listPtr++;
+
+                        //
+                        //  If at the end, indicate we need to break after
+                        //  this one. Else, cap it off here.
+                        //
+                        if (!*listPtr)
+                            breakFlag = true;
+                        else
+                            *listPtr = chNull;
+
+                        if (!fDTDGrammar->getNotationDecl(lastPtr))
+                        {
+                            emitError
+                            (
+                                XMLValid::UnknownNotRefAttr
+                                , curAttDef.getFullName()
+                                , lastPtr
+                            );
+                        }
+
+                        // Break out if we hit the end last time
+                        if (breakFlag)
+                            break;
+
+                        // Else move upwards and try again
+                        listPtr++;
+                        lastPtr = listPtr;
+                    }
+                }
+             }
             // If it has a default/fixed value, then validate it
             if (validateDefAttr && curAttDef.getValue())
             {
