@@ -618,21 +618,17 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
   */
 bool XMLString::isValidNCName(const XMLCh* const name) {
 
-    if (XMLString::stringLen(name) == 0
-        || XMLString::indexOf(name, chColon) != -1) {
+    if ( !name || !*name )
         return false;
-    }
 
     const XMLCh* tempName = name;
     XMLCh firstChar = *tempName++;
 
     if (!XMLReader::isXMLLetter(firstChar) && firstChar != chUnderscore) {
-
         return false;
     }
 
     while(*tempName) {
-
         if (*tempName == chColon || !XMLReader::isNameChar(*tempName++)) {
             return false;
         }
@@ -650,8 +646,7 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
   */
 bool XMLString::isValidName(const XMLCh* const name) {
 
-    if (!name ||
-        (XMLString::stringLen(name) == 0))
+    if (!name || !*name)
         return false;
 
     const XMLCh* tempName = name;
@@ -678,8 +673,7 @@ bool XMLString::isValidName(const XMLCh* const name) {
 bool XMLString::isValidEncName(const XMLCh* const name)
 {
 
-    if ( ( !name) ||
-         ( XMLString::stringLen(name) == 0 ))
+    if (!name || !*name)
         return false;
 
     const XMLCh* tempName = name;
@@ -1173,12 +1167,10 @@ XMLCh* XMLString::findAny(          XMLCh* const    toSearch
 int XMLString::patternMatch(  const XMLCh* const    toSearch
                             , const XMLCh* const    pattern)
 {
-    if (!toSearch || !pattern )
+    if (!toSearch || !*toSearch || !pattern || !*pattern)
         return -1;
 
     const int patnLen = XMLString::stringLen(pattern);
-	if ( !patnLen )
-		return -1;
 
     const XMLCh* srcPtr    = toSearch;
     const XMLCh* patnStart = toSearch;
