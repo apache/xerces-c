@@ -157,8 +157,8 @@ static inline IDOM_Node *castToNode(const IDNodeImpl *p) {
 
 static inline IDNodeImpl *castToNodeImpl(const IDParentNode *p)
 {
-    char *nodeImplOffset = (char *)&(((IDElementImpl *)0)->fNode);
-    char *parentOffset   = (char *)&(((IDElementImpl *)0)->fParent);
+    int nodeImplOffset = (char *)&(((IDElementImpl *)0)->fNode) - (char *)0;
+    int parentOffset = (char *)&(((IDElementImpl *)0)->fParent) - (char *)0;
     char *retPtr = (char *)p - parentOffset + nodeImplOffset;
     return (IDNodeImpl *)retPtr;
 }
