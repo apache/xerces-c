@@ -81,6 +81,7 @@
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/validators/schema/identity/XPathException.hpp>
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
@@ -376,7 +377,8 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
     fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
-    fGrammarResolver->putGrammar(fTargetNSURIString, fSchemaGrammar);
+    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(fTargetNSURIString);
+    fGrammarResolver->putGrammar(gramDesc, fSchemaGrammar);
     fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
 
     // Save current schema info
