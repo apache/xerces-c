@@ -204,6 +204,9 @@ unsigned int EntityReferenceImpl::getLength()
 */
 bool EntityReferenceImpl::hasChildNodes()
 {
+#if 0
+    // defer this query for now. 
+    //There's lot of work to be done here before it can return the actual value.
     bool haskids=false;
     
     DocumentTypeImpl *doctype;
@@ -216,6 +219,9 @@ bool EntityReferenceImpl::hasChildNodes()
         haskids=entDef->hasChildNodes();
     
     return haskids;
+#endif
+
+    return firstChild!=null;
 }
 
 
