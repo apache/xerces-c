@@ -63,7 +63,8 @@
 // The ParentNode subclass overrides this behavior.
 
 
-#include "DOMNodeImpl.hpp"
+#include "DOMDocumentTypeImpl.hpp"
+#include "DOMElementImpl.hpp"
 #include "DOMCasts.hpp"
 #include "DOMDocumentImpl.hpp"
 
@@ -280,9 +281,24 @@ void DOMNodeImpl::setReadOnly(bool readOnl, bool deep)
     if (deep) {
         for (DOMNode *mykid = castToNode(this)->getFirstChild();
             mykid != 0;
-            mykid = mykid->getNextSibling())
-            if(mykid->getNodeType() != DOMNode::ENTITY_REFERENCE_NODE)
-                castToNodeImpl(mykid)->setReadOnly(readOnl,true);
+            mykid = mykid->getNextSibling()) {
+
+            short kidNodeType = mykid->getNodeType();
+
+            switch (kidNodeType) {
+            case DOMNode::ENTITY_REFERENCE_NODE:
+                break;
+            case DOMNode::ELEMENT_NODE:
+                ((DOMElementImpl*) mykid)->setReadOnly(readOnl, true);
+                break;
+            case DOMNode::DOCUMENT_TYPE_NODE:
+               ((DOMDocumentTypeImpl*) mykid)->setReadOnly(readOnl, true);
+               break;
+            default:
+                castToNodeImpl(mykid)->setReadOnly(readOnl, true);
+                break;
+            }
+        }
     }
 }
 
