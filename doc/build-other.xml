@@ -312,7 +312,7 @@ gmake </source>
 			</li>
 			
 			<li>Has two Mac OS native netaccessor classes. The first is based on Carbon and
-			and classic supported URLAccess and may be used in the broadest variety of
+			classic supported URLAccess and may be used in the broadest variety of
 			configurations [MacOSURLAccess]. The second [MacOSURLAccessCF] is based on
 			CFURLAccess, which requires either Carbon or Mac OS X CoreServices.framework.
 			This second NetAccessor is useful in Mac OS X configurations where reliance on
@@ -331,9 +331,11 @@ gmake </source>
 			</p>
 			
 			<p>&XercesCName; may be built with CodeWarrior under Mac OS Classic or Mac OS X. Since
-			the &XercesCName; code contains some files with very long names, and CodeWarrior
-			does not yet support use of files with such long names, the installation
-			in this case is somewhat involved.
+			the &XercesCName; code contains some files with very long names, and earlier versions
+			of Mac OS, as well as earlier versions of CodeWarrior, did not support file names
+			longer than 32 characters, CodeWarrior 8.0 is required. If you are building &XercesCName; 
+			on a Mac OS 9 system, be extremely carefull in how to unpack and/or transfer the &XercesCName; 
+			files to that system, to ensure that their file names are not trancated in the process.
 			</p>
 			
 			<p><em>Installing &XercesCName; for use with CodeWarrior:</em>
@@ -346,9 +348,11 @@ gmake </source>
 			</p>
 			
 			<p>It is extemely important to ensure that you retrieve and unpack the sources
-			with a tool that does not truncate file names. The command line tar utility on Mac OS X
-			will do the right thing; current versions of StuffIt seem to truncate names as they
-			unpack tar archives. Failure to do this properly will result in broken projects.
+			with a tool that does not truncate file names. The command line gnutar utility on Mac
+			OS X will do the right thing; older versions of StuffIt truncate names to 31 characters as
+			they unpack tar archives, though versions >= 7.0.1 seem to work, at least on Mac OS X.
+			The command line tool tar will truncate path names that get too long; gnutar should be
+			used instead. Failure to heed these warnings will result in broken projects.
 			</p>
 			
 			<p><em>Building &XercesCName; with CodeWarrior:</em>
@@ -398,9 +402,8 @@ gmake </source>
 			</p>
 			
 			<ul>
-				<li>Since you are running under Mac OS X, and if you are not also performing
-				CodeWarrior builds, it is not necessary to shorten file names or set the
-				type/creator codes as required for CodeWarrior.
+				<li>Be sure to heed warnings under "special instructions" below regarding which
+				tools must be used to unpack archives: gnutar is your friend.
 				</li>
 				
 				<li>The Project Builder project builds XercesLib as the framework
@@ -423,7 +426,9 @@ gmake </source>
 			<ul>
 				<li>In general, the Mac OS X command line build follows the generic unix
 				build instructions. You need to set your XERCESCROOT environment variable,
-				<code>./runConfigure</code>, and <code>make</code>.
+				<code>./runConfigure</code>, and <code>make</code>. Be sure to heed warnings
+				under "special instructions" below regarding which tools must be used to unpack
+				archives: gnutar is your friend.
 				</li>
 			</ul>
 		
@@ -446,6 +451,16 @@ make</source>
 		
 		<s3 title="Special usage information for &XercesCName; on the Macintosh">
 		
+			<p><em>Unpacking the tar archive</em></p>
+			
+			<p>It is extemely important to ensure that you retrieve and unpack the sources
+			with a tool that does not truncate file names. The command line gnutar utility on Mac
+			OS X will do the right thing; older versions of StuffIt truncate names to 31 characters as
+			they unpack tar archives, though versions >= 7.0.1 seem to work, at least on Mac OS X.
+			The command line tool tar will truncate path names that get too long; gnutar should be
+			used instead. Failure to heed these warnings will result in broken projects.
+			</p>
+			
 			<p><em>File Path Specification</em></p>
 			
 			<p>Apart from the build instructions, above, the most important note
@@ -455,8 +470,8 @@ make</source>
 			expected by the shell. The easiest means of creating and interpreting these
 			paths will be through the routines <code>XMLCreateFullPathFromFSRef</code>
 			and <code>XMLParsePathToFSRef</code> as declared in the file
-			<code>MacOSPlatformUtils.hpp</code>. FSSpec variants of these routines are
-			also supplied.
+			<code>MacOSPlatformUtils.hpp</code>. <code>FSSpec</code> variants of these
+			routines are also supplied.
 			</p>
 			
 			<p><em>Mac OS Version Compatibility</em></p>
