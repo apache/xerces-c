@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2003/08/20 11:51:39  gareth
+ * Reorderd initializer list to prevent compiler warning.
+ *
  * Revision 1.10  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -150,9 +153,10 @@ RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHash(0)
     , fInitialModulus(modulus)
     , fCount(0)
+    , fHash(0)
+
 {
     initialize(modulus);
 	
@@ -170,9 +174,9 @@ RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHash(0)
     , fInitialModulus(modulus)
     , fCount(0)
+    , fHash(0)
 {
     initialize(modulus);
     // set hasher
@@ -187,9 +191,9 @@ RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHash(0)
     , fInitialModulus(modulus)
     , fCount(0)
+    , fHash(0)
 {
     initialize(modulus);
 
