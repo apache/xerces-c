@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/01/17 23:38:06  abagchi
+ * Changed string "localhost" to XMLUni::fgLocalHostString
+ *
  * Revision 1.1  2000/01/15 01:26:17  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -481,7 +484,7 @@ BinInputStream* XMLURL::makeNewStream() const
     //
     if (fProtocol == XMLURL::File)
     {
-        if (!fHost || !XMLString::compareIString(fHost, L"localhost"))
+        if (!fHost || !XMLString::compareIString(fHost, XMLUni::fgLocalHostString))
         {
             //
             //  We have to play a little trick here. If its really a Windows
