@@ -205,7 +205,8 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName
+                                      , MemoryManager* const manager)
 {
     FileHandle retVal = ::CreateFileA
     (
@@ -224,7 +225,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+                                      , MemoryManager* const manager)
 {
     // Watch for obvious wierdness
     if (!fileName)
@@ -295,7 +297,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //
     if (*srcPtr)
     {
-        tmpUName = XMLString::replicate(nameToOpen, fgMemoryManager);
+        tmpUName = XMLString::replicate(nameToOpen, manager);
 
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)
@@ -327,7 +329,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
         //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
         //    so that we can open it.
         //
-        char* tmpName = XMLString::transcode(nameToOpen, fgMemoryManager);
+        char* tmpName = XMLString::transcode(nameToOpen, manager);
         retVal = ::CreateFileA
             (
             tmpName
@@ -338,11 +340,11 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
             , FILE_FLAG_SEQUENTIAL_SCAN
             , 0
             );
-        fgMemoryManager->deallocate(tmpName);//delete [] tmpName;
+        manager->deallocate(tmpName);//delete [] tmpName;
     }
 
     if (tmpUName)
-        fgMemoryManager->deallocate(tmpUName);//delete [] tmpUName;
+        manager->deallocate(tmpUName);//delete [] tmpUName;
 
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;
@@ -350,7 +352,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                             , MemoryManager* const manager)
 {
     FileHandle retVal = ::CreateFileA
     (
@@ -369,7 +372,8 @@ FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                             , MemoryManager* const manager)
 {
     // Watch for obvious wierdness
     if (!fileName)
@@ -411,7 +415,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     //
     if (*srcPtr)
     {
-        tmpUName = XMLString::replicate(fileName, fgMemoryManager);
+        tmpUName = XMLString::replicate(fileName, manager);
 
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)
@@ -443,7 +447,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
         //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
         //    so that we can open it.
         //
-        char* tmpName = XMLString::transcode(nameToOpen, fgMemoryManager);
+        char* tmpName = XMLString::transcode(nameToOpen, manager);
         retVal = ::CreateFileA
             (
             tmpName
@@ -454,11 +458,11 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
             , FILE_ATTRIBUTE_NORMAL
             , 0
             );
-        fgMemoryManager->deallocate(tmpName);//delete [] tmpName;
+        manager->deallocate(tmpName);//delete [] tmpName;
     }
 
     if (tmpUName)
-        fgMemoryManager->deallocate(tmpUName);//delete [] tmpUName;
+        manager->deallocate(tmpUName);//delete [] tmpUName;
 
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;

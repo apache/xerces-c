@@ -197,19 +197,22 @@ XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
 unsigned int
-XMLPlatformUtils::curFilePos(const FileHandle theFile)
+XMLPlatformUtils::curFilePos(const FileHandle theFile
+                             , MemoryManager* const manager)
 {
 	return reinterpret_cast<XMLMacAbstractFile*>(theFile)->currPos();
 }
 
 void
-XMLPlatformUtils::closeFile(const FileHandle theFile)
+XMLPlatformUtils::closeFile(const FileHandle theFile
+                            , MemoryManager* const manager)
 {
     reinterpret_cast<XMLMacAbstractFile*>(theFile)->close();
 }
 
 unsigned int
-XMLPlatformUtils::fileSize(const FileHandle theFile)
+XMLPlatformUtils::fileSize(const FileHandle theFile
+                           , MemoryManager* const manager)
 {
     return reinterpret_cast<XMLMacAbstractFile*>(theFile)->size();
 }
@@ -268,10 +271,10 @@ XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 
 
 FileHandle
-XMLPlatformUtils::openStdInHandle()
+XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 {
     XMLCh stdinStr[] = {chLatin_s, chLatin_t, chLatin_d, chLatin_i, chLatin_n, chNull};
-    ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, stdinStr);
+    ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, stdinStr, manager);
     return NULL;
 }
 
@@ -279,7 +282,8 @@ XMLPlatformUtils::openStdInHandle()
 unsigned int
 XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
                                  ,  const unsigned int    toRead
-                                 ,        XMLByte* const  toFill)
+                                 ,        XMLByte* const  toFill
+                                 ,  MemoryManager* const  manager)
 {
     return reinterpret_cast<XMLMacAbstractFile*>(theFile)->read(toRead, toFill);
 }
@@ -288,14 +292,16 @@ XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
 void
 XMLPlatformUtils::writeBufferToFile(   const   FileHandle   theFile
                                     ,  const long		    toWrite
-                                    ,  const XMLByte* const toFlush)
+                                    ,  const XMLByte* const toFlush
+                                    ,  MemoryManager* const manager)
 {
     return reinterpret_cast<XMLMacAbstractFile*>(theFile)->write(toWrite, toFlush);
 }
 
 
 void
-XMLPlatformUtils::resetFile(FileHandle theFile)
+XMLPlatformUtils::resetFile(FileHandle theFile
+                            , MemoryManager* const manager)
 {
     reinterpret_cast<XMLMacAbstractFile*>(theFile)->reset();
 }
@@ -348,8 +354,8 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 			: NULL;
 			
     if (!path)
-		 ThrowXML(XMLPlatformUtilsException,
-	           XMLExcepts::File_CouldNotGetBasePathName);
+		 ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+	           XMLExcepts::File_CouldNotGetBasePathName, manager);
 	           
 	return path;
 }

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/16 03:11:22  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -102,37 +106,42 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  BinFileInputStream: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BinFileInputStream::BinFileInputStream(const XMLCh* const fileName) :
+BinFileInputStream::BinFileInputStream(const XMLCh* const fileName
+                                       , MemoryManager* const manager) :
 
     fSource(0)
+  , fMemoryManager(manager)
 {
     // Try to open the file
-    fSource = XMLPlatformUtils::openFile(fileName);
+    fSource = XMLPlatformUtils::openFile(fileName, manager);
 }
 
 BinFileInputStream::BinFileInputStream(const char* const fileName,
                                        MemoryManager* const manager) :
 
     fSource(0)
+  , fMemoryManager(manager)
 {
     // Transcode the file name and put a janitor on the temp buffer
     XMLCh* realName = XMLString::transcode(fileName, manager);
     ArrayJanitor<XMLCh> janName(realName, manager);
 
     // Try to open the file
-    fSource = XMLPlatformUtils::openFile(realName);
+    fSource = XMLPlatformUtils::openFile(realName, manager);
 }
 
-BinFileInputStream::BinFileInputStream(const FileHandle toAdopt) :
+BinFileInputStream::BinFileInputStream(const FileHandle toAdopt
+                                       , MemoryManager* const manager) :
 
     fSource(toAdopt)
+  , fMemoryManager(manager)
 {
 }
 
 BinFileInputStream::~BinFileInputStream()
 {
     if (fSource)
-        XMLPlatformUtils::closeFile(fSource);
+        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
 }
 
 
@@ -141,7 +150,7 @@ BinFileInputStream::~BinFileInputStream()
 // ---------------------------------------------------------------------------
 unsigned int BinFileInputStream::getSize() const
 {
-    return XMLPlatformUtils::fileSize(fSource);
+    return XMLPlatformUtils::fileSize(fSource, fMemoryManager);
 }
 
 
@@ -150,7 +159,7 @@ unsigned int BinFileInputStream::getSize() const
 // ---------------------------------------------------------------------------
 void BinFileInputStream::reset()
 {
-    XMLPlatformUtils::resetFile(fSource);
+    XMLPlatformUtils::resetFile(fSource, fMemoryManager);
 }
 
 
@@ -159,7 +168,7 @@ void BinFileInputStream::reset()
 // ---------------------------------------------------------------------------
 unsigned int BinFileInputStream::curPos() const
 {
-    return XMLPlatformUtils::curFilePos(fSource);
+    return XMLPlatformUtils::curFilePos(fSource, fMemoryManager);
 }
 
 unsigned int
@@ -170,7 +179,7 @@ BinFileInputStream::readBytes(          XMLByte* const  toFill
     //  Read up to the maximum bytes requested. We return the number
     //  actually read.
     //
-    return XMLPlatformUtils::readFileBuffer(fSource, maxToRead, toFill);
+    return XMLPlatformUtils::readFileBuffer(fSource, maxToRead, toFill, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -287,7 +287,8 @@ public :
       *
       * @return The file handle of the opened file
       */
-    static FileHandle openFile(const char* const fileName);
+    static FileHandle openFile(const char* const fileName
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Opens a named file
       *
@@ -299,7 +300,8 @@ public :
       *
       * @return The file handle of the opened file
       */
-    static FileHandle openFile(const XMLCh* const fileName);
+    static FileHandle openFile(const XMLCh* const fileName
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Open a named file to write
       *
@@ -311,7 +313,8 @@ public :
       *
       * @return The file handle of the opened file
       */
-    static FileHandle openFileToWrite(const char* const fileName);
+    static FileHandle openFileToWrite(const char* const fileName
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Open a named file to write
       *
@@ -323,7 +326,8 @@ public :
       *
       * @return The file handle of the opened file
       */
-    static FileHandle openFileToWrite(const XMLCh* const fileName);
+    static FileHandle openFileToWrite(const XMLCh* const fileName
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Opens the standard input as a file
       *
@@ -571,7 +575,7 @@ public :
       * the actual content of the passed mutex handle is.
       *
       * Note that, since the underlying system synchronization services
-      * are used, Xerces cannot guarantee that lock/unlock operaitons are
+      * are used, Xerces cannot guarantee that lock/unlock operations are
       * correctly enforced on a per-thread basis or that incorrect nesting
       * of lock/unlock operations will be caught.
       *

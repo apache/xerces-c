@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/12/17 00:18:33  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -99,7 +103,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const XMLCh* const   fileName
 , fCapacity(1023)
 , fMemoryManager(manager)
 {
-    fSource = XMLPlatformUtils::openFileToWrite(fileName);
+    fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
 
     if (!fSource)
         ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
@@ -123,7 +127,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
 , fCapacity(1023)
 , fMemoryManager(manager)
 {
-    fSource = XMLPlatformUtils::openFileToWrite(fileName);
+    fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
 
     if (!fSource)
         ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
@@ -144,7 +148,7 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
     flushBuffer();
 
     if (fSource)
-        XMLPlatformUtils::closeFile(fSource);
+        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
 
     fMemoryManager->deallocate(fDataBuf);//delete [] fDataBuf;
 }
@@ -172,7 +176,7 @@ void LocalFileFormatTarget::flushBuffer()
     // Exception thrown in writeBufferToFile, if any, will be propagated to
     // the XMLFormatter and then to the DOMWriter, which may notify
     // application through DOMErrorHandler, if any.
-    XMLPlatformUtils::writeBufferToFile(fSource, (long) fIndex, fDataBuf);
+    XMLPlatformUtils::writeBufferToFile(fSource, (long) fIndex, fDataBuf, fMemoryManager);
     fIndex = 0;
     fDataBuf[0] = 0;
     fDataBuf[fIndex + 1] = 0;

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/17 13:58:03  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.10  2003/10/01 16:32:40  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -178,7 +182,8 @@ void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
-unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
+unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile
+                                          , MemoryManager* const manager)
 {
     // Get the current position
     int curPos = ftell( (FILE*)theFile);
@@ -188,13 +193,15 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     return (unsigned int)curPos;
 }
 
-void XMLPlatformUtils::closeFile(FileHandle theFile)
+void XMLPlatformUtils::closeFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     if (fclose((FILE*)theFile))
         throw XMLPlatformUtilsException("XMLPlatformUtils::closeFile - Could not close the file handle");
 }
 
-unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
+unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
+                                        , MemoryManager* const manager)
 {
     // Get the current position
     long  int curPos = ftell((FILE*)theFile);
@@ -230,7 +237,8 @@ FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
 unsigned int
 XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
                                 , const unsigned int    toRead
-                                , XMLByte* const  toFill)
+                                , XMLByte* const  toFill
+                                , MemoryManager* const manager)
 {
     size_t noOfItemsRead = fread( (void*) toFill, 1, toRead, (FILE*)theFile);
 
@@ -243,7 +251,8 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 }
 
 
-void XMLPlatformUtils::resetFile(FileHandle theFile)
+void XMLPlatformUtils::resetFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET) )
@@ -405,7 +414,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 }
 
 
-FileHandle XMLPlatformUtils::openStdInHandle()
+FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 {
     return (FileHandle)fdopen(dup(0), "rb");
 }

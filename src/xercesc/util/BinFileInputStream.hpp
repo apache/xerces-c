@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.4  2003/06/03 18:12:29  knoaman
  * Add default value for memory manager argument.
  *
@@ -99,6 +103,7 @@ public :
     BinFileInputStream
     (
         const   XMLCh* const    fileName
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     BinFileInputStream
@@ -110,6 +115,7 @@ public :
     BinFileInputStream
     (
         const   FileHandle      toUse
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     virtual ~BinFileInputStream();
@@ -143,7 +149,8 @@ private :
     //      The source file that we represent. The FileHandle type is defined
     //      per platform.
     // -----------------------------------------------------------------------
-    FileHandle      fSource;
+    FileHandle              fSource;
+    MemoryManager* const    fMemoryManager;
 };
 
 

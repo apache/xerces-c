@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/16 03:11:30  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -98,7 +102,7 @@ BinInputStream* StdInInputSource::makeStream() const
     // Open a binary file stream for the standard input file handle
     BinFileInputStream* retStream = new (getMemoryManager()) BinFileInputStream
     (
-        XMLPlatformUtils::openStdInHandle()
+        XMLPlatformUtils::openStdInHandle(getMemoryManager())
     );
 
     if (!retStream->getIsOpen())

@@ -198,7 +198,7 @@ LocalFileInputSource::~LocalFileInputSource()
 // ---------------------------------------------------------------------------
 BinInputStream* LocalFileInputSource::makeStream() const
 {
-    BinFileInputStream* retStrm = new (getMemoryManager()) BinFileInputStream(getSystemId());
+    BinFileInputStream* retStrm = new (getMemoryManager()) BinFileInputStream(getSystemId(), getMemoryManager());
     if (!retStrm->getIsOpen())
     {
         delete retStrm;

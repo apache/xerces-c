@@ -253,7 +253,8 @@ void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 // ---------------------------------------------------------------------------
 static void emptyBuffer(XMLByte* writeBuffer,
                         size_t   bytesToWrite,
-                        FileHandleImpl* fhiPtr)
+                        FileHandleImpl* fhiPtr
+                        , MemoryManager* const manager)
 {
      FILE* fileHandle = (FILE*)fhiPtr->getHandle();
      size_t bytesThisWrite = 0;
@@ -285,7 +286,7 @@ static void emptyBuffer(XMLByte* writeBuffer,
         bytesThisWrite = fwrite(writeBuffer, sizeof(XMLByte), bytesThisPass, fileHandle);
 
         if (ferror(fileHandle))
-           ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+           ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 
         bytesToWrite -= bytesThisWrite;
         writeBuffer += bytesThisWrite;
@@ -295,7 +296,8 @@ static void emptyBuffer(XMLByte* writeBuffer,
 }
 
 
-static FileHandleImpl* openRead(char* tmpFileName)
+static FileHandleImpl* openRead(char* tmpFileName
+                                , MemoryManager* const manager)
 {
      FileHandleImpl* retVal;
      FILE* fileHandle = 0;
@@ -313,8 +315,8 @@ static FileHandleImpl* openRead(char* tmpFileName)
         optionBufferSize += (strlen(pathobj.getfopenParms()) + 1);
      }
 
-     char* optionBuffer = (char*) XMLPlatformUtils::fgMemoryManager->allocate(optionBufferSize * sizeof(char));//new char[optionBufferSize];
-     ArrayJanitor<char> janText((char*)optionBuffer, XMLPlatformUtils::fgMemoryManager);
+     char* optionBuffer = (char*) manager->allocate(optionBufferSize * sizeof(char));//new char[optionBufferSize];
+     ArrayJanitor<char> janText((char*)optionBuffer, manager);
      strcpy(optionBuffer,"rb");
 
      // Build the options buffer
@@ -347,12 +349,12 @@ static FileHandleImpl* openRead(char* tmpFileName)
         fldata_rc = fldata(fileHandle, pathobj.getfopenPath(), &fileinfo);
 
         if (fldata_rc)
-           ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+           ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
 
         if (fileinfo.__dsorgHFS)
         {
            if (fclose(fileHandle))
-              ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+              ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile, manager);
 
            fileHandle=fopen(pathobj.getfopenPath(), "rb");
            retVal->setHandle(fileHandle);
@@ -372,11 +374,11 @@ static FileHandleImpl* openRead(char* tmpFileName)
     //     path/path2/filename.ext  => //path.path2.ext(filename)
     //     path/path2/filename      => //path.path2.filename
 
-    char* datasetName = (char*) XMLPlatformUtils::fgMemoryManager->allocate
+    char* datasetName = (char*) manager->allocate
     (
         (strlen(tmpFileName) + 5) * sizeof(char)
     );//new char[ strlen(tmpFileName) + 5 ];
-    ArrayJanitor<char> janText1((char*)datasetName, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<char> janText1((char*)datasetName, manager);
     char *datasetPos = datasetName, *tmpPos = tmpFileName;
 
     // We are in EBCDIC mode here
@@ -462,12 +464,12 @@ static FileHandleImpl* openRead(char* tmpFileName)
                fldata_rc = fldata(fileHandle, srcName, &fileinfo);
 
                if (fldata_rc)
-                 ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+                 ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
 
                if (fileinfo.__dsorgHFS)
                {
                   if (fclose(fileHandle))
-                     ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+                     ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile, manager);
 
                   fileHandle=fopen(srcName, "rb");
                   retVal->setHandle(fileHandle);
@@ -494,7 +496,8 @@ static FileHandleImpl* openRead(char* tmpFileName)
 }
 
 
-static FileHandleImpl* openWrite(char* tmpFileName)
+static FileHandleImpl* openWrite(char* tmpFileName
+                                 , MemoryManager* const manager)
 {
     FileHandleImpl* retVal;
     FILE* fileHandle = 0;
@@ -514,8 +517,8 @@ static FileHandleImpl* openWrite(char* tmpFileName)
     if (pathobj.getfopenParms())
        optionBufferSize += (strlen(pathobj.getfopenParms()) + 1);
 
-    char* optionBuffer = (char*) XMLPlatformUtils::fgMemoryManager->allocate((optionBufferSize) * sizeof(char));//new char[optionBufferSize];
-    ArrayJanitor<char> janText((char*)optionBuffer, XMLPlatformUtils::fgMemoryManager);
+    char* optionBuffer = (char*) manager->allocate((optionBufferSize) * sizeof(char));//new char[optionBufferSize];
+    ArrayJanitor<char> janText((char*)optionBuffer, manager);
     strcpy(optionBuffer,"wb");
 
     // Build the options buffer
@@ -542,7 +545,7 @@ static FileHandleImpl* openWrite(char* tmpFileName)
        fldata_rc = fldata(fileHandle, pathobj.getfopenPath(), &fileinfo);
 
        if (fldata_rc)
-          ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+          ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 
        fileLrecl = fileinfo.__maxreclen;
 
@@ -553,7 +556,7 @@ static FileHandleImpl* openWrite(char* tmpFileName)
        if (fileinfo.__dsorgHFS)
        {
           if (fclose(fileHandle))
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile, manager);
 
           fileHandle=fopen(pathobj.getfopenPath(), "wb");
 
@@ -579,7 +582,8 @@ static FileHandleImpl* openWrite(char* tmpFileName)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
-unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
+unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile
+                                          , MemoryManager* const manager)
 {
     // Get the current position
     FileHandleImpl* fhiPtr = (FileHandleImpl*) theFile;
@@ -587,12 +591,13 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     int curPos = ftell(fileHandle);
 
     if (curPos == -1)
-       ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize, manager);
 
     return (unsigned int)curPos;
 }
 
-void XMLPlatformUtils::closeFile(FileHandle theFile)
+void XMLPlatformUtils::closeFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     FileHandleImpl* fhiPtr = (FileHandleImpl*) theFile;
     FILE* fileHandle = (FILE*)fhiPtr->getHandle();
@@ -609,13 +614,13 @@ void XMLPlatformUtils::closeFile(FileHandle theFile)
     {
         XMLByte* tmpFlush = fhiPtr->getStgBufferPtr();
         size_t bytesToWrite = fhiPtr->getNextByte();
-        emptyBuffer(tmpFlush, bytesToWrite,fhiPtr);
+        emptyBuffer(tmpFlush, bytesToWrite, fhiPtr, manager);
     }
 
     // Do the regular close stuff ....
 
     if (fclose(fileHandle))
-       ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile, manager);
 
     // Delete the instance of the FileHandleImpl class (this will free the
     // staging buffer for us)
@@ -624,7 +629,8 @@ void XMLPlatformUtils::closeFile(FileHandle theFile)
 
 }
 
-unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
+unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
+                                        , MemoryManager* const manager)
 {
     // Get the current position
     FileHandleImpl* fhiPtr = (FileHandleImpl*) theFile;
@@ -632,73 +638,78 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     long  int curPos = ftell(fileHandle);
 
     if (curPos == -1)
-       ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
 
     // Seek to the end and save that value for return
-     if (fseek(fileHandle, 0, SEEK_END))
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
+    if (fseek(fileHandle, 0, SEEK_END))
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd, manager);
 
     long int retVal = ftell(fileHandle);
 
     if (retVal == -1)
-       ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd, manager);
 
 
     // And put the pointer back
     if (fseek(fileHandle, curPos, SEEK_SET) )
-       ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
+       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos, manager);
 
     return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+                                      , MemoryManager* const manager)
 {
-    char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
 
-    return openRead(tmpFileName);
+    return openRead(tmpFileName, manager);
 }
 
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName
+                                      , MemoryManager* const manager)
 {
-    char* tmpFileName = (char*) fgMemoryManager->allocate
+    char* tmpFileName = (char*) manager->allocate
     (
         (strlen(fileName) + 1) * sizeof(char)
     );//new char[strlen(fileName) + 1];
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     strcpy(tmpFileName,fileName);
 
-    return openRead(tmpFileName);
+    return openRead(tmpFileName, manager);
 }
 
 
-FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                             , MemoryManager* const manager)
 {
-    char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
 
-    return openWrite(tmpFileName);
+    return openWrite(tmpFileName, manager);
 }
 
 
-FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                             , MemoryManager* const manager)
 {
-    char* tmpFileName = (char*) fgMemoryManager->allocate
+    char* tmpFileName = (char*) manager->allocate
     (
         (strlen(fileName) + 1) * sizeof(char)
     );//new char[strlen(fileName) + 1];
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     strcpy(tmpFileName,fileName);
 
-    return openWrite(tmpFileName);
+    return openWrite(tmpFileName, manager);
 }
 
 
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)
+                                   , const XMLByte* const  toFlush
+                                   , MemoryManager* const  manager)
 {
     FileHandleImpl* fhiPtr = (FileHandleImpl*) theFile;
     FILE* fileHandle = (FILE*)fhiPtr->getHandle();
@@ -748,7 +759,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
              inputBufferPtr += stageThisAdd;
              stageBufferAddPtr += stageThisAdd;
              stageToWrite = stageBufferAddPtr - stageBufferStartPtr;
-             emptyBuffer(stageBufferStartPtr, stageToWrite, fhiPtr);
+             emptyBuffer(stageBufferStartPtr, stageToWrite, fhiPtr, manager);
              stageBufferAddPtr = stageBufferStartPtr;
              stageBufferNextByte = 0;
           }
@@ -773,7 +784,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
     // Normal type of write, just write data to disk ...
 
     else
-       emptyBuffer(tmpFlush, toWrite, fhiPtr);
+       emptyBuffer(tmpFlush, toWrite, fhiPtr, manager);
 
   return;
 }
@@ -782,7 +793,8 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
 unsigned int
 XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
                                 , const unsigned int    toRead
-                                , XMLByte* const  toFill)
+                                , XMLByte* const  toFill
+                                , MemoryManager* const manager)
 {
     FileHandleImpl* fhiPtr = (FileHandleImpl*) theFile;
     FILE* fileHandle = (FILE*)fhiPtr->getHandle();
@@ -798,7 +810,7 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
        noOfItemsRead = fread( (void*) toFill, 1, toRead, fileHandle);
 
        if(ferror(fileHandle))
-          ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+          ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
 
        if (isTypeRecord)
        {
@@ -842,13 +854,14 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 }
 
 
-void XMLPlatformUtils::resetFile(FileHandle theFile)
+void XMLPlatformUtils::resetFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     // Seek to the start of the file
     FileHandleImpl* fhiPtr = (FileHandleImpl*) theFile;
     FILE* fileHandle = (FILE*)fhiPtr->getHandle();
     if (fseek(fileHandle, 0, SEEK_SET) )
-   ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile, manager);
 }
 
 // ---------------------------------------------------------------------------
@@ -863,21 +876,21 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
     //
-    char* newSrc = XMLString::transcode(srcPath, fgMemoryManager);
-    ArrayJanitor<char> janText(newSrc, fgMemoryManager);
+    char* newSrc = XMLString::transcode(srcPath, manager);
+    ArrayJanitor<char> janText(newSrc, manager);
 
     Path390 pathobj;
     pathobj.setPath(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = (char*) fgMemoryManager->allocate((_POSIX_PATH_MAX) * sizeof(char));//new char[_POSIX_PATH_MAX];
-    ArrayJanitor<char> janText2(absPath, fgMemoryManager);
+    char *absPath = (char*) manager->allocate((_POSIX_PATH_MAX) * sizeof(char));//new char[_POSIX_PATH_MAX];
+    ArrayJanitor<char> janText2(absPath, manager);
 
     if ( (pathobj.getPathType() == PATH390_HFS) || (pathobj.getPathType() == PATH390_OTHER) ) {
        //get the absolute path
        if (getcwd(absPath, _POSIX_PATH_MAX) == NULL) {
-          ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
-          }
+          ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
+       }
        return XMLString::transcode(absPath, manager);
     }
     return XMLString::transcode(newSrc, manager);
@@ -965,16 +978,16 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
     if (isPosixEnabled) {
-    if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
-    {
-   ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
-    }
-    if ( (pthread_mutex_t*)mtxHandle)
-        delete (pthread_mutex_t*) mtxHandle;
+        if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
+        {
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
+        }
+        if ( (pthread_mutex_t*)mtxHandle)
+            delete (pthread_mutex_t*) mtxHandle;
     } // __isPosixOn
     else {
-    if ( (int*)mtxHandle)
-        delete (int*) mtxHandle;
+        if ( (int*)mtxHandle)
+            delete (int*) mtxHandle;
     }
 }
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
@@ -982,18 +995,18 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
     if (isPosixEnabled) {
-    if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
-    {
-   ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
-    }
+        if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
+        {
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+        }
     } // __isPosixOn
     else {
-   int locked = 1, unlocked;
+        int locked = 1, unlocked;
 
-    do {
-        unlocked = 0;
-        compareAndSwap( (void**) &mtxHandle, (void*) locked, (void*) unlocked );
-    } while( unlocked != 0 );
+        do {
+            unlocked = 0;
+            compareAndSwap( (void**) &mtxHandle, (void*) locked, (void*) unlocked );
+        } while( unlocked != 0 );
     }
     return;
 
@@ -1004,7 +1017,7 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutex_t* mutex = new pthread_mutex_t;
     if (mutex == NULL)
     {
-   ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
     }
 
     pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
@@ -1012,8 +1025,8 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutexattr_setkind_np(attr, __MUTEX_RECURSIVE);
     if (pthread_mutex_init(mutex, attr))
     {
-        ThrowXML(XMLPlatformUtilsException,
-                XMLExcepts::Mutex_CouldNotCreate);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
     }
     pthread_mutexattr_destroy(attr);
     delete attr;
@@ -1032,14 +1045,14 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
     if (isPosixEnabled) {
-    if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
-    {
-   ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
-    }
+        if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
+        {
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
+        }
     } // __isPosixOn
     else {
-   if (*(int*) mtxHandle == 0 )
-   *(int*) mtxHandle = 0;
+        if (*(int*) mtxHandle == 0 )
+            *(int*) mtxHandle = 0;
     }
 }
 
@@ -1100,7 +1113,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 }
 
 
-FileHandle XMLPlatformUtils::openStdInHandle()
+FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 {
      FileHandleImpl* retVal;
      FILE* fileHandle = 0;

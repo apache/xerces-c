@@ -116,23 +116,26 @@ void XMLPlatformUtils::platformTerm()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
-unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
+unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile
+                                          , MemoryManager* const manager)
 {
     // Get the current position
     int curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
 
     return (unsigned int)curPos;
 }
 
-void XMLPlatformUtils::closeFile(FileHandle theFile)
+void XMLPlatformUtils::closeFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     if (fclose((FILE*)theFile))
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile, manager);
 }
 
-unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
+unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
+                                        , MemoryManager* const manager)
 {
     return (unsigned int)filelength(fileno((FILE *)theFile));
 }
@@ -157,30 +160,32 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openStdInHandle()
+FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 {
     return (FileHandle)fdopen(dup(0), "rb");
 }
 
 unsigned int XMLPlatformUtils::readFileBuffer ( FileHandle      theFile
                             , const unsigned int    toRead
-                            ,       XMLByte* const  toFill )
+                            ,       XMLByte* const  toFill 
+                            , MemoryManager* const manager)
 {
     size_t noOfItemsRead = fread( (void*) toFill, 1, toRead, (FILE*)theFile);
 
     if(ferror((FILE*)theFile))
     {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
     }
 
     return (unsigned int)noOfItemsRead;
 }
 
-void XMLPlatformUtils::resetFile(FileHandle theFile)
+void XMLPlatformUtils::resetFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET) )
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile, manager);
 }
 
 
@@ -281,7 +286,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 
     if (DosCloseMutexSem( (HMTX)mtxHandle))
     {
-      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
+      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
     }
 #endif
 }
@@ -294,7 +299,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 
     if (DosRequestMutexSem( (HMTX)mtxHandle,(ULONG) SEM_INDEFINITE_WAIT) )
     {
-      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
+      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
     }
 #endif
 }
@@ -305,7 +310,7 @@ void* XMLPlatformUtils::makeMutex()
     HMTX hRet; // Mutex Handle
 
     if (DosCreateMutexSem(NULL, &hRet, 0, FALSE))
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
     return (void*)hRet;
 #else
     return 0;
@@ -320,7 +325,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 
     if (DosReleaseMutexSem( (HMTX)mtxHandle))
     {
-      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
+      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
     }
 #endif
 }

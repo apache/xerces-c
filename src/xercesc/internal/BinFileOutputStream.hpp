@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.1  2003/09/18 18:39:12  peiyongz
  * Binary File Output Stream:
  *
@@ -82,6 +86,7 @@ public :
     BinFileOutputStream
     (
         const   XMLCh* const    fileName
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     BinFileOutputStream
@@ -118,7 +123,8 @@ private :
     //      The source file that we represent. The FileHandle type is defined
     //      per platform.
     // -----------------------------------------------------------------------
-    FileHandle      fSource;
+    FileHandle              fSource;
+    MemoryManager* const    fMemoryManager;
 };
 
 

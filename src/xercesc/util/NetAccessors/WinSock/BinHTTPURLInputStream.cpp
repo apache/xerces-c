@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -300,7 +304,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     {
         if (!fInitMutex)
         {
-            XMLMutex* tmpMutex = new XMLMutex;
+            XMLMutex* tmpMutex = new XMLMutex();
             if (XMLPlatformUtils::compareAndSwap((void**)&fInitMutex, tmpMutex, 0))
             {
                 // Someone beat us to it, so let's clean up ours

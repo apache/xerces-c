@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/12/17 13:58:02  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.1  2003/09/18 18:39:12  peiyongz
  * Binary File Output Stream:
  *
@@ -81,26 +85,29 @@ XERCES_CPP_NAMESPACE_BEGIN
 BinFileOutputStream::~BinFileOutputStream()
 {
     if (fSource)
-        XMLPlatformUtils::closeFile(fSource);
+        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
 }
 
-BinFileOutputStream::BinFileOutputStream(const XMLCh*   const fileName)
+BinFileOutputStream::BinFileOutputStream(const XMLCh*   const fileName
+                                         , MemoryManager* const manager)
 
 :fSource(0)
+,fMemoryManager(manager)
 {
-    fSource = XMLPlatformUtils::openFileToWrite(fileName);
+    fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
 }
 
 BinFileOutputStream::BinFileOutputStream(const char*    const fileName
                                        , MemoryManager* const manager)
 :fSource(0)
+,fMemoryManager(manager)
 {
     // Transcode the file name and put a janitor on the temp buffer
     XMLCh* realName = XMLString::transcode(fileName, manager);
     ArrayJanitor<XMLCh> janName(realName, manager);
 
     // Try to open the file
-    fSource = XMLPlatformUtils::openFileToWrite(realName);
+    fSource = XMLPlatformUtils::openFileToWrite(realName, manager);
 }
 
 // ---------------------------------------------------------------------------
@@ -108,7 +115,7 @@ BinFileOutputStream::BinFileOutputStream(const char*    const fileName
 // ---------------------------------------------------------------------------
 unsigned int BinFileOutputStream::getSize() const
 {
-    return XMLPlatformUtils::fileSize(fSource);
+    return XMLPlatformUtils::fileSize(fSource, fMemoryManager);
 }
 
 
@@ -117,7 +124,7 @@ unsigned int BinFileOutputStream::getSize() const
 // ---------------------------------------------------------------------------
 void BinFileOutputStream::reset()
 {
-    XMLPlatformUtils::resetFile(fSource);
+    XMLPlatformUtils::resetFile(fSource, fMemoryManager);
 }
 
 
@@ -126,7 +133,7 @@ void BinFileOutputStream::reset()
 // ---------------------------------------------------------------------------
 unsigned int BinFileOutputStream::curPos() const
 {
-    return XMLPlatformUtils::curFilePos(fSource);
+    return XMLPlatformUtils::curFilePos(fSource, fMemoryManager);
 }
 
 
@@ -137,7 +144,7 @@ void BinFileOutputStream::writeBytes(       XMLByte* const  toGo
     //  Write up to the maximum bytes requested. 
     //  
 
-    XMLPlatformUtils::writeBufferToFile(fSource, maxToWrite, toGo);
+    XMLPlatformUtils::writeBufferToFile(fSource, maxToWrite, toGo, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END
