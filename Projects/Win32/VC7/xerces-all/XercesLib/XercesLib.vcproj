@@ -1835,6 +1835,24 @@
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathNamespace.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathEvaluator.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMUserDataHandler.hpp">
 			</File>
 			<File

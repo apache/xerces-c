@@ -65,6 +65,7 @@
 #include "DOMNode.hpp"
 #include "DOMDocumentRange.hpp"
 #include "DOMDocumentTraversal.hpp"
+#include "DOMXPathEvaluator.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -100,8 +101,10 @@ class DOMNode;
  */
 
 class CDOM_EXPORT DOMDocument: public DOMDocumentRange,
+ public DOMXPathEvaluator,
  public DOMDocumentTraversal,
  public DOMNode {
+
 
 protected:
     // -----------------------------------------------------------------------

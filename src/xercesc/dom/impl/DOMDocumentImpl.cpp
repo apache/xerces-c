@@ -85,7 +85,7 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-
+#include <iostream>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -436,6 +436,29 @@ void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
         }
     }
 }
+
+
+const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh *expression, const DOMXPathNSResolver *resolver)
+{
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *nodeResolver)
+
+{
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+void* DOMDocumentImpl::evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
+                           unsigned short type, void* result) 
+{
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+
 
 DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {

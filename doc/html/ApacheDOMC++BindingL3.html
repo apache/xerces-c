@@ -23,11 +23,10 @@ Binding for DOM Level 2]</a></font></div>
 <p><br>This document contains the Experimental Apache Recommended C++ Language
 binding for the <a href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">Document
 Object Model Level 3.0 Core</a>, and for the subset of&nbsp; <a href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">Document
-Object Model Level 3.0 Abstract Schemas and Load and Save</a>.&nbsp; Both
-are W3C Working Draft of 09 April 2002.
+Object Model Level 3.0 Abstract Schemas and Load and Save</a>&nbsp;, as well as the <a href="http://www.w3.org/TR/2003/CR-DOM-Level-3-XPath-20030331/">Document Object Model Level 3.0 XPath</a>.&nbsp;
 <p>The definitions are divided into <a href="#A: Document Object Model: Core">Core</a>,
 and
-<a href="#B: Document Object Model: Load and Save">Load and Save</a>.
+<a href="#B: Document Object Model: Load and Save">Load and Save</a> and <a href="#C: Document Object Model: XPath">XPath</a>.
 The headers are also available in Xerces-C++ distribution.
 <p>Note:
 <ol>
@@ -125,6 +124,13 @@ are owned by implementation</li>
 <br>- added DOMError::getRelatedData, DOMError::setRelatedData, DOMError::SetType, DOMError::getType
 <br>- removed DOMDocument::setFeature, DOMDocument::getFeature, DOMDocument::canSetFeature
 <br>- added DOMDocument::getDOMConfiguration
+</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>Xerces-C++ 2.4</td>
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- added DOM Level 3 XPath interfaces
 </td>
 </tr>
 
@@ -4397,6 +4403,611 @@ long toShow) = 0;</font></font></td>
 </table>
 </div>
 
+
+
+
+<hr WIDTH="100%">
+<h2>
+<a NAME="C: Document Object Model: XPath"></a><u><font color="#000000"><a href="#C++ Language Binding for DOM Level 3">C:
+Document Object Model: XPath</a></font></u></h2>
+
+
+
+
+<h3>
+<font color="#000000">DOMXPathEvaluator.hpp:</font></h3>
+
+<div id="DOMXPathEvaluator"><font face="Courier New,Courier"><font size=-1>classDOMXPathEvaluator</font></font>
+<table>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>public:</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const DOMXPathExpression*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>createExpression(const XMLCh *expression, const DOMXPathNSResolver *resolver) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const DOMXPathNSResolver*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>createNSResolver(DOMNode *nodeResolver) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver,                            unsigned short type, void* result) = 0;
+</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+
+
+
+<h3>
+<font color="#000000">DOMXPathException.hpp:</font></h3>
+
+<div id="DOMXPathException"><font face="Courier New,Courier"><font size=-1>classDOMXPathException</font></font>
+<table>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>public:</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>enum</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>ExceptionCode {</font></font></td>
+
+<td></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>INVALID_EXPRESSION_ERR</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 51,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TYPE_ERR</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 52,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+<h3>
+<font color="#000000">DOMXPathExpression.hpp:</font></h3>
+
+<div id="DOMXPathExpression"><font face="Courier New,Courier"><font size=-1>class
+DOMXPathExpression</font></font>
+<table>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>public:</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>evaluate(DOMNode *contextNode, unsigned short type, void* result) const = 0;</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+
+
+
+
+<h3>
+<font color="#000000">DOMXPathNamespace.hpp:</font></h3>
+
+<div id="DOMXPathNamespace"><font face="Courier New,Courier"><font size=-1>classDOMXPathNamespace</font></font>
+<table>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>public:</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>enum</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>XPathNodeType {</font></font></td>
+
+<td></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>XPATH_NAMESPACE_NODE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 13,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMElement</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>*getOwnerElement() const = 0;</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+
+
+
+<h3>
+<font color="#000000">DOMXPathNSResolver.hpp:</font></h3>
+
+<div id="DOMXPathNSResolver"><font face="Courier New,Courier"><font size=-1>class
+DOMXPathNSResolver</font></font>
+<table>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>public:</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>lookupNamespaceURI(const XMLCh* prefix) const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>lookupPrefix(const XMLCh* URI) const = 0;</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+
+
+
+
+<h3>
+<font color="#000000">DOMXPathResult.hpp:</font></h3>
+
+<div id="DOMXPathResult"><font face="Courier New,Courier"><font size=-1>class
+DOMXPathResult</font></font>
+<table>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>public:</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>enum</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>resultType {</font></font></td>
+
+<td></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>ANY_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>NUMBER_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 1,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>STRING_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 2,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>BOOLEAN_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 3,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>UNORDERED_NODE_ITERATOR_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 4,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>ORDERED_NODE_ITERATOR_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 5,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>UNORDERED_NODE_SNAPSHOT_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 6,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>ORDERED_NODE_SNAPSHOT_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 7,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>ANY_UNORDERED_NODE_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 8,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>FIRST_ORDERED_NODE_TYPE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 9,</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
+
+
+
+
+<td><font face="Courier New,Courier"><font size=-1>getBooleanValue() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getInvalidIteratorState() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>double</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getNumberValue() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>short</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getResultType() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMNode</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>*getSingleNodeValue() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>unsigned long</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getSnapshotLength() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getStringValue() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>iterateNext() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>snapshotItem(unsigned long index) const = 0;</font></font></td>
+</tr>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+
+</tr>
+</table>
+</div>
+
 <div class='div1'>
 <div id="Divider">
 <hr WIDTH="100%"></div>
@@ -4410,6 +5021,8 @@ long toShow) = 0;</font></font></td>
 </table>
 </div>
 </div>
+
+
 
 </body>
 </html>

@@ -107,6 +107,8 @@ class DOMRangeImpl;
 class DOMStringPool;
 class DOMBuffer;
 class MemoryManager;
+class XPathNSResolver;
+class XPathExpression;
 
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
 typedef RefVectorOf<DOMNodeIteratorImpl>     NodeIterators;
@@ -192,6 +194,11 @@ public:
     virtual NodeIterators*       getNodeIterators() const;  //non-standard api
     virtual void                 removeRange(DOMRangeImpl* range); //non-standard api
     virtual void                 removeNodeIterator(DOMNodeIteratorImpl* nodeIterator); //non-standard api
+
+    virtual const DOMXPathExpression*    createExpression(const XMLCh *expression, const DOMXPathNSResolver *resolver);
+    virtual const DOMXPathNSResolver*    createNSResolver(DOMNode *nodeResolver);
+    virtual void* evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
+                           unsigned short type, void* result);
 
 
     // Extension to be called by the Parser

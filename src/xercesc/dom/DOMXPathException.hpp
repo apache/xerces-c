@@ -1,10 +1,10 @@
-#ifndef DOMHEADER_GUARD_HPP
-#define DOMHEADER_GUARD_HPP
+#ifndef DOMXPathException_HEADER_GUARD_
+#define DOMXPathException_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,66 +57,94 @@
  * <http://www.apache.org/>.
  */
 
-/*
- * $Id$
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+/**
+ * @since DOM Level 3
  */
+class CDOM_EXPORT DOMXPathException
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors
+    // -----------------------------------------------------------------------
+    /** @name Constructors */
+    //@{
+    /**
+      * Default constructor for DOMXPathException.
+      *
+      */
+    DOMXPathException();
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
+    /**
+      * Constructor which takes an error code and a message.
+      *
+      * @param code The error code which indicates the exception
+      * @param message The string containing the error message
+      */
+    DOMXPathException(short code, const XMLCh *message);
 
-#include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/dom/DOMCDATASection.hpp>
-#include <xercesc/dom/DOMCharacterData.hpp>
-#include <xercesc/dom/DOMComment.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentFragment.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMEntity.hpp>
-#include <xercesc/dom/DOMEntityReference.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNode.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMNotation.hpp>
-#include <xercesc/dom/DOMProcessingInstruction.hpp>
-#include <xercesc/dom/DOMText.hpp>
+    /**
+      * Copy constructor.
+      *
+      * @param other The object to be copied.
+      */
+    DOMXPathException(const DOMXPathException  &other);
 
-// Introduced in DOM Level 2
-#include <xercesc/dom/DOMDocumentRange.hpp>
-#include <xercesc/dom/DOMDocumentTraversal.hpp>
-#include <xercesc/dom/DOMNodeFilter.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMRange.hpp>
-#include <xercesc/dom/DOMRangeException.hpp>
-#include <xercesc/dom/DOMTreeWalker.hpp>
+    //@}
 
-// Introduced in DOM Level 3
-// Experimental - subject to change
-#include <xercesc/dom/DOMBuilder.hpp>
-#include <xercesc/dom/DOMConfiguration.hpp>
-#include <xercesc/dom/DOMEntityResolver.hpp>
-#include <xercesc/dom/DOMError.hpp>
-#include <xercesc/dom/DOMErrorHandler.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
-#include <xercesc/dom/DOMImplementationSource.hpp>
-#include <xercesc/dom/DOMInputSource.hpp>
-#include <xercesc/dom/DOMLocator.hpp>
-#include <xercesc/dom/DOMTypeInfo.hpp>
-#include <xercesc/dom/DOMUserDataHandler.hpp>
-#include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/dom/DOMWriterFilter.hpp>
+    // -----------------------------------------------------------------------
+    //  Destructors
+    // -----------------------------------------------------------------------
+    /** @name Destructor. */
+    //@{
+	 /**
+	  * Destructor for DOMXPathException.
+	  *
+	  */
+    virtual ~DOMXPathException();
+    //@}
 
-#include <xercesc/dom/DOMXPathEvaluator.hpp>
-#include <xercesc/dom/DOMXPathNSResolver.hpp>
-#include <xercesc/dom/DOMXPathException.hpp>
-#include <xercesc/dom/DOMXPathExpression.hpp>
-#include <xercesc/dom/DOMXPathResult.hpp>
-#include <xercesc/dom/DOMXPathNamespace.hpp>
+public:
 
+    //@{
+    /**
+     * ExceptionCode
+     * INVALID_EXPRESSION_ERR If the expression has a syntax error or otherwise
+     * is not a legal expression according to the rules of the specific 
+     * <code>XPathEvaluator</code> or contains specialized extension functions
+     * or variables not supported by this implementation.
+     * TYPE_ERR If the expression cannot be converted to return the specified type.
+     */
+	enum ExceptionCode {
+		INVALID_EXPRESSION_ERR = 51,
+		TYPE_ERR = 52,
+	};
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Class Types
+    // -----------------------------------------------------------------------
+    /** @name Public variables */
+    //@{
+	 /**
+	  * A code value, from the set defined by the ExceptionCode enum,
+     * indicating the type of error that occured.
+     */
+    ExceptionCode   code;
+
+	 /**
+	  * A string value.  Applications may use this field to hold an error
+     *  message.  The field value is not set by the DOM implementation,
+     *  meaning that the string will be empty when an exception is first
+     *  thrown.
+	  */
+    const XMLCh *msg;
+    //@}
+};
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -85,7 +85,7 @@ DOM_CPP_PUBHEADERS = \
 	DOMCDATASection.hpp \
 	DOMCharacterData.hpp \
 	DOMComment.hpp \
-        DOMConfiguration.hpp \
+  DOMConfiguration.hpp \
 	DOMDocument.hpp \
 	DOMDocumentRange.hpp \
 	DOMDocumentTraversal.hpp \
@@ -119,7 +119,13 @@ DOM_CPP_PUBHEADERS = \
 	DOMUserDataHandler.hpp \
 	DOMWriter.hpp \
 	DOMWriterFilter.hpp \
-	StDOMNode.hpp
+	StDOMNode.hpp \
+	DOMXPathNamespace.hpp \
+	DOMXPathNSResolver.hpp \
+	DOMXPathResult.hpp \
+	DOMXPathEvaluator.hpp \
+	DOMXPathException.hpp \
+	DOMXPathExpression.hpp 
 
 DOM_CPP_PRIVHEADERS =
 
@@ -127,7 +133,8 @@ DOM_C_FILES =
 
 DOM_CPP_OBJECTS = \
 	DOMException.$(TO) \
-	DOMRangeException.$(TO)
+	DOMRangeException.$(TO) \
+	DOMXPathException.$(TO) 
 
 all::	includes $(DOM_CPP_OBJECTS) impl deprecated
 

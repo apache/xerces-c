@@ -3135,6 +3135,31 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriter.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNamespace.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathEvaluator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp
+# End Source File
+# Begin Source File
+
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp
 # End Source File
 # End Group
@@ -3144,3 +3169,5 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
 # End Source File
 # End Target
 # End Project
+
+
