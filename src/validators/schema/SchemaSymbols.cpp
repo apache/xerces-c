@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 19:18:03  knoaman
+ * TraverseSchema Part II.
+ *
  * Revision 1.1  2001/03/21 21:39:21  knoaman
  * Schema symbols and Datatype validator part I
  *
@@ -488,9 +491,9 @@ const XMLCh SchemaSymbols::fgATT_NAMESPACE[] =
     chLatin_a, chLatin_c, chLatin_e, chNull
 };
 
-const XMLCh SchemaSymbols::fgATT_NULLABLE[] =
+const XMLCh SchemaSymbols::fgATT_NILLABLE[] =
 {
-    chLatin_n, chLatin_u, chLatin_l, chLatin_l, chLatin_a, chLatin_b,
+    chLatin_n, chLatin_i, chLatin_l, chLatin_l, chLatin_a, chLatin_b,
     chLatin_l, chLatin_e, chNull
 };
 
@@ -568,6 +571,13 @@ const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL[] =
 const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDOTHER[] =
 {
     chPound, chPound, chLatin_o, chLatin_o, chLatin_h, chLatin_e, chLatin_r, chNull
+};
+
+const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE[] =
+{
+    chPound, chPound, chLatin_t, chLatin_a, chLatin_r, chLatin_g, chLatin_e,
+    chLatin_t, chLatin_N, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p,
+    chLatin_a, chLatin_c, chLatin_e, chNull
 };
 
 const XMLCh SchemaSymbols::fgATTVAL_POUNDALL[] = 
@@ -696,6 +706,11 @@ const XMLCh SchemaSymbols::fgATTVAL_SKIP[] =
     chLatin_s, chLatin_k, chLatin_i, chLatin_p, chNull
 };
 
+const XMLCh SchemaSymbols::fgATTVAL_STRICT[] =
+{
+    chLatin_s, chLatin_t, chLatin_r, chLatin_i, chLatin_c, chLatin_t, chNull
+};
+
 const XMLCh SchemaSymbols::fgATTVAL_STRING[] =
 {
     chLatin_s, chLatin_t, chLatin_r, chLatin_i, chLatin_n, chLatin_g, chNull
@@ -740,6 +755,18 @@ const XMLCh SchemaSymbols::fgATTVAL_SUBSTITUTIONGROUP[] =
     chLatin_s, chLatin_u, chLatin_b, chLatin_s, chLatin_t, chLatin_i,
     chLatin_t, chLatin_u, chLatin_t, chLatin_i, chLatin_o, chLatin_n,
     chLatin_G, chLatin_r, chLatin_o, chLatin_u, chLatin_p, chNull
+};
+
+const XMLCh SchemaSymbols::fgATTVAL_SUBSTITUTION[] =
+{
+    chLatin_s, chLatin_u, chLatin_b, chLatin_s, chLatin_t, chLatin_i,
+    chLatin_t, chLatin_u, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh SchemaSymbols::fgATTVAL_ANYTYPE[] =
+{
+    chLatin_a, chLatin_n, chLatin_y, chLatin_T, chLatin_y, chLatin_p,
+    chLatin_e, chNull
 };
 
 const XMLCh SchemaSymbols::fgWS_COLLAPSE[] =

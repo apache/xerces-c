@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 19:17:47  knoaman
+ * TraverseSchema Part II.
+ *
  * Revision 1.1  2001/03/21 21:39:14  knoaman
  * Schema symbols and Datatype validator part I
  *
@@ -70,10 +73,6 @@
 #include <util/XMLUniDefs.hpp>
 #include <util/Janitor.hpp>
 
-// ---------------------------------------------------------------------------
-//  DatatypeValidatorFactory: Local declaration
-// ---------------------------------------------------------------------------
-typedef RefHashTableOf<KVStringPair> KVStringPairHashTable;
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local const data
@@ -365,7 +364,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 		Janitor<KVStringPairHashTable> janFacets(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
-                    new KVStringPair(0, SchemaSymbols::fgWS_REPLACE));
+                    new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_REPLACE));
 
         if (createDatatypeValidator(XMLUni::fgCDATAString,
                     getDatatypeValidator(SchemaSymbols::fgDT_STRING),
@@ -378,7 +377,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
-                    new KVStringPair(0, SchemaSymbols::fgWS_COLLAPSE));
+                    new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_COLLAPSE));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_TOKEN,
                       getDatatypeValidator(XMLUni::fgCDATAString),
@@ -391,7 +390,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_PATTERN,
-                    new KVStringPair(0, fgLangPattern));
+                    new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgLangPattern));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_LANGUAGE, 
                       getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),
@@ -404,7 +403,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_PATTERN,
-                    new KVStringPair(0, fgNamePattern));
+                    new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgNamePattern));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_NAME,
                       getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),
@@ -417,7 +416,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_PATTERN,
-                    new KVStringPair(0, fgNCNamePattern));
+                    new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgNCNamePattern));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_NCNAME,
                       getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),
@@ -430,7 +429,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_SCALE,
-                    new KVStringPair(0, fgValueZero));
+                    new KVStringPair(SchemaSymbols::fgELT_SCALE, fgValueZero));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_INTEGER,
                       getDatatypeValidator(SchemaSymbols::fgDT_DECIMAL),
@@ -443,7 +442,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgValueZero));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgValueZero));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER, 
                       getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
@@ -456,7 +455,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-			        new KVStringPair(0,fgNegOne));
+			        new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE,fgNegOne));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_NEGATIVEINTEGER, 
                       getDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER),
@@ -469,9 +468,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0,fgLongMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE,fgLongMaxInc));
         facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                    new KVStringPair(0,fgLongMinInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE,fgLongMinInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_LONG,
                       getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
@@ -484,9 +483,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgIntMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgIntMaxInc));
         facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                    new KVStringPair(0, fgIntMinInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgIntMinInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_INT,
                       getDatatypeValidator(SchemaSymbols::fgDT_LONG),
@@ -499,9 +498,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgShortMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgShortMaxInc));
         facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE, 
-                    new KVStringPair(0, fgShortMinInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgShortMinInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_SHORT,
                       getDatatypeValidator(SchemaSymbols::fgDT_INT),                                
@@ -514,9 +513,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgByteMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgByteMaxInc));
         facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                    new KVStringPair(0, fgByteMinInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgByteMinInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_BYTE,
                       getDatatypeValidator(SchemaSymbols::fgDT_SHORT),
@@ -529,7 +528,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                    new KVStringPair(0, fgValueZero));
+                    new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgValueZero));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER,
                       getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
@@ -542,7 +541,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgULongMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgULongMaxInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_ULONG,
                       getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),
@@ -555,7 +554,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgUIntMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUIntMaxInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_UINT,
                       getDatatypeValidator(SchemaSymbols::fgDT_ULONG),
@@ -568,7 +567,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgUShortMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUShortMaxInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_USHORT, 
                       getDatatypeValidator(SchemaSymbols::fgDT_UINT),
@@ -581,7 +580,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                    new KVStringPair(0, fgUByteMaxInc));
+                    new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUByteMaxInc));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_UBYTE,
                       getDatatypeValidator(SchemaSymbols::fgDT_USHORT),
@@ -594,7 +593,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                    new KVStringPair(0, fgValueOne));
+                    new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgValueOne));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_POSITIVEINTEGER,
                       getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),
@@ -607,9 +606,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_DURATION,
-                    new KVStringPair(0, fgP0Y));
+                    new KVStringPair(SchemaSymbols::fgELT_DURATION, fgP0Y));
         facets->put((void*) SchemaSymbols::fgELT_PERIOD,
-                    new KVStringPair(0, fgP0Y));
+                    new KVStringPair(SchemaSymbols::fgELT_PERIOD, fgP0Y));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_TIMEINSTANT, 
                       getDatatypeValidator(SchemaSymbols::fgDT_RECURRINGDURATION),
@@ -624,7 +623,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_PERIOD,
-                    new KVStringPair(0, fgP0Y));
+                    new KVStringPair(SchemaSymbols::fgELT_PERIOD, fgP0Y));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_TIMEPERIOD,
                       getDatatypeValidator(SchemaSymbols::fgDT_RECURRINGDURATION),
@@ -637,7 +636,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_DURATION,
-                    new KVStringPair(0, fgPT24H));
+                    new KVStringPair(SchemaSymbols::fgELT_DURATION, fgPT24H));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_DATE,
                       getDatatypeValidator(SchemaSymbols::fgDT_TIMEPERIOD),
@@ -650,7 +649,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_DURATION,
-                    new KVStringPair(0, fgP1M));
+                    new KVStringPair(SchemaSymbols::fgELT_DURATION, fgP1M));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_MONTH,
                       getDatatypeValidator(SchemaSymbols::fgDT_TIMEPERIOD),
@@ -663,7 +662,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_DURATION,
-                    new KVStringPair(0, fgP1Y));
+                    new KVStringPair(SchemaSymbols::fgELT_DURATION, fgP1Y));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_YEAR,
                       getDatatypeValidator(SchemaSymbols::fgDT_TIMEPERIOD),
@@ -676,7 +675,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_DURATION,
-                    new KVStringPair(0, fgP100Y));
+                    new KVStringPair(SchemaSymbols::fgELT_DURATION, fgP100Y));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_CENTURY,
                       getDatatypeValidator(SchemaSymbols::fgDT_TIMEPERIOD),
@@ -689,9 +688,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         janFacets.reset(facets);
 
         facets->put((void*) SchemaSymbols::fgELT_PERIOD,
-                    new KVStringPair(0, fgP1Y));
+                    new KVStringPair(SchemaSymbols::fgELT_PERIOD, fgP1Y));
         facets->put((void*) SchemaSymbols::fgELT_DURATION,
-                    new KVStringPair(0, fgPT24H));
+                    new KVStringPair(SchemaSymbols::fgELT_DURATION, fgPT24H));
 
         if (createDatatypeValidator(SchemaSymbols::fgDT_RECURRINGDATE, 
                       getDatatypeValidator(SchemaSymbols::fgDT_RECURRINGDURATION),
@@ -713,7 +712,8 @@ DatatypeValidator*
 DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName, 
 		                                          DatatypeValidator* const baseValidator,
                                                   RefHashTableOf<KVStringPair>* const facets,
-                                                  const bool derivedByList)
+                                                  const bool derivedByList,
+                                                  const int finalSet)
 {
 	if (baseValidator == 0) {
         return 0;
@@ -728,7 +728,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
     else {
 
         baseValidator->processWhiteSpace(facets);
-        datatypeValidator = baseValidator->newInstance(baseValidator, facets);
+        datatypeValidator = baseValidator->newInstance(baseValidator, facets, finalSet);
     }
 
     if (datatypeValidator != 0) {
@@ -741,14 +741,15 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 
 DatatypeValidator*
 DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
-                                                  RefVectorOf<DatatypeValidator>* const validators)
+                                                  RefVectorOf<DatatypeValidator>* const validators,
+                                                  const int finalSet)
 {
     if (validators == 0)
         return 0;
 
     DatatypeValidator* datatypeValidator = 0;
 
-    //datatypeValidator = new UnionDatatypeValidator(validators);
+    //datatypeValidator = new UnionDatatypeValidator(validators, finalSet);
 
     if (datatypeValidator != 0) {
         fRegistry->put((void*) typeName, datatypeValidator); 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/03 19:17:59  knoaman
+ * TraverseSchema Part II.
+ *
  * Revision 1.5  2001/04/19 17:43:16  knoaman
  * More schema implementation classes.
  *
@@ -94,12 +97,13 @@ SchemaElementDecl::SchemaElementDecl() :
 
     fModelType(Any)
     , fDatatypeValidator(0)
-    , fEnclosingScope(-1)
+    , fEnclosingScope(Grammar::TOP_LEVEL_SCOPE)
     , fBlockSet(0)
     , fFinalSet(0)
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
+    , fTypeFromAnotherSchemaURI(0)    
     , fComplexTypeInfo(0)
 {
 }
@@ -118,6 +122,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
+    , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
 {
     setElementName(prefix, localPart, uriId);
@@ -135,6 +140,7 @@ SchemaElementDecl::SchemaElementDecl(QName* const                  elementName
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
+    , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
 {
     setElementName(elementName);

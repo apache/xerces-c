@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 19:17:26  knoaman
+ * TraverseSchema Part II.
+ *
  * Revision 1.7  2000/03/02 19:53:55  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -451,7 +454,7 @@ public:
 
      friend class DOM_Document;
      friend class DOM_Attr;
-
+     friend class TraverseSchema;
 };
 
 #endif

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -65,9 +65,9 @@
 #include <util/KVStringPair.hpp>
 
 /**
-  * DataTypeValidator defines the interface that data type validators must 
+  * DataTypeValidator defines the interface that data type validators must
   * obey. These validators can be supplied by the application writer and may
-  * be useful as standalone code as well as plugins to the validator 
+  * be useful as standalone code as well as plugins to the validator
   * architecture.
   *
   * Notice:
@@ -90,7 +90,7 @@ public:
         FACET_LENGTH       = 1,
         FACET_MINLENGTH    = 1<<1,
         FACET_MAXLENGTH    = 1<<2,
-        FACET_PATTERN      = 1<<3, 
+        FACET_PATTERN      = 1<<3,
         FACET_ENUMERATION  = 1<<4,
         FACET_MAXINCLUSIVE = 1<<5,
         FACET_MAXEXCLUSIVE = 1<<6,
@@ -104,14 +104,14 @@ public:
         FACET_WHITESPACE   = 1<<14
     };
 
-    //2.4.2.6 whiteSpace - Datatypes 
+    //2.4.2.6 whiteSpace - Datatypes
 	enum {
         PRESERVE = 0,
         REPLACE  = 1,
         COLLAPSE = 2
     };
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Destructor
     // -----------------------------------------------------------------------
 	/** @name Destructor. */
@@ -128,8 +128,13 @@ public:
     //@{
 
     /**
+      * Returns the final values of the simpleType
+      */
+    int getFinalSet() const;
+
+    /**
       * Returns the datatype facet if any is set.
-	  */
+      */
 	RefHashTableOf<KVStringPair>* getFacets() const;
 
     /**
@@ -151,7 +156,7 @@ public:
     /** @name Validation Function */
     //@{
 
-     /** 
+     /**
 	   * Checks that the "content" string is valid datatype.
        * If invalid, a Datatype validation exception is thrown.
 	   *
@@ -159,6 +164,14 @@ public:
 	   *
 	   */
 	virtual void validate(const XMLCh* const content) = 0;
+
+    /**
+      * Checks whether a given type can be used as a substitute
+      *
+      * @param  toCheck    A datatype validator of the type to be used as a
+      *                    substitute
+      */
+    bool isSubstitutableBy(const DatatypeValidator* const toCheck);
 
 	 //@}
 
@@ -170,7 +183,7 @@ public:
 
     /**
       * Compares content in the Domain value vs. lexical value.
-      * 
+      *
       * e.g. If type is a float then 1.0 may be equivalent to 1 even though
       * both are lexically different.
       *
@@ -192,16 +205,17 @@ protected:
     /** @name Constructors */
     //@{
 
-	/**
+    /**
       *
       * @param  baseValidator  The base datatype validator for derived
       *                        validators. Null if native validator.
       *
       * @param  facets         A hashtable of datatype facets.
-	  *
+      *
       */
 	DatatypeValidator(DatatypeValidator* const baseValidator,
-                      RefHashTableOf<KVStringPair>* const facets);
+                      RefHashTableOf<KVStringPair>* const facets,
+                      const int finalSet);
 
     //@}
 
@@ -210,13 +224,14 @@ protected:
 	  * Used by the DatatypeValidatorFactory.
       */
 	virtual DatatypeValidator* newInstance(DatatypeValidator* const,
-                                           RefHashTableOf<KVStringPair>* const) = 0;
+                                           RefHashTableOf<KVStringPair>* const,
+                                           const int finalSet) = 0;
 
 	friend class DatatypeValidatorFactory;
 
 	/**
 	  * Process the WHITESPACE facet if passed by user.
-      * For all datatypes (exception of string), we don't need to pass 
+      * For all datatypes (exception of string), we don't need to pass
 	  * the WHITESPACE facet as its value is always 'collapse' and cannot
 	  * be reset by user.
 	  *
@@ -233,6 +248,9 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
+    //  fFinalSet
+    //      stores "final" values of simpleTypes
+    //
     //  fBaseValidator
     //      This is a pointer to a base datatype validator. If value is null,
 	//      it means we have a native datatype validator not a derived one.
@@ -240,6 +258,7 @@ private:
     //  fFacets
     //      This is a hashtable of dataype facets.
     // -----------------------------------------------------------------------
+    int                           fFinalSet;
 	DatatypeValidator*            fBaseValidator;
 	RefHashTableOf<KVStringPair>* fFacets;
 };
@@ -248,6 +267,11 @@ private:
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Getters
 // ---------------------------------------------------------------------------
+inline int DatatypeValidator::getFinalSet() const {
+
+    return fFinalSet;
+}
+
 inline RefHashTableOf<KVStringPair>* DatatypeValidator::getFacets() const {
 
     return fFacets;
@@ -263,7 +287,6 @@ inline short DatatypeValidator::getWSFacet() const {
     return COLLAPSE;
 }
 
-
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: CleanUp methods
 // ---------------------------------------------------------------------------
@@ -276,10 +299,30 @@ inline void DatatypeValidator::cleanUp() {
 // ---------------------------------------------------------------------------
 //  DatatypeValidators: Compare methods
 // ---------------------------------------------------------------------------
-inline int DatatypeValidator::compare(const XMLCh* const value1, 
+inline int DatatypeValidator::compare(const XMLCh* const value1,
                                       const XMLCh* const value2)
 {
     return XMLString::compareString(value1, value2);
+}
+
+// ---------------------------------------------------------------------------
+//  DatatypeValidators: Validation methods
+// ---------------------------------------------------------------------------
+inline bool
+DatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
+{
+    const DatatypeValidator* dv = toCheck;
+
+	while (dv != 0) {
+
+        if (dv == this) {
+            return true;
+        }
+
+        dv = dv->getBaseValidator();
+    }
+
+    return false;
 }
 
 #endif

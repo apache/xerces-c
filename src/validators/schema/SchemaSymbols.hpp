@@ -143,7 +143,7 @@ public :
     static const XMLCh fgATT_MINOCCURS[];
     static const XMLCh fgATT_NAME[];
     static const XMLCh fgATT_NAMESPACE[];
-    static const XMLCh fgATT_NULLABLE[];
+    static const XMLCh fgATT_NILLABLE[];
     static const XMLCh fgATT_PROCESSCONTENTS[];
     static const XMLCh fgATT_REF[];
     static const XMLCh fgATT_REFER[];
@@ -158,6 +158,7 @@ public :
     static const XMLCh fgATTVAL_TWOPOUNDANY[];
     static const XMLCh fgATTVAL_TWOPOUNDLOCAL[];
     static const XMLCh fgATTVAL_TWOPOUNDOTHER[];
+    static const XMLCh fgATTVAL_TWOPOUNDTRAGETNAMESPACE[];
     static const XMLCh fgATTVAL_POUNDALL[];
     static const XMLCh fgATTVAL_BASE64[];
     static const XMLCh fgATTVAL_BOOLEAN[];
@@ -181,6 +182,7 @@ public :
     static const XMLCh fgATTVAL_REQUIRED[];
     static const XMLCh fgATTVAL_RESTRICTION[];
     static const XMLCh fgATTVAL_SKIP[];
+    static const XMLCh fgATTVAL_STRICT[];
     static const XMLCh fgATTVAL_STRING[];
     static const XMLCh fgATTVAL_TEXTONLY[];
     static const XMLCh fgATTVAL_TIMEDURATION[];
@@ -189,6 +191,8 @@ public :
     static const XMLCh fgATTVAL_URI[];
     static const XMLCh fgATTVAL_URIREFERENCE[];
     static const XMLCh fgATTVAL_SUBSTITUTIONGROUP[];
+    static const XMLCh fgATTVAL_SUBSTITUTION[];
+    static const XMLCh fgATTVAL_ANYTYPE[];
     static const XMLCh fgWS_COLLAPSE[];
     static const XMLCh fgWS_REPLACE[];
     static const XMLCh fgDT_STRING[];
@@ -228,12 +232,12 @@ public :
 
     enum {
         EMPTY_SET = 0,
-        EXTENSION = 1,
-        RESTRICTION = 2,
-        REPRODUCTION = 4,
+        SUBSTITUTION = 1,
+        EXTENSION = 2,
+        RESTRICTION = 4,
         LIST = 8,
-        ENUMERATION = 16,
-        SUBSTITUTIONGROUP = 32
+        UNION = 16,
+        ENUMERATION = 32
     };
 
     // group orders
@@ -245,7 +249,7 @@ public :
 
     enum {
         INFINITY = -1,
-        NULLABLE = 1,
+        NILLABLE = 1,
         ABSTRACT = 2
     };
 

@@ -82,7 +82,13 @@
  * to be checked. If no validation is necesary we should not instantiate a
  * DatatypeValidatorFactory.
  * If validation is needed, we need to instantiate a DatatypeValidatorFactory.
-  */
+ */
+
+// ---------------------------------------------------------------------------
+//  DatatypeValidatorFactory: Local declaration
+// ---------------------------------------------------------------------------
+typedef RefHashTableOf<KVStringPair> KVStringPairHashTable;
+
 
 class VALIDATORS_EXPORT DatatypeValidatorFactory
 {
@@ -174,11 +180,14 @@ public:
       *
       * @param  derivedByList  Indicates whether the datatype is derived by
 	  *                        list or not
+      *
+      * @param  finalSet       'final' values of the simpleType
 	  */
 	DatatypeValidator* createDatatypeValidator(const XMLCh* const, 
 		                                       DatatypeValidator* const,
                                                RefHashTableOf<KVStringPair>* const,
-                                               const bool);
+                                               const bool,
+                                               const int = 0);
 
     /** 
       * Creates a new datatype validator of type UnionDatatypeValidator and
@@ -190,7 +199,8 @@ public:
       *
       */
     DatatypeValidator* createDatatypeValidator(const XMLCh* const,
-                                               RefVectorOf<DatatypeValidator>* const);
+                                               RefVectorOf<DatatypeValidator>* const,
+                                               const int finalSet);
 
 	//@}
 

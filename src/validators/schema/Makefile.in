@@ -55,8 +55,8 @@
 #
 #
 # $Log$
-# Revision 1.6  2001/04/19 17:43:14  knoaman
-# More schema implementation classes.
+# Revision 1.7  2001/05/03 19:17:57  knoaman
+# TraverseSchema Part II.
 #
 # Revision 1.4  2001/03/30 16:06:00  tng
 # Schema: XUtil, added by Pei Yong Zhang
@@ -100,7 +100,9 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SchemaValidator.hpp \
 	XUtil.hpp \
 	NamespaceScope.hpp \
-	ComplexTypeInfo.hpp
+	ComplexTypeInfo.hpp \
+	SubstitutionGroupComparator.hpp \
+	TraverseSchema.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
 
@@ -115,7 +117,9 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SchemaValidator.$(TO) \
 	XUtil.$(TO) \
 	NamespaceScope.$(TO) \
-	ComplexTypeInfo.$(TO)
+	ComplexTypeInfo.$(TO) \
+	SubstitutionGroupComparator.$(TO) \
+	TraverseSchema.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
 

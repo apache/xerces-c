@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/03 19:18:01  knoaman
+ * TraverseSchema Part II.
+ *
  * Revision 1.4  2001/04/19 17:43:17  knoaman
  * More schema implementation classes.
  *
@@ -75,6 +78,7 @@
 #define SCHEMAELEMENTDECL_HPP
 
 #include <util/QName.hpp>
+#include <validators/common/Grammar.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
 
 class ContentSpecNode;
@@ -118,14 +122,14 @@ public :
       , const XMLCh* const       localPart
       , const int                uriId
       , const ModelTypes         modelType = Any
-      , const int                enclosingScope = -1
+      , const int                enclosingScope = Grammar::TOP_LEVEL_SCOPE
     );
 
     SchemaElementDecl
     (
         QName* const       elementName
       , const ModelTypes         modelType = Any
-      , const int                enclosingScope = -1
+      , const int                enclosingScope = Grammar::TOP_LEVEL_SCOPE
     );
 
     ~SchemaElementDecl();
@@ -166,6 +170,7 @@ public :
     int getMiscFlags() const;
     XMLCh* getDefaultValue() const;
     XMLCh* getSubstitutionGroupName() const;
+    XMLCh* getTypeFromAnotherSchemaURI() const;
     ComplexTypeInfo* getComplexTypeInfo() const;
 
 
@@ -181,6 +186,7 @@ public :
     void setMiscFlags(const int flags);
     void setDefaultValue(const XMLCh* const value);
     void setSubstitutionGroupName(const XMLCh* const name);
+    void setTypeFromAnotherSchemaURI(const XMLCh* const uriStr);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
 
@@ -231,6 +237,9 @@ private :
     //  fSubstitutionGroupName
     //      The substitution group full name ("uristring','local")
     //
+    //  fTypeFromAnotherSchemaURI
+    //      The URI of type if it belongs to a different schema
+    //
     //  fComplexTypeInfo
     //      Stores complex type information
     //      (no need to delete - handled by schema grammar)
@@ -244,6 +253,7 @@ private :
     int                            fMiscFlags;
     XMLCh*                         fDefaultValue;
     XMLCh*                         fSubstitutionGroupName;
+    XMLCh*                         fTypeFromAnotherSchemaURI;
     ComplexTypeInfo*               fComplexTypeInfo;
 };
 
@@ -323,6 +333,11 @@ inline XMLCh* SchemaElementDecl::getSubstitutionGroupName() const
     return fSubstitutionGroupName;
 }
 
+inline XMLCh* SchemaElementDecl::getTypeFromAnotherSchemaURI() const {
+
+    return fTypeFromAnotherSchemaURI;
+}
+
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
 {
     return fComplexTypeInfo;
@@ -383,6 +398,16 @@ inline void SchemaElementDecl::setSubstitutionGroupName(const XMLCh* const name)
     }
 
     fSubstitutionGroupName = XMLString::replicate(name);
+}
+
+inline void
+SchemaElementDecl::setTypeFromAnotherSchemaURI(const XMLCh* const uriStr) {
+
+    if (fTypeFromAnotherSchemaURI) {
+        delete [] fTypeFromAnotherSchemaURI;
+    }
+
+    fTypeFromAnotherSchemaURI = XMLString::replicate(uriStr);
 }
 
 inline void

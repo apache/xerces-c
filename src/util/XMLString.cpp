@@ -827,6 +827,17 @@ int XMLString::compareString(   const   XMLCh* const    str1
 {
     const XMLCh* psz1 = str1;
     const XMLCh* psz2 = str2;
+
+    if (psz1 == 0 || psz2 == 0) {
+
+        if (psz1 == 0) {
+            return 0 - XMLString::stringLen(psz2);
+        }
+		else if (psz2 == 0) {
+            return XMLString::stringLen(psz1);
+        }
+    }
+
     while (true)
     {
         // If an inequality, then return the difference
@@ -1237,6 +1248,60 @@ RefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
         index = skip;
     }
     return tokenStack;
+}
+
+//
+//  This method is called when we get a notation or enumeration type attribute
+//  to validate. We have to confirm that the passed value to find is one of
+//  the values in the passed list. The list is a space separated string of
+//  values to match against.
+//
+bool XMLString::isInList(const XMLCh* const toFind, const XMLCh* const enumList)
+{
+    //
+    //  We loop through the values in the list via this outer loop. We end
+    //  when we hit the end of the enum list or get a match.
+    //
+    const XMLCh* listPtr = enumList;
+    const unsigned int findLen = XMLString::stringLen(toFind);
+    while (*listPtr)
+    {
+        unsigned int testInd;
+        for (testInd = 0; testInd < findLen; testInd++)
+        {
+            //
+            //  If they don't match, then reset and try again. Note that
+            //  hitting the end of the current item will cause a mismatch
+            //  because there can be no spaces in the toFind string.
+            //
+            if (listPtr[testInd] != toFind[testInd])
+                break;
+        }
+
+        //
+        //  If we went the distance, see if we matched. If we did, the current
+        //  list character has to be null or space.
+        //
+        if (testInd == findLen)
+        {
+            if ((listPtr[testInd] == chSpace) || !listPtr[testInd])
+                return true;
+        }
+
+        // Run the list pointer up to the next substring
+        while ((*listPtr != chSpace) && *listPtr)
+            listPtr++;
+
+        // If we hit the end, then we failed
+        if (!*listPtr)
+            return false;
+
+        // Else move past the space and try again
+        listPtr++;
+    }
+
+    // We never found it
+    return false;
 }
 
 // ---------------------------------------------------------------------------

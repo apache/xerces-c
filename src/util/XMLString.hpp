@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/05/03 19:17:35  knoaman
+ * TraverseSchema Part II.
+ *
  * Revision 1.17  2001/03/21 21:56:13  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -936,6 +939,19 @@ public:
         , const XMLCh* const    prefix
     );
 
+    /** Tells if the sub-string appears within a string at the end.
+      * @param toTest The string to test
+      * @param suffix The sub-string that needs to be checked
+      * @return Returns true if the sub-string was found at the end of
+      * <code>toTest</code>, else false
+      */
+    static bool endsWith
+    (
+        const   XMLCh* const    toTest
+        , const XMLCh* const    prefix
+    );
+
+
     /** Tells if a string has any occurance of another string within itself
       * @param toSearch The string to be searched
       * @param searchList The sub-string to be searched within the string
@@ -1204,6 +1220,16 @@ inline bool XMLString::startsWithI( const   XMLCh* const    toTest
                                     , const XMLCh* const    prefix)
 {
     return (compareNIString(toTest, prefix, stringLen(prefix)) == 0);
+}
+
+inline bool XMLString::endsWith(const XMLCh* const toTest,
+                                const XMLCh* const suffix)
+{
+
+    unsigned int suffixLen = XMLString::stringLen(suffix);
+
+    return regionMatches(toTest, XMLString::stringLen(toTest) - suffixLen, 
+                         suffix, 0, suffixLen);
 }
 
 inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
