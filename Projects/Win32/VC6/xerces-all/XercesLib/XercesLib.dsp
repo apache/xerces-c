@@ -53,8 +53,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:1.0 /subsystem:windows /dll /incremental:yes /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
-# SUBTRACT LINK32 /pdb:none
+# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:1.0 /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
+# SUBTRACT LINK32 /pdb:none /incremental:yes
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
 
@@ -306,6 +306,10 @@ SOURCE=..\..\..\..\..\src\util\TranscodingException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\TransService.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\TransService.hpp
 # End Source File
 # Begin Source File
@@ -346,6 +350,22 @@ SOURCE=..\..\..\..\..\src\util\XML4CDefs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLEnumerator.hpp
 # End Source File
 # Begin Source File
@@ -374,11 +394,35 @@ SOURCE=..\..\..\..\..\src\util\XMLString.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLUCS4Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUCSTranscoder.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLUni.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLUni.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.hpp
 # End Source File
 # End Group
 # Begin Group "framework"
