@@ -329,7 +329,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     if (length($ICUROOT) > 0) {
         psystem("cp $XERCESCROOT/license.html $targetdir");
-        psystem("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        psystem("cp $XERCESCROOT/XLicense.html $targetdir");
     }
     psystem("rm -f $targetdir/doc/Doxyfile");
     psystem("rm -rf $targetdir/doc/dtd");
@@ -725,7 +725,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("cp $XERCESCROOT/LICENSE.txt $targetdir");
     if (length($ICUROOT) > 0) {
         psystem("cp $XERCESCROOT/license.html $targetdir");
-        psystem("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        psystem("cp $XERCESCROOT/XLicense.html $targetdir");
     }
     psystem("rm -f $targetdir/doc/Doxyfile");
     psystem("rm -rf $targetdir/doc/dtd");
