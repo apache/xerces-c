@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/03/02 23:34:58  peiyongz
+ * fix typo
+ *
  * Revision 1.22  2004/03/02 23:22:06  peiyongz
  * save/load TypeUri/TypeLocalName more accurately
  *
@@ -442,8 +445,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  Deserialize RefHashTableOf<KVStringPair>
          *
          ***/
-        XTemplateSerializer::loadObject(&fFacets, 29, false, serEng);
-        //XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
+        XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
 
         serEng.readString(fPattern);
 
