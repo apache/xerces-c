@@ -4688,7 +4688,32 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
 
     if (baseValidator == 0) {
 
+		SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
         SchemaInfo* saveInfo = fSchemaInfo;
+		int                  saveScope = fCurrentScope;
+
+		if (!XMLString::equals(uri, fTargetNSURIString) && (uri && *uri)) {
+
+			// Make sure that we have an explicit import statement.
+			// Clause 4 of Schema Representation Constraint:
+			// http://www.w3.org/TR/xmlschema-1/#src-resolve
+			unsigned int uriId = fURIStringPool->addOrFind(uri);
+
+			if (!fSchemaInfo->isImportingNS(uriId)) {
+
+				reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uri);
+				return 0;
+			}
+
+			SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
+
+			if (!impInfo || impInfo->getProcessed())
+				return 0;
+
+			infoType = SchemaInfo::IMPORT;
+			restoreSchemaInfo(impInfo, infoType);
+		}
+
         DOMElement* baseTypeNode = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
             SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
@@ -4697,7 +4722,9 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
             baseValidator = traverseSimpleTypeDecl(baseTypeNode);
 
             // restore schema information, if necessary
-            fSchemaInfo = saveInfo;
+            if (saveInfo != fSchemaInfo) {
+                restoreSchemaInfo(saveInfo, infoType, saveScope);
+            }
         }
     }
 
