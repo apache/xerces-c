@@ -55,6 +55,91 @@
     </tr>
 
     <tr>
+        <td>2001-11-29</td>
+        <td>Michael Huedepohl</td>
+        <td>Add FreeBSD Support.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>PeiYong Zhang</td>
+        <td>DOMMemTest: delete compiler generated temperary DOMString object "Hello Goodbye".
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Tinny Ng</td>
+        <td>Fix broken ParserTest.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Tinny Ng</td>
+        <td>Do not increment the error count if it is a warning.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Phil Brown</td>
+        <td>[Bug 4019] XMLReader::getNextChar can over read (UTF-16).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 4544] DOM_NodeList::getLength incorrect when called twice for empty list.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Artur Klauser</td>
+        <td>[Bug 2238]libWWW problems with broken proxys and range requests.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Artur Klauser</td>
+        <td>[Bug 2237] libWWW redirect error.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Matt Lovett</td>
+        <td>[Bug 4422] BinMemInputStream::readBytes is inefficient.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3683] Access Violations when performing custom schema validation.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-28</td>
+        <td>Tinny Ng</td>
+        <td>Check tohash pointer before accessing content in XMLString::hash.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-27</td>
+        <td>Tinny Ng</td>
+        <td>Fix packageBinaries.pl to correctly strip the zip file name from the target
+            directory which has "." dot in it.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-11-26</td>
         <td>Don Mastrovito</td>
         <td>BCB4 can use wchar_t.

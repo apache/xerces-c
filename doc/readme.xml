@@ -64,7 +64,7 @@
         <ul>
             <li>Win32 using MSVC 6.0 SP3</li>
             <li>Linux (RedHat 6.1) using egcs-2.91.66 and glibc-2.1.2-11</li>
-            <li>Solaris 2.6 using Sun Workshop 4.2</li>
+            <li>Solaris 2.6 using Forte C++ Version 6 Update 2</li>
             <li>AIX 4.3 using xlC_r 5.0.2</li>
             <li>HP-UX 11 using aCC A.03.13 with pthreads</li>
         </ul>
@@ -74,10 +74,12 @@
         <ul>
             <li>OS/390</li>
             <li>AS/400</li>
+            <li>FreeBSD</li>
             <li>SGI IRIX</li>
             <li>Macintosh</li>
             <li>OS/2</li>
             <li>PTX</li>
+            <li>UnixWare</li>
             <li>and more!</li>
         </ul>
     </s2>

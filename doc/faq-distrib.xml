@@ -31,7 +31,7 @@
         </tr>
         <tr>
           <td>Solaris 2.6</td>
-          <td>CC Workshop 4.2</td>
+          <td>Forte C++ Version 6 Update 2</td>
         </tr>
         <tr>
           <td>HP-UX 11.0</td>
@@ -206,8 +206,8 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
 
 
 
-    <faq title="What application did you used to create the documentation?">
-        <q>What application did you used to create the documentation?</q>
+    <faq title="What application do you use to create the documentation?">
+        <q>What application do you use to create the documentation?</q>
         <a>
             <p>We have used an internal XML based application to create the
             documentation. The documentation files are all written in XML and the
