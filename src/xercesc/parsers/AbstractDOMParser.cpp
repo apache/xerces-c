@@ -898,35 +898,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
             attr->setSpecified(oneAttrib->getSpecified());
 
-            XMLAttDef *attDef = 0;
-            if(defAttrs != 0)
-                attDef = defAttrs->findAttDef(attrURIId, oneAttrib->getQName());
-
-            if(attDef != 0) {
-                attr->setTypeInfo(attDef->getDOMTypeInfoName(), attDef->getDOMTypeInfoUri());
-                attDef->reset();
-            }
-            else {
-                const XMLCh *name = oneAttrib->getName();
-                if (XMLString::equals(oneAttrib->getPrefix(), XSI)) {
-                    if(XMLString::equals(name, SchemaSymbols::fgXSI_TYPE)) {
-                        attr->setTypeInfo(SchemaSymbols::fgDT_QNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-                    }
-                    else if(XMLString::equals(name, SchemaSymbols::fgATT_NILL)) {
-                        attr->setTypeInfo(SchemaSymbols::fgDT_BOOLEAN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-                    }
-                    else if(XMLString::equals(name, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION)) {
-                        attr->setTypeInfo(SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-                    }
-                }
-                else if(foundXMLNS || XMLString::equals(oneAttrib->getPrefix(), XMLUni::fgXMLNSString)){
-                    //for normal ns attrs
-                    attr->setTypeInfo(SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-                }
-                else {
-                    attr->setTypeInfo(SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-                }
-            }
+            attr->setTypeInfo(oneAttrib->getValidatingTypeName(), oneAttrib->getValidatingTypeURI());
         }
     }
     else {    //DOM Level 1
@@ -954,14 +926,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                 attr->fNode.isIdAttr(true);
             }
 
-            XMLAttDef *attDef = 0;
-            if(defAttrs != 0)
-                attDef = defAttrs->findAttDef(oneAttrib -> getURIId(), oneAttrib->getQName());
-
-            if(attDef != 0) {
-                attr->setTypeInfo(attDef->getDOMTypeInfoName(), attDef->getDOMTypeInfoUri());
-                attDef->reset();
-            }
+            attr->setTypeInfo(oneAttrib->getValidatingTypeName(), oneAttrib->getValidatingTypeURI());
 
         }
     }
@@ -1033,6 +998,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                     }
                 }
 
+                // REVISIT:  this won't work in multithreaded code...
                 insertAttr->setTypeInfo(attr->getDOMTypeInfoName(), attr->getDOMTypeInfoUri());
 
             }
