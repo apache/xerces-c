@@ -122,6 +122,25 @@ public:
     ~TraverseSchema();
 
 private:
+   	// This enumeration is defined here for compatibility with the CodeWarrior
+   	// compiler, which apparently doesn't like to accept default parameter
+   	// arguments that it hasn't yet seen. The Not_All_Context argument is
+   	// used in the declaration of checkMinMax, below.
+   	//
+    // Flags indicate any special restrictions on minOccurs and maxOccurs
+    // relating to "all".
+    //    Not_All_Context    - not processing an <all>
+    //    All_Element        - processing an <element> in an <all>
+    //    Group_Ref_With_All - processing <group> reference that contained <all>
+    //    All_Group          - processing an <all> group itself
+    enum
+	{
+        Not_All_Context = 0
+        , All_Element = 1
+        , Group_Ref_With_All = 2
+        , All_Group = 4
+    };
+
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -645,20 +664,6 @@ private:
     {
         Elem_Def_Qualified = 1,
         Attr_Def_Qualified = 2
-    };
-
-    // Flags indicate any special restrictions on minOccurs and maxOccurs
-    // relating to "all".
-    //    Not_All_Context    - not processing an <all>
-    //    All_Element        - processing an <element> in an <all>
-    //    Group_Ref_With_All - processing <group> reference that contained <all>
-    //    All_Group          - processing an <all> group itself
-    enum
-	{
-        Not_All_Context = 0
-        , All_Element = 1
-        , Group_Ref_With_All = 2
-        , All_Group = 4
     };
 
     // -----------------------------------------------------------------------
