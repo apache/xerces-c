@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/08/11 16:52:59  peiyongz
+ * using Literal constants from XMLUni
+ *
  * Revision 1.26  2004/01/13 16:17:09  knoaman
  * Fo sanity, use class name to qualify method
  *
@@ -271,18 +274,6 @@ const XMLCh fgTokPattern[] =
     chBackSlash, chLatin_c, chPlus, chNull
 };
 
-// http://www.w3.org/2001/05/xmlschema-errata#Errata2
-// E2-25
-//"([a-zA-Z]{1,8})(-[a-zA-Z0-9]{1,8})*"
-const XMLCh fgLangPattern[] =
-{
-    chOpenParen,   chOpenSquare,  chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
-    chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8, chCloseCurly, chCloseParen,
-    chOpenParen,   chDash, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
-	chDigit_0,     chDash, chDigit_9, chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8,
-    chCloseCurly,  chCloseParen, chAsterisk, chNull
-};
-
 //E2-43
 //[+\-]?[0-9]+
 const XMLCh fgIntegerPattern[] =
@@ -305,91 +296,7 @@ const XMLCh fgNCNamePattern[] =
     chColon, chCloseSquare, chCloseSquare, chAsterisk, chNull
 };
 
-const XMLCh fgValueZero[] =
-{
-    chDigit_0, chNull
-};
 
-const XMLCh fgNegOne[] =
-{
-    chDash, chDigit_1, chNull
-};
-
-const XMLCh fgValueOne[] =
-{
-    chDigit_1, chNull
-};
-
-//"9223372036854775807"
-const XMLCh fgLongMaxInc[] =
-{
-    chDigit_9, chDigit_2, chDigit_2, chDigit_3, chDigit_3, chDigit_7, chDigit_2,
-    chDigit_0, chDigit_3, chDigit_6, chDigit_8, chDigit_5, chDigit_4, chDigit_7,
-    chDigit_7, chDigit_5, chDigit_8, chDigit_0, chDigit_7, chNull
-};
-
-//"-9223372036854775808"
-const XMLCh fgLongMinInc[] =
-{
-    chDash, chDigit_9, chDigit_2, chDigit_2, chDigit_3, chDigit_3, chDigit_7,
-    chDigit_2, chDigit_0, chDigit_3, chDigit_6, chDigit_8, chDigit_5, chDigit_4,
-    chDigit_7, chDigit_7, chDigit_5, chDigit_8, chDigit_0, chDigit_8,  chNull
-};
-
-const XMLCh fgIntMaxInc[] =
-{
-    chDigit_2, chDigit_1, chDigit_4, chDigit_7, chDigit_4, chDigit_8,
-    chDigit_3, chDigit_6, chDigit_4, chDigit_7, chNull
-};
-
-const XMLCh fgIntMinInc[] =
-{
-    chDash, chDigit_2, chDigit_1, chDigit_4, chDigit_7, chDigit_4,
-    chDigit_8, chDigit_3, chDigit_6, chDigit_4, chDigit_8, chNull
-};
-
-const XMLCh fgShortMaxInc[] =
-{
-    chDigit_3, chDigit_2, chDigit_7, chDigit_6, chDigit_7, chNull
-};
-
-const XMLCh fgShortMinInc[] =
-{
-    chDash, chDigit_3, chDigit_2, chDigit_7, chDigit_6, chDigit_8, chNull
-};
-
-const XMLCh fgByteMaxInc[] =
-{
-    chDigit_1, chDigit_2, chDigit_7, chNull
-};
-
-const XMLCh fgByteMinInc[] =
-{
-    chDash, chDigit_1, chDigit_2, chDigit_8, chNull
-};
-
-const XMLCh fgULongMaxInc[] =
-{
-    chDigit_1, chDigit_8, chDigit_4, chDigit_4, chDigit_6, chDigit_7, chDigit_4,
-    chDigit_4, chDigit_0, chDigit_7, chDigit_3, chDigit_7, chDigit_0, chDigit_9,
-    chDigit_5, chDigit_5, chDigit_1, chDigit_6, chDigit_1, chDigit_5, chNull
-};
-
-const XMLCh fgUIntMaxInc[] =
-{
-    chDigit_4, chDigit_2, chDigit_9, chDigit_4, chDigit_9, chDigit_6,
-    chDigit_7, chDigit_2, chDigit_9, chDigit_5, chNull
-};
-
-const XMLCh fgUShortMaxInc[] =
-{
-    chDigit_6, chDigit_5, chDigit_5, chDigit_3, chDigit_5, chNull
-};
-
-const XMLCh fgUByteMaxInc[] =
-{
-    chDigit_2, chDigit_5, chDigit_5, chNull
-};
 
 const XMLCh fgP0Y[] =
 {
@@ -631,7 +538,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(3);
 
                 facets->put((void*) SchemaSymbols::fgELT_PATTERN,
-                            new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgLangPattern));
+                    new KVStringPair(SchemaSymbols::fgELT_PATTERN, XMLUni::fgLangPattern));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_LANGUAGE,
                               getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),
@@ -641,7 +548,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(3);
 
                 facets->put((void*) SchemaSymbols::fgELT_FRACTIONDIGITS,
-                            new KVStringPair(SchemaSymbols::fgELT_FRACTIONDIGITS, fgValueZero));
+                    new KVStringPair(SchemaSymbols::fgELT_FRACTIONDIGITS, XMLUni::fgValueZero));
 
                 facets->put((void*) SchemaSymbols::fgELT_PATTERN,
                             new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgIntegerPattern));
@@ -654,7 +561,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgValueZero));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgValueZero));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER,
                               getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
@@ -664,7 +571,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-    			            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE,fgNegOne));
+    			            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgNegOne));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_NEGATIVEINTEGER,
                               getDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER),
@@ -674,9 +581,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE,fgLongMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgLongMaxInc));
                 facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE,fgLongMinInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, XMLUni::fgLongMinInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_LONG,
                               getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
@@ -686,9 +593,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgIntMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgIntMaxInc));
                 facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgIntMinInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, XMLUni::fgIntMinInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_INT,
                               getDatatypeValidator(SchemaSymbols::fgDT_LONG),
@@ -698,9 +605,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgShortMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgShortMaxInc));
                 facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgShortMinInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, XMLUni::fgShortMinInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_SHORT,
                               getDatatypeValidator(SchemaSymbols::fgDT_INT),
@@ -710,9 +617,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgByteMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgByteMaxInc));
                 facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgByteMinInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, XMLUni::fgByteMinInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_BYTE,
                               getDatatypeValidator(SchemaSymbols::fgDT_SHORT),
@@ -722,7 +629,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgValueZero));
+                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, XMLUni::fgValueZero));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER,
                               getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
@@ -732,7 +639,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgULongMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgULongMaxInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_ULONG,
                               getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),
@@ -742,7 +649,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUIntMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgUIntMaxInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_UINT,
                               getDatatypeValidator(SchemaSymbols::fgDT_ULONG),
@@ -752,7 +659,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUShortMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgUShortMaxInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_USHORT,
                               getDatatypeValidator(SchemaSymbols::fgDT_UINT),
@@ -762,7 +669,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUByteMaxInc));
+                            new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, XMLUni::fgUByteMaxInc));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_UBYTE,
                               getDatatypeValidator(SchemaSymbols::fgDT_USHORT),
@@ -772,7 +679,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 facets = new RefHashTableOf<KVStringPair>(2);
 
                 facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
-                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgValueOne));
+                            new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, XMLUni::fgValueOne));
 
                 createDatatypeValidator(SchemaSymbols::fgDT_POSITIVEINTEGER,
                               getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),

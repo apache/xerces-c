@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/08/11 16:52:59  peiyongz
+ * using Literal constants from XMLUni
+ *
  * Revision 1.16  2004/01/29 11:51:22  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -134,15 +137,6 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-const int   ARRAYSIZE = 4;
-const XMLCh fgValueSpace[][32] =
-{
-    { chLatin_f, chLatin_a, chLatin_l, chLatin_s, chLatin_e, chNull },
-    { chLatin_t, chLatin_r, chLatin_u, chLatin_e, chNull },
-    { chDigit_0, chNull },
-    { chDigit_1, chNull }
-};
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -237,14 +231,14 @@ void BooleanDatatypeValidator::checkContent( const XMLCh*             const cont
     if (asBase)
         return;
 
-    int   i = 0;
-    for ( ; i < ARRAYSIZE; i++ )
+    unsigned int   i = 0;
+    for ( ; i < XMLUni::fgBooleanValueSpaceArraySize; i++ )
     {
-        if ( XMLString::equals(content, fgValueSpace[i]))
+        if ( XMLString::equals(content, XMLUni::fgBooleanValueSpace[i]))
             break;
     }
 
-    if (i == ARRAYSIZE)
+    if (i == XMLUni::fgBooleanValueSpaceArraySize)
         ThrowXMLwithMemMgr(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType, manager);
         //Not valid boolean type
 
@@ -258,19 +252,19 @@ int BooleanDatatypeValidator::compare(const XMLCh* const lValue
     // 1 == true
     // 0 == false
 
-    if (XMLString::equals(lValue, fgValueSpace[0])||
-        XMLString::equals(lValue, fgValueSpace[2]))
+    if (XMLString::equals(lValue, XMLUni::fgBooleanValueSpace[0])||
+        XMLString::equals(lValue, XMLUni::fgBooleanValueSpace[2]))
     {
-        if (XMLString::equals(rValue, fgValueSpace[0]) ||
-            XMLString::equals(rValue, fgValueSpace[2]))
+        if (XMLString::equals(rValue, XMLUni::fgBooleanValueSpace[0]) ||
+            XMLString::equals(rValue, XMLUni::fgBooleanValueSpace[2]))
             return 0;
     }
     else
-    if (XMLString::equals(lValue, fgValueSpace[1]) ||
-        XMLString::equals(lValue, fgValueSpace[3]))
+    if (XMLString::equals(lValue, XMLUni::fgBooleanValueSpace[1]) ||
+        XMLString::equals(lValue, XMLUni::fgBooleanValueSpace[3]))
     {
-        if (XMLString::equals(rValue, fgValueSpace[1]) ||
-            XMLString::equals(rValue, fgValueSpace[3]))
+        if (XMLString::equals(rValue, XMLUni::fgBooleanValueSpace[1]) ||
+            XMLString::equals(rValue, XMLUni::fgBooleanValueSpace[3]))
             return 0;
     }
 
@@ -308,10 +302,10 @@ const XMLCh* BooleanDatatypeValidator::getCanonicalRepresentation(const XMLCh*  
         }
     }
 
-    return ( XMLString::equals(rawData, fgValueSpace[0]) ||
-             XMLString::equals(rawData, fgValueSpace[2])  ) ?
-             XMLString::replicate(fgValueSpace[0], toUse) :
-             XMLString::replicate(fgValueSpace[1], toUse) ;
+    return ( XMLString::equals(rawData, XMLUni::fgBooleanValueSpace[0]) ||
+             XMLString::equals(rawData, XMLUni::fgBooleanValueSpace[2])  ) ?
+             XMLString::replicate(XMLUni::fgBooleanValueSpace[0], toUse) :
+             XMLString::replicate(XMLUni::fgBooleanValueSpace[1], toUse) ;
 
 }
 
