@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding = "iso-8859-1" standalone="no"?>
 <!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
-<faqs title="Building / Running with &XercesCName;">
+<faqs title="Building / Running FAQs">
 
   <faq title="Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?">
     <q>Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?</q>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding = "iso-8859-1" standalone="no"?>
 <!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
-<faqs title="Programming/Parsing with &XercesCName;">
+<faqs title="Programming/Parsing FAQs">
 
   <faq title="Does &XercesCName; support Schema?">
 
@@ -490,7 +490,7 @@ catch (const XMLException&amp; toCatch) {
          extends the encoding support to over 100 different encodings that are allowed
          by ICU.  In particular, all the encodings registered with the
          <jump href="http://www.iana.org/assignments/character-sets">
-         Internet Assigned Numbers Authority (IANA) </jump> are suppored in XML4C.</p>
+         Internet Assigned Numbers Authority (IANA) </jump> are supported in XML4C.</p>
 
       <p>Some implementations or ports of Xerces-C provide support for
         additional encodings. The exact set will depend on the supplier of the parser
@@ -691,6 +691,29 @@ catch (const XMLException&amp; toCatch) {
          pointer is a generic void pointer, see
          <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
          exactly what type of property value each property returns for replication.
+      </p>
+
+    </a>
+  </faq>
+
+  <faq title="Why does the parser still try to locate the DTD even validation is turned off
+       and how to ignore external DTD reference?">
+
+    <q>Why does the parser still try to locate the DTD even validation is turned off
+       and how to ignore external DTD reference?</q>
+
+    <a>
+
+      <p>If the DTD is referenced, the parser will try to read it, because DTDs can
+         provide a lot more information than just validation. It defines entities and
+         notations, external uparsed entities, default attributes, character
+         entities, etc... So it will always try to read it if present, even if
+         validation is turned off.
+      </p>
+
+      <p>To ignore the DTD, the only way to get around this is to install an EntityResolver
+         (see the Redirect sample for an example of how this is done.), and reset the
+         DTD file to "".
       </p>
 
     </a>
