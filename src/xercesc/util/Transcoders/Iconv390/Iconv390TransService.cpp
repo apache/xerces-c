@@ -350,33 +350,18 @@ void Iconv390TransService::lowerCase(XMLCh* const toLowerCase) const
 // ---------------------------------------------------------------------------
 unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
 {
-    unsigned int retVal;
-
     if (!srcText)
         return 0;
 
-#ifdef OS390BATCH
-    //
-    // Cannot use mbstowcs in a non-POSIX environment(???).
-    //
-    if (!__isPosixOn()) {
-        const unsigned charLen = mblen(srcText, MB_CUR_MAX);
-        if (charLen == -1)
-            return 0;
-        else {
-            if (charLen != 0)
-                retVal = strlen(srcText)/charLen;
-            else
-                retVal = charLen;
-        }
-    }
-    else
-#endif
-        retVal = ::mbstowcs(NULL, srcText, 0);
-
-    if (retVal == -1)
+    unsigned charLen = ::mblen(srcText, MB_CUR_MAX);
+    if (charLen == -1)
         return 0;
-    return retVal;
+    else if (charLen != 0)
+        charLen = strlen(srcText)/charLen;
+
+    if (charLen == -1)
+        return 0;
+    return charLen;
 }
 
 

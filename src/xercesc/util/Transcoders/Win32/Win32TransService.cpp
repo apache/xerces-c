@@ -165,16 +165,21 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
 {
     // Transcode the name to Unicode and store that copy
     const unsigned int srcLen = strlen(encodingName);
-    const unsigned int targetLen = ::mbstowcs(0, encodingName, srcLen);
-    fEncodingName = new XMLCh[targetLen + 1];
-    ::mbstowcs(fEncodingName, encodingName, srcLen);
-    fEncodingName[targetLen] = 0;
+    const unsigned charLen = ::mblen(encodingName, MB_CUR_MAX);
+    if (charLen != -1) {
+        const unsigned int targetLen = srcLen/charLen;
 
-    //
-    //  Upper case it because we are using a hash table and need to be
-    //  sure that we find all case combinations.
-    //
-    _wcsupr(fEncodingName);
+
+        fEncodingName = new XMLCh[targetLen + 1];
+        ::mbstowcs(fEncodingName, encodingName, srcLen);
+        fEncodingName[targetLen] = 0;
+
+        //
+        //  Upper case it because we are using a hash table and need to be
+        //  sure that we find all case combinations.
+        //
+        _wcsupr(fEncodingName);
+  }
 }
 
 CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
@@ -397,37 +402,42 @@ Win32TransService::Win32TransService()
         if (isAlias(encodingKey, aliasBuf, nameBufSz))
         {
             const unsigned int srcLen = strlen(aliasBuf);
-            const unsigned int targetLen = ::mbstowcs(0, aliasBuf, srcLen);
-            XMLCh* uniAlias = new XMLCh[targetLen + 1];
-            ::mbstowcs(uniAlias, aliasBuf, srcLen);
-            uniAlias[targetLen] = 0;
-            _wcsupr(uniAlias);
+            const unsigned charLen = ::mblen(aliasBuf, MB_CUR_MAX);
 
-            // Look up the alias name
-            CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
-            if (aliasedEntry)
-            {
-                const unsigned int srcLen = strlen(nameBuf);
-                const unsigned int targetLen = ::mbstowcs(0, nameBuf, srcLen);
-                XMLCh* uniName = new XMLCh[targetLen + 1];
-                ::mbstowcs(uniName, nameBuf, srcLen);
-                uniName[targetLen] = 0;
-                _wcsupr(uniName);
+            if (charLen != -1) {
+                const unsigned int targetLen = srcLen/charLen;
 
-                //
-                //  If the name is actually different, then take it.
-                //  Otherwise, don't take it. They map aliases that are
-                //  just different case.
-                //
-                if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
+                XMLCh* uniAlias = new XMLCh[targetLen + 1];
+                ::mbstowcs(uniAlias, aliasBuf, srcLen);
+                uniAlias[targetLen] = 0;
+                _wcsupr(uniAlias);
+
+                // Look up the alias name
+                CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
+                if (aliasedEntry)
                 {
-                    CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
-                    fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
-                }
+                    const unsigned int srcLen = strlen(nameBuf);
+                    const unsigned int targetLen = ::mbstowcs(0, nameBuf, srcLen);
+                    XMLCh* uniName = new XMLCh[targetLen + 1];
+                    ::mbstowcs(uniName, nameBuf, srcLen);
+                    uniName[targetLen] = 0;
+                    _wcsupr(uniName);
 
-                delete [] uniName;
+                    //
+                    //  If the name is actually different, then take it.
+                    //  Otherwise, don't take it. They map aliases that are
+                    //  just different case.
+                    //
+                    if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
+                    {
+                        CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
+                        fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
+                    }
+
+                    delete [] uniName;
+                }
+                delete [] uniAlias;
             }
-            delete [] uniAlias;
         }
 
         // And now close the subkey handle and bump the subkey index
@@ -822,10 +832,15 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText)
     if (!srcText)
         return 0;
 
-    const unsigned int retVal = ::mbstowcs(0, srcText, 0);
-    if (retVal == (unsigned int)-1)
+    unsigned charLen = ::mblen(srcText, MB_CUR_MAX);
+    if (charLen == -1)
         return 0;
-    return retVal;
+    else if (charLen != 0)
+        charLen = strlen(srcText)/charLen;
+
+    if (charLen == -1)
+        return 0;
+    return charLen;
 }
 
 
@@ -879,9 +894,13 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
     if (*toTranscode)
     {
         // Calculate the buffer size required
-        const unsigned int neededLen = ::mbstowcs(0, toTranscode, 0);
-        if (neededLen == (unsigned int)-1)
-            return 0;
+        const unsigned int neededLen = calcRequiredSize(toTranscode);
+        if (neededLen == 0)
+        {
+            retVal = new XMLCh[1];
+            retVal[0] = 0;
+            return retVal;
+        }
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = new XMLCh[neededLen + 1];
