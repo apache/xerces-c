@@ -62,6 +62,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/XercesDefs.hpp>
+
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
