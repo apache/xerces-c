@@ -1598,19 +1598,20 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
     // Process 'namespace' attribute
     // ------------------------------------------------------------------
     ContentSpecNode* retSpecNode = 0;
-    QName elemName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString,
-                   fEmptyNamespaceURI);
 
     if (XMLString::stringLen(nameSpace) == 0
         || !XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
-
-        retSpecNode = new ContentSpecNode(&elemName);
+        retSpecNode = new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
+                                                    XMLUni::fgZeroLenString,
+                                                    fEmptyNamespaceURI),
+                                          false);
         retSpecNode->setType(anyType);
     }
     else if (!XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER)) {
-
-        elemName.setURI(fTargetNSURI);
-        retSpecNode = new ContentSpecNode(&elemName);
+        retSpecNode = new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
+                                                    XMLUni::fgZeroLenString,
+                                                    fTargetNSURI),
+                                          false);
         retSpecNode->setType(anyOtherType);
     }
     else {
@@ -1641,8 +1642,11 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
             }
 
             uriList.addElement(uriIndex);
-            elemName.setURI(uriIndex);
-            firstNode = new ContentSpecNode(&elemName);
+
+            firstNode = new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
+                                                      XMLUni::fgZeroLenString,
+                                                      uriIndex),
+                                            false);
             firstNode->setType(anyLocalType);
 
             if (secondNode == 0) {
@@ -5512,9 +5516,11 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
         }
         else {
             // add #PCDATA leaf and set its minOccurs to 0
-            QName* tmpName = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgPCDataElemId);
-            Janitor<QName> janQName(tmpName);
-            ContentSpecNode* pcdataNode = new ContentSpecNode(tmpName);
+            ContentSpecNode* pcdataNode =
+                  new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
+                                                XMLUni::fgZeroLenString,
+                                                XMLElementDecl::fgPCDataElemId),
+                                      false);
 
             pcdataNode->setMinOccurs(0);
             typeInfo->setContentSpec(pcdataNode);

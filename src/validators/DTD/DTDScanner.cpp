@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/12/06 17:51:18  tng
+ * Performance Enhancement. The ContentSpecNode constructor always copied the QName
+ * that was passed to it.  Added a second constructor that allows the QName to be just assigned, not copied.
+ * That was because there are some cases in which a temporary QName was constructed, passed to ContentSpecNode, and then deleted.
+ * There were examples of that in TraverseSchema and DTDScanner.
+ * By Henry Zongaro.
+ *
  * Revision 1.21  2001/11/13 13:27:28  tng
  * Move root element check to XMLScanner.
  *
@@ -3315,9 +3322,11 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
     //  PCDATA element id. This current node pointer will be pushed down the
     //  tree as we go.
     //
-    QName* tmpName = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgPCDataElemId);
-    ContentSpecNode* curNode = new ContentSpecNode(tmpName);
-    delete tmpName;
+    ContentSpecNode* curNode =
+                 new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
+                                               XMLUni::fgZeroLenString,
+                                               XMLElementDecl::fgPCDataElemId),
+                                     false);
 
     //
     //  Set the initial leaf as the temporary head. If we hit the first choice

@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/12/06 17:50:42  tng
+ * Performance Enhancement. The ContentSpecNode constructor always copied the QName
+ * that was passed to it.  Added a second constructor that allows the QName to be just assigned, not copied.
+ * That was because there are some cases in which a temporary QName was constructed, passed to ContentSpecNode, and then deleted.
+ * There were examples of that in TraverseSchema and DTDScanner.
+ * By Henry Zongaro.
+ *
  * Revision 1.18  2001/11/07 21:50:28  tng
  * Fix comment log that lead to error.
  *
@@ -177,6 +184,7 @@ public :
     // -----------------------------------------------------------------------
     ContentSpecNode();
     ContentSpecNode(QName* const toAdopt);
+    ContentSpecNode(QName* const toAdopt, const bool copyQName);
     ContentSpecNode
     (
         const   NodeTypes               type
@@ -308,6 +316,30 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
 {
     if (element)
         fElement = new QName(element);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(QName* const element
+                               , const bool copyQName) :
+
+    fElement(0)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
+{
+    if (copyQName)
+    {
+        if (element)
+            fElement = new QName(element);
+    }
+    else
+    {
+        fElement = element;
+    }
 }
 
 inline
