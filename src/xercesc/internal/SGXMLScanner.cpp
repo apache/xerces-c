@@ -904,52 +904,30 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
-    // After the </ is the element QName, so get a name from the input
-    if (!fReaderMgr.getName(fQNameBuf))
-    {
-        // It failed so we can't really do anything with it
-        emitError(XMLErrs::ExpectedElementName);
-        fReaderMgr.skipPastChar(chCloseAngle);
-        return;
-    }
-
-    int prefixColonPos = -1;
-    unsigned int uriId = resolveQName
-    (
-        fQNameBuf.getRawBuffer()
-        , fPrefixBuf
-        , ElemStack::Mode_Element
-        , prefixColonPos
-    );
-
     //  Pop the stack of the element we are supposed to be ending. Remember
     //  that we don't own this. The stack just keeps them and reuses them.
-    //
-    //  NOTE: We CANNOT do this until we've resolved the element name because
-    //  the element stack top contains the prefix to URI mappings for this
-    //  element.
-    unsigned int topUri = fElemStack.getCurrentURI();
-    const ElemStack::StackElem* topElem = fElemStack.popTop();
-
-    // See if it was the root element, to avoid multiple calls below
-    const bool isRoot = fElemStack.isEmpty();
+    unsigned int uriId = (fDoNamespaces)
+        ? fElemStack.getCurrentURI() : fEmptyNamespaceId;
 
     // Make sure that its the end of the element that we expect
-    XMLElementDecl* tempElement = topElem->fThisElement;
-    const XMLCh* rawNameBuf = fQNameBuf.getRawBuffer();
-
-    // reset error occurred
-    fPSVIElemContext.fErrorOccurred = fErrorStack->pop();
-
-    if ((topUri != uriId) ||
-        (!XMLString::equals(tempElement->getBaseName(), &rawNameBuf[prefixColonPos + 1])))
+    XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
+    const ElemStack::StackElem* topElem = fElemStack.popTop(); 
+    XMLElementDecl *tempElement = topElem->fThisElement; 
+    if (!fReaderMgr.skippedString(elemName))
     {
         emitError
         (
             XMLErrs::ExpectedEndOfTagX
-            , topElem->fThisElement->getFullName()
+            , elemName
         );
+        fReaderMgr.skipPastChar(chCloseAngle);
+        return;
     }
+
+    // See if it was the root element, to avoid multiple calls below
+    const bool isRoot = fElemStack.isEmpty();
+
+    fPSVIElemContext.fErrorOccurred = fErrorStack->pop();
 
     // Make sure we are back on the same reader as where we started
     if (topElem->fReaderNum != fReaderMgr.getCurrentReaderNum())
@@ -1202,10 +1180,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  First we have to do the rawest attribute scan. We don't do any
     //  normalization of them at all, since we don't know yet what type they
     //  might be (since we need the element decl in order to do that.)
+    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
     bool isEmpty;
     unsigned int attCount = rawAttrScan
     (
-        fQNameBuf.getRawBuffer()
+        qnameRawBuf
         , *fRawAttrList
         , isEmpty
     );
@@ -1275,7 +1254,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  the element decl for this element. We have now update the prefix to
     //  namespace map so we should get the correct element now.
     int prefixColonPos = -1;
-    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
     unsigned int uriId = resolveQName
     (
         qnameRawBuf
@@ -1302,7 +1280,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     bool laxBeforeElementFound = false;
     const XMLCh* nameRawBuf = &qnameRawBuf[prefixColonPos + 1];
     const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
-    unsigned orgGrammarUri = fURIStringPool->getId(original_uriStr);
 
     if (uriId != fEmptyNamespaceId) {
 
@@ -1320,7 +1297,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             // before we made grammars stateless:
             elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
         }
-        if (!elemDecl && (orgGrammarUri != uriId)) {
+        if (!elemDecl && ( fURIStringPool->getId(original_uriStr) != uriId)) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
             bool errorCondition = !switchGrammar(uriStr) && fValidate;
@@ -1422,7 +1399,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             // before we made grammars stateless:
             elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
         }
-        if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
+        // this is initialized correctly only if there is
+        // no element decl.  The other uses in this scope will only
+        // be encountered if there continues to be no element decl--which
+        // implies that this will have been initialized correctly.
+        unsigned orgGrammarUri = fEmptyNamespaceId;
+        if (!elemDecl && (orgGrammarUri = fURIStringPool->getId(original_uriStr)) != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
             bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
             if (errorCondition && !laxThisOne)
@@ -1625,6 +1607,10 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         if (((SchemaValidator*) fValidator)->getErrorOccurred())
             fPSVIElemContext.fErrorOccurred = true;
     }
+
+    // squirrel away the element's QName, so that we can do an efficient
+    // end-tag match
+    fElemStack.setCurrentSchemaElemName(fQNameBuf.getRawBuffer());
 
     ComplexTypeInfo* typeinfo = (fValidate)
         ? ((SchemaValidator*)fValidator)->getCurrentTypeInfo()

@@ -645,44 +645,30 @@ void DGXMLScanner::scanEndTag(bool& gotData)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
-    // After the </ is the element QName, so get a name from the input
-    if (!fReaderMgr.getName(fQNameBuf))
-    {
-        // It failed so we can't really do anything with it
-        emitError(XMLErrs::ExpectedElementName);
-        fReaderMgr.skipPastChar(chCloseAngle);
-        return;
-    }
-
-    // Resolve element name uri if needed
-    unsigned int uriId = fEmptyNamespaceId;
-    const ElemStack::StackElem* topElem = fElemStack.topElement();
-    if (fDoNamespaces)
-    {
-        uriId = resolvePrefix
-        (
-            topElem->fThisElement->getElementName()->getPrefix()
-            , ElemStack::Mode_Element
-        );
-    }
+    //  Pop the stack of the element we are supposed to be ending. Remember
+    //  that we don't own this. The stack just keeps them and reuses them.
+    unsigned int uriId = (fDoNamespaces)
+        ? fElemStack.getCurrentURI() : fEmptyNamespaceId;
 
     //  Pop the stack of the element we are supposed to be ending. Remember
     //  that we don't own this. The stack just keeps them and reuses them.
-    fElemStack.popTop();
+    const ElemStack::StackElem* topElem = fElemStack.popTop();
+    XMLElementDecl *tempElement = topElem->fThisElement;
 
     // See if it was the root element, to avoid multiple calls below
     const bool isRoot = fElemStack.isEmpty();
 
     // Make sure that its the end of the element that we expect
-    if (!XMLString::equals(topElem->fThisElement->getFullName(), fQNameBuf.getRawBuffer()))
+    if (!fReaderMgr.skippedString(tempElement->getFullName()))
     {
         emitError
         (
             XMLErrs::ExpectedEndOfTagX
-            , topElem->fThisElement->getFullName()
+            , tempElement->getFullName()
         );
+        fReaderMgr.skipPastChar(chCloseAngle);
+        return;
     }
-
 
     // Make sure we are back on the same reader as where we started
     if (topElem->fReaderNum != fReaderMgr.getCurrentReaderNum())

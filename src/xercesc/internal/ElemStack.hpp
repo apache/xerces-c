@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/06/02 19:58:10  neilg
+ * Fix bug where scanners would accept malformed tags of the form
+ * <p:a xmlns:p="b" xmlns:q="b"></q:a> when namespace processing was
+ * enabled.  This also opened the way for some end-tag scanning
+ * performance improvements.
+ *
  * Revision 1.9  2004/04/27 19:17:52  peiyongz
  * XML1.0-3rd VC: element content(children) dont allow white space from
  * EntityRef/CharRef
@@ -221,6 +227,8 @@ public :
         int                 fCurrentScope;
         Grammar*            fCurrentGrammar;
         unsigned int        fCurrentURI;
+        XMLCh *             fSchemaElemName;
+        unsigned int        fSchemaElemNameMaxLen;
     };
 
     enum MapModes
@@ -269,6 +277,9 @@ public :
 
     void setCurrentURI(unsigned int uri);
     unsigned int getCurrentURI();
+
+    inline void setCurrentSchemaElemName(const XMLCh * const schemaElemName);
+    inline XMLCh *getCurrentSchemaElemName();
 
     // -----------------------------------------------------------------------
     //  Prefix map methods
@@ -584,6 +595,26 @@ inline void ElemStack::setReferenceEscaped()
 {
     fStack[fStackTop-1]->fReferenceEscaped = true;
     return;
+}
+
+inline void ElemStack::setCurrentSchemaElemName(const XMLCh * const schemaElemName)
+{
+    unsigned int schemaElemNameLen = XMLString::stringLen(schemaElemName);
+    unsigned int stackPos = fStackTop-1;
+    
+    if(fStack[stackPos]->fSchemaElemNameMaxLen <= schemaElemNameLen)
+    {
+        XMLCh *tempStr = fStack[stackPos]->fSchemaElemName;
+        fStack[stackPos]->fSchemaElemNameMaxLen = schemaElemNameLen << 1;
+        fStack[stackPos]->fSchemaElemName = (XMLCh *)fMemoryManager->allocate((fStack[stackPos]->fSchemaElemNameMaxLen)*sizeof(XMLCh));
+        fMemoryManager->deallocate(tempStr);
+    }
+    XMLString::copyString(fStack[stackPos]->fSchemaElemName, schemaElemName);
+}
+
+inline XMLCh *ElemStack::getCurrentSchemaElemName()
+{
+    return fStack[fStackTop-1]->fSchemaElemName;
 }
 
 inline int ElemStack::getCurrentScope()

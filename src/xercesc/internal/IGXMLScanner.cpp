@@ -976,67 +976,44 @@ void IGXMLScanner::scanEndTag(bool& gotData)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
-    // After the </ is the element QName, so get a name from the input
-    if (!fReaderMgr.getName(fQNameBuf))
+    //  Pop the stack of the element we are supposed to be ending. Remember
+    //  that we don't own this. The stack just keeps them and reuses them.
+    unsigned int uriId = (fDoNamespaces)
+        ? fElemStack.getCurrentURI() : fEmptyNamespaceId;
+
+    // these get initialized below
+    const ElemStack::StackElem* topElem = 0;
+    XMLElementDecl *tempElement = 0;
+    XMLCh *elemName = 0;
+
+    // Make sure that its the end of the element that we expect
+    // special case for schema validation, whose element decls,
+    // obviously don't contain prefix information
+    if(fGrammarType == Grammar::SchemaGrammarType)
     {
-        // It failed so we can't really do anything with it
-        emitError(XMLErrs::ExpectedElementName);
+        elemName = fElemStack.getCurrentSchemaElemName();
+        topElem = fElemStack.popTop(); 
+        tempElement = topElem->fThisElement; 
+    }
+    else
+    {
+        topElem = fElemStack.popTop(); 
+        tempElement = topElem->fThisElement;
+        elemName = (XMLCh *)tempElement->getFullName();
+    }
+    if (!fReaderMgr.skippedString(elemName))
+    {
+        emitError
+        (
+            XMLErrs::ExpectedEndOfTagX
+            , elemName
+        );
         fReaderMgr.skipPastChar(chCloseAngle);
-        //REVISIT: Do we restore PSVI information?
         return;
     }
 
-    unsigned int uriId = fEmptyNamespaceId;
-    int prefixColonPos = -1;
-    if (fDoNamespaces)
-    {
-        uriId = resolveQName
-        (
-            fQNameBuf.getRawBuffer()
-            , fPrefixBuf
-            , ElemStack::Mode_Element
-            , prefixColonPos
-        );
-    }
-
-    //  Pop the stack of the element we are supposed to be ending. Remember
-    //  that we don't own this. The stack just keeps them and reuses them.
-    //
-    //  NOTE: We CANNOT do this until we've resolved the element name because
-    //  the element stack top contains the prefix to URI mappings for this
-    //  element.
-    unsigned int topUri = fElemStack.getCurrentURI();
-    const ElemStack::StackElem* topElem = fElemStack.popTop();
-
     // See if it was the root element, to avoid multiple calls below
     const bool isRoot = fElemStack.isEmpty();
-
-    // Make sure that its the end of the element that we expect
-    XMLElementDecl* tempElement = topElem->fThisElement;
-    if (fDoNamespaces && fGrammarType == Grammar::SchemaGrammarType) {
-
-        // reset error occurred
-        fPSVIElemContext.fErrorOccurred = fErrorStack->pop();
-        const XMLCh* rawNameBuf = fQNameBuf.getRawBuffer();
-        if ((topUri != uriId) || (!XMLString::equals(tempElement->getBaseName(), &rawNameBuf[prefixColonPos + 1])))
-        {
-            emitError
-            (
-                XMLErrs::ExpectedEndOfTagX
-                , topElem->fThisElement->getFullName()
-            );
-        }
-    }
-    else {
-        if (!XMLString::equals(tempElement->getFullName(), fQNameBuf.getRawBuffer()))
-        {
-            emitError
-            (
-                XMLErrs::ExpectedEndOfTagX
-                , topElem->fThisElement->getFullName()
-            );
-        }
-    }
 
     // Make sure we are back on the same reader as where we started
     if (topElem->fReaderNum != fReaderMgr.getCurrentReaderNum())
@@ -1057,6 +1034,8 @@ void IGXMLScanner::scanEndTag(bool& gotData)
 
     if (fGrammarType == Grammar::SchemaGrammarType)
     {
+        // reset error occurred
+        fPSVIElemContext.fErrorOccurred = fErrorStack->pop();
         if (fValidate && topElem->fThisElement->isDeclared())
         {
             fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
@@ -2372,7 +2351,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     const XMLCh* nameRawBuf = &qnameRawBuf[prefixColonPos + 1];
     const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
-    unsigned orgGrammarUri = fURIStringPool->getId(original_uriStr);
 
     // REVISIT:  since all this code only really
     // makes sense for schemas, why can DTD validation theoretically pass 
@@ -2380,12 +2358,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     if (uriId != fEmptyNamespaceId) {
 
         // Check in current grammar before switching if necessary
-        const XMLCh *rawQName = fQNameBuf.getRawBuffer();
         elemDecl = fGrammar->getElemDecl
         (
           uriId
           , nameRawBuf
-          , rawQName
+          , qnameRawBuf
           , currentScope
         );
         // may have not been declared; must look everywhere:
@@ -2393,14 +2370,14 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if(fGrammarType == Grammar::DTDGrammarType) 
             {
                 // should never occur in practice
-                elemDecl = fDTDElemNonDeclPool->getByKey(rawQName);
+                elemDecl = fDTDElemNonDeclPool->getByKey(qnameRawBuf);
             }
             else if (fGrammarType == Grammar::SchemaGrammarType) 
             {
                 elemDecl = fSchemaElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
             }
 
-        if (!elemDecl && (orgGrammarUri != uriId)) {
+        if (!elemDecl && ( fURIStringPool->getId(original_uriStr) != uriId)) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
             bool errorCondition = !switchGrammar(uriStr) && fValidate;
@@ -2524,7 +2501,12 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 // before we made grammars stateless:
                 elemDecl = fSchemaElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
             }
-        if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
+        // this is initialized correctly only if there is
+        // no element decl.  The other uses in this scope will only
+        // be encountered if there continues to be no element decl--which
+        // implies that this will have been initialized correctly.
+        unsigned orgGrammarUri = fEmptyNamespaceId;
+        if (!elemDecl && (orgGrammarUri = fURIStringPool->getId(original_uriStr)) != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
             bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
             if (errorCondition && !laxThisOne)
@@ -2752,6 +2734,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     }
 
     if (fGrammarType == Grammar::SchemaGrammarType) {
+
+        // squirrel away the element's QName, so that we can do an efficient
+        // end-tag match
+        fElemStack.setCurrentSchemaElemName(fQNameBuf.getRawBuffer());
 
         ComplexTypeInfo* typeinfo = (fValidate)
             ? ((SchemaValidator*)fValidator)->getCurrentTypeInfo()
@@ -3527,3 +3513,4 @@ void IGXMLScanner::resetPSVIElemContext()
 }
 
 XERCES_CPP_NAMESPACE_END
+

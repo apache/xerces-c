@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/06/02 19:58:10  neilg
+ * Fix bug where scanners would accept malformed tags of the form
+ * <p:a xmlns:p="b" xmlns:q="b"></q:a> when namespace processing was
+ * enabled.  This also opened the way for some end-tag scanning
+ * performance improvements.
+ *
  * Revision 1.12  2004/04/27 19:17:52  peiyongz
  * XML1.0-3rd VC: element content(children) dont allow white space from
  * EntityRef/CharRef
@@ -209,6 +215,7 @@ ElemStack::~ElemStack()
 
         fMemoryManager->deallocate(fStack[stackInd]->fChildren);//delete [] fStack[stackInd]->fChildren;
         fMemoryManager->deallocate(fStack[stackInd]->fMap);//delete [] fStack[stackInd]->fMap;
+        fMemoryManager->deallocate(fStack[stackInd]->fSchemaElemName);
         delete fStack[stackInd];
     }
 
@@ -235,6 +242,8 @@ unsigned int ElemStack::addLevel()
         fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
+        fStack[fStackTop]->fSchemaElemName = 0;
+        fStack[fStackTop]->fSchemaElemNameMaxLen = 0;
     }
 
     // Set up the new top row
@@ -271,6 +280,8 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
         fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
+        fStack[fStackTop]->fSchemaElemName = 0;
+        fStack[fStackTop]->fSchemaElemNameMaxLen = 0;
     }
 
     // Set up the new top row
