@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/08/17 21:09:04  peiyongz
+ * canRep for nonPositivieInteger
+ *
  * Revision 1.11  2004/08/11 16:48:24  peiyongz
  * String version compareValue
  *
@@ -126,19 +129,29 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawData
-                                               ,       MemoryManager* const memMgr)
+                                               ,       MemoryManager* const memMgr
+                                               ,       bool                 isNonPositiveInteger)
 {
     try 
     {
-        XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData) + 1) * sizeof(XMLCh));
+        XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData) + 2) * sizeof(XMLCh));
         int    sign = 0;
 
         XMLBigInteger::parseBigInteger(rawData, retBuf, sign);
 
         if (sign == 0)
         {
-            retBuf[0] = chDigit_0;
-            retBuf[1] = chNull;
+            if (isNonPositiveInteger)
+            {
+                retBuf[0] = chDash;
+                retBuf[1] = chDigit_0;
+                retBuf[2] = chNull;
+            }
+            else
+            {
+                retBuf[0] = chDigit_0;
+                retBuf[1] = chNull;
+            }
         }
         else if (sign == -1)
         {

@@ -96,6 +96,7 @@ public:
                         (
                           const XMLCh*         const rawData
                         ,       MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager
+                        ,       bool                 isNonPositiveInteger = false
                         );
 
     static void parseBigInteger(const XMLCh* const toConvert

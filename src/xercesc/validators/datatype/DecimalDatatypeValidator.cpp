@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/08/17 21:09:27  peiyongz
+ * canRep for nonPositivieInteger
+ *
  * Revision 1.26  2004/01/13 21:18:18  peiyongz
  * revert code back to previous version
  *
@@ -753,7 +756,7 @@ const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*  
         (dvType == XMLCanRepGroup::Decimal_Derivated_unsigned) ||
         (dvType == XMLCanRepGroup::Decimal_Derivated_npi)        )
     {          
-        return XMLBigInteger::getCanonicalRepresentation(rawData, toUse);
+        return XMLBigInteger::getCanonicalRepresentation(rawData, toUse, dvType == XMLCanRepGroup::Decimal_Derivated_npi);
     }
     else if (dvType == XMLCanRepGroup::Decimal) 
     {
