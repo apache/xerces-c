@@ -264,6 +264,19 @@ void myParsingFunction()
         the parser object and destroy it explicitly before the
         call to XMLPlatformUtils::Terminate() is made.
       </p>
+      <p>Another way of producing segmentation faults--that again, 
+      unfortunately, was employed by some of our
+      samples--is to have calls to XMLPlatformUtils::Terminate()
+      in a catch block that catches any of Xerces's exceptions.
+      Since the destructor of the exception will implicitly be
+      invoked upon exit from the catch block, and since some of
+      the exceptions' destructors call on Xerces's
+      default memory manager to destroy dynamically-allocated
+      objects, their destruction will provoke a segmentation
+      fault even if a return statement is placed in the catch
+      block since the default memory manager will no longer exist.  
+      This practice is now avoided in all our samples.
+      </p>
     </a>
   </faq>
 
