@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/03 14:51:16  peiyongz
+ * Bug#8769: UMR detected by memory tool - patch from Kenneth Palsson
+ *
  * Revision 1.3  2002/02/28 22:34:36  peiyongz
  * Bug#2717: patch to Unterminated INCLUDE section causes infinite loop with setExitOnFirstFatalError(false)
  *
@@ -1192,7 +1195,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     //  the tree off the second child as we move across.
     //
     ContentSpecNode* headNode = 0;
-    ContentSpecNode::NodeTypes curType;
+    ContentSpecNode::NodeTypes curType = ContentSpecNode::UnknownType;
     if (opCh == chComma)
     {
         curType = ContentSpecNode::Sequence;
