@@ -3214,6 +3214,9 @@ void XMLScanner::normalizeURI(const XMLCh* const systemURI,
             pszSrc += 3;
             normalizedURI.append(chSpace);
         }
+        else if (*pszSrc == 0xFFFF) { //escaped character
+            pszSrc++;
+        } 
         else {
             normalizedURI.append(*pszSrc);
             pszSrc++;
