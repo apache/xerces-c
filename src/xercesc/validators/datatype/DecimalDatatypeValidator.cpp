@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/01/06 04:42:53  neilg
+ * On some platforms, it is problematic to throw a different exception from inside the catch block of another exception
+ *
  * Revision 1.22  2004/01/03 00:04:36  peiyongz
  * using ctor/parseContent to avoid exception thrown from ctor
  *
@@ -584,9 +587,9 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
     // all other facet were inherited by the derived type
     if (asBase)
         return;
-
+    XMLCh *errorMsg = 0;
     try {
-        XMLBigDecimal  compareDataValue(manager);
+        XMLBigDecimal compareDataValue (manager);
         compareDataValue.parseContent(content);
         XMLBigDecimal* compareData = &compareDataValue;
         
@@ -657,7 +660,12 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
     }
     catch (XMLException &e)
     {
-       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage(), manager);
+       errorMsg = XMLString::replicate(e.getMessage(), manager);
+    }
+    if(errorMsg)
+    {
+       ArrayJanitor<XMLCh> jan(errorMsg, manager);
+       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, errorMsg, manager);
     }
 }
 
