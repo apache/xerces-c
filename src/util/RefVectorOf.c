@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/07/31 19:18:25  jpolast
+ * bug fix in removeAll() to zero out all the pointers.
+ *
  * Revision 1.3  2000/03/02 19:54:45  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -186,15 +189,13 @@ orphanElementAt(const unsigned int orphanAt)
 
 template <class TElem> void RefVectorOf<TElem>::removeAllElements()
 {
-    if (fAdoptedElems)
+    for (unsigned int index = 0; index < fCurCount; index++)
     {
-        for (unsigned int index = 0; index < fCurCount; index++)
-        {
-            delete fElemList[index];
+        if (fAdoptedElems)
+          delete fElemList[index];
 
-            // Keep unused elements zero for sanity's sake
-            fElemList[index] = 0;
-        }
+        // Keep unused elements zero for sanity's sake
+        fElemList[index] = 0;
     }
     fCurCount = 0;
 }
