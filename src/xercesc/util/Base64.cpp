@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.9  2003/05/20 21:32:02  peiyongz
- * Apply MemoryManager
+ * Revision 1.10  2003/05/20 22:10:02  peiyongz
+ * To differentiate external/internal memory
  *
  * Revision 1.8  2003/01/27 21:15:56  peiyongz
  * only zero or one space allowed in between B64 character.
@@ -150,25 +150,35 @@ bool Base64::isInitialized = false;
  *
  * Memory Management Issue:
  *
- * . For result returned to caller, the plugged memory manager is used
- *   if it is provided, or XMLPlatformUtils::fgMemoryManager otherwise.
+ * . For memory allocated for result returned to caller (external memory), 
+ *   the plugged memory manager is used if it is provided, otherwise global 
+ *   new used to retain the pre-memory-manager behaviour.
  *
- * . For internal used, XMLPlatformUtils::fgMemoryManager is used ONLY
+ * . For memory allocated for temperary buffer (internal memory), 
+ *   XMLPlatformUtils::fgMemoryManager is used.
  *
  */
 
-static inline void* getMemory(MemoryManager* const allocator
-                            , unsigned int const   sizeToAllocate)
+static inline void* getExternalMemory(MemoryManager* const allocator
+                                    , unsigned int const   sizeToAllocate)
 {
    return allocator ? allocator->allocate(sizeToAllocate)
-                    : XMLPlatformUtils::fgMemoryManager->allocate(sizeToAllocate);
+       : ::operator new(sizeToAllocate);
 }
 
-static inline void returnMemory(MemoryManager* const allocator
-                              , void*                buffer)
+static inline void* getInternalMemory(unsigned int const   sizeToAllocate)
+{
+    return XMLPlatformUtils::fgMemoryManager->allocate(sizeToAllocate);
+}
+
+/***
+ * internal memory is deallocated by janitorArray
+ */ 
+static inline void returnExternalMemory(MemoryManager* const allocator
+                                      , void*                buffer)
 {
     allocator ? allocator->deallocate(buffer)
-              : XMLPlatformUtils::fgMemoryManager->deallocate(buffer);
+        : ::operator delete(buffer);
 }
 
 /**
@@ -224,7 +234,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData
 
     unsigned int inputIndex = 0;
     unsigned int outputIndex = 0;
-    XMLByte *encodedData = (XMLByte*) getMemory(memMgr, (quadrupletCount*FOURBYTE+lineCount+1) * sizeof(XMLByte));
+    XMLByte *encodedData = (XMLByte*) getExternalMemory(memMgr, (quadrupletCount*FOURBYTE+lineCount+1) * sizeof(XMLByte));
 
     //
     // Process all quadruplet(s) except the last
@@ -317,7 +327,7 @@ int Base64::getDataLength(const XMLCh* const inputData)
         return -1;
     else
     {
-        returnMemory(0, decodedData);
+        returnExternalMemory(0, decodedData);
         return retLen;
     }
 }
@@ -360,7 +370,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
     // remove all XML whitespaces from the base64Data
     //
     int inputLength = XMLString::stringLen( (const char* const)inputData );
-    XMLByte* rawInputData = (XMLByte*) getMemory(0, (inputLength+1) * sizeof(XMLByte));
+    XMLByte* rawInputData = (XMLByte*) getInternalMemory((inputLength+1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> jan(rawInputData, XMLPlatformUtils::fgMemoryManager);
 
     int inputIndex = 0;
@@ -402,7 +412,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
 
     int rawInputIndex  = 0;
     int outputIndex    = 0;
-    XMLByte *decodedData = (XMLByte*) getMemory(memMgr, (quadrupletCount*3+1) * sizeof(XMLByte));
+    XMLByte *decodedData = (XMLByte*) getExternalMemory(memMgr, (quadrupletCount*3+1) * sizeof(XMLByte));
 
     //
     // Process all quadruplet(s) except the last
@@ -417,7 +427,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
             !isData( (d4 = rawInputData[ rawInputIndex++ ]) ))
         {
             // if found "no data" just return NULL
-            returnMemory(memMgr, decodedData);
+            returnExternalMemory(memMgr, decodedData);
             return 0;
         }
 
@@ -440,7 +450,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
         !isData( (d2 = rawInputData[ rawInputIndex++ ]) ))
     {
         // if found "no data" just return NULL
-        returnMemory(memMgr, decodedData);
+        returnExternalMemory(memMgr, decodedData);
         return 0;
     }
 
@@ -459,7 +469,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
             // two PAD e.g. 3c==
             if ((b2 & 0xf) != 0) // last 4 bits should be zero
             {
-                returnMemory(memMgr, decodedData);
+                returnExternalMemory(memMgr, decodedData);
                 return 0;
             }
 
@@ -471,7 +481,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
             b3 = base64Inverse[ d3 ];
             if (( b3 & 0x3 ) != 0 ) // last 2 bits should be zero
             {
-                returnMemory(memMgr, decodedData);
+                returnExternalMemory(memMgr, decodedData);
                 return 0;
             }
 
@@ -481,7 +491,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData
         else
         {
             // an error like "3c[Pad]r", "3cdX", "3cXd", "3cXX" where X is non data
-            returnMemory(memMgr, decodedData);
+            returnExternalMemory(memMgr, decodedData);
             return 0;
         }
     }
@@ -513,7 +523,7 @@ XMLCh* Base64::decode(const XMLCh* const   inputData
      *  Move input data to a XMLByte buffer
      */
 	unsigned int srcLen = XMLString::stringLen(inputData);
-    XMLByte *dataInByte = (XMLByte*) getMemory(0, (srcLen+1) * sizeof(XMLByte));
+    XMLByte *dataInByte = (XMLByte*) getInternalMemory((srcLen+1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> janFill(dataInByte, XMLPlatformUtils::fgMemoryManager);
 
     for (unsigned int i = 0; i < srcLen; i++)
@@ -533,7 +543,7 @@ XMLCh* Base64::decode(const XMLCh* const   inputData
     /***
      * Move decoded data to a XMLCh buffer to return
      */
-    XMLCh *toRet = (XMLCh*) getMemory(memMgr, (*decodedLen+1) * sizeof(XMLCh));
+    XMLCh *toRet = (XMLCh*) getExternalMemory(memMgr, (*decodedLen+1) * sizeof(XMLCh));
                
     for (unsigned int j = 0; j < *decodedLen; j++)
 		toRet[j] = (XMLCh)DecodedBuf[j];
@@ -543,7 +553,7 @@ XMLCh* Base64::decode(const XMLCh* const   inputData
     /***
      * Release the memory allocated in the actual decoding method
      */ 
-    returnMemory(memMgr, DecodedBuf);
+    returnExternalMemory(memMgr, DecodedBuf);
 
     return toRet;
 
