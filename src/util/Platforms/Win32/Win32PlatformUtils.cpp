@@ -646,11 +646,11 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
     //  Note we have to cast off the constness of some of these because
     //  the system APIs are not C++ aware in all cases.
     //
-    return ::InterlockedCompareExchange
+    return (void *) ::InterlockedCompareExchange
     (
-        toFill
-        , (void*)newValue
-        , (void*)toCompare
+        (long *)toFill
+        , (long)newValue
+        , (long)toCompare
     );
 
     #endif
