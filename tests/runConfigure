@@ -223,6 +223,8 @@ if test $debug = "off"; then
        debugflag="-w -O2";
     elif test $platform = "aix"; then
        debugflag="-w -O2";
+    elif test $platform = "hp-11"; then
+       debugflag="-w +O1";       
     else
     debugflag="-w -O";
     fi
