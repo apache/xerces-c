@@ -1797,17 +1797,6 @@ void XMLScanner::scanEndTag(bool& gotData)
         );
     }
 
-    // If we have a doc handler, tell it about the end tag
-    if (fDocHandler)
-    {
-        fDocHandler->endElement
-        (
-            *topElem->fThisElement
-            , uriId
-            , isRoot
-        );
-    }
-
     //
     //  If validation is enabled, then lets pass him the list of children and
     //  this element and let him validate it.
@@ -1916,6 +1905,17 @@ void XMLScanner::scanEndTag(bool& gotData)
                 fValueStoreCache->endElement();
             }
         }
+    }
+
+    // If we have a doc handler, tell it about the end tag
+    if (fDocHandler)
+    {
+        fDocHandler->endElement
+        (
+            *topElem->fThisElement
+            , uriId
+            , isRoot
+        );
     }
 
     // If this was the root, then done with content
@@ -3401,6 +3401,22 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         }
     }
 
+    // Since the element may have default values, call start tag now regardless if it is empty or not
+    // If we have a document handler, then tell it about this start tag
+    if (fDocHandler)
+    {
+        fDocHandler->startElement
+        (
+            *elemDecl
+            , uriId
+            , fPrefixBuf.getRawBuffer()
+            , *fAttrList
+            , attCount
+            , false
+            , isRoot
+        );
+    }
+
     //
     //  If empty, validate content right now if we are validating and then
     //  pop the element stack top. Else, we have to update the current stack
@@ -3486,6 +3502,17 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             }
         }
 
+        // If we have a doc handler, tell it about the end tag
+        if (fDocHandler)
+        {
+            fDocHandler->endElement
+            (
+                *elemDecl
+                , uriId
+                , isRoot
+            );
+        }
+
         // If the elem stack is empty, then it was an empty root
         if (isRoot)
             gotData = false;
@@ -3514,21 +3541,6 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             // Restore the validation flag
             fValidate = fElemStack.getValidationFlag();
         }
-    }
-
-    // If we have a document handler, then tell it about this start tag
-    if (fDocHandler)
-    {
-        fDocHandler->startElement
-        (
-            *elemDecl
-            , uriId
-            , fPrefixBuf.getRawBuffer()
-            , *fAttrList
-            , attCount
-            , isEmpty
-            , isRoot
-        );
     }
 
     return true;
