@@ -209,44 +209,44 @@ endif
 	-${CP} -Rf ${XERCESCROOT}/lib/${REAL_NAME} ${BINTARGETDIR}/lib
 	-${CD} ${BINTARGETDIR}/lib; ln -s ${REAL_NAME} ${SO_NAME}; ln -s ${REAL_NAME} ${LINK_NAME}
 ifeq (${TRANSCODER},ICU)
-	-${CP} -Rf ${ICUROOT}/lib/libicudata30.0.so ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicudata.so.30.0 ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicudata.sl.30.0 ${BINTARGETDIR}/lib
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata30.0.so' -exec ln -s {} libicudata.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata30.0.so' -exec ln -s {} libicudata30.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so.30 \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.30.0' -exec ln -s {} libicudata.sl \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.30.0' -exec ln -s {} libicudata.sl.30 \;
-	-${CP} -Rf ${ICUROOT}/lib/libicuuc30.0.so ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicuuc.so.30.0 ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicuuc.sl.30.0 ${BINTARGETDIR}/lib
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc30.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so.30 \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl.30 \;
+	-${CP} -Rf ${ICUROOT}/lib/libicudata32.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.so.32.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.sl.32.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata32.0.so' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata32.0.so' -exec ln -s {} libicudata32.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.32.0' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.32.0' -exec ln -s {} libicudata.so.32 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.32.0' -exec ln -s {} libicudata.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.32.0' -exec ln -s {} libicudata.sl.32 \;
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc32.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.so.32.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.sl.32.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc32.0.so' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc32.0.so' -exec ln -s {} libicuuc32.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.32.0' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.32.0' -exec ln -s {} libicuuc.so.32 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.32.0' -exec ln -s {} libicuuc.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.32.0' -exec ln -s {} libicuuc.sl.32 \;
 else
    ifeq (${MESSAGELOADER},ICU)
-	-${CP} -Rf ${ICUROOT}/lib/libicudata30.0.so ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicudata.so.30.0 ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicudata.sl.30.0 ${BINTARGETDIR}/lib
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata30.0.so' -exec ln -s {} libicudata.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata30.0.so' -exec ln -s {} libicudata30.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so.30 \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.30.0' -exec ln -s {} libicudata.sl \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.30.0' -exec ln -s {} libicudata.sl.30 \;
-	-${CP} -Rf ${ICUROOT}/lib/libicuuc30.0.so ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicuuc.so.30.0 ${BINTARGETDIR}/lib
-	-${CP} -Rf ${ICUROOT}/lib/libicuuc.sl.30.0 ${BINTARGETDIR}/lib
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc30.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so.30 \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl \;
-	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl.30 \;
+	-${CP} -Rf ${ICUROOT}/lib/libicudata32.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.so.32.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.sl.32.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata32.0.so' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata32.0.so' -exec ln -s {} libicudata32.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.32.0' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.32.0' -exec ln -s {} libicudata.so.32 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.32.0' -exec ln -s {} libicudata.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.32.0' -exec ln -s {} libicudata.sl.32 \;
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc32.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.so.32.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.sl.32.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc32.0.so' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc32.0.so' -exec ln -s {} libicuuc32.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.32.0' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.32.0' -exec ln -s {} libicuuc.so.32 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.32.0' -exec ln -s {} libicuuc.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.32.0' -exec ln -s {} libicuuc.sl.32 \;
    endif
 endif
 ifeq (${MESSAGELOADER},ICU)
