@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/12/02 17:50:21  neilg
+ * additional fix for bug 25118; once again, thanks to Jeroen Whitmond
+ *
  * Revision 1.12  2003/10/01 00:20:41  knoaman
  * Add a static method to check whether a given string is a valid URI.
  *
@@ -177,6 +180,9 @@ public:
      *
      * @param uriSpec the URI specification string (cannot be null or empty)
      *
+     * @param manager Pointer to the memory manager to be used to
+     *                allocate objects.
+     *
      * ctor# 2
      *
      */
@@ -189,8 +195,12 @@ public:
      *
      * @param baseURI the base URI (cannot be null if uriSpec is null or
      *                empty)
+     *
      * @param uriSpec the URI specification string (cannot be null or
      *                empty if base is null)
+     *
+     * @param manager Pointer to the memory manager to be used to
+     *                allocate objects.
      *
      * ctor# 7 relative ctor
      *
