@@ -107,7 +107,7 @@ static UChar* convertToUChar(   const   XMLCh* const    toConvert
     const unsigned int actualLen = srcLen
                                    ? srcLen : XMLString::stringLen(toConvert);
 
-    UChar* tmpBuf = new UChar[srcLen + 1];
+    UChar* tmpBuf = new UChar[actualLen + 1];
     const XMLCh* srcPtr = toConvert;
     UChar* outPtr = tmpBuf;
     while (*srcPtr)
@@ -567,7 +567,7 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     // Put the old handler back
     err = U_ZERO_ERROR;
     UConverterFromUCallback orgAction = NULL;
-    
+
     ucnv_setFromUCallBack(fConverter, oldCB, NULL, &orgAction, &orgContent, &err);
 
     if (!res)
@@ -618,7 +618,7 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
      UErrorCode  err = U_ZERO_ERROR;
      UConverterFromUCallback oldCB = NULL;
      void* orgContent;
-     
+
      ucnv_setFromUCallBack
          (
          (UConverter*)&fConverter
@@ -649,13 +649,13 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
 
     // Save the result before we overight the error code
     const bool res = (err == U_ZERO_ERROR);
-    
+
     // Put the old handler back
     err = U_ZERO_ERROR;
     UConverterFromUCallback orgAction = NULL;
-    
+
     ucnv_setFromUCallBack(fConverter, oldCB, NULL, &orgAction, &orgContent, &err);
-    
+
     return res;
 }
 
