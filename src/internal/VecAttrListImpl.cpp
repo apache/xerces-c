@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/11/02 01:14:07  andyh
+ * SAX bug fix:  Attribute lists were throwing exceptions rather than returning
+ * null when an attribute could not be found by name.  Fixed by Tinny Ng.
+ *
  * Revision 1.5  2000/03/13 20:19:11  rahulj
  * Fixed #54. Changed self-assignment to now use the parameter value.
  * Reported by Helmut Eiken <H.Eiken@cli.de>
@@ -120,22 +124,25 @@ unsigned int VecAttrListImpl::getLength() const
 
 const XMLCh* VecAttrListImpl::getName(const unsigned int index) const
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+    }
     return fVector->elementAt(index)->getName();
 }
 
 const XMLCh* VecAttrListImpl::getType(const unsigned int index) const
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+    }
     return XMLAttDef::getAttTypeString(fVector->elementAt(index)->getType());
 }
 
 const XMLCh* VecAttrListImpl::getValue(const unsigned int index) const
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+    }
     return fVector->elementAt(index)->getValue();
 }
 

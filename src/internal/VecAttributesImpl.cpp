@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/11/02 01:14:07  andyh
+ * SAX bug fix:  Attribute lists were throwing exceptions rather than returning
+ * null when an attribute could not be found by name.  Fixed by Tinny Ng.
+ *
  * Revision 1.2  2000/08/09 22:11:16  jpolast
  * changes to allow const instances of the sax2
  * Attributes class.
@@ -83,7 +87,7 @@ VecAttributesImpl::VecAttributesImpl() :
     fAdopt(false)
     , fCount(0)
     , fVector(0)
-	, fValidator(0)
+    , fValidator(0)
 {
 }
 
@@ -108,44 +112,51 @@ unsigned int VecAttributesImpl::getLength() const
 
 const XMLCh* VecAttributesImpl::getURI(const unsigned int index) const
 {
-	// since this func really needs to be const, like the rest, not sure how we
-	// make it const and re-use the fURIBuffer member variable.  we're currently
-	// creating a buffer each time you need a URI.  there has to be a better
-	// way to do this...
+    // since this func really needs to be const, like the rest, not sure how we
+    // make it const and re-use the fURIBuffer member variable.  we're currently
+    // creating a buffer each time you need a URI.  there has to be a better
+    // way to do this...
 
-	//XMLBuffer tempBuf;
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    //XMLBuffer tempBuf;
+    if (index >= fCount) {
+
+
+        return 0;
+     }
     //fValidator->getURIText(fVector->elementAt(index)->getURIId(), tempBuf) ;
-	//return tempBuf.getRawBuffer() ;
-	return fValidator->getURIText(fVector->elementAt(index)->getURIId());
+    //return tempBuf.getRawBuffer() ;
+    return fValidator->getURIText(fVector->elementAt(index)->getURIId());
 }
 
 const XMLCh* VecAttributesImpl::getLocalName(const unsigned int index) const 
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+     }
     return fVector->elementAt(index)->getName(); 
 }
 
 const XMLCh* VecAttributesImpl::getQName(const unsigned int index) const 
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+     }
     return fVector->elementAt(index)->getQName(); 
 }
 
 const XMLCh* VecAttributesImpl::getType(const unsigned int index) const
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+     }
     return XMLAttDef::getAttTypeString(fVector->elementAt(index)->getType());
 }
 
 const XMLCh* VecAttributesImpl::getValue(const unsigned int index) const
 {
-    if (index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+    if (index >= fCount) {
+        return 0;
+     }
     return fVector->elementAt(index)->getValue();
 }
 
@@ -155,16 +166,16 @@ int VecAttributesImpl::getIndex(const XMLCh* const uri, const XMLCh* const local
     //  Search the vector for the attribute with the given name and return
     //  its type.
     //
-	XMLBuffer uriBuffer ;
+    XMLBuffer uriBuffer ;
     for (unsigned int index = 0; index < fCount; index++)
     {
         const XMLAttr* curElem = fVector->elementAt(index);
-		
-		fValidator->getURIText(curElem->getURIId(), uriBuffer) ;
+        
+        fValidator->getURIText(curElem->getURIId(), uriBuffer) ;
 
         if ( (!XMLString::compareString(curElem->getName(), localPart)) &&
-			 (!XMLString::compareString(uriBuffer.getRawBuffer(), uri)) )
-			return index ;
+             (!XMLString::compareString(uriBuffer.getRawBuffer(), uri)) )
+            return index ;
     }
     return -1; 
 }
@@ -187,22 +198,22 @@ int VecAttributesImpl::getIndex(const XMLCh* const QName ) const
 
 const XMLCh* VecAttributesImpl::getType(const XMLCh* const uri, const XMLCh* const localPart ) const 
 {
-	return getType(getIndex(uri, localPart)) ;
+    return getType(getIndex(uri, localPart)) ;
 }
 
 const XMLCh* VecAttributesImpl::getType(const XMLCh* const QName) const 
 {
-	return getType(getIndex(QName)) ;
+    return getType(getIndex(QName)) ;
 }
 
 const XMLCh* VecAttributesImpl::getValue(const XMLCh* const uri, const XMLCh* const localPart ) const 
 {
-	return getValue(getIndex(uri, localPart)) ;
+    return getValue(getIndex(uri, localPart)) ;
 }
 
 const XMLCh* VecAttributesImpl::getValue(const XMLCh* const QName) const 
 {
-	return getValue(getIndex(QName)) ;
+    return getValue(getIndex(QName)) ;
 }
 
 // ---------------------------------------------------------------------------
@@ -210,7 +221,7 @@ const XMLCh* VecAttributesImpl::getValue(const XMLCh* const QName) const
 // ---------------------------------------------------------------------------
 void VecAttributesImpl::setVector(const   RefVectorOf<XMLAttr>* const srcVec
                                 , const unsigned int                count
-								, const XMLValidator * const		validator
+                                , const XMLValidator * const        validator
                                 , const bool                        adopt)
 {
     //
@@ -224,6 +235,6 @@ void VecAttributesImpl::setVector(const   RefVectorOf<XMLAttr>* const srcVec
     fAdopt = adopt;
     fCount = count;
     fVector = srcVec;
-	fValidator = validator ;
+    fValidator = validator ;
 }
 
