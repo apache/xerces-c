@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/03/24 00:32:15  rahulj
+ * Connect to the port specified in the URL, rather than the default one.
+ *
  * Revision 1.2  2000/03/22 00:21:10  rahulj
  * Now we throw exceptions when errors occur.
  * Simplified the code, based on the assumption that
@@ -132,6 +135,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     const XMLCh*        hostName = urlSource.getHost();
     char*               hostNameAsCharStar = localTranscode(hostName);
     ArrayJanitor<char>  janBuf1(hostNameAsCharStar);
+    unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
     char                obuf[1024];  // URL's should be < 1018 bytes.
@@ -159,7 +163,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     memcpy((void *) &sa.sin_addr,
            (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
     sa.sin_family = hostEntPtr->h_addrtype;
-    sa.sin_port = htons(80);
+    sa.sin_port = htons(portNumber);
 
     SOCKET s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
     if (s == INVALID_SOCKET)
