@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/12/22 15:16:51  tng
+ * SAX2-ext's LexicalHandler support added by David Bertoni.
+ *
  * Revision 1.4  2000/08/09 23:39:58  jpolast
  * should be namespace-prefixes; not namespaces-prefixes
  *
@@ -91,6 +94,7 @@
 #include <util/RefStackOf.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <sax2/ContentHandler.hpp>
+#include <sax2/LexicalHandler.hpp>
 #include <sax/DTDHandler.hpp>
 #include <sax/ErrorHandler.hpp>
 #include <sax/EntityResolver.hpp>
@@ -188,6 +192,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     , fElemDepth(0)
     , fEntityResolver(0)
     , fErrorHandler(0)
+   , fLexicalHandler(0)
     , fAdvDHCount(0)
     , fAdvDHList(0)
     , fAdvDHListSize(32)
@@ -308,6 +313,12 @@ void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler)
 }
 
 
+void SAX2XMLReaderImpl::setLexicalHandler(LexicalHandler* const handler)
+{
+    fLexicalHandler = handler;
+}
+
+
 void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver)
 {
     fEntityResolver = resolver;
@@ -388,9 +399,17 @@ void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
     if (!fElemDepth)
         return;
 
+   // Call the installed LexicalHandler.
+   if (cdataSection && fLexicalHandler)
+        fLexicalHandler->startCDATA();
+
     // Just map to the SAX document handler
     if (fDocHandler)
         fDocHandler->characters(chars, length);
+
+   // Call the installed LexicalHandler.
+   if (cdataSection && fLexicalHandler)
+        fLexicalHandler->endCDATA();
 
     //
     //  If there are any installed advanced handlers, then lets call them
@@ -403,13 +422,21 @@ void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
 
 void SAX2XMLReaderImpl::docComment(const XMLCh* const commentText)
 {
+   // Call the installed LexicalHandler.
+   if (fLexicalHandler)
+   {
+        // SAX2 reports comment text like characters -- as an
+        // array with a length.
+        fLexicalHandler->comment(commentText, XMLString::stringLen(commentText));
+   }
+
     // Suppress passing through any comments before the root element.
     if (!fElemDepth)
         return;
 
     //
-    //  SAX has no way to report this. But, if there are any installed
-    //  advanced handlers, then lets call them with this info.
+    //  OK, if there are any installed advanced handlers,
+   // then let's call them with this info.
     //
     for (unsigned int index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docComment(commentText);
@@ -457,6 +484,10 @@ void SAX2XMLReaderImpl::endDocument()
 
 void SAX2XMLReaderImpl::endEntityReference(const XMLEntityDecl& entityDecl)
 {
+   // Call the installed LexicalHandler.
+   if (fLexicalHandler)
+        fLexicalHandler->endEntity(entityDecl.getName());
+
     //
     //  SAX has no way to report this event. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
@@ -712,6 +743,9 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 
 void SAX2XMLReaderImpl::startEntityReference(const XMLEntityDecl& entityDecl)
 {
+   // Call the installed LexicalHandler.
+   if (fLexicalHandler)
+        fLexicalHandler->startEntity(entityDecl.getName());
     //
     //  SAX has no way to report this. But, If there are any installed
     //  advanced handlers, then lets call them with this info.
@@ -742,6 +776,10 @@ void SAX2XMLReaderImpl::doctypeDecl(const   DTDElementDecl& elemDecl
                             , const XMLCh* const    systemId
                             , const bool            hasIntSubset)
 {
+   // Call the installed LexicalHandler.
+   if (fLexicalHandler)
+        fLexicalHandler->startDTD(elemDecl.getFullName(), publicId, systemId);
+
     // Unused by SAX DTDHandler interface at this time
 }
 
@@ -780,6 +818,10 @@ void SAX2XMLReaderImpl::endIntSubset()
 
 void SAX2XMLReaderImpl::endExtSubset()
 {
+   // Call the installed LexicalHandler.
+   if (fLexicalHandler)
+        fLexicalHandler->endDTD();
+
     // Unused by SAX DTDHandler interface at this time
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/12/22 15:16:53  tng
+ * SAX2-ext's LexicalHandler support added by David Bertoni.
+ *
  * Revision 1.3  2000/08/09 22:16:13  jpolast
  * many conformance & stability changes:
  *   - ContentHandler::resetDocument() removed
@@ -93,6 +96,7 @@
 #include <framework/XMLBufferMgr.hpp>
 
 class ContentHandler;
+class LexicalHandler;
 
 /**
   * This class implements the SAX2 'XMLReader' interface and should be
@@ -402,6 +406,13 @@ public :
       */
     virtual ErrorHandler* getErrorHandler() const ;
 
+    /**
+      * This method returns the installed lexical handler.
+      *
+      * @return A pointer to the installed lexical handler object.
+      */
+    virtual LexicalHandler* getLexicalHandler() const ;
+
     /** @name Implementation of SAX 2.0 interface's. */
     //@{
     /**
@@ -496,6 +507,24 @@ public :
     virtual void setErrorHandler(ErrorHandler* const handler) ;
 
 	/**
+    * Allow an application to register a lexical event handler.
+    *
+    * If the application does not register a lexical handler,
+    * all events reported by the SAX parser will be silently
+    * ignored. (this is the default behaviour implemented by HandlerBase).
+    *
+    * Applications may register a new or different handler in the
+    * middle of a parse, and the SAX parser must begin using the new
+    * handler immediately.
+    *
+    * @param handler The error handler.
+    * @see LexicalHandler#LexicalHandler
+    * @see SAXException#SAXException
+    * @see HandlerBase#HandlerBase
+    */
+    virtual void setLexicalHandler(LexicalHandler* const handler) ;
+
+   /**
 	  * This method sets a Feature as per the SAX2 spec (such as
 	  * do validation)
 	  *
@@ -996,6 +1025,7 @@ private :
     unsigned int               fElemDepth;
     EntityResolver*            fEntityResolver;
     ErrorHandler*              fErrorHandler;
+   LexicalHandler*            fLexicalHandler;
     unsigned int               fAdvDHCount;
     XMLDocumentHandler**       fAdvDHList;
     unsigned int               fAdvDHListSize;
@@ -1032,6 +1062,11 @@ inline EntityResolver* SAX2XMLReaderImpl::getEntityResolver() const
 inline ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() const
 {
 	return fErrorHandler;
+}
+
+inline LexicalHandler* SAX2XMLReaderImpl::getLexicalHandler() const
+{
+   return fLexicalHandler;
 }
 
 inline XMLValidator* SAX2XMLReaderImpl::getValidator() const

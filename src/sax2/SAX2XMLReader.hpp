@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/12/22 15:17:04  tng
+ * SAX2-ext's LexicalHandler support added by David Bertoni.
+ *
  * Revision 1.3  2000/08/09 22:19:29  jpolast
  * many conformance & stability changes:
  *   - ContentHandler::resetDocument() removed
@@ -92,6 +95,7 @@ class DTDHandler;
 class EntityResolver;
 class ErrorHandler;
 class InputSource;
+class LexicalHandler;
 
 class SAX2_EXPORT SAX2XMLReader
 {
@@ -152,6 +156,13 @@ public:
       * @return A pointer to the installed error handler object.
       */
     virtual ErrorHandler* getErrorHandler() const = 0 ;
+
+	/**
+      * This method returns the installed lexical handler.
+      *
+      * @return A pointer to the installed lexical handler object.
+      */
+    virtual LexicalHandler* getLexicalHandler() const = 0 ;
 
 	/**
 	  * This method gets a Feature as per the SAX2 spec (such as
@@ -319,6 +330,24 @@ public:
     * @see HandlerBase#HandlerBase
     */
     virtual void setErrorHandler(ErrorHandler* const handler) = 0;
+
+   /**
+    * Allow an application to register a lexical event handler.
+    *
+    * If the application does not register a lexical handler,
+    * all events reported by the SAX parser will be silently
+    * ignored. (this is the default behaviour implemented by HandlerBase).
+    *
+    * Applications may register a new or different handler in the
+    * middle of a parse, and the SAX parser must begin using the new
+    * handler immediately.
+    *
+    * @param handler The error handler.
+    * @see LexicalHandler#LexicalHandler
+    * @see SAXException#SAXException
+    * @see HandlerBase#HandlerBase
+    */
+    virtual void setLexicalHandler(LexicalHandler* const handler) = 0;
 
   /**
 	* This method sets a Feature as per the SAX2 spec (such as
