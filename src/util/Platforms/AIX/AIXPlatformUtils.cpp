@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/19 18:16:12  abagchi
+ * Removed the streaming classes and fgLibLocation
+ *
  * Revision 1.7  2000/01/14 02:18:33  aruna1
  * modified absolute path creation on heap
  *
@@ -163,59 +166,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::platformInit()
 {
-    // Here you would also set the fgLibLocation global variable
-    // XMLPlatformUtils::fgLibLocation is the variable to be set
-
-    char * libraryPath = 0;
-
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".a");
-
-    const int bufLen = 4096;   // arbitrary value big enough to hold path name
-    char buf[bufLen];		   // it's in the stack anyway
-
-    if (load(libName, L_LIBPATH_EXEC, ".") == NULL) {
-		panic( XMLPlatformUtils::Panic_CantFindLib );
-    }
-
-    int retval = loadquery(L_GETINFO, buf, bufLen);
-    if (retval == -1) {
-		panic( XMLPlatformUtils::Panic_CantFindLib );
-    }
-
-    struct ld_info* oneBufPtr = (struct ld_info*)buf;
-
-    while (oneBufPtr)
-    {
-        if (oneBufPtr != (struct ld_info*) buf)
-        {
-            char* fileName = oneBufPtr->ldinfo_filename;
-			if (strstr(fileName, libName) != NULL) {
-				char* copyTo = strrchr(fileName, '/');
-				size_t chars_to_extract = copyTo - fileName;
-				char *libPathName = new char[chars_to_extract + 1];
-				strncpy(libPathName, fileName, chars_to_extract);
-				libPathName[chars_to_extract] = 0;
-				libraryPath = new char[strlen(libPathName)+1];
-				strcpy((char *) libraryPath, libPathName);
-				delete libPathName;
-				break;
-			}
-        }
-        if (oneBufPtr->ldinfo_next == 0)
-            oneBufPtr = NULL;
-        else
-            oneBufPtr = (struct ld_info*) ((char*) oneBufPtr + oneBufPtr->ldinfo_next);
-    }
-
-    XMLPlatformUtils::fgLibLocation = libraryPath;
-
-    if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
-        panic( XMLPlatformUtils::Panic_CantFindLib );
-    }
 }
 
 //
@@ -579,30 +529,6 @@ XMLCh* XMLPlatformUtils::weavePaths
 	return tmpBuf;
 }
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
-
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-    WriteCharStr(stderr, toWrite);
-}
-
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
-}
-
 
 // -----------------------------------------------------------------------
 //  Mutex methods
@@ -737,3 +663,95 @@ FileHandle XMLPlatformUtils::openStdInHandle()
     return (FileHandle)fdopen(dup(0), "rb");
 }
 
+
+
+// ======================================================================
+// This is the software attic. It contains stuff no longer used.
+// Don't look at it unless you have a ladder.
+// ======================================================================
+/**************** Beginning of code attic *******************************
+
+// -----------------------------------------------------------------------
+//  Standard out/error support
+// -----------------------------------------------------------------------
+ 
+void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
+{
+    WriteCharStr(stderr, toWrite);
+}
+
+void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
+{
+    WriteUStrStdErr(toWrite);
+}
+
+void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
+{
+    WriteUStrStdOut(toWrite);
+}
+
+void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
+{
+    WriteCharStr(stdout, toWrite);
+}
+
+
+void XMLPlatformUtils::platformInit()
+{
+    // Here you would also set the fgLibLocation global variable
+    // XMLPlatformUtils::fgLibLocation is the variable to be set
+
+    char * libraryPath = 0;
+
+    char libName[256];
+    strcpy(libName, XML4C_DLLName);
+    strcat(libName, gXML4CVersionStr);
+    strcat(libName, ".a");
+
+    const int bufLen = 4096;   // arbitrary value big enough to hold path name
+    char buf[bufLen];		   // it's in the stack anyway
+
+    if (load(libName, L_LIBPATH_EXEC, ".") == NULL) {
+		panic( XMLPlatformUtils::Panic_CantFindLib );
+    }
+
+    int retval = loadquery(L_GETINFO, buf, bufLen);
+    if (retval == -1) {
+		panic( XMLPlatformUtils::Panic_CantFindLib );
+    }
+
+    struct ld_info* oneBufPtr = (struct ld_info*)buf;
+
+    while (oneBufPtr)
+    {
+        if (oneBufPtr != (struct ld_info*) buf)
+        {
+            char* fileName = oneBufPtr->ldinfo_filename;
+			if (strstr(fileName, libName) != NULL) {
+				char* copyTo = strrchr(fileName, '/');
+				size_t chars_to_extract = copyTo - fileName;
+				char *libPathName = new char[chars_to_extract + 1];
+				strncpy(libPathName, fileName, chars_to_extract);
+				libPathName[chars_to_extract] = 0;
+				libraryPath = new char[strlen(libPathName)+1];
+				strcpy((char *) libraryPath, libPathName);
+				delete libPathName;
+				break;
+			}
+        }
+        if (oneBufPtr->ldinfo_next == 0)
+            oneBufPtr = NULL;
+        else
+            oneBufPtr = (struct ld_info*) ((char*) oneBufPtr + oneBufPtr->ldinfo_next);
+    }
+
+    XMLPlatformUtils::fgLibLocation = libraryPath;
+
+    if (XMLPlatformUtils::fgLibLocation == NULL)
+    {
+        panic( XMLPlatformUtils::Panic_CantFindLib );
+    }
+}
+
+
+********************* End of code attic *******************************/
