@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/29 00:39:08  andyh
+ * Redo synchronization in DOMStringHandle allocator.  There
+ * was a bug in the use of Compare and Swap.  Switched to mutexes.
+ *
+ * Changed a few plain deletes to delete [].
+ *
  * Revision 1.3  1999/12/03 00:14:52  andyh
  * Removed transcoding stuff, replaced with DOMString::transcode.
  *
@@ -233,7 +239,6 @@ int main(int argC, char* argV[])
     {
         cerr << "An error occured during parsing\n   Message: "
             << DOMString(e.getMessage()) << endl;
- //           << StrX(e.getMessage()) << endl;
         errorsOccured = true;
     }
 
@@ -449,7 +454,6 @@ void outputContent(ostream& target, const DOMString &toWrite)
                 
             default:
                 // If it is none of the special characters, print it as such
-                // target << StrX(&chars[index], 1);
                 target << toWrite.substringData(index, 1);
                 break;
             }
@@ -470,10 +474,8 @@ void outputContent(ostream& target, const DOMString &toWrite)
 // ---------------------------------------------------------------------------
 ostream& operator<<(ostream& target, const DOMString& s)
 {
-    //if (s.length() > 0)
-    //    target << StrX(s.rawBuffer(), s.length());
     char *p = s.transcode();
     target << p;
-    delete p;
+    delete [] p;
     return target;
 }

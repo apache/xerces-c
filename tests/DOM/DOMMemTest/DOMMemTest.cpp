@@ -66,6 +66,12 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/01/29 00:39:09  andyh
+ * Redo synchronization in DOMStringHandle allocator.  There
+ * was a bug in the use of Compare and Swap.  Switched to mutexes.
+ *
+ * Changed a few plain deletes to delete [].
+ *
  * Revision 1.9  2000/01/22 01:38:32  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -163,7 +169,7 @@ int  main()
         char *pMessage = XMLString::transcode(toCatch.getMessage());
         fprintf(stderr, "Error during XMLPlatformUtils::Initialize(). \n"
                         "  Message is: %s\n", pMessage);
-        delete pMessage;
+        delete [] pMessage;
         return -1;
     }
 
@@ -780,7 +786,7 @@ int  main()
 		DOMString DOMTestStr = testStr;
 		char *roundTripString = DOMTestStr.transcode();
 		TASSERT(strcmp(testStr, roundTripString) == 0);
-		delete roundTripString;
+		delete [] roundTripString;
 	}
     TESTEPILOG;
 
@@ -951,8 +957,6 @@ int  main()
     }
     TESTEPILOG;
     
-
-
 
 
 
@@ -1198,6 +1202,7 @@ int  main()
     //
     TESTPROLOG;
     {
+
         // Set up an initial (root element only) document.
         // 
         DOM_DOMImplementation impl;
@@ -1226,19 +1231,19 @@ int  main()
         DOM_Attr attre = doc.createAttributeNS("http://nse", "attrb");   
         rootEl.setAttributeNodeNS(attre);
 
-
         //
         // Check that the attribute nodes were created with the correct properties.
         //
-        TASSERT(attra.getNodeName().equals("a.attra"));
+        TASSERT(attra.getNodeName().equals("a:attra"));
         TASSERT(attra.getNamespaceURI().equals("http://nsa"));
         TASSERT(attra.getLocalName().equals("attra"));
-        TASSERT(attra.getName().equals("a.attra"));
+        TASSERT(attra.getName().equals("a:attra"));
         TASSERT(attra.getNodeType() == DOM_Node::ATTRIBUTE_NODE);
         TASSERT(attra.getNodeValue().equals(""));
         TASSERT(attra.getPrefix().equals("a"));
         TASSERT(attra.getSpecified() == true);
         TASSERT(attra.getValue().equals(""));
+
 
     }
     TESTEPILOG;

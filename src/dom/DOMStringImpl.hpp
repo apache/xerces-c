@@ -59,6 +59,12 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/29 00:39:08  andyh
+ * Redo synchronization in DOMStringHandle allocator.  There
+ * was a bug in the use of Compare and Swap.  Switched to mutexes.
+ *
+ * Changed a few plain deletes to delete [].
+ *
  * Revision 1.2  2000/01/12 19:55:14  aruna1
  * Included header for size_t
  *
@@ -79,6 +85,7 @@
 
 
 #include <util/XML4CDefs.hpp>
+#include <util/Mutexes.hpp>
 #include <stdio.h>
 
 
@@ -113,6 +120,7 @@ public:
                              ~DOMStringHandle() {};
 private:
     inline                   DOMStringHandle() {};
+    static inline  XMLMutex &getMutex();
 };
 
 

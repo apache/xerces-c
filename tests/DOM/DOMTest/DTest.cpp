@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/29 00:39:09  andyh
+ * Redo synchronization in DOMStringHandle allocator.  There
+ * was a bug in the use of Compare and Swap.  Switched to mutexes.
+ *
+ * Changed a few plain deletes to delete [].
+ *
  * Revision 1.3  2000/01/19 21:40:58  andyh
  * Remove a few remaining dependencies on the (now defunct)
  * XML StdOut stream.
@@ -84,6 +90,12 @@
  
 /**
  * $Log$
+ * Revision 1.4  2000/01/29 00:39:09  andyh
+ * Redo synchronization in DOMStringHandle allocator.  There
+ * was a bug in the use of Compare and Swap.  Switched to mutexes.
+ *
+ * Changed a few plain deletes to delete [].
+ *
  * Revision 1.3  2000/01/19 21:40:58  andyh
  * Remove a few remaining dependencies on the (now defunct)
  * XML StdOut stream.
@@ -478,7 +490,7 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
          catch (const XMLException& toCatch) {
              char *pMessage = XMLString::transcode(toCatch.getMessage());
              fprintf(stderr, "Error during initialization! \n  %s \n", pMessage);
-             delete pMessage;
+             delete [] pMessage;
              return;
          } 
          

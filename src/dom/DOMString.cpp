@@ -56,6 +56,12 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/29 00:39:08  andyh
+ * Redo synchronization in DOMStringHandle allocator.  There
+ * was a bug in the use of Compare and Swap.  Switched to mutexes.
+ *
+ * Changed a few plain deletes to delete [].
+ *
  * Revision 1.7  2000/01/18 19:55:37  andyh
  * Remove dependencies on XMLStdout and err, as these are about
  * to stop working.
@@ -189,66 +195,72 @@ static const int allocGroupSize = 1024;   // Number of string handles to allocat
                                           //  memory allocator.
 
 
+//
+//  There is one global mutex that is used to synchronize access to the
+//     allocator free list for DOMStringHandles.  This function gets that
+//     mutex, and will create it on the first attempt to get it.
+//
+XMLMutex& DOMStringHandle::getMutex()
+{
+    static XMLMutex* DOMStringHandleMutex = 0;
+    if (!DOMStringHandleMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&DOMStringHandleMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+    }
+    return *DOMStringHandleMutex;
+}
+
+
+//
+//  Operator new for DOMStringHandles.  Called implicitly from the
+//          DOMStringHandle constructor.
+//
 void *DOMStringHandle::operator new(size_t sizeToAlloc)
 {
     assert(sizeToAlloc == sizeof(DOMStringHandle));
     void    *retPtr;
-    void    *oldFreeListPtr;
-
-    do
+    XMLMutexLock lock(&getMutex());    // Lock the DOMStringHandle mutex for
+                                       //  the duration of this function.
+    
+    if (freeListPtr == 0) 
     {
-       retPtr = freeListPtr;    // In the common case, freeListPtr points
-                                //   to an available string handle, and
-                                //   this will be the block we return.
-       
-       if (retPtr == 0) 
-       {
-           // Uncommon case.  The free list of string handles is empty
-           // and we must allocate a new batch of them, using
-           // the system's operator new.  
-           //
-           // Link all but one of these new StringHandles into our free list by 
-           // deleting them with DOMStringHandle::operator delete.
-           // Unconditionally return the one that we didn't put in the free list.
-           //
-           // There is a remote chance that two threads could see the free list
-           //  as empty at about the same time and both fall into this code.
-           //  No great harm will result - the free list will have twice the
-           //  usual number of new free handles added to it.  It's not worth
-           //  any added code complexity to prevent it from happening.
-           DOMStringHandle *dsg = 
-               ::new DOMStringHandle[allocGroupSize];
-           int   i;
-           for (i=1; i<allocGroupSize-1; i++)
-               delete &dsg[i];
-
-           return &dsg[0];
-       }
-
-       // Thread-safe (atomic) update of freeListPtr.
-       oldFreeListPtr = XMLPlatformUtils::compareAndSwap(&freeListPtr, *(void **)retPtr, retPtr);
+        // Uncommon case.  The free list of string handles is empty
+        // Allocate a new batch of them, using the system's 
+        // operator new to get a chunk of memory.
+        //
+        // Link all of these new StringHandles into our free list
+        //
+        DOMStringHandle *dsg = 
+            ::new DOMStringHandle[allocGroupSize];
+        int   i;
+        for (i=0; i<allocGroupSize-1; i++) {
+            *(void **)&dsg[i] = freeListPtr;
+            freeListPtr = &dsg[i];
+        }
     }
-    // This loop will normally exit the first time through.  It will only repeat if,
-    // in a multi-threaded environment, some second thread updated the free list ptr
-    // in the interval between when we looked at it (retPtr = freeListPtr;) and when
-    // we attempted to update it ourselves with the compareAndSwap().
-    while (oldFreeListPtr != retPtr);
-
+    
+    retPtr = freeListPtr;
+    freeListPtr = *(void **)freeListPtr;
+    
     return retPtr;
 };
 
 
-
+//
+//  Operator delete for DOMStringHandles.  Called implicitly from the 
+//              Destructor for DOMStringHandle.
+//
 void DOMStringHandle::operator delete(void *pMem)
 {
-    void    *initialFreeListPtr;
-    void    *oldFreeListPtr;
-    do
-    {
-        *(void **)pMem = initialFreeListPtr = freeListPtr;
-        oldFreeListPtr = XMLPlatformUtils::compareAndSwap(&freeListPtr, pMem, initialFreeListPtr);
-    }
-    while (oldFreeListPtr != initialFreeListPtr);
+    XMLMutexLock   lock(&getMutex());    // Lock the DOMStringHandle mutex for the
+                                         //    duration of this function.
+   *(void **)pMem = freeListPtr;
+    freeListPtr = pMem;
 };
     
 
@@ -783,7 +795,7 @@ void DOMString::print() const
         fputs(pc, stdout);
 
         delete [] buffer;
-        delete pc;
+        delete [] pc;
     };
 };
 
