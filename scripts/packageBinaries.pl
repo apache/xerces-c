@@ -143,8 +143,9 @@ if ($platform =~ m/Windows/) {
 
         # Populate the include output directory
         print ("\n\nCopying headers files ...\n");
-        $xcopycommand = "xcopy $XERCESCROOT\\src\\*.hpp $targetdir\\include";
-		system ("del  $targetdir\\include\\dom\\*Impl.hpp");
+        $xcopycommand = "xcopy $XERCESCROOT\\src\\D*.hpp $targetdir\\include";
+	system ("del  $targetdir\\include\\dom\\*Impl.hpp");
+	system ("del  $targetdir\\include\\dom\\DS*.hpp");
         $xcopycommand =~ s/\//\\/g;
         system ("$xcopycommand /S /C /I /R");
         $xcopycommand = "xcopy $XERCESCROOT\\src\\*.c $targetdir\\include";
@@ -413,8 +414,9 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         print ("\n\nCopying headers files ...\n");
         system("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
         system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
-        system("cp -Rf $XERCESCROOT/src/dom/DOM*.hpp $targetdir/include/dom");
-		system("rm -f $targetdir/include/dom/*Impl.hpp");
+        system("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
+	system("rm -f $targetdir/include/dom/*Impl.hpp");
+	system("rm -f $targetdir/include/dom/DS*.hpp");
         system("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
         system("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
         system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
