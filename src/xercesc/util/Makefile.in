@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.19  2002/11/20 18:29:50  tng
+# Make install should also copy the netaccessormodule header
+#
 # Revision 1.18  2002/11/13 12:43:05  tng
 # DOM Message: new file XMLDOMMsg.hpp
 #
@@ -649,5 +652,8 @@ install::
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifneq (${NETACCESSORMODULE},FileOnly)
+	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
+endif
 	${MAKE} -C Compilers $@
 	${MAKE} -C regx $@
