@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/20 23:00:46  rahulj
+ * Moved the inline definition of stringLen before the first
+ * use. This satisfied the HP CC compiler.
+ *
  * Revision 1.9  2000/03/02 19:54:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -881,18 +885,6 @@ inline void XMLString::moveChars(       XMLCh* const    targetStr
         *outPtr++ = *inPtr++;
 }
 
-inline bool XMLString::startsWith(  const   XMLCh* const    toTest
-                                    , const XMLCh* const    prefix)
-{
-    return (compareNString(toTest, prefix, stringLen(prefix)) == 0);
-}
-
-inline bool XMLString::startsWithI( const   XMLCh* const    toTest
-                                    , const XMLCh* const    prefix)
-{
-    return (compareNIString(toTest, prefix, stringLen(prefix)) == 0);
-}
-
 inline unsigned int XMLString::stringLen(const XMLCh* const src)
 {
     unsigned int len = 0;
@@ -903,6 +895,18 @@ inline unsigned int XMLString::stringLen(const XMLCh* const src)
             len++;
     }
     return len;
+}
+
+inline bool XMLString::startsWith(  const   XMLCh* const    toTest
+                                    , const XMLCh* const    prefix)
+{
+    return (compareNString(toTest, prefix, stringLen(prefix)) == 0);
+}
+
+inline bool XMLString::startsWithI( const   XMLCh* const    toTest
+                                    , const XMLCh* const    prefix)
+{
+    return (compareNIString(toTest, prefix, stringLen(prefix)) == 0);
 }
 
 inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
