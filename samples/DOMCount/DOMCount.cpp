@@ -448,7 +448,7 @@ bool DOMCountErrorHandler::handleError(const DOMError& domError)
          << ", char " << domError.getLocation()->getColumnNumber()
          << "\n  Message: " << StrX(domError.getMessage()) << endl;
 
-    return false;
+    return true;
 }
 
 void DOMCountErrorHandler::resetErrors()
