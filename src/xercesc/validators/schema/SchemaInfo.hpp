@@ -43,6 +43,12 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// ---------------------------------------------------------------------------
+//  Forward Declarations
+// ---------------------------------------------------------------------------
+class ValidationContext;
+
+
 class VALIDATORS_EXPORT SchemaInfo : public XMemory
 {
 public:
@@ -97,7 +103,8 @@ public:
     BaseRefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
     ValueVectorOf<const DOMElement*>* getRecursingAnonTypes() const;
     ValueVectorOf<const XMLCh*>*      getRecursingTypeNames() const;
-    ValueVectorOf<DOMNode*>* getNonXSAttList() const;
+    ValueVectorOf<DOMNode*>*          getNonXSAttList() const;
+    ValidationContext*                getValidationContext() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -164,6 +171,7 @@ private:
     ValueVectorOf<const XMLCh*>*      fRecursingTypeNames;
     ValueVectorOf<DOMElement*>*       fTopLevelComponents[C_Count];
     ValueVectorOf<DOMNode*>*          fNonXSAttList;
+    ValidationContext*                fValidationContext;
     MemoryManager*                    fMemoryManager;
 };
 
@@ -337,6 +345,11 @@ inline SchemaInfo* SchemaInfo::getImportInfo(const unsigned int namespaceURI) co
     }
 
     return currInfo;
+}
+
+inline ValidationContext* SchemaInfo::getValidationContext() const {
+
+    return fValidationContext;
 }
 
 inline bool SchemaInfo::containsInfo(const SchemaInfo* const toCheck,

@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/09/29 20:58:10  knoaman
+ * [Bug 1209] Problem with id usage across schema
+ * http://issues.apache.org/jira/browse/XERCESC-1209
+ *
  * Revision 1.22  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -470,6 +474,7 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
     bool isInvalid = false;
     DatatypeValidator* dv = 0;
 
+    fValidationContext = schema->fSchemaInfo->getValidationContext();
     switch (dvIndex) {
     case DV_Form:
         if (!XMLString::equals(attValue, SchemaSymbols::fgATTVAL_QUALIFIED)

@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/09/29 20:58:10  knoaman
+ * [Bug 1209] Problem with id usage across schema
+ * http://issues.apache.org/jira/browse/XERCESC-1209
+ *
  * Revision 1.12  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -80,6 +84,7 @@
 #include <xercesc/validators/schema/XUtil.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/internal/ValidationContextImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -115,12 +120,14 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fRecursingAnonTypes(0)
     , fRecursingTypeNames(0)
     , fNonXSAttList(0)
+    , fValidationContext(0)
     , fMemoryManager(manager)
 {
     fImportingInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(4, false, fMemoryManager);
     for (unsigned int i = 0; i < C_Count; i++)
         fTopLevelComponents[i] = 0;
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
+    fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
 }
 
 
@@ -156,6 +163,9 @@ SchemaInfo::~SchemaInfo()
 
     delete fNonXSAttList;
     fNonXSAttList = 0;
+
+    delete fValidationContext;
+    fValidationContext = 0;
 }
 
 // ---------------------------------------------------------------------------
