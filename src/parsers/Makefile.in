@@ -54,41 +54,7 @@
 # <http://www.apache.org/>.
 #
 #
-# $Log$
-# Revision 1.8  2000/03/14 23:49:16  aruna1
-# Include variable changed to incorporate all src headers.
-#
-# Revision 1.7  2000/03/01 22:30:03  abagchi
-# Object files are now created directly under obj directory
-#
-# Revision 1.6  2000/02/06 07:47:56  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.5  2000/02/04 23:48:34  abagchi
-# Made sure all targets are appended with :: not single :
-#
-# Revision 1.4  2000/02/01 23:43:18  abagchi
-# AS/400 related change
-#
-# Revision 1.3  1999/12/14 23:53:23  rahulj
-# Removed the offending Ctrl-M's from the commit message
-# logs which was giving packaging problems.
-#
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.2  1999/11/23 01:59:56  rahulj
-# Code now works under HPUX 11. Tested inmemory message loader.
-# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
-#
-# Revision 1.1.1.1  1999/11/09 01:07:50  twl
-# Initial checkin
-#
-# Revision 1.3  1999/11/08 20:44:53  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#
+# $Id$
 #
 
 PLATFORM = @platform@
@@ -110,7 +76,8 @@ MODULE = parsers
 
 PARSERS_CPP_PUBHEADERS = \
 	DOMParser.hpp \
-	SAXParser.hpp
+	SAXParser.hpp \
+	SAX2XMLReaderImpl.hpp
 
 PARSERS_CPP_PRIVHEADERS =
 
@@ -118,7 +85,8 @@ PARSERS_C_FILES =
 
 PARSERS_CPP_OBJECTS = \
 	DOMParser.$(TO) \
-	SAXParser.$(TO)
+	SAXParser.$(TO) \
+	SAX2XMLReaderImpl.$(TO)
 
 XML_INCL := $(XML_INCL) -I$(XERCESCROOT)/src
 
