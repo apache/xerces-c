@@ -61,7 +61,7 @@
 #ifndef ___xmldomattribute_h___
 #define ___xmldomattribute_h___
 
-#include <xercesc/dom/DOM_Attr.hpp>
+#include <xercesc/dom/deprecated/DOM_Attr.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 class ATL_NO_VTABLE CXMLDOMAttribute :

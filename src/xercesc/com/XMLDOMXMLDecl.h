@@ -58,7 +58,7 @@
 #ifndef ___xmldomxmldecl_h___
 #define ___xmldomxmldecl_h___
 
-#include <xercesc/dom/DOM_XMLDecl.hpp>
+#include <xercesc/dom/deprecated/DOM_XMLDecl.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 class ATL_NO_VTABLE CXMLDOMXMLDecl : 

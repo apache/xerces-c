@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 19:53:53  tng
+ * DOM Reorganization: update include path for the old DOM interface in COM files
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:41  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/06/03 00:28:59  andyh
  * COM Wrapper changes from Curt Arnold
@@ -70,7 +73,7 @@
 #ifndef ___xmldomentity_h___
 #define ___xmldomentity_h___
 
-#include <xercesc/dom/DOM_Entity.hpp>
+#include <xercesc/dom/deprecated/DOM_Entity.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 class ATL_NO_VTABLE CXMLDOMEntity : 

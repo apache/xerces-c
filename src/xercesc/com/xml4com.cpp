@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:40  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 19:53:53  tng
+ * DOM Reorganization: update include path for the old DOM interface in COM files
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:40  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/05/11 13:25:08  tng
  * Copyright update.
@@ -108,7 +111,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include "xml4com.h"
-#include <xercesc/dom/DOM_DOMException.hpp>
+#include <xercesc/dom/deprecated/DOM_DOMException.hpp>
 
 //
 //

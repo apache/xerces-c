@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 19:53:53  tng
+ * DOM Reorganization: update include path for the old DOM interface in COM files
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:42  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/05/11 13:25:07  tng
  * Copyright update.
@@ -79,7 +82,7 @@
 #ifndef ___xmldomnotation_h___
 #define ___xmldomnotation_h___
 
-#include <xercesc/dom/DOM_Notation.hpp>
+#include <xercesc/dom/deprecated/DOM_Notation.hpp>
 #include "IXMLDOMNodeImpl.h"
 
 class ATL_NO_VTABLE CXMLDOMNotation :

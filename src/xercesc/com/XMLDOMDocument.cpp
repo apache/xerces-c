@@ -60,7 +60,7 @@
 
 #include "stdafx.h"
 
-#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/dom/deprecated/DOMParser.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
@@ -80,7 +80,7 @@
 #include "XMLDOMAttribute.h"
 #include "XMLDOMEntityReference.h"
 #include "BindStatusCallback.h"
-#include <xercesc/dom/DocumentImpl.hpp>
+#include <xercesc/dom/deprecated/DocumentImpl.hpp>
 
 // I need to make sure the file is registered with long filenames
 HRESULT WINAPI CXMLDOMDocument::UpdateRegistry(BOOL bRegister)

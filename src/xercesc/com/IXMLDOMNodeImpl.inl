@@ -59,12 +59,12 @@
  */
 
 
-#include <xercesc/dom/DOM_Node.hpp>
-#include <xercesc/dom/DOM_Document.hpp>
+#include <xercesc/dom/deprecated/DOM_Node.hpp>
+#include <xercesc/dom/deprecated/DOM_Document.hpp>
 #include "XMLDOMNodeList.h"
 #include "XMLDOMNamedNodeMap.h"
 #include "XMLDOMUtil.h"
-#include <xercesc/dom/DOM_DOMException.hpp>
+#include <xercesc/dom/deprecated/DOM_DOMException.hpp>
 
 template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
 HRESULT STDMETHODCALLTYPE IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::InterfaceSupportsErrorInfo(REFIID riid)
