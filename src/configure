@@ -1317,11 +1317,6 @@ case "${host}" in
 esac
 
 
-case "${host}" in
- *-*-os400*)      ;;
- *-*-OS400*)      ;;
-*) ;;
-esac
 
 cxx=${CXX}
 
@@ -1429,11 +1424,15 @@ s%\[%\\&%g
 s%\]%\\&%g
 s%\$%$$%g
 EOF
-if test "$platform" != "OS390"; then
-DEFS=`sed -f conftest.defs confdefs.h | tr '\012' ' '`
-else
+if test "$platform" = "OS390"; then
 # OS390 - EBCDIC NL is '\025'
 DEFS=`sed -f conftest.defs confdefs.h | tr '\025' ' '`
+else
+if test "$platform" = "OS400"; then
+DEFS=`sed -f conftest.defs confdefs.h | tr '\n' ' '`
+else
+DEFS=`sed -f conftest.defs confdefs.h | tr '\012' ' '`
+fi
 fi
 rm -f conftest.defs
 
