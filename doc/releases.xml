@@ -13,6 +13,14 @@
     </tr>
 
     <tr>
+        <td>2001-07-17</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 2643] - derivation by extension of complex types does not permit
+        addition of ONLY element content.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-07-16</td>
         <td>Tinny Ng</td>
         <td>[Bug 2410] DOMParser::parse() throws undocumented exceptions.
