@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/09/22 19:49:02  neilg
+ * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
+ *
  * Revision 1.7  2003/07/31 17:12:10  peiyongz
  * Grammar embed grammar description
  *
@@ -157,7 +160,9 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     fElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, true, 128, fMemoryManager);
 
     try {
-        fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
+        // should not be necessary now that grammars, once built,
+        // are read-only
+        // fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
         fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false, 128, fMemoryManager);
         fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
         fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(29, fMemoryManager);
@@ -211,6 +216,8 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
             , Grammar::TOP_LEVEL_SCOPE
             , fMemoryManager
         );
+        if(!fElemNonDeclPool)
+            fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
         const unsigned int elemId = fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
         retVal->setId(elemId);
         wasAdded = true;
@@ -238,9 +245,15 @@ XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
         , Grammar::TOP_LEVEL_SCOPE
         , fMemoryManager
     );
-    const unsigned int elemId = (notDeclared) ? fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal)
-                                              : fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
-    retVal->setId(elemId);
+    if(notDeclared)
+    {
+        if(!fElemNonDeclPool)
+            fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
+        retVal->setId(fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal));
+    } else 
+    {
+        retVal->setId(fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal));
+    }
     return retVal;
 }
 
@@ -250,7 +263,8 @@ void SchemaGrammar::reset()
     //  We need to reset all of the pools.
     //
     fElemDeclPool->removeAll();
-    fElemNonDeclPool->removeAll();
+    if(fElemNonDeclPool)
+        fElemNonDeclPool->removeAll();
     fGroupElemDeclPool->removeAll();
     fNotationDeclPool->removeAll();
     fValidated = false;
@@ -260,7 +274,8 @@ void SchemaGrammar::reset()
 void SchemaGrammar::cleanUp()
 {
     delete fElemDeclPool;
-    delete fElemNonDeclPool;
+    if(fElemDeclPool)
+        delete fElemNonDeclPool;
     delete fGroupElemDeclPool;
     delete fNotationDeclPool;
     fMemoryManager->deallocate(fTargetNamespace);//delete [] fTargetNamespace;

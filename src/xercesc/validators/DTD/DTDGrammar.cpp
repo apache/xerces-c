@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/22 19:49:02  neilg
+ * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
+ *
  * Revision 1.8  2003/08/14 03:00:46  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -130,7 +133,9 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     //  pools.
     //
     fElemDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(109, 128, fMemoryManager);
-    fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
+    // should not need this in the common situation where grammars
+    // are built once and then read - NG
+    //fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
     fEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109, 128, fMemoryManager);
     fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
 
@@ -144,7 +149,10 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
 DTDGrammar::~DTDGrammar()
 {
     delete fElemDeclPool;
-    delete fElemNonDeclPool;
+    if(fElemNonDeclPool) 
+    {
+        delete fElemNonDeclPool;
+    }
     delete fEntityDeclPool;
     delete fNotationDeclPool;
     delete fGramDesc;
@@ -181,6 +189,8 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
             , DTDElementDecl::Any
             , fMemoryManager
         );
+        if(!fElemNonDeclPool)
+            fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
         const unsigned int elemId = fElemNonDeclPool->put(retVal);
         retVal->setId(elemId);
         wasAdded = true;
@@ -206,9 +216,15 @@ XMLElementDecl* DTDGrammar::putElemDecl (const   unsigned int    uriId
         , DTDElementDecl::Any
         , fMemoryManager
     );
-    const unsigned int elemId = (notDeclared) ? fElemNonDeclPool->put(retVal)
-                                              : fElemDeclPool->put(retVal);
-    retVal->setId(elemId);
+    if(notDeclared)
+    {
+        if(!fElemNonDeclPool)
+            fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
+        retVal->setId(fElemNonDeclPool->put(retVal));
+    } else 
+    {
+        retVal->setId(fElemDeclPool->put(retVal));
+    }
     return retVal;
 }
 
@@ -218,7 +234,9 @@ void DTDGrammar::reset()
     //  We need to reset all of the pools.
     //
     fElemDeclPool->removeAll();
-    fElemNonDeclPool->removeAll();
+    // now that we have this, no point in deleting it...
+    if(fElemNonDeclPool)
+        fElemNonDeclPool->removeAll();
     fNotationDeclPool->removeAll();
     fEntityDeclPool->removeAll();
     fValidated = false;

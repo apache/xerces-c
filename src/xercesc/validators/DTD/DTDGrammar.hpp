@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/09/22 19:49:02  neilg
+ * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
+ *
  * Revision 1.9  2003/08/14 03:00:46  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -140,6 +143,9 @@ public:
     virtual Grammar::GrammarType getGrammarType() const;
     virtual const XMLCh* getTargetNamespace() const;
 
+    // this method should only be used while the grammar is being
+    // constructed, not while it is being used
+    // in a validation episode!
     virtual XMLElementDecl* findOrAddElemDecl
     (
         const   unsigned int    uriId
@@ -210,7 +216,7 @@ public:
     (
         XMLElementDecl* const elemDecl
         , const bool          notDeclared = false
-    )   const;
+    )   ;
 
     virtual unsigned int putNotationDecl
     (
@@ -224,6 +230,9 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    
+    // deprecated.  returns the ID of the root element; not
+    // useable in multithreaded environments!
     unsigned int getRootElemId();
     const DTDEntityDecl* getEntityDecl(const XMLCh* const entName) const;
     DTDEntityDecl* getEntityDecl(const XMLCh* const entName);
@@ -236,6 +245,8 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+
+    // deprecated.  Not usable in multithreaded environments
     void setRootElemId(unsigned int rootElemId);
 
     virtual void                    setGrammarDescription( XMLGrammarDescription*);
@@ -413,7 +424,7 @@ inline const XMLElementDecl* DTDGrammar::getElemDecl( const   unsigned int
 {
     const XMLElementDecl* elemDecl = fElemDeclPool->getByKey(qName);
 
-    if (!elemDecl)
+    if (!elemDecl && fElemNonDeclPool)
         elemDecl = fElemNonDeclPool->getByKey(qName);
 
     return elemDecl;
@@ -426,7 +437,7 @@ inline XMLElementDecl* DTDGrammar::getElemDecl (const   unsigned int
 {
     XMLElementDecl* elemDecl = fElemDeclPool->getByKey(qName);
 
-    if (!elemDecl)
+    if (!elemDecl && fElemNonDeclPool)
         elemDecl = fElemNonDeclPool->getByKey(qName);
 
     return elemDecl;
@@ -446,10 +457,14 @@ inline XMLElementDecl* DTDGrammar::getElemDecl(const unsigned int elemId)
 
 inline unsigned int
 DTDGrammar::putElemDecl(XMLElementDecl* const elemDecl,
-                        const bool notDeclared) const
+                        const bool notDeclared) 
 {
     if (notDeclared)
+    {
+        if(!fElemNonDeclPool)
+            fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
         return fElemNonDeclPool->put((DTDElementDecl*) elemDecl);
+    }
 
     return fElemDeclPool->put((DTDElementDecl*) elemDecl);
 }

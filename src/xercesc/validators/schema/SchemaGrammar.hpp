@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/22 19:49:03  neilg
+ * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
+ *
  * Revision 1.8  2003/07/31 17:12:10  peiyongz
  * Grammar embed grammar description
  *
@@ -178,6 +181,9 @@ public:
     virtual Grammar::GrammarType getGrammarType() const;
     virtual const XMLCh* getTargetNamespace() const;
 
+    // this method should only be used while the grammar is being
+    // constructed, not while it is being used
+    // in a validation episode!
     virtual XMLElementDecl* findOrAddElemDecl
     (
         const   unsigned int    uriId
@@ -248,7 +254,7 @@ public:
     (
         XMLElementDecl* const elemDecl
         , const bool          notDeclared = false
-    )   const;
+    )   ;
 
     virtual unsigned int putNotationDecl
     (
@@ -519,7 +525,7 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  u
 
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
 
-        if (!decl)
+        if (!decl && fElemNonDeclPool)
             decl = fElemNonDeclPool->getByKey(baseName, uriId, scope);
     }
 
@@ -537,7 +543,7 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
 
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
 
-        if (!decl)
+        if (!decl && fElemNonDeclPool)
             decl = fElemNonDeclPool->getByKey(baseName, uriId, scope);
     }
 
@@ -568,10 +574,14 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
 
 inline unsigned int
 SchemaGrammar::putElemDecl(XMLElementDecl* const elemDecl,
-                           const bool notDeclared) const
+                           const bool notDeclared) 
 {
     if (notDeclared)
+    {
+        if(!fElemNonDeclPool)
+            fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
         return fElemNonDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
+    }
 
     return fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
 }
