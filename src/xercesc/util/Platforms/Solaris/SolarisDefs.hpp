@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:25  peiyongz
- * Initial revision
+ * Revision 1.2  2003/11/17 16:18:01  peiyongz
+ * Fix to  #4556
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:25  peiyongz
+ * sane_include
  *
  * Revision 1.4  2000/03/02 19:55:30  roddey
  * This checkin includes many changes done while waiting for the
@@ -83,7 +86,7 @@
 //  SPARC runs in big endian mode
 // ---------------------------------------------------------------------------
 #define ENDIANMODE_BIG
-typedef void* FileHandle;
+typedef int FileHandle;
 
 #ifndef SOLARIS
 #define SOLARIS
