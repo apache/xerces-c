@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/17 05:54:18  knoaman
+ * Update NetAccessors to use the memory manager.
+ *
  * Revision 1.3  2002/12/06 16:43:55  tng
  * Fix the error messages thrown from net accessor module.
  *
@@ -313,24 +316,24 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     //   and transcode them back to ASCII.
     //
     const XMLCh*        hostName = urlSource.getHost();
-    char*               hostNameAsCharStar = XMLString::transcode(hostName);
-    ArrayJanitor<char>  janBuf1(hostNameAsCharStar);
+    char*               hostNameAsCharStar = XMLString::transcode(hostName, urlSource.getMemoryManager());
+    ArrayJanitor<char>  janBuf1(hostNameAsCharStar, urlSource.getMemoryManager());
 
     const XMLCh*        path = urlSource.getPath();
-    char*               pathAsCharStar = XMLString::transcode(path);
-    ArrayJanitor<char>  janBuf2(pathAsCharStar);
+    char*               pathAsCharStar = XMLString::transcode(path, urlSource.getMemoryManager());
+    ArrayJanitor<char>  janBuf2(pathAsCharStar, urlSource.getMemoryManager());
 
     const XMLCh*        fragment = urlSource.getFragment();
     char*               fragmentAsCharStar = 0;
     if (fragment)
-        fragmentAsCharStar = XMLString::transcode(fragment);
-    ArrayJanitor<char>  janBuf3(fragmentAsCharStar);
+        fragmentAsCharStar = XMLString::transcode(fragment, urlSource.getMemoryManager());
+    ArrayJanitor<char>  janBuf3(fragmentAsCharStar, urlSource.getMemoryManager());
 
     const XMLCh*        query = urlSource.getQuery();
     char*               queryAsCharStar = 0;
     if (query)
-        queryAsCharStar = XMLString::transcode(query);
-    ArrayJanitor<char>  janBuf4(queryAsCharStar);		
+        queryAsCharStar = XMLString::transcode(query, urlSource.getMemoryManager());
+    ArrayJanitor<char>  janBuf4(queryAsCharStar, urlSource.getMemoryManager());		
 
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
 

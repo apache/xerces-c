@@ -101,7 +101,7 @@ MacOSURLAccess::makeNew(const XMLURL&  urlSource)
 	//	from this source. That's the correct place to verify
 	//	whether or not we can really handle this URL type...
 	//	if it throws, well, it throws ;)
-	BinInputStream* result = new URLAccessBinInputStream(urlSource);
+	BinInputStream* result = new (urlSource.getMemoryManager()) URLAccessBinInputStream(urlSource);
 	return result;
 }
 

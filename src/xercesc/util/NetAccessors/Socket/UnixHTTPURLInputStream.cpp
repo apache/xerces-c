@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/05/17 05:54:18  knoaman
+ * Update NetAccessors to use the memory manager.
+ *
  * Revision 1.11  2003/05/16 14:03:28  knoaman
  * Pass memory manager to makeNewTranscoder.
  *
@@ -214,14 +217,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     const XMLCh*        path = urlSource.getPath();
     const XMLCh*        fragment = urlSource.getFragment();
     const XMLCh*        query = urlSource.getQuery();
+    MemoryManager*      manager = urlSource.getMemoryManager();
 
     //
     //  Convert the hostName to the platform's code page for gethostbyname and
     //  inet_addr functions.
     //
 
-    char*               hostNameAsCharStar = XMLString::transcode(hostName);
-    ArrayJanitor<char>  janBuf1(hostNameAsCharStar);
+    char*               hostNameAsCharStar = XMLString::transcode(hostName, manager);
+    ArrayJanitor<char>  janBuf1(hostNameAsCharStar, manager);
 
     //
     //  Convert all the parts of the urlSource object to ASCII so they can be
@@ -229,32 +233,44 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     //
 
     transSize = XMLString::stringLen(hostName)+1;
-    char*               hostNameAsASCII = new char[transSize+1];
-    ArrayJanitor<char>  janBuf2(hostNameAsASCII);
+    char*               hostNameAsASCII = (char*) manager->allocate
+    (
+        (transSize+1) * sizeof(char)
+    );//new char[transSize+1];
+    ArrayJanitor<char>  janBuf2(hostNameAsASCII, manager);
 
-    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, urlSource.getMemoryManager());
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, manager);
     trans->transcodeTo(hostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     transSize = XMLString::stringLen(path)+1;
-    char*               pathAsASCII = new char[transSize+1];
-    ArrayJanitor<char>     janBuf3(pathAsASCII);
+    char*               pathAsASCII = (char*) manager->allocate
+    (
+        (transSize+1) * sizeof(char)
+    );//new char[transSize+1];
+    ArrayJanitor<char>     janBuf3(pathAsASCII, manager);
     trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     char*               fragmentAsASCII = 0;
     if (fragment)
     {
         transSize = XMLString::stringLen(fragment)+1;
-        fragmentAsASCII = new char[transSize+1];
-        ArrayJanitor<char>  janBuf4(fragmentAsASCII);
+        fragmentAsASCII = (char*) manager->allocate
+        (
+            (transSize+1) * sizeof(char)
+        );//new char[transSize+1];
+        ArrayJanitor<char>  janBuf4(fragmentAsASCII, manager);
         trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     char*               queryAsASCII = 0;
-    ArrayJanitor<char>  janBuf5(queryAsASCII);
+    ArrayJanitor<char>  janBuf5(queryAsASCII, manager);
     if (query)
     {
         transSize = XMLString::stringLen(query)+1;
-        queryAsASCII = new char[transSize+1];
+        queryAsASCII = (char*) manager->allocate
+        (
+            (transSize+1) * sizeof(char)
+        );//new char[transSize+1];
         trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
@@ -266,7 +282,10 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
 
     XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10);
     transSize = XMLString::stringLen(portBuffer)+1;
-    char*               portAsASCII = new char[transSize+1];
+    char*               portAsASCII = (char*) manager->allocate
+    (
+        (transSize+1) * sizeof(char)
+    );//new char[transSize+1];
     trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     delete trans;

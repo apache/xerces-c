@@ -112,7 +112,7 @@ BinInputStream* LibWWWNetAccessor::makeNew(const XMLURL&  urlSource)
         case XMLURL::HTTP:
         {
             BinURLInputStream* retStrm =
-				new BinURLInputStream(urlSource);
+				new (urlSource.getMemoryManager()) BinURLInputStream(urlSource);
             return retStrm;
         }
 

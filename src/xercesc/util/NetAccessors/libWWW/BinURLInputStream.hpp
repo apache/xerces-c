@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/17 05:54:18  knoaman
+ * Update NetAccessors to use the memory manager.
+ *
  * Revision 1.2  2002/11/04 15:11:39  tng
  * C++ Namespace Support.
  *
@@ -152,6 +155,7 @@ private :
     unsigned int        fBufferSize;
     unsigned int        fRemoteFileSize;
     unsigned int        fBytesProcessed;
+    MemoryManager*      fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

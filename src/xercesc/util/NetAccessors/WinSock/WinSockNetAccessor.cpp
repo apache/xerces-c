@@ -100,7 +100,7 @@ BinInputStream* WinSockNetAccessor::makeNew(const XMLURL&  urlSource)
         case XMLURL::HTTP:
         {
             BinHTTPURLInputStream* retStrm =
-                new BinHTTPURLInputStream(urlSource);
+                new (urlSource.getMemoryManager()) BinHTTPURLInputStream(urlSource);
             return retStrm;
             break;
         }

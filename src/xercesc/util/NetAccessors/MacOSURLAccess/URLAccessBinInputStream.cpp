@@ -83,8 +83,8 @@ URLAccessBinInputStream::URLAccessBinInputStream(const XMLURL& urlSource)
 	OSStatus status = noErr;
 	
 	//	Get the full URL from the source
-    char*               url = XMLString::transcode(urlSource.getURLText());
-    ArrayJanitor<char>  janBuf(url);
+    char*               url = XMLString::transcode(urlSource.getURLText(), urlSource.getMemoryManager());
+    ArrayJanitor<char>  janBuf(url, urlSource.getMemoryManager());
 
 	//	Create a URL reference from the URL
 	status = URLNewReference(url, &mURLReference);

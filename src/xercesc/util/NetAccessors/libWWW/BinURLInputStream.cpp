@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/17 05:54:18  knoaman
+ * Update NetAccessors to use the memory manager.
+ *
  * Revision 1.3  2002/12/06 16:42:13  tng
  * Fix the error messages thrown from net accessor module.
  *
@@ -151,7 +154,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 static char* localTranscode(const XMLCh* latinStrInUnicode)
 {
     unsigned int   lent = XMLString::stringLen(latinStrInUnicode);
-    char*  retval = new char[lent + 1];
+    char*  retval = (char*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        (lent + 1) * sizeof(char)
+    );//new char[lent + 1];
     unsigned int  i = 0;
     for (i = 0; i < lent; i++)
         retval[i] = (char) latinStrInUnicode[i]; // drop the leading byte.
@@ -168,8 +174,12 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
       , fRemoteFileSize(0)
       , fAnchor(0)
       , fBytesProcessed(0)
+      , fMemoryManager(urlSource.getMemoryManager())
 {
-    fBuffer = new XMLByte[URLISBUFMAXSIZE];
+    fBuffer = (XMLByte*) fMemoryManager->allocate
+    (
+        URLISBUFMAXSIZE * sizeof(XMLByte)
+    );//new XMLByte[URLISBUFMAXSIZE];
     const XMLCh*  uri = urlSource.getURLText();
     char*   uriAsCharStar = localTranscode(uri);
 
@@ -213,7 +223,7 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
 
 BinURLInputStream::~BinURLInputStream()
 {
-    delete [] fBuffer;
+    fMemoryManager->deallocate(fBuffer);//delete [] fBuffer;
     fBuffer = 0;
     // Do not delete the fAnchor. Its deleted when the destructor of
     // libWWWNetAccessor is called.

@@ -94,7 +94,7 @@ MacOSURLAccessCF::~MacOSURLAccessCF()
 BinInputStream*
 MacOSURLAccessCF::makeNew(const XMLURL&  urlSource)
 {
-	BinInputStream* result = new URLAccessCFBinInputStream(urlSource);
+	BinInputStream* result = new (urlSource.getMemoryManager()) URLAccessCFBinInputStream(urlSource);
 	return result;
 }
 
