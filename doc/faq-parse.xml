@@ -847,5 +847,42 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
     </a>
   </faq>
 
+  <faq title="Why does my application crash when deleting the parser after releasing a document?">
 
+    <q>Why does my application crash when deleting the parser after releasing a document?</q>
+
+    <a>
+
+      <p>In most cases, parser is taking care of perper deletion of documents from parsing, if application
+         needs to release a document, it shall adopt the document before releasing it, so that the parser 
+         knows that the ownership of this particular document is transfered to the application and will not 
+         try to delete it once the parser gets deleted.
+      </p>
+
+<source>
+XercesDOMParser *parser = new XercesDOMParser;
+...
+try
+{
+    parser->parse(gXmlFile);
+}
+catch ()
+{
+...
+}
+DOMNode *doc = parser->getDocument();
+...
+parser->adoptDocument();
+doc->release();  
+...
+delete parser;
+</source>
+
+      <p>The alternative to release document is to call parser's resetDocumentPool(), which releases 
+         all the documents parsed.
+      </p>
+      
+    </a>
+  </faq>
+  
 </faqs>
