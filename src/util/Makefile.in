@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2000/02/08 02:03:44  aruna1
+# Added changes for IBM1047 transcoder
+#
 # Revision 1.13  2000/02/06 07:48:02  rahulj
 # Year 2K copyright swat.
 #
@@ -189,7 +192,8 @@ UTIL_CPP_PUBHEADERS = \
 	ValueVectorOf.hpp \
 	XML4CDefs.hpp \
 	XML88591Transcoder.hpp \
-	XMLASCIITranscoder.hpp \
+	XMLASCIITranscoder.hpp \       
+        XMLIBM1047Transcoder.hpp \
 	XMLEBCDICTranscoder.hpp \
 	XMLEnumerator.hpp \
 	XMLExceptMsgs.hpp \
@@ -235,6 +239,7 @@ UTIL_CPP_OBJECTS = \
 	TransService.$(TO) \
 	XML88591Transcoder.$(TO) \
 	XMLASCIITranscoder.$(TO) \
+        XMLIBM1047Transcoder.$(TO) \
 	XMLEBCDICTranscoder.$(TO) \
 	XMLException.$(TO) \
 	XMLString.$(TO) \
