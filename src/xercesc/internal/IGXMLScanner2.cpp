@@ -1172,6 +1172,9 @@ void IGXMLScanner::scanReset(const InputSource& src)
     // Reset validation
     fValidate = (fValScheme == Val_Always) ? true : false;
 
+    // Ignore skipDTDValidation flag if no schema processing is taking place */
+    fSkipDTDValidation = fSkipDTDValidation && fDoSchema;
+
     //  And for all installed handlers, send reset events. This gives them
     //  a chance to flush any cached data.
     if (fDocHandler)
@@ -1514,7 +1517,7 @@ void IGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     //        2. if xxx is xml, then yyy must match XMLUni::fgXMLURIName, and vice versa
     //        3. yyy is not XMLUni::fgXMLNSURIName
     //        4. if xxx is not null, then yyy cannot be an empty string.
-    const XMLCh* prefPtr = XMLUni::fgZeroLenString;    
+    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
     if (colonOfs != -1) {
         prefPtr = &attrName[colonOfs + 1];
 
@@ -2866,7 +2869,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
     int  colonPosition;
     bool validName = fDoNamespaces ? fReaderMgr.getQName(bbName.getBuffer(), &colonPosition) :
                                      fReaderMgr.getName(bbName.getBuffer());
-    if (!validName)    
+    if (!validName)
     {
         emitError(XMLErrs::ExpectedEntityRefName);
         return EntityExp_Failed;
@@ -3046,7 +3049,7 @@ bool IGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 {
     Grammar* tempGrammar = fGrammarResolver->getGrammar(newGrammarNameSpace);
 
-    if (!tempGrammar) {
+    if (!tempGrammar && !fSkipDTDValidation) {
         // This is a case where namespaces is on with a DTD grammar.
         tempGrammar = fDTDGrammar;
     }
@@ -3055,23 +3058,30 @@ bool IGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
     }
     else {
 
-        fGrammar = tempGrammar;
-        fGrammarType = fGrammar->getGrammarType();
-        if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+        Grammar::GrammarType tempGrammarType = tempGrammar->getGrammarType();
+        if (tempGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
             if (fValidatorFromUser)
                 ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
             else {
                 fValidator = fSchemaValidator;
             }
         }
-        else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
-            if (fValidatorFromUser)
-                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
-            else {
-                fValidator = fDTDValidator;
+        else if (tempGrammarType == Grammar::DTDGrammarType) {
+            if (fSkipDTDValidation) {
+                return false;
+            }
+
+            if (!fValidator->handlesDTD()) {
+                if (fValidatorFromUser)
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
+                else {
+                    fValidator = fDTDValidator;
+                }
             }
         }
 
+        fGrammarType = tempGrammarType;
+        fGrammar = tempGrammar;
         fValidator->setGrammar(fGrammar);
         return true;
     }
