@@ -437,7 +437,7 @@ bool Iconv390LCPTranscoder::transcode( const   XMLCh* const    toTranscode
     char *outPtr = toFill;
     int bytectr = maxBytes;
 
-    while (bytectr--)
+    while (bytectr-- && *srcPtr)
        *outPtr++ = gUnicodeToIBM037XlatTable[*srcPtr++];
     *outPtr=0;
 
