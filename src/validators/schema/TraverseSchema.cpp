@@ -4622,6 +4622,12 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
 
         Grammar* aGrammar = fGrammarResolver->getGrammar(typeURI);
 
+        if (!aGrammar || (aGrammar->getGrammarType() != Grammar::SchemaGrammarType)) {
+
+            reportSchemaError(XMLUni::fgValidityDomain, XMLValid::GrammarNotFound, typeURI);
+            return 0;
+        }
+
         typeInfo = ((SchemaGrammar*)aGrammar)->getComplexTypeRegistry()->get(fBuffer.getRawBuffer());
 
         if (typeInfo) {
