@@ -56,6 +56,10 @@
 
 /*
 * $Log$
+* Revision 1.11  2001/10/19 19:02:43  tng
+* [Bug 3909] return non-zero an exit code when error was encounted.
+* And other modification for consistent help display and return code across samples.
+*
 * Revision 1.10  2001/08/15 12:41:04  tng
 * Initialize the fURI array to zeros, in case, some compilers like AIX xlC_r doesn't reset the memory.
 *
@@ -106,16 +110,20 @@ void usage()
 {
     cout << "\nUsage:\n"
             "    SAX2Count [options] <XML file> | List file>\n\n"
+            "This program invokes the SAX2XMLReader, and then prints the\n"
+            "number of elements, attributes, spaces and characters found\n"
+            "in each XML file, using SAX2 API.\n\n"
             "Options:\n"
-            "    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file\n"
-            "    -v=xxx      Validation scheme [always | never | auto*]\n"
+            "    -l          Indicate the input file is a List File that has a list of xml files.\n"
+            "                Default to off (Input file is an XML file).\n"
+            "    -v=xxx      Validation scheme [always | never | auto*].\n"
+            "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
             "    -n          Disable namespace processing. Defaults to on.\n"
+            "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
             "    -s          Disable schema processing. Defaults to on.\n"
-            "    -f          Enable full schema constraint checking processing. Defaults to off.\n\n"
-            "This program prints the number of elements, attributes,\n"
-            "white spaces and other non-white space characters in the "
-            "input file.\n\n"
-            "  * = Default if not provided explicitly\n"
+            "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
+		      "    -?          Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n"
          << endl;
 }
 
@@ -154,23 +162,22 @@ int main(int argC, char* argV[])
     bool                         doList = false;
     bool                         errorOccurred = false;
 
-    // See if non validating dom parser configuration is requested.
-    if ((argC == 2) && !strcmp(argV[1], "-?"))
-    {
-        usage();
-        XMLPlatformUtils::Terminate();
-        return 2;
-    }
-
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
     {
-        // Break out on first non-dash parameter
+        // Break out on first parm not starting with a dash
         if (argV[argInd][0] != '-')
             break;
 
-        if (!strncmp(argV[argInd], "-v=", 3)
-        ||  !strncmp(argV[argInd], "-V=", 3))
+        // Watch for special case help request
+        if (!strcmp(argV[argInd], "-?"))
+        {
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 2;
+        }
+         else if (!strncmp(argV[argInd], "-v=", 3)
+              ||  !strncmp(argV[argInd], "-V=", 3))
         {
             const char* const parm = &argV[argInd][3];
 
@@ -183,6 +190,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -273,8 +281,8 @@ int main(int argC, char* argV[])
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,sizeof(fURI)); 
-                
+        memset(fURI,0,sizeof(fURI));
+
         if (doList) {
             if (! fin.eof() ) {
                 fin.getline (fURI, sizeof(fURI));
@@ -330,6 +338,8 @@ int main(int argC, char* argV[])
                 << handler.getSpaceCount() << " spaces, "
                 << handler.getCharacterCount() << " chars)" << endl;
         }
+        else
+            errorOccurred = true;
     }
 
     if (doList)

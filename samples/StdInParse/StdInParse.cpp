@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/19 19:02:43  tng
+ * [Bug 3909] return non-zero an exit code when error was encounted.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.10  2001/08/01 19:11:01  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -134,16 +138,18 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    StdInParse [options]\n"
-         << "    -v=xxx      Validation scheme [always | never | auto] \n"
-         << "    -n          Enable namespace processing. [default is off]\n"
-         << "    -s          Enable schema processing. [default is off]\n"
-         << "    -f          Enable full schema constraint checking. [defaults is off]\n"
-		   << "    -?          Show this help\n\n"
-         << "  * = Default if not provided explicitly\n\n"
-         << "This program allows you to redirect a file into the program\n"
-         << "to be parsed. It will count the elements, characters, and \n"
-         << "spaces and display these stats at the end\n"
+            "    StdInParse [options] < <XML file>\n\n"
+            "This program demonstrates streaming XML data from standard\n"
+            "input.  It then uses the SAX Parser, and prints the\n"
+            "number of elements, attributes, spaces and characters found\n"
+            "in the input, using SAX API.\n\n"
+            "Options:\n"
+            "    -v=xxx      Validation scheme [always | never | auto*].\n"
+            "    -n          Enable namespace processing. Defaults to off.\n"
+            "    -s          Enable schema processing. Defaults to off.\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n"
+		      "    -?          Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n"
          << endl;
 }
 
@@ -169,13 +175,19 @@ int main(int argC, char* argV[])
     int parmInd;
     for (parmInd = 1; parmInd < argC; parmInd++)
     {
+        // Break out on first parm not starting with a dash
+        if (argV[parmInd][0] != '-')
+            break;
+
+        // Watch for special case help request
         if (!strcmp(argV[parmInd], "-?"))
         {
             usage();
-            return 1;
+            XMLPlatformUtils::Terminate();
+            return 2;
         }
-        if (!strncmp(argV[parmInd], "-v=", 3)
-        ||  !strncmp(argV[parmInd], "-V=", 3))
+         else if (!strncmp(argV[parmInd], "-v=", 3)
+              ||  !strncmp(argV[parmInd], "-V=", 3))
         {
             const char* const parm = &argV[parmInd][3];
 
@@ -188,6 +200,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -239,6 +252,7 @@ int main(int argC, char* argV[])
     //  input input source and tell the parser to parse from that.
     //
     unsigned long duration;
+    int errorCount = 0;
     StdInInputSource src;
     try
     {
@@ -246,6 +260,7 @@ int main(int argC, char* argV[])
         parser.parse(src);
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
+        errorCount = parser.getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -253,16 +268,24 @@ int main(int argC, char* argV[])
         cerr << "\nError during parsing: \n"
              << StrX(e.getMessage())
              << "\n" << endl;
-        return -1;
+        XMLPlatformUtils::Terminate();
+        return 4;
     }
 
     // Print out the stats that we collected and time taken
-    cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
-         << handler.getElementCount() << " elems, "
-         << handler.getAttrCount() << " attrs, "
-         << handler.getSpaceCount() << " spaces, "
-         << handler.getCharacterCount() << " chars)" << endl;
+    if (!errorCount) {
+        cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
+             << handler.getElementCount() << " elems, "
+             << handler.getAttrCount() << " attrs, "
+             << handler.getSpaceCount() << " spaces, "
+             << handler.getCharacterCount() << " chars)" << endl;
+    }
 
-    return 0;
+    XMLPlatformUtils::Terminate();
+
+    if (errorCount > 0)
+        return 4;
+    else
+        return 0;
 }
 

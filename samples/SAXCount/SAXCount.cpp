@@ -56,6 +56,10 @@
 
 /*
 * $Log$
+* Revision 1.17  2001/10/19 19:02:43  tng
+* [Bug 3909] return non-zero an exit code when error was encounted.
+* And other modification for consistent help display and return code across samples.
+*
 * Revision 1.16  2001/08/15 12:41:04  tng
 * Initialize the fURI array to zeros, in case, some compilers like AIX xlC_r doesn't reset the memory.
 *
@@ -132,16 +136,18 @@ void usage()
 {
     cout << "\nUsage:\n"
             "    SAXCount [options] <XML file> | List file>\n\n"
+            "This program invokes the SAX Parser, and then prints the\n"
+            "number of elements, attributes, spaces and characters found\n"
+            "in each XML file, using SAX API.\n\n"
             "Options:\n"
-            "    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file\n"
-            "    -v=xxx      Validation scheme [always | never | auto*]\n"
+            "    -l          Indicate the input file is a List File that has a list of xml files.\n"
+            "                Default to off (Input file is an XML file).\n"
+            "    -v=xxx      Validation scheme [always | never | auto*].\n"
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
-            "    -f          Enable full schema constraint checking. Defaults to off.\n\n"
-            "This program prints the number of elements, attributes,\n"
-            "white spaces and other non-white space characters in the "
-            "input file.\n\n"
-            "  * = Default if not provided explicitly\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n"
+		      "    -?          Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n"
          << endl;
 }
 
@@ -184,12 +190,19 @@ int main(int argC, char* argV[])
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
     {
-        // Break out on first non-dash parameter
+        // Break out on first parm not starting with a dash
         if (argV[argInd][0] != '-')
             break;
 
-        if (!strncmp(argV[argInd], "-v=", 3)
-        ||  !strncmp(argV[argInd], "-V=", 3))
+        // Watch for special case help request
+        if (!strcmp(argV[argInd], "-?"))
+        {
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 2;
+        }
+         else if (!strncmp(argV[argInd], "-v=", 3)
+              ||  !strncmp(argV[argInd], "-V=", 3))
         {
             const char* const parm = &argV[argInd][3];
 
@@ -202,6 +215,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -236,7 +250,7 @@ int main(int argC, char* argV[])
     //  There should at least one parameter left, and that
     //  should be the file name(s).
     //
-    if (argInd == argC)
+    if (argInd != argC - 1)
     {
         usage();
         XMLPlatformUtils::Terminate();
@@ -279,8 +293,8 @@ int main(int argC, char* argV[])
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,sizeof(fURI)); 
-                
+        memset(fURI,0,sizeof(fURI));
+
         if (doList) {
             if (! fin.eof() ) {
                 fin.getline (fURI, sizeof(fURI));
@@ -341,6 +355,8 @@ int main(int argC, char* argV[])
                 << handler.getSpaceCount() << " spaces, "
                 << handler.getCharacterCount() << " chars)" << endl;
         }
+        else
+            errorOccurred = true;
     }
 
     if (doList)

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/10/19 19:02:42  tng
+ * [Bug 3909] return non-zero an exit code when error was encounted.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.12  2001/05/11 13:24:54  tng
  * Copyright update.
  *
@@ -171,10 +175,10 @@ static void usage()
 {
     cout << "\nUsage:\n"
             "    EnumVal <XML file>\n\n"
-            "This program parses a file, then shows how to enumerate the\n"
-            "contents of the validator pools. Essentially, shows how one can\n"
-            "access the DTD information stored in internal data structures.\n\n"
-            "  * = Default if not provided explicitly\n"
+            "This program parses the specified XML file, then shows how to\n"
+            "enumerate the contents of the validator pools. Essentially,\n"
+            "shows how one can access the DTD information stored in internal\n"
+            "data structures.\n"
          << endl;
 }
 
@@ -207,11 +211,11 @@ int main(int argC, char* argV[])
     }
 
     // We only have one required parameter, which is the file to process
-    if ((argC == 2) && (*(argV[1]) == '-'))
+    if ((argC != 2) || (*(argV[1]) == '-'))
     {
         usage();
         XMLPlatformUtils::Terminate();
-        return 2;
+        return 1;
     }
 
     const char*              xmlFile   = argV[1];
@@ -223,6 +227,7 @@ int main(int argC, char* argV[])
     //  we were told on the command line, set it to validate or not. He owns
     //  the validator, so we have to allocate it.
     //
+    int errorCount = 0;
     DTDValidator* valToUse = new DTDValidator;
     SAXParser parser(valToUse);
     parser.setValidationScheme(valScheme);
@@ -234,6 +239,7 @@ int main(int argC, char* argV[])
     try
     {
         parser.parse(xmlFile);
+        errorCount = parser.getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -242,90 +248,97 @@ int main(int argC, char* argV[])
              << "Exception message is:  \n"
              << StrX(e.getMessage()) << "\n" << endl;
         XMLPlatformUtils::Terminate();
-        return 3;
+        return 4;
     }
 
-    //
-    //  Now we will get an enumerator for the element pool from the validator
-    //  and enumerate the elements, printing them as we go. For each element
-    //  we get an enumerator for its attributes and print them also.
-    //
-	DTDGrammar* grammar = (DTDGrammar*) valToUse->getGrammar();
-    NameIdPoolEnumerator<DTDElementDecl> elemEnum = grammar->getElemEnumerator();
-    if (elemEnum.hasMoreElements())
-    {
-        cout << "\nELEMENTS:\n----------------------------\n";
-        while(elemEnum.hasMoreElements())
+    if (!errorCount) {
+        //
+        //  Now we will get an enumerator for the element pool from the validator
+        //  and enumerate the elements, printing them as we go. For each element
+        //  we get an enumerator for its attributes and print them also.
+        //
+        DTDGrammar* grammar = (DTDGrammar*) valToUse->getGrammar();
+        NameIdPoolEnumerator<DTDElementDecl> elemEnum = grammar->getElemEnumerator();
+        if (elemEnum.hasMoreElements())
         {
-            const DTDElementDecl& curElem = elemEnum.nextElement();
-            cout << "  Name: " << StrX(curElem.getFullName()) << "\n";
-
-            cout << "  Content Model: "
-                 << StrX(curElem.getFormattedContentModel())
-                 << "\n";
-
-            // Get an enumerator for this guy's attributes if any
-            if (curElem.hasAttDefs())
+            cout << "\nELEMENTS:\n----------------------------\n";
+            while(elemEnum.hasMoreElements())
             {
-                cout << "  Attributes:\n";
-                XMLAttDefList& attList = curElem.getAttDefList();
-                while (attList.hasMoreElements())
+                const DTDElementDecl& curElem = elemEnum.nextElement();
+                cout << "  Name: " << StrX(curElem.getFullName()) << "\n";
+
+                cout << "  Content Model: "
+                     << StrX(curElem.getFormattedContentModel())
+                     << "\n";
+
+                // Get an enumerator for this guy's attributes if any
+                if (curElem.hasAttDefs())
                 {
-                    const XMLAttDef& curAttDef = attList.nextElement();
-                    cout << "    Name:" << StrX(curAttDef.getFullName())
-                         << ", Type: ";
-
-                    // Get the type and display it
-                    const XMLAttDef::AttTypes type = curAttDef.getType();
-                    switch(type)
+                    cout << "  Attributes:\n";
+                    XMLAttDefList& attList = curElem.getAttDefList();
+                    while (attList.hasMoreElements())
                     {
-                        case XMLAttDef::CData :
-                            cout << "CDATA";
-                            break;
+                        const XMLAttDef& curAttDef = attList.nextElement();
+                        cout << "    Name:" << StrX(curAttDef.getFullName())
+                             << ", Type: ";
 
-                        case XMLAttDef::ID :
-                            cout << "ID";
-                            break;
+                        // Get the type and display it
+                        const XMLAttDef::AttTypes type = curAttDef.getType();
+                        switch(type)
+                        {
+                            case XMLAttDef::CData :
+                                cout << "CDATA";
+                                break;
 
-                        case XMLAttDef::IDRef :
-                        case XMLAttDef::IDRefs :
-                            cout << "IDREF(S)";
-                            break;
+                            case XMLAttDef::ID :
+                                cout << "ID";
+                                break;
 
-                        case XMLAttDef::Entity :
-                        case XMLAttDef::Entities :
-                            cout << "ENTITY(IES)";
-                            break;
+                            case XMLAttDef::IDRef :
+                            case XMLAttDef::IDRefs :
+                                cout << "IDREF(S)";
+                                break;
 
-                        case XMLAttDef::NmToken :
-                        case XMLAttDef::NmTokens :
-                            cout << "NMTOKEN(S)";
-                            break;
+                            case XMLAttDef::Entity :
+                            case XMLAttDef::Entities :
+                                cout << "ENTITY(IES)";
+                                break;
 
-                        case XMLAttDef::Notation :
-                            cout << "NOTATION";
-                            break;
+                            case XMLAttDef::NmToken :
+                            case XMLAttDef::NmTokens :
+                                cout << "NMTOKEN(S)";
+                                break;
 
-                        case XMLAttDef::Enumeration :
-                            cout << "ENUMERATION";
-                            break;
+                            case XMLAttDef::Notation :
+                                cout << "NOTATION";
+                                break;
+
+                            case XMLAttDef::Enumeration :
+                                cout << "ENUMERATION";
+                                break;
+                        }
+
+                        cout << "\n";
                     }
-
-                    cout << "\n";
                 }
+                cout << endl;
             }
-            cout << endl;
+        }
+         else
+        {
+            cout << "The validator has no elements to display\n" << endl;
         }
     }
-     else
-    {
-        cout << "The validator has no elements to display\n" << endl;
-    }
+    else
+        cout << "\nErrors occured, no output available\n" << endl;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    if (errorCount > 0)
+        return 4;
+    else
+        return 0;
 }
 
 

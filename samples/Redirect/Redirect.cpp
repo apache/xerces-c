@@ -75,6 +75,10 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.5  2001/10/19 19:02:42  tng
+ * [Bug 3909] return non-zero an exit code when error was encounted.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.4  2000/05/31 18:53:15  rahulj
  * Removed extraneous command line arguments.
  *
@@ -128,28 +132,21 @@ int main(int argc, char* args[])
     }
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! Message:\n"
-              << StrX(toCatch.getMessage()) << endl;
-        XMLPlatformUtils::Terminate();
-         return 1;
+        cerr << "Error during initialization! Message:\n"
+             << StrX(toCatch.getMessage()) << endl;
+        return 1;
     }
 
     // We only have one parameter, which is the file to process
-    if (argc < 2)
+    // We only have one required parameter, which is the file to process
+    if ((argc != 2) || (*(args[1]) == '-'))
     {
         usage();
         XMLPlatformUtils::Terminate();
         return 1;
     }
-    const char*              xmlFile = args[1];
 
-    // Check for some special cases values of the parameter
-    if (xmlFile[0] == '-')
-    {
-        usage();
-        XMLPlatformUtils::Terminate();
-        return 0;
-    }
+    const char*              xmlFile = args[1];
 
     //
     //  Create a SAX parser object. Then, according to what we were told on
@@ -171,12 +168,14 @@ int main(int argc, char* args[])
     //  Catch any exceptions that might propogate out of it.
     //
     unsigned long duration;
+    int errorCount = 0;
     try
     {
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         parser.parse(xmlFile);
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
+        errorCount = parser.getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -184,16 +183,24 @@ int main(int argc, char* args[])
         cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
                 << StrX(e.getMessage()) << "\n" << endl;
-        return -1;
+        XMLPlatformUtils::Terminate();
+        return 4;
     }
 
     // Print out the stats that we collected and time taken.
-    cout << xmlFile << ": " << duration << " ms ("
-         << handler.getElementCount() << " elems, "
-         << handler.getAttrCount() << " attrs, "
-         << handler.getSpaceCount() << " spaces, "
-         << handler.getCharacterCount() << " chars)" << endl;
+    if (!errorCount) {
+        cout << xmlFile << ": " << duration << " ms ("
+             << handler.getElementCount() << " elems, "
+             << handler.getAttrCount() << " attrs, "
+             << handler.getSpaceCount() << " spaces, "
+             << handler.getCharacterCount() << " chars)" << endl;
+    }
 
-    return 0;
+    XMLPlatformUtils::Terminate();
+
+    if (errorCount > 0)
+        return 4;
+    else
+        return 0;
 }
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/10/19 19:02:43  tng
+ * [Bug 3909] return non-zero an exit code when error was encounted.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.15  2001/08/01 19:11:01  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -166,22 +170,23 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout <<  "\nUsage: SAXPrint [options] file\n"
-             "This program prints the data returned by the various SAX\n"
-             "handlers for the specified input file. Options are NOT case\n"
-             "sensitive.\n\n"
-             "Options:\n"
-             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
-             "    -v=xxx      Validation scheme [always | never | auto*]\n"
+    cout << "\nUsage:\n"
+            "    SAX2Print [options] <XML file>\n\n"
+            "This program invokes the SAX Parser, and then prints the\n"
+            "data returned by the various SAX handlers for the specified\n"
+            "XML file.\n\n"
+            "Options:\n"
+             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].\n"
+             "    -v=xxx      Validation scheme [always | never | auto*].\n"
              "    -n          Enable namespace processing.\n"
              "    -s          Enable schema processing.\n"
              "    -f          Enable full schema constraint checking.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
-             "    -?          Show this help\n\n"
-             "  * = Default if not provided explicitly\n\n"
+             "    -?          Show this help.\n\n"
+             "  * = Default if not provided explicitly.\n\n"
              "The parser has intrinsic support for the following encodings:\n"
              "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
-             "    WINDOWS-1252, IBM1140, IBM037\n"
+             "    WINDOWS-1252, IBM1140, IBM037.\n"
          <<  endl;
 }
 
@@ -213,14 +218,6 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    // Watch for special case help request
-    if ((argC == 2) && !strcmp(argV[1], "-?"))
-    {
-        usage();
-        XMLPlatformUtils::Terminate();
-        return 2;
-    }
-
     int parmInd;
     for (parmInd = 1; parmInd < argC; parmInd++)
     {
@@ -228,8 +225,15 @@ int main(int argC, char* argV[])
         if (argV[parmInd][0] != '-')
             break;
 
-        if (!strncmp(argV[parmInd], "-v=", 3)
-        ||  !strncmp(argV[parmInd], "-V=", 3))
+        // Watch for special case help request
+        if (!strcmp(argV[parmInd], "-?"))
+        {
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 2;
+        }
+         else if (!strncmp(argV[parmInd], "-v=", 3)
+              ||  !strncmp(argV[parmInd], "-V=", 3))
         {
             const char* const parm = &argV[parmInd][3];
 
@@ -242,6 +246,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -280,6 +285,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -u= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -297,9 +303,11 @@ int main(int argC, char* argV[])
     if (parmInd + 1 != argC)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
     xmlFile = argV[parmInd];
+    int errorCount = 0;
 
     //
     //  Create a SAX parser object. Then, according to what we were told on
@@ -322,6 +330,7 @@ int main(int argC, char* argV[])
         parser.setDocumentHandler(&handler);
         parser.setErrorHandler(&handler);
         parser.parse(xmlFile);
+        errorCount = parser.getErrorCount();
     }
 
     catch (const XMLException& toCatch)
@@ -329,12 +338,16 @@ int main(int argC, char* argV[])
         cerr << "\nAn error occured\n  Error: "
              << StrX(toCatch.getMessage())
              << "\n" << endl;
+        XMLPlatformUtils::Terminate();
         return -1;
     }
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    if (errorCount > 0)
+        return 4;
+    else
+        return 0;
 }
 

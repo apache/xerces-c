@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/10/19 19:02:42  tng
+ * [Bug 3909] return non-zero an exit code when error was encounted.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.5  2000/03/02 19:53:39  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -118,11 +122,13 @@ int main(int argC, char* argV[])
     // Watch for special case help request
     if (argC > 1)
     {
-        cout << "\nUsage: CreateDOMDocument\n"
-            "   This program creates a new DOM document from scratch in memory.\n"
-            "   It then prints the count of elements in the tree.\n"
-            <<  endl;
-        return 0;
+        cout << "\nUsage:\n"
+                "    CreateDOMDocument\n\n"
+                "This program creates a new DOM document from scratch in memory.\n"
+                "It then prints the count of elements in the tree.\n"
+             <<  endl;
+        XMLPlatformUtils::Terminate();
+        return 1;
     }
 
     //  The tree we create below is the same that the DOMParser would
@@ -135,7 +141,7 @@ int main(int argC, char* argV[])
     // </company>
 
     DOM_DOMImplementation impl;
-    
+
     DOM_Document doc = impl.createDocument(
                 0,                    // root element namespace URI.
                 "company",            // root element name
@@ -158,7 +164,7 @@ int main(int argC, char* argV[])
 
     DOM_Element  devByElem = doc.createElement("developedBy");
     rootElem.appendChild(devByElem);
-    
+
     DOM_Text    devByDataVal = doc.createTextNode("Apache Software Foundation");
     devByElem.appendChild(devByDataVal);
 
@@ -174,6 +180,7 @@ int main(int argC, char* argV[])
     //  The DOM document and its contents are reference counted, and need
     //  no explicit deletion.
     //
+    XMLPlatformUtils::Terminate();
     return 0;
 }
 

@@ -82,16 +82,17 @@ void usage()
 {
     cout << "\nUsage:\n"
             "    DOMCount [options] <XML file> | List file>\n\n"
-            "This program invokes the XML4C DOM parser, builds\n"
-            "the DOM tree, and then prints the number of elements\n"
-            "found in the input XML file.\n\n"
+            "This program invokes the DOM parser, builds the DOM tree,\n"
+            "and then prints the number of elements found in each XML file.\n\n"
             "Options:\n"
-            "    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file\n"
-            "    -v=xxx      Validation scheme [always | never | auto*]\n"
+            "    -l          Indicate the input file is a List File that has a list of xml files.\n"
+            "                Default to off (Input file is an XML file).\n"
+            "    -v=xxx      Validation scheme [always | never | auto*].\n"
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
-            "    -f          Enable full schema constraint checking. Defaults to off.\n\n"
-            "  * = Default if not provided explicitly\n\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n"
+		      "    -?          Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n"
          << endl;
 }
 
@@ -115,6 +116,7 @@ int main(int argC, char* argV[])
     if (argC < 2)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
 
@@ -126,22 +128,22 @@ int main(int argC, char* argV[])
     bool                     doList = false;
     bool                     errorOccurred = false;
 
-    // See if non validating dom parser configuration is requested.
-    if ((argC == 2) && !strcmp(argV[1], "-?"))
-    {
-        usage();
-        return 2;
-    }
-
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
     {
-        // Break out on first non-dash parameter
+        // Break out on first parm not starting with a dash
         if (argV[argInd][0] != '-')
             break;
 
-        if (!strncmp(argV[argInd], "-v=", 3)
-        ||  !strncmp(argV[argInd], "-V=", 3))
+        // Watch for special case help request
+        if (!strcmp(argV[argInd], "-?"))
+        {
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 2;
+        }
+         else if (!strncmp(argV[argInd], "-v=", 3)
+              ||  !strncmp(argV[argInd], "-V=", 3))
         {
             const char* const parm = &argV[argInd][3];
 
@@ -222,8 +224,8 @@ int main(int argC, char* argV[])
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,sizeof(fURI)); 
-                
+        memset(fURI,0,sizeof(fURI));
+
         if (doList) {
             if (! fin.eof() ) {
                 fin.getline (fURI, sizeof(fURI));
@@ -283,6 +285,7 @@ int main(int argC, char* argV[])
         if (errorHandler.getSawErrors())
         {
             cout << "\nErrors occured, no output available\n" << endl;
+            errorOccurred = true;
         }
          else
         {
