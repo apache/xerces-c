@@ -173,57 +173,56 @@ $set 1
 176  Expected | enumeration separator, or closing paren
 177  Unterminated entity literal
 178  There are more end tags than start tags
-179  Reference to external declaration in standalone document. Entity={0}
-180  Expected an open parenthesis
-181  The attribute '{0}' is already used in element '{1}'
-182  A '<' character cannot be used in attribute '{0}', except through &lt;
-183  A leading surrogate character was not followed by a legal second character
-184  Expected ']]>' to end a conditional section
-185  Expected INCLUDE or IGNORE here
-186  Expected [ to follow INCLUDE or IGNORE
-187  Expected a TextDecl here: <?xml ....
-188  Expected a XMLDecl here: <?xml ....
-189  Unexpected end of entity {0}
-190  A PE propogated out of the int/ext subset, discarding extra text
-191  An extra ] character was found an ignored
-192  PE refs are not allowed inside markup in the internal subset
-193  An entity propogated out of the content section into Miscellaneous
-194  Expected &# to be followed by a numeric character value
-195  Expected an open bracket ('[') here
-196  The sequence ']]>' is not allowed in character data
-197  Illegal sequence '--' in comment
-198  Unterminated CDATA section
-199  Expected NDATA
-200  NDATA is not legal for parameter entities
-201  Hex radix character refs must use 'x', not 'X'
-202  '{0}' has already been set. Ignoring redundant setting
-203  The XMLDecl strings must be in the order: version, encoding, standalone
-204  External entities cannot be referred to from attribute values
-205  The XML or Text decl must start with '<?xml ', not '<?XML '
-206  Expected a literal entity value or PUBLIC/SYSTEM id
-207  '{0}' is not a valid digit for the indicated radix
-208  The input ended before all started tags were ended. Last tag started was '{0}'
-209  The content model for element '{0}' is ambiguous
-210  Nested CDATA sections are not allowed
-211  The prefix '{0}' has not been mapped to any URI
-212  The start and the end tag were in the different entities
-213  The main XML document cannot be empty
-214  CDATA is not allowed outside the root element
-215  Only numeric character entities or special character entities are legal here
-216  Got an unexpected trailing surrogate character
-217  No processing instruction starts with 'xml'
-218  The XML or Text declaration must start at line/column 1/1
-219  The 'version=' string is required in an XMLDecl
-220  The 'standalone=' string is only allowed in the main XML entity
-221  When namespaces are enabled, a name can have only one colon character
-222  When namespaces are enabled, the colon cannot be the first or last character
-223  Colons are not allowed in this name when namespaces are enabled
-224  A system exception occured during processing
-225  An exception occured! Type:{0}, Message:{1}
-226  Unexpected end of file exception. Message: {0}
-227  UnexpectedError
-228  The schemaLocation attribute does not contain pairs of values.
-229  Internal error: don't have a GrammarResolver for TraverseSchema
+179  Expected an open parenthesis
+180  The attribute '{0}' is already used in element '{1}'
+181  A '<' character cannot be used in attribute '{0}', except through &lt;
+182  A leading surrogate character was not followed by a legal second character
+183  Expected ']]>' to end a conditional section
+184  Expected INCLUDE or IGNORE here
+185  Expected [ to follow INCLUDE or IGNORE
+186  Expected a TextDecl here: <?xml ....
+187  Expected a XMLDecl here: <?xml ....
+188  Unexpected end of entity {0}
+189  A PE propogated out of the int/ext subset, discarding extra text
+190  An extra ] character was found an ignored
+191  PE refs are not allowed inside markup in the internal subset
+192  An entity propogated out of the content section into Miscellaneous
+193  Expected &# to be followed by a numeric character value
+194  Expected an open bracket ('[') here
+195  The sequence ']]>' is not allowed in character data
+196  Illegal sequence '--' in comment
+197  Unterminated CDATA section
+198  Expected NDATA
+199  NDATA is not legal for parameter entities
+200  Hex radix character refs must use 'x', not 'X'
+201  '{0}' has already been set. Ignoring redundant setting
+202  The XMLDecl strings must be in the order: version, encoding, standalone
+203  External entities cannot be referred to from attribute values
+204  The XML or Text decl must start with '<?xml ', not '<?XML '
+205  Expected a literal entity value or PUBLIC/SYSTEM id
+206  '{0}' is not a valid digit for the indicated radix
+207  The input ended before all started tags were ended. Last tag started was '{0}'
+208  The content model for element '{0}' is ambiguous
+209  Nested CDATA sections are not allowed
+210  The prefix '{0}' has not been mapped to any URI
+211  The start and the end tag were in the different entities
+212  The main XML document cannot be empty
+213  CDATA is not allowed outside the root element
+214  Only numeric character entities or special character entities are legal here
+215  Got an unexpected trailing surrogate character
+216  No processing instruction starts with 'xml'
+217  The XML or Text declaration must start at line/column 1/1
+218  The 'version=' string is required in an XMLDecl
+219  The 'standalone=' string is only allowed in the main XML entity
+220  When namespaces are enabled, a name can have only one colon character
+221  When namespaces are enabled, the colon cannot be the first or last character
+222  Colons are not allowed in this name when namespaces are enabled
+223  A system exception occured during processing
+224  An exception occured! Type:{0}, Message:{1}
+225  Unexpected end of file exception. Message: {0}
+226  UnexpectedError
+227  The schemaLocation attribute does not contain pairs of values.
+228  Internal error: don't have a GrammarResolver for TraverseSchema
 
 
 $set 2
@@ -307,6 +306,11 @@ $set 2
  79  Schema error during parsing
  80  Element '{0}' should be qualified
  81  Element '{0}' should be un-qualified
+ 82  Reference to external entity declaration '{0}' is not allowed in a standalone document.
+ 83  Attribute '{0}' for element '{1}' has a default value and must be specified in a standalone document.
+ 84  Attribute '{0}' must not be changed by normalization in a standalone document.
+ 85  White space must not occur between externally declared elements with element content in a standalone document.
+ 86  Entity '{0}' was not found
 
 
 $set 3

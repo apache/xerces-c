@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/07/05 13:12:19  tng
+ * Standalone checking is validity constraint and thus should be just error, not fatal error:
+ *
  * Revision 1.11  2001/06/25 14:39:54  knoaman
  * Fix bug #965 - submitted by Matt Lovett
  *
@@ -204,6 +207,7 @@ bool DTDScanner::checkForPERef(const  bool    spaceRequired
     if (!fReaderMgr->skippedChar(chPercent))
        return gotSpace;
 
+    fScanner->setHasNoDTD(false);
     while (true)
     {
        if (!expandPERef(false, inLiteral, inMarkup, throwAtEndExt))
@@ -253,9 +257,10 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
     //  emit an error and continue.
     //
     XMLEntityDecl* decl = fPEntityDeclPool->getByKey(bbName.getRawBuffer());
-    if (!decl)
+    if (!decl && fScanner->getDoValidation())
     {
-        fScanner->emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
+        // XML 1.0 Section 4.1
+        fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
         return false;
     }
 
@@ -263,8 +268,8 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
     //  If we are a standalone document, then it has to have been declared
     //  in the internal subset. Keep going though.
     //
-    if (fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
-        fScanner->emitError(XMLErrs::IllegalRefInStandalone, bbName.getRawBuffer());
+    if (fScanner->getDoValidation() && fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
+        fScanner->getValidator()->emitError(XMLValid::IllegalRefInStandalone, bbName.getRawBuffer());
 
     //
     //  Okee dokee, we found it. So create either a memory stream with
@@ -1646,6 +1651,7 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     {
         // Indicate we have an external subset
         hasExtSubset = true;
+        fScanner->setHasNoDTD(false);
 
         // Get buffers for the ids
         XMLBufBid bbPubId(fBufMgr);
@@ -1852,12 +1858,14 @@ void DTDScanner::scanElementDecl()
         //  the decl pool.
         //
         decl = new DTDElementDecl(bbName.getRawBuffer(), fEmptyNamespaceId);
-        decl->setExternalElemDeclaration(isReadingExternalEntity());
         fDTDGrammar->putElemDecl(decl);
     }
 
     // Set a flag for whether we will ignore this one
     const bool isIgnored = (decl == fDumElemDecl);
+
+    // Mark this one if being externally declared
+    decl->setExternalElemDeclaration(isReadingExternalEntity());
 
     // Mark this one as being declared
     decl->setCreateReason(XMLElementDecl::Declared);
@@ -2092,18 +2100,20 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
     XMLEntityDecl* decl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
 
     // If it does not exist, then obviously an error
-    if (!decl)
+    if (!decl && fScanner->getDoValidation())
     {
-        fScanner->emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
+        // XML 1.0 Section 4.1
+        fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
         return EntityExp_Failed;
     }
+
 
     //
     //  If we are a standalone document, then it has to have been declared
     //  in the internal subset. Keep going though.
     //
-    if (fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
-        fScanner->emitError(XMLErrs::IllegalRefInStandalone, bbName.getRawBuffer());
+    if (fScanner->getDoValidation() && fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
+        fScanner->getValidator()->emitError(XMLValid::IllegalRefInStandalone, bbName.getRawBuffer());
 
     //
     //  If its a special char reference, then its escaped and we can return

@@ -92,11 +92,16 @@ public :
       , GenericError                       = 79
       , ElementNotQualified                = 80
       , ElementNotUnQualified              = 81
-      , E_HighBounds                       = 82
-      , W_LowBounds                        = 83
-      , W_HighBounds                       = 84
-      , F_LowBounds                        = 85
-      , F_HighBounds                       = 86
+      , IllegalRefInStandalone             = 82
+      , NoDefAttForStandalone              = 83
+      , NoAttNormForStandalone             = 84
+      , NoWSForStandalone                  = 85
+      , VC_EntityNotFound                  = 86
+      , E_HighBounds                       = 87
+      , W_LowBounds                        = 88
+      , W_HighBounds                       = 89
+      , F_LowBounds                        = 90
+      , F_HighBounds                       = 91
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

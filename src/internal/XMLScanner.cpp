@@ -170,6 +170,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fScannerId(0)
     , fSequenceId(0)
     , fStandalone(false)
+    , fHasNoDTD(true)
     , fValidate(false)
     , fValidator(valToAdopt)
     , fDTDValidator(0)
@@ -223,6 +224,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fScannerId(0)
     , fSequenceId(0)
     , fStandalone(false)
+    , fHasNoDTD(true)
     , fValidate(false)
     , fValidator(valToAdopt)
     , fDTDValidator(0)
@@ -2542,22 +2544,20 @@ bool XMLScanner::scanStartTag(bool& gotData)
                         (
                             XMLValid::RequiredAttrNotProvided
                             , curDef.getFullName()
-                            , elemDecl->getFullName()
                         );
                     }
-		            else if ((defType == XMLAttDef::Default) ||
-		                     (defType == XMLAttDef::Fixed)  )
-					{
-		                if (fStandalone && curDef.isExternal())
-		                {
-			                //
-			                // XML 1.0 Section 2.9
-			                // Document is standalone, so attributes must not be defaulted.
-			                //
-			                emitError(XMLErrs::BadStandalone, elemDecl->getFullName());
-
-		                 }
-		             }
+                    else if ((defType == XMLAttDef::Default) ||
+		                       (defType == XMLAttDef::Fixed)  )
+                    {
+                        if (fStandalone && curDef.isExternal())
+                        {
+                            //
+                            // XML 1.0 Section 2.9
+                            // Document is standalone, so attributes must not be defaulted.
+                            //
+                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef.getFullName(), elemDecl->getFullName());
+                        }
+                    }
                 }
 
                 // Fault in the value if needed, and bump the att count

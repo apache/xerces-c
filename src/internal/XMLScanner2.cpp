@@ -442,7 +442,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             // XML 1.0 Section 2.9
                             // Document is standalone, so attributes must not be defaulted.
                             //
-                            emitError(XMLErrs::BadStandalone, elemDecl.getFullName());
+                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef.getFullName(), elemDecl.getFullName());
                         }
                     }
                 }
@@ -1719,7 +1719,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                              // Can't have a standalone document declaration of "yes" if  attribute
                              // values are subject to normalisation
                              //
-                             emitError(XMLErrs::BadStandalone);
+                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
                         }
                         curState = InWhitespace;
                         continue;
@@ -1809,7 +1809,23 @@ void XMLScanner::scanCDSection()
             // This document is standalone; this ignorable CDATA whitespace is forbidden.
             // XML 1.0, Section 2.9
             //
-            emitError(XMLErrs::BadStandalone);
+
+            // And see if the current element is a 'Children' style content model
+            const ElemStack::StackElem* topElem = fElemStack.topElement();
+
+            if (topElem->fThisElement->isExternal()) {
+
+                // Get the character data opts for the current element
+                XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+
+                if (charOpts == XMLElementDecl::SpacesOk) // Element Content
+                {
+                    // Error - standalone should have a value of "no" as whitespace detected in an
+                    // element type with element content whose element declaration was external
+                    //
+                    fValidator->emitError(XMLValid::NoWSForStandalone);
+                }
+            }
         }
 
         //
@@ -2057,7 +2073,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
     const XMLCh* rawBuf = toUse.getRawBuffer();
     const unsigned int len = toUse.getLen();
 
-    if (fValidate)
+    if (fValidate && fStandalone)
     {
         // See if the text contains whitespace
         // Get the raw data we need for the callback
@@ -2067,17 +2083,17 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
             // And see if the current element is a 'Children' style content model
             const ElemStack::StackElem* topElem = fElemStack.topElement();
 
-            // Get the character data opts for the current element
-            XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+            if (topElem->fThisElement->isExternal()) {
 
-            if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
-            {
-                if ((fStandalone) && (topElem->fThisElement->isExternal()))
+                // Get the character data opts for the current element
+                XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+
+                if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
                 {
                     // Error - standalone should have a value of "no" as whitespace detected in an
                     // element type with element content whose element declaration was external
                     //
-                    emitError(XMLErrs::BadStandalone);
+                    fValidator->emitError(XMLValid::NoWSForStandalone);
                 }
             }
         }
@@ -2412,16 +2428,31 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     // If it does not exist, then obviously an error
     if (!decl)
     {
-        emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
+        // XML 1.0 Section 4.1
+        // Well-formedness Constraint for entity not found:
+        //   In a document without any DTD, a document with only an internal DTD subset which contains no parameter entity references,
+        //      or a document with "standalone='yes'", for an entity reference that does not occur within the external subset
+        //      or a parameter entity
+        //
+        // Else it's Validity Constraint
+        //
+        if (fStandalone || fHasNoDTD)
+            emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
+        else {
+            if (fValidate)
+                fValidator->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
+        }
+
         return EntityExp_Failed;
     }
 
     //
+    // XML 1.0 Section 2.9
     //  If we are a standalone document, then it has to have been declared
     //  in the internal subset. Keep going though.
     //
-    if (fStandalone && !decl->getDeclaredInIntSubset())
-        emitError(XMLErrs::IllegalRefInStandalone, bbName.getRawBuffer());
+    if (fStandalone && !decl->getDeclaredInIntSubset() && fValidate)
+        fValidator->emitError(XMLValid::IllegalRefInStandalone, bbName.getRawBuffer());
 
     if (decl->isExternal())
     {

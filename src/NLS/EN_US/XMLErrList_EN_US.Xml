@@ -185,7 +185,6 @@
             <Message Id="ExpectedEnumSepOrParen" Text="Expected | enumeration separator, or closing paren"/>
             <Message Id="UnterminatedEntityLiteral" Text="Unterminated entity literal"/>
             <Message Id="MoreEndThanStartTags" Text="There are more end tags than start tags"/>
-            <Message Id="IllegalRefInStandalone" Text="Reference to external declaration in standalone document. Entity={0}"/>
             <Message Id="ExpectedOpenParen" Text="Expected an open parenthesis"/>
             <Message Id="AttrAlreadyUsedInSTag" Text="The attribute '{0}' is already used in element '{1}'"/>
             <Message Id="BracketInAttrValue" Text="A '&lt;' character cannot be used in attribute '{0}', except through &amp;lt;"/>
@@ -320,6 +319,11 @@
             <Message Id="GenericError" Text="Schema error during parsing"/>
             <Message Id="ElementNotQualified" Text="Element '{0}' should be qualified"/>
             <Message Id="ElementNotUnQualified" Text="Element '{0}' should be un-qualified"/>
+            <Message Id="IllegalRefInStandalone" Text="Reference to external entity declaration '{0}' is not allowed in a standalone document."/>
+            <Message Id="NoDefAttForStandalone" Text="Attribute '{0}' for element '{1}' has a default value and must be specified in a standalone document."/>
+            <Message Id="NoAttNormForStandalone" Text="Attribute '{0}' must not be changed by normalization in a standalone document."/>
+            <Message Id="NoWSForStandalone" Text="White space must not occur between externally declared elements with element content in a standalone document."/>
+            <Message Id="VC_EntityNotFound" Text="Entity '{0}' was not found"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">

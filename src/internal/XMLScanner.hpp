@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/07/05 13:12:11  tng
+ * Standalone checking is validity constraint and thus should be just error, not fatal error:
+ *
  * Revision 1.22  2001/06/22 12:42:33  tng
  * [Bug 2257] 1.5 thinks a <?xml-stylesheet ...> tag is a <?xml ...> tag
  *
@@ -413,6 +416,7 @@ public :
     void setValidationScheme(const ValSchemes newScheme);
     void setValidator(XMLValidator* const valToAdopt);
     void setDoSchema(const bool doSchema);
+    void setHasNoDTD(const bool hasNoDTD);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -693,6 +697,10 @@ private :
     //      Indicates whether the document is standalone or not. Defaults to
     //      no, but can be overridden in the XMLDecl.
     //
+    //  fHasNoDTD
+    //      Indicates the document has no DTD or has only an internal DTD subset
+    //      which contains no parameter entity references.
+    //
     //  fValidate
     //      Indicates whether any validation should be done. This is defined
     //      by the existence of a Grammar together with fValScheme.
@@ -796,6 +804,7 @@ private :
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     bool                        fStandalone;
+    bool                        fHasNoDTD;
     bool                        fValidate;
     XMLValidator*               fValidator;
     DTDValidator*               fDTDValidator;
@@ -1075,6 +1084,10 @@ inline void XMLScanner::setDoSchema(const bool doSchema)
     fDoSchema = doSchema;
 }
 
+inline void XMLScanner::setHasNoDTD(const bool hasNoDTD)
+{
+    fHasNoDTD = hasNoDTD;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Mutator methods
