@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2002/11/14 22:34:11  tng
+ * [Bug 14265] Access violation with Null systemId/publicId in DTDScanner
+ *
  * Revision 1.15  2002/11/05 21:40:36  tng
  * Oasis test fix:
  * 1.  Should check if content model allow character for CDataSection case
@@ -2303,9 +2306,9 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
     // Fill in the id fields of the decl with the info we got
     const XMLCh* publicId = bbPubId.getRawBuffer();
     const XMLCh* systemId = bbSysId.getRawBuffer();
-    decl.setPublicId((*publicId) ? publicId : 0);
-    decl.setSystemId((*systemId) ? systemId : 0);
-    decl.setBaseURI((*lastInfo.systemId) ? lastInfo.systemId : 0);
+    decl.setPublicId((publicId && *publicId) ? publicId : 0);
+    decl.setSystemId((systemId && *systemId) ? systemId : 0);
+    decl.setBaseURI((lastInfo.systemId && *lastInfo.systemId) ? lastInfo.systemId : 0);
 
     // If its a PE decl, we are done
     bool gotSpaces = checkForPERef(false, false, true);
@@ -3416,9 +3419,9 @@ void DTDScanner::scanNotationDecl()
         decl = new XMLNotationDecl
         (
             bbName.getRawBuffer()
-            , (*publicId) ? publicId : 0
-            , (*systemId) ? systemId : 0
-            , (*lastInfo.systemId) ? lastInfo.systemId : 0
+            , (publicId && *publicId) ? publicId : 0
+            , (systemId && *systemId) ? systemId : 0
+            , (lastInfo.systemId && *lastInfo.systemId) ? lastInfo.systemId : 0
         );
         fDTDGrammar->putNotationDecl(decl);
     }
