@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.14  2001/06/05 16:51:17  knoaman
+  * Add 'const' to getGrammar - submitted by Peter A. Volchek.
+  *
   * Revision 1.13  2001/05/11 13:25:33  tng
   * Copyright update.
   *
@@ -277,7 +280,7 @@ public:
     /**
       * Retrieve the Grammar used
       */
-    virtual Grammar* getGrammar() =0;
+    virtual Grammar* getGrammar() const =0;
 
     /**
       * Set the Grammar

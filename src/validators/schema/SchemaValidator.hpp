@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/06/05 16:51:21  knoaman
+ * Add 'const' to getGrammar - submitted by Peter A. Volchek.
+ *
  * Revision 1.6  2001/05/11 15:17:48  tng
  * Schema: Nillable fixes.
  *
@@ -111,7 +114,7 @@ public:
 
     void setXsiType(const XMLCh* const        prefix
       , const XMLCh* const        localPart
-	   , const unsigned int        uriId);
+       , const unsigned int        uriId);
 
     void setNillable(bool isNil);
 
@@ -155,7 +158,7 @@ public:
         const   XMLElementDecl*             elemDef
     );
 
-    virtual Grammar* getGrammar();
+    virtual Grammar* getGrammar() const;
     virtual void setGrammar(Grammar* aGrammar);
 
     // -----------------------------------------------------------------------
@@ -223,7 +226,7 @@ inline void SchemaValidator::setGrammarResolver(GrammarResolver* grammarResolver
 
 inline void SchemaValidator::setXsiType(const XMLCh* const        prefix
       , const XMLCh* const        localPart
-	   , const unsigned int        uriId)
+       , const unsigned int        uriId)
 {
     delete fXsiType;
     fXsiType = new QName(prefix, localPart, uriId);
@@ -236,7 +239,7 @@ inline void SchemaValidator::setNillable(bool isNil) {
 // ---------------------------------------------------------------------------
 //  Virtual interface
 // ---------------------------------------------------------------------------
-inline Grammar* SchemaValidator::getGrammar() {
+inline Grammar* SchemaValidator::getGrammar() const {
     return fSchemaGrammar;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/06/05 16:51:20  knoaman
+ * Add 'const' to getGrammar - submitted by Peter A. Volchek.
+ *
  * Revision 1.11  2001/05/11 13:27:11  tng
  * Copyright update.
  *
@@ -166,7 +169,7 @@ public:
     (
         const   XMLElementDecl*             elemDef
     );
-    virtual Grammar* getGrammar();
+    virtual Grammar* getGrammar() const;
     virtual void setGrammar(Grammar* aGrammar);
 
     // -----------------------------------------------------------------------
@@ -194,7 +197,7 @@ private:
 // ---------------------------------------------------------------------------
 //  Virtual interface
 // ---------------------------------------------------------------------------
-inline Grammar* DTDValidator::getGrammar() {
+inline Grammar* DTDValidator::getGrammar() const {
     return fDTDGrammar;
 }
 
