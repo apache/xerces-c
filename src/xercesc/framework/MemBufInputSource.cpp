@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2004/09/28 02:14:13  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.6  2004/09/08 13:55:57  peiyongz
  * Apache License Version 2.0
  *
@@ -93,6 +96,12 @@ MemBufInputSource::~MemBufInputSource()
         delete [] (XMLByte*)fSrcBytes;
 }
 
+void MemBufInputSource::resetMemBufInputSource(const   XMLByte* const  srcDocBytes
+                                , const unsigned int    byteCount)
+{
+    fByteCount = byteCount;
+    fSrcBytes  = srcDocBytes;
+}
 
 // ---------------------------------------------------------------------------
 //  MemBufInputSource: InputSource interface implementation

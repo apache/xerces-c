@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/09/28 02:14:13  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.8  2004/09/08 13:55:57  peiyongz
  * Apache License Version 2.0
  *
@@ -217,6 +220,17 @@ public :
       */
     void setCopyBufToStream(const bool newState);
 
+    /**
+      * This methods allows the MemBufInputSource to be used for more than
+      * one input source, instead of destructing/constructing another
+      * MemBufInputSource.
+      *
+      * @param  srcDocBytes     The actual data buffer to be parsed from.
+      * @param  byteCount       The count of bytes (not characters, bytes!)
+      *                         in the buffer.     
+      */
+    void resetMemBufInputSource(const   XMLByte* const  srcDocBytes
+                                , const unsigned int    byteCount);
     //@}
 
 

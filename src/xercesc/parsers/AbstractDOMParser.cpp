@@ -235,6 +235,11 @@ bool AbstractDOMParser::getGenerateSyntheticAnnotations() const
     return fScanner->getGenerateSyntheticAnnotations();
 }
 
+bool AbstractDOMParser::getValidateAnnotations() const
+{
+    return fScanner->getValidateAnnotations();
+}
+
 bool AbstractDOMParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
@@ -331,6 +336,11 @@ void AbstractDOMParser::setDoNamespaces(const bool newState)
 void AbstractDOMParser::setGenerateSyntheticAnnotations(const bool newState)
 {
     fScanner->setGenerateSyntheticAnnotations(newState);
+}
+
+void AbstractDOMParser::setValidateAnnotations(const bool newState)
+{
+    fScanner->setValidateAnnotations(newState);
 }
 
 void AbstractDOMParser::setExitOnFirstFatalError(const bool newState)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2004/09/28 02:14:14  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.33  2004/09/23 01:09:55  cargilld
  * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
  *
@@ -645,7 +648,7 @@ public :
      */
     unsigned int getSrcOffset() const;
 
-    /** Get the 'generate synthetic validations' flag
+    /** Get the 'generate synthetic annotations' flag
       *    
       * @return true, if the parser is currently configured to
       *         generate synthetic annotations, false otherwise.
@@ -658,6 +661,15 @@ public :
       */
     bool getGenerateSyntheticAnnotations() const;
 
+    /** Get the 'validate annotations' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         validate annotations, false otherwise.
+      *
+      * @see #setValidateAnnotations
+      */
+    bool getValidateAnnotations() const;
+
     //@}
 
 
@@ -667,7 +679,7 @@ public :
 
     /** @name Setter methods */
     //@{
-    /** set the 'generate synthetic validations' flag
+    /** set the 'generate synthetic annotations' flag
       *    
       * @param newValue The value for specifying whether Synthetic Annotations
       *        should be generated or not.
@@ -678,6 +690,15 @@ public :
       * @see #getGenerateSyntheticAnnotations
       */
     void setGenerateSyntheticAnnotations(const bool newValue);
+
+    /** set the 'validate annotations' flag
+      *    
+      * @param newValue The value for specifying whether annotations
+      *        should be validate or not.
+      *
+      * @see #getValidateAnnotations
+      */
+    void setValidateAnnotations(const bool newValue);
 
     /**
       * This method allows users to enable or disable the parser's

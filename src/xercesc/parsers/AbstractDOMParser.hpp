@@ -408,7 +408,7 @@ public :
       */
     bool  getCreateSchemaInfo() const;
 
-    /** Get the 'generate synthetic validations' flag
+    /** Get the 'generate synthetic annotations' flag
       *    
       * @return true, if the parser is currently configured to
       *         generate synthetic annotations, false otherwise.
@@ -421,6 +421,15 @@ public :
       */
     bool getGenerateSyntheticAnnotations() const;
 
+    /** Get the 'validate annotations' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         validate annotations, false otherwise.
+      *
+      * @see #setValidateAnnotations
+      */
+    bool getValidateAnnotations() const;
+
     //@}
 
 
@@ -430,7 +439,7 @@ public :
 
     /** @name Setter methods */
     //@{
-    /** set the 'generate synthetic validations' flag
+    /** set the 'generate synthetic annotations' flag
       *    
       * @param newValue The value for specifying whether Synthetic Annotations
       *        should be generated or not.
@@ -442,6 +451,15 @@ public :
       * @see #getGenerateSyntheticAnnotations
       */
     void setGenerateSyntheticAnnotations(const bool newValue);
+
+    /** set the 'validlate annotations' flag
+      *    
+      * @param newValue The value for specifying whether Annotations
+      *        should be validated or not.
+      *
+      * @see #getValidateAnnotations
+      */
+    void setValidateAnnotations(const bool newValue);
 
     /** Set the 'do namespaces' flag
       *

@@ -164,6 +164,7 @@ public :
     static const XMLCh fgIGXMLScanner[];
     static const XMLCh fgSGXMLScanner[];
     static const XMLCh fgDGXMLScanner[];
+    static const XMLCh fgXSAXMLScanner[];
     static const XMLCh fgCDataStart[];
     static const XMLCh fgCDataEnd[];
 
@@ -221,6 +222,8 @@ public :
     static const XMLCh fgXercesStandardUriConformant[];
     static const XMLCh fgXercesDOMHasPSVIInfo[];
     static const XMLCh fgXercesGenerateSyntheticAnnotations[];
+    static const XMLCh fgXercesValidateAnnotations[];
+
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];

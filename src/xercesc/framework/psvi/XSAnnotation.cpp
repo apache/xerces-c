@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/28 02:14:13  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.10  2004/09/08 13:56:07  peiyongz
  * Apache License Version 2.0
  *
@@ -114,6 +117,7 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
         , fMemoryManager
     );
     memBufIS->setEncoding(XMLUni::fgXMLChEncodingString);
+    memBufIS->setCopyBufToStream(false);
 
     try
     {        
@@ -148,6 +152,7 @@ void XSAnnotation::writeAnnotation(ContentHandler* handler)
         , fMemoryManager
     );
     memBufIS->setEncoding(XMLUni::fgXMLChEncodingString);
+    memBufIS->setCopyBufToStream(false);
 
     try
     {        

@@ -56,6 +56,8 @@
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/internal/XSAXMLScanner.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -139,19 +141,6 @@ const XMLCh* fgIdentityConstraints[] =
     SchemaSymbols::fgELT_UNIQUE,
     SchemaSymbols::fgELT_KEY,
     SchemaSymbols::fgELT_KEYREF
-};
-
-const XMLCh fgAnnotation[] =
-{
-    chLatin_a, chLatin_n, chLatin_n, chLatin_o, chLatin_t, chLatin_a, chLatin_t
-    ,   chLatin_i, chLatin_o, chLatin_n, chNull
-};
-
-const XMLCh fgDocumentation[] =
-{
-    chLatin_d, chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e
-    ,   chLatin_n, chLatin_t, chLatin_a, chLatin_t
-    ,   chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
 const XMLCh fgSynthetic_Annotation[] =
@@ -293,6 +282,10 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
         }
     }
 
+    if (fScanner->getValidateAnnotations() && !fSchemaGrammar->getAnnotations()->isEmpty())
+    {
+        validateAnnotations();
+    }
     fSchemaInfo->setProcessed();
 }
 
@@ -4655,7 +4648,7 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
     } // for each child node
 
 
-    if (fSchemaInfo->getNonXSAttList()->size() && !sawAnnotation)
+    if (fScanner->getGenerateSyntheticAnnotations() && fSchemaInfo->getNonXSAttList()->size() && !sawAnnotation)
     {
         // synthesize a global annotation here.
         fSchemaGrammar->addAnnotation(
@@ -8743,7 +8736,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
         fBuffer.append(prefix);
         fBuffer.append(chColon);
     }
-    fBuffer.append(fgAnnotation);
+    fBuffer.append(SchemaSymbols::fgELT_ANNOTATION);
 
     // next is the nonXSAttList names & values
     unsigned int nonXSAttSize = nonXSAttList->size();
@@ -8841,7 +8834,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
         fBuffer.append(prefix);
         fBuffer.append(chColon);
     }
-    fBuffer.append(fgDocumentation);
+    fBuffer.append(SchemaSymbols::fgELT_DOCUMENTATION);
     fBuffer.append(chCloseAngle);
     fBuffer.append(fgSynthetic_Annotation);
     fBuffer.append(chOpenAngle);
@@ -8851,7 +8844,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
         fBuffer.append(prefix);
         fBuffer.append(chColon);
     }
-    fBuffer.append(fgDocumentation);
+    fBuffer.append(SchemaSymbols::fgELT_DOCUMENTATION);
     fBuffer.append(chCloseAngle);
     fBuffer.append(chLF);
     fBuffer.append(chOpenAngle);
@@ -8861,7 +8854,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
         fBuffer.append(prefix);
         fBuffer.append(chColon);
     }
-    fBuffer.append(fgAnnotation);
+    fBuffer.append(SchemaSymbols::fgELT_ANNOTATION);
     fBuffer.append(chCloseAngle);
 
     XSAnnotation* annot = new (fGrammarPoolMemoryManager) XSAnnotation(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager);    
@@ -8869,6 +8862,134 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
                      , ((XSDElementNSImpl*)elem)->getColumnNo() );
     annot->setSystemId(fSchemaInfo->getCurrentSchemaURL());
     return annot;
+}
+
+void TraverseSchema::validateAnnotations() {
+           
+    MemoryManager  *memMgr = fMemoryManager;
+    RefHashTableOfEnumerator<XSAnnotation> xsAnnotationEnum = RefHashTableOfEnumerator<XSAnnotation> (fSchemaGrammar->getAnnotations(), false, memMgr);    
+    XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
+
+    // create schema grammar
+    SchemaGrammar  *grammar = new (memMgr) SchemaGrammar(memMgr);
+    NamespaceScope *nsScope;
+    grammar->setComplexTypeRegistry(new (memMgr) RefHashTableOf<ComplexTypeInfo>(29, memMgr));
+    grammar->setGroupInfoRegistry(new (memMgr) RefHashTableOf<XercesGroupInfo>(13, memMgr));
+    grammar->setAttGroupInfoRegistry(new (memMgr) RefHashTableOf<XercesAttGroupInfo>(13, memMgr));
+    grammar->setAttributeDeclRegistry(new (memMgr) RefHashTableOf<XMLAttDef>(29, memMgr));
+    nsScope = new (memMgr) NamespaceScope(memMgr);
+    nsScope->reset(fEmptyNamespaceURI);
+    grammar->setNamespaceScope(nsScope);
+    grammar->setValidSubstitutionGroups(new (memMgr) RefHash2KeysTableOf<ElemVector>(29, memMgr));
+    grammar->setTargetNamespace(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+    gramDesc->setTargetNamespace(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+
+    // setup components of annotation grammar
+    SchemaElementDecl* annotElemDecl = new (memMgr) SchemaElementDecl
+    (
+        XMLUni::fgZeroLenString , SchemaSymbols::fgELT_ANNOTATION
+        , fURIStringPool->addOrFind(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        , SchemaElementDecl::Mixed_Complex, Grammar::TOP_LEVEL_SCOPE , memMgr
+    );
+    annotElemDecl->setCreateReason(XMLElementDecl::Declared);
+    grammar->putElemDecl(annotElemDecl);    
+      
+    ComplexTypeInfo* complexType = new (memMgr) ComplexTypeInfo(memMgr);
+    complexType->setAnonymous();
+    complexType->setContentType(SchemaElementDecl::Mixed_Complex);
+    annotElemDecl->setComplexTypeInfo(complexType);
+
+    // Revisit: is this okay for a key?
+    fBuffer.set(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+    fBuffer.append(chComma);
+    fBuffer.append(chLatin_C);
+    fBuffer.append(chDigit_0);        
+    grammar->getComplexTypeRegistry()->put((void*) fBuffer.getRawBuffer(), complexType);
+
+    SchemaElementDecl* appInfoElemDecl = new (memMgr) SchemaElementDecl
+    (
+        XMLUni::fgZeroLenString , SchemaSymbols::fgELT_APPINFO
+        , fURIStringPool->addOrFind(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        , SchemaElementDecl::Any, Grammar::TOP_LEVEL_SCOPE , memMgr
+    );
+        
+    appInfoElemDecl->setCreateReason(XMLElementDecl::Declared);
+    appInfoElemDecl->setAttWildCard
+    (
+        new (memMgr) SchemaAttDef
+        (
+            XMLUni::fgZeroLenString, XMLUni::fgZeroLenString,
+            fEmptyNamespaceURI, XMLAttDef::Any_Any,
+            XMLAttDef::ProcessContents_Lax, memMgr
+        )
+    );
+    grammar->putElemDecl(appInfoElemDecl);
+    complexType->addElement(appInfoElemDecl);
+
+    SchemaElementDecl* docElemDecl = new (memMgr) SchemaElementDecl
+    (
+        XMLUni::fgZeroLenString , SchemaSymbols::fgELT_DOCUMENTATION
+        , fURIStringPool->addOrFind(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        , SchemaElementDecl::Any, Grammar::TOP_LEVEL_SCOPE , memMgr
+    );
+        
+    docElemDecl->setCreateReason(XMLElementDecl::Declared);
+    docElemDecl->setAttWildCard
+    (
+        new (memMgr) SchemaAttDef
+        (
+            XMLUni::fgZeroLenString, XMLUni::fgZeroLenString,
+            fEmptyNamespaceURI, XMLAttDef::Any_Any,
+            XMLAttDef::ProcessContents_Lax, memMgr
+        )
+    );
+    grammar->putElemDecl(docElemDecl);
+    complexType->addElement(docElemDecl);
+
+    ContentSpecNode* left  = new (memMgr) ContentSpecNode(appInfoElemDecl, memMgr);
+    ContentSpecNode* right = new (memMgr) ContentSpecNode(docElemDecl, memMgr);
+    ContentSpecNode* root  = new (memMgr) ContentSpecNode(ContentSpecNode::ModelGroupChoice
+                                            , left
+                                            , right
+                                            , true
+                                            , true
+                                            , memMgr);
+    root->setMinOccurs(0);
+    root->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
+    complexType->setContentSpec(root);
+
+    // create input source to scan
+    MemBufInputSource* memBufIS = new (memMgr) MemBufInputSource
+    (
+        (const XMLByte*)xsAnnot.getAnnotationString()
+        , XMLString::stringLen(xsAnnot.getAnnotationString())*sizeof(XMLCh)       
+        , SchemaSymbols::fgELT_ANNOTATION
+        , false
+        , memMgr
+        );
+    memBufIS->setEncoding(XMLUni::fgXMLChEncodingString);
+    memBufIS->setCopyBufToStream(false);    
+
+    XSAXMLScanner *scanner = new (memMgr) XSAXMLScanner
+    (
+        fGrammarResolver, fURIStringPool, grammar, memMgr
+    );
+
+    scanner->setErrorReporter(fErrorReporter);
+
+    scanner->scanDocument(*memBufIS);
+
+    while (xsAnnotationEnum.hasMoreElements())
+    {
+        XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
+        memBufIS->resetMemBufInputSource((const XMLByte*)xsAnnot.getAnnotationString()
+                                        , XMLString::stringLen(xsAnnot.getAnnotationString())*sizeof(XMLCh));
+        //scanner->scanDocument(*memBufIS);
+    }
+    
+    delete scanner;
+    delete memBufIS;
 }
 
 XERCES_CPP_NAMESPACE_END

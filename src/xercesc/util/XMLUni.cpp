@@ -683,6 +683,13 @@ const XMLCh XMLUni::fgDGXMLScanner[] =
     ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
+const XMLCh XMLUni::fgXSAXMLScanner[] =
+{
+        chLatin_X, chLatin_S, chLatin_A
+    ,   chLatin_X, chLatin_M, chLatin_L, chLatin_S
+    ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
+};
+
 const XMLCh XMLUni::fgCDataStart[] =
 {
         chOpenAngle, chBang, chOpenSquare, chLatin_C, chLatin_D
@@ -1106,6 +1113,20 @@ const XMLCh XMLUni::fgXercesGenerateSyntheticAnnotations[] =
     ,   chForwardSlash, chLatin_g, chLatin_e, chLatin_n, chLatin_e, chLatin_r
     ,   chLatin_a, chLatin_t, chLatin_e, chDash, chLatin_s, chLatin_y, chLatin_n
     ,   chLatin_t, chLatin_h, chLatin_e, chLatin_t, chLatin_i, chLatin_c, chDash 
+    ,   chLatin_a, chLatin_n, chLatin_n, chLatin_o, chLatin_t, chLatin_a, chLatin_t
+    ,   chLatin_i, chLatin_o, chLatin_n, chLatin_s, chNull
+};
+
+const XMLCh XMLUni::fgXercesValidateAnnotations[] =
+//Xerces: http://apache.org/xml/features/validate-annotations
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_e, chDash
     ,   chLatin_a, chLatin_n, chLatin_n, chLatin_o, chLatin_t, chLatin_a, chLatin_t
     ,   chLatin_i, chLatin_o, chLatin_n, chLatin_s, chNull
 };

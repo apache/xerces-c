@@ -686,6 +686,10 @@ private:
     // routine to generate synthetic annotations
     XSAnnotation* generateSyntheticAnnotation(const DOMElement* const elem
                                              , ValueVectorOf<DOMNode*>* nonXSAttList);
+
+    // routine to validate annotations
+    void validateAnnotations();
+
     // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------

@@ -235,6 +235,10 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         getScanner()->setGenerateSyntheticAnnotations(state);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    {
+        getScanner()->setValidateAnnotations(state);
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -328,6 +332,10 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
     {
         return getScanner()->getGenerateSyntheticAnnotations();
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    {
+        return getScanner()->getValidateAnnotations();
     }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());

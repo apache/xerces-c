@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/09/28 02:14:14  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.16  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -325,6 +328,12 @@ public:
     XSAnnotation* getAnnotation();
     const XSAnnotation* getAnnotation() const;
 
+    /** 
+      * Get annotation hash table, to enumerate through them
+      */
+    RefHashTableOf<XSAnnotation>*  getAnnotations();
+    const RefHashTableOf<XSAnnotation>*  getAnnotations() const;
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -508,6 +517,15 @@ inline const XSAnnotation* SchemaGrammar::getAnnotation() const
     return fAnnotations->get(this);
 }
 
+inline RefHashTableOf<XSAnnotation>* SchemaGrammar::getAnnotations()
+{
+    return fAnnotations;
+}
+
+inline const RefHashTableOf<XSAnnotation>* SchemaGrammar::getAnnotations() const
+{
+    return fAnnotations;
+}
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------

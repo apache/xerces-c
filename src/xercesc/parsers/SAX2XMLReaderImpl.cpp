@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.37  2004/09/28 02:14:14  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.36  2004/09/23 01:09:55  cargilld
  * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
  *
@@ -1564,6 +1567,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setGenerateSyntheticAnnotations(value);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    {
+        fScanner->setValidateAnnotations(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 }
@@ -1600,6 +1607,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->getStandardUriConformant();
     else if (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
         return fScanner->getGenerateSyntheticAnnotations();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
+        return fScanner->getValidateAnnotations();
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.39  2004/09/28 02:14:13  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.38  2004/09/23 01:09:55  cargilld
  * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
  *
@@ -517,6 +520,7 @@ public :
     const XMLCh* getPrefixForId(unsigned int prefId) const;
 
     bool getGenerateSyntheticAnnotations() const;
+    bool getValidateAnnotations() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -612,6 +616,7 @@ public :
     void setStandardUriConformant(const bool newValue);
 
     void setGenerateSyntheticAnnotations(const bool newValue);
+    void setValidateAnnotations(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -965,6 +970,7 @@ protected:
     bool                        fLoadExternalDTD;
     bool                        fNormalizeData;
     bool                        fGenerateSyntheticAnnotations;
+    bool                        fValidateAnnotations;
     int                         fErrorCount;
     unsigned int                fEntityExpansionLimit;
     unsigned int                fEntityExpansionCount;
@@ -1315,6 +1321,11 @@ inline bool XMLScanner::getGenerateSyntheticAnnotations() const
     return fGenerateSyntheticAnnotations;
 }
 
+inline bool XMLScanner::getValidateAnnotations() const
+{
+    return fValidateAnnotations;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1471,6 +1482,11 @@ inline void XMLScanner::setStandardUriConformant(const bool newValue)
 inline void XMLScanner::setGenerateSyntheticAnnotations(const bool newValue)
 {
     fGenerateSyntheticAnnotations = newValue;
+}
+
+inline void XMLScanner::setValidateAnnotations(const bool newValue)
+{
+    fValidateAnnotations = newValue;
 }
 
 // ---------------------------------------------------------------------------

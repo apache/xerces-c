@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2004/09/28 02:14:14  cargilld
+ * Add support for validating annotations.
+ *
  * Revision 1.34  2004/09/23 01:09:55  cargilld
  * Add support for generating synthetic XSAnnotations.  When a schema component has non-schema attributes and no child attributes create a synthetic XSAnnotation (under feature control) so the non-schema attributes can be recovered under PSVI.
  *
@@ -454,6 +457,11 @@ bool SAXParser::getGenerateSyntheticAnnotations() const
     return fScanner->getGenerateSyntheticAnnotations();
 }
 
+bool SAXParser::getValidateAnnotations() const
+{
+    return fScanner->getValidateAnnotations();
+}
+
 bool SAXParser::getExitOnFirstFatalError() const
 {
     return fScanner->getExitOnFirstFatal();
@@ -568,6 +576,11 @@ void SAXParser::setDoNamespaces(const bool newState)
 void SAXParser::setGenerateSyntheticAnnotations(const bool newState)
 {
     fScanner->setGenerateSyntheticAnnotations(newState);
+}
+
+void SAXParser::setValidateAnnotations(const bool newState)
+{
+    fScanner->setValidateAnnotations(newState);
 }
 
 void SAXParser::setExitOnFirstFatalError(const bool newState)
