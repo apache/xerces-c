@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 20:34:16  tng
+ * [Bug 17774] Unixware platform utils not implemented .  Patch from Peter Crozier.
+ *
  * Revision 1.4  2002/11/04 15:13:01  tng
  * C++ Namespace Support.
  *
@@ -320,6 +323,18 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    return fopen( tmpFileName , "wb" );
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    return fopen( fileName , "wb" );
+}
+
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
 	return (FileHandle)fdopen(dup(0), "rb");
@@ -341,6 +356,40 @@ XMLPlatformUtils::readFileBuffer( FileHandle          theFile
     return (unsigned int) noOfItemsRead;
 }
 
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush         )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    size_t bytesWritten = 0;
+
+    while (true)
+    {
+        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
+}
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
