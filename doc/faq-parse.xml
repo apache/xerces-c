@@ -643,15 +643,17 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why does SAX2XMLReader::setProperty not work?">
+  <faq title="Why does setProperty not work?">
 
-    <q>Why does SAX2XMLReader::setProperty not work?</q>
+    <q>Why does setProperty not work?</q>
 
     <a>
 
       <p>The function <code>SAX2XMLReader::setProperty(const XMLCh* const name, void* value)</code>
+         and <code>DOMBuilder::setProperty(const XMLCh* const name, void* value)</code>
          takes a void pointer for the property value.  Application is required to initialize this void pointer
          to a correct type.  See <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump>
+         and <jump href="program-dom.html#DOMBuilderProperties">DOM Programming Guide</jump>
          to learn exactly what type of property value that each property expects for processing.
          Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
       </p>
@@ -659,15 +661,16 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why does SAX2XMLReader::getProperty not work?">
+  <faq title="Why does getProperty not work?">
 
-    <q>Why does SAX2XMLReader::getProperty not work?</q>
+    <q>Why does getProperty not work?</q>
 
     <a>
 
       <p>The function <code>void* SAX2XMLReader::getProperty(const XMLCh* const name)</code>
+         and <code>void* DOMBuilder::getProperty(const XMLCh* const name)</code>
          returns a void pointer for the property value.  See
-         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
+         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> and
          exactly what type of object each property returns.
       </p>
       <p>The parser owns the returned pointer.  The memory allocated for
@@ -676,7 +679,8 @@ catch (const XMLException&amp; toCatch) {
          is deleted, callers need to copy and store the returned information
          somewhere else; otherwise you may get unexpected result.  Since the returned
          pointer is a generic void pointer, see
-         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
+         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> and
+         <jump href="program-dom.html#DOMBuilderProperties">DOM Programming Guide</jump> to learn
          exactly what type of property value each property returns for replication.
       </p>
 
