@@ -77,6 +77,14 @@ static RefVectorOf<DOMImplementationSource>* gDOMImplSrcVector;
 //  Global mutex that is used to synchronize access to the vector
 static XMLMutex* gDOMImplSrcVectorMutex = 0;
 
+
+// -----------------------------------------------------------------------
+//  Function prototypes for internally used functions.
+// -----------------------------------------------------------------------
+RefVectorOf<DOMImplementationSource>* getDOMImplSrcVector();
+XMLMutex& getDOMImplSrcVectorMutex();
+
+
 // -----------------------------------------------------------------------
 //  Reset the static data
 // -----------------------------------------------------------------------
