@@ -390,7 +390,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
     fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
 
-    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();       
+    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();
     gramDesc->setTargetNamespace(fTargetNSURIString);
 
     fGrammarResolver->putGrammar(fSchemaGrammar);
@@ -2396,24 +2396,22 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     if (!janAnnot.isDataNull())
         fSchemaGrammar->putAnnotation(attDef, janAnnot.release());
 
-    if (topLevel) {
+    if (topLevel)
+    {
         fAttributeDeclRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), attDef);
+        attDef->setPSVIScope(PSVIDefs::SCP_GLOBAL);
     }
-    else {
-	
-        bool toClone = false;
-
-        if (typeInfo) {
-            toClone = true;
+    else
+    {
+        if (typeInfo)
+        {
             typeInfo->addAttDef(attDef);
             if (!fCurrentAttGroupInfo)
-            {
-                attDef->setEnclosingCT(typeInfo);
-            }
+                attDef->setPSVIScope(PSVIDefs::SCP_LOCAL);
         }
 
         if (fCurrentAttGroupInfo) {
-            fCurrentAttGroupInfo->addAttDef(attDef, toClone);
+            fCurrentAttGroupInfo->addAttDef(attDef, (typeInfo != 0));
         }
     }
 }
@@ -2505,14 +2503,16 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         if (!janAnnot.isDataNull())
             fSchemaGrammar->putAnnotation(elemDecl, janAnnot.release());
 
-        if (fCurrentGroupInfo &&
-            elemDecl->getEnclosingScope() == fCurrentGroupInfo->getScope()) {
-            fCurrentGroupInfo->addElement(elemDecl);
-        }
-
         if (fCurrentComplexType &&
             elemDecl->getEnclosingScope() == fCurrentComplexType->getScopeDefined()) {
             fCurrentComplexType->addElement(elemDecl);
+            elemDecl->setPSVIScope(PSVIDefs::SCP_LOCAL);
+        }
+
+        if (fCurrentGroupInfo &&
+            elemDecl->getEnclosingScope() == fCurrentGroupInfo->getScope()) {
+            fCurrentGroupInfo->addElement(elemDecl);
+            elemDecl->setPSVIScope(PSVIDefs::SCP_ABSENT);
         }
     }
 
@@ -5387,6 +5387,9 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
 
     elemDecl->setCreateReason(XMLElementDecl::Declared);
 
+    if (topLevel)
+        elemDecl->setPSVIScope(PSVIDefs::SCP_GLOBAL);
+
     // process attributes
     processElemDeclAttrs(elem, elemDecl, valConstraint, topLevel);
 
@@ -5544,6 +5547,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                                             0, fGrammarPoolMemoryManager);
 
     attDef->setBaseAttDecl(refAttDef);
+    attDef->setPSVIScope(PSVIDefs::SCP_GLOBAL);
 
     if (refAttDefType == XMLAttDef::Fixed) {
         if (required && !invalidAttUse) {

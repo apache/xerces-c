@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.12  2003/12/17 20:50:35  knoaman
  * PSVI: fix for annotation of attributes in attributeGroup/derived types
  *
@@ -318,32 +321,36 @@ XSObjectFactory::createWildcardParticle(const ContentSpecNode* const rootNode,
     return 0;
 }
 
-XSAttributeDeclaration* XSObjectFactory::addOrFind(SchemaAttDef* const attDef,
-                                                   XSModel* const xsModel)
+XSAttributeDeclaration*
+XSObjectFactory::addOrFind(SchemaAttDef* const attDef,
+                           XSModel* const xsModel,
+                           XSComplexTypeDefinition* const enclosingTypeDef)
 {
     XSAttributeDeclaration* xsObj = (XSAttributeDeclaration*) getObjectFromMap(attDef, xsModel);
-    if (!xsObj)
+
+    if (xsObj)
+    {
+        if (xsObj->getScope() == XSConstants::SCOPE_LOCAL
+            && xsObj->getEnclosingCTDefinition() == 0
+            && enclosingTypeDef)
+            xsObj->setEnclosingCTDefinition(enclosingTypeDef);
+    }
+    else
     {
         XSSimpleTypeDefinition* xsType = 0;
         if (attDef->getDatatypeValidator())
             xsType = addOrFind(attDef->getDatatypeValidator(), xsModel);
 
-        // need grammar to determine if scope is global:                   
-                                               
         XSConstants::SCOPE scope = XSConstants::SCOPE_ABSENT;
         XSComplexTypeDefinition* enclosingCTDefinition = 0;
-        XSNamespaceItem* namespaceItem = xsModel->getNamespaceItem(xsModel->getURIStringPool()->getValueForId(attDef->getAttName()->getURI()));
-        if (namespaceItem)
+
+        if (attDef->getPSVIScope() == PSVIDefs::SCP_GLOBAL)
+            scope = XSConstants::SCOPE_GLOBAL;
+        else if (attDef->getPSVIScope() == PSVIDefs::SCP_LOCAL)
         {
-            // REVISIT: what if local name and global name are the same???
-            if (namespaceItem->getSchemaGrammar()->getAttributeDeclRegistry()->get(attDef))
-                scope = XSConstants::SCOPE_GLOBAL;
-            else if (attDef->getEnclosingCT())
-            {
-                scope = XSConstants::SCOPE_LOCAL;
-                enclosingCTDefinition = addOrFind(attDef->getEnclosingCT(), xsModel);
-            }
-        }        
+            scope = XSConstants::SCOPE_LOCAL;
+            enclosingCTDefinition = enclosingTypeDef;
+        }
 
         xsObj = new (fMemoryManager) XSAttributeDeclaration
         (
@@ -363,25 +370,23 @@ XSAttributeDeclaration* XSObjectFactory::addOrFind(SchemaAttDef* const attDef,
 
 XSSimpleTypeDefinition*
 XSObjectFactory::addOrFind(DatatypeValidator* const validator,
-                           XSModel* const xsModel)
+                           XSModel* const xsModel,
+                           bool isAnySimpleType)
 {
     XSSimpleTypeDefinition* xsObj = (XSSimpleTypeDefinition*) getObjectFromMap(validator, xsModel);
-
     if (!xsObj)
     {
         XSSimpleTypeDefinition* baseType = 0;
         XSSimpleTypeDefinitionList* memberTypes = 0;
         XSSimpleTypeDefinition* primitiveOrItemType = 0;
         XSSimpleTypeDefinition::VARIETY typeVariety = XSSimpleTypeDefinition::VARIETY_ATOMIC;
+        bool primitiveTypeSelf = false;
 
-        // compute fBaseType
-        DatatypeValidator* baseDV = validator->getBaseValidator();
-        if (baseDV)
-            baseType = addOrFind(baseDV, xsModel);
-    
         //REVISIT: the getFixed method is protected so added friend XSObjectFactory
         //         to DatatypeValidator class... 
         DatatypeValidator::ValidatorType dvType = validator->getType();
+        DatatypeValidator* baseDV = validator->getBaseValidator();
+
         if (dvType == DatatypeValidator::Union)
         {
             typeVariety = XSSimpleTypeDefinition::VARIETY_UNION;
@@ -393,26 +398,53 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
                 for (unsigned int i=0; i<size; i++)
                     memberTypes->addElement(addOrFind(membersDV->elementAt(i), xsModel));
             }
+            
+            if (baseDV)
+            {
+                baseType = addOrFind(baseDV, xsModel);
+            }
+            else
+            {
+                baseType = (XSSimpleTypeDefinition*) xsModel->getTypeDefinition
+                (
+                    SchemaSymbols::fgDT_ANYSIMPLETYPE
+                    , SchemaSymbols::fgURI_SCHEMAFORSCHEMA
+                );
+            }
         } 
         else if (dvType == DatatypeValidator::List)
         {
             typeVariety = XSSimpleTypeDefinition::VARIETY_LIST;
-
-            while (baseDV && (baseDV->getType() == DatatypeValidator::List))
+            if (baseDV->getType() == DatatypeValidator::List)
             {
-                addOrFind(baseDV, xsModel);
-                baseDV = baseDV->getBaseValidator();
+                baseType = addOrFind(baseDV, xsModel);
+                primitiveOrItemType = baseType->getItemType();
             }
-            if (baseDV)
-                primitiveOrItemType = addOrFind(baseDV, xsModel);
-        }
-        else
-        {
-            // REVISIT: assume ATOMIC but what about VARIETY_ABSENT?
-            while (baseDV)
+            else
             {
+                baseType = (XSSimpleTypeDefinition*) xsModel->getTypeDefinition
+                (
+                    SchemaSymbols::fgDT_ANYSIMPLETYPE
+                    , SchemaSymbols::fgURI_SCHEMAFORSCHEMA
+                );
                 primitiveOrItemType = addOrFind(baseDV, xsModel);
-                baseDV = baseDV->getBaseValidator();
+            }
+        }
+        else if (!isAnySimpleType)
+        {
+            if (baseDV)
+            {
+                baseType = addOrFind(baseDV, xsModel);
+                primitiveOrItemType = baseType->getPrimitiveType();
+            }
+            else // built-in
+            {
+                baseType = (XSSimpleTypeDefinition*) xsModel->getTypeDefinition
+                (
+                    SchemaSymbols::fgDT_ANYSIMPLETYPE
+                    , SchemaSymbols::fgURI_SCHEMAFORSCHEMA
+                );
+                primitiveTypeSelf = true;
             }
         }
 
@@ -429,6 +461,9 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
         );
         putObjectInMap(validator, xsObj, xsModel);
 
+        if (primitiveTypeSelf)
+            xsObj->setPrimitiveType(xsObj);
+
         // process facets
         if (validator->getFacetsDefined())
             processFacets(validator, xsModel, xsObj);
@@ -443,7 +478,12 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
                            XSComplexTypeDefinition* const enclosingTypeDef)
 {
     XSElementDeclaration* xsObj = (XSElementDeclaration*) getObjectFromMap(elemDecl, xsModel);
-    if (!xsObj)
+    if (xsObj)
+    {
+        if (!xsObj->getEnclosingCTDefinition() && enclosingTypeDef)
+            xsObj->setEnclosingCTDefinition(enclosingTypeDef);
+    }
+    else
     {
         XSElementDeclaration*        xsSubElem = 0;
         XSTypeDefinition*            xsType = 0;
@@ -491,10 +531,9 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         }
 
         XSConstants::SCOPE elemScope = XSConstants::SCOPE_ABSENT;
-
-        if (enclosingTypeDef)
+        if (elemDecl->getPSVIScope() == PSVIDefs::SCP_LOCAL)
             elemScope = XSConstants::SCOPE_LOCAL;
-        else if (elemDecl->getEnclosingScope() == Grammar::TOP_LEVEL_SCOPE)
+        else if (elemDecl->getPSVIScope() == PSVIDefs::SCP_GLOBAL)
             elemScope = XSConstants::SCOPE_GLOBAL;
 
         xsObj = new (fMemoryManager) XSElementDeclaration
@@ -514,6 +553,15 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         if (elemDecl->getComplexTypeInfo())
         {
             xsType = addOrFind(elemDecl->getComplexTypeInfo(), xsModel);
+            xsObj->setTypeDefinition(xsType);
+        }
+        else if (!xsType)
+        {
+            xsType = xsModel->getTypeDefinition
+            (
+                SchemaSymbols::fgATTVAL_ANYTYPE
+                , SchemaSymbols::fgURI_SCHEMAFORSCHEMA
+            );
             xsObj->setTypeDefinition(xsType);
         }
     }
@@ -553,10 +601,15 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
         }
 
         // compute fBase
-        if (typeInfo->getBaseComplexTypeInfo())
+        bool isAnyType = false;
+        if (typeInfo->getBaseComplexTypeInfo() == typeInfo) // case of anyType
+            isAnyType = true;
+        else if (typeInfo->getBaseComplexTypeInfo())
             xsBaseType = addOrFind(typeInfo->getBaseComplexTypeInfo(), xsModel);
         else if (typeInfo->getBaseDatatypeValidator())
             xsBaseType = addOrFind(typeInfo->getBaseDatatypeValidator(), xsModel);
+        else // base is anyType
+            xsBaseType = xsModel->getTypeDefinition(SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
 
         // compute particle
         ContentSpecNode* contentSpec = typeInfo->getContentSpec();
@@ -576,6 +629,9 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
             , fMemoryManager
         );
         putObjectInMap(typeInfo, xsObj, xsModel);
+
+        if (isAnyType)
+            xsObj->setBaseType(xsObj);
        
         if (typeInfo->hasAttDefs())
         {
@@ -589,7 +645,7 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
                 if (attDef.getBaseAttDecl())
                     xsAttDecl = addOrFind(attDef.getBaseAttDecl(), xsModel);
                 else
-                    xsAttDecl = addOrFind(&attDef, xsModel);
+                    xsAttDecl = addOrFind(&attDef, xsModel, xsObj);
 
                 XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
                 xsAttList->addElement(attUse);
@@ -603,7 +659,8 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
         {
             SchemaElementDecl* elemDecl = typeInfo->elementAt(j);
 
-            if (elemDecl->getEnclosingScope() == typeInfo->getScopeDefined())
+            if (elemDecl->getEnclosingScope() == typeInfo->getScopeDefined()
+                && elemDecl->getPSVIScope() == PSVIDefs::SCP_LOCAL)
                 addOrFind(elemDecl, xsModel, xsObj);
         }
     }
@@ -806,9 +863,13 @@ XSAnnotation* XSObjectFactory::getAnnotationFromModel(XSModel* const xsModel,
     XSAnnotation* annot = 0;
     for (unsigned int i=0; i<namespaceItemList->size(); i++)
     {
-        annot = namespaceItemList->elementAt(i)->getSchemaGrammar()->getAnnotation(key);
-        if (annot)
-            return annot;
+        XSNamespaceItem* nsItem = namespaceItemList->elementAt(i);
+        if (nsItem->fGrammar)
+        {
+            annot = nsItem->fGrammar->getAnnotation(key);
+            if (annot)
+                return annot;
+        }
     }
 
     if (xsModel->fParent)

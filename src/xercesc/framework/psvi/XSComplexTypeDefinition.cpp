@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.10  2003/12/19 15:09:47  knoaman
  * PSVI: process 'final' information
  *
@@ -182,12 +185,10 @@ XSComplexTypeDefinition::~XSComplexTypeDefinition()
 XSConstants::DERIVATION_TYPE XSComplexTypeDefinition::getDerivationMethod() const
 {
     switch(fComplexTypeInfo->getDerivedBy()) {
-        case SchemaSymbols::XSD_RESTRICTION:
-            return XSConstants::DERIVATION_RESTRICTION;
         case SchemaSymbols::XSD_EXTENSION:
             return XSConstants::DERIVATION_EXTENSION;
         default:
-            return XSConstants::DERIVATION_NONE;
+            return XSConstants::DERIVATION_RESTRICTION;
     }
 }
 

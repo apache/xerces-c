@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/24 17:42:03  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.11  2003/12/17 20:50:35  knoaman
  * PSVI: fix for annotation of attributes in attributeGroup/derived types
  *
@@ -137,7 +140,7 @@ SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
-    , fEnclosingCT(0)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)    
     , fBaseAttDecl(0)
 {
 }
@@ -156,7 +159,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
-    , fEnclosingCT(0)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fBaseAttDecl(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
@@ -179,7 +182,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
-    , fEnclosingCT(0)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fBaseAttDecl(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
@@ -198,7 +201,7 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fNamespaceList(0)
     , fValidity(other->fValidity)
     , fValidation(other->fValidation)
-    , fEnclosingCT(other->fEnclosingCT)
+    , fPSVIScope(other->fPSVIScope)
     , fBaseAttDecl(other->fBaseAttDecl)
 {
     QName* otherName = other->getAttName();
@@ -254,7 +257,6 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
         serEng<<(int)fValidity;
         serEng<<(int)fValidation;
-        serEng<<fEnclosingCT;
         serEng<<fBaseAttDecl;
     }
     else
@@ -277,8 +279,7 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
         serEng>>i;
         fValidation = (PSVIDefs::Validation)i;
-        
-        serEng>>fEnclosingCT;
+
         serEng>>fBaseAttDecl;
     }
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/12/24 17:42:03  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.18  2003/12/12 18:36:37  peiyongz
  * getObjectType()
  *
@@ -207,7 +210,6 @@ public :
         , ModelTypes_Count
     };
 
-
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
@@ -266,6 +268,7 @@ public :
     const SchemaAttDef* getAttWildCard() const;
     SchemaAttDef* getAttWildCard();
     ModelTypes getModelType() const;
+    PSVIDefs::PSVIScope getPSVIScope() const;
     DatatypeValidator* getDatatypeValidator() const;
     int getEnclosingScope() const;
     int getFinalSet() const;
@@ -381,6 +384,7 @@ public :
     // -----------------------------------------------------------------------
     void setElemId(unsigned int elemId);
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
+    void setPSVIScope(const PSVIDefs::PSVIScope toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setEnclosingScope(const int enclosingScope);
     void setFinalSet(const int finalSet);
@@ -509,6 +513,7 @@ private :
 
     // -----------------------------------------------------------------------
     ModelTypes                         fModelType;
+    PSVIDefs::PSVIScope                fPSVIScope;
     DatatypeValidator*                 fDatatypeValidator;
     int                                fEnclosingScope;
     int                                fFinalSet;
@@ -582,6 +587,11 @@ inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
     }
 
     return fModelType;
+}
+
+inline PSVIDefs::PSVIScope SchemaElementDecl::getPSVIScope() const
+{
+    return fPSVIScope;
 }
 
 inline DatatypeValidator* SchemaElementDecl::getDatatypeValidator() const
@@ -813,6 +823,12 @@ inline void
 SchemaElementDecl::setModelType(const SchemaElementDecl::ModelTypes toSet)
 {
     fModelType = toSet;
+}
+
+inline void
+SchemaElementDecl::setPSVIScope(const PSVIDefs::PSVIScope toSet)
+{
+    fPSVIScope = toSet;
 }
 
 inline void SchemaElementDecl::setDatatypeValidator(DatatypeValidator* newDatatypeValidator)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.7  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -135,6 +138,13 @@ public:
     (
         XSModel* const         xsModel
         , SchemaGrammar* const grammar
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    XSNamespaceItem
+    (
+        XSModel* const         xsModel
+        , const XMLCh* const   schemaNamespace
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -234,7 +244,7 @@ public:
     /** methods needed by implementation */
 
     //@{
-    SchemaGrammar*  getSchemaGrammar()  const;
+
 
     //@}
 private:
@@ -247,6 +257,7 @@ private:
 
 protected:
     friend class XSModel;
+    friend class XSObjectFactory;
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
@@ -275,20 +286,20 @@ protected:
     */
     XSNamedMap<XSObject>*                   fComponentMap[XSConstants::MULTIVALUE_FACET];
     XSAnnotationList*                       fXSAnnotationList;
-
     RefHashTableOf<XSObject>*               fHashMap[XSConstants::MULTIVALUE_FACET];
-
+    const XMLCh*                            fSchemaNamespace;
 };
-
-inline SchemaGrammar* XSNamespaceItem::getSchemaGrammar() const
-{
-    return fGrammar;
-}
 
 inline XSAnnotationList* XSNamespaceItem::getAnnotations()
 {
     return fXSAnnotationList;
 }
+
+inline const XMLCh *XSNamespaceItem::getSchemaNamespace()
+{
+    return fSchemaNamespace;
+}
+
 
 
 XERCES_CPP_NAMESPACE_END

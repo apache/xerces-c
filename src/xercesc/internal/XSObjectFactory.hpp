@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.5  2003/12/17 20:50:35  knoaman
  * PSVI: fix for annotation of attributes in attributeGroup/derived types
  *
@@ -139,12 +142,14 @@ private:
     (
         SchemaAttDef* const attDef
         , XSModel* const xsModel
+        , XSComplexTypeDefinition* const enclosingTypeDef = 0
     );
 
     XSSimpleTypeDefinition* addOrFind
     (
         DatatypeValidator* const validator
         , XSModel* const xsModel
+        , bool isAnySimpleType = false
     );
 
     XSElementDeclaration* addOrFind

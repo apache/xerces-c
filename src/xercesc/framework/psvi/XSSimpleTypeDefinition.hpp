@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.9  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -428,6 +431,7 @@ private:
         , XSMultiValueFacetList* const xsMultiValueFacetList
         , StringList* const            patternList
     );
+    void setPrimitiveType(XSSimpleTypeDefinition*  const toSet);
 
     friend class XSObjectFactory;
 
@@ -502,6 +506,12 @@ inline XSMultiValueFacetList* XSSimpleTypeDefinition::getMultiValueFacets()
 inline XSAnnotationList *XSSimpleTypeDefinition::getAnnotations()
 {
     return fXSAnnotationList;
+}
+
+inline void
+XSSimpleTypeDefinition::setPrimitiveType(XSSimpleTypeDefinition* const toSet)
+{
+    fPrimitiveOrItemType = toSet;
 }
 
 XERCES_CPP_NAMESPACE_END

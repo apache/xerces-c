@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/24 17:42:03  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.10  2003/12/17 20:50:35  knoaman
  * PSVI: fix for annotation of attributes in attributeGroup/derived types
  *
@@ -264,9 +267,14 @@ public :
     QName* getAttName() const;
     DatatypeValidator* getDatatypeValidator() const;
     ValueVectorOf<unsigned int>* getNamespaceList() const;
-    ComplexTypeInfo* getEnclosingCT() const;
     const SchemaAttDef* getBaseAttDecl() const;
     SchemaAttDef* getBaseAttDecl();
+    PSVIDefs::PSVIScope getPSVIScope() const;
+
+    /*
+     * @deprecated
+     */
+    ComplexTypeInfo* getEnclosingCT() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -281,6 +289,7 @@ public :
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setBaseAttDecl(SchemaAttDef* const attDef);
+    void setPSVIScope(const PSVIDefs::PSVIScope toSet);
 
     /*
      * @deprecated
@@ -350,7 +359,7 @@ private :
     ValueVectorOf<unsigned int>* fNamespaceList;
     PSVIDefs::Validity           fValidity;
     PSVIDefs::Validation         fValidation;
-    ComplexTypeInfo*             fEnclosingCT;
+    PSVIDefs::PSVIScope          fPSVIScope;
     SchemaAttDef*                fBaseAttDecl;
 };
 
@@ -486,7 +495,7 @@ SchemaAttDef::getNamespaceList() const {
 
 inline ComplexTypeInfo* SchemaAttDef::getEnclosingCT() const
 {
-    return fEnclosingCT;
+    return 0;
 }
 
 inline SchemaAttDef* SchemaAttDef::getBaseAttDecl()
@@ -497,6 +506,11 @@ inline SchemaAttDef* SchemaAttDef::getBaseAttDecl()
 inline const SchemaAttDef* SchemaAttDef::getBaseAttDecl() const
 {
     return fBaseAttDecl;
+}
+
+inline PSVIDefs::PSVIScope SchemaAttDef::getPSVIScope() const
+{
+    return fPSVIScope;
 }
 
 // ---------------------------------------------------------------------------
@@ -556,14 +570,18 @@ inline void SchemaAttDef::reset() {
     fValidation = PSVIDefs::NONE;    
 }
 
-inline void SchemaAttDef::setEnclosingCT(ComplexTypeInfo* complexTypeInfo)
+inline void SchemaAttDef::setEnclosingCT(ComplexTypeInfo*)
 {
-    fEnclosingCT = complexTypeInfo;
 }
 
 inline void SchemaAttDef::setBaseAttDecl(SchemaAttDef* const attDef)
 {
     fBaseAttDecl = attDef;
+}
+
+inline void SchemaAttDef::setPSVIScope(const PSVIDefs::PSVIScope toSet)
+{
+    fPSVIScope = toSet;
 }
 
 XERCES_CPP_NAMESPACE_END

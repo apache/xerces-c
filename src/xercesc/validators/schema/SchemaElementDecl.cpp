@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/24 17:42:03  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.17  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -183,6 +186,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 SchemaElementDecl::SchemaElementDecl(MemoryManager* const manager) :
     XMLElementDecl(manager)
     , fModelType(Any)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fEnclosingScope(Grammar::TOP_LEVEL_SCOPE)
     , fBlockSet(0)
@@ -212,6 +216,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
                                    , MemoryManager* const                manager) :
     XMLElementDecl(manager)
     , fModelType(type)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
     , fBlockSet(0)
@@ -240,6 +245,7 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
                                    , MemoryManager* const                manager) :
     XMLElementDecl(manager)
     , fModelType(type)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
     , fBlockSet(0)

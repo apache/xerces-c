@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/12/24 17:42:03  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.22  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -218,10 +221,116 @@
 #include <xercesc/validators/common/MixedContentModel.hpp>
 #include <xercesc/validators/common/SimpleContentModel.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
-
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+// ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+static bool               sAnyTypeMutexRegistered = false;
+static XMLMutex*          sAnyTypeMutex = 0;
+static XMLRegisterCleanup anyTypeCleanup;
+
+
+// ---------------------------------------------------------------------------
+//  ComplexTypeInfo: Static member data
+// ---------------------------------------------------------------------------
+ComplexTypeInfo* ComplexTypeInfo::fAnyType = 0;
+
+
+// ---------------------------------------------------------------------------
+//  ComplexTypeInfo: Static meber methods
+// ---------------------------------------------------------------------------
+void ComplexTypeInfo::reinitAnyType() {
+
+    delete fAnyType;
+    fAnyType = 0;
+
+    // delete local static data
+    delete sAnyTypeMutex;
+    sAnyTypeMutex = 0;
+    sAnyTypeMutexRegistered = false;
+}
+
+ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
+{
+    if (!sAnyTypeMutexRegistered)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&sAnyTypeMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+
+        // Now lock it and try to register it
+        XMLMutexLock lock(sAnyTypeMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sAnyTypeMutexRegistered)
+        {
+            // create type name
+            XMLCh typeName[128];
+            unsigned int nsLen = XMLString::stringLen(
+                SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+
+			XMLString::copyString(
+                typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            typeName[nsLen] = chComma;
+            XMLString::copyString(
+                typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
+
+            // Create and initialize 'anyType'
+            fAnyType = new ComplexTypeInfo();
+
+            ContentSpecNode* term = new ContentSpecNode
+            (
+                new QName
+                (
+                    XMLUni::fgZeroLenString
+                    , XMLUni::fgZeroLenString
+                    , emptyNSId
+                )
+                , false
+            );
+            term->setType(ContentSpecNode::Any_Lax);
+            term->setMinOccurs(0);
+            term->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
+
+            ContentSpecNode* particle = new ContentSpecNode
+            (
+                ContentSpecNode::ModelGroupSequence
+                , term
+                , 0
+            );
+
+            SchemaAttDef* attWildCard = new SchemaAttDef
+            (
+                XMLUni::fgZeroLenString
+                , XMLUni::fgZeroLenString
+                , emptyNSId
+                , XMLAttDef::Any_Any
+                , XMLAttDef::ProcessContents_Lax
+            );
+
+            fAnyType->setTypeName(typeName);
+            fAnyType->setBaseComplexTypeInfo(fAnyType);
+            fAnyType->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
+            fAnyType->setContentType(SchemaElementDecl::Mixed_Complex);
+            fAnyType->setContentSpec(particle);
+            fAnyType->setAttWildCard(attWildCard);
+
+            // register cleanup method
+            anyTypeCleanup.registerCleanup(reinitAnyType);
+            sAnyTypeMutexRegistered = true;
+        }
+    }
+
+    return fAnyType;
+}
+
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Constructors and Destructor
@@ -1043,6 +1152,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
          fUniqueURI = 0;
     }
 }
+
 
 XERCES_CPP_NAMESPACE_END
 

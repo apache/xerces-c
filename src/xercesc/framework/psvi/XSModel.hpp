@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.9  2003/11/26 16:12:23  knoaman
  * Add a method to return the XSObject mapped to a schema grammar component
  *
@@ -313,8 +316,26 @@ public:
 
     //@}
 private:
-    // Local Functions:
-    void addGrammarToXSModel(XSNamespaceItem* namespaceItem);
+
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    void addGrammarToXSModel
+    (
+        XSNamespaceItem* namespaceItem
+    );
+    void addS4SToXSModel
+    (
+        XSNamespaceItem* const namespaceItem
+        , RefHashTableOf<DatatypeValidator>* const builtInDV
+    );
+    void addComponentToNamespace
+    (
+         XSNamespaceItem* const namespaceItem
+         , XSObject* const component
+         , int componentIndex
+         , bool addToXSModel = true
+    );
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -355,16 +376,14 @@ protected:
 	      MULTIVALUE_FACET          = 14       no
     */
     XSNamedMap<XSObject>*                   fComponentMap[XSConstants::MULTIVALUE_FACET];
-
     XMLStringPool*                          fURIStringPool;
     XSAnnotationList*                       fXSAnnotationList;
     RefHashTableOf<XSNamespaceItem>*        fHashNamespace;
     XSObjectFactory*                        fObjFactory;
-    RefVectorOf<XSNamespaceItem>*           fDeleteNamespace; 
-
+    RefVectorOf<XSNamespaceItem>*           fDeleteNamespace;
     XSModel*                                fParent;
     bool                                    fDeleteParent;
-    bool                                    fAddedBuiltinDatatypeValidators;
+    bool                                    fAddedS4SGrammar;
 };
 
 inline XMLStringPool*  XSModel::getURIStringPool()

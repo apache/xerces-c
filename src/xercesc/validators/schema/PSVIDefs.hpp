@@ -79,7 +79,12 @@ public:
         COMPLEX = 2
     };
 
-
+    enum PSVIScope
+    {
+        SCP_ABSENT    // declared in group/attribute group
+	    , SCP_GLOBAL  // global decalarion or ref
+	    , SCP_LOCAL   // local declaration
+    };
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.7  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -294,6 +297,12 @@ public:
 
 private:
 
+    /**
+     * Set the base type
+     */
+    void setBaseType(XSTypeDefinition* const xsBaseType);
+    friend class XSObjectFactory;
+
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -340,6 +349,11 @@ inline XSParticle *XSComplexTypeDefinition::getParticle() const
     return fParticle;
 }
 
+inline void
+XSComplexTypeDefinition::setBaseType(XSTypeDefinition* const xsBaseType)
+{
+    fBaseType = xsBaseType;
+}
 
 XERCES_CPP_NAMESPACE_END
 

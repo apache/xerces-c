@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.7  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -229,6 +232,9 @@ public:
 
 private:
 
+    void setEnclosingCTDefinition(XSComplexTypeDefinition* const toSet);
+    friend class XSObjectFactory;
+
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -274,6 +280,14 @@ inline XSConstants::SCOPE XSAttributeDeclaration::getScope() const
 inline XSComplexTypeDefinition *XSAttributeDeclaration::getEnclosingCTDefinition()
 {
     return fEnclosingCTDefinition;
+}
+
+inline void XSAttributeDeclaration::setEnclosingCTDefinition
+(
+    XSComplexTypeDefinition* const toSet
+)
+{
+    fEnclosingCTDefinition = toSet;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -192,6 +192,18 @@ public:
       , XMLValidator*     const pValidator
     ) ;
 
+    /**
+      * Return a singleton that represents 'anyType'
+      *
+      * @param emptyNSId the uri id of the empty namespace 
+      */
+    static ComplexTypeInfo* getAnyType(unsigned int emptyNSId);
+
+    /**
+      *  Notification that lazy data has been deleted
+      */
+    static void reinitAnyType();
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -249,6 +261,8 @@ private:
     unsigned int                       fContentSpecOrgURISize;
     XSDLocator*                        fLocator;
     MemoryManager*                     fMemoryManager;
+
+    static ComplexTypeInfo*            fAnyType;
 };
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 17:42:02  knoaman
+ * Misc. PSVI updates
+ *
  * Revision 1.7  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -102,6 +105,60 @@ XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
     , fGrammar(grammar)
     , fXSModel(xsModel)
     , fXSAnnotationList(0)
+    , fSchemaNamespace(grammar->getTargetNamespace())
+{
+    // Populate XSNamedMaps by going through the components
+    for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
+    {        
+        switch (i+1) 
+        {
+            case XSConstants::ATTRIBUTE_DECLARATION:
+            case XSConstants::ELEMENT_DECLARATION:
+            case XSConstants::TYPE_DEFINITION:
+            case XSConstants::ATTRIBUTE_GROUP_DEFINITION:
+            case XSConstants::MODEL_GROUP_DEFINITION:
+            case XSConstants::NOTATION_DECLARATION:
+                fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
+                (
+                    20,     // size
+                    29,     // modulus
+                    fXSModel->getURIStringPool(),
+                    false,  // adoptElems 
+                    fMemoryManager
+                );               
+                fHashMap[i] = new (fMemoryManager) RefHashTableOf<XSObject>
+                (
+                    29,
+                    false,
+                    fMemoryManager
+                );
+                break;
+            default:
+                // ATTRIBUTE_USE
+                // MODEL_GROUP
+                // PARTICLE
+                // IDENTITY_CONSTRAINT
+                // WILDCARD
+                // ANNOTATION
+                // FACET
+                // MULTIVALUE
+                fComponentMap[i] = 0;
+                fHashMap[i] = 0;
+                break;
+        }
+    }
+    
+    fXSAnnotationList = new (manager) RefVectorOf <XSAnnotation> (5, false, manager);
+}
+
+XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
+                                 const XMLCh* const   schemaNamespace,
+                                 MemoryManager* const manager)
+    : fMemoryManager(manager)
+    , fGrammar(0)
+    , fXSModel(xsModel)
+    , fXSAnnotationList(0)
+    , fSchemaNamespace(schemaNamespace)
 {
     // Populate XSNamedMaps by going through the components
     for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
@@ -171,11 +228,6 @@ XSNamespaceItem::~XSNamespaceItem()
 // ---------------------------------------------------------------------------
 //  XSNamespaceItem: access methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSNamespaceItem::getSchemaNamespace()
-{
-    return fGrammar->getTargetNamespace();
-}
-
 XSNamedMap<XSObject> *XSNamespaceItem::getComponents(XSConstants::COMPONENT_TYPE objectType)
 {
     return fComponentMap[objectType -1];
@@ -225,7 +277,10 @@ XSNotationDeclaration *XSNamespaceItem::getNotationDeclaration(const XMLCh *name
 
 StringList *XSNamespaceItem::getDocumentLocations()
 {
-    return ((XMLSchemaDescriptionImpl*) fGrammar->getGrammarDescription())->getLocationHints();
+    if (fGrammar)
+        return ((XMLSchemaDescriptionImpl*) fGrammar->getGrammarDescription())->getLocationHints();
+
+    return 0;
 }
 
 XERCES_CPP_NAMESPACE_END
