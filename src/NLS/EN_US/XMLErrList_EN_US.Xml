@@ -171,8 +171,24 @@
         <Error>
             <Message Id="Array_BadIndex" Text="The index is beyond the array bounds  "/>
             <Message Id="Array_BadNewSize" Text="The new size is less than the old one"/>
+            <Message Id="AttrList_BadIndex" Text="The index given was beyond the max attribute index"/>
+            <Message Id="AttDef_BadAttType" Text="The passed AttTypes value is not known"/>
+            <Message Id="AttDef_BadDefAttType" Text="The passed DefAttTypes value is not known"/>
             <Message Id="Bitset_BadIndex" Text="The bit index was beyond the set size"/>
+            <Message Id="BufMgr_NoMoreBuffers" Text="The buffer manager cannot provide any more buffers"/>
+            <Message Id="BufMgr_BufferNotInPool" Text="The passed buffer was not found in this manager's pool"/>
             <Message Id="CPtr_PointerIsZero" Text="The pointer has not been set"/>
+            <Message Id="CM_BinOpHadUnaryType" Text="The binary operation node had a unary node type"/>
+            <Message Id="CM_MustBeMixedOrChildren" Text="The content type must be mixed or children"/>
+            <Message Id="CM_NoPCDATAHere" Text="PCDATA nodes are not valid here"/>
+            <Message Id="CM_NotValidForSpecType" Text="The {0} operation is invalid for the spec type"/>
+            <Message Id="CM_UnaryOpHadBinType" Text="The unary operation node had a binary node type"/>
+            <Message Id="CM_UnknownCMType" Text="Unknown content model type"/>
+            <Message Id="CM_UnknownCMSpecType" Text="Unknown content spec type"/>
+            <Message Id="ElemStack_EmptyStack" Text="The element stack is empty"/>
+            <Message Id="ElemStack_BadIndex" Text="The element stack index given was beyond the stack top"/>
+            <Message Id="ElemStack_StackUnderflow" Text="The element stack was already empty when a pop request occured"/>
+            <Message Id="ElemStack_NoParentPushed" Text="A parent operation was requested, but only one element is on the stack"/>
             <Message Id="Enum_NoMoreElements" Text="The enumerator contains no more elements"/>
             <Message Id="File_CouldNotOpenFile" Text="Could not open file: {0}"/>
             <Message Id="File_CouldNotGetCurPos" Text="Could not query the current file position"/>
@@ -184,6 +200,11 @@
             <Message Id="File_CouldNotResetFile" Text="Could not reset file to beginning"/>
             <Message Id="File_CouldNotGetSize" Text="Could not acertain the file size"/>
             <Message Id="File_CouldNotGetBasePathName" Text="Could not determine base pathname of the file"/>
+            <Message Id="Gen_ParseInProgress" Text="Parse may not be called while parsing"/>
+            <Message Id="Gen_NoDTDValidator" Text="A DOCTYPE was seen but the installed validator does not understand DTDs"/>
+            <Message Id="Gen_CouldNotOpenDTD" Text="Could not open DTD file '{0}'"/>
+            <Message Id="Gen_CouldNotOpenExtEntity" Text="Could not open external entity '{0}'"/>
+            <Message Id="Gen_UnexpectedEOF" Text="The end of input was not expected"/>
             <Message Id="HshTbl_ZeroModulus" Text="The hash modulus cannot be zero"/>
             <Message Id="HshTbl_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
             <Message Id="HshTbl_NoSuchKeyExists" Text="The key '{0}' could not be found in the hash table"/>
@@ -196,6 +217,18 @@
             <Message Id="Pool_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
             <Message Id="Pool_InvalidId" Text="The passed id is not valid for this pool"/>
             <Message Id="Pool_ZeroModulus" Text="The modulus value cannot be zero"/>
+            <Message Id="RdrMgr_ReaderIdNotFound" Text="The indicated reader id was never found"/>
+            <Message Id="Reader_BadAutoEncoding" Text="The auto encoding enum has an unknown value"/>
+            <Message Id="Reader_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
+            <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
+            <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
+            <Message Id="Reader_EncodingNeedsCvtr" Text="This encoding ({0})should have had a transcoder"/>
+            <Message Id="Reader_BadUTF8Seq" Text="Invalid second byte of a UTF-8 character sequence"/>
+            <Message Id="Reader_BadSurrogateInUTF8" Text="Invalid surrogate character found in UTF-8 data"/>
+            <Message Id="Reader_SrcOfsNotSupported" Text="The current transcoding service does not support source offset information"/>
+            <Message Id="Scan_CouldNotOpenSource" Text="The primary document entity could not be opened. Id={0}"/>
+            <Message Id="Scan_UnbalancedStartEnd" Text="Unbalanced start/end tags found, cannot continue"/>
+            <Message Id="Scan_BadPScanToken" Text="The call to scanNext() is illegal at this time"/>
             <Message Id="Stack_BadIndex" Text="The index is past the top of stack"/>
             <Message Id="Stack_EmptyStack" Text="The stack is empty, cannot access members"/>
             <Message Id="Str_ZeroSizedTargetBuf" Text="The target buffer cannot have a max size of zero"/>
@@ -206,6 +239,11 @@
             <Message Id="Strm_StdOutWriteFailure" Text="Could not write to standard out"/>
             <Message Id="Strm_ConWriteFailure" Text="Could not write to console"/>
             <Message Id="StrPool_IllegalId" Text="String pool id was not legal"/>
+            <Message Id="Trans_CouldNotXCodeXMLData" Text="The block of XML data could not be transcoded"/>
+            <Message Id="Trans_CouldNotCreateDefCvtr" Text="Could not create a default transcoder"/>
+            <Message Id="Trans_InvalidSizeReq" Text="The maximum size to xlat is larger than the declared block size"/>
+            <Message Id="Trans_Unrepresentable" Text="Got an representable code point for encoding {0}"/>
+            <Message Id="Trans_NotInSourceSet" Text="A source character was not in the code point set for encoding {0}"/>
             <Message Id="URL_MalformedURL" Text="The URL was not correctly formed"/>
             <Message Id="URL_UnsupportedProto" Text="The URL used an unsupported protocol"/>
             <Message Id="URL_UnsupportedProto1" Text="Unsupported URL protocol: '{0}'"/>
@@ -215,43 +253,9 @@
             <Message Id="URL_IncorrectEscapedCharRef" Text="% must be followed by two hex digits"/>
             <Message Id="URL_UnterminatedHostComponent" Text="Unterminated host component"/>
             <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
-            <Message Id="Gen_ParseInProgress" Text="Parse may not be called while parsing"/>
-            <Message Id="Gen_NoDTDValidator" Text="A DOCTYPE was seen but the installed validator does not understand DTDs"/>
-            <Message Id="Gen_CouldNotOpenDTD" Text="Could not open DTD file '{0}'"/>
-            <Message Id="Gen_CouldNotOpenExtEntity" Text="Could not open external entity '{0}'"/>
-            <Message Id="Gen_UnexpectedEOF" Text="The end of input was not expected"/>
-            <Message Id="AttrList_BadIndex" Text="The index given was beyond the max attribute index"/>
-            <Message Id="ElemStack_EmptyStack" Text="The element stack is empty"/>
-            <Message Id="ElemStack_BadIndex" Text="The element stack index given was beyond the stack top"/>
-            <Message Id="ElemStack_StackUnderflow" Text="The element stack was already empty when a pop request occured"/>
-            <Message Id="ElemStack_NoParentPushed" Text="A parent operation was requested, but only one element is on the stack"/>
-            <Message Id="RdrMgr_ReaderIdNotFound" Text="The indicated reader id was never found"/>
-            <Message Id="Reader_BadAutoEncoding" Text="The auto encoding enum has an unknown value"/>
-            <Message Id="Reader_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
-            <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
-            <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
-            <Message Id="Reader_EncodingNeedsCvtr" Text="This encoding ({0})should have had a transcoder"/>
-            <Message Id="Reader_BadUTF8Seq" Text="Invalid second byte of a UTF-8 character sequence"/>
-            <Message Id="Reader_BadSurrogateInUTF8" Text="Invalid surrogate character found in UTF-8 data"/>
-            <Message Id="Scan_CouldNotOpenSource" Text="The primary document entity could not be opened. Id={0}"/>
-            <Message Id="Scan_UnbalancedStartEnd" Text="Unbalanced start/end tags found, cannot continue"/>
-            <Message Id="AttDef_BadAttType" Text="The passed AttTypes value is not known"/>
-            <Message Id="AttDef_BadDefAttType" Text="The passed DefAttTypes value is not known"/>
-            <Message Id="BufMgr_NoMoreBuffers" Text="The buffer manager cannot provide any more buffers"/>
-            <Message Id="BufMgr_BufferNotInPool" Text="The passed buffer was not found in this manager's pool"/>
-            <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
-            <Message Id="Trans_CouldNotXCodeXMLData" Text="The block of XML data could not be transcoded"/>
-            <Message Id="Trans_CouldNotCreateDefCvtr" Text="Could not create a default transcoder"/>
-            <Message Id="CM_BinOpHadUnaryType" Text="The binary operation node had a unary node type"/>
-            <Message Id="CM_MustBeMixedOrChildren" Text="The content type must be mixed or children"/>
-            <Message Id="CM_NoPCDATAHere" Text="PCDATA nodes are not valid here"/>
-            <Message Id="CM_NotValidForSpecType" Text="The {0} operation is invalid for the spec type"/>
-            <Message Id="CM_UnaryOpHadBinType" Text="The unary operation node had a binary node type"/>
-            <Message Id="CM_UnknownCMType" Text="Unknown content model type"/>
-            <Message Id="CM_UnknownCMSpecType" Text="Unknown content spec type"/>
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the validator, no internal subset is allowed"/>
-            <Message Id="Scan_BadPScanToken" Text="The call to scanNext() is illegal at this time"/>
+            <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
