@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/25 18:15:00  knoaman
+ * Serialize enclosing complex type. Thanks to David Cargill.
+ *
  * Revision 1.9  2003/11/21 22:34:46  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -244,6 +247,7 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
         serEng<<(int)fValidity;
         serEng<<(int)fValidation;
+        serEng<<fEnclosingCT;
     }
     else
     {
@@ -265,6 +269,8 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
         serEng>>i;
         fValidation = (PSVIDefs::Validation)i;
+        
+        serEng>>fEnclosingCT;
     }
 }
 
