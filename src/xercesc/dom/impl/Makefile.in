@@ -176,7 +176,9 @@ clean::
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
+ifneq ($(strip $(DOM_IMPL_CPP_PUBHEADERS)),)
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(DOM_IMPL_CPP_PUBHEADERS))
+endif
 
 install::
 	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
