@@ -205,51 +205,57 @@ $set 3
  47  Could not unlock mutex
  48  Could not destroy mutex
  49  Error on {0} NetAccessor. Msg: {1}
- 50  The element {0} already exists
- 51  Hashing the key returned an invalid bad hash value
- 52  The passed id is not valid for this pool
- 53  The modulus value cannot be zero
- 54  The indicated reader id was never found
- 55  The auto encoding enum has an unknown value
- 56  Could not create a converter for encoding: {0}
- 57  Could not decode first line of entity: {0}
- 58  End of input was hit in the middle of a multibyte sequence
- 59  The current transcoding service does not support source offset information
- 60  EBCDIC files must provide an encoding= string
- 61  The primary document entity could not be opened. Id={0}
- 62  Unbalanced start/end tags found, cannot continue
- 63  The call to scanNext() is illegal at this time
- 64  The index is past the top of stack
- 65  The stack is empty, cannot access members
- 66  The target buffer cannot have a max size of zero
- 67  The given radix is not supported. Use 2, 8, 10, or 16
- 68  The target buffer is too small to accept the results
- 69  The start index is past the end of the string
- 70  Could not write to standard err
- 71  Could not write to standard out
- 72  Could not write to console
- 73  String pool id was not legal
- 74  Could not create a default transcoder
- 75  The maximum size to xlat is larger than the declared block size
- 76  Unicode char {0} is representable in encoding {1}
- 77  Character {0} is not valid for encoding {1}
- 78  The requested block size is not equal to the size set during construction
- 79  An invalid multi-byte source text sequence was encountered
- 80  {0} is not a valid value for encoding {1}
- 81  Leading surrogate was not followed by trailing
- 82  The URL was not correctly formed
- 83  The URL used an unsupported protocol
- 84  Unsupported URL protocol: '{0}'
- 85  Only localhost is supported at this time
- 86  No protocol prefix present
- 87  Expected // after protocol
- 88  % must be followed by two hex digits
- 89  Unterminated host component
- 90  The base part of the URL cannot be relative
- 91  The base part has too few levels to weave in relative part
- 92  The passed index is past the end of the vector
- 93  The element id was invalid
- 94  When reusing the validator, no internal subset is allowed
- 95  The passed recognizer encoding was not known
+ 50  The NetAccessor could not be initialized. Error={0}
+ 51  The host/address '(0}' could not be resolved
+ 52  Could not create the socket for URL '{0}'. Error={1}
+ 53  Could not connect to the socket for URL '{0}'. Error={1}
+ 54  Could not write to the socket. Error={0}
+ 55  Could not read from the socket. Error={0}
+ 56  The element {0} already exists
+ 57  Hashing the key returned an invalid bad hash value
+ 58  The passed id is not valid for this pool
+ 59  The modulus value cannot be zero
+ 60  The indicated reader id was never found
+ 61  The auto encoding enum has an unknown value
+ 62  Could not create a converter for encoding: {0}
+ 63  Could not decode first line of entity: {0}
+ 64  End of input was hit in the middle of a multibyte sequence
+ 65  The current transcoding service does not support source offset information
+ 66  EBCDIC files must provide an encoding= string
+ 67  The primary document entity could not be opened. Id={0}
+ 68  Unbalanced start/end tags found, cannot continue
+ 69  The call to scanNext() is illegal at this time
+ 70  The index is past the top of stack
+ 71  The stack is empty, cannot access members
+ 72  The target buffer cannot have a max size of zero
+ 73  The given radix is not supported. Use 2, 8, 10, or 16
+ 74  The target buffer is too small to accept the results
+ 75  The start index is past the end of the string
+ 76  Could not write to standard err
+ 77  Could not write to standard out
+ 78  Could not write to console
+ 79  String pool id was not legal
+ 80  Could not create a default transcoder
+ 81  The maximum size to xlat is larger than the declared block size
+ 82  Unicode char {0} is representable in encoding {1}
+ 83  Character {0} is not valid for encoding {1}
+ 84  The requested block size is not equal to the size set during construction
+ 85  An invalid multi-byte source text sequence was encountered
+ 86  {0} is not a valid value for encoding {1}
+ 87  Leading surrogate was not followed by trailing
+ 88  The URL was not correctly formed
+ 89  The URL used an unsupported protocol
+ 90  Unsupported URL protocol: '{0}'
+ 91  Only localhost is supported at this time
+ 92  No protocol prefix present
+ 93  Expected // after protocol
+ 94  % must be followed by two hex digits
+ 95  Unterminated host component
+ 96  The base part of the URL cannot be relative
+ 97  The base part has too few levels to weave in relative part
+ 98  The passed index is past the end of the vector
+ 99  The element id was invalid
+100  When reusing the validator, no internal subset is allowed
+101  The passed recognizer encoding was not known
 
 
