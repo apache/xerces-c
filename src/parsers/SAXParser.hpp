@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/08/02 18:05:15  jpolast
+ * changes required for sax2
+ * (changed private members to protected)
+ *
  * Revision 1.8  2000/04/12 22:58:30  roddey
  * Added support for 'auto validate' mode.
  *
@@ -1268,7 +1272,7 @@ public :
     //@}
 
 
-private :
+protected :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
