@@ -758,6 +758,8 @@ void DGXMLScanner::scanEndTag(bool& gotData)
                 ? topElem->fThisElement->getElementName()->getPrefix()
                 : XMLUni::fgZeroLenString
         );
+        // pass back type name information
+        fDocHandler->elementTypeInfo(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString); 
     }
 
     // If this was the root, then done with content
@@ -1591,6 +1593,8 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                 , (fDoNamespaces) ? elemDecl->getElementName()->getPrefix()
                                   : XMLUni::fgZeroLenString
             );
+            // pass back type name information
+            fDocHandler->elementTypeInfo(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString); 
         }
 
         // Pop the element stack back off since it'll never be used now

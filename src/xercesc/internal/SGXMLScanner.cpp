@@ -941,6 +941,9 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     XMLElementDecl* tempElement = topElem->fThisElement;
     const XMLCh* rawNameBuf = fQNameBuf.getRawBuffer();
 
+    // reset error occurred
+    fPSVIElemContext.fErrorOccurred = fErrorStack->pop();
+
     if ((topUri != uriId) ||
         (!XMLString::equals(tempElement->getBaseName(), &rawNameBuf[prefixColonPos + 1])))
     {
@@ -968,24 +971,24 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         );
     }
 
-    if (fPSVIHandler)
+    if (fValidate && topElem->fThisElement->isDeclared())
     {
-        if (fValidate && topElem->fThisElement->isDeclared())
+        fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+        fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+        if (fPSVIHandler)
         {
-            fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
-            fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
             fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
 
             if (XMLString::equals(fPSVIElemContext.fNormalizedValue, XMLUni::fgZeroLenString))
                 fPSVIElemContext.fNormalizedValue = 0;
 
         }
-        else
-        {
-            fPSVIElemContext.fCurrentDV = 0;
-            fPSVIElemContext.fCurrentTypeInfo = 0;
-            fPSVIElemContext.fNormalizedValue = 0;
-        }
+    }
+    else
+    {
+        fPSVIElemContext.fCurrentDV = 0;
+        fPSVIElemContext.fCurrentTypeInfo = 0;
+        fPSVIElemContext.fNormalizedValue = 0;
     }
 
     //  If validation is enabled, then lets pass him the list of children and
@@ -1036,14 +1039,12 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         }
 
         // update PSVI info
+        if (((SchemaValidator*) fValidator)->getErrorOccurred())
+            fPSVIElemContext.fErrorOccurred = true;
+        else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
+            psviMemberType = fValidationContext->getValidatingMemberType();
         if (fPSVIHandler)
-        {
             fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
-            if (((SchemaValidator*) fValidator)->getErrorOccurred())
-                fPSVIElemContext.fErrorOccurred = true;
-            else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
-                psviMemberType = fValidationContext->getValidatingMemberType();
-        }
 
         // call matchers and de-activate context
         int oldCount = fMatcherStack->getMatcherCount();
@@ -1116,13 +1117,52 @@ void SGXMLScanner::scanEndTag(bool& gotData)
             , isRoot
             , fPrefixBuf.getRawBuffer()
         );
+        // pass information about type info:
+        const XMLCh *typeName = SchemaSymbols::fgATTVAL_ANYTYPE;
+        const XMLCh *typeURI = SchemaSymbols::fgURI_SCHEMAFORSCHEMA; 
+        if(!fPSVIElemContext.fErrorOccurred)
+        {
+            if(fPSVIElemContext.fCurrentTypeInfo != 0)
+            {
+                if(fPSVIElemContext.fCurrentTypeInfo->getAnonymous())
+                    typeName = XMLUni::fgZeroLenString;
+                else 
+                    typeName = fPSVIElemContext.fCurrentTypeInfo->getTypeLocalName();
+                typeURI = fPSVIElemContext.fCurrentTypeInfo->getTypeUri();
+            } 
+            else
+            {
+                DatatypeValidator *actualDV = (psviMemberType)?psviMemberType:fPSVIElemContext.fCurrentDV;
+                if(actualDV)
+                {
+                    if(actualDV->getAnonymous())
+                        typeName = XMLUni::fgZeroLenString;
+                    else
+                        typeName = actualDV->getTypeLocalName();
+                    typeURI = actualDV->getTypeUri();
+                }
+            }
+        }
+        else 
+        {
+            // idiosyncratically, if there's an
+            // error but this element was simpleType-validated,
+            // the tests demand anySimpleType be returned
+            if(fPSVIElemContext.fCurrentDV)
+                typeName = SchemaSymbols::fgDT_ANYSIMPLETYPE;
+        }
+        fDocHandler->elementTypeInfo(typeName, typeURI);
     }
 
     // reset xsi:type ComplexTypeInfo    
     ((SchemaElementDecl*)topElem->fThisElement)->reset();
     if (!isRoot)
+    {
         ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
             setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
+        // update error information
+        fErrorStack->push(fErrorStack->pop() || fPSVIElemContext.fErrorOccurred);
+    }
 
     // If this was the root, then done with content
     gotData = !isRoot;
@@ -1508,6 +1548,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         }
     }
 
+    // this info needed for DOMTypeInfo
+    fPSVIElemContext.fErrorOccurred = false;
 
     //  We do something different here according to whether we found the
     //  element or not.
@@ -1534,6 +1576,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 , elemDecl->getFullName()
             );
             ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+            fPSVIElemContext.fErrorOccurred = true;
         }
     }
     else
@@ -1550,6 +1593,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                fPSVIElemContext.fErrorOccurred = true;
             }
             if (laxThisOne) {
                 fValidate = false;
@@ -1589,8 +1633,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     if (fPSVIHandler)
     {
-        fErrorStack->push(fPSVIElemContext.fErrorOccurred);
-        fPSVIElemContext.fErrorOccurred = false;
         fPSVIElemContext.fElemDepth++;
 
         if (elemDecl->isDeclared())
@@ -1601,8 +1643,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         {
             fPSVIElemContext.fFullValidationDepth = fPSVIElemContext.fElemDepth;
 
+            /******
+             * While we report an error for historical reasons, this should
+             * actually result in lax assessment - NG.
             if (isRoot && fValidate)
                 fPSVIElemContext.fErrorOccurred = true;
+            ******/
         }
     }
 
@@ -1610,11 +1656,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     if (fValidate)
     {
         fValidator->validateElement(elemDecl);
-        if (fPSVIHandler)
-        {
-            if (((SchemaValidator*) fValidator)->getErrorOccurred())
-                fPSVIElemContext.fErrorOccurred = true;
-        }
+        if (((SchemaValidator*) fValidator)->getErrorOccurred())
+            fPSVIElemContext.fErrorOccurred = true;
     }
 
     ComplexTypeInfo* typeinfo = (fValidate)
@@ -1757,16 +1800,20 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         fElemStack.popTop();
 
         // reset current type info
-        if (fPSVIHandler && fGrammarType == Grammar::SchemaGrammarType)
+        DatatypeValidator* psviMemberType = 0;
+        if (fGrammarType == Grammar::SchemaGrammarType)
         {
             if (fValidate && elemDecl->isDeclared())
             {
                 fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
-                fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
+                if(fPSVIHandler)
+                {
+                    fPSVIElemContext.fNormalizedValue = ((SchemaValidator*) fValidator)->getNormalizedValue();
 
-                if (XMLString::equals(fPSVIElemContext.fNormalizedValue, XMLUni::fgZeroLenString))
-                    fPSVIElemContext.fNormalizedValue = 0;
+                    if (XMLString::equals(fPSVIElemContext.fNormalizedValue, XMLUni::fgZeroLenString))
+                        fPSVIElemContext.fNormalizedValue = 0;
+                }
             }
             else
             {
@@ -1777,7 +1824,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         }
 
         // If validating, then insure that its legal to have no content
-        DatatypeValidator* psviMemberType = 0;
         if (fValidate)
         {
             const int res = fValidator->checkContent(elemDecl, 0, 0);
@@ -1794,13 +1840,15 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
             }
 
-            if (fPSVIHandler)
+            if (((SchemaValidator*) fValidator)->getErrorOccurred())
+                fPSVIElemContext.fErrorOccurred = true;
+            // note that if we're empty, won't be a current DV
+            else 
             {
-                if (((SchemaValidator*) fValidator)->getErrorOccurred())
-                    fPSVIElemContext.fErrorOccurred = true;
-                // note that if we're empty, won't be a current DV
-                else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
-                        psviMemberType = fValidationContext->getValidatingMemberType();
+                if (fPSVIHandler)
+                    fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
+                if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
+                    psviMemberType = fValidationContext->getValidatingMemberType(); 
             }
 
             // call matchers and de-activate context
@@ -1870,6 +1918,41 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 , isRoot
                 , fPrefixBuf.getRawBuffer()
             );
+            // pass information about type info:
+            const XMLCh *typeName = SchemaSymbols::fgATTVAL_ANYTYPE;
+            const XMLCh *typeURI = SchemaSymbols::fgURI_SCHEMAFORSCHEMA; 
+            if(!fPSVIElemContext.fErrorOccurred)
+            {
+                if(fPSVIElemContext.fCurrentTypeInfo != 0)
+                {
+                    if(fPSVIElemContext.fCurrentTypeInfo->getAnonymous())
+                        typeName = XMLUni::fgZeroLenString;
+                    else 
+                        typeName = fPSVIElemContext.fCurrentTypeInfo->getTypeLocalName();
+                    typeURI = fPSVIElemContext.fCurrentTypeInfo->getTypeUri();
+                } 
+                else
+                {
+                    DatatypeValidator *actualDV = (psviMemberType)?psviMemberType:fPSVIElemContext.fCurrentDV;
+                    if(actualDV)
+                    {
+                        if(actualDV->getAnonymous())
+                            typeName = XMLUni::fgZeroLenString;
+                        else
+                            typeName = actualDV->getTypeLocalName();
+                        typeURI = actualDV->getTypeUri();
+                    }
+                }
+            }
+            else 
+            {
+                // idiosyncratically, if there's an
+                // error but this element was simpleType-validated,
+                // the tests demand anySimpleType be returned
+                if(fPSVIElemContext.fCurrentDV)
+                    typeName = SchemaSymbols::fgDT_ANYSIMPLETYPE;
+            }
+            fDocHandler->elementTypeInfo(typeName, typeURI);
         }
 
         // reset xsi:type ComplexTypeInfo        
@@ -1892,6 +1975,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             fValidate = fElemStack.getValidationFlag();
         }
     }
+    else    // not empty
+        fErrorStack->push(fPSVIElemContext.fErrorOccurred);
 
     return true;
 }
@@ -2329,10 +2414,10 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     , attDef->getFullName()
                                 );
                                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                fPSVIElemContext.fErrorOccurred = true;
                                 if (getPSVIHandler())
                                 {
                                     attrValid = PSVIItem::VALIDITY_INVALID;
-                                    fPSVIElemContext.fErrorOccurred = true;
                                 }
                             }
                         }
@@ -2348,10 +2433,10 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     , attDef->getFullName()
                                 );
                                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                fPSVIElemContext.fErrorOccurred = true;
                                 if (getPSVIHandler())
                                 {
                                     attrValid = PSVIItem::VALIDITY_INVALID;
-                                    fPSVIElemContext.fErrorOccurred = true;
                                 }
                             }
                         }
@@ -2420,16 +2505,19 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
             }
 
-            if(getPSVIHandler())
+            // if we've found either an attDef or an attDefForWildCard,
+            // then we're doing full validation and it may still be valid.
+            if(!attDef && !attDefForWildCard)
             {
-                // if we've found either an attDef or an attDefForWildCard,
-                // then we're doing full validation and it may still be valid.
-                if(!attDef && !attDefForWildCard)
+                if(!laxThisOne && !skipThisOne)
+                {
+                    fPSVIElemContext.fErrorOccurred = true;
+                } 
+                if(getPSVIHandler())
                 {
                     if(!laxThisOne && !skipThisOne)
                     {
                         attrValid = PSVIItem::VALIDITY_INVALID;
-                        fPSVIElemContext.fErrorOccurred = true;
                     }
                     else if(laxThisOne)
                     {
@@ -2516,10 +2604,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , elemDecl
                     );
                     attrValidator = ((SchemaValidator *)fValidator)->getMostRecentAttrValidator();
-                    if(getPSVIHandler() && ((SchemaValidator *)fValidator)->getErrorOccurred())
+                    if(((SchemaValidator *)fValidator)->getErrorOccurred())
                     {
-                        attrValid = PSVIItem::VALIDITY_INVALID;
                         fPSVIElemContext.fErrorOccurred = true;
+                        if(getPSVIHandler())
+                            attrValid = PSVIItem::VALIDITY_INVALID;
                     }
                 }
                 else // no decl; default DOMTypeInfo to anySimpleType
@@ -2571,10 +2660,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , elemDecl
                         );
                         attrValidator = ((SchemaValidator *)fValidator)->getMostRecentAttrValidator();
-                        if(getPSVIHandler() && ((SchemaValidator *)fValidator)->getErrorOccurred())
+                        if(((SchemaValidator *)fValidator)->getErrorOccurred())
                         {
-                            attrValid = PSVIItem::VALIDITY_INVALID;
                             fPSVIElemContext.fErrorOccurred = true;
+                            if(getPSVIHandler())
+                                attrValid = PSVIItem::VALIDITY_INVALID;
                         }
                     }
                     else
@@ -2867,6 +2957,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , curDef->getFullName()
                     );
                     ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::INVALID);         
+                    fPSVIElemContext.fErrorOccurred = true;
                     if (getPSVIHandler())
                     {
                         QName *attQName = ((SchemaAttDef *)curDef)->getAttName();
@@ -3209,16 +3300,14 @@ void SGXMLScanner::scanReset(const InputSource& src)
     fDoSchema = true;
 
     // Reset PSVI context
-    if (fPSVIHandler)
-    {
-        if (!fPSVIElement)
-            fPSVIElement = new (fMemoryManager) PSVIElement(fMemoryManager);
+    // Note that we always need this around for DOMTypeInfo
+    if (!fPSVIElement)
+        fPSVIElement = new (fMemoryManager) PSVIElement(fMemoryManager);
 
-        if (!fErrorStack)
-            fErrorStack = new (fMemoryManager) ValueStackOf<bool>(8, fMemoryManager);
+    if (!fErrorStack)
+        fErrorStack = new (fMemoryManager) ValueStackOf<bool>(8, fMemoryManager);
 
-        resetPSVIElemContext();
-    }
+    resetPSVIElemContext();
 
     // Reset the validators
     fSchemaValidator->reset();
@@ -4833,9 +4922,6 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     // decrease element depth
     fPSVIElemContext.fElemDepth--;
 
-    // reset error occurred
-    fPSVIElemContext.fErrorOccurred = 
-        fPSVIElemContext.fErrorOccurred && fErrorStack->pop();
 }
 
 void SGXMLScanner::resetPSVIElemContext()
