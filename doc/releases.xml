@@ -3,6 +3,47 @@
 
 <s1 title="Releases">
 
+<s2 title="&XercesCName; Latest Changes in CVS since December 6, 2001">
+<table>
+    <tr>
+        <td>Date</td>
+        <td>Contributor</td>
+        <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2001-12-11</td>
+        <td>Max Gotlib</td>
+        <td>More changes to IconvFBSDTransService.  Allow using "old" TransServece implementation
+            (via '-t native' option to runConfigure) or to employ libiconv (it is a part of FreeBSD
+            ports-collection) services.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-11</td>
+        <td>Christopher Just</td>
+        <td>[Bug 5320] 1.5.2 Build fails on IRIX.  The variable "atomicOpsMutex" has been defined twice.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-10</td>
+        <td>PeiYong Zhang</td>
+        <td>Swap checking to avoid "dangling pointer" reported by BoundsChecker.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-10</td>
+        <td>PeiYong Zhang</td>
+        <td>Memory Leak: fLeafNameTypeVector.
+        </td>
+    </tr
+
+</table>
+</s2>
+
 <s2 title="&XercesCName; Version 1.6.0: December 6, 2001">
 <table>
     <tr>
