@@ -1339,6 +1339,9 @@ private :
     //      Used to store and update the documentType variable information
     //      in fDocument
     //
+    //  fDocumentVector
+    //      Store all the previous fDocument(s) (thus not the current fDocument)
+    //      created in this parser.  It is destroyed when the parser is destructed.
     // -----------------------------------------------------------------------
     IDOM_Node*               fCurrentParent;
     IDOM_Node*               fCurrentNode;
@@ -1352,6 +1355,7 @@ private :
     XMLScanner*              fScanner;
     bool                     fWithinElement;
     IDDocumentTypeImpl*      fDocumentType;
+    RefVectorOf<IDDocumentImpl>* fDocumentVector;
 };
 
 

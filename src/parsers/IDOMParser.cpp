@@ -109,6 +109,8 @@ fErrorHandler(0)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
+, fDocument(0)
+, fDocumentVector(0)
 {
     //
     //  Create a scanner and tell it what validator to use. Then set us
@@ -127,6 +129,10 @@ fErrorHandler(0)
 
 IDOMParser::~IDOMParser()
 {
+    if (fDocumentVector)
+        delete fDocumentVector;
+
+    delete fDocument;
     delete fNodeStack;
     delete fScanner;
 }
@@ -134,7 +140,16 @@ IDOMParser::~IDOMParser()
 
 void IDOMParser::reset()
 {
-    fDocument        = 0;
+    // if fDocument exists already, store the old pointer in the vector for deletion later
+    if (fDocument) {
+        if (!fDocumentVector) {
+            // allocate the vector if not exists yet
+            fDocumentVector  = new RefVectorOf<IDDocumentImpl>(10, true) ;
+        }
+        fDocumentVector->addElement(fDocument);
+    }
+
+    fDocument = 0;
     resetDocType();
 
     fCurrentParent   = 0;
