@@ -78,10 +78,15 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
     : ParentNode(other)
 {
     name = other.name.clone();
-    specified(false);
-    idAttr(false);
-    if (deep)
-      cloneChildren(other);
+	
+    specified(true);
+    if (other.idAttr())
+    {
+        idAttr(true);
+        this->getOwnerDocument()->getNodeIDMap()->add(this);
+    }
+    
+	cloneChildren(other);
 };
 
 

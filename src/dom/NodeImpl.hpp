@@ -207,7 +207,7 @@ public: // should really be protected - ALH
      * Flags setters and getters
      */
 
-    inline bool readOnly() {
+    inline bool readOnly() const {
         return (flags & READONLY) != 0;
     }
 
@@ -215,7 +215,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | READONLY : flags & ~READONLY);
     }
 
-    inline bool syncData() {
+    inline bool syncData() const {
         return (flags & SYNCDATA) != 0;
     }
 
@@ -223,7 +223,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | SYNCDATA : flags & ~SYNCDATA);
     }
 
-    inline bool syncChildren() {
+    inline bool syncChildren() const {
         return (flags & SYNCCHILDREN) != 0;
     }
 
@@ -231,7 +231,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | SYNCCHILDREN : flags & ~SYNCCHILDREN);
     }
 
-    inline bool owned() {
+    inline bool owned() const {
         return (flags & OWNED) != 0;
     }
 
@@ -239,7 +239,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | OWNED : flags & ~OWNED);
     }
 
-    inline bool firstChild() {
+    inline bool firstChild() const {
         return (flags & FIRSTCHILD) != 0;
     }
 
@@ -247,7 +247,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | FIRSTCHILD : flags & ~FIRSTCHILD);
     }
 
-    inline bool specified() {
+    inline bool specified() const {
         return (flags & SPECIFIED) != 0;
     }
 
@@ -255,7 +255,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | SPECIFIED : flags & ~SPECIFIED);
     }
 
-    inline bool ignorableWhitespace() {
+    inline bool ignorableWhitespace() const {
         return (flags & IGNORABLEWS) != 0;
     }
 
@@ -263,7 +263,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | IGNORABLEWS : flags & ~IGNORABLEWS);
     }
 
-    inline bool setValue() {
+    inline bool setValue() const {
         return (flags & SETVALUE) != 0;
     }
 
@@ -271,7 +271,7 @@ public: // should really be protected - ALH
         flags = (value ? flags | SETVALUE : flags & ~SETVALUE);
     }
     
-    inline bool idAttr() {
+    inline bool idAttr() const {
         return (flags & ID_ATTR) != 0;
     }
     

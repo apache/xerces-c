@@ -104,12 +104,14 @@ void NamedNodeMapImpl::addRef(NamedNodeMapImpl *This)
 NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNod)
 {
     NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNod);
+	
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
         for (unsigned int i = 0; i < nodes->size(); ++i)
         {
             NodeImpl *n = nodes->elementAt(i)->cloneNode(true);
+			n->specified(nodes->elementAt(i)->specified());
             n->ownerNode = ownerNod;
             n->owned(true);
             newmap->nodes->addElement(n);
