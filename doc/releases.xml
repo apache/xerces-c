@@ -12,6 +12,20 @@
     </tr>
 
     <tr>
+        <td>2001-12-12</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5367] Progressive parse does not throw error when file is empty.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-12</td>
+        <td>Tinny Ng</td>
+        <td>Performance: Remove obsolete code in ElemStack.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-12-11</td>
         <td>Max Gotlib</td>
         <td>More changes to IconvFBSDTransService.  Allow using "old" TransServece implementation
@@ -39,7 +53,7 @@
         <td>PeiYong Zhang</td>
         <td>Memory Leak: fLeafNameTypeVector.
         </td>
-    </tr
+    </tr>
 
 </table>
 </s2>
