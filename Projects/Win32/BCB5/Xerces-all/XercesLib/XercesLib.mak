@@ -195,6 +195,8 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\ListDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\NOTATIONDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\QNameDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\NameDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\NCNameDatatypeValidator.obj \    
     ..\..\..\..\..\Build\Win32\BCB5\obj\StringDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\UnionDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\DTDAttDef.obj \

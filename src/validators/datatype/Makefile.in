@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.20  2001/09/25 16:08:26  peiyongz
+# DTV Reorganization: Create native NameDTV and NCNameDTV
+#
 # Revision 1.19  2001/09/18 16:00:54  peiyongz
 # DTV reorganization: AbstractStringValidator
 #
@@ -151,6 +154,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	NOTATIONDatatypeValidator.hpp \
 	ENTITYDatatypeValidator.hpp \
 	QNameDatatypeValidator.hpp \
+	NameDatatypeValidator.hpp \
+	NCNameDatatypeValidator.hpp \
 	ListDatatypeValidator.hpp \
 	UnionDatatypeValidator.hpp \
 	DoubleDatatypeValidator.hpp \
@@ -176,6 +181,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	NOTATIONDatatypeValidator.$(TO) \
 	ENTITYDatatypeValidator.$(TO) \
 	QNameDatatypeValidator.$(TO) \
+	NameDatatypeValidator.$(TO) \
+	NCNameDatatypeValidator.$(TO) \
 	ListDatatypeValidator.$(TO) \
 	UnionDatatypeValidator.$(TO) \
 	DoubleDatatypeValidator.$(TO) \

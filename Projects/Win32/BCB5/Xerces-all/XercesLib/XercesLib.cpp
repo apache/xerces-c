@@ -202,6 +202,8 @@ USEUNIT("..\..\..\..\..\src\validators\datatype\IDREFDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\ListDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\NOTATIONDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\QNameDatatypeValidator.cpp");
+USEUNIT("..\..\..\..\..\src\validators\datatype\NameDatatypeValidator.cpp");
+USEUNIT("..\..\..\..\..\src\validators\datatype\NCNameDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\StringDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\DTD\DTDAttDef.cpp");
