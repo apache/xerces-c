@@ -1042,6 +1042,6 @@ void GetXML(const DOM_Node &node, _bstr_t &text)
 {
 	xmlstream stream;
 	stream << node;
-	text.Assign(stream.SysAllocString());
+	text = _bstr_t(stream.SysAllocString(),false);
 }
 
