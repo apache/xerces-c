@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2002/10/03 18:13:38  peiyongz
+ * Bug#12560 Use const in DOMWriter - patch from Duncan Stodart
+ *                                                              (Duncan_Stodart@insession.com )
+ *
  * Revision 1.17  2002/09/24 20:19:14  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  * and check for null string directly isntead of calling XMLString::stringLen
@@ -620,8 +624,8 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 	}
 	else
 	{
-        DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
-                            (DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
+        const DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
+                            (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
         if (docu)
         {
             const XMLCh* tmpEncoding = docu->getEncoding();
@@ -748,7 +752,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 	case DOMNode::DOCUMENT_NODE: // Not to be shown to Filter
         {
 			setURCharRef();
-            DOMDocument *docu = (DOMDocument*)nodeToWrite;
+            const DOMDocument *docu = (const DOMDocument*)nodeToWrite;
 
             //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
             //[24] VersionInfo  ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
@@ -1001,7 +1005,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
 	case DOMNode::DOCUMENT_TYPE_NODE:  // Not to be shown to Filter
 		{
-            DOMDocumentType *doctype = (DOMDocumentType *)nodeToWrite;;
+            const DOMDocumentType *doctype = (const DOMDocumentType *)nodeToWrite;;
 
 			fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
             TRY_CATCH_THROW
@@ -1066,15 +1070,15 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
 			*fFormatter << gStartEntity	<< nodeName;
 
-			const XMLCh * id = ((DOMEntity*)nodeToWrite)->getPublicId();
+			const XMLCh * id = ((const DOMEntity*)nodeToWrite)->getPublicId();
 			if (id)
 				*fFormatter << gPublic << id << chDoubleQuote;
 
-			id = ((DOMEntity*)nodeToWrite)->getSystemId();
+			id = ((const DOMEntity*)nodeToWrite)->getSystemId();
 			if (id)
 				*fFormatter << gSystem << id << chDoubleQuote;
 
-			id = ((DOMEntity*)nodeToWrite)->getNotationName();
+			id = ((const DOMEntity*)nodeToWrite)->getNotationName();
 			if (id)
 				*fFormatter << gNotation << id << chDoubleQuote;
 
