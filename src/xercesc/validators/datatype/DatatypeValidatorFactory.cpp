@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/11/05 16:36:15  peiyongz
+ * initialize BuiltInRegistry during deserialization
+ *
  * Revision 1.18  2003/10/20 15:56:48  knoaman
  * Fix multithreading problem.
  *
@@ -755,6 +758,8 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         }
     }
 
+    //todo: to move these to fBuiltInRegistry
+
     // ID, IDREF IDREFS, ENTITY, ENTITIES  DTV have specific data member
     //   and cannot be shared across threads
     // So instead of storing them in the static fBuiltInRegistry,
@@ -932,6 +937,12 @@ void DatatypeValidatorFactory::serialize(XSerializeEngine& serEng)
     }
     else
     {
+        /***
+         * DV in the UserDefinedRegistry rely on the fBuiltInRegistry
+         * to resolve their built-in baseValidator
+         ***/
+        expandRegistryToFullSchemaSet();
+
         /***
          * Deserialize RefHashTableOf<DatatypeValidator>
          ***/
