@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/06/04 21:03:07  jberry
+ * Add pure virtual getErrorCount to SAX2XMLReader interface.
+ *
  * Revision 1.7  2001/05/11 13:26:25  tng
  * Copyright update.
  *
@@ -139,6 +142,18 @@ public:
     //-----------------------------------------------------------------------
     /** @name The XMLReader interfaces */
     //@{
+
+    /** Get error count from the last parse operation.
+      *
+      * This method returns the error count from the last parse
+      * operation. Note that this count is actually stored in the
+      * scanner, so this method simply returns what the
+      * scanner reports.
+      *
+      * @return number of errors encountered during the latest
+      *			parse operation.
+      */
+    virtual int getErrorCount() const = 0 ;
 
     /**
       * This method returns the installed content handler.
