@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/08/21 15:10:15  peiyongz
+ * Bugzilla# 3017: MSVC5.0: C2202: 'compareSpecial' : not all
+ * control paths return a value
+ *
  * Revision 1.8  2001/08/14 22:10:20  peiyongz
  * new exception message added
  *
@@ -518,5 +522,6 @@ int XMLDouble::compareSpecial(const XMLDouble* const specialValue
                 , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
                 , value1);
         //internal error
+        return 0;
     }
 }
