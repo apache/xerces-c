@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/12/14 18:49:56  tng
+ * Fix API document generation warning: "Warning: end of member group without matching begin"
+ *
  * Revision 1.7  2000/11/30 18:22:38  andyh
  * reuseValidator - fix bugs (spurious errors) that occured on reuse due to
  * pools already containing some items.  Fixed by Tinny Ng.
@@ -176,7 +179,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Public, static methods */
-    //{@
+    //@{
 
     /** Get a string representation of the passed attribute type enum
       *
@@ -224,7 +227,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Virtual interface */
-    //{@
+    //@{
 
     /** Get the full name of this attribute type
       *
@@ -244,7 +247,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Getter methods */
-    //{@
+    //@{
 
     /** Get the default type of this attribute type
       *
@@ -332,7 +335,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Setter methods */
-    //{@
+    //@{
 
     /** Set the default attribute type
       *

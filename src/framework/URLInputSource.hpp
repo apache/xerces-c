@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/12/14 18:49:56  tng
+ * Fix API document generation warning: "Warning: end of member group without matching begin"
+ *
  * Revision 1.7  2000/02/24 20:00:22  abagchi
  * Swat for removing Log from API docs
  *
@@ -227,7 +230,7 @@ public :
     // -----------------------------------------------------------------------
 
     /** @name Virtual methods */
-    //{@
+    //@{
 
     /**
      * This method will return a binary input stream derivative that will
@@ -243,7 +246,7 @@ public :
     // -----------------------------------------------------------------------
 
     /** @name Getter methods */
-    //{@
+    //@{
 
     /**
       * This method will return a const reference to the URL member which

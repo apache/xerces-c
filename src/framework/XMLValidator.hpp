@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.8  2000/12/14 18:49:58  tng
+  * Fix API document generation warning: "Warning: end of member group without matching begin"
+  *
   * Revision 1.7  2000/08/09 22:09:09  jpolast
   * added const XMLCh* getURIText()
   * allows parsers to use const URIs instead of appending
@@ -167,7 +170,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Getter Methods */
-    //{@
+    //@{
 
     /**
       * When an attribute name has no prefix, unlike elements, it is not mapped
@@ -229,7 +232,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Setter methods */
-    //{@
+    //@{
 
     /**
       * @param  owningScanner   This is a pointer to the scanner to which the
@@ -273,7 +276,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Virtual validator interface */
-    //{@
+    //@{
 
     /**
       * The derived class should look for the passed URI (case sensitive) in
@@ -537,7 +540,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Virtual DTD handler interface */
-    //{@
+    //@{
 
     /**
       * This method allows the scanner to ask the validator if it handles
@@ -568,7 +571,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Error emittor methods */
-    //{@
+    //@{
 
     /**
      *  This call is a convenience by which validators can emit errors. Most

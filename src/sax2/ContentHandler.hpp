@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/12/14 18:50:05  tng
+ * Fix API document generation warning: "Warning: end of member group without matching begin"
+ *
  * Revision 1.3  2000/08/09 22:19:29  jpolast
  * many conformance & stability changes:
  *   - ContentHandler::resetDocument() removed
@@ -359,8 +362,6 @@ public:
 	(
 		const	XMLCh* const	prefix
 	) = 0 ;
-
-    //@}
 
   /**
     * Receive notification of a skipped entity

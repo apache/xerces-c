@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/12/14 18:49:57  tng
+ * Fix API document generation warning: "Warning: end of member group without matching begin"
+ *
  * Revision 1.7  2000/11/30 18:22:38  andyh
  * reuseValidator - fix bugs (spurious errors) that occured on reuse due to
  * pools already containing some items.  Fixed by Tinny Ng.
@@ -296,7 +299,7 @@ class XMLPARSER_EXPORT XMLElementDecl
     // -----------------------------------------------------------------------
 
     /** @name Getter methods */
-    //{@
+    //@{
 
     /** Get a pointer to the abstract content model
       *
@@ -370,7 +373,7 @@ class XMLPARSER_EXPORT XMLElementDecl
     // -----------------------------------------------------------------------
 
     /** @name Setter methods */
-    //{@
+    //@{
 
     /** Set the content model object for this element type
       *
@@ -419,7 +422,7 @@ class XMLPARSER_EXPORT XMLElementDecl
     // -----------------------------------------------------------------------
 
     /** @name Miscellenous methods */
-    //{@
+    //@{
 
     /** Geta formatted string of the content model
       *

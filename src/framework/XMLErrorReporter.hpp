@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.9  2000/12/14 18:49:57  tng
+  * Fix API document generation warning: "Warning: end of member group without matching begin"
+  *
   * Revision 1.8  2000/03/02 19:54:25  roddey
   * This checkin includes many changes done while waiting for the
   * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -144,7 +147,7 @@ public:
     // -----------------------------------------------------------------------
 
     /** @name Error Handler interface */
-    //{@
+    //@{
 
     /** Called to report errors from the scanner or validator
       *

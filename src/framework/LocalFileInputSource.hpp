@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/12/14 18:49:53  tng
+ * Fix API document generation warning: "Warning: end of member group without matching begin"
+ *
  * Revision 1.5  2000/02/24 20:00:22  abagchi
  * Swat for removing Log from API docs
  *
@@ -174,7 +177,7 @@ public :
     // -----------------------------------------------------------------------
 
     /** @name Virtual methods */
-    //{@
+    //@{
 
     /**
     * This method will return a binary input stream derivative that will
