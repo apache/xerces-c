@@ -383,6 +383,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     (
                         attDefForWildCard
                         , normBuf.getRawBuffer()
+                        , false
+                        , elemDecl
                     );
                 }
 
@@ -419,6 +421,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         (
                             attDef
                             , normBuf.getRawBuffer()
+                            , false
+                            , elemDecl
                         );
                     }
                 }
@@ -540,6 +544,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         (
                             &curDef
                             , curDef.getValue()
+                            , false
+                            , elemDecl
                         );
                     }
 

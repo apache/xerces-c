@@ -2956,6 +2956,8 @@ bool XMLScanner::scanStartTag(bool& gotData)
                     (
                         attDef
                         , fAttValueBuf.getRawBuffer()
+                        , false
+                        , elemDecl
                     );
                 }
             }
@@ -3098,6 +3100,8 @@ bool XMLScanner::scanStartTag(bool& gotData)
                         (
                             &curDef
                             , curDef.getValue()
+                            , false
+                            , elemDecl
                         );
                     }
 

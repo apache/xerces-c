@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.7  2002/11/07 21:59:22  tng
+  * Pass elemDecl to XMLValidator::validateAttrValue so that we can include element name in error message.
+  *
   * Revision 1.6  2002/11/04 15:00:21  tng
   * C++ Namespace Support.
   *
@@ -286,6 +289,7 @@ public:
         const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
         , bool                              preValidation = false
+        , const XMLElementDecl*             elemDecl = 0
     ) = 0;
 
     /**

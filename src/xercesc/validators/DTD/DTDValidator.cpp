@@ -202,7 +202,8 @@ bool DTDValidator::requiresNamespaces() const
 void
 DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                                 , const XMLCh* const    attrValue
-                                , bool                  preValidation)
+                                , bool                  preValidation
+                                , const XMLElementDecl* elemDecl)
 {
     //
     //  Get quick refs to lost of of the stuff in the passed objects in
@@ -586,6 +587,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
                     &curAttDef
                     , curAttDef.getValue()
                     , true
+                    , &curElem
                 );
             }
         }
