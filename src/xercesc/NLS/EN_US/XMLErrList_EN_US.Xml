@@ -462,7 +462,7 @@
             <Message Id="Mutex_CouldNotDestroy" Text="Could not destroy mutex"/>
             <Message Id="NetAcc_InternalError" Text="Error on {0} NetAccessor. Msg: {1}"/>
             <Message Id="NetAcc_InitFailed" Text="The NetAccessor could not be initialized. Error={0}"/>
-            <Message Id="NetAcc_TargetResolution" Text="The host/address '(0}' could not be resolved"/>
+            <Message Id="NetAcc_TargetResolution" Text="The host/address '{0}' could not be resolved"/>
             <Message Id="NetAcc_CreateSocket" Text="Could not create the socket for URL '{0}'. Error={1}"/>
             <Message Id="NetAcc_ConnSocket" Text="Could not connect to the socket for URL '{0}'. Error={1}"/>
             <Message Id="NetAcc_WriteSocket" Text="Could not write to the socket. Error={0}"/>
@@ -770,7 +770,7 @@
             <Message Id="UnterminatedPEReference" Text="The parameter entity reference must end with the ';' delimiter."/>
             <Message Id="ExternalIDRequired" Text="The external entity declaration must begin with either SYSTEM or PUBLIC"/>
             <Message Id="RecursiveReference" Text="Recursive reference {0} (Reference path: '{1}')"/>
-            <Message Id="ImproperDeclarationNesting" Text="The replacement text of parameter entity `(0)'' must be properly nested"/>
+            <Message Id="ImproperDeclarationNesting" Text="The replacement text of parameter entity '{0}' must be properly nested"/>
             <Message Id="ErrorMessageAvailable" Text="There is a message available for this error."/>
             <Message Id="IncompleteContent" Text="The content is not complete for element '{0}'"/>
             <Message Id="UnterminatedSystemID" Text="Expected a termination character for the system id."/>
