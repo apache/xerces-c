@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/20 23:48:51  rahulj
+ * Added Socket based NetAccessor. This will enable one to
+ * use HTTP URL's for system id's. Default build options do
+ * not use this NetAccessor. Specify the '-n socket' option
+ * to 'runConfigure' to configure Xerces-C to use this new
+ * feature. The code works under Solaris 2.6, Linux, AIX
+ * and HPUX 11 with aCC.
+ * Todo's: enable proper error handling.
+ *
  * Revision 1.11  2000/03/17 23:59:59  roddey
  * Initial updates for two way transcoding support
  *
@@ -147,6 +156,12 @@
 
 
 
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#endif
+
+
+
 #if !defined(XML_HPUX_KAICC)
 #include    <sys/timeb.h>             // does not work with KAI compiler
 #endif
@@ -196,7 +211,11 @@ static void WriteUStrStdOut(const XMLCh* const toWrite)
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 
@@ -274,7 +293,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-	 const char* reasonStr = "Unknown reason";
+     const char* reasonStr = "Unknown reason";
     if (reason == Panic_NoTransService)
         reasonStr = "Could not load a transcoding service";
     else if (reason == Panic_NoDefTranscoder)
@@ -420,24 +439,24 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
 
-	//
-	//  NOTE: THe path provided has always already been opened successfully,
-	//  so we know that its not some pathological freaky path. It comes in
-	//  in native format, and goes out as Unicode always
-	//
-	char* newSrc = XMLString::transcode(srcPath);
-	ArrayJanitor<char> janText(newSrc);
+    //
+    //  NOTE: THe path provided has always already been opened successfully,
+    //  so we know that its not some pathological freaky path. It comes in
+    //  in native format, and goes out as Unicode always
+    //
+    char* newSrc = XMLString::transcode(srcPath);
+    ArrayJanitor<char> janText(newSrc);
 
-	// Use a local buffer that is big enough for the largest legal path
-	char absPath[PATH_MAX];
-	//get the absolute path
-	char* retPath = realpath(newSrc, &absPath[0]);
-	ArrayJanitor<char> janText2(retPath);
+    // Use a local buffer that is big enough for the largest legal path
+    char absPath[PATH_MAX];
+    //get the absolute path
+    char* retPath = realpath(newSrc, &absPath[0]);
+    ArrayJanitor<char> janText2(retPath);
 
-	if (!retPath)
-	{
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
-	}
+    if (!retPath)
+    {
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
+    }
     return XMLString::transcode(absPath);
 }
 
@@ -516,7 +535,7 @@ XMLCh* XMLPlatformUtils::weavePaths
     const XMLCh* pathPtr = relativePath;
     while (true)
     {
-		// If it does not start with some period, then we are done
+        // If it does not start with some period, then we are done
         if (*pathPtr != chPeriod)
             break;
 
@@ -549,7 +568,8 @@ XMLCh* XMLPlatformUtils::weavePaths
 
             // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
         }
     }
 
@@ -564,7 +584,7 @@ XMLCh* XMLPlatformUtils::weavePaths
 
     // Orphan the buffer and return it
     janBuf.orphan();
-	return tmpBuf;
+    return tmpBuf;
 }
 
 // -----------------------------------------------------------------------

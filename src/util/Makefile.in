@@ -55,6 +55,15 @@
 #
 #
 # $Log$
+# Revision 1.22  2000/03/20 23:48:50  rahulj
+# Added Socket based NetAccessor. This will enable one to
+# use HTTP URL's for system id's. Default build options do
+# not use this NetAccessor. Specify the '-n socket' option
+# to 'runConfigure' to configure Xerces-C to use this new
+# feature. The code works under Solaris 2.6, Linux, AIX
+# and HPUX 11 with aCC.
+# Todo's: enable proper error handling.
+#
 # Revision 1.21  2000/03/20 19:17:00  abagchi
 # Added XML256TableTranscoder
 #
@@ -142,6 +151,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+NETACCESSOR = @netaccessor@
 
 MODULE = util
 
@@ -174,126 +184,140 @@ else
   endif
 endif
 
+
+ifeq (${NETACCESSOR},Socket)
+   NETACCESSORMODULE=Socket
+endif
+
+
 include ../Makefile.incl
 
 UTIL_CPP_PUBHEADERS = \
-	ArrayIndexOutOfBoundsException.hpp \
-	AutoSense.hpp \
-	BinFileInputStream.hpp \
-	BinInputStream.hpp \
-	BinMemInputStream.hpp \
-	BitOps.hpp \
-	BitSet.hpp \
-	CountedPointer.hpp \
-	EmptyStackException.hpp \
-	FlagJanitor.hpp \
-	IOException.hpp \
-	IllegalArgumentException.hpp \
-	InvalidCastException.hpp \
-	Janitor.hpp \
-	KVStringPair.hpp \
-	KeyValuePair.hpp \
-	Mutexes.hpp \
-	NameIdPool.hpp \
-	NoDefTranscoderException.hpp \
-	NoSuchElementException.hpp \
-	NullPointerException.hpp \
-	PlatformUtils.hpp \
-	RefArrayOf.hpp \
-	RefHashTableOf.hpp \
-	RefStackOf.hpp \
-	RefVectorOf.hpp \
-	RuntimeException.hpp \
-	StringPool.hpp \
-	TextOutputStream.hpp \
-	TransENameMap.hpp \
-	TransService.hpp \
-	TranscodingException.hpp \
-	UTFDataFormatException.hpp \
-	UnexpectedEOFException.hpp \
-	UnsupportedEncodingException.hpp \
-	ValueArrayOf.hpp \
-	ValueStackOf.hpp \
-	ValueVectorOf.hpp \
-	XercesDefs.hpp \
-	XML256TableTranscoder.hpp \
-	XML88591Transcoder.hpp \
-	XMLASCIITranscoder.hpp \
-	XMLChTranscoder.hpp \
-	XMLIBM1140Transcoder.hpp \
-	XMLDeleterFor.hpp \
-	XMLEBCDICTranscoder.hpp \
-	XMLEnumerator.hpp \
-	XMLExceptMsgs.hpp \
-	XMLException.hpp \
-	XMLMsgLoader.hpp \
-	XMLNetAccessor.hpp \
-	XMLString.hpp \
-	XMLUCS4Transcoder.hpp \
-	XMLURL.hpp \
-	XMLUTF16Transcoder.hpp \
-	XMLUTF8Transcoder.hpp \
-	XMLUni.hpp \
-	XMLWin1252Transcoder.hpp
+    ArrayIndexOutOfBoundsException.hpp \
+    AutoSense.hpp \
+    BinFileInputStream.hpp \
+    BinInputStream.hpp \
+    BinMemInputStream.hpp \
+    BitOps.hpp \
+    BitSet.hpp \
+    CountedPointer.hpp \
+    EmptyStackException.hpp \
+    FlagJanitor.hpp \
+    IOException.hpp \
+    IllegalArgumentException.hpp \
+    InvalidCastException.hpp \
+    Janitor.hpp \
+    KVStringPair.hpp \
+    KeyValuePair.hpp \
+    Mutexes.hpp \
+    NameIdPool.hpp \
+    NoDefTranscoderException.hpp \
+    NoSuchElementException.hpp \
+    NullPointerException.hpp \
+    PlatformUtils.hpp \
+    RefArrayOf.hpp \
+    RefHashTableOf.hpp \
+    RefStackOf.hpp \
+    RefVectorOf.hpp \
+    RuntimeException.hpp \
+    StringPool.hpp \
+    TextOutputStream.hpp \
+    TransENameMap.hpp \
+    TransService.hpp \
+    TranscodingException.hpp \
+    UTFDataFormatException.hpp \
+    UnexpectedEOFException.hpp \
+    UnsupportedEncodingException.hpp \
+    ValueArrayOf.hpp \
+    ValueStackOf.hpp \
+    ValueVectorOf.hpp \
+    XercesDefs.hpp \
+    XML256TableTranscoder.hpp \
+    XML88591Transcoder.hpp \
+    XMLASCIITranscoder.hpp \
+    XMLChTranscoder.hpp \
+    XMLIBM1140Transcoder.hpp \
+    XMLDeleterFor.hpp \
+    XMLEBCDICTranscoder.hpp \
+    XMLEnumerator.hpp \
+    XMLExceptMsgs.hpp \
+    XMLException.hpp \
+    XMLMsgLoader.hpp \
+    XMLNetAccessor.hpp \
+    XMLString.hpp \
+    XMLUCS4Transcoder.hpp \
+    XMLURL.hpp \
+    XMLUTF16Transcoder.hpp \
+    XMLUTF8Transcoder.hpp \
+    XMLUni.hpp \
+    XMLWin1252Transcoder.hpp
 
 UTIL_CPP_PRIVHEADERS =
 
 C_FILES = \
-	CountedPointer.c \
-	FlagJanitor.c \
-	Janitor.c \
-	KeyValuePair.c \
-	NameIdPool.c \
-	RefArrayOf.c \
-	RefHashTableOf.c \
-	RefStackOf.c \
-	RefVectorOf.c \
-	TransENameMap.c \
-	ValueArrayOf.c \
-	ValueStackOf.c \
-	ValueVectorOf.c \
-	XMLDeleterFor.c
+    CountedPointer.c \
+    FlagJanitor.c \
+    Janitor.c \
+    KeyValuePair.c \
+    NameIdPool.c \
+    RefArrayOf.c \
+    RefHashTableOf.c \
+    RefStackOf.c \
+    RefVectorOf.c \
+    TransENameMap.c \
+    ValueArrayOf.c \
+    ValueStackOf.c \
+    ValueVectorOf.c \
+    XMLDeleterFor.c
 
 UTIL_CPP_OBJECTS = \
-	BinFileInputStream.$(TO) \
-	BinInputStream.$(TO) \
-	BinMemInputStream.$(TO) \
-	BitSet.$(TO) \
-	HeaderDummy.$(TO) \
-	KVStringPair.$(TO) \
-	Mutexes.$(TO) \
-	PlatformUtils.$(TO) \
-	StringPool.$(TO) \
-	TextOutputStream.$(TO) \
-	XMLURL.$(TO) \
-	TransService.$(TO) \
-	XML256TableTranscoder.$(TO) \
-	XML88591Transcoder.$(TO) \
-	XMLASCIITranscoder.$(TO) \
-	XMLChTranscoder.$(TO) \
-        XMLIBM1140Transcoder.$(TO) \
-	XMLEBCDICTranscoder.$(TO) \
-	XMLException.$(TO) \
-	XMLString.$(TO) \
-	XMLUCSTranscoder.$(TO) \
-	XMLUTF16Transcoder.$(TO) \
-	XMLUTF8Transcoder.$(TO) \
-	XMLUni.$(TO) \
-	XMLWin1252Transcoder.$(TO)
+    BinFileInputStream.$(TO) \
+    BinInputStream.$(TO) \
+    BinMemInputStream.$(TO) \
+    BitSet.$(TO) \
+    HeaderDummy.$(TO) \
+    KVStringPair.$(TO) \
+    Mutexes.$(TO) \
+    PlatformUtils.$(TO) \
+    StringPool.$(TO) \
+    TextOutputStream.$(TO) \
+    XMLURL.$(TO) \
+    TransService.$(TO) \
+    XML256TableTranscoder.$(TO) \
+    XML88591Transcoder.$(TO) \
+    XMLASCIITranscoder.$(TO) \
+    XMLChTranscoder.$(TO) \
+    XMLIBM1140Transcoder.$(TO) \
+    XMLEBCDICTranscoder.$(TO) \
+    XMLException.$(TO) \
+    XMLString.$(TO) \
+    XMLUCSTranscoder.$(TO) \
+    XMLUTF16Transcoder.$(TO) \
+    XMLUTF8Transcoder.$(TO) \
+    XMLUni.$(TO) \
+    XMLWin1252Transcoder.$(TO)
 
-all::	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers
 
-includes::	pubheaders $(C_FILES)
+all:: includes $(UTIL_CPP_OBJECTS) platforms transcoders \
+      messageloaders compilers netaccessors
+
+includes:: pubheaders $(C_FILES)
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
+ifeq ($(NETACCESSORMODULE),Socket)
+	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) $@ ; cd ../..
+endif
 	cd Compilers ; $(MAKE) $@ ; cd ..
+
 
 platforms::
 	cd Platforms ; $(MAKE) ; cd ..
 
+
 transcoders::
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) ; cd ../..
+
 
 messageloaders::
 ifeq (${MESSAGELOADER},ICONV)
@@ -308,16 +332,24 @@ endif
 endif
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) ; cd ../..
 
+
 compilers::
 	cd Compilers ; $(MAKE) ; cd ..
+
+
+netaccessors::
+	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) ; cd ../..
+
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
 	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(XML_INC_DIR)/$(MODULE)
 
+
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+
 
 clean::
 	@echo "Making clean in $(MODULE) ..."
@@ -325,11 +357,14 @@ clean::
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
+ifeq ($(NETACCESSORMODULE),Socket)
+	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) $@ ; cd ../..
+endif
 	cd Compilers ; $(MAKE) $@ ; cd ..
 
 
 
-distclean::	clean
+distclean:: clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(UTIL_CPP_PUBHEADERS))
@@ -337,6 +372,9 @@ distclean::	clean
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
+ifeq ($(NETACCESSORMODULE),Socket)
+	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) $@ ; cd ../..
+endif
 	cd Compilers ; $(MAKE) $@ ; cd ..
 
 

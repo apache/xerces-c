@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/03/20 23:48:51  rahulj
+ * Added Socket based NetAccessor. This will enable one to
+ * use HTTP URL's for system id's. Default build options do
+ * not use this NetAccessor. Specify the '-n socket' option
+ * to 'runConfigure' to configure Xerces-C to use this new
+ * feature. The code works under Solaris 2.6, Linux, AIX
+ * and HPUX 11 with aCC.
+ * Todo's: enable proper error handling.
+ *
  * Revision 1.15  2000/03/17 23:59:59  roddey
  * Initial updates for two way transcoding support
  *
@@ -126,7 +135,7 @@
 #include    <string.h>
 #include    <unistd.h>
 #include    <limits.h>
-#include 	<sys/ldr.h>
+#include    <sys/ldr.h>
 
 #include    <util/PlatformUtils.hpp>
 #include    <util/RuntimeException.hpp>
@@ -148,6 +157,11 @@
 #endif
 
 
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#endif
+
+
 // ---------------------------------------------------------------------------
 //  Local Methods
 // ---------------------------------------------------------------------------
@@ -155,7 +169,7 @@ static void WriteCharStr( FILE* stream, const char* const toWrite)
 {
     if (fputs(toWrite, stream) == EOF)
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -165,7 +179,7 @@ static void WriteUStrStdErr( const XMLCh* const toWrite)
     ArrayJanitor<char> janText(tmpVal);
     if (fputs(tmpVal, stderr) == EOF)
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -175,14 +189,18 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
     ArrayJanitor<char> janText(tmpVal);
     if (fputs(tmpVal, stdout) == EOF)
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
     }
 }
 
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 // ---------------------------------------------------------------------------
@@ -231,7 +249,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
     catch(...)
     {
-		 panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+         panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -241,7 +259,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-	const char* reasonStr = "Unknown reason";
+    const char* reasonStr = "Unknown reason";
     if (reason == Panic_NoTransService)
         reasonStr = "Could not load a transcoding service";
     else if (reason == Panic_NoDefTranscoder)
@@ -270,7 +288,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     // Get the current position
     int curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
-	ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
+    ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
 
     return (unsigned int)curPos;
 }
@@ -278,7 +296,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
     if (fclose((FILE*)theFile))
-	ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+    ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
 
 unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
@@ -286,19 +304,19 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     // Get the current position
     long  int curPos = ftell((FILE*)theFile);
     if (curPos == -1)
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
      if (fseek( (FILE*)theFile, 0, SEEK_END) )
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     long int retVal = ftell( (FILE*)theFile);
     if (retVal == -1)
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     // And put the pointer back
     if (fseek( (FILE*)theFile, curPos, SEEK_SET) )
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
 
     return (unsigned int)retVal;
 }
@@ -332,7 +350,7 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 
     if(ferror((FILE*)theFile))
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
     }
 
     return (unsigned int)noOfItemsRead;
@@ -343,7 +361,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET) )
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
 
 
@@ -373,11 +391,12 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     char *absPath = new char[PATH_MAX];
     ArrayJanitor<char> janText2(absPath);
     //get the absolute path 
-    char* retPath = realpath(newSrc, absPath);	
-	
+    char* retPath = realpath(newSrc, absPath);  
+    
     if (!retPath)
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::File_CouldNotGetBasePathName);
     }
     return XMLString::transcode(absPath);
 }
@@ -456,7 +475,7 @@ XMLCh* XMLPlatformUtils::weavePaths
     const XMLCh* pathPtr = relativePath;
     while (true)
     {
-		// If it does not start with some period, then we are done
+        // If it does not start with some period, then we are done
         if (*pathPtr != chPeriod)
             break;
 
@@ -489,7 +508,8 @@ XMLCh* XMLPlatformUtils::weavePaths
 
             // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
         }
     }
 
@@ -504,7 +524,7 @@ XMLCh* XMLPlatformUtils::weavePaths
 
     // Orphan the buffer and return it
     janBuf.orphan();
-	return tmpBuf;
+    return tmpBuf;
 }
 
 
@@ -518,7 +538,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
         return;
     if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
     }
     if ( (pthread_mutex_t*)mtxHandle)
         delete mtxHandle;
@@ -529,7 +549,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
         return;
     if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
     }
 
 }
@@ -559,7 +579,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
         return;
     if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
     }
 }
 

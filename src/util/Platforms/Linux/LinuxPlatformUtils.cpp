@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/03/20 23:48:52  rahulj
+ * Added Socket based NetAccessor. This will enable one to
+ * use HTTP URL's for system id's. Default build options do
+ * not use this NetAccessor. Specify the '-n socket' option
+ * to 'runConfigure' to configure Xerces-C to use this new
+ * feature. The code works under Solaris 2.6, Linux, AIX
+ * and HPUX 11 with aCC.
+ * Todo's: enable proper error handling.
+ *
  * Revision 1.14  2000/03/18 00:00:00  roddey
  * Initial updates for two way transcoding support
  *
@@ -149,10 +158,14 @@
 
 #if defined(XML_USE_ICU_MESSAGELOADER)
     #include <util/MsgLoaders/ICU/ICUMsgLoader.hpp>
-
 #else
     // Same as -DXML_USE_INMEM_MESSAGELOADER
     #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#endif
+
+
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
 
@@ -194,7 +207,11 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 
@@ -302,7 +319,8 @@ XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
 
             // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
         }
     }
 
@@ -377,7 +395,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-	 const char* reasonStr = "Unknown reason";
+     const char* reasonStr = "Unknown reason";
     if (reason == Panic_NoTransService)
         reasonStr = "Could not load a transcoding service";
     else if (reason == Panic_NoDefTranscoder)
@@ -527,12 +545,12 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     // Use a local buffer that is big enough for the largest legal path
     char *absPath = new char[1024];
     // get the absolute path 
-    char* retPath = realpath(newSrc, absPath);	
+    char* retPath = realpath(newSrc, absPath);  
     ArrayJanitor<char> janText2(retPath);
-	
+    
     if (!retPath)
     {
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
     }
     return XMLString::transcode(absPath);
 }

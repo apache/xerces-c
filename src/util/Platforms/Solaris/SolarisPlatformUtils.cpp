@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/03/20 23:48:52  rahulj
+ * Added Socket based NetAccessor. This will enable one to
+ * use HTTP URL's for system id's. Default build options do
+ * not use this NetAccessor. Specify the '-n socket' option
+ * to 'runConfigure' to configure Xerces-C to use this new
+ * feature. The code works under Solaris 2.6, Linux, AIX
+ * and HPUX 11 with aCC.
+ * Todo's: enable proper error handling.
+ *
  * Revision 1.15  2000/03/18 00:00:02  roddey
  * Initial updates for two way transcoding support
  *
@@ -151,6 +160,13 @@
 #endif
 
 
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#endif
+
+
+
+
 // ---------------------------------------------------------------------------
 //  Local Methods
 // ---------------------------------------------------------------------------
@@ -187,7 +203,11 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 // ---------------------------------------------------------------------------
@@ -200,13 +220,13 @@ void XMLPlatformUtils::platformInit()
 {
     //
     // The gAtomicOpMutex mutex needs to be created 
-	// because compareAndSwap and incrementlocation and decrementlocation 
-	// does not have the atomic system calls for usage
+    // because compareAndSwap and incrementlocation and decrementlocation 
+    // does not have the atomic system calls for usage
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
 
-    gAtomicOpMutex = new pthread_mutex_t;	
+    gAtomicOpMutex = new pthread_mutex_t;   
 
     if (pthread_mutex_init(gAtomicOpMutex, NULL))
         panic( XMLPlatformUtils::Panic_SystemInit );
@@ -273,7 +293,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
     
-	const char* reasonStr = "Unknown reason";
+    const char* reasonStr = "Unknown reason";
     if (reason == Panic_NoTransService)
         reasonStr = "Could not load a transcoding service";
     else if (reason == Panic_NoDefTranscoder)
@@ -408,7 +428,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
-	//
+    //
     //  NOTE: THe path provided has always already been opened successfully,
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
@@ -507,7 +527,7 @@ XMLCh* XMLPlatformUtils::weavePaths
         if (*pathPtr != chPeriod)
             break;
 
-		unsigned int periodCount = 1;
+        unsigned int periodCount = 1;
         pathPtr++;
         if (*pathPtr == chPeriod)
         {
@@ -536,7 +556,8 @@ XMLCh* XMLPlatformUtils::weavePaths
 
             // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
         }
     }
 
@@ -570,36 +591,36 @@ public:
     pthread_t         tid;
 
     RecursiveMutex() { 
-		       if (pthread_mutex_init(&mutex, NULL))
-			    ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
+               if (pthread_mutex_init(&mutex, NULL))
+                ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
                        recursionCount = 0;
                        tid = 0;
                      };
 
     ~RecursiveMutex() {
-			if (pthread_mutex_destroy(&mutex))
-			    ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
+            if (pthread_mutex_destroy(&mutex))
+                ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
                       };
 
      void lock()      {
-			  if (pthread_equal(tid, pthread_self()))
-			  {
-			      recursionCount++;
-			      return;
-			  }
-			  if (pthread_mutex_lock(&mutex) != 0)
-			      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
-			  tid = pthread_self();
-			  recursionCount = 1;
-		      };
+              if (pthread_equal(tid, pthread_self()))
+              {
+                  recursionCount++;
+                  return;
+              }
+              if (pthread_mutex_lock(&mutex) != 0)
+                  ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
+              tid = pthread_self();
+              recursionCount = 1;
+              };
 
 
      void unlock()    {
                           if (--recursionCount > 0)
                               return;
 
-			  if (pthread_mutex_unlock(&mutex) != 0)
-			      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
+              if (pthread_mutex_unlock(&mutex) != 0)
+                  ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
                           tid = 0;
                        };
    };
@@ -683,7 +704,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
     if (pthread_mutex_lock( gAtomicOpMutex))
         panic(XMLPlatformUtils::Panic_SynchronizationErr);
-	
+    
     int tmp = --location;
 
     if (pthread_mutex_unlock( gAtomicOpMutex))

@@ -56,6 +56,15 @@
 #
 #
 # $Log$
+# Revision 1.24  2000/03/20 23:48:50  rahulj
+# Added Socket based NetAccessor. This will enable one to
+# use HTTP URL's for system id's. Default build options do
+# not use this NetAccessor. Specify the '-n socket' option
+# to 'runConfigure' to configure Xerces-C to use this new
+# feature. The code works under Solaris 2.6, Linux, AIX
+# and HPUX 11 with aCC.
+# Todo's: enable proper error handling.
+#
 # Revision 1.23  2000/03/14 22:40:15  abagchi
 # Now actually uses the compiler option -z
 #
@@ -189,7 +198,7 @@ usage()
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
-    echo "       -n <net accessor> can be 'fileonly', 'libwww'"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket'"
     echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -l <extra linker options>"
@@ -435,13 +444,24 @@ export MESSAGELOADER
 # Check for the type of net accessor
 #
 
-USELIBWWW=0;                   # By default use file-only
+NETACCESSOR=FileOnly               # By default use file-only
 if test $netaccessor ; then
 case $netaccessor in
    fileonly)
        netaccessorDefines="" ;;
 
+   socket)
+       NETACCESSOR=Socket
+       netaccessorDefines="-DXML_USE_NETACCESSOR_SOCKET"
+       case $platform in
+           solaris)
+               netaccessorLibs="-lnsl -lsocket";;
+           *)
+               ;;
+       esac;;
+
    libwww)
+       NETACCESSOR=LibWWW
        if test -z ${LIBWWWROOT} ; then
            echo "You have not defined your LIBWWWROOT environment variable. Cannot proceed further ..."
            exit ${ERROR_EXIT_CODE};
@@ -456,7 +476,7 @@ case $netaccessor in
 esac
 fi
 
-export USELIBWWW
+export NETACCESSOR
 
 
 
@@ -508,12 +528,13 @@ echo In future, you may also directly type the following commands to create the 
 echo
 echo export TRANSCODER=$TRANSCODER
 echo export MESSAGELOADER=$MESSAGELOADER
-echo export USELIBWWW=$USELIBWWW
+echo export NETACCESSOR=$NETACCESSOR
 echo export CC=$CC
 echo export CXX=$CXX
 echo export CXXFLAGS=$CXXFLAGS
 echo export CFLAGS=$CFLAGS
 echo export LIBS=$LIBS
+echo export NETACCESSOR=$NETACCESSOR
 echo configure
 
 echo

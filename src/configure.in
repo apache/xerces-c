@@ -82,6 +82,9 @@ AC_SUBST(messageloader)
 transcoder=${TRANSCODER}
 AC_SUBST(transcoder)
 
+netaccessor=${NETACCESSOR}
+AC_SUBST(netaccessor)
+
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
 util/Makefile \
@@ -103,6 +106,7 @@ util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
+util/NetAccessors/Socket/Makefile \
 validators/DTD/Makefile \
 framework/Makefile \
 dom/Makefile \

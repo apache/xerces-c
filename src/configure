@@ -1350,6 +1350,9 @@ messageloader=${MESSAGELOADER}
 transcoder=${TRANSCODER}
 
 
+netaccessor=${NETACCESSOR}
+
+
 trap '' 1 2 15
 cat > confcache <<\EOF
 # This file is a shell script that caches the results of configure
@@ -1483,6 +1486,7 @@ util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
+util/NetAccessors/Socket/Makefile \
 validators/DTD/Makefile \
 framework/Makefile \
 dom/Makefile \
@@ -1545,6 +1549,7 @@ s%@libs@%$libs%g
 s%@uselibwww@%$uselibwww%g
 s%@messageloader@%$messageloader%g
 s%@transcoder@%$transcoder%g
+s%@netaccessor@%$netaccessor%g
 
 CEOF
 EOF
@@ -1606,6 +1611,7 @@ util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
+util/NetAccessors/Socket/Makefile \
 validators/DTD/Makefile \
 framework/Makefile \
 dom/Makefile \
