@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/05/23 21:27:21  knoaman
+ * Fix "Array Bound Read" problem reported by Purify.
+ *
  * Revision 1.9  2002/04/19 13:33:23  knoaman
  * Fix for bug 8236.
  *
@@ -901,6 +904,12 @@ void SchemaValidator::postParseValidation()
 //
 void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill)
 {
+    toFill.reset();
+
+    //empty string
+    if (!*value)
+        return;
+
     short fWhiteSpace = DatatypeValidator::PRESERVE;
     if (dV)
         fWhiteSpace = dV->getWSFacet();
@@ -912,7 +921,6 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     };
 
     States curState = InContent;
-    toFill.reset();
 
     //
     //  Loop through the chars of the source value and normalize it according
