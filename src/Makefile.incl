@@ -55,8 +55,11 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:02:55  twl
-# Initial revision
+# Revision 1.2  1999/11/12 18:36:34  abagchi
+# Changed instances of XML4CROOT to XERCESROOT
+#
+# Revision 1.1.1.1  1999/11/09 01:02:55  twl
+# Initial checkin
 #
 # Revision 1.4  1999/11/08 20:44:09  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -69,7 +72,7 @@
 # Before you try to run the Makefile, make sure you have set      #
 # the following environment variables properly.                   #
 #                                                                 #
-# export XML4CROOT=<the directory where you installed XML4C>      #
+# export XERCESCROOT=<the directory where you installed XRECES-C> #
 #                                                                 #
 # In case you intend to use either the ICU transcoder or the      #
 # ICU message loader, you must set ICUROOT correctly.             #
@@ -95,7 +98,7 @@
 
 ALL:    all
 
-ALL_OBJECTS_DIR = ${XML4CROOT}/obj
+ALL_OBJECTS_DIR = ${XERCESCROOT}/obj
 
 XML_BUILD_OPTIONS = ${CXXFLAGS}
 
@@ -194,7 +197,7 @@ endif
 #    else
 #      PLATFORM_COMPILE_OPTIONS  = $(COMMON_COMPILE_OPTIONS) -ptr${TEMPLATESREPOSITORY}
 #    endif
-#    ALLINCLUDES= -I$(XML4CROOT)/src -I$(ICUROOT)/include
+#    ALLINCLUDES= -I$(XERCESCROOT)/src -I$(ICUROOT)/include
 #    MAKE_SHARED = $(PLATFORM_CPP_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
 #    MAKE_SHARED_C = $(PLATFORM_C_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
 #    ALLLIBS = -licu-uc -lcma -lm
@@ -238,9 +241,9 @@ endif
       PLATFORM_COMPILE_OPTIONS  = $(COMMON_COMPILE_OPTIONS) -ptr${TEMPLATESREPOSITORY}
     endif
 ifdef ICUROOT
-    ALLINCLUDES=-I$(XML4CROOT)/src/com/ibm/xml -I$(XML4CROOT)/src -I$(ICUROOT)/include
+    ALLINCLUDES=-I$(XERCESCROOT)/src/com/ibm/xml -I$(XERCESCROOT)/src -I$(ICUROOT)/include
 else
-    ALLINCLUDES=-I$(XML4CROOT)/src/com/ibm/xml -I$(XML4CROOT)/src
+    ALLINCLUDES=-I$(XERCESCROOT)/src/com/ibm/xml -I$(XERCESCROOT)/src
 endif
     MAKE_SHARED = $(PLATFORM_CPP_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
     MAKE_SHARED_C = $(PLATFORM_C_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
@@ -293,8 +296,8 @@ CREATE_DEPENDS_FILE = echo "" > depends
 MAKE_DEPEND = ${CC1} -E -xM
 
 ########################## DIRECTORIES ############################
-XML_LIB_DIR = $(XML4CROOT)/lib
-XML_INC_DIR = $(XML4CROOT)/include
+XML_LIB_DIR = $(XERCESCROOT)/lib
+XML_INC_DIR = $(XERCESCROOT)/include
 ifeq (${MESSAGELOADER}, ICU)
     INTL_INC_DIR1 = $(ICUROOT)/include
 endif
