@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/07/07 22:16:51  jpolast
+ * remove old put(value) function.  use put(key,value) instead.
+ *
  * Revision 1.7  2000/06/29 18:27:09  jpolast
  * bug fix for passing hasher class references to constructor
  *
@@ -170,7 +173,6 @@ public:
     //  Putters
     // -----------------------------------------------------------------------
 	void put(void* key, TVal* const valueToAdopt);
-	void put(TVal* const valueToAdopt); // deprecated. use at your own risk. instead use put(key, value)
 
 
 private :

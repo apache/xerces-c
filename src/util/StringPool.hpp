@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/07/07 22:16:52  jpolast
+ * remove old put(value) function.  use put(key,value) instead.
+ *
  * Revision 1.3  2000/02/24 20:05:25  abagchi
  * Swat for removing Log from API docs
  *
@@ -121,11 +124,12 @@ private :
             PoolElem(const XMLCh* const string, const unsigned int id);
             ~PoolElem();
 
-            const XMLCh* getKey() const;
+            inline const XMLCh* getKey() const { return fString; }
             void reset(const XMLCh* const string, const unsigned int id);
 
             unsigned int    fId;
             XMLCh*          fString;
+
     };
 
 

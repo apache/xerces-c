@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/07/07 22:16:56  jpolast
+ * remove old put(value) function.  use put(key,value) instead.
+ *
  * Revision 1.13  2000/05/09 00:22:44  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -261,11 +264,6 @@ const XMLCh* CPMapEntry::getEncodingName() const
     return fEncodingName;
 }
 
-const XMLCh* CPMapEntry::getKey() const
-{
-    return fEncodingName;
-}
-
 unsigned int CPMapEntry::getWinCP() const
 {
     return fCPId;
@@ -402,7 +400,7 @@ Win32TransService::Win32TransService()
                 }
 
                 CPMapEntry* newEntry = new CPMapEntry(nameBuf, CPId, IEId);
-                fCPMap->put(newEntry);
+                fCPMap->put(nameBuf, newEntry);
             }
         }
 
@@ -472,13 +470,8 @@ Win32TransService::Win32TransService()
                 //
                 if (::wcscmp(uniAlias, aliasedEntry->getEncodingName()))
                 {
-                    CPMapEntry* newEntry = new CPMapEntry
-                    (
-                        uniAlias
-                        , aliasedEntry->getWinCP()
-                        , aliasedEntry->getIEEncoding()
-                    );
-                    fCPMap->put(newEntry);
+                    CPMapEntry* newEntry = new CPMapEntry(uniAlias, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
+                    fCPMap->put(uniAlias, newEntry);
                 }
             }
             delete [] uniAlias;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/07/07 22:16:51  jpolast
+ * remove old put(value) function.  use put(key,value) instead.
+ *
  * Revision 1.4  2000/05/15 22:31:20  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -105,10 +108,6 @@ XMLStringPool::PoolElem::~PoolElem()
 // ---------------------------------------------------------------------------
 //  StringPool::PoolElem: Public methods
 // ---------------------------------------------------------------------------
-const XMLCh* XMLStringPool::PoolElem::getKey() const
-{
-    return fString;
-}
 
 void
 XMLStringPool::PoolElem::reset(const XMLCh* const string, const unsigned int id)
@@ -222,7 +221,7 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     //  id index.
     //
     PoolElem* newElem = new PoolElem(newString, fCurId);
-    fHashTable->put(newElem);
+    fHashTable->put((void*)(newElem->getKey()), newElem);
     fIdMap[fCurId] = newElem;
 
     // Bump the current id and return the id of the new elem we just added

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/07/07 22:16:50  jpolast
+ * remove old put(value) function.  use put(key,value) instead.
+ *
  * Revision 1.5  2000/06/29 18:27:09  jpolast
  * bug fix for passing hasher class references to constructor
  *
@@ -247,12 +250,6 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
         newBucket = new RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
-}
-
-// this function is deprecated in favor of put(key,value).  use at your own risk.
-template <class TVal> void RefHashTableOf<TVal>::put(TVal* const valueToAdopt)
-{
-	put((void*)(valueToAdopt->getKey()), valueToAdopt);
 }
 
 

@@ -276,33 +276,33 @@ void XMLTransService::initTransService()
     //  Add in the magical mapping for the native XMLCh transcoder. This
     //  is used for internal entities.
     //
-    gMappings->put(new ENameMapFor<XMLChTranscoder>(XMLUni::fgXMLChEncodingString));
+    gMappings->put((void*)XMLUni::fgXMLChEncodingString, new ENameMapFor<XMLChTranscoder>(XMLUni::fgXMLChEncodingString));
 
     //
     //  Add in our mappings for ASCII.
     //
-    gMappings->put(new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString));
-    gMappings->put(new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString2));
-    gMappings->put(new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString3));
-    gMappings->put(new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString4));
+    gMappings->put((void*)XMLUni::fgUSASCIIEncodingString, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString));
+    gMappings->put((void*)XMLUni::fgUSASCIIEncodingString2, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString2));
+    gMappings->put((void*)XMLUni::fgUSASCIIEncodingString3, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString3));
+    gMappings->put((void*)XMLUni::fgUSASCIIEncodingString4, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString4));
 
     //
     //  Add in our mappings for UTF-8
     //
-    gMappings->put(new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString));
-    gMappings->put(new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString2));
+    gMappings->put((void*)XMLUni::fgUTF8EncodingString, new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString));
+    gMappings->put((void*)XMLUni::fgUTF8EncodingString2, new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString2));
 
     //
     //  Add in our mappings for Latin1
     //
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString2));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString3));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString4));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString5));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString6));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString7));
-    gMappings->put(new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString8));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString2, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString2));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString3, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString3));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString4, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString4));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString5, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString5));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString6, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString6));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString7, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString7));
+    gMappings->put((void*)XMLUni::fgISO88591EncodingString8, new ENameMapFor<XML88591Transcoder>(XMLUni::fgISO88591EncodingString8));
 
     //
     //  Add in our mappings for UTF-16 and UCS-4, little endian
@@ -314,6 +314,7 @@ void XMLTransService::initTransService()
     #endif
     gMappings->put
     (
+		(void*)XMLUni::fgUTF16LEncodingString,
         new EEndianNameMapFor<XMLUTF16Transcoder>
         (
             XMLUni::fgUTF16LEncodingString
@@ -323,6 +324,7 @@ void XMLTransService::initTransService()
 
     gMappings->put
     (
+		(void*)XMLUni::fgUTF16LEncodingString2,
         new EEndianNameMapFor<XMLUTF16Transcoder>
         (
             XMLUni::fgUTF16LEncodingString2
@@ -332,6 +334,7 @@ void XMLTransService::initTransService()
 
     gMappings->put
     (
+		(void*)XMLUni::fgUCS4LEncodingString,
         new EEndianNameMapFor<XMLUCS4Transcoder>
         (
             XMLUni::fgUCS4LEncodingString
@@ -341,6 +344,7 @@ void XMLTransService::initTransService()
 
     gMappings->put
     (
+		(void*)XMLUni::fgUCS4LEncodingString2,
         new EEndianNameMapFor<XMLUCS4Transcoder>
         (
             XMLUni::fgUCS4LEncodingString2
@@ -357,6 +361,7 @@ void XMLTransService::initTransService()
     #endif
     gMappings->put
     (
+		(void*)XMLUni::fgUTF16BEncodingString,
         new EEndianNameMapFor<XMLUTF16Transcoder>
         (
             XMLUni::fgUTF16BEncodingString
@@ -366,6 +371,7 @@ void XMLTransService::initTransService()
 
     gMappings->put
     (
+		(void*)XMLUni::fgUTF16BEncodingString2,
         new EEndianNameMapFor<XMLUTF16Transcoder>
         (
             XMLUni::fgUTF16BEncodingString2
@@ -375,6 +381,7 @@ void XMLTransService::initTransService()
 
     gMappings->put
     (
+		(void*)XMLUni::fgUCS4BEncodingString,
         new EEndianNameMapFor<XMLUCS4Transcoder>
         (
             XMLUni::fgUCS4BEncodingString
@@ -384,6 +391,7 @@ void XMLTransService::initTransService()
 
     gMappings->put
     (
+		(void*)XMLUni::fgUCS4BEncodingString2,
         new EEndianNameMapFor<XMLUCS4Transcoder>
         (
             XMLUni::fgUCS4BEncodingString2
@@ -395,18 +403,18 @@ void XMLTransService::initTransService()
     //  Add in our mappings for IBM037, and the one alias we support for
     //  it, which is EBCDIC-CP-US.
     //
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
+    gMappings->put((void*)XMLUni::fgIBM037EncodingString, new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
+    gMappings->put((void*)XMLUni::fgIBM037EncodingString2, new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
 
     //
     //  Add in our mappings for IBM037 with Euro update, i.e. IBM1140. It
     //  has no aliases
     //
-    gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
+    gMappings->put((void*)XMLUni::fgIBM1140EncodingString, new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
 
     //
     //  Add in our mappings for Windows-1252. We don't have any aliases for
     //  this one, so there is just one mapping.
     //
-    gMappings->put(new ENameMapFor<XMLWin1252Transcoder>(XMLUni::fgWin1252EncodingString));
+    gMappings->put((void*)XMLUni::fgWin1252EncodingString, new ENameMapFor<XMLWin1252Transcoder>(XMLUni::fgWin1252EncodingString));
 }
