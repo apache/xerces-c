@@ -739,8 +739,9 @@ void DOMBasicTests()
         DOM_Element     rootEl  = doc.createElement("RootElement");
         doc.appendChild(rootEl);
 
-
-        DOM_Text        txt1 = doc.createTextNode("Hello Goodbye");
+        DOMString       tmp("Hello Goodbye");
+        DOM_Text        txt1 = doc.createTextNode(tmp);
+		tmp = 0;
         rootEl.appendChild(txt1);
 
         txt1.splitText(6);
