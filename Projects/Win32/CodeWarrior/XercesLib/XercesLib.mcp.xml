@@ -3918,15 +3918,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
-                    <PATH>NoDefTranscoderException.hpp</PATH>
-                    <PATHFORMAT>Windows</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>NoSuchElementException.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -7649,6 +7640,60 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -9861,13 +9906,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>NameIdPool.hpp</PATH>
-                    <PATHFORMAT>Windows</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
-                    <PATH>NoDefTranscoderException.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -12735,13 +12773,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>CodeWarrior</PATHROOT>
-                    <ACCESSPATH>:Win32-x86 Support:</ACCESSPATH>
-                    <PATH>Libraries\Win32 SDK\advapi32.lib</PATH>
-                    <PATHFORMAT>Windows</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>XMemory.hpp</PATH>
@@ -12766,6 +12797,55 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\dom\impl</ACCESSPATH>
                     <PATH>DOMNormalizer.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>CodeWarrior</PATHROOT>
+                    <ACCESSPATH>:Win32-x86 Support:</ACCESSPATH>
+                    <PATH>Libraries\Win32 SDK\advapi32.lib</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -16635,15 +16715,6 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
-                    <PATH>NoDefTranscoderException.hpp</PATH>
-                    <PATHFORMAT>Windows</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>NoSuchElementException.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -20366,6 +20437,60 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -22578,13 +22703,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>NameIdPool.hpp</PATH>
-                    <PATHFORMAT>Windows</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
-                    <PATH>NoDefTranscoderException.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -25485,6 +25603,48 @@
                     <PATH>XMemory.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                    <PATH>XMLDTDDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                    <PATH>XMLSchemaDescriptionImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
     </TARGETLIST>
@@ -28025,6 +28185,22 @@
                     <PATH>MemoryManagerImpl.cpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.hpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>..\..\..\..\src\xercesc\internal</ACCESSPATH>
+                    <PATH>XMLGrammarPoolImpl.cpp</PATH>
+                    <PATHFORMAT>Windows</PATHFORMAT>
+                </FILEREF>
             </GROUP>
             <GROUP><NAME>parsers</NAME>
                 <FILEREF>
@@ -28599,14 +28775,6 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
                     <PATH>NameIdPool.hpp</PATH>
-                    <PATHFORMAT>Windows</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <TARGETNAME>Xerces DLL Debug</TARGETNAME>
-                    <PATHTYPE>PathRelative</PATHTYPE>
-                    <PATHROOT>Project</PATHROOT>
-                    <ACCESSPATH>..\..\..\..\src\xercesc\util</ACCESSPATH>
-                    <PATH>NoDefTranscoderException.hpp</PATH>
                     <PATHFORMAT>Windows</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
@@ -30804,6 +30972,22 @@
                         <PATH>DTDValidator.hpp</PATH>
                         <PATHFORMAT>Windows</PATHFORMAT>
                     </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                        <PATH>XMLDTDDescriptionImpl.hpp</PATH>
+                        <PATHFORMAT>Windows</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>..\..\..\..\src\xercesc\validators\DTD</ACCESSPATH>
+                        <PATH>XMLDTDDescriptionImpl.cpp</PATH>
+                        <PATHFORMAT>Windows</PATHFORMAT>
+                    </FILEREF>
                 </GROUP>
                 <GROUP><NAME>schema</NAME>
                     <FILEREF>
@@ -31286,6 +31470,22 @@
                         <PATHROOT>Project</PATHROOT>
                         <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
                         <PATH>XercesGroupInfo.hpp</PATH>
+                        <PATHFORMAT>Windows</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                        <PATH>XMLSchemaDescriptionImpl.cpp</PATH>
+                        <PATHFORMAT>Windows</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>Xerces DLL Debug</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>..\..\..\..\src\xercesc\validators\schema</ACCESSPATH>
+                        <PATH>XMLSchemaDescriptionImpl.hpp</PATH>
                         <PATHFORMAT>Windows</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
