@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.9  2003/01/13 16:13:37  knoaman
+  * We should load the validation message set.
+  *
   * Revision 1.8  2003/01/09 15:30:09  tng
   * Performance: construct message loader only when required.
   *
@@ -152,7 +155,7 @@ static XMLMsgLoader* getValidMsgLoader()
     static XMLRegisterCleanup cleanupValidMsgLoader;
     if (gValidMsgLoader == 0)
     {
-        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
         if (!t)
             XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
         else {
