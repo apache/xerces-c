@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,7 @@
 #include <xercesc/util/XMLASCIITranscoder.hpp>
 #include <xercesc/util/XMLChTranscoder.hpp>
 #include <xercesc/util/XMLEBCDICTranscoder.hpp>
+#include <xercesc/util/XMLIBM1047Transcoder.hpp>
 #include <xercesc/util/XMLIBM1140Transcoder.hpp>
 #include <xercesc/util/XMLUCS4Transcoder.hpp>
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
@@ -489,6 +490,11 @@ void XMLTransService::initTransService()
     gMappingsRecognizer->setElementAt(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgEBCDICEncodingString), XMLRecognizer::EBCDIC);
     gMappings->put((void*)XMLUni::fgIBM037EncodingString, new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
     gMappings->put((void*)XMLUni::fgIBM037EncodingString2, new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
+
+
+    //hhe
+    gMappings->put((void*)XMLUni::fgIBM1047EncodingString, new ENameMapFor<XMLIBM1047Transcoder>(XMLUni::fgIBM1047EncodingString));
+    gMappings->put((void*)XMLUni::fgIBM1047EncodingString2, new ENameMapFor<XMLIBM1047Transcoder>(XMLUni::fgIBM1047EncodingString2));
 
     //
     //  Add in our mappings for IBM037 with Euro update, i.e. IBM1140. It

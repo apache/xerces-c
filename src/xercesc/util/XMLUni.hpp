@@ -100,6 +100,8 @@ public :
     static const XMLCh fgFixedString[];
     static const XMLCh fgIBM037EncodingString[];
     static const XMLCh fgIBM037EncodingString2[];
+    static const XMLCh fgIBM1047EncodingString[];
+    static const XMLCh fgIBM1047EncodingString2[];
     static const XMLCh fgIBM1140EncodingString[];
     static const XMLCh fgIBM1140EncodingString2[];
     static const XMLCh fgIBM1140EncodingString3[];

@@ -168,6 +168,17 @@ const XMLCh XMLUni::fgIBM037EncodingString2[] =
     chLatin_I, chLatin_B, chLatin_M, chDigit_0, chDigit_3, chDigit_7, chNull
 };
 
+//hhe
+const XMLCh XMLUni::fgIBM1047EncodingString[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_0, chDigit_4, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM1047EncodingString2[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_0, chDigit_4, chDigit_7, chNull
+};
+
 const XMLCh XMLUni::fgIBM1140EncodingString[] =
 {
     chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
