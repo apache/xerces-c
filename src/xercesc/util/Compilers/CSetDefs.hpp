@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/05 21:43:55  tng
+ * Turn on C++ Namespace support only if using AIX xlC version 4 or higher.
+ *
  * Revision 1.5  2002/11/04 14:45:20  tng
  * C++ Namespace Support.
  *
@@ -147,7 +150,9 @@
 //  Indicate that we support C++ namespace
 //  Do not define it if the compile cannot handle C++ namespace
 // ---------------------------------------------------------------------------
+#if __IBMCPP__ >= 400
 #define XERCES_HAS_CPP_NAMESPACE
+#endif
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
