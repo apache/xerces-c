@@ -189,7 +189,7 @@ private:
     // -----------------------------------------------------------------------
     void buildFullText();
     void cleanup();
-    void conglomerateWithBase(const XMLURL& baseURL);
+    bool conglomerateWithBase(const XMLURL& baseURL, bool useExceptions=true);
     void parse
     (
         const   XMLCh* const    urlText

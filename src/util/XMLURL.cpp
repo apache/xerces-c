@@ -55,64 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2000/03/24 20:02:43  roddey
- * A few more tweaks to the base/relative URL conglomeration code.
- *
- * Revision 1.11  2000/03/24 00:29:36  rahulj
- * While composing the full path, also consider the port number
- * of the base URL.
- *
- * Revision 1.10  2000/03/23 01:02:38  roddey
- * Updates to the XMLURL class to correct a lot of parsing problems
- * and to add support for the port number. Updated the URL tests
- * to test some of this new stuff.
- *
- * Revision 1.9  2000/03/17 23:59:55  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.8  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.7  2000/02/17 18:09:02  roddey
- * Fixed an infinite loop caused while trying to trim leading
- * whitespace from the raw URL during parsing.
- *
- * Revision 1.6  2000/02/06 07:48:06  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/02/01 00:07:31  roddey
- * A small patch for the base/rel conglomeration when the protocol is file.
- *
- * Revision 1.4  2000/01/27 18:22:31  roddey
- * Fixed a couple of small reported bugs, in the parsing code and in the
- * special cased local file stream creation code.
- *
- * Revision 1.3  2000/01/19 00:56:59  roddey
- * Changes to get rid of dependence on old utils standard streams and to
- * get rid of the fgLibLocation stuff.
- *
- * Revision 1.2  2000/01/17 23:38:06  abagchi
- * Changed string "localhost" to XMLUni::fgLocalHostString
- *
- * Revision 1.1  2000/01/15 01:26:17  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.2  2000/01/12 00:16:22  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.1.1.1  1999/11/09 01:04:20  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:16  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -128,6 +71,7 @@
 #include <util/XMLNetAccessor.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
+
 
 
 // ---------------------------------------------------------------------------
@@ -465,19 +409,6 @@ void XMLURL::setURL(const XMLCh* const    baseURL
     {
         // Parse our URL string
         parse(relativeURL);
-
-        //
-        //  If its relative and the base is non-null and non-empty, then
-        //  parse the base URL string and conglomerate them.
-        //
-        if (isRelative() && baseURL)
-        {
-            if (*baseURL)
-            {
-                XMLURL basePart(baseURL);
-                conglomerateWithBase(basePart);
-            }
-        }
     }
 
     catch(...)
@@ -485,6 +416,23 @@ void XMLURL::setURL(const XMLCh* const    baseURL
         cleanup();
         throw;
     }
+
+	//
+	//  If its relative and the base is non-null and non-empty, then
+	//  parse the base URL string and conglomerate them.
+	//
+	if (isRelative() && baseURL)
+	{
+		if (*baseURL)
+		{
+			XMLURL basePart(baseURL);
+			if (!conglomerateWithBase(basePart, false))
+			{
+				cleanup();
+				ThrowXML(MalformedURLException, XMLExcepts::URL_RelativeBaseURL);
+			}
+		}
+	}
 }
 
 void XMLURL::setURL(const XMLURL&         baseURL
@@ -727,11 +675,20 @@ void XMLURL::cleanup()
 }
 
 
-void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
+//This function  has been modified to take a bool parameter and the
+//functionality inside looks irrational but is only to make 
+//solaris 2.7 CC 5.0 optimized build happy.
+
+bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
 {
     // The base URL cannot be relative
     if (baseURL.isRelative())
-        ThrowXML(MalformedURLException, XMLExcepts::URL_RelativeBaseURL);
+    {
+        if (useExceptions)
+			ThrowXML(MalformedURLException, XMLExcepts::URL_RelativeBaseURL);
+        else
+            return false;
+    }
 
     //
     //  Check a special case. If all we have is a fragment, then we want
@@ -757,7 +714,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
         fUser = XMLString::replicate(baseURL.fUser);
         fPassword = XMLString::replicate(baseURL.fPassword);
         fPath = XMLString::replicate(baseURL.fPath);
-        return;
+        return true;
     }
 
     //
@@ -766,7 +723,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     //  that we have, we stop.
     //
     if (fProtocol != Unknown)
-        return;
+        return true;
     fProtocol = baseURL.fProtocol;
 
     //
@@ -776,7 +733,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     if (fProtocol != File)
     {
         if (fHost || !baseURL.fHost)
-            return;
+            return true;
     }
 
     // Replicate all of the hosty stuff if the base has one
@@ -800,7 +757,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
     if (hadPath)
     {
         if (*fPath == chForwardSlash)
-            return;
+            return true;
     }
 
     // Its a relative path, so weave them together.
@@ -809,15 +766,15 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
 
     // If we had any original path, then we are done
     if (hadPath)
-        return;
+        return true;
 
     // We had no original path, so go on to deal with the query/fragment parts
     if (fQuery || !baseURL.fQuery)
-        return;
+        return true;
     fQuery = XMLString::replicate(baseURL.fQuery);
 
     if (fFragment || !baseURL.fFragment)
-        return;
+        return true;
     fFragment = XMLString::replicate(baseURL.fFragment);
 }
 
