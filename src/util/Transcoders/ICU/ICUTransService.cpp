@@ -791,8 +791,14 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText)
     if (err != U_BUFFER_OVERFLOW_ERROR)
         return 0;
 
+#if (U_ICU_VERSION_MAJOR_NUM < 2)
     // Subtract one since it includes the terminator space
     return (unsigned int)(targetCap - 1);
+#else
+    // Starting ICU 2.0, this is fixed and all ICU String functions have consistent NUL-termination behavior.
+    // The returned length is always the number of output UChar's, not counting an additional, terminating NUL.
+    return (unsigned int)(targetCap);
+#endif
 }
 
 
