@@ -672,86 +672,6 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
     return !toFill.isEmpty();
 }
 
-bool XMLReader::getNextChar(XMLCh& chGotten)
-{
-    //
-    //  See if there is at least a char in the buffer. Else, do the buffer
-    //  reload logic.
-    //
-    if (fCharIndex >= fCharsAvail)
-    {
-        // If fNoMore is set, then we have nothing else to give
-        if (fNoMore)
-            return false;
-
-        // If the buffer is empty, then try to refresh
-        if (fCharIndex == fCharsAvail)
-        {
-            refreshCharBuffer();
-
-            // If still empty, then return false
-            if (fCharIndex == fCharsAvail)
-                return false;
-        }
-
-    }
-
-    chGotten = fCharBuf[fCharIndex++];
-
-    // Handle end of line normalization and line/col member maintenance.
-    if (chGotten == chCR)
-    {
-        //
-        //  Do the normalization. We return chLF regardless of which was
-        //  found. We also eat a chCR followed by an chLF.
-        //
-        //  We only do this if the content being spooled is not already
-        //  internalized.
-        //
-        if (fSource == Source_External)
-        {
-            //
-            //  See if we have another char left. If not, don't bother.
-            //  Else, see if its an chLF to eat. If it is, bump the
-            //  index again.
-            //
-            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-            {
-                if (fCharBuf[fCharIndex] == chLF
-                    || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                    fCharIndex++;
-            }
-
-            // And return just an chLF
-            chGotten = chLF;
-        }
-
-        // And handle the line/col stuff
-        fCurCol = 1;
-        fCurLine++;
-    }
-     else if (chGotten == chLF
-              || ((chGotten == chNEL) && fNEL))
-    {
-        chGotten = chLF;
-        fCurLine++;
-        fCurCol = 1;
-    }
-     else if (chGotten)
-    {
-        //
-        //  Only do this is not a null char. Null chars are not part of the
-        //  real content. They are just marker characters inserted into
-        //  the stream.
-        //
-        fCurCol++;
-    }
-    return true;
-}
-
-
-
-
 
 bool XMLReader::getSpaces(XMLBuffer& toFill)
 {
@@ -917,38 +837,6 @@ bool XMLReader::getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck)
     return false;
 
 }
-
-
-bool XMLReader::peekNextChar(XMLCh& chGotten)
-{
-    //
-    //  If there is something still in the buffer, get it. Else do the reload
-    //  scenario.
-    //
-    if (fCharIndex >= fCharsAvail)
-    {
-        // Try to refresh the buffer
-        if (!refreshCharBuffer())
-        {
-            chGotten = chNull;
-            return false;
-        }
-    }
-
-    chGotten = fCharBuf[fCharIndex];
-
-    //
-    //  Even though we are only peeking, we have to act the same as the
-    //  normal char get method in regards to newline normalization, though
-    //  its not as complicated as the actual character getting method's.
-    //
-    if ((chGotten == chCR || ((chGotten == chNEL) && fNEL))
-        && (fSource == Source_External))
-        chGotten = chLF;
-
-    return true;
-}
-
 
 bool XMLReader::skipIfQuote(XMLCh& chGotten)
 {
