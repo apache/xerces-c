@@ -344,7 +344,12 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj\
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj\
+    ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj\
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj\
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSValue.obj\ 
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSAXMLScanner.obj\ 
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj"
 RESFILES = ..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res
 MAINSOURCE = Xerceslib.cpp
 RESDEPEN = $(RESFILES)
@@ -359,7 +364,7 @@ OTHERFILES =
 # ---------------------------------------------------------------------------
 DEBUGLIBPATH = $(BCB)\lib\debug
 RELEASELIBPATH = $(BCB)\lib\release
-USERDEFINES = PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG
+USERDEFINES = XML_PLATFORM_NEW_BLOCK_ALIGNMENT=4;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG
 SYSDEFINES = NO_STRICT;_RTLDLL;USEPACKAGES
 INCLUDEPATH = ..\..\..\..\..\src;$(BCB)\include
 LIBPATH = ..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib
@@ -371,11 +376,11 @@ PATHRC = .;..\..\..\..\..\src\xercesc\util\Platforms\Win32
 PATHOBJ = .;$(LIBPATH)
 # ---------------------------------------------------------------------------
 CFLAG1 = -WD -Od -Q -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -tWD -tWM -c
-IDLCFLAGS = -I..\..\..\..\..\src\xercesc -I$(BCB)\include -src_suffix cpp \
+IDLCFLAGS = -I..\..\..\..\..\src -I$(BCB)\include -src_suffix cpp \
     -DPLATFORM_WIN32 -D_CRTDBG_MAP_ALLOC -DPROJ_XMLPARSER -DPROJ_XMLUTIL \
     -DPROJ_PARSERS -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS \
     -DXML_SINGLEDLL -DXML_USE_WIN32_TRANSCODER -DXML_USE_WIN32_MSGLOADER \
-    -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -boa
+    -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -DPROJ_DEPRECATED_DOM -boa
 PFLAGS = -N2..\..\..\..\..\Build\Win32\BCB6\obj \
     -N0..\..\..\..\..\Build\Win32\BCB6\obj -$Y+ -$W -$O- -$A8 -v -JPHNE -M
 RFLAGS = 
