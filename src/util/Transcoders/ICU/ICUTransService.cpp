@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/11/18 20:16:52  abagchi
+ * Now works with ICU 1.3.1
+ *
  * Revision 1.2  1999/11/17 22:36:41  rahulj
  * Code works with ICU transcoding service
  *
@@ -78,6 +81,7 @@
 #include <unicode.h>
 #include <ucnv.h>
 #include <ustring.h>
+
 
 
 // ---------------------------------------------------------------------------
@@ -425,7 +429,7 @@ XMLCh* ICUTranscoder::transcode(const char* const toTranscode)
 
     //
     //  Here we don't know what the target length will be so use 0 and expect
-    //  an BUFFER_OVERFLOW_ERROR in which case it'd get resolved by the
+    //  an U_BUFFER_OVERFLOW_ERROR in which case it'd get resolved by the
     //  correct capacity value.
     //
     UErrorCode err = U_ZERO_ERROR;
