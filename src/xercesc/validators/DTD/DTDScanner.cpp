@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2004/12/14 02:06:40  cargilld
+ * More error message updates.
+ *
  * Revision 1.35  2004/09/30 13:14:27  amassari
  * Fix jira#1280 - Borland leaks memory if break or continue are used inside a catch block
  *
@@ -3440,7 +3443,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                 if (!fReaderMgr->skippedChar(chCloseParen))
                 {
                     delete headNode;
-                    fScanner->emitError(XMLErrs::UnterminatedContentModel);
+                    fScanner->emitError(XMLErrs::UnterminatedContentModel, toFill.getElementName()->getLocalPart());                     
                     return false;
                 }
 
@@ -3451,7 +3454,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
 
                     if (starRequired)
                     {
-                        if (fScanner->emitErrorWillThrowException(XMLErrs::UnterminatedContentModel))
+                        if (fScanner->emitErrorWillThrowException(XMLErrs::ExpectedAsterisk))
                         {
                             delete headNode;
                         }

@@ -55,12 +55,12 @@
             <Message Id="InvalidChildFollowingConplexContent" Text="Invalid child following the complexContent child in the complexType"/>
             <Message Id="InvalidComplexTypeBlockValue" Text="The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
             <Message Id="InvalidComplexTypeFinalValue" Text="The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
-            <Message Id="AttributeDefaultFixedValue" Text="Attribute '{0}' cannot have both 'fixed' and 'default' present at the same time."/>
-            <Message Id="NotOptionalDefaultAttValue" Text="If default and use are both present, use must have the value 'optional'."/>
+            <Message Id="AttributeDefaultFixedValue" Text="Attribute '{0}={1}' cannot have both 'fixed' and 'default' present at the same time."/>
+            <Message Id="NotOptionalDefaultAttValue" Text="For attribute '{0}={1}' default and use are both present so use must have the value 'optional'."/>
             <Message Id="LocalAttributeWithNameRef" Text="Local attribute:{0} has also a ref defined - name ignored"/>
             <Message Id="GlobalAttributeWithNameRef" Text="Global attribute:'{0}' cannot have a ref defined"/>
             <Message Id="DuplicateAttribute" Text="Error: Attribute '{0}' declared more than once in the same scope- ignoring"/>
-            <Message Id="AttributeWithTypeAndSimpleType" Text="Attribute declarations may not contain both a type and a simpleType declaration"/>
+            <Message Id="AttributeWithTypeAndSimpleType" Text="Attribute '{0}' may not contain both a type and a simpleType declaration."/>
             <Message Id="AttributeSimpleTypeNotFound" Text="SimpleType ({0}:{1}) for attribute: {2} not found"/>
             <Message Id="ElementWithFixedAndDefault" Text="Element '{0}' cannot have both 'fixed' and 'default' present at the same time."/>
             <Message Id="DeclarationWithNameRef" Text="{0}:'{1}' has also a ref defined - name ignored"/>
@@ -89,7 +89,7 @@
             <Message Id="InvalidElementBlockValue" Text="The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found"/>
             <Message Id="InvalidElementFinalValue" Text="The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found"/>
             <Message Id="InvalidAttValue" Text="Invalid value '{0}' for attribute: '{1}'."/>
-            <Message Id="AttributeRefContentError" Text="Ref is present, and simpleType/form/type found"/>
+            <Message Id="AttributeRefContentError" Text="Ref is present, and simpleType/form/type found for attribute '{0}={1}'"/>
             <Message Id="DuplicateRefAttribute" Text="Duplicate reference attribute {0}:{1} in complexType"/>
             <Message Id="ForbiddenDerivationByRestriction" Text="Derivation by restriction is forbidden by either the base type '{0}' or the schema"/>
             <Message Id="ForbiddenDerivationByExtension" Text="Derivation by extension is forbidden by either the base type '{0}' or the schema"/>
@@ -241,7 +241,7 @@
             <Message Id="UnterminatedElementDecl" Text="Unterminated element declaration, '{0}'"/>
             <Message Id="ExpectedContentSpecExpr" Text="Expected content specification expression for element '{0}'"/>
             <Message Id="ExpectedAsterisk" Text="Expected asterisk"/>
-            <Message Id="UnterminatedContentModel" Text="Unterminated Content model"/>
+            <Message Id="UnterminatedContentModel" Text="'{0}' is a mixed content model that is not terminated properly."/>
             <Message Id="ExpectedSystemId" Text="Expected system id"/>
             <Message Id="ExpectedSystemOrPublicId" Text="Expected system or public id"/>
             <Message Id="UnterminatedNotationDecl" Text="Unterminated notation declaration"/>

@@ -45,12 +45,12 @@ $set 1
 46  Invalid child following the complexContent child in the complexType
 47  The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
 48  The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
-49  Attribute '{0}' cannot have both 'fixed' and 'default' present at the same time.
-50  If default and use are both present, use must have the value 'optional'.
+49  Attribute '{0}={1}' cannot have both 'fixed' and 'default' present at the same time.
+50  For attribute '{0}={1}' default and use are both present so use must have the value 'optional'.
 51  Local attribute:{0} has also a ref defined - name ignored
 52  Global attribute:'{0}' cannot have a ref defined
 53  Error: Attribute '{0}' declared more than once in the same scope- ignoring
-54  Attribute declarations may not contain both a type and a simpleType declaration
+54  Attribute '{0}' may not contain both a type and a simpleType declaration.
 55  SimpleType ({0}:{1}) for attribute: {2} not found
 56  Element '{0}' cannot have both 'fixed' and 'default' present at the same time.
 57  {0}:'{1}' has also a ref defined - name ignored
@@ -79,7 +79,7 @@ $set 1
 80  The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found
 81  The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found
 82  Invalid value '{0}' for attribute: '{1}'.
-83  Ref is present, and simpleType/form/type found
+83  Ref is present, and simpleType/form/type found for attribute '{0}={1}'
 84  Duplicate reference attribute {0}:{1} in complexType
 85  Derivation by restriction is forbidden by either the base type '{0}' or the schema
 86  Derivation by extension is forbidden by either the base type '{0}' or the schema
@@ -229,7 +229,7 @@ $set 1
 232  Unterminated element declaration, '{0}'
 233  Expected content specification expression for element '{0}'
 234  Expected asterisk
-235  Unterminated Content model
+235  '{0}' is a mixed content model that is not terminated properly.
 236  Expected system id
 237  Expected system or public id
 238  Unterminated notation declaration

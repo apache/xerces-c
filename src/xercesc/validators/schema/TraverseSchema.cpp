@@ -2199,14 +2199,18 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         if (fixedVal) {
 
             fixedVal = 0;
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue, name);
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue, 
+                              (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
+                              (name) ? name : ref);
         }
 
         if ((useVal && *useVal)
             && !XMLString::equals(useVal, SchemaSymbols::fgATTVAL_OPTIONAL)) {
 
             useVal = 0;
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotOptionalDefaultAttValue);
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotOptionalDefaultAttValue,
+                              (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
+                              (name) ? name : ref);
         }
     }
 
@@ -2215,7 +2219,9 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
         // Check ref representation OK - 3.2.3::3.2
         if (attForm || dvType || (simpleType != 0)) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeRefContentError);
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeRefContentError,
+                              (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
+                              (name) ? name : ref);
         }
 
         processAttributeDeclRef(elem, typeInfo, ref, useVal, defaultVal, fixedVal);
@@ -2272,7 +2278,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     if (simpleType != 0) {
 
         if (dvType && *dvType) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeWithTypeAndSimpleType);
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeWithTypeAndSimpleType, name);
         }
 
         dv = traverseSimpleTypeDecl(simpleType, false);
