@@ -1467,4 +1467,3 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 
 XERCES_CPP_NAMESPACE_END
 
-

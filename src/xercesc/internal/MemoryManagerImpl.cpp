@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/02 09:33:23  gareth
+ * Removed ^Z from end of files which was preventing compilation under gcc 2.96.
+ *
  * Revision 1.2  2003/10/01 16:32:38  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -94,4 +97,3 @@ void MemoryManagerImpl::deallocate(void* p)
 }
 
 XERCES_CPP_NAMESPACE_END
-

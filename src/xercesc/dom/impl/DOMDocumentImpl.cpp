@@ -1403,4 +1403,3 @@ void * DOMDocumentImpl::allocate(size_t amount, NodeObjectType type)
 }
 
 XERCES_CPP_NAMESPACE_END
-
