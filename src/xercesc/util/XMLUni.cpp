@@ -650,26 +650,26 @@ const XMLCh XMLUni::fgApos[] =
 
 const XMLCh XMLUni::fgWFScanner[] =
 {
-        chLatin_W, chLatin_F, chLatin_S, chLatin_c, chLatin_a, chLatin_n
-    ,   chLatin_n, chLatin_e, chLatin_r, chNull
+        chLatin_W, chLatin_F, chLatin_X, chLatin_M, chLatin_L, chLatin_S
+    ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
 const XMLCh XMLUni::fgIGScanner[] =
 {
-        chLatin_I, chLatin_G, chLatin_S, chLatin_c, chLatin_a, chLatin_n
-    ,   chLatin_n, chLatin_e, chLatin_r, chNull
+        chLatin_I, chLatin_G, chLatin_X, chLatin_M, chLatin_L, chLatin_S
+    ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
 const XMLCh XMLUni::fgSGScanner[] =
 {
-        chLatin_S, chLatin_G, chLatin_S, chLatin_c, chLatin_a, chLatin_n
-    ,   chLatin_n, chLatin_e, chLatin_r, chNull
+        chLatin_S, chLatin_G, chLatin_X, chLatin_M, chLatin_L, chLatin_S
+    ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
 const XMLCh XMLUni::fgDGScanner[] =
 {
-        chLatin_D, chLatin_G, chLatin_S, chLatin_c, chLatin_a, chLatin_n
-    ,   chLatin_n, chLatin_e, chLatin_r, chNull
+        chLatin_D, chLatin_G, chLatin_X, chLatin_M, chLatin_L, chLatin_S
+    ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
 //Exception strings
