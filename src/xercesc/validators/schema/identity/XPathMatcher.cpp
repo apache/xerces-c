@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/18 06:26:50  jberry
+ * Quiet codewarrior compiler warnings
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/15 17:10:19  knoaman
  * Particle derivation checking support.
@@ -213,7 +216,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
             fMatched[i] = true;
             int j=0;
 
-            for(; j<i && !fMatched[j]; j++);
+            for(; j<i && !fMatched[j]; j++) ;
 
             if(j==i)
                 fBufferContent = fShouldBufferContent;
@@ -270,7 +273,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
             fMatched[i] = true;
             int j=0;
 
-            for(; j<i && !fMatched[j]; j++);
+            for(; j<i && !fMatched[j]; j++) ;
 
             if(j==i)
                 fBufferContent = fShouldBufferContent;
@@ -300,7 +303,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
                             fMatched[i] = true;
                             int j=0;
 
-                            for(; j<i && !fMatched[j]; j++);
+                            for(; j<i && !fMatched[j]; j++) ;
 
                             if(j == i) {
 
@@ -355,7 +358,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl) {
 
             int j=0;
 
-            for(; j<i && !fMatched[j]; j++);
+            for(; j<i && !fMatched[j]; j++) ;
 
             if (j < i) 
 				continue;

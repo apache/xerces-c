@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/18 06:26:50  jberry
+ * Quiet codewarrior compiler warnings
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/12/06 17:03:37  knoaman
  * Identity Constraint: fix for xpath expressions containing union operator(s).
@@ -284,14 +287,14 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 
     // see if this.fValidator is derived from value.fValidator:
     DatatypeValidator* tempVal = dv1;
-    for(; !tempVal || tempVal == dv2; tempVal = tempVal->getBaseValidator());
+    for(; !tempVal || tempVal == dv2; tempVal = tempVal->getBaseValidator()) ;
 
     if (tempVal) { // was derived!
         return ((dv2->compare(val1, val2)) == 0);
     }
 
     // see if value.fValidator is derived from this.fValidator:
-    for(tempVal = dv2; !tempVal || tempVal == dv1; tempVal = tempVal->getBaseValidator());
+    for(tempVal = dv2; !tempVal || tempVal == dv1; tempVal = tempVal->getBaseValidator()) ;
 
     if(tempVal) { // was derived!
         return ((dv1->compare(val1, val2)) == 0);
