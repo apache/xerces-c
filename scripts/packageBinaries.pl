@@ -277,8 +277,8 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
             system("type buildlog.txt");
             # to follow 2 digits convention
-            psystem("cp XercesMessages2_6_0.DLL XercesMessages2_6.DLL");
-            psystem("cp XercesMessages2_6_0.lib XercesMessages2_6.lib");            
+            psystem("ren XercesMessages2_6_0.DLL XercesMessages2_6.DLL");
+            psystem("ren XercesMessages2_6_0.lib XercesMessages2_6.lib");            
         }
 
         #
