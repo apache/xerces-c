@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/09 01:59:12  abagchi
+ * Removed private function docs, added parse docs
+ *
  * Revision 1.2  2000/02/06 07:47:58  rahulj
  * Year 2K copyright swat.
  *
@@ -92,6 +95,9 @@ class InputSource;
   * invoke the parse() methods recursively within a parse.
   *
   * $Log$
+  * Revision 1.3  2000/02/09 01:59:12  abagchi
+  * Removed private function docs, added parse docs
+  *
   * Revision 1.2  2000/02/06 07:47:58  rahulj
   * Year 2K copyright swat.
   *
@@ -268,6 +274,28 @@ public:
         , const bool            reuseValidator = false
     ) = 0;
 
+  /**
+    * Parse an XML document from a system identifier (URI).
+    *
+    * This method is a shortcut for the common case of reading a
+    * document from a system identifier.  It is the exact equivalent
+    * of the following:
+    *
+    * parse(new URLInputSource(systemId));
+    *
+    * If the system identifier is a URL, it must be fully resolved
+    * by the application before it is passed to the parser.
+    *
+    * @param systemId The system identifier (URI).
+    * @param reuseValidator Indicates whether the validator should be
+    *               reused, ignoring any external subset. If true, there
+    *               cannot be any internal subset.
+    * @exception SAXException Any SAX exception, possibly
+    *            wrapping another exception.
+    * @exception XMLException An exception from the parser or client
+    *            handler code.
+    * @see #parse(InputSource)
+    */
     virtual void parse
     (
         const   char* const     systemId
@@ -277,14 +305,11 @@ public:
 
 
 private :
-    /** @name Unimplemented constructors and operators */
-    //@{
-    /** The copy constructor, you cannot call this directly */
+    /* The copy constructor, you cannot call this directly */
     Parser(const Parser&);
 
-    /** The assignment operator, you cannot call this directly */
+    /* The assignment operator, you cannot call this directly */
     void operator=(const Parser&);
-    //@}
 };
 
 #endif
