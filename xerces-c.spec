@@ -4,7 +4,7 @@
 # values: pthreads, none
 %define threads pthreads
 
-Summary:	Validating XML parser
+Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
 Version:	2.2.0
 Release:	2
@@ -13,7 +13,6 @@ Source0:	%{name}-src%{tarversion}.tar.gz
 Copyright:	Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root
-BuildRequires:	gcc-c++
 Prefix:		/usr
 
 %description
@@ -30,9 +29,23 @@ and minimal use of #ifdefs.
 %package devel
 Requires:	xerces-c = %{version}
 Group:		Development/Libraries
-Summary:	Header files, documentation and samples for xerces-c.
+Summary:	Header files for Xerces-C++ validating XML parser
 
 %description devel
+Header files you can use to develop XML applications with Xerces-C++.
+
+Xerces-C++ is a validating XML parser written in a portable subset of C++.
+Xerces-C++ makes it easy to give your application the ability to read and
+write XML data. A shared library is provided for parsing, generating,
+manipulating, and validating XML documents.
+
+%package doc
+Group:		Documentation
+Summary:	Documentation for Xerces-C++ validating XML parser
+
+%description doc
+Documentation for Xerces-C++.
+
 Xerces-C++ is a validating XML parser written in a portable subset of C++.
 Xerces-C++ makes it easy to give your application the ability to read and
 write XML data. A shared library is provided for parsing, generating,
@@ -43,24 +56,22 @@ manipulating, and validating XML documents.
 
 %build
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
-cd src/xercesc
+cd $XERCESCROOT/src/xercesc
 ./runConfigure -plinux -cgcc -xg++ -minmem -nsocket -tnative -r%{threads} -P%{prefix}
 make
-cd $RPM_BUILD_DIR/%{name}-src%{tarversion}/samples
+cd $XERCESCROOT/samples
 ./runConfigure -plinux -cgcc -xg++
 make
-rm -rf $RPM_BUILD_DIR/%{name}-src%{tarversion}/bin/obj
 
 %install
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
-cd src/xercesc
-make install DESTDIR=$RPM_BUILD_ROOT
-cd $RPM_BUILD_DIR/%{name}-src%{tarversion}
+cd $XERCESCROOT/src/xercesc
+make PREFIX=$RPM_BUILD_ROOT%{prefix} install
 mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
-cp -a bin/* $RPM_BUILD_ROOT%{prefix}/bin/
+#we don't want obj directory
+install `find $XERCESCROOT/bin -type f -maxdepth 1` $RPM_BUILD_ROOT%{prefix}/bin
 mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}
-cp -a doc $RPM_BUILD_ROOT%{prefix}/share/%{name}/
-cp -a samples $RPM_BUILD_ROOT%{prefix}/share/%{name}/
+cp -a $XERCESCROOT/samples $RPM_BUILD_ROOT%{prefix}/share/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -71,17 +82,23 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(755,root,root)
-%{prefix}/bin
-%{prefix}/lib/libxerces-c.so.*
+%{prefix}/bin/*
+%{prefix}/lib/libxerces-c.so*
 
 %files devel
 %defattr(-,root,root)
 %{prefix}/include/xercesc
-%{prefix}/lib/libxerces-c.so
-%{prefix}/share/%{name}/doc
 %{prefix}/share/%{name}/samples
 
+%files doc
+%defattr(-,root,root)
+%doc LICENSE.txt STATUS credits.txt Readme.html doc/
+
 %changelog
+* Fri Dec 13 2002 Albert Strasheim <albert@stonethree.com>
+- added seperate doc package
+- major cleanups
+
 * Tue Sep 03 2002  <thomas@linux.de>
 - fixed missing DESTDIR in Makefile.util.submodule
 
