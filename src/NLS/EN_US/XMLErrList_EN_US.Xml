@@ -108,6 +108,7 @@
             <Message Id="NoNameGlobalElement" Text="Global {0} must have a name - declaration ignored"/>
             <Message Id="NoCircularDefinition" Text="No circular definitions are allowed: '{0}'"/>
             <Message Id="DuplicateGlobalType" Text="Global {0}: '{1}' declared more than once or also declared as {2}"/>
+            <Message Id="WS_CollapseExpected" Text="Invalid value '{0}' for facet 'whiteSpace'. Value should be 'collapse'."/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
