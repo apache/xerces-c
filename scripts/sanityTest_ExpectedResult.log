@@ -173,6 +173,7 @@ Options:
                 Default to off (Input file is an XML file).
     -v=xxx      Validation scheme [always | never | auto*].
     -f          Enable full schema constraint checking processing. Defaults to off.
+    -p          Enable namespace-prefixes feature. Defaults to off.
     -n          Disable namespace processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -s          Disable schema processing. Defaults to on.
@@ -198,6 +199,7 @@ Options:
     -e          Expand Namespace Alias with URI's.
     -x=XXX      Use a particular encoding for output (LATIN1*).
     -f          Enable full schema constraint checking processing. Defaults to off.
+    -p          Enable namespace-prefixes feature. Defaults to off.
     -s          Disable schema processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -?          Show this help.
