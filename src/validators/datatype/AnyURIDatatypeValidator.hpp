@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/18 20:38:02  peiyongz
+ * DTV reorganization: inherit from AbstractStringValidator.
+ *
  * Revision 1.4  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -77,12 +80,10 @@
 #if !defined(ANYURI_DATATYPEVALIDATOR_HPP)
 #define ANYURI_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
-#include <validators/schema/SchemaSymbols.hpp>
-#include <util/RefVectorOf.hpp>
+#include <validators/datatype/AbstractStringValidator.hpp>
 #include <util/XMLUri.hpp>
 
-class VALIDATORS_EXPORT AnyURIDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT AnyURIDatatypeValidator : public AbstractStringValidator
 {
 public:
 
@@ -103,50 +104,6 @@ public:
 
 	//@}
 
-    // -----------------------------------------------------------------------
-    // Getter methods
-    // -----------------------------------------------------------------------
-    /** @name Getter Functions */
-    //@{
-
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    // Validation methods
-    // -----------------------------------------------------------------------
-    /** @name Validation Function */
-    //@{
-
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
-	void validate(const XMLCh* const content);
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    // Compare methods
-    // -----------------------------------------------------------------------
-    /** @name Compare Function */
-    //@{
-
-    /**
-     * Compare two boolean data types
-     * 
-     * @param content1
-     * @param content2
-     * @return 
-     */
-    int compare(const XMLCh* const, const XMLCh* const);
-
-    //@}
-
     /**
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
@@ -155,39 +112,9 @@ public:
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
+    void checkValueSpace(const XMLCh* const);
+
 private:
-
-    void checkContent(const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-    unsigned int         getLength() const;
-
-    unsigned int         getMaxLength() const;
-
-    unsigned int         getMinLength() const;
-
-    RefVectorOf<XMLCh>*  getEnumeration() const;
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-
-    void                 setLength(unsigned int);
-
-    void                 setMaxLength(unsigned int);
-
-    void                 setMinLength(unsigned int);
-
-    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -196,24 +123,10 @@ private:
     //      to support relative URI, such as the urispec= "\sample"
 	//		
     // -----------------------------------------------------------------------    
-     int                  fLength;
-     int                  fMaxLength;  
-     int                  fMinLength;  
-     bool                 fEnumerationInherited;
-     RefVectorOf<XMLCh>*  fEnumeration;
 
-     XMLUri              *fTempURI;   
+    XMLUri              *fTempURI;   
 
 };
-
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int AnyURIDatatypeValidator::compare(const XMLCh* const lValue
-                                          , const XMLCh* const rValue)
-{
-    return XMLString::compareString(lValue, rValue);
-}
 
 inline DatatypeValidator* AnyURIDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
@@ -223,77 +136,6 @@ inline DatatypeValidator* AnyURIDatatypeValidator::newInstance(
     return (DatatypeValidator*) new AnyURIDatatypeValidator(this, facets, enums, finalSet);
 }
 
-inline void AnyURIDatatypeValidator::validate( const XMLCh* const content)
-{
-    checkContent(content, false);
-}
-
-inline void AnyURIDatatypeValidator::cleanUp()
-{
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-
-    if ( fTempURI )
-        delete fTempURI;
-}
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
-inline unsigned int AnyURIDatatypeValidator::getLength() const
-{
-    return fLength;
-}
-
-inline unsigned int AnyURIDatatypeValidator::getMaxLength() const
-{
-    return fMaxLength;
-}
-
-inline unsigned int AnyURIDatatypeValidator::getMinLength() const
-{
-    return fMinLength;
-}
-
-inline RefVectorOf<XMLCh>* AnyURIDatatypeValidator:: getEnumeration() const
-{
-    return fEnumeration;
-}
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-
-inline void AnyURIDatatypeValidator::setLength(unsigned int newLength)
-{
-    fLength = newLength;
-}
-
-inline void AnyURIDatatypeValidator::setMaxLength(unsigned int newMaxLength)
-{
-    fMaxLength = newMaxLength;
-}
-
-inline void AnyURIDatatypeValidator::setMinLength(unsigned int newMinLength)
-{
-    fMinLength = newMinLength;
-}
-
-inline void AnyURIDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
-                                                  , bool                inherited)
-{
-    if (enums)
-    {
-        if (fEnumeration && !fEnumerationInherited)
-            delete fEnumeration;
-
-        fEnumeration = enums;
-        fEnumerationInherited = inherited;
-        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-    }
-}
 
 /**
   * End of file AnyURIDatatypeValidator.hpp
