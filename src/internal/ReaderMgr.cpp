@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/25 01:04:21  roddey
+ * Fixes a bogus error about ]]> in char data.
+ *
  * Revision 1.5  2000/01/15 01:26:16  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -149,38 +152,6 @@ bool ReaderMgr::isEmpty() const
 // ---------------------------------------------------------------------------
 //  ReaderMgr: Scanning APIs
 // ---------------------------------------------------------------------------
-XMLCh ReaderMgr::getCharData(XMLBuffer&     toFill
-                            , XMLScanner&   owningScanner
-                            , bool&         gotLeadingSurrogate)
-{
-    //
-    //  NOTE:   We DO NOT reset the buffer here. This is an accumulation
-    //          method that will be called multiple times in some cases to
-    //          get all the contiguous char data.
-    //
-    //  Ok, so enter the loop and get char data until we can't go no more.
-    //
-    XMLCh breakCh = chNull;
-    while (true)
-    {
-        //
-        //  Ask the current reader for all he's got. He will return the
-        //  break character that caused him to break out. If its null, then
-        //  it just means he has no more data, so we can pop a reader and
-        //  keep going. Otherwise, we return with that break char.
-        //
-        breakCh = fCurReader->getCharData(toFill, owningScanner, gotLeadingSurrogate);
-        if (breakCh)
-            break;
-
-        // If we cannot pop a reader, then just break out with the null char
-        if (!popReader())
-            break;
-    }
-    return breakCh;
-}
-
-
 XMLCh ReaderMgr::getNextChar()
 {
     XMLCh chRet;

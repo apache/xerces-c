@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/25 01:04:21  roddey
+ * Fixes a bogus error about ]]> in char data.
+ *
  * Revision 1.4  2000/01/22 00:01:08  roddey
  * Simple change to get rid of two hard coded 'x' type characters, which won't
  * work on EBCDIC systems.
@@ -199,14 +202,9 @@ public:
     // -----------------------------------------------------------------------
     //  Scanning methods
     // -----------------------------------------------------------------------
-    XMLCh getCharData
-    (
-        XMLBuffer&      toFill
-        , XMLScanner&   owningScanner
-        , bool&         gotLeadingSurrogate
-    );
     bool getName(XMLBuffer& toFill, const bool token);
     bool getNextChar(XMLCh& chGotten);
+    bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
     bool getSpaces(XMLBuffer& toFill);
     bool getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool peekNextChar(XMLCh& chGotten);

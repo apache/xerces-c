@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/25 01:04:21  roddey
+ * Fixes a bogus error about ]]> in char data.
+ *
  * Revision 1.5  2000/01/22 00:01:07  roddey
  * Simple change to get rid of two hard coded 'x' type characters, which won't
  * work on EBCDIC systems.
@@ -487,139 +490,6 @@ bool XMLReader::refreshCharBuffer()
 // ---------------------------------------------------------------------------
 //  XMLReader: Scanning methods
 // ---------------------------------------------------------------------------
-XMLCh XMLReader::getCharData(   XMLBuffer&      toFill
-                                , XMLScanner&   owningScanner
-                                , bool&         gotLeadingSurrogate)
-{
-    //
-    //  Ok, lets loop through the chars in the buffer until we eat them up
-    //  and then reload and try again.
-    //
-    while (true)
-    {
-        while (fCharIndex < fCharsAvail)
-        {
-            // Peek the next char from the buffer, but don't eat it yet
-            XMLCh nextCh = fCharBuf[fCharIndex];
-
-            //
-            //  Ok, lets check whether its a special character data char.
-            //  If not, then we handle it here. Else we break out and let
-            //  the caller handle it.
-            //
-            if (!XMLReader::isSpecialCharDataChar(nextCh))
-            {
-                // Eat this one
-                fCharIndex++;
-
-                // Deal with surrogate pairs
-                if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
-                {
-                    //
-                    //  Its a leading surrogate. If we already got one, then
-                    //  issue an error, else set leading flag to make sure that
-                    //  we look for a trailing next time.
-                    //
-                    if (gotLeadingSurrogate)
-                        owningScanner.emitError(XML4CErrs::Expected2ndSurrogateChar);
-                    else
-                        gotLeadingSurrogate = true;
-                }
-                 else
-                {
-                    //
-                    //  If its a trailing surrogate, make sure that we are
-                    //  prepared for that. Else, its just a regular char so make
-                    //  sure that we were not expected a trailing surrogate.
-                    //
-                    if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
-                    {
-                        // Its trailing, so make sure we were expecting it
-                        if (!gotLeadingSurrogate)
-                            owningScanner.emitError(XML4CErrs::Unexpected2ndSurrogateChar);
-                    }
-                     else
-                    {
-                        //
-                        //  Its just a char, so make sure we were not expecting a
-                        //  trailing surrogate.
-                        //
-                        if (gotLeadingSurrogate)
-                            owningScanner.emitError(XML4CErrs::Expected2ndSurrogateChar);
-
-                        // Check for valid characters here
-                        if (!XMLReader::isXMLChar(nextCh))
-                        {
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                            );
-                            owningScanner.emitError(XML4CErrs::InvalidCharacter, tmpBuf);
-                        }
-                    }
-                    gotLeadingSurrogate = false;
-                }
-
-                //
-                //  Keep the line and column info up to date and do new
-                //  line normalization.
-                //
-                if (nextCh == chCR)
-                {
-                    fCurLine++;
-                    fCurCol = 1;
-
-                    if (fSource == Source_External)
-                    {
-                        if (fCharIndex < fCharsAvail)
-                        {
-                            if (fCharBuf[fCharIndex] == chLF)
-                                fCharIndex++;
-                        }
-                         else
-                        {
-                            if (refreshCharBuffer())
-                            {
-                                if (fCharBuf[fCharIndex] == chLF)
-                                    fCharIndex++;
-                            }
-                        }
-                        nextCh = chLF;
-                    }
-                }
-                 else if (nextCh == chLF)
-                {
-                    fCurLine++;
-                    fCurCol = 1;
-                }
-                 else
-                {
-                    fCurCol++;
-                }
-
-                // Add the (possibly normalized) char to the buffer and go again
-                toFill.append(nextCh);
-            }
-             else
-            {
-                return nextCh;
-            }
-        }
-
-        // We've used up the current buffer so try to get more
-        if (!refreshCharBuffer())
-            break;
-    }
-
-    // We ate up all this reader's data
-    return chNull;
-}
-
-
 bool XMLReader::getName(XMLBuffer& toFill, const bool token)
 {
     //
@@ -694,25 +564,116 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
     {
         // If fNoMore is set, then we have nothing else to give
         if (fNoMore)
-        {
-            chGotten = XMLCh(0);
             return false;
-        }
 
         // If the buffer is empty, then try to refresh
         if (fCharIndex == fCharsAvail)
         {
             if (!refreshCharBuffer())
             {
-                // If still empty, then return a zero char
+                // If still empty, then return false
                 if (fCharIndex == fCharsAvail)
-                {
-                    chGotten = XMLCh(0);
                     return false;
-                }
             }
         }
 
+        chGotten = fCharBuf[fCharIndex++];
+    }
+
+    // Handle end of line normalization and line/col member maintenance.
+    if (chGotten == chCR)
+    {
+        //
+        //  Do the normalization. We return chLF regardless of which was
+        //  found. We also eat a chCR followed by an chLF.
+        //
+        //  We only do this if the content being spooled is not already
+        //  internalized.
+        //
+        if (fSource == Source_External)
+        {
+            //
+            //  See if we have another char left. If not, don't bother.
+            //  Else, see if its an chLF to eat. If it is, bump the
+            //  index again.
+            //
+            if (fCharIndex < fCharsAvail)
+            {
+                if (fCharBuf[fCharIndex] == chLF)
+                    fCharIndex++;
+            }
+             else
+            {
+                if (refreshCharBuffer())
+                {
+                    if (fCharBuf[fCharIndex] == chLF)
+                        fCharIndex++;
+                }
+            }
+
+            // And return just an chLF
+            chGotten = chLF;
+        }
+
+        // And handle the line/col stuff
+        fCurCol = 1;
+        fCurLine++;
+    }
+     else if (chGotten == chLF)
+    {
+        fCurLine++;
+        fCurCol = 1;
+    }
+     else if (chGotten)
+    {
+        //
+        //  Only do this is not a null char. Null chars are not part of the
+        //  real content. They are just marker characters inserted into
+        //  the stream.
+        //
+        fCurCol++;
+    }
+    return true;
+}
+
+
+bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
+{
+    //
+    //  See if there is at least a char in the buffer. Else, do the buffer
+    //  reload logic.
+    //
+    if (fCharIndex < fCharsAvail)
+    {
+        // Check the next char
+        if (fCharBuf[fCharIndex] == chNotToGet)
+            return false;
+
+        // Its not the one we want to skip so bump the index
+        chGotten = fCharBuf[fCharIndex++];
+    }
+     else
+    {
+        // If fNoMore is set, then we have nothing else to give
+        if (fNoMore)
+            return false;
+
+        // If the buffer is empty, then try to refresh
+        if (fCharIndex == fCharsAvail)
+        {
+            if (!refreshCharBuffer())
+            {
+                // If still empty, then return false
+                if (fCharIndex == fCharsAvail)
+                    return false;
+            }
+        }
+
+        // Check the next char
+        if (fCharBuf[fCharIndex] == chNotToGet)
+            return false;
+
+        // Its not the one we want to skip so bump the index
         chGotten = fCharBuf[fCharIndex++];
     }
 

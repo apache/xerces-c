@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/25 01:04:21  roddey
+ * Fixes a bogus error about ]]> in char data.
+ *
  * Revision 1.6  2000/01/15 01:26:16  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -1601,11 +1604,6 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
     {
         while (true)
         {
-            //
-            //  Ok, lets get char data from the the readers until we hit
-            //  a special char. It returns the char that made us break out
-            //  of the loop. Use any second char first.
-            //
             if (secondCh)
             {
                 nextCh = secondCh;
@@ -1613,18 +1611,8 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
             }
              else
             {
-                // Reset the surrogate flag and get another block of chars
-                nextCh = fReaderMgr.getCharData(toUse, *this, gotLeadingSurrogate);
-
-                //
-                //  If we get an EOF, that's not really expected here, but it
-                //  could happen if there was effectively no content, so just
-                //  return.
-                //
-                //  Also, if we get the open angle of some markup, then break
-                //  out.
-                //
-                if ((nextCh == chOpenAngle) || !nextCh)
+                // Try to get another char from the source
+                if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
                 {
                     // If we were waiting for a trailing surrogate, its an error
                     if (gotLeadingSurrogate)
@@ -1633,9 +1621,6 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
                     notDone = false;
                     break;
                 }
-
-                // Get the break char out of the input buffer now
-                fReaderMgr.getNextChar();
             }
 
             //

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/25 01:04:21  roddey
+ * Fixes a bogus error about ]]> in char data.
+ *
  * Revision 1.4  2000/01/24 20:40:43  roddey
  * Exposed the APIs to get to the byte offset in the source XML buffer. This stuff
  * is not tested yet, but I wanted to get the API changes in now so that the API
@@ -137,15 +140,10 @@ public :
     //  character spooling methods.
     // -----------------------------------------------------------------------
     bool atEOF() const;
-    XMLCh getCharData
-    (
-        XMLBuffer&      toFill
-        , XMLScanner&   owningScanner
-        , bool&         gotLeadingSurrogate
-    );
     bool getName(XMLBuffer& toFill);
     bool getNameToken(XMLBuffer& toFill);
     XMLCh getNextChar();
+    bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
     void getSpaces(XMLBuffer& toFill);
     void getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool isEmpty() const;
@@ -303,6 +301,11 @@ inline bool ReaderMgr::getNameToken(XMLBuffer& toFill)
 {
     toFill.reset();
     return fCurReader->getName(toFill, true);
+}
+
+inline bool ReaderMgr::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
+{
+    return fCurReader->getNextCharIfNot(chNotToGet, chGotten);
 }
 
 inline bool ReaderMgr::getThrowEOE() const
