@@ -40,6 +40,7 @@
   <separator/>
   <external href="http://&XercesDistDir;/"     label="Download"    />
   <external href="http://xml.apache.org/from-cvs/xml-xerces/"     label="Dev Snapshots"    />
+  <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"    />
   <external href="http://xml-archive.webweaving.org/"     label="Mail Archive"    />
   <external href="http://xml.apache.org/bugs/"     label="Bug Database"    />
 </book>
