@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/10 17:49:42  tng
+ * Schema: SchemaValidator fixes
+ *
  * Revision 1.4  2001/05/03 20:34:44  tng
  * Schema: SchemaValidator update
  *
@@ -592,6 +595,11 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     if (fNil && (miscFlags & SchemaSymbols::NILLABLE) == 0 ) {
         fNil = false;
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
+    }
+
+    if (((SchemaElementDecl*) elemDef)->getModelType() == SchemaElementDecl::Simple) {
+        fBufferDatatype = true;
+        fDatatypeBuffer.reset();
     }
 }
 

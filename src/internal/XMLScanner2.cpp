@@ -1170,7 +1170,7 @@ void XMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
         emitError(XMLErrs::BadSchemaLocation);
     } else {
         for(unsigned int i=0; i<size; i=i+2) {
-            resolveSchemaGrammar(schemaLocation->elementAt(i), schemaLocation->elementAt(i+1));
+            resolveSchemaGrammar(schemaLocation->elementAt(i+1), schemaLocation->elementAt(i));
         }
     }
 
@@ -1308,7 +1308,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                 fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
 
             grammar = new SchemaGrammar();
-            TraverseSchema traverseSchema(root, fURIStringPool, grammar, fGrammarResolver, this, fValidator, uri, fEntityResolver);
+            TraverseSchema traverseSchema(root, fURIStringPool, grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
         }
     }
     fGrammar = grammar;
