@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.32  2003/04/21 15:58:07  knoaman
+# Add MemoryManagerImpl.
+#
 # Revision 1.31  2003/04/17 21:58:49  neilg
 # Adding a new property,
 # http://apache.org/xml/properties/security-manager, with
@@ -478,6 +481,7 @@ UTIL_CPP_PUBHEADERS = \
     KeyRefPair.hpp \
     KeyValuePair.hpp \
     KVStringPair.hpp \
+    MemoryManagerImpl.hpp \
     Mutexes.hpp \
     NameIdPool.hpp \
     NoDefTranscoderException.hpp \
@@ -582,6 +586,7 @@ UTIL_CPP_OBJECTS = \
     HeaderDummy.$(TO) \
     HexBin.$(TO) \
     KVStringPair.$(TO) \
+    MemoryManagerImpl.$(TO) \
     Mutexes.$(TO) \
     PanicHandler.$(TO) \
     PlatformUtils.$(TO) \
