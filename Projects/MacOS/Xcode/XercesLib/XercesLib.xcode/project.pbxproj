@@ -980,6 +980,7 @@
 				F51053570382BB2501A80066,
 				02058E9CFF8AF8CD7F000001,
 				F5A6C93E01B968C801000102,
+				9019C4BB05EDC7A5007EE4FE,
 				02058E9DFF8AF8CD7F000001,
 				02058E9EFF8AF8CD7F000001,
 				F563D4BF00D52C3F01000001,
@@ -3422,6 +3423,20 @@
 		};
 		900A9B87055B0570002E6943 = {
 			fileRef = 900A9B81055B0570002E6943;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9019C4BB05EDC7A5007EE4FE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = XMLRegisterCleanup.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9019C4BD05EDC7A5007EE4FE = {
+			fileRef = 9019C4BB05EDC7A5007EE4FE;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7236,6 +7251,7 @@
 				909229700573B03C00C9F477,
 				909229760573B0C400C9F477,
 				9003BCCB05C456BB003A34FC,
+				9019C4BD05EDC7A5007EE4FE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
