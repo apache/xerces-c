@@ -69,8 +69,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\VC6\Debug\Obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DOM_EXPORTS" /YX /FD /GZ  /c
-# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\DOM" /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /D "PROJ_DOM" /FD /GZ  /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DOM_EXPORTS" /YX /FD /GZ /c
+# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\DOM" /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /D "PROJ_DOM" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -239,10 +239,6 @@ SOURCE=..\..\..\..\..\src\dom\EntityReferenceImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\NamedNodeMapImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\dom\NodeFilterImpl.cpp
 # End Source File
 # Begin Source File
 
