@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/20 19:57:44  peiyongz
+ * validate content as a whole against pattern.
+ *
  * Revision 1.3  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -188,7 +191,7 @@ void ListDatatypeValidator::validate( const XMLCh* const content)
     setContent(content);
     RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
     Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, false);
+    checkContent(tokenVector, content, false);
 }
 
 void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
@@ -196,18 +199,20 @@ void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBas
     setContent(content);
     RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
     Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, asBase);
+    checkContent(tokenVector, content, asBase);
 }
 
 //
 // here content is a list of items
 //
-void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool asBase)
+void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector
+                                        , const XMLCh* const content
+                                        , bool asBase)
 {
     DatatypeValidator* bv = getBaseValidator();
 
     if (bv->getType() == DatatypeValidator::List)
-        ((ListDatatypeValidator*)bv)->checkContent(tokenVector, true);
+        ((ListDatatypeValidator*)bv)->checkContent(tokenVector, content, true);
     else
     {   // the ultimate itemType DTV
         for (unsigned int i = 0; i < tokenVector->size(); i++)
@@ -231,18 +236,15 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
             }
         }
 
-        //check each and every item in the list
-        for (unsigned int i = 0; i < tokenVector->size(); i++)
+        //check every item in the list as a whole
+        if (getRegex()->matches(content) == false)
         {
-            if (getRegex()->matches(tokenVector->elementAt(i)) ==false)
-            {
-                ThrowXML2(InvalidDatatypeValueException
+            ThrowXML2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
-                    , tokenVector->elementAt(i)
+                    , content
                     , getPattern());
-            }
-
         }
+
     }
 
     // if this is a base validator, we only need to check pattern facet

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/20 19:57:44  peiyongz
+ * validate content as a whole against pattern.
+ *
  * Revision 1.2  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -210,7 +213,9 @@ protected:
 
 private:
 
-    void checkContent(RefVectorOf<XMLCh>* tokenVector, bool asBase);
+    void checkContent(RefVectorOf<XMLCh>* tokenVector
+                    , const XMLCh* const  content
+                    , bool asBase);
 
     bool valueSpaceCheck(RefVectorOf<XMLCh>* tokenVector
                        , const XMLCh* const  enumStr) const;
