@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/06/02 00:45:42  andyh
+ * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
+ * Two plain deletes changed to array deletes.
+ *
  * Revision 1.11  2000/03/02 19:53:52  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -359,7 +363,7 @@ public:
       *         a null being there, and do not add one, as several DOMStrings
       *         with different lengths may share the same raw buffer.
       */
-    XMLCh       *rawBuffer() const;
+    const XMLCh *rawBuffer() const;
 
     /**
       * Returns a copy of the string, transcoded to the local code page. The

@@ -153,7 +153,7 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
     if (prefix.equals(xml) && !namespaceURI.equals(xmlURI))
         throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    XMLCh *p = prefix.rawBuffer();
+    const XMLCh *p = prefix.rawBuffer();
     for (int i = prefix.length(); --i >= 0;)
         if (*p++ == chColon)	//prefix is malformed
             throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);

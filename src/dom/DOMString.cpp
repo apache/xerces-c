@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/06/02 00:45:42  andyh
+ * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
+ * Two plain deletes changed to array deletes.
+ *
  * Revision 1.16  2000/05/09 00:22:29  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -168,7 +172,7 @@ void DOMStringData::removeRef()
     {
         fBufferLength = 0xcccc;
         fRefCount     = 0xcccc;
-        delete this;
+        delete [] this;  //  was allocated with new char[size] !
         XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringDataCount);
     };
 };
@@ -982,7 +986,7 @@ void DOMString::println() const
 
 
 
-XMLCh *DOMString::rawBuffer() const
+const XMLCh *DOMString::rawBuffer() const
 {
     XMLCh  *retP = 0;
     if (fHandle)

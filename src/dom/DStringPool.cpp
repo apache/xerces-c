@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/06/02 00:45:42  andyh
+ * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
+ * Two plain deletes changed to array deletes.
+ *
  * Revision 1.4  2000/05/09 00:22:31  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -128,7 +132,7 @@ DStringPool::~DStringPool()
                            //   on spe->fString.
         }
     }
-    delete fHashTable;
+    delete [] fHashTable;
     fHashTable = 0;
 };
 
@@ -158,9 +162,9 @@ const DOMString &DStringPool::getPooledString(const DOMString &in)
     DStringPoolEntry    **pspe;
     DStringPoolEntry    *spe;
 
-    XMLCh *inCharData = in.rawBuffer();
-    int    inLength   = in.length();
-    int    inHash     = XMLString::hashN(inCharData, inLength, fHashTableSize);
+    const XMLCh *inCharData = in.rawBuffer();
+    int          inLength   = in.length();
+    int          inHash     = XMLString::hashN(inCharData, inLength, fHashTableSize);
 
     pspe = &fHashTable[inHash];
     while (*pspe != 0)

@@ -423,9 +423,9 @@ NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
 
 bool DocumentImpl::isXMLName(const DOMString &s)
 {
-    XMLCh       *nam;
-    int         length;
-    int         i;
+    const XMLCh   *nam;
+    int           length;
+    int           i;
 
     length = s.length();
     if (length == 0)
@@ -673,7 +673,7 @@ ElementImpl *DocumentImpl::getElementById(const DOMString &elementId)
 int DocumentImpl::indexofQualifiedName(const DOMString & qName)
 {
     //Check if s = prefix:localName, name or malformed
-    XMLCh *qNameP = qName.rawBuffer();
+    const XMLCh *qNameP = qName.rawBuffer();
     int qNameLen = qName.length();	//note: qName[qNameLen] may not be 0
     int index = -1, count = 0;
     for (int i = 0; i < qNameLen; ++i)
