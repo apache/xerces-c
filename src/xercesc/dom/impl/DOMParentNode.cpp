@@ -88,14 +88,14 @@ DOMParentNode::DOMParentNode(const DOMParentNode &other)  :
 
 void DOMParentNode::changed()
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)(castToNodeImpl(this)->getOwnerDocument());
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
     doc->changed();
 }
 
 
 int DOMParentNode::changes() const
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)(castToNodeImpl(this)->getOwnerDocument());
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
     return doc->changes();
 };
 
