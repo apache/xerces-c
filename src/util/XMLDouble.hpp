@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/08/29 19:03:03  peiyongz
+ * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
+ *
  * Revision 1.4  2001/07/31 13:48:29  peiyongz
  * fValue removed
  *
@@ -182,11 +185,6 @@ private:
     LiteralType             fType;
 };
 
-inline XMLDouble::~XMLDouble()
-{
-    cleanUp();
-}
-
 inline int XMLDouble::getSign() const
 {
     return fMantissa->getSign();
@@ -209,6 +207,11 @@ inline void XMLDouble::cleanUp()
 
     if (fExponent)
         delete fExponent;
+}
+
+inline XMLDouble::~XMLDouble()
+{
+    cleanUp();
 }
 
 #endif

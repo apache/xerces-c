@@ -238,6 +238,26 @@ static const XMLCh PATH_SEPARATORS[] =
 // ---------------------------------------------------------------------------
 //  XMLUri: Constructors and initialization methods
 // ---------------------------------------------------------------------------
+XMLUri::~XMLUri()
+{
+    if (getScheme())
+        delete[] fScheme;
+
+    if (getUserInfo())
+        delete[] fUserInfo;
+
+    if (getHost())
+        delete[] fHost;
+
+    if (getPath())
+        delete[] fPath;
+
+    if (getQueryString())
+        delete[] fQueryString;
+
+    if (getFragment())
+        delete[] fFragment;
+}
 
 void XMLUri::initialize(const XMLUri& toCopy)
 {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/29 19:03:40  peiyongz
+ * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
+ *
  * Revision 1.3  2001/08/21 18:42:53  peiyongz
  * Bugzilla# 2816: cleanUp() declared with external linkage and called
  *                          before defined as inline
@@ -709,6 +712,22 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
         return 0;
     }
        
+}
+
+void ListDatatypeValidator::validate( const XMLCh* const content)
+{
+    setContent(content);
+    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    checkContent(tokenVector, false);
+}
+
+void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
+{
+    setContent(content);
+    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    checkContent(tokenVector, asBase);
 }
 
 /**

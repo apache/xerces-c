@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/29 19:03:03  peiyongz
+ * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
+ *
  * Revision 1.2  2001/08/16 14:09:44  peiyongz
  * Removed unused ctors and methods
  *
@@ -470,27 +473,6 @@ inline XMLUri::XMLUri(const XMLUri* const      baseURI
 {
     initialize(baseURI, uriSpec);
 }  
-
-inline XMLUri::~XMLUri()
-{
-    if (getScheme())
-        delete[] fScheme;
-
-    if (getUserInfo())
-        delete[] fUserInfo;
-
-    if (getHost())
-        delete[] fHost;
-
-    if (getPath())
-        delete[] fPath;
-
-    if (getQueryString())
-        delete[] fQueryString;
-
-    if (getFragment())
-        delete[] fFragment;
-}
 
 // ---------------------------------------------------------------------------
 //  XMLUri: Getter methods

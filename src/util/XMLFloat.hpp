@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/29 19:03:03  peiyongz
+ * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
+ *
  * Revision 1.2  2001/07/31 13:48:29  peiyongz
  * fValue removed
  *
@@ -177,11 +180,6 @@ private:
     LiteralType             fType;
 };
 
-inline XMLFloat::~XMLFloat()
-{
-    cleanUp();
-}
-
 inline bool XMLFloat::operator==(const XMLFloat& toCompare) const
 {
     return ( XMLFloat::compareValues(this, &toCompare) == 0 ? true : false);
@@ -205,4 +203,10 @@ inline int XMLFloat::getSign() const
 {
     return fMantissa->getSign();
 }
+
+inline XMLFloat::~XMLFloat()
+{
+    cleanUp();
+}
+
 #endif

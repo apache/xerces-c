@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/08/29 19:03:40  peiyongz
+ * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
+ *
  * Revision 1.6  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -227,21 +230,7 @@ inline DatatypeValidator* ListDatatypeValidator::newInstance(
     return (DatatypeValidator*) new ListDatatypeValidator(this, facets, enums, finalSet);
 }
 
-inline void ListDatatypeValidator::validate( const XMLCh* const content)
-{
-    setContent(content);
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, false);
-}
 
-inline void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
-{
-    setContent(content);
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, asBase);
-}
 
 inline void ListDatatypeValidator::cleanUp()
 {
