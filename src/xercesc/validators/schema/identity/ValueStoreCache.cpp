@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/08/28 13:41:20  knoaman
+ * missing type info.
+ *
  * Revision 1.3  2002/08/27 05:56:19  knoaman
  * Identity Constraint: handle case of recursive elements.
  *
@@ -179,7 +182,7 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
     }
 }
 
-void ValueStoreCache::transplant(IdentityConstraint* const ic, const initialDepth) {
+void ValueStoreCache::transplant(IdentityConstraint* const ic, const int initialDepth) {
 
     if (ic->getType() == IdentityConstraint::KEYREF) {
         return;

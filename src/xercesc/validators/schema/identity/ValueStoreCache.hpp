@@ -128,7 +128,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Access methods
     // -----------------------------------------------------------------------
-    ValueStore* getValueStoreFor(const IC_Field* const field, const initialDepth);
+    ValueStore* getValueStoreFor(const IC_Field* const field, const int initialDepth);
     ValueStore* getValueStoreFor(const IdentityConstraint* const ic, const int intialDepth);
     ValueStore* getGlobalValueStoreFor(const IdentityConstraint* const ic);
 
