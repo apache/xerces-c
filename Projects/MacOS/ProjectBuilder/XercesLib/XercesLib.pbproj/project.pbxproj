@@ -4782,6 +4782,8 @@
 				F5DEBE4400F80EF301000001,
 				F5DEBE4500F80EF301000001,
 				F5DEBE4600F80EF301000001,
+				F5DCC26D0101D29101000001,
+				F5DCC26E0101D29101000001,
 			);
 			isa = PBXHeadersBuildPhase;
 			name = Headers;
@@ -5020,6 +5022,8 @@
 				F5DEBE4900F80EF301000001,
 				F5DEBE4A00F80EF301000001,
 				F5DEBE4B00F80EF301000001,
+				F5DCC26F0101D29101000001,
+				F5DCC2700101D29101000001,
 			);
 			isa = PBXSourcesBuildPhase;
 			name = Sources;
@@ -5306,12 +5310,16 @@
 				F5DEBE3D00F80EF301000001,
 				20965416008111847F000001,
 				20965417008111847F000001,
+				F5DCC2690101D29101000001,
+				F5DCC26A0101D29101000001,
 				F5DEBE3E00F80EF301000001,
 				F5DEBE3F00F80EF301000001,
 				F5DEBE4000F80EF301000001,
 				F5DEBE4100F80EF301000001,
 				F50CFCA000B9D0E301000001,
 				F50CFCA100B9D0E301000001,
+				F5DCC26B0101D29101000001,
+				F5DCC26C0101D29101000001,
 			);
 			isa = PBXGroup;
 			path = datatype;
@@ -8007,6 +8015,50 @@
 		};
 		F5D0276500BD60F501000001 = {
 			fileRef = F5D0270A00BD60F501000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DCC2690101D29101000001 = {
+			isa = PBXFileReference;
+			path = ListDatatypeValidator.cpp;
+			refType = 4;
+		};
+		F5DCC26A0101D29101000001 = {
+			isa = PBXFileReference;
+			path = ListDatatypeValidator.hpp;
+			refType = 4;
+		};
+		F5DCC26B0101D29101000001 = {
+			isa = PBXFileReference;
+			path = UnionDatatypeValidator.cpp;
+			refType = 4;
+		};
+		F5DCC26C0101D29101000001 = {
+			isa = PBXFileReference;
+			path = UnionDatatypeValidator.hpp;
+			refType = 4;
+		};
+		F5DCC26D0101D29101000001 = {
+			fileRef = F5DCC26A0101D29101000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DCC26E0101D29101000001 = {
+			fileRef = F5DCC26C0101D29101000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DCC26F0101D29101000001 = {
+			fileRef = F5DCC2690101D29101000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DCC2700101D29101000001 = {
+			fileRef = F5DCC26B0101D29101000001;
 			isa = PBXBuildFile;
 			settings = {
 			};
