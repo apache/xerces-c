@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/10/17 20:49:05  peiyongz
+ * Patch to Bug#13640: Getter methods not public in DecimalDatatypeValidator
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.10  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -169,7 +172,7 @@ protected:
 
     virtual void checkContent( const XMLCh* const content, bool asBase);
 
-private:
+public:
 
 // -----------------------------------------------------------------------
 // Getter methods
@@ -179,6 +182,7 @@ private:
 
     inline unsigned int                    getFractionDigits() const;
 
+private:
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
