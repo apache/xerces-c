@@ -3,6 +3,18 @@
 
 <faqs title="Parsing with &XercesCName;">
 
+  <faq title="Does Xerces-C support Schema?">
+
+    <q> Does Xerces-C support Schema?</q>
+
+    <a>
+
+      <p>See <jump href="http://xml.apache.org/xerces-c/schema.html">
+         http://xml.apache.org/xerces-c/schema.html</jump> for latest status.</p>
+
+    </a>
+  </faq>
+
   <faq title="Why does my application crash on AIX when I run it under a
          multi-threaded environment?">
 
