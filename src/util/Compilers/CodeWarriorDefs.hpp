@@ -55,28 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2000/07/18 18:26:04  andyh
- * Mac OS update.
- * Contributed by James Berry <jberry@criticalpath.com>
- *
- * Revision 1.5  2000/03/02 19:55:07  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/06 07:48:17  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  1999/11/12 20:36:53  rahulj
- * Changed library name to xerces-c.lib.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:29  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:22  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -108,9 +87,7 @@
 
 
 // ---------------------------------------------------------------------------
-//  Define our version of the XMLCh. XMLCh should be mapped to the native
-//  wide char type (whatever wchar_t is.) On Mac, wchar_t is not an
-//  intrinsic type and is just mapped to unsigned short.
+//  Define our version of the XMLCh.
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLCh;
 typedef unsigned short  UTF16Ch;
