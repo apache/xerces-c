@@ -527,7 +527,7 @@ docRootNode.AppendChild(aNode);</source>
       <note>The ICU classes are a more general solution to UNICODE
         character handling for C++ applications.  ICU is an Open
         Source Unicode library, available at the <jump
-        href="http://www.software.ibm.com/developerworks/opensource/icu/index.html">IBM
+        href="http://oss.software.ibm.com/icu/">IBM
         DeveloperWorks website</jump>.</note>
 
     </s3>
@@ -713,7 +713,7 @@ DOM_Text         someText;
 
     <anchor name="IDOMObjMemMgmt"/>
     <s3 title="Objects and Memory Management">
-      <p>The C++ IDOM implementation no longer uses reference counting for 
+      <p>The C++ IDOM implementation no longer uses reference counting for
          automatic memory management.  The storage for a DOM document is
          associated with the document node object. Applications would use
          normal C++ pointers to directly access the implementation objects
@@ -736,7 +736,7 @@ docRootNode->appendChild(aNode);
       <source>
 // DOM C++
 DOM_Node       aNode;
-DOM_Node docRootNode;       
+DOM_Node docRootNode;
 aNode = someDocument.createElement("ElementName");
 docRootNode = someDocument.getDocumentElement();
 docRootNode.appendChild(aNode);
@@ -747,7 +747,7 @@ docRootNode.appendChild(aNode);
          The advantage here is that allocation would require no synchronization
          in most cases (based on the the same threading model that we
          have now - one thread active per document, but any number of
-         documents running in parallel with separate threads).         
+         documents running in parallel with separate threads).
       </p>
 
       <p>The allocator does not support a delete operation at all - all

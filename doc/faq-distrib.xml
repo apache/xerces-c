@@ -55,19 +55,18 @@
             encodings, say in Shift-JIS, Big5 etc., then you cannot
             use Xerces-C. XML4C addresses this need. It combines Xerces-C
             and <jump
-            href="http://www10.software.ibm.com/developerworks/opensource/icu/index.html">
+            href="http://oss.software.ibm.com/icu/">
             International Components for Unicode (ICU)</jump> and
             provides support for over 100 different encodings.</p>
 
             <p>ICU is also an open source project but is licensed
             under the <jump
-            href="http://www10.software.ibm.com/developerworks/opensource/license10.html">
-            IBM Public License</jump>. XML4C is published by IBM and
+            href="http://www.x.org/terms.htm">
+            X License</jump>. XML4C is published by IBM and
             can be downloaded from their <jump
             href="http://www.alphaworks.ibm.com/tech/xml4c">Alphaworks</jump>
             site. The license to use XML4C is simply to comply with
-            the Apache license (because of Xerces-C) and IBM Public
-            License (because of ICU).</p>
+            the Apache license (because of Xerces-C) and X License (because of ICU).</p>
 
             <p>XML4C binaries are published for Solaris using SunWorkshop
             compiler, HPUX 10.20 and 11.0 using CC and aCC, Redhat
