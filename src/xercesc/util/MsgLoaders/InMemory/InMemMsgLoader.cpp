@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/03/09 16:41:40  peiyongz
+ * PanicHandler
+ *
  * Revision 1.6  2002/12/12 19:14:00  peiyongz
  * InMem Message file name changed.
  *
@@ -123,7 +126,7 @@ InMemMsgLoader::InMemMsgLoader(const XMLCh* const msgDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
     {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
+        XMLPlatformUtils::panic(PanicHandler::Panic_UnknownMsgDomain);
     }
 
     fMsgDomain = XMLString::replicate(msgDomain);

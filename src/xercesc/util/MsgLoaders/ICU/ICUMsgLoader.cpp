@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/03/09 16:41:20  peiyongz
+ * PanicHandler
+ *
  * Revision 1.14  2003/02/20 18:07:46  peiyongz
  * Bug#7077: build error message shared library for ICUMsgLoader
  *
@@ -205,7 +208,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain) &&
         !XMLString::equals(msgDomain, XMLUni::fgValidityDomain)   )
     {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
+        XMLPlatformUtils::panic(PanicHandler::Panic_UnknownMsgDomain);
     }
 
     /***
@@ -286,12 +289,12 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
             fLocaleBundle = ures_open("XercesMessages", XMLMsgLoader::getLocale(), &err);
             if (!U_SUCCESS(err) || fLocaleBundle == NULL)
             {
-                 XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+                 XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
             }
         }
         else
         {    	     	   
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
         }        
     }
 
@@ -303,7 +306,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
     if (!U_SUCCESS(err) || fDomainBundle == NULL)
     {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+        XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
 
 }

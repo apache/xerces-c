@@ -103,7 +103,7 @@ XMLLCPTranscoder*  getDomConverter()
     {
         XMLLCPTranscoder* transcoder = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
         if (!transcoder)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoDefTranscoder
+            XMLPlatformUtils::panic(PanicHandler::Panic_NoDefTranscoder
             );
 
         if (XMLPlatformUtils::compareAndSwap((void **)&gDomConverter, transcoder, 0) != 0)

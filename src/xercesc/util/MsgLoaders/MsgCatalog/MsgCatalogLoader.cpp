@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/03/09 16:42:05  peiyongz
+ * PanicHandler
+ *
  * Revision 1.12  2003/02/20 20:20:11  peiyongz
  * Allow set user specified error message file location in PlatformUtils::Initialize().
  *
@@ -153,7 +156,7 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
     {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
+        XMLPlatformUtils::panic(PanicHandler::Panic_UnknownMsgDomain);
     }
 
     // Prepare the path info

@@ -153,7 +153,7 @@ static XMLMsgLoader& gScannerMsgLoader()
     {
         gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
         if (!gMsgLoader)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
 
         // Register this object to be cleaned up at termination
         cleanupMsgLoader.registerCleanup(XMLScanner::reinitMsgLoader);

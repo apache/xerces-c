@@ -137,7 +137,7 @@ Win32MsgLoader::Win32MsgLoader(const XMLCh* const msgDomain) :
     else if (XMLString::equals(fMsgDomain, XMLUni::fgXMLDOMMsgDomain))
         fDomainOfs = 0x6000;
     else
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
+        XMLPlatformUtils::panic(PanicHandler::Panic_UnknownMsgDomain);
 }
 
 Win32MsgLoader::~Win32MsgLoader()

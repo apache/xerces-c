@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.3  2003/03/09 16:38:04  peiyongz
+  * PanicHandler
+  *
   * Revision 1.2  2002/11/04 15:00:21  tng
   * C++ Namespace Support.
   *
@@ -174,7 +177,7 @@ static XMLMsgLoader& getMsgLoader()
 	{
 		sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
 		if (!sMsgLoader)
-			XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+			XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
 
         //
         // Register this XMLMsgLoader for cleanup at Termination.

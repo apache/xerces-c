@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/03/09 16:40:47  peiyongz
+ * PanicHandler
+ *
  * Revision 1.7  2003/02/17 19:54:47  peiyongz
  * Allow set user specified error message file location in PlatformUtils::Initialize().
  *
@@ -158,6 +161,8 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/DefaultPanicHandler.hpp>
+
 #include <limits.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -185,7 +190,7 @@ static long                     gInitFlag = 0;
 //		static data cleanup list
 // ---------------------------------------------------------------------------
 XMLRegisterCleanup*	gXMLCleanupList = 0;
-XMLMutex*			gXMLCleanupListMutex = 0;
+XMLMutex*               gXMLCleanupListMutex = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -193,14 +198,15 @@ XMLMutex*			gXMLCleanupListMutex = 0;
 // ---------------------------------------------------------------------------
 XMLNetAccessor*     XMLPlatformUtils::fgNetAccessor = 0;
 XMLTransService*    XMLPlatformUtils::fgTransService = 0;
-
-
+PanicHandler*       XMLPlatformUtils::fgUserPanicHandler = 0;
+PanicHandler*       XMLPlatformUtils::fgDefaultPanicHandler = 0;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::Initialize(const char* const locale 
-                                , const char* const nlsHome)
+void XMLPlatformUtils::Initialize(const char*         const locale 
+                                , const char*         const nlsHome
+                                ,       PanicHandler* const panicHandler)
 {
     //
     //  Effects of overflow:
@@ -225,6 +231,19 @@ void XMLPlatformUtils::Initialize(const char* const locale
     if (gInitFlag > 1)
       return;
 
+    /***
+     * Panic Handler:
+     *
+     ***/
+    if (!panicHandler)
+    {
+        fgDefaultPanicHandler = new DefaultPanicHandler();
+    }
+    else
+    {
+        fgUserPanicHandler = panicHandler;
+    }
+    
     //
     //  Call the platform init method, which is implemented in each of the
     //  per-platform implementation cpp files. This one does the very low
@@ -253,7 +272,7 @@ void XMLPlatformUtils::Initialize(const char* const locale
     fgTransService = makeTransService();
 
     if (!fgTransService)
-        panic(Panic_NoTransService);
+        panic(PanicHandler::Panic_NoTransService);
 
     // Initialize the transcoder service
     fgTransService->initTransService();
@@ -265,7 +284,7 @@ void XMLPlatformUtils::Initialize(const char* const locale
     //
     XMLLCPTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
     if (!defXCode)
-        panic(Panic_NoDefTranscoder);
+        panic(PanicHandler::Panic_NoDefTranscoder);
     XMLString::initString(defXCode);
 
     //
@@ -283,6 +302,7 @@ void XMLPlatformUtils::Initialize(const char* const locale
      ***/
     XMLMsgLoader::setLocale(locale);
     XMLMsgLoader::setNLSHome(nlsHome);
+
 }
 
 
@@ -346,6 +366,11 @@ void XMLPlatformUtils::Terminate()
      ***/
     XMLMsgLoader::setLocale(0);
     XMLMsgLoader::setNLSHome(0);
+
+    if (fgDefaultPanicHandler)
+    {
+        delete fgDefaultPanicHandler;
+    }
 
     // And say we are no longer initialized
     gInitFlag = 0;

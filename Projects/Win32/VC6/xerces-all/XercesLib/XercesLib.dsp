@@ -7,21 +7,21 @@
 CFG=XercesLib - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak" CFG="XercesLib - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "XercesLib - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XercesLib - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XercesLib - Win64 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XercesLib - Win64 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -44,18 +44,16 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\VC6\Release\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP  /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP  /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
-# ADD BASE MTL  /D "NDEBUG" /mktyplib203 /o "NUL" /win32
-# ADD MTL  /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+# ADD BASE CPP /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# ADD BASE MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+# ADD MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
-# ADD BASE BSC32
-# ADD BSC32
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.2.0
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /machine:I386
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.2.0
 # SUBTRACT LINK32 /pdb:none /incremental:yes
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -71,19 +69,17 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\VC6\Debug\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP  /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP  /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# ADD BASE CPP /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
 # SUBTRACT CPP /Fr /YX
-# ADD BASE MTL  /D "_DEBUG" /mktyplib203 /o "NUL" /win32
-# ADD MTL  /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+# ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+# ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
-# ADD BASE BSC32
-# ADD BSC32
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
@@ -100,21 +96,19 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\Build\Win64\VC6\Debug\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP  /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# ADD BASE CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
 # SUBTRACT BASE CPP /Fr /YX
 # ADD CPP /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
-# ADD BASE MTL  /D "_DEBUG" /mktyplib203 /o "NUL" /win32
-# ADD MTL  /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+# ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+# ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
-# ADD BASE BSC32
-# ADD BSC32
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /debug /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0
+# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0 /machine:IA64
-# SUBTRACT LINK32  /pdb:none
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0 /machine:IA64
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
 
@@ -130,22 +124,20 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\Build\Win64\VC6\Release\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP  /G6 /MD /Za /W3 /GX /O2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# ADD BASE CPP /G6 /MD /Za /W3 /GX /O2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
 # ADD CPP /MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
-# ADD BASE MTL  /D "NDEBUG" /mktyplib203 /o "NUL" /win32
-# ADD MTL  /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+# ADD BASE MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+# ADD MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
-# ADD BASE BSC32
-# ADD BSC32
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /map /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.2.0
+# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.2.0
 # SUBTRACT BASE LINK32 /pdb:none /incremental:yes
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.2.0 /machine:IA64
-# SUBTRACT LINK32  /pdb:none
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.2.0 /machine:IA64
+# SUBTRACT LINK32 /pdb:none
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -182,16 +174,16 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp
 # ADD CPP /Ze
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp
 # End Source File
 # End Group
 # Begin Group "Transcoders"
@@ -467,6 +459,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Base64.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\BinFileInputStream.cpp
 # End Source File
 # Begin Source File
@@ -504,6 +500,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\BitSet.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\CountedPointer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\DefaultPanicHandler.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\DefaultPanicHandler.hpp
 # End Source File
 # Begin Source File
 
@@ -615,6 +619,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NullPointerException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\PlatformUtils.cpp
 # End Source File
 # Begin Source File
@@ -635,6 +647,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.hpp
 # End Source File
 # Begin Source File
@@ -652,14 +668,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp
 # End Source File
 # Begin Source File
 
@@ -2230,14 +2238,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementNSImpl.cpp
 # End Source File
 # Begin Source File
@@ -2391,6 +2391,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -2939,10 +2947,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMEntity.hpp
 # End Source File
 # Begin Source File
@@ -3040,6 +3044,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMText.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp
 # End Source File
 # Begin Source File
 

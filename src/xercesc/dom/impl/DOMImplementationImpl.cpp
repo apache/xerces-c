@@ -122,7 +122,7 @@ XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM() {
     {
         XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
         if (!t)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
         else {
             if (XMLPlatformUtils::compareAndSwap((void **)&gMsgLoader4DOM, t, 0) != 0)
             {

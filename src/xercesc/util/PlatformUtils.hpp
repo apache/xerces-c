@@ -64,13 +64,13 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/PanicHandler.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLMsgLoader;
 class XMLNetAccessor;
 class XMLTransService;
-
 
 //
 //  For internal use only
@@ -103,21 +103,6 @@ private :
 class XMLUTIL_EXPORT XMLPlatformUtils
 {
 public :
-    /** @name Public Types */
-    //@{
-    enum PanicReasons
-    {
-        Panic_NoTransService
-        , Panic_NoDefTranscoder
-        , Panic_CantFindLib
-        , Panic_UnknownMsgDomain
-        , Panic_CantLoadMsgDomain
-        , Panic_SynchronizationErr
-        , Panic_SystemInit
-
-        , PanicReasons_Count
-    };
-    //@}
 
     /** @name Public Static Data */
     //@{
@@ -148,6 +133,18 @@ public :
       */
     static XMLTransService*     fgTransService;
 
+    /** The Panic Handler
+      *
+      *   This is the application provided panic handler. 
+      */
+    static PanicHandler*        fgUserPanicHandler;
+    
+    /** The Panic Handler
+      *
+      *   This is the default panic handler. 
+      */    
+    static PanicHandler*        fgDefaultPanicHandler;
+    
     //@}
 
 
@@ -175,9 +172,14 @@ public :
       *          the discussion above with regard to locale, applies to this nlsHome
       *          as well.
       *
+      * panicHandler: application's panic handler, application owns this handler.
+      *               Application shall make sure that the plugged panic handler persists 
+      *               through the call to XMLPlatformUtils::terminate().       
+      *
       */
-    static void Initialize(const char* const locale = XMLUni::fgXercescDefaultLocale
-                         , const char* const nlsHome = 0);
+    static void Initialize(const char*         const locale = XMLUni::fgXercescDefaultLocale
+                         , const char*         const nlsHome = 0
+                         ,       PanicHandler* const panicHandler = 0);
 
     /** Perform per-process parser termination
       *
@@ -193,17 +195,21 @@ public :
       * to get transcoding up or get message loading working, we call
       * this method.</p>
       *
-      * Each platform can implement it however they want. This method is
-      * expected to display something meaningful and end the process. The
-      * enum indicates why its being called, to allow the per-platform code
-      * to display or log something more specific if desired.</p>
+      * Each platform can implement it however they want. This method will
+      * delegate the panic handling to a user specified panic handler or
+      * in the absence of it, the default panic handler.
       *
+      * In case the default panic handler does not support a particular
+      * platform, the platform specific panic hanlding shall be implemented
+      * here </p>.
+      * 
       * @param reason The enumeration that defines the cause of the failure
       */
     static void panic
     (
-        const   PanicReasons    reason
+        const   PanicHandler::PanicReasons    reason
     );
+    
     //@}
 
     /** @name File Methods */

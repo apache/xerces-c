@@ -144,7 +144,7 @@ static XMLMsgLoader& gGetMsgLoader()
     {
         sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
         if (!sMsgLoader)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
 
         //
         // Register this XMLMsgLoader for cleanup at Termination.

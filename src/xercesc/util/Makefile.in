@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.28  2003/03/09 16:40:47  peiyongz
+# PanicHandler
+#
 # Revision 1.27  2003/02/20 18:06:55  peiyongz
 # Bug#7077: build error message shared library for ICUMsgLoader
 #
@@ -431,6 +434,7 @@ UTIL_CPP_PUBHEADERS = \
     BitOps.hpp \
     BitSet.hpp \
     CountedPointer.hpp \
+    DefaultPanicHandler.hpp \
     EmptyStackException.hpp \
     EncodingValidator.hpp \
     FlagJanitor.hpp \
@@ -452,6 +456,7 @@ UTIL_CPP_PUBHEADERS = \
     NoSuchElementException.hpp \
     NullPointerException.hpp \
     NumberFormatException.hpp \
+    PanicHandler.hpp \
     ParseException.hpp \
     PlatformUtils.hpp \
     QName.hpp \
@@ -541,6 +546,7 @@ UTIL_CPP_OBJECTS = \
     BinInputStream.$(TO) \
     BinMemInputStream.$(TO) \
     BitSet.$(TO) \
+    DefaultPanicHandler.$(TO) \
     EncodingValidator.$(TO) \
     HashPtr.$(TO) \
     HashXMLCh.$(TO) \
@@ -548,6 +554,7 @@ UTIL_CPP_OBJECTS = \
     HexBin.$(TO) \
     KVStringPair.$(TO) \
     Mutexes.$(TO) \
+    PanicHandler.$(TO) \    
     PlatformUtils.$(TO) \
     QName.$(TO) \
     StringPool.$(TO) \
