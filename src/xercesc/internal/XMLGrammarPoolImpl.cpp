@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/09/02 08:59:02  gareth
+ * Added API to get enumerator of grammars.
+ *
  * Revision 1.3  2003/07/31 17:05:03  peiyongz
  * Grammar embed Grammar Description
  * using getGrammar(URI)
@@ -133,6 +136,13 @@ Grammar* XMLGrammarPoolImpl::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
     return fGrammarRegistry->orphanKey(nameSpaceKey); 
 }
+
+RefHashTableOfEnumerator<Grammar>
+XMLGrammarPoolImpl::getGrammarEnumerator() const
+{
+    return RefHashTableOfEnumerator<Grammar>(fGrammarRegistry);
+}
+
 
 void XMLGrammarPoolImpl::clear()
 {
