@@ -50,8 +50,8 @@ CLEAN :"XercesLib - Win32 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\SAXCountHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\XSerializerHandlers.obj"
 	-@erase "$(INTDIR)\XSerializerTest.obj"
 	-@erase "$(OUTDIR)\XSerializerTest.exe"
 
@@ -62,7 +62,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /I "..\..\..\..\..\samples\SAXCount" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -102,7 +102,7 @@ BSC32_SBRS= \
 LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:no /pdb:"$(OUTDIR)\XSerializerTest.pdb" /machine:I386 /out:"$(OUTDIR)\XSerializerTest.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
-	"$(INTDIR)\SAXCountHandlers.obj" \
+	"$(INTDIR)\XSerializerHandlers.obj" \
 	"$(INTDIR)\XSerializerTest.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
@@ -134,9 +134,9 @@ CLEAN :"XercesLib - Win32 DebugCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\SAXCountHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\XSerializerHandlers.obj"
 	-@erase "$(INTDIR)\XSerializerTest.obj"
 	-@erase "$(OUTDIR)\XSerializerTest.exe"
 	-@erase "$(OUTDIR)\XSerializerTest.ilk"
@@ -149,7 +149,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\samples\SAXCount" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -189,7 +189,7 @@ BSC32_SBRS= \
 LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\XSerializerTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\XSerializerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
-	"$(INTDIR)\SAXCountHandlers.obj" \
+	"$(INTDIR)\XSerializerHandlers.obj" \
 	"$(INTDIR)\XSerializerTest.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
@@ -221,9 +221,9 @@ CLEAN :"XercesLib - Win64 DebugCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\SAXCountHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\XSerializerHandlers.obj"
 	-@erase "$(INTDIR)\XSerializerTest.obj"
 	-@erase "$(OUTDIR)\XSerializerTest.exe"
 	-@erase "$(OUTDIR)\XSerializerTest.ilk"
@@ -276,7 +276,7 @@ BSC32_SBRS= \
 LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\XSerializerTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\XSerializerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
-	"$(INTDIR)\SAXCountHandlers.obj" \
+	"$(INTDIR)\XSerializerHandlers.obj" \
 	"$(INTDIR)\XSerializerTest.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
@@ -308,8 +308,8 @@ CLEAN :"XercesLib - Win64 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\SAXCountHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\XSerializerHandlers.obj"
 	-@erase "$(INTDIR)\XSerializerTest.obj"
 	-@erase "$(OUTDIR)\XSerializerTest.exe"
 	-@erase "$(OUTDIR)\XSerializerTest.ilk"
@@ -361,7 +361,7 @@ BSC32_SBRS= \
 LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\XSerializerTest.pdb" /machine:IX86 /out:"$(OUTDIR)\XSerializerTest.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
-	"$(INTDIR)\SAXCountHandlers.obj" \
+	"$(INTDIR)\XSerializerHandlers.obj" \
 	"$(INTDIR)\XSerializerTest.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
@@ -383,9 +383,9 @@ LINK32_OBJS= \
 
 
 !IF "$(CFG)" == "XSerializerTest - Win32 Release" || "$(CFG)" == "XSerializerTest - Win32 Debug" || "$(CFG)" == "XSerializerTest - Win64 Debug" || "$(CFG)" == "XSerializerTest - Win64 Release"
-SOURCE=..\..\..\..\..\samples\SAXCount\SAXCountHandlers.cpp
+SOURCE=..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.cpp
 
-"$(INTDIR)\SAXCountHandlers.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\XSerializerHandlers.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
