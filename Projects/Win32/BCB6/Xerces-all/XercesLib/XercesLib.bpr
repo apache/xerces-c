@@ -740,6 +740,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp" FORMNAME="" UNITNAME="DOMXPathException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp" FORMNAME="" UNITNAME="XSObjectFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1047Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp" FORMNAME="" UNITNAME="XMLCanRepGroup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

@@ -314,7 +314,37 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\TreeWalkerImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDeclImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMException.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj 
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttribute.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttributeList.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIElement.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIItem.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ValidationContextImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSAnnotation.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeDeclaration.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeGroupDefinition.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeUse.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSComplexTypeDefinition.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSElementDeclaration.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSFacet.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSIDCDefinition.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSModel.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSModelGroup.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSModelGroupDefinition.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSMultiValueFacet.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSNamespaceItem.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSNotationDeclaration.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSObject.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSParticle.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSSimpleTypeDefinition.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSTypeDefinition.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileOutputStream.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\BinOutputStream.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj\
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj
 RESFILES = ..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res
 MAINSOURCE = Xerceslib.cpp
 RESDEPEN = $(RESFILES)
@@ -334,7 +364,7 @@ SYSDEFINES = NO_STRICT;_RTLDLL;USEPACKAGES
 INCLUDEPATH = ..\..\..\..\..\src;$(BCB)\include
 LIBPATH = ..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib
 WARNINGS= -w-par -w-8027 -w-8026
-PATHCPP = .;..\..\..\..\..\src\xercesc\util\Platforms\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom
+PATHCPP = .;..\..\..\..\..\src\xercesc\util\Platforms\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;..\..\..\..\..\src\xercesc\util\Platforms\Win32
