@@ -277,7 +277,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XercesDOMParser.obj \
     $(TARGETPATH)\obj\DOMException.obj \
     $(TARGETPATH)\obj\DefaultPanicHandler.obj \
-    $(TARGETPATH)\obj\PanicHandler.obj \    
+    $(TARGETPATH)\obj\PanicHandler.obj \
     $(TARGETPATH)\obj\EncodingValidator.obj \
     $(TARGETPATH)\obj\XSDErrorReporter.obj \
     $(TARGETPATH)\obj\XSDDOMParser.obj \
@@ -311,18 +311,56 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XMLGrammarPoolImpl.obj \
     $(TARGETPATH)\obj\XMLDTDDescriptionImpl.obj \
     $(TARGETPATH)\obj\XMLSchemaDescriptionImpl.obj \
+    $(TARGETPATH)\obj\PSVIAttribute.obj \
+    $(TARGETPATH)\obj\PSVIAttributeList.obj \
+    $(TARGETPATH)\obj\PSVIElement.obj \
+    $(TARGETPATH)\obj\PSVIItem.obj \
+    $(TARGETPATH)\obj\XSAnnotation.obj \
+    $(TARGETPATH)\obj\XSAttributeDeclaration.obj \
+    $(TARGETPATH)\obj\XSAttributeGroupDefinition.obj \
+    $(TARGETPATH)\obj\XSAttributeUse.obj \
+    $(TARGETPATH)\obj\XSComplexTypeDefinition.obj \
+    $(TARGETPATH)\obj\XSElementDeclaration.obj \
+    $(TARGETPATH)\obj\XSFacet.obj \
+    $(TARGETPATH)\obj\XSIDCDefinition.obj \
+    $(TARGETPATH)\obj\XSModel.obj \
+    $(TARGETPATH)\obj\XSModelGroup.obj \
+    $(TARGETPATH)\obj\XSModelGroupDefinition.obj \
+    $(TARGETPATH)\obj\XSMultiValueFacet.obj \
+    $(TARGETPATH)\obj\XSNamespaceItem.obj \
+    $(TARGETPATH)\obj\XSNotationDeclaration.obj \
+    $(TARGETPATH)\obj\XSObject.obj \
+    $(TARGETPATH)\obj\XSParticle.obj \
+    $(TARGETPATH)\obj\XSSimpleTypeDefinition.obj \
+    $(TARGETPATH)\obj\XSTypeDefinition.obj \
+    $(TARGETPATH)\obj\XSWildcard.obj \
+    $(TARGETPATH)\obj\XObjectComparator.obj \
+    $(TARGETPATH)\obj\XProtoType.obj \
+    $(TARGETPATH)\obj\XSerializeEngine.obj \
+    $(TARGETPATH)\obj\XTemplateComparator.obj \
+    $(TARGETPATH)\obj\XTemplateSerializer.obj \
+    $(TARGETPATH)\obj\MemoryManagerArrayImpl.obj \
+    $(TARGETPATH)\obj\ValidationContextImpl.obj \
+    $(TARGETPATH)\obj\XMLRefInfo.obj \
+    $(TARGETPATH)\obj\XMLAttDefList.obj \
+    $(TARGETPATH)\obj\XMLGrammarDescription.obj \
+    $(TARGETPATH)\obj\Grammar.obj \
+    $(TARGETPATH)\obj\SynchronizedStringPool.obj \
+    $(TARGETPATH)\obj\DTDEntityDecl.obj \
+    $(TARGETPATH)\obj\XMLDTDDescription.obj \
+    $(TARGETPATH)\obj\XMLSchemaDescription.obj \
     $(DEPRDOM_OBJFILES)
 RESFILES = $(TARGETPATH)\obj\Version.res
 MAINSOURCE = XercesLib.cpp
 RESDEPEN = $(RESFILES)
-LIBFILES = 
-IDLFILES = 
-IDLGENFILES = 
-LIBRARIES = 
-SPARELIBS = 
-DEFFILE = 
+LIBFILES =
+IDLFILES =
+IDLGENFILES =
+LIBRARIES =
+SPARELIBS =
+DEFFILE =
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Platforms\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;$(DEPRDOM_PATH)
+PATHCPP = .;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Platforms\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;$(DEPRDOM_PATH)
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;..\..\..\..\..\src\xercesc\util\Platforms\Win32
@@ -336,10 +374,10 @@ LIBPATH = ..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework;..
 WARNINGS= -w-par
 # ---------------------------------------------------------------------------
 CFLAG1 = -tWD -Od -Vx -Ve -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM
-IDLCFLAGS = 
+IDLCFLAGS =
 PFLAGS = -N2$(TARGETPATH)\obj \
     -N0$(TARGETPATH)\obj -$YD -$W -$O- -v -JPHNE -M
-RFLAGS = 
+RFLAGS =
 AFLAGS = /mx /w2 /zd
 LFLAGS = -l"$(TARGETPATH)\" -I$(TARGETPATH)\obj \
     -D"" -aa -Tpd -x -Gn -Gi -v
