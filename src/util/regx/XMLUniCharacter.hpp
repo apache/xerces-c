@@ -107,6 +107,8 @@ public:
 		FINAL_PUNCTUATION       = 29
 	};
 
+	/** destructor */
+    ~XMLUniCharacter() {}
 
     /* Static methods for getting unicode character type */
     /** @name Getter functions */
@@ -125,8 +127,6 @@ private :
     //@{
     /** Unimplemented default constructor */
     XMLUniCharacter();
-    /** Unimplemented destructor */
-    ~XMLUniCharacter();
     //@}
 };
 

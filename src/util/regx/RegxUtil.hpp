@@ -70,6 +70,11 @@
 class XMLUTIL_EXPORT RegxUtil {
 public:
 
+	// -----------------------------------------------------------------------
+    //  Constructors and destructors
+    // -----------------------------------------------------------------------
+	~RegxUtil() {}
+
 	static XMLInt32 composeFromSurrogate(const XMLCh high, const XMLCh low);
 	static bool isEOLChar(const XMLCh);
 	static bool isWordChar(const XMLCh);
@@ -83,7 +88,6 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RegxUtil();
-	~RegxUtil();
 };
 
 

@@ -311,3 +311,4 @@ inline int RegxParser::hexChar(const XMLInt32 ch) {
 /**
   *	End file RegxParser.hpp
   */
+

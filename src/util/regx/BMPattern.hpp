@@ -180,3 +180,4 @@ inline void BMPattern::cleanUp() {
 /*
  * End of file BMPattern.hpp
  */
+

@@ -265,4 +265,4 @@ const XMLCh fgUniSymbol[] =
 /**
   * End of file RegxDefs.hpp
   */
- 
+

@@ -69,7 +69,6 @@
 #include <util/RefVectorOf.hpp>
 #include <util/regx/Token.hpp>
 #include <util/Mutexes.hpp>
-#include <stdlib.h>
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -194,20 +193,6 @@ private:
 // ---------------------------------------------------------------------------
 //  RangeFactory: Instance methods
 // ---------------------------------------------------------------------------
-inline TokenFactory* TokenFactory::instance() {
-
-	if (!fInstance) {
-
-		fInstance = new TokenFactory();
-		atexit(cleanUp);
-	}
-	
-    return (fInstance);
-}
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Instance methods
-// ---------------------------------------------------------------------------
 inline void TokenFactory::cleanUp() {
 
 	delete fInstance;
@@ -219,3 +204,4 @@ inline void TokenFactory::cleanUp() {
 /**
   *	End file TokenFactory
   */
+

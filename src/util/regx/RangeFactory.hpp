@@ -66,7 +66,6 @@
 // ---------------------------------------------------------------------------
 #include <util/StringPool.hpp>
 #include <util/Mutexes.hpp>
-#include <stdlib.h>
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -253,20 +252,6 @@ inline RefHashTableOf<RangeFactory>* RangeFactory::getRangeMap() const {
 inline XMLStringPool* RangeFactory::getCategories() const {
 
     return fCategories;
-}
-
-// ---------------------------------------------------------------------------
-//  RangeFactory: Instance methods
-// ---------------------------------------------------------------------------
-inline RangeFactory* RangeFactory::instance() {
-
-	if (!fInstance) {
-
-		fInstance = new RangeFactory();
-		atexit(cleanUp);
-	}
-	
-    return (fInstance);
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/22 13:23:34  knoaman
+ * Minor modifications to eliminate compiler warnings.
+ *
  * Revision 1.1  2001/03/02 19:23:00  knoaman
  * Schema: Regular expression handling part I
  *
@@ -71,6 +74,7 @@
 #include <util/regx/UnicodeRangeFactory.hpp>
 #include <util/regx/BlockRangeFactory.hpp>
 #include <util/regx/RegxDefs.hpp>
+#include <stdlib.h>
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -392,6 +396,19 @@ Token* TokenFactory::getGraphemePattern() {
 }
 
 
+// ---------------------------------------------------------------------------
+//  RangeFactory: Instance methods
+// ---------------------------------------------------------------------------
+TokenFactory* TokenFactory::instance() {
+
+    if (!fInstance) {
+
+        fInstance = new TokenFactory();
+        atexit(TokenFactory::cleanUp);
+    }
+	
+    return (fInstance);
+}
 
 
 // ---------------------------------------------------------------------------

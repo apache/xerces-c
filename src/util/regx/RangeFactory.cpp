@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/22 13:23:32  knoaman
+ * Minor modifications to eliminate compiler warnings.
+ *
  * Revision 1.1  2001/03/02 19:26:44  knoaman
  * Schema: Regular expression handling part II
  *
@@ -68,6 +71,7 @@
 #include <util/regx/RangeToken.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/regx/RegxDefs.hpp>
+#include <stdlib.h>
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -233,6 +237,21 @@ void RangeFactory::initializeRegistry() {
 
 void RangeFactory::initializeKeywordMap() {
 	// Behavior defined at child level
+}
+
+
+// ---------------------------------------------------------------------------
+//  RangeFactory: Instance methods
+// ---------------------------------------------------------------------------
+RangeFactory* RangeFactory::instance() {
+
+	if (!fInstance) {
+
+		fInstance = new RangeFactory();
+		atexit(RangeFactory::cleanUp);
+	}
+	
+    return (fInstance);
 }
 
 /**

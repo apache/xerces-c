@@ -571,3 +571,4 @@ inline bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
 /**
   * End of file RegularExpression.hpp
   */
+
