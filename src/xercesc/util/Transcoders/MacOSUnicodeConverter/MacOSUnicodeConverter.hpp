@@ -111,7 +111,8 @@ private :
 	static const XMLCh fgMyServiceId[];			// Name of the our unicode converter
 	static const XMLCh fgMacLCPEncodingName[];	// Name of the LCP transcoder we create
 
-	bool	mHasUnicodeCollation;	// True if unicode collation is available
+	bool		fHasUnicodeCollation;			// True if unicode collation is available
+	CollatorRef	fCollator;						// Our collator
 	
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators

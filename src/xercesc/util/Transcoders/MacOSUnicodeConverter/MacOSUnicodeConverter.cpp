@@ -94,14 +94,32 @@ const XMLCh MacOSUnicodeConverter::fgMacLCPEncodingName[] =
 //  MacOSUnicodeConverter: Constructors and Destructor
 // ---------------------------------------------------------------------------
 MacOSUnicodeConverter::MacOSUnicodeConverter()
+  : fCollator(NULL)
 {
 	//	Test for presense of unicode collation functions
-	mHasUnicodeCollation = (UCCompareTextDefault != (void*)kUnresolvedCFragSymbolAddress);
+	fHasUnicodeCollation = (UCCompareTextDefault != (void*)kUnresolvedCFragSymbolAddress);
+    
+    //  Create a unicode collator for doing string comparisons
+    if (fHasUnicodeCollation)
+    {
+		//  Configure collation options
+        UCCollateOptions collateOptions =
+								kUCCollateComposeInsensitiveMask
+								| kUCCollateWidthInsensitiveMask
+								| kUCCollateCaseInsensitiveMask
+								| kUCCollatePunctuationSignificantMask
+								;
+						
+        OSStatus status = UCCreateCollator(NULL, 0, collateOptions, &fCollator);
+    }
 }
 
 
 MacOSUnicodeConverter::~MacOSUnicodeConverter()
 {
+    //  Dispose our collator
+    if (fCollator != NULL)
+        UCDisposeCollator(&fCollator);
 }
 
 
@@ -119,23 +137,15 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 	//	has a c library with a valid set of wchar routines,
 	//	fall back to the standard library.
 
-	if (mHasUnicodeCollation)
+	if (fHasUnicodeCollation && fCollator != NULL)
 	{
-		// Use the Unicode Utilities to do the compare
-		UCCollateOptions collateOptions =
-								kUCCollateComposeInsensitiveMask
-								| kUCCollateWidthInsensitiveMask
-								| kUCCollateCaseInsensitiveMask
-								| kUCCollatePunctuationSignificantMask
-								;
-						
 		std::size_t cnt1 = XMLString::stringLen(comp1);
 		std::size_t cnt2 = XMLString::stringLen(comp2);
 		
         Boolean equivalent = false;
         SInt32 order = 0;
-        OSStatus status = UCCompareTextDefault(
-                                collateOptions,	
+        OSStatus status = UCCompareText(
+                                fCollator,
                                 reinterpret_cast<const UniChar*>(comp1),
                                 cnt1,
                                 reinterpret_cast<const UniChar*>(comp2),
@@ -176,7 +186,7 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 }
 
 
-int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
+int MacOSUnicodeConverter::compareNIString( const XMLCh* const  comp1
                                         , const XMLCh* const    comp2
                                         , const unsigned int    maxChars)
 {
@@ -188,16 +198,8 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 	//	has a c library with a valid set of wchar routines,
 	//	fall back to the standard library.
 
-	if (mHasUnicodeCollation)
+	if (fHasUnicodeCollation && fCollator != NULL)
 	{
-		// Use the Unicode Utilities to do the compare
-		UCCollateOptions collateOptions =
-								kUCCollateComposeInsensitiveMask
-								| kUCCollateWidthInsensitiveMask
-								| kUCCollateCaseInsensitiveMask
-								| kUCCollatePunctuationSignificantMask
-								;
-						
 		std::size_t cnt1 = XMLString::stringLen(comp1);
 		std::size_t cnt2 = XMLString::stringLen(comp2);
 		
@@ -208,12 +210,10 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 		if (cnt2 > maxChars)
 			cnt2 = maxChars;
 		
-		//	Do multiple passes over source, comparing each pass.
-		//	The first pass that's not equal wins.
         Boolean equivalent = false;
         SInt32 order = 0;
-        OSStatus status = UCCompareTextDefault(
-                                collateOptions,	
+        OSStatus status = UCCompareText(
+                                fCollator,	
                                 reinterpret_cast<const UniChar*>(comp1),
                                 cnt1,
                                 reinterpret_cast<const UniChar*>(comp2),
