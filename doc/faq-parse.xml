@@ -437,57 +437,120 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
     <a>
 
       <p>Xerces-C uses has intrinsic support for ASCII, UTF-8, UTF-16
-      (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC-US and
+      (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC-CP-US and
       ISO-8859-1 (aka Latin1) encodings. This means that it can parse
       input XML files in these above mentioned encodings.</p>
 
-      <p>XML4C uses International Components for Unicode (ICU) for
-      encoding &amp; Unicode support. ICU (1.4.0 and higher) is
-      Unicode 3.0 compliant. ICU supports over 100 different
-      encodings, of which some of them are listed below:</p>
+      <p>XML4C - the version of Xerces-c available from IBM - extends
+	  this set to include the encodings listed in the table below.</p>
 
       <table>
-        <tr><td><em>Common Name</em></td><td><em>Use this MIME/IANA name in XML</em></td></tr>
-        <tr><td>8 bit Unicode</td><td>UTF-8</td></tr>
-        <tr><td>ISO Latin 1</td><td>ISO-8859-1</td></tr>
-        <tr><td>ISO Latin 2</td><td>ISO-8859-2</td></tr>
-        <tr><td>ISO Latin 3</td><td>ISO-8859-3</td></tr>
-        <tr><td>ISO Latin 4</td><td>ISO-8859-4</td></tr>
-        <tr><td>ISO Latin Cyrillic</td><td>ISO-8859-5</td></tr>
-        <tr><td>ISO Latin Arabic</td><td>ISO-8859-6</td></tr>
-        <tr><td>ISO Latin Greek</td><td>ISO-8859-7</td></tr>
-        <tr><td>ISO Latin Hebrew</td><td>ISO-8859-8</td></tr>
-        <tr><td>ISO Latin 5</td><td>ISO-8859-9</td></tr>
-        <tr><td>EBCDIC: US</td><td>ebcdic-cp-us</td></tr>
-        <tr><td>EBCDIC: Canada</td><td>ebcdic-cp-ca</td></tr>
-        <tr><td>EBCDIC: Netherlands</td><td>ebcdic-cp-nl</td></tr>
-        <tr><td>EBCDIC: Denmark</td><td>ebcdic-cp-dk</td></tr>
-        <tr><td>EBCDIC: Norway</td><td>ebcdic-cp-no</td></tr>
-        <tr><td>EBCDIC: Finland</td><td>ebcdic-cp-fi</td></tr>
-        <tr><td>EBCDIC: Sweden</td><td>ebcdic-cp-se</td></tr>
-        <tr><td>EBCDIC: Italy</td><td>ebcdic-cp-it</td></tr>
-        <tr><td>EBCDIC: Spain, Latin America</td><td>ebcdic-cp-es</td></tr>
-        <tr><td>EBCDIC: Great Britain</td><td>ebcdic-cp-gb</td></tr>
-        <tr><td>EBCDIC: France</td><td>ebcdic-cp-fr</td></tr>
-        <tr><td>EBCDIC: Arabic</td><td>ebcdic-cp-ar1</td></tr>
-        <tr><td>EBCDIC: Hebrew</td><td>ebcdic-cp-he</td></tr>
-        <tr><td>EBCDIC: Switzerland</td><td>ebcdic-cp-ch</td></tr>
-        <tr><td>EBCDIC: Roece</td><td>ebcdic-cp-roece</td></tr>
-        <tr><td>EBCDIC: Yugoslavia</td><td>ebcdic-cp-yu</td></tr>
-        <tr><td>EBCDIC: Iceland</td><td>ebcdic-cp-is</td></tr>
-        <tr><td>EBCDIC: Urdu</td><td>ebcdic-cp-ar2</td></tr>
-        <tr><td>Chinese for PRC, mixed 1/2 byte</td><td>gb2312</td></tr>
-        <tr><td>Extended UNIX code, packed for Japanese</td><td>euc-jp</td></tr>
-        <tr><td>Japanese: iso-2022-jp</td><td>iso-2022-jp</td></tr>
-        <tr><td>Japanese: Shift JIS</td><td>Shift_JIS</td></tr>
-        <tr><td>Chinese: Big5</td><td>Big5</td></tr>
-        <tr><td>Extended UNIX code, packed for Korean</td><td>euc-kr</td></tr>
-        <tr><td>Korean: iso-2022-kr</td><td>iso-2022-kr</td></tr>
-        <tr><td>Cyrillic</td><td>koi8-r</td></tr>
+        <tr><td><em>Common Name</em></td><td><em>Use this name in XML</em></td></tr>
+        <tr><td>8 bit Unicode</td>                <td>UTF-8</td></tr>
+        <tr><td>ISO Latin 1</td>                  <td>ISO-8859-1</td></tr>
+        <tr><td>ISO Latin 2</td>                  <td>ISO-8859-2</td></tr>
+        <tr><td>ISO Latin 3</td>                  <td>ISO-8859-3</td></tr>
+        <tr><td>ISO Latin 4</td>                  <td>ISO-8859-4</td></tr>
+        <tr><td>ISO Latin Cyrillic</td>           <td>ISO-8859-5</td></tr>
+        <tr><td>ISO Latin Arabic</td>             <td>ISO-8859-6</td></tr>
+        <tr><td>ISO Latin Greek</td>              <td>ISO-8859-7</td></tr>
+        <tr><td>ISO Latin Hebrew</td>             <td>ISO-8859-8</td></tr>
+        <tr><td>ISO Latin 5</td>                  <td>ISO-8859-9</td></tr>
+        <tr><td>EBCDIC US</td>                    <td>ebcdic-cp-us</td></tr>
+		<tr><td>EBCDIC with Euro symbol</td>      <td>ibm1140></td></tr>
+        <tr><td>Chinese, PRC</td>                 <td>gb2312</td></tr>
+        <tr><td>Chinese, Big5</td>                <td>Big5</td></tr>
+        <tr><td>Cyrillic</td>                     <td>koi8-r</td></tr>
+        <tr><td>Japanese, Shift JIS</td>          <td>Shift_JIS</td></tr>
+        <tr><td>Korean, Extended UNIX code</td>   <td>euc-kr</td></tr>
       </table>
             
-    </a>
+	<p>Some implementations or ports of Xerces-C provide support for
+	additional encodings.  The exact set will depend on the supplier
+	of the parser and on the character set transcoding services in use.
+	</p>
+	
+	</a>
   </faq>
+
+  <faq title="What character encoding should I use when creating XML documents?">
+    <q>What character encoding should I use when creating XML documents?</q>
+	<a>
+	
+	  <p>The best choice in most cases is either utf-8 or utf-16.  
+	  Advantages of these encodings include </p>
+	  
+	  <ul>
+	     <li>The best portability.  These encodings are more widely
+		 supported by XML processors than any others, meaning that
+		 your documents will have the best possible chance of being 
+		 read correctly, no matter where they end up. </li>
+		 
+		 <li>Full international character support.  Both utf-8 and
+		 utf-16 cover the full Unicode character set, which
+		 includes all of the characters from all major national,
+		 international and industry character sets. </li>
+		 
+		 <li>Efficient.  utf-8 has the smaller storage requirements
+		 for documents that are primarily composed of of characters
+		 from the Latin alphabet.  utf-16 is more efficient for
+		 encoding Asian languages.  But both encodings cover
+		 all languages without loss.</li>
+	  </ul>
+	  
+	  <p>The only drawback of utf-8 or utf-16 is that they are not
+	  the native text file format for most systems, meaning that
+	  common text file editors and viewers can not be directly used.</p>
+	  
+	  <p>A second choice of encoding would be any of the others listed in
+	  the table above.  This works best when the xml encoding is the same
+	  as the default system encoding on the machine where the
+	  XML document is being prepared, because the document will then
+	  display correctly as a plain text file.  For UNIX systems
+	  in countries speaking Western European languages, the encoding
+	  will usually be iso-8859-1.</p>
+	  
+	  <p>The versions of Xerces, both C and Java, distributed
+	  by IBM as XML4C and XML4J, include all of the encodings
+	  listed in the above table, on all platforms. </p>
+	  
+	  <p>A word of caution for Windows users: The default character set
+	  on Windows systems is windows-1252, not iso-8859-1.  While Xerces-c
+	  does recognize this Windows encoding, it is a poor choice for portable
+	  XML data because it is not widely recoginized by other XML processing
+	  tools.  If you are using a Windows based editing tool to generate
+	  XML, check which character set it generates, and make sure that the
+	  resulting XML specifies the correct name in the encoding="..." declaration.<p>
+	  
+	    </a>
+	  </faq>
+
+  <faq title="Is EBCDIC supported?">
+    <q>Is EBCDIC supported??</q>
+    
+    <p>Yes, &XercesCName; supports EBCDIC.  When creating EBCDIC encoded XML data,
+    the preferred encoding is ibm1140.  Also supported is ibm037 (and its alternate name,
+    ebcdic-cp-us); this encoding is almost the same as ibm1140, but it lacks the Euro
+    symbol</p>
+    
+    <p>These two encodings, ibm1140 and ibm037, are available on both Xerces-C and
+    IBM XML4C, on all platforms. </p>
+    
+    <p>On IBM System 390, XML4C also supports two alternative forms, ibm037-s390
+    and ibm1140-s390.  These are similar to the base ibm037 and ibm1140 encodings,
+    but with alternate mappings of the EBCDIC new-line character, which allows
+    them to appear as normal text files on System 390s.  These encodings are not
+    supported on other platforms, and should not be used for portable data.</p>
+    
+    <p>XML4C on System 390 and AS/400 also provides additional EBCDIC encodings, including
+    those for the character sets of different countries.  The exact set supported
+    will be platform dependent, and these encodings are not not recommended for
+    portable XML data.  </p>
+    
+ 	</a>
+	  </faq>
+   
+
 
 </faqs>
 
