@@ -5,12 +5,27 @@
 
 
     <s2 title="Windows NT/2000">
-        <p>Install the binary &XercesCName; release by using <code>unzip</code>
-		on the <ref>file</ref>-win32.zip archive in the Windows environment. You can
+      <s3 title="Source distribution">
+        <p>The &XercesCName; source is available in the source distribution.
+        </p>
+        <p>Install the &XercesCName; source distribution by using <code>unzip</code>
+		on the &XercesCSrcInstallDir;.zip archive in the Windows environment. You can
+		use WinZip, or any other UnZip utility.</p>
+<source>unzip &XercesCSrcInstallDir;.zip</source>
+        <p>This creates a &apos;&XercesCSrcInstallDir;&apos; sub-directory
+		containing the &XercesCName; source distribution. </p>
+
+        <p>If you need to build the &XercesCName; source after installation,
+        please follow the <jump href="build.html">Build Instructions</jump>.</p>
+
+      </s3>
+      <s3 title="Binary distribution">
+        <p>Install the &XercesCName; binary distribution by using <code>unzip</code>
+		on the &XercesCInstallDir;-win32.zip archive in the Windows environment. You can
 		use WinZip, or any other UnZip utility.</p>
 <source>unzip &XercesCInstallDir;-win32.zip</source>
         <p>This creates a &apos;&XercesCInstallDir;-win32&apos; sub-directory
-		containing the &XercesCName; distribution. </p>
+		containing the &XercesCName; binary distribution. </p>
 
         <p>You need to add the &apos;&XercesCInstallDir;-win32\bin&apos;
 		directory to your path: </p>
@@ -23,22 +38,49 @@
 		To do this under Windows 2000 add this line to your AUTOEXEC.BAT file:</p>
 <source>SET PATH=&lt;full_path_to_&XercesCInstallDir;>\bin;%PATH%</source>
 		<p>or run the <code>SET PATH</code> command in your shell window.</p>
+
+        <p>The binary distribution has the built parser library and some samples executables.
+           Please refer to the <jump href="samples.html">Samples</jump> for how to run the samples.</p>
+
+      </s3>
     </s2>
 
     <s2 title="UNIX">
-        <p>Binary installation of this release is to extract the files from the
-		compressed .tar archive (using 'tar').</p>
-<source>cd $HOME
-gunzip &XercesCInstallDir;-linux.tar.gz
-tar -xvf &XercesCInstallDir;-linux.tar</source>
-        <p>This will create an '&XercesCInstallDir;-linux' sub-directory
-		(in the home directory)
-        which contains the &XercesCName; distribution. You will need to add the
-        &XercesCInstallDir;-linux/bin directory to your PATH environment variable:</p>
+      <s3 title="Source distribution">
+        <p>The &XercesCName; source is available in the source distribution.
+        </p>
+        <p>Install the &XercesCName; source distribution &XercesCSrcInstallDir;.tar.gz by extracting the files
+           from the compressed archive.</p>
+<source>
+gunzip &XercesCSrcInstallDir;.tar.gz
+tar &XercesCSrcInstallDir;.tar
+</source>
+        <p>This creates a &apos;&XercesCSrcInstallDir;&apos; sub-directory
+		containing the &XercesCName; source distribution. </p>
 
-        <note>On Solaris, you may need to use <code>gtar</code> instead of tar.  See
+        <note>On Solaris, please use <code>gtar</code> instead of tar.  See
         <jump href="faq-distrib.html#faq-11">FAQ</jump> for more information.</note>
 
+        <p>If you need to build the &XercesCName; source after installation,
+        please follow the <jump href="build.html">Build Instructions</jump>.</p>
+
+      </s3>
+      <s3 title="Binary distribution">
+        <p>Install the binary distribution &XercesCInstallDir;-xxx.tar.gz by extracting the files
+           from the compressed archive; where &apos;xxx&apos; is the corresponding UNIX platform.
+           For example:</p>
+<source>
+gunzip &XercesCInstallDir;-linux.tar.gz
+tar -xvf &XercesCInstallDir;-linux.tar
+</source>
+        <p>This will create an '&XercesCInstallDir;-linux' sub-directory
+		containing the &XercesCName; binary distribution. </p>
+
+        <note>On Solaris, please use <code>gtar</code> instead of tar.  See
+        <jump href="faq-distrib.html#faq-11">FAQ</jump> for more information.</note>
+
+        <p>You will need to add the
+        &XercesCInstallDir;-linux/bin directory to your PATH environment variable:</p>
 
         <p>For Bourne Shell, K Shell or Bash, type: </p>
 <source>export PATH="$PATH:$HOME/&XercesCInstallDir;-linux/bin"</source>
@@ -48,31 +90,24 @@ tar -xvf &XercesCInstallDir;-linux.tar</source>
         <p>If you wish to make this setting permanent, you need to change
 		your profile by changing your setup files which can be either .profile or .kshrc.</p>
 
-        <p>In addition, you will also need to set the environment variables XERCESCROOT,
-        ICUROOT and the library search path. (LIBPATH on AIX, LD_LIBRARY_PATH on
-        Solaris and Linux, SHLIB_PATH on HP-UX).</p>
-
-        <note>XERCESCROOT and ICUROOT are needed only if you intend to
-        recompile the samples or build your own applications. The library path is
-        necessary to link the shared libraries at runtime.</note>
+        <p>In addition, you will also need to set the library search path.
+        (LIBPATH on AIX, LD_LIBRARY_PATH on Solaris and Linux, SHLIB_PATH on HP-UX).</p>
 
         <p>For Bourne Shell, K Shell or Bash, type:</p>
-<source>export XERCESCROOT=&lt;wherever you installed &XercesCName;>
-export ICUROOT=&lt;wherever you installed ICU>
+<source>
 export LIBPATH=$XERCESCROOT/lib:$LIBPATH (on AIX)
 export LD_LIBRARY_PATH=$XERCESCROOT/lib:$LD_LIBRARY_PATH (on Solaris, Linux)
 export SHLIB_PATH=$XERCESCROOT/lib:$SHLIB_PATH (on HP-UX)</source>
 
     	<p>For C Shell, type:</p>
-<source>setenv XERCESCROOT "&lt;wherever you installed &XercesCName;>"
-setenv ICUROOT "&lt;wherever you installed ICU>"
+<source>
 setenv LIBPATH "$XERCESCROOT/lib:$LIBPATH" (on AIX)
 setenv LD_LIBRARY_PATH "$XERCESCROOT/lib:$LD_LIBRARY_PATH" (on Solaris, Linux)
 setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
 
-        <note>If you need to build the samples after installation,
-        make sure you read and follow the <jump href="build.html">
-        Build Instructions</jump>.</note>
+        <p>The binary distribution has the built parser library and some samples executables.
+           Please refer to the <jump href="samples.html">Samples</jump> for how to run the samples.</p>
 
+      </s3>
    </s2>
 </s1>

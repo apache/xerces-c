@@ -4,12 +4,12 @@
 <s1 title="Building on Windows and UNIX">
     <anchor name="WinNT"/>
     <s2 title="Building &XercesCName; on Windows NT/2000">
-        <p>&XercesCName; comes with Microsoft Visual C++ projects and workspaces to
+        <p>&XercesCName; source distribution comes with Microsoft Visual C++ projects and workspaces to
         help you build &XercesCName;. The following describes the steps you need
         to build &XercesCName;.</p>
 
         <s3 title="Building &XercesCName; library">
-            <p>To build &XercesCName; from it source (using MSVC), you will
+            <p>To build &XercesCName; from the source distribution (using MSVC), you will
             need to open the workspace containing the project. If you are
             building your application, you may want to add the &XercesCName;
             project inside your applications's workspace.</p>
@@ -43,53 +43,9 @@
         </s3>
     </s2>
 
-    <anchor name="WinVisualAge"/>
-    <s2 title="Building &XercesCName; on Windows using Visual Age C++">
-        <p>A few unsupported projects are also packaged with &XercesCName;. Due to
-        origins of &XercesCName; inside IBM labs, we do have projects for IBM's
-        <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump> on Windows.
-        The following describes the steps you need to build &XercesCName; using
-        Visual Age C++.</p>
-
-        <s3 title="Building &XercesCName; library">
-            <p><em>Requirements:</em></p>
-
-            <ul>
-                <li>VisualAge C++ Version 4.0 with Fixpak 1:
-                <br/>Download the
-                <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
-                from the IBM VisualAge C++ Corrective Services web page.</li>
-            </ul>
-
-            <p>To include the ICU library:</p>
-
-            <ul>
-                <li>ICU Build:
-                <br/>You should have the
-                <jump href="http://oss.software.ibm.com/icu/">ICU Library</jump>
-                in the same directory as the &XercesCName; library. For example if
-                &XercesCName; is at the top level of the d drive, put the ICU
-                library at the top level of d e.g. d:/&XercesCInstallDir; d:/icu.</li>
-            </ul>
-
-            <p><em>Instructions:</em></p>
-            <ol>
-                <li>Change the directory to d:\&XercesCInstallDir;\Projects\Win32</li>
-                <li>If a d:\&XercesCInstallDir;\Project\Win32\VACPP40 directory does not exist, create it.</li>
-                <li>Copy the IBM VisualAge project file, <code>XML4C2X.icc</code>,
-                    to the VACPP40 directory.</li>
-                <li>From the VisualAge main menu enter the project file name and path.</li>
-                <li>When the build finishes the status bar displays this message: Last Compile
-                   completed Successfully with warnings on date.</li>
-            </ol>
-            <note>These instructions assume that you install in drive d:\.
-            Replace d with the appropriate drive letter.</note>
-        </s3>
-    </s2>
-
     <anchor name="WinBorland"/>
     <s2 title="Building &XercesCName; on Windows using Borland C++Builder">
-        <p>&XercesCName; comes with Borland C++Builder projects to help you
+        <p>&XercesCName; sourec distribution comes with Borland C++Builder projects to help you
 		build &XercesCName;. The following describes the steps you need to build
 		&XercesCName;.</p>
 
@@ -178,7 +134,7 @@
         understanding that you know how to interpret it for the other UNIX flavors.</p>
 
         <note>If you wish to build &XercesCName; with ICU,
-        look at the <jump href="build-misc.html#faq-1">Building ICU</jump>.
+        look at the <jump href="build-misc.html#faq-1">Building with ICU using bundled perl script</jump>.
         It tells you where you can get ICU and how to build &XercesCName; with it.</note>
 
         <s3 title="Setting build environment variables">
@@ -196,7 +152,8 @@
             </s3>
 
         <s3 title="Building &XercesCName; library">
-            <p>As mentioned earlier, you must be ready with the GNU tools like
+            <p>As mentioned earlier, to build &XercesCName; from the source distribution,
+            you must be ready with the GNU tools like
             <jump href="http://www.gnu.org/software/autoconf/autoconf.html">autoconf</jump> and
             <jump href="http://www.gnu.org/software/make/make.html">gmake</jump>
             before you attempt the build.</p>

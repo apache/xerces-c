@@ -8,7 +8,6 @@
       or jump directly to:</p>
     <ul>
        <li><jump href="build-winunix.html#WinNT">Building &XercesCName; on Windows NT/2000</jump></li>
-       <li><jump href="build-winunix.html#WinVisualAge">Building &XercesCName; on Windows using Visual Age C++</jump></li>
        <li><jump href="build-winunix.html#WinBorland">Building &XercesCName; on Windows using Borland C++Builder</jump></li>
        <li><jump href="build-winunix.html#UNIX">Building &XercesCName; on UNIX platforms</jump></li>
        <li><jump href="build-winunix.html#UNIX_SingleThread">Building &XercesCName; as a single-threaded library on Unix platforms</jump></li>
@@ -29,7 +28,7 @@
     <p>Read the <jump href="build-misc.html">Other Build Instructions</jump> document
       or jump directly to:</p>
     <ul>
-       <li><jump href="build-misc.html#ICUPerl">Building &XercesCName; with ICU using bundled Perl scripts on Windows</jump></li>
+       <li><jump href="build-misc.html#ICUPerl">Building &XercesCName; with ICU using bundled Perl scripts</jump></li>
        <li><jump href="build-misc.html#WinCOM">Building &XercesCName; COM Wrapper on Windows</jump></li>
        <li><jump href="build-misc.html#UserDoc">Building User Documentation</jump></li>
        <li><jump href="build-misc.html#PortInfo">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</jump></li>

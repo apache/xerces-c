@@ -299,11 +299,9 @@ gmake </source>
 
     <anchor name="OS2VisualAge"/>
     <s2 title="Building &XercesCName; on OS/2 using Visual Age C++">
-          <p>OS/2 is a favourite IBM PC platforms. The only
-          option in this platform is to use
+          <p>Here are the steps you need to build &XercesCName; from the source distribution using
           <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump>.
-          Here are the steps you need to build &XercesCName; using
-          Visual Age C++ on OS/2.</p>
+          on OS/2.</p>
           <s3 title="Building &XercesCName; library">
              <p><em>Requirements:</em></p>
                 <ul>
@@ -400,17 +398,17 @@ gmake </source>
           for OS/2 (VAC++).</p>
 
          <ul>
-         <li> In the <code>XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory,
+         <li> In the <code>&XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory,
          find and edit the VAC++ configuration file <code>basedir.icc</code>.</li>
 
          <li>All of the directories used to build the samples are defined in
          <code>basedir.icc</code>. You need to edit the directories to match your system.
          Here are the directories you need to assign:
 
-                SRC_DIR -- <code>XercesCSrcInstallDir;</code>
+                SRC_DIR -- <code>&XercesCSrcInstallDir;</code>
                            This is where VAC++ should look to find the samples
                            directories containing the source files.
-                BASE_DIR -- The install directory <code>XercesCSrcInstallDir;</code>.
+                BASE_DIR -- The install directory <code>&XercesCSrcInstallDir;</code>.
                 		VAC++ will store the compiled samples in the <code>bin</code>
                 		directory under BASE_DIR. It will also look for the
                 		<code>xerces-c.lib</code> file in the <code>lib</code> directory under BASE_DIR.
@@ -422,7 +420,7 @@ gmake </source>
 
          <li>Start the Command Line in the VAC++ folder.</li>
 
-         <li>Navigate to the <code>XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory.</li>
+         <li>Navigate to the <code>&XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory.</li>
 
          <li>Run <code>bldsamples.cmd</code></li>
 
