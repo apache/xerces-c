@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/09/09 00:11:48  andyh
+ * Virtual Destructor Patch, submitted by Kirk Wylie
+ *
  * Revision 1.5  2000/07/19 18:47:26  andyh
  * More Macintosh port tweaks, submitted by James Berry.
  *
@@ -259,7 +262,7 @@ public :
         const   NameIdPoolEnumerator<TElem>& toCopy
     );
 
-    ~NameIdPoolEnumerator();
+    virtual ~NameIdPoolEnumerator();
 
     // -----------------------------------------------------------------------
     //  Public operators

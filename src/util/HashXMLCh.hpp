@@ -72,7 +72,7 @@ class XMLUTIL_EXPORT HashXMLCh : public HashBase
 {
 public:
 	HashXMLCh();
-	~HashXMLCh();
+	virtual ~HashXMLCh();
 	virtual unsigned int getHashVal(const void *const key, unsigned int mod);
 	virtual bool equals(const void *const key1, const void *const key2);
 

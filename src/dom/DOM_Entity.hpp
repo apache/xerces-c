@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/09/09 00:11:46  andyh
+ * Virtual Destructor Patch, submitted by Kirk Wylie
+ *
  * Revision 1.7  2000/04/19 02:26:16  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -181,12 +184,12 @@ public:
    */
   DOMString        getNotationName() const;
 
-  virtual DOM_Node		getFirstChild() const;
-  virtual DOM_Node      getLastChild() const;
-  virtual DOM_NodeList  getChildNodes() const;
-  virtual bool          hasChildNodes() const;
-  virtual DOM_Node		getPreviousSibling() const;
-  virtual DOM_Node		getNextSibling() const;
+  DOM_Node		getFirstChild() const;
+  DOM_Node      getLastChild() const;
+  DOM_NodeList  getChildNodes() const;
+  bool          hasChildNodes() const;
+  DOM_Node		getPreviousSibling() const;
+  DOM_Node		getNextSibling() const;
   //@}
 
 protected:
