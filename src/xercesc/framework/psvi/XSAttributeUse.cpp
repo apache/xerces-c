@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 20:50:34  knoaman
+ * PSVI: fix for annotation of attributes in attributeGroup/derived types
+ *
  * Revision 1.5  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -77,7 +80,6 @@
  */
 
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
-#include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,6 +90,9 @@ XSAttributeUse::XSAttributeUse(XSAttributeDeclaration* const xsAttDecl,
                                XSModel* const xsModel,
                                MemoryManager* const manager)
     : XSObject(XSConstants::ATTRIBUTE_USE, xsModel, manager)
+    , fRequired(false)
+    , fConstraintType(XSConstants::VC_NONE)
+    , fConstraintValue(0)
     , fXSAttributeDeclaration(xsAttDecl)
 {
 }
@@ -97,25 +102,18 @@ XSAttributeUse::~XSAttributeUse()
 {
     // don't delete fXSAttributeDeclaration - deleted by XSModel
 }
-// XSAttributeUse methods
 
 
 // ---------------------------------------------------------------------------
-//  XSAttributeUse: access methods
+//  XSAttributeUse: helper methods
 // ---------------------------------------------------------------------------
-bool XSAttributeUse::getRequired() const
+void XSAttributeUse::set(const bool isRequired,
+                         XSConstants::VALUE_CONSTRAINT constraintType,
+                         const XMLCh* const constraintValue)
 {
-    return fXSAttributeDeclaration->getRequired();
-}
-
-XSConstants::VALUE_CONSTRAINT XSAttributeUse::getConstraintType() const
-{
-    return fXSAttributeDeclaration->getConstraintType();
-}
-
-const XMLCh *XSAttributeUse::getConstraintValue()
-{
-    return fXSAttributeDeclaration->getConstraintValue();
+    fRequired = isRequired;
+    fConstraintType = constraintType;
+    fConstraintValue = constraintValue;
 }
 
 XERCES_CPP_NAMESPACE_END

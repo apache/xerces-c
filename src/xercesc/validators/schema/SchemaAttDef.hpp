@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 20:50:35  knoaman
+ * PSVI: fix for annotation of attributes in attributeGroup/derived types
+ *
  * Revision 1.9  2003/11/24 05:13:41  neilg
  * update method documentation
  *
@@ -262,6 +265,8 @@ public :
     DatatypeValidator* getDatatypeValidator() const;
     ValueVectorOf<unsigned int>* getNamespaceList() const;
     ComplexTypeInfo* getEnclosingCT() const;
+    const SchemaAttDef* getBaseAttDecl() const;
+    SchemaAttDef* getBaseAttDecl();
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -275,6 +280,8 @@ public :
     );
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator);
+    void setBaseAttDecl(SchemaAttDef* const attDef);
+
     /*
      * @deprecated
      */
@@ -327,6 +334,13 @@ private :
     //  fValidation
     //      The type of validation that happened to this attr
     //
+    //  fBaseAttDecl
+    //      The base attribute declaration that this attribute is based on
+    //      NOTE: we do not have a notion of attribute use, so in the case
+    //      of ref'd attributes and inherited attributes, we make a copy
+    //      of the actual attribute declaration. The fBaseAttDecl stores that
+    //      declaration, and will be helpful when we build the XSModel (i.e
+    //      easy access the XSAnnotation object).
     // -----------------------------------------------------------------------
     unsigned int                 fElemId;
     QName*                       fAttName;
@@ -337,6 +351,7 @@ private :
     PSVIDefs::Validity           fValidity;
     PSVIDefs::Validation         fValidation;
     ComplexTypeInfo*             fEnclosingCT;
+    SchemaAttDef*                fBaseAttDecl;
 };
 
 
@@ -474,6 +489,16 @@ inline ComplexTypeInfo* SchemaAttDef::getEnclosingCT() const
     return fEnclosingCT;
 }
 
+inline SchemaAttDef* SchemaAttDef::getBaseAttDecl()
+{
+    return fBaseAttDecl;
+}
+
+inline const SchemaAttDef* SchemaAttDef::getBaseAttDecl() const
+{
+    return fBaseAttDecl;
+}
+
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Setter methods
 // ---------------------------------------------------------------------------
@@ -534,6 +559,11 @@ inline void SchemaAttDef::reset() {
 inline void SchemaAttDef::setEnclosingCT(ComplexTypeInfo* complexTypeInfo)
 {
     fEnclosingCT = complexTypeInfo;
+}
+
+inline void SchemaAttDef::setBaseAttDecl(SchemaAttDef* const attDef)
+{
+    fBaseAttDecl = attDef;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -244,7 +244,12 @@ inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
     }
 
     if (toClone) {
-        fAttributes->addElement(new (fMemoryManager) SchemaAttDef(toAdd));
+        SchemaAttDef* clonedAttDef = new (fMemoryManager) SchemaAttDef(toAdd);
+
+        if (!clonedAttDef->getBaseAttDecl())
+            clonedAttDef->setBaseAttDecl(toAdd);
+
+        fAttributes->addElement(clonedAttDef);
     }
     else {
         fAttributes->addElement(toAdd);
@@ -259,7 +264,12 @@ inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
     }
 
     if (toClone) {
-        fAnyAttributes->addElement(new (fMemoryManager) SchemaAttDef(toAdd));
+        SchemaAttDef* clonedAttDef = new (fMemoryManager) SchemaAttDef(toAdd);
+
+        if (!clonedAttDef->getBaseAttDecl())
+            clonedAttDef->setBaseAttDecl(toAdd);
+
+        fAnyAttributes->addElement(clonedAttDef);
     }
     else {
         fAnyAttributes->addElement(toAdd);

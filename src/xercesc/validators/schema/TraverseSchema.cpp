@@ -5543,6 +5543,8 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                                             refAttDefType,
                                             0, fGrammarPoolMemoryManager);
 
+    attDef->setBaseAttDecl(refAttDef);
+
     if (refAttDefType == XMLAttDef::Fixed) {
         if (required && !invalidAttUse) {
             attDef->setDefaultType(XMLAttDef::Required_And_Fixed);
@@ -6399,6 +6401,11 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
                 newAttDef->setDatatypeValidator(attDef.getDatatypeValidator());
                 typeInfo->addAttDef(newAttDef);
+
+                if (attDef.getBaseAttDecl())
+                    newAttDef->setBaseAttDecl(attDef.getBaseAttDecl());
+                else
+                    newAttDef->setBaseAttDecl(&attDef);
             }
         }
     }
@@ -7069,7 +7076,11 @@ void TraverseSchema::copyAttGroupAttributes(const DOMElement* const elem,
                 typeInfo->setAttWithTypeId(true);
             }
 
-            typeInfo->addAttDef(new (fGrammarPoolMemoryManager) SchemaAttDef(attDef));
+            SchemaAttDef* clonedAttDef = new (fGrammarPoolMemoryManager) SchemaAttDef(attDef);
+            typeInfo->addAttDef(clonedAttDef);
+
+            if (!clonedAttDef->getBaseAttDecl())
+                clonedAttDef->setBaseAttDecl(attDef);
 
             if (toAttGroup) {
                 toAttGroup->addAttDef(attDef, true);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/17 20:50:35  knoaman
+ * PSVI: fix for annotation of attributes in attributeGroup/derived types
+ *
  * Revision 1.10  2003/11/25 18:15:00  knoaman
  * Serialize enclosing complex type. Thanks to David Cargill.
  *
@@ -135,6 +138,7 @@ SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
     , fEnclosingCT(0)
+    , fBaseAttDecl(0)
 {
 }
 
@@ -153,6 +157,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
     , fEnclosingCT(0)
+    , fBaseAttDecl(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
 }
@@ -175,6 +180,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
     , fEnclosingCT(0)
+    , fBaseAttDecl(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
 }
@@ -193,6 +199,7 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fValidity(other->fValidity)
     , fValidation(other->fValidation)
     , fEnclosingCT(other->fEnclosingCT)
+    , fBaseAttDecl(other->fBaseAttDecl)
 {
     QName* otherName = other->getAttName();
     fAttName = new (getMemoryManager()) QName(otherName->getPrefix(),
@@ -248,6 +255,7 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
         serEng<<(int)fValidity;
         serEng<<(int)fValidation;
         serEng<<fEnclosingCT;
+        serEng<<fBaseAttDecl;
     }
     else
     {
@@ -271,6 +279,7 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
         fValidation = (PSVIDefs::Validation)i;
         
         serEng>>fEnclosingCT;
+        serEng>>fBaseAttDecl;
     }
 }
 

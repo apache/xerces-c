@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 20:50:35  knoaman
+ * PSVI: fix for annotation of attributes in attributeGroup/derived types
+ *
  * Revision 1.11  2003/12/17 19:58:25  knoaman
  * Check for NULL when building XSParticle
  *
@@ -580,10 +583,17 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
             SchemaAttDefList& attDefList = (SchemaAttDefList&) typeInfo->getAttDefList();
             for(unsigned int i=0; i<attCount; i++)
             {
+                XSAttributeDeclaration* xsAttDecl = 0;
                 SchemaAttDef& attDef = (SchemaAttDef&) attDefList.getAttDef(i);
-                XSAttributeDeclaration* xsAttDecl = addOrFind(&attDef, xsModel);
+
+                if (attDef.getBaseAttDecl())
+                    xsAttDecl = addOrFind(attDef.getBaseAttDecl(), xsModel);
+                else
+                    xsAttDecl = addOrFind(&attDef, xsModel);
+
                 XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
                 xsAttList->addElement(attUse);
+                processAttUse(&attDef, attUse);
             }
         }
 
@@ -678,10 +688,14 @@ XSWildcard*
 XSObjectFactory::createXSWildcard(SchemaAttDef* const attDef,
                                   XSModel* const xsModel)
 {
+    XSAnnotation* annot = (attDef->getBaseAttDecl())
+        ? getAnnotationFromModel(xsModel, attDef->getBaseAttDecl())
+        : getAnnotationFromModel(xsModel, attDef);
+
     XSWildcard* xsWildcard = new (fMemoryManager) XSWildcard
     (
         attDef
-        , getAnnotationFromModel(xsModel, attDef)
+        , annot
         , xsModel
         , fMemoryManager
     );
@@ -750,11 +764,19 @@ XSObjectFactory::createXSAttGroupDefinition(XercesAttGroupInfo* const attGroupIn
         xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);
         for (unsigned int i=0; i < attCount; i++) 
         {
-            XSAttributeDeclaration* xsAttDecl = addOrFind(attGroupInfo->attributeAt(i), xsModel);
+            SchemaAttDef* attDef = attGroupInfo->attributeAt(i);
+            XSAttributeDeclaration* xsAttDecl = 0;
+
+            if (attDef->getBaseAttDecl())
+                xsAttDecl = addOrFind(attDef->getBaseAttDecl(), xsModel);
+            else
+                xsAttDecl = addOrFind(attDef, xsModel);
+
             if (xsAttDecl) // just for sanity
             {
-				XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
+                XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
                 xsAttList->addElement(attUse);
+                processAttUse(attDef, attUse);
             }
         }
     }
@@ -951,6 +973,29 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
     }
 
     xsST->setFacetInfo(definedFacets, fixedFacets, xsFacetList, xsMultiFacetList, patternList);
+}
+
+void XSObjectFactory::processAttUse(SchemaAttDef* const attDef,
+                                    XSAttributeUse* const xsAttUse)
+{
+    bool isRequired = false;
+    XSConstants::VALUE_CONSTRAINT constraintType = XSConstants::VC_NONE;
+    
+    if (attDef->getDefaultType() & XMLAttDef::Default)
+    {
+        constraintType = XSConstants::VC_DEFAULT;
+    }
+    else if (attDef->getDefaultType() & XMLAttDef::Fixed ||
+             attDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
+    {
+        constraintType = XSConstants::VC_FIXED;
+    }
+
+    if (attDef->getDefaultType() == XMLAttDef::Required ||
+        attDef->getDefaultType() == XMLAttDef::Required_And_Fixed)
+        isRequired = true;
+
+    xsAttUse->set(isRequired, constraintType, attDef->getValue());
 }
 
 XERCES_CPP_NAMESPACE_END

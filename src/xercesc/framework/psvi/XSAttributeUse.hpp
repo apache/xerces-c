@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 20:50:34  knoaman
+ * PSVI: fix for annotation of attributes in attributeGroup/derived types
+ *
  * Revision 1.5  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -160,6 +163,16 @@ public:
 
 private:
 
+    // set data
+    void set
+    (
+        const bool isRequired
+        , XSConstants::VALUE_CONSTRAINT constraintType
+        , const XMLCh* const constraintValue
+    );
+
+    friend class XSObjectFactory;
+    
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -171,7 +184,10 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    XSAttributeDeclaration* fXSAttributeDeclaration;
+    bool                          fRequired;
+    XSConstants::VALUE_CONSTRAINT fConstraintType;   
+    const XMLCh*                  fConstraintValue;
+    XSAttributeDeclaration*       fXSAttributeDeclaration;
 };
 
 inline XSAttributeDeclaration *XSAttributeUse::getAttrDeclaration() const
@@ -179,6 +195,20 @@ inline XSAttributeDeclaration *XSAttributeUse::getAttrDeclaration() const
     return fXSAttributeDeclaration;
 }
 
+inline bool XSAttributeUse::getRequired() const
+{
+    return fRequired;
+}
+
+inline XSConstants::VALUE_CONSTRAINT XSAttributeUse::getConstraintType() const
+{
+    return fConstraintType;
+}
+
+const inline XMLCh *XSAttributeUse::getConstraintValue()
+{
+    return fConstraintValue;
+}
 
 XERCES_CPP_NAMESPACE_END
 

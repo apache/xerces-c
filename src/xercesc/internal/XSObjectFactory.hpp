@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/17 20:50:35  knoaman
+ * PSVI: fix for annotation of attributes in attributeGroup/derived types
+ *
  * Revision 1.4  2003/11/25 18:11:54  knoaman
  * Make XSObjectFactory inherit from XMemory. Thanks to David Cargill.
  *
@@ -253,6 +256,12 @@ private:
         DatatypeValidator* const dv
         , XSModel* const xsModel
         , XSSimpleTypeDefinition* const xsST
+    );
+
+    void processAttUse
+    (
+        SchemaAttDef* const attDef
+        , XSAttributeUse* const xsAttUse
     );
 
     // make XSModel our friend
