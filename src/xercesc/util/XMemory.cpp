@@ -123,8 +123,8 @@ void XMemory::operator delete(void* p)
     }
 }
 
-//The HP compiler is complaining about duplicate overloading of delete
-#if !defined(XML_HPUX) && !defined(XML_BORLAND)
+//The Borland compiler is complaining about duplicate overloading of delete
+#if !defined(XML_BORLAND)
 
 void XMemory::operator delete(void* p, MemoryManager* manager)
 {

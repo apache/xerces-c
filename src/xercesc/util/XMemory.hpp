@@ -127,8 +127,8 @@ public :
       */
     void operator delete(void* p);
 
-     //The HP compiler is complaining about duplicate overloading of delete
-#if !defined(XML_HPUX) && !defined(XML_BORLAND)
+     //The Borland compiler is complaining about duplicate overloading of delete
+#if !defined(XML_BORLAND)
     /**
       * This method provides a matching delete for the placement new
       *
