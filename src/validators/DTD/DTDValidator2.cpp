@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/29 23:36:45  rahulj
+ * Handle trailing PE refs in content models.
+ *
  * Revision 1.9  2000/02/24 02:12:36  aruna1
  * ReaderMgr:;getReaderDepth() added
  *
@@ -1111,14 +1114,15 @@ DTDValidator::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         ContentSpecNode* lastNode = 0;
         while (true)
         {
-            // Check for a PE ref here, but don't require spaces
-            checkForPERef(false, false, true);
-
-            //
-            //  The next thing must either be another | or , character followed
-            //  by another leaf or subexpression, or a closing parenthesis.
-            //
-            if (getReaderMgr()->skippedChar(chCloseParen))
+            if (getReaderMgr()->lookingAtChar(chPercent))
+            {
+                checkForPERef(false, false, true);
+            }
+             else if (getReaderMgr()->skippedSpace())
+            {
+                getReaderMgr()->skipPastSpaces();
+            }
+             else if (getReaderMgr()->skippedChar(chCloseParen))
             {
                 //
                 //  We've hit the end of this section, so break out. But, we
