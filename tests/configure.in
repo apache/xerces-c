@@ -103,6 +103,7 @@ DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
 ThreadTest/Makefile \
 XSerializerTest/Makefile \
+XSValueTest/Makefile \
 MemHandlerTest/Makefile])
 
 echo

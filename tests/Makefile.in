@@ -68,6 +68,7 @@ EncodingTest_DIR=EncodingTest
 DOMRange_DIR=DOM/RangeTest
 InitTermTest_DIR=InitTermTest
 XSerializerTest_DIR=XSerializerTest
+XSValueTest_DIR=XSValueTest
 
 LIB_DIR=${XERCESCROOT}/lib
 
@@ -85,12 +86,12 @@ BITSTOBUILD = @bitstobuild@
 
 ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
-      all::	bindir threadtest memhandlertest encodingtest traversal xserializertest
+      all::	bindir threadtest memhandlertest encodingtest traversal xserializertest xsvaluetest
   else
-      all::	bindir dommemtest deprecateddomcount domtest domtypeinfo threadtest encodingtest traversal rangetest inittermtest memhandlertest xserializertest
+      all::	bindir dommemtest deprecateddomcount domtest domtypeinfo threadtest encodingtest traversal rangetest inittermtest memhandlertest xserializertest xsvaluetest
   endif
 else
-    all::	bindir dommemtest deprecateddomcount domtest domtypeinfo encodingtest traversal rangetest inittermtest memhandlertest xserializertest
+    all::	bindir dommemtest deprecateddomcount domtest domtypeinfo encodingtest traversal rangetest inittermtest memhandlertest xserializertest xsvaluetest
   ifneq (${THREADS},none)
     all::	threadtest
   endif
@@ -144,6 +145,10 @@ xserializertest::
 	@echo Building "XSerializerTest"
 	${MAKE} -C $(XSerializerTest_DIR) $(MAKE_FLAGS)
 	
+xsvaluetest::
+	@echo Building "XSValueTest"
+	${MAKE} -C $(XSValueTest_DIR) $(MAKE_FLAGS)
+		
 clean::
 	${MAKE} -C $(DOMMemTest_DIR) $@
 	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
@@ -156,6 +161,7 @@ clean::
 	${MAKE} -C $(DOMRange_DIR) $@
 	${MAKE} -C $(InitTermTest_DIR) $@
 	${MAKE} -C $(XSerializerTest_DIR) $@
+	${MAKE} -C $(XSValueTest_DIR) $@	
 
 distclean::
 	${MAKE} -C $(DOMMemTest_DIR) $@
@@ -169,6 +175,7 @@ distclean::
 	${MAKE} -C $(DOMRange_DIR) $@
 	${MAKE} -C $(InitTermTest_DIR) $@
 	${MAKE} -C $(XSerializerTest_DIR) $@
+	${MAKE} -C $(XSValueTest_DIR) $@	
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 
