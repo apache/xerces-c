@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 00:17:48  roddey
+ * Removed validator tests temporarily, since they have changed and the tests need
+ * to be rewritten. Added new tests for the new URL class.
+ *
  * Revision 1.2  1999/12/07 23:11:01  roddey
  * Add in some new tests for transcoders and update the URL tests
  * a bit.
@@ -76,194 +80,216 @@
 #include "CoreTests.hpp"
 
 
+
 // ---------------------------------------------------------------------------
-//  Local test methods
+//  Local testing functions
 // ---------------------------------------------------------------------------
-static bool parseTests()
+
+//
+//  This test just sets up a list of variations on URLs and parses them. The
+//  URL list includes the expected text for each of the parts that should be
+//  parsed out of the URL.
+//
+struct BasicTestEntry
 {
-    URL testURL;
+    const XMLCh*    orgURL;
+    const XMLCh*    fullText;
+    URL::Protocols  Protocol;
+    const XMLCh*    Fragment;
+    const XMLCh*    Host;
+    const XMLCh*    Path;
+    const XMLCh*    Password;
+    const XMLCh*    Query;
+    const XMLCh*    User;
+};
 
-    //
-    //  First lets set some invalid URL's and make sure that we get the
-    //  expected malformed URL exceptions. Use an outer generic catch to
-    //  handle anything unexpected and report it.
-    //
-    try
+static bool checkAField(const XMLCh* const test, const XMLCh* const expected)
+{
+    if (!test && !expected)
+        return true;
+
+    if ((!test || !expected) || XMLString::compareString(test, expected))
     {
-        static const char* badURLS[] = 
-        {
-            "myfile.txt"
-            , "bubba:///myfile.txt"
-            , "file://myfile.txt"
-            , 0
-        };
-        unsigned int index = 0;
-
-        while (badURLS[index])
-        {
-            bool gotIt = false;
-            try
-            {
-                testURL.setURL(badURLS[index]);
-            }
-
-            catch(const MalformedURLException&)
-            {
-                gotIt = true;
-            }
-
-            if (!gotIt)
-            {
-                outStrm << "Failed to get bad URL exception for: "
-                        << badURLS[index] << EndLn;
-                return false;
-            }
-            index++;
-        }
-    }
-
-    catch(const XMLException& toCatch)
-    {
-        outStrm << "Got an unexpected exception.\n  Type:"
-                << toCatch.getType() << ", Message:" << toCatch.getMessage()
-                << EndLn;
+        outStrm << "Expected: " << expected << ", but got: " << test << EndLn;
         return false;
     }
+    return true;
+}
 
-    catch(...)
-    {
-        outStrm << "Got an unexpected system exception." << EndLn;
-        return false;
-    }
-
-
+static bool checkBasicResult(const  URL&            testURL
+                            , const BasicTestEntry& testInfo)
+{
     //
-    //  Next lets test that we get runtime exceptions for unsupported
-    //  protocols.
+    //  Check each part to insure that its what its supposed to be. Since
+    //  any of them can be a null pointer, we have a little helper function
+    //  that spits out the actual testing code for each one.
     //
-    try
-    {
-        static const char* unsupportedURLS[] = 
-        {
-            "http:///xyz"
-            , "gopher:///myfile.txt"
-            , "wais:///myfile.txt"
-            , "ftp://host/filename.txt"
-            , "mailto://goober.74/snobby"
-            , 0
-        };
-
-        unsigned int index = 0;
-        while (unsupportedURLS[index])
-        {
-            bool gotIt = false;
-            try
-            {
-                testURL.setURL(unsupportedURLS[index]);
-            }
-
-            catch(const MalformedURLException&)
-            {
-                gotIt = true;
-            }
-
-            if (!gotIt)
-            {
-                outStrm << "Failed to get runtime exception for: "
-                        << unsupportedURLS[index] << EndLn;
-                return false;
-            }
-            index++;
-        }
-    }
-
-    catch(const XMLException& toCatch)
-    {
-        outStrm << "Got an unexpected exception.\n  Type:"
-                << toCatch.getType() << ", Message:" << toCatch.getMessage()
-                << EndLn;
+    if (!checkAField(testURL.getURLText(), testInfo.fullText))
         return false;
-    }
 
-    catch(...)
-    {
-        outStrm << "Got an unexpected system exception." << EndLn;
+    if (!checkAField(testURL.getFragment(), testInfo.Fragment))
         return false;
-    }
+
+    if (!checkAField(testURL.getHost(), testInfo.Host))
+        return false;
+
+    if (!checkAField(testURL.getPath(), testInfo.Path))
+        return false;
+
+    if (!checkAField(testURL.getPassword(), testInfo.Password))
+        return false;
+
+    if (!checkAField(testURL.getQuery(), testInfo.Query))
+        return false;
+
+    if (!checkAField(testURL.getUser(), testInfo.User))
+        return false;
 
     return true;
 }
 
-
-static bool basicTests()
+static bool basicURLTest()
 {
-    //
-    //  Set up a list of URLs and what we expect to get out of them for
-    //  the various components.
-    //
-    struct TestInfo
+    static BasicTestEntry testList[] =
     {
-        const char*     urlText;
-        const char*     hostComp;
-        const char*     pathComp;
-        const char*     protocol;
+        {
+            L"file://host@user:password/path1/path2/file.txt?query#fragment"
+            , L"file://host@user:password/path1/path2/file.txt?query#fragment"
+            , URL::File
+            , L"fragment"
+            , L"host"
+            , L"/path1/path2/file.txt"
+            , L"password"
+            , L"query"
+            , L"user"
+        }
+      , {
+            L"file:///path2/file.txt?query#fragment"
+            , L"file:///path2/file.txt?query#fragment"
+            , URL::File
+            , L"fragment"
+            , 0
+            , L"/path2/file.txt"
+            , 0
+            , L"query"
+            , 0
+        }
+      , {
+            L"#fragment"
+            , L"#fragment"
+            , URL::Unknown
+            , L"fragment"
+            , 0
+            , 0
+            , 0
+            , 0
+            , 0
+        }
+      , {
+            L"file://host@user/path1/path2/file.txt#fragment"
+            , L"file://host@user/path1/path2/file.txt#fragment"
+            , URL::File
+            , L"fragment"
+            , L"host"
+            , L"/path1/path2/file.txt"
+            , 0
+            , 0
+            , L"user"
+        }
     };
+    const unsigned int testCount = sizeof(testList) / sizeof(testList[0]);
 
-    static const TestInfo testList[] =
+    bool retVal = true;
+
+    //
+    //  Do a run where we construct the URL over and over for each
+    //  test.
+    //
+    for (unsigned int index = 0; index < testCount; index++)
     {
-            { "file:///A:\\abc.txt"         , ""            , "A:\\abc.txt"     , "file://" }
-        ,   { "file://localhost/A:\\abc.txt", "localhost"   , "A:\\abc.txt"     , "file://" }
-        ,   { "file:///abc.txt"             , ""            , "/abc.txt"        , "file://" }
-        ,   { "file:///A:\\a%20c.txt"       , ""            , "A:\\a c.txt"     , "file://" }
-        ,   { 0, 0, 0, 0 }
-    };
-
-    bool result = true;
-    unsigned int index = 0;
-    while (true)
-    {
-        // Break out at the end
-        if (!testList[index].urlText)
-            break;
-
-        // Parse the next URL in the list
-        URL testURL;
-        testURL.setURL(testList[index].urlText);
-
-        //
-        //  And test the various components. We have to transcode them in order
-        //  to do the the comparison.
-        //
-        XMLCh* tmpStr = XMLString::transcode(testList[index].hostComp);
-        if (XMLString::compareString(testURL.getHost(), tmpStr))
+        // Force full destruction each time
         {
-            outStrm << "Host incorrect on URL: " << testList[index].urlText << EndLn;
-            result = false;
-        }
-        delete [] tmpStr;
+            URL testURL(testList[index].orgURL);
 
-        tmpStr = XMLString::transcode(testList[index].protocol);
-        if (XMLString::compareString(testURL.getProtocol(), tmpStr))
-        {
-            outStrm << "Protocol incorrect on URL: " << testList[index].urlText << EndLn;
-            result = false;
+            // Call the comparison function
+            if (!checkBasicResult(testURL, testList[index]))
+                retVal = false;
         }
-        delete [] tmpStr;
-
-        tmpStr = XMLString::transcode(testList[index].pathComp);
-        if (XMLString::compareString(testURL.getPath(), tmpStr))
-        {
-            outStrm << "Path incorrect on URL: " << testList[index].urlText << EndLn;
-            result = false;
-        }
-        delete [] tmpStr;
-
-        // Move up to the next test
-        index++;
     }
-    return result;
+
+    //
+    //  Do a run where we use a single URL object and just reset it over
+    //  and over again.
+    //
+    URL testURL;
+    for (unsigned int index = 0; index < testCount; index++)
+    {
+        testURL.setURL(testList[index].orgURL);
+
+        // Call the comparison function
+        if (!checkBasicResult(testURL, testList[index]))
+            retVal = false;
+    }
+
+    return retVal;
 }
 
+
+//
+//  This test makes sure that parsing one URL relative to another works
+//  correctly. The tests used here come from one of the internet RFCs on
+//  generic URI syntax. A single base URL is created, then a number of
+//  relative URLs are parsed against it and the results compared to the
+//  expected result.
+//
+static bool relativeURLTest()
+{
+    static struct TestEntry
+    {
+        const XMLCh*    relative;
+        const XMLCh*    result;
+    } testList[] =
+    {
+        { L"g"      , L"http://a/b/c/g" }
+      , { L"./g"    , L"http://a/b/c/g" }
+      , { L"g/"     , L"http://a/b/c/g/" }
+      , { L"/g"     , L"http://a/g" }
+      , { L"?y"     , L"http://a/b/c/?y" }
+      , { L"g?y"    , L"http://a/b/c/g?y" }
+      , { L"#s"     , L"http://a/b/c/d;p#s" }
+      , { L"g#s"    , L"http://a/b/c/g#s" }
+      , { L"g?y#s"  , L"http://a/b/c/g?y#s" }
+      , { L";x"     , L"http://a/b/c/;x" }
+      , { L"g;x"    , L"http://a/b/c/g;x" }
+      , { L"g;x?y#s", L"http://a/b/c/g;x?y#s" }
+      , { L"."      , L"http://a/b/c/" }
+      , { L"./"     , L"http://a/b/c/" }
+      , { L".."     , L"http://a/b/" }
+      , { L"../"    , L"http://a/b/" }
+      , { L"../g"   , L"http://a/b/g" }
+      , { L"../.."  , L"http://a/" }
+      , { L"../../" , L"http://a/" }
+      , { L"../../g", L"http://a/g" }
+    };
+    const unsigned int testCount = sizeof(testList) / sizeof(testList[0]);
+
+    // This is the base URL against which the tests are run
+    URL baseURL(L"http://a/b/c/d;p?q");
+
+    bool retVal = true;
+    for (unsigned int index = 0; index < testCount; index++)
+    {
+        URL testURL(baseURL, testList[index].relative);
+
+        if (XMLString::compareString(testURL.getURLText(), testList[index].result))
+        {
+            outStrm << "Expected URL: " << testList[index].result
+                    << " but got: " << testURL.getURLText() << EndLn;
+            retVal = false;
+        }
+    }
+    return retVal;
+};
 
 
 // ---------------------------------------------------------------------------
@@ -279,29 +305,28 @@ bool testURL()
     bool retVal = true;
     try
     {
-        // Test the URL parsing code
-        outStrm << "Testing URL Parsing" << EndLn;
-        if (!parseTests())
+        // Call other local methods to do specific tests
+        outStrm << "Testing basic URL parsing" << EndLn;
+        if (!basicURLTest())
         {
-            outStrm << "URL parsing tests failed\n";
+            outStrm << "Basic URL parsing tests failed" << EndLn;
             retVal = false;
         }
          else
         {
-            outStrm << "URL parsing tests passed\n";
+            outStrm << "Basic URL parsing tests passed" << EndLn;
         }
         outStrm << EndLn;
 
-        // Now test basic functionality
-        outStrm << "Testing URL Basics" << EndLn;
-        if (!basicTests())
+        outStrm << "Testing relative URL parsing" << EndLn;
+        if (!relativeURLTest())
         {
-            outStrm << "URL basic tests failed\n";
+            outStrm << "Relative URL parsing tests failed" << EndLn;
             retVal = false;
         }
          else
         {
-            outStrm << "URL basic tests passed\n";
+            outStrm << "Relative URL parsing tests passed" << EndLn;
         }
         outStrm << EndLn;
     }
