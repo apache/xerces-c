@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/09/25 22:24:28  peiyongz
+ * Using writeString/readString
+ *
  * Revision 1.9  2003/09/25 15:22:34  peiyongz
  * Implementation of Serialization
  *
@@ -501,18 +504,9 @@ void QName::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
-        int bufferLen = 0;
+        serEng.writeString(fPrefix, fPrefixBufSz, XSerializeEngine::toWriteBufferLen);
 
-        //note: buffer size is different from actual string length
-        serEng<<fPrefixBufSz;
-        bufferLen = XMLString::stringLen(fPrefix);
-        serEng<<bufferLen;
-        serEng.write(fPrefix, bufferLen);
-
-        serEng<<fLocalPartBufSz;
-        bufferLen = XMLString::stringLen(fLocalPart);
-        serEng<<bufferLen;
-        serEng.write(fLocalPart, bufferLen);
+        serEng.writeString(fLocalPart, fLocalPartBufSz, XSerializeEngine::toWriteBufferLen);
 
         //do not serialize rawName
 
@@ -520,26 +514,17 @@ void QName::serialize(XSerializeEngine& serEng)
     }
     else
     {
-        int bufferLen = 0;
+        int dataLen = 0;
 
-        serEng>>fPrefixBufSz;
-        fPrefix = (XMLCh*) fMemoryManager->allocate((fPrefixBufSz+1) * sizeof(XMLCh));
-        serEng>>bufferLen;
-        serEng.read(fPrefix, bufferLen);
-        fPrefix[bufferLen] = 0;
+        serEng.readString(fPrefix, (int&)fPrefixBufSz, dataLen, XSerializeEngine::toReadBufferLen);
 
-        serEng>>fLocalPartBufSz;
-        fLocalPart = (XMLCh*) fMemoryManager->allocate((fLocalPartBufSz+1) * sizeof(XMLCh));
-        serEng>>bufferLen;
-        serEng.read(fLocalPart, bufferLen);
-        fLocalPart[bufferLen] = 0;
+        serEng.readString(fLocalPart, (int&)fLocalPartBufSz, dataLen, XSerializeEngine::toReadBufferLen);
 
         //force raw name rebuilt
-        fRawNameBufSz = 0;
+        fRawNameBufSz = 0;        
         fRawName = 0;
 
         serEng>>fURIId;
-
     }
 
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/09/25 22:24:28  peiyongz
+ * Using writeString/readString
+ *
  * Revision 1.12  2003/09/25 15:23:25  peiyongz
  * add sizeof(XMLCh) when allocating memory
  *
@@ -389,14 +392,10 @@ void XMLBigDecimal::serialize(XSerializeEngine& serEng)
         serEng<<fSign;
         serEng<<fTotalDigits;
         serEng<<fScale;
-        serEng<<fRawDataLen;
+        serEng<<fRawDataLen;   // we purposely write this seperatly
 
-        serEng.write(fRawData, fRawDataLen);
-
-        int intValLen = XMLString::stringLen(fIntVal);
-        serEng<<intValLen;
-
-        serEng.write(fIntVal, intValLen);
+        serEng.writeString(fRawData);
+        serEng.writeString(fIntVal);
 
     }
     else
@@ -406,15 +405,9 @@ void XMLBigDecimal::serialize(XSerializeEngine& serEng)
         serEng>>fScale;
         serEng>>fRawDataLen;
 
-        fRawData = (XMLCh*) fMemoryManager->allocate((fRawDataLen+1) * sizeof(XMLCh));
-        serEng.read(fRawData, fRawDataLen);
-        fRawData[fRawDataLen] = 0;
+        serEng.readString(fRawData);
+        serEng.readString(fIntVal);
 
-        int intValLen = 0;
-        serEng>>intValLen;
-        fIntVal = (XMLCh*) fMemoryManager->allocate((intValLen+1) * sizeof(XMLCh));
-        serEng.read(fIntVal, intValLen);
-        fIntVal[intValLen] = 0;
     }
 
 }

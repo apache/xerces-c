@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/09/25 22:24:28  peiyongz
+ * Using writeString/readString
+ *
  * Revision 1.15  2003/09/25 15:22:54  peiyongz
  * Solve HP complier error
  *
@@ -1464,12 +1467,8 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
 
         serEng<<fStart;
         serEng<<fEnd;
-        serEng<<fBufferMaxLen;
 
-        int bufferLen = XMLString::stringLen(fBuffer);
-        serEng<<bufferLen;
-        serEng.write(fBuffer, bufferLen);
-
+        serEng.writeString(fBuffer, fBufferMaxLen, XSerializeEngine::toWriteBufferLen);
     }
     else
     {
@@ -1485,14 +1484,9 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
 
         serEng>>fStart;
         serEng>>fEnd;
-        serEng>>fBufferMaxLen;
 
-        fBuffer = (XMLCh*) fMemoryManager->allocate((fBufferMaxLen+1) * sizeof(XMLCh));
-
-        int bufferLen = 0;
-        serEng>>bufferLen;
-        serEng.read(fBuffer, bufferLen);
-        fBuffer[bufferLen] = 0;
+        int dataLen = 0;
+        serEng.readString(fBuffer, fBufferMaxLen, dataLen ,XSerializeEngine::toReadBufferLen);
 
     }
 

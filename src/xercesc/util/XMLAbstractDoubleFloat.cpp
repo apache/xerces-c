@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/09/25 22:24:28  peiyongz
+ * Using writeString/readString
+ *
  * Revision 1.15  2003/09/25 15:23:25  peiyongz
  * add sizeof(XMLCh) when allocating memory
  *
@@ -448,9 +451,7 @@ void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
         serEng << fDataConverted;
         serEng << fSign;
 
-        int rawDataLen = XMLString::stringLen(fRawData);
-        serEng << rawDataLen;
-        serEng.write(fRawData, rawDataLen);
+        serEng.writeString(fRawData);
 
         // Do not serialize fFormattedString
 
@@ -466,11 +467,7 @@ void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
         serEng >> fDataConverted;
         serEng >> fSign;
 
-        int rawDataLen = 0;
-        serEng >> rawDataLen;
-        fRawData = (XMLCh*) fMemoryManager->allocate((rawDataLen+1) * sizeof(XMLCh));
-        serEng.read(fRawData, rawDataLen);
-        fRawData[rawDataLen] = 0;
+        serEng.readString(fRawData);
 
         // Set it to 0 force it to re-format if needed
         fFormattedString = 0;
