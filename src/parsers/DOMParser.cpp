@@ -695,7 +695,6 @@ void DOMParser::XMLDecl(const   XMLCh* const version
         DOM_XMLDecl xmlDecl = fDocument.createXMLDecl(ver, enc, std);
         
         fCurrentParent.appendChild(xmlDecl);
-        fNodeStack->push(fCurrentParent);
     }
 }
 
