@@ -126,11 +126,11 @@ Win32MsgLoader::Win32MsgLoader(const XMLCh* const msgDomain) :
     fMsgDomain = XMLString::replicate(msgDomain);
 
     // And precalc the id offset we use for this domain
-    if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
+    if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
         fDomainOfs = 0;
-    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
+    else if (XMLString::equals(fMsgDomain, XMLUni::fgExceptDomain))
         fDomainOfs = 0x2000;
-    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
+    else if (XMLString::equals(fMsgDomain, XMLUni::fgValidityDomain))
         fDomainOfs = 0x4000;
     else
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/24 19:57:20  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/02/18 06:26:50  jberry
  * Quiet codewarrior compiler warnings
  *
@@ -251,7 +254,7 @@ bool ValueStore::contains(const FieldValueMap* const other) {
             }
         }
     }
-    
+
     return false;
 }
 
@@ -260,7 +263,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 
     // if either validator's null, fall back on string comparison
     if(!dv1 || !dv2) {
-        return ((XMLString::compareString(val1, val2)) == 0);
+        return (XMLString::equals(val1, val2));
     }
 
     unsigned int val1Len = XMLString::stringLen(val1);
@@ -283,7 +286,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
     // As always we are obliged to compare by reference...
     if (dv1 == dv2) {
         return ((dv1->compare(val1, val2)) == 0);
-    } 
+    }
 
     // see if this.fValidator is derived from value.fValidator:
     DatatypeValidator* tempVal = dv1;
@@ -301,7 +304,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
     }
 
     // if we're here it means the types weren't related.  Must fall back to strings:
-    return ((XMLString::compareString(val1, val2)) == 0); 
+    return (XMLString::equals(val1, val2));
 }
 
 
@@ -347,7 +350,7 @@ void ValueStore::endDcocumentFragment(ValueStoreCache* const valueStoreCache) {
 void ValueStore::reportNilError(IdentityConstraint* const ic) {
 
     if (fDoReportError && ic->getType() == IdentityConstraint::KEY) {
-        fScanner->getValidator()->emitError(XMLValid::IC_KeyMatchesNillable, 
+        fScanner->getValidator()->emitError(XMLValid::IC_KeyMatchesNillable,
                                             ic->getElementName());
     }
 }

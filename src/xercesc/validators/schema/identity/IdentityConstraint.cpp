@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 19:57:20  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/15 17:10:19  knoaman
  * Particle derivation checking support.
@@ -109,7 +112,7 @@ bool IdentityConstraint::operator ==(const IdentityConstraint& other) const {
     if (getType() != other.getType())
         return false;
 
-    if (XMLString::compareString(fIdentityConstraintName, other.fIdentityConstraintName))
+    if (!XMLString::equals(fIdentityConstraintName, other.fIdentityConstraintName))
         return false;
 
     if (*fSelector != *(other.fSelector))

@@ -79,7 +79,7 @@ DOMDeepNodeListImpl::DOMDeepNodeListImpl(const DOMNode *rootNode,
     , fMatchURIandTagname(false)
 {
     fTagName = ((DOMDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(tagName);
-    fMatchAll = (XMLString::compareString(fTagName, kAstr) == 0);
+    fMatchAll = XMLString::equals(fTagName, kAstr);
 }
 
 
@@ -95,8 +95,8 @@ DOMDeepNodeListImpl::DOMDeepNodeListImpl(const DOMNode *rootNode,
     , fMatchURIandTagname(true)
 {
     fTagName = ((DOMDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(localName);
-    fMatchAll = (XMLString::compareString(fTagName, kAstr) == 0);
-    fMatchAllURI = (XMLString::compareString(namespaceURI, kAstr) == 0);
+    fMatchAll = XMLString::equals(fTagName, kAstr);
+    fMatchAllURI = XMLString::equals(namespaceURI, kAstr);
     fNamespaceURI = ((DOMDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(namespaceURI);
 }
 
@@ -231,18 +231,15 @@ DOMNode *DOMDeepNodeListImpl::nextMatchingElementAfter(DOMNode *current)
 
             if (!fMatchURIandTagname) {        //DOM Level 1
                 if (fMatchAll ||
-                    (XMLString::compareString(currElement->getTagName(),
-                                              fTagName) == 0))
+                    XMLString::equals(currElement->getTagName(), fTagName))
                     return current;
             } else {        //DOM Level 2
                 if (!fMatchAllURI &&
-                    (XMLString::compareString(current -> getNamespaceURI(),
-                                              fNamespaceURI) != 0))
+                    !XMLString::equals(current->getNamespaceURI(), fNamespaceURI))
                     continue;
 
                 if (fMatchAll ||
-                    (XMLString::compareString(current -> getLocalName(),
-                                              fTagName) == 0))
+                    XMLString::equals(current->getLocalName(), fTagName))
                     return current;
             }
         }

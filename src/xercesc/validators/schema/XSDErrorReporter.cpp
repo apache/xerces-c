@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.3  2002/09/24 20:12:48  tng
+  * Performance: use XMLString::equals instead of XMLString::compareString
+  *
   * Revision 1.2  2002/05/22 20:54:14  knoaman
   * Prepare for DOM L3 :
   * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
@@ -197,7 +200,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     XMLMsgLoader* msgLoader = gErrMsgLoader;
     XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
 
-    if (!XMLString::compareString(msgDomain, XMLUni::fgValidityDomain)) {
+    if (XMLString::equals(msgDomain, XMLUni::fgValidityDomain)) {
 
         errType = XMLValid::errorType((XMLValid::Codes) toEmit);
         msgLoader = gValidMsgLoader;
@@ -244,7 +247,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     XMLMsgLoader* msgLoader = gErrMsgLoader;
     XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
 
-    if (!XMLString::compareString(msgDomain, XMLUni::fgValidityDomain)) {
+    if (XMLString::equals(msgDomain, XMLUni::fgValidityDomain)) {
 
         errType = XMLValid::errorType((XMLValid::Codes) toEmit);
         msgLoader = gValidMsgLoader;

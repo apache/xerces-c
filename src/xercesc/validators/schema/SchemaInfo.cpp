@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/09/24 20:12:48  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.7  2002/06/21 11:52:24  knoaman
  * cleanup
  *
@@ -237,7 +240,7 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
         for (unsigned int i= 0; i < listLen; i++) {
 
             child = compList->elementAt(i);
-            if (!XMLString::compareString(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
+            if (XMLString::equals(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
                 return child;
         }
     }
@@ -245,19 +248,19 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
     DOMElement* redefParent = (DOMElement*) child->getParentNode();
 
     // Parent is not "redefine"
-    if (XMLString::compareString(redefParent->getLocalName(),SchemaSymbols::fgELT_REDEFINE))
+    if (!XMLString::equals(redefParent->getLocalName(),SchemaSymbols::fgELT_REDEFINE))
         redefParent = 0;
 
     while (child != 0) {
 
-        if (!XMLString::compareString(child->getLocalName(), compName)) {
+        if (XMLString::equals(child->getLocalName(), compName)) {
 
             compList->addElement(child);
 
-            if (!XMLString::compareString(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
+            if (XMLString::equals(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
                 return child;
         }
-        else if (!XMLString::compareString(child->getLocalName(),SchemaSymbols::fgELT_REDEFINE)
+        else if (XMLString::equals(child->getLocalName(),SchemaSymbols::fgELT_REDEFINE)
                  && (!fFailedRedefineList || !fFailedRedefineList->containsElement(child))) { // if redefine
 
             DOMElement* redefineChild = XUtil::getFirstChildElement(child);
@@ -265,11 +268,11 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
             while (redefineChild != 0) {
 
                 if ((!fFailedRedefineList || !fFailedRedefineList->containsElement(redefineChild))
-                    && !XMLString::compareString(redefineChild->getLocalName(), compName)) {
+                    && XMLString::equals(redefineChild->getLocalName(), compName)) {
 
                     compList->addElement(redefineChild);
 
-                    if (!XMLString::compareString(redefineChild->getAttribute(SchemaSymbols::fgATT_NAME), name))
+                    if (XMLString::equals(redefineChild->getAttribute(SchemaSymbols::fgATT_NAME), name))
                         return redefineChild;
                 }
 

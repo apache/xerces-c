@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 20:02:20  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/07/05 20:12:35  tng
  * [Bug 9788] VecAttrListImpl::getValue skips prefix if SAX namespace validation is on.
  *
@@ -165,7 +168,7 @@ const XMLCh* VecAttrListImpl::getType(const XMLCh* const name) const
     {
         const XMLAttr* curElem = fVector->elementAt(index);
 
-        if (!XMLString::compareString(curElem->getQName(), name))
+        if (XMLString::equals(curElem->getQName(), name))
             return XMLAttDef::getAttTypeString(curElem->getType());
     }
     return 0;
@@ -181,7 +184,7 @@ const XMLCh* VecAttrListImpl::getValue(const XMLCh* const name) const
     {
         const XMLAttr* curElem = fVector->elementAt(index);
 
-        if (!XMLString::compareString(curElem->getQName(), name))
+        if (XMLString::equals(curElem->getQName(), name))
             return curElem->getValue();
     }
     return 0;
@@ -201,7 +204,7 @@ const XMLCh* VecAttrListImpl::getValue(const char* const name) const
     {
         const XMLAttr* curElem = fVector->elementAt(index);
 
-        if (!XMLString::compareString(curElem->getQName(), wideName))
+        if (XMLString::equals(curElem->getQName(), wideName))
             return curElem->getValue();
     }
     return 0;

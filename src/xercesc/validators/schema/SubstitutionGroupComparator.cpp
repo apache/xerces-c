@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 20:12:48  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/07/12 15:17:48  knoaman
  * For a given global element, store info about a substitution group element
  * as a SchemaElementDecl and not as a string.
@@ -119,7 +122,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
         return false;
 
 
-    if ((XMLString::compareString(anElement->getLocalPart(), exemplar->getLocalPart()) == 0) &&
+    if (XMLString::equals(anElement->getLocalPart(), exemplar->getLocalPart()) &&
         (anElement->getURI() == exemplar->getURI()))
         return true; // they're the same!
 
@@ -161,7 +164,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
 
     while (pElemDecl) //(substitutionGroupFullName)
     {
-        if ((XMLString::compareString(pElemDecl->getBaseName(), exemplar->getLocalPart()) == 0) &&
+        if (XMLString::equals(pElemDecl->getBaseName(), exemplar->getLocalPart()) &&
             (pElemDecl->getURI() == exemplar->getURI()))
         {
             // time to check for block value on element

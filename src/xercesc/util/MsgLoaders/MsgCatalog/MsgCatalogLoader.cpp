@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 19:58:33  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/09/23 21:05:40  peiyongz
  * remove debugging code
  *
@@ -119,9 +122,9 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
 ,fMsgDomain(0)
 ,fMsgSet(0)
 {
-    if (XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain)
-    &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
-    &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
+    if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)
+    &&  !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)
+    &&  !XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
@@ -144,11 +147,11 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
 
     fMsgDomain = XMLString::replicate(msgDomain);
 
-    if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
+    if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
         fMsgSet = CatId_XMLErrs;
-    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
+    else if (XMLString::equals(fMsgDomain, XMLUni::fgExceptDomain))
         fMsgSet = CatId_XMLExcepts;
-    else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
+    else if (XMLString::equals(fMsgDomain, XMLUni::fgValidityDomain))
         fMsgSet = CatId_XMLValid;
 }
 
@@ -172,8 +175,8 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     // catgets returns a pointer to msgString if it fails to locate the message
     // from the message catalog
-    if (XMLString::compareString(catMessage, msgString) == 0)
-        return false;   
+    if (XMLString::equals(catMessage, msgString))
+        return false;
     else
     {
         XMLString::transcode(catMessage, toFill, maxChars);

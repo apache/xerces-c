@@ -845,7 +845,7 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
             const XMLEntityDecl* curDecl = fEntityStack->elementAt(index);
             if (curDecl)
             {
-                if (!XMLString::compareString(theName, curDecl->getName()))
+                if (XMLString::equals(theName, curDecl->getName()))
                 {
                     // Oops, already there so delete reader and return
                     delete reader;

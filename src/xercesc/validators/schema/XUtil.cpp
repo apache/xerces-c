@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 20:12:48  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/05/21 19:31:45  tng
  * DOM Reorganization: modify to use the new DOM interface and remove obsolete code in XUtil.
  *
@@ -130,8 +133,8 @@ DOMElement* XUtil::getFirstChildElementNS(const DOMNode* const parent
 		{
             for (unsigned int i = 0; i < length; i++)
 			{
-                if (!XMLString::compareString(child->getNamespaceURI(), uriStr) &&
-                    !XMLString::compareString(child->getLocalName(), elemNames[i]))
+                if (XMLString::equals(child->getNamespaceURI(), uriStr) &&
+                    XMLString::equals(child->getLocalName(), elemNames[i]))
                     return (DOMElement*)child;
 			}
 		}
@@ -174,8 +177,8 @@ DOMElement* XUtil::getNextSiblingElementNS(const DOMNode* const node
 		{
             for (unsigned int i = 0; i < length; i++)
 			{
-                if (!XMLString::compareString(sibling->getNamespaceURI(), uriStr) &&
-                    !XMLString::compareString(sibling->getLocalName(), elemNames[i]))
+                if (XMLString::equals(sibling->getNamespaceURI(), uriStr) &&
+                    XMLString::equals(sibling->getLocalName(), elemNames[i]))
                     return (DOMElement*)sibling;
 			}
 		}

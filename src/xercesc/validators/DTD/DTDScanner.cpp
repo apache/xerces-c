@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/09/24 20:10:30  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.12  2002/08/22 21:05:29  tng
  * [Bug 7475] Xerces-C++ reports validation error with Docbook.
  *
@@ -657,7 +660,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         // if attdef is xml:space, check correct enumeration (default|preserve)
         const XMLCh fgXMLSpace[] = { chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e, chNull };
 
-        if (!XMLString::compareString(decl->getFullName(),fgXMLSpace)) {
+        if (XMLString::equals(decl->getFullName(),fgXMLSpace)) {
             const XMLCh fgPreserve[] = { chLatin_p, chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_r, chLatin_v, chLatin_e, chNull };
             const XMLCh fgDefault[] = { chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
             bool ok = false;
@@ -665,14 +668,14 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
                 RefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration());
                 int size = enumVector->size();
                 ok = (size == 1 &&
-                     (!XMLString::compareString(enumVector->elementAt(0), fgDefault) ||
-                      !XMLString::compareString(enumVector->elementAt(0), fgPreserve))) ||
+                     (XMLString::equals(enumVector->elementAt(0), fgDefault) ||
+                      XMLString::equals(enumVector->elementAt(0), fgPreserve))) ||
                      (size == 2 &&
-                     (!XMLString::compareString(enumVector->elementAt(0), fgDefault) &&
-                      !XMLString::compareString(enumVector->elementAt(1), fgPreserve))) ||
+                     (XMLString::equals(enumVector->elementAt(0), fgDefault) &&
+                      XMLString::equals(enumVector->elementAt(1), fgPreserve))) ||
                      (size == 2 &&
-                     (!XMLString::compareString(enumVector->elementAt(1), fgDefault) &&
-                      !XMLString::compareString(enumVector->elementAt(0), fgPreserve)));
+                     (XMLString::equals(enumVector->elementAt(1), fgDefault) &&
+                      XMLString::equals(enumVector->elementAt(0), fgPreserve)));
                 delete enumVector;
             }
             if (!ok)
@@ -3661,7 +3664,7 @@ void DTDScanner::scanTextDecl()
         }
 
         // If its not our supported version, issue an error but continue
-        if (XMLString::compareString(bbVersion.getRawBuffer(), XMLUni::fgSupportedVersion))
+        if (!XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgSupportedVersion))
             fScanner->emitError(XMLErrs::UnsupportedXMLVersion, bbVersion.getRawBuffer());
     }
 

@@ -495,7 +495,7 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg)
             return false;
         }
     }
-    else if (XMLString::compareString(getPublicId(), argDT->getPublicId())) {
+    else if (!XMLString::equals(getPublicId(), argDT->getPublicId())) {
         return false;
     }
 
@@ -504,7 +504,7 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg)
             return false;
         }
     }
-    else if (XMLString::compareString(getSystemId(), argDT->getSystemId())) {
+    else if (!XMLString::equals(getSystemId(), argDT->getSystemId())) {
         return false;
     }
 
@@ -513,7 +513,7 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg)
             return false;
         }
     }
-    else if (XMLString::compareString(getInternalSubset(), argDT->getInternalSubset())) {
+    else if (!XMLString::equals(getInternalSubset(), argDT->getInternalSubset())) {
         return false;
     }
 

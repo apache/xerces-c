@@ -148,10 +148,10 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
     if (!feature)
         return false;
 
-    bool anyVersion = (version == 0 || XMLString::stringLen(version) == 0);
-    bool version1_0 = (XMLString::compareString(version, g1_0) == 0);
-    bool version2_0 = (XMLString::compareString(version, g2_0) == 0);
-    bool version3_0 = (XMLString::compareString(version, g3_0) == 0);
+    bool anyVersion = (version == 0 || !*version);
+    bool version1_0 = XMLString::equals(version, g1_0);
+    bool version2_0 = XMLString::equals(version, g2_0);
+    bool version3_0 = XMLString::equals(version, g3_0);
 
     // Currently, we support only XML Level 1 version 1.0
     if (XMLString::compareIString(feature, gXML) == 0

@@ -129,7 +129,7 @@ const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
     pspe = &fHashTable[inHash];
     while (*pspe != 0)
     {
-        if (XMLString::compareString((*pspe)->fString, in) == 0)
+        if (XMLString::equals((*pspe)->fString, in))
             return (*pspe)->fString;
         pspe = &((*pspe)->fNext);
     }

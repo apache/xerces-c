@@ -478,7 +478,7 @@ const XMLCh* DOMElementImpl::getBaseURI() const
         DOMNode* attrNode = fAttributes->getNamedItem(xmlBaseString);
         if (attrNode) {
             const XMLCh* uri =  attrNode->getNodeValue();
-            if (XMLString::stringLen(uri) != 0 ) {// attribute value is always empty string
+            if (uri && *uri) {// attribute value is always empty string
                 try {
                     XMLUri temp(baseURI);
                     XMLUri temp2(&temp, uri);

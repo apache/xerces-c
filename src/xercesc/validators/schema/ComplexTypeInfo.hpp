@@ -510,8 +510,7 @@ inline bool ComplexTypeInfo::contains(const XMLCh* const attName) {
 
     while (enumDefs.hasMoreElements()) {
 
-        if (XMLString::compareString(attName,
-                enumDefs.nextElement().getAttName()->getLocalPart()) == 0) {
+        if (XMLString::equals(attName, enumDefs.nextElement().getAttName()->getLocalPart())) {
             return true;
         }
     }

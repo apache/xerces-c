@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/09/24 20:00:32  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.10  2002/08/14 15:20:38  knoaman
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
  *
@@ -816,9 +819,9 @@ startElement(   const   XMLElementDecl&         elemDecl
             for (unsigned int i = 0; i < attrCount; i++)
             {
                 tempAttr = attrList.elementAt(i);
-                if (XMLString::compareString(tempAttr->getQName(), nsString) == 0)
+                if (XMLString::equals(tempAttr->getQName(), nsString))
                     nsURI = tempAttr->getValue();
-                if (XMLString::compareString(tempAttr->getPrefix(), nsString) == 0)
+                if (XMLString::equals(tempAttr->getPrefix(), nsString))
                 {
                     nsPrefix = tempAttr->getName();
                     nsURI = tempAttr->getValue();

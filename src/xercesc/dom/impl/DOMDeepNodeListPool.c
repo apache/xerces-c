@@ -359,7 +359,7 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
     {
         //key2 and key3 are XMLCh*, compareString takes null pointer vs zero len string the same
         //but we need them to be treated as different keys in this case
-        if (fHash->equals(key1, curElem->fKey1) && (!XMLString::compareString(key2, curElem->fKey2)) && (!XMLString::compareString(key3, curElem->fKey3))) {
+        if (fHash->equals(key1, curElem->fKey1) && (XMLString::equals(key2, curElem->fKey2)) && (XMLString::equals(key3, curElem->fKey3))) {
             if (!key2 || !curElem->fKey2) {
                 if (key2 || curElem->fKey2) {
                     curElem = curElem->fNext;
@@ -395,7 +395,7 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
     {
         //key2 and key3 are XMLCh*, compareString takes null pointer vs zero len string the same
         //but we need them to be treated as different keys in this case
-        if (fHash->equals(key1, curElem->fKey1) && (!XMLString::compareString(key2, curElem->fKey2)) && (!XMLString::compareString(key3, curElem->fKey3))) {
+        if (fHash->equals(key1, curElem->fKey1) && (XMLString::equals(key2, curElem->fKey2)) && (XMLString::equals(key3, curElem->fKey3))) {
             if (!key2 || !curElem->fKey2) {
                 if (key2 || curElem->fKey2) {
                     curElem = curElem->fNext;

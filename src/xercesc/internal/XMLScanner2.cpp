@@ -206,8 +206,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //
         const bool isNSAttr = (uriId == fXMLNSNamespaceId)
                               || (uriId == fXMLNamespaceId)
-                              || !XMLString::compareString(suffPtr, XMLUni::fgXMLNSString)
-                              || !XMLString::compareString(getURIText(uriId), SchemaSymbols::fgURI_XSI);
+                              || XMLString::equals(suffPtr, XMLUni::fgXMLNSString)
+                              || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI);
 
 
         //
@@ -836,9 +836,9 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
     //  to map to by the NS spec. xmlns gets mapped to a special place holder
     //  URI that we define (so that it maps to something checkable.)
     //
-    if (!XMLString::compareString(prefix, XMLUni::fgXMLNSString))
+    if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
         return fXMLNSNamespaceId;
-    else if (!XMLString::compareString(prefix, XMLUni::fgXMLString))
+    else if (XMLString::equals(prefix, XMLUni::fgXMLString))
         return fXMLNamespaceId;
 
 
@@ -868,9 +868,9 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
     //  to map to by the NS spec. xmlns gets mapped to a special place holder
     //  URI that we define (so that it maps to something checkable.)
     //
-    if (!XMLString::compareString(prefix, XMLUni::fgXMLNSString))
+    if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
         return fXMLNSNamespaceId;
-    else if (!XMLString::compareString(prefix, XMLUni::fgXMLString))
+    else if (XMLString::equals(prefix, XMLUni::fgXMLString))
         return fXMLNamespaceId;
 
     //
@@ -1323,14 +1323,14 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
         //  "xmlns", then use it to update the map.
         //
         if (!XMLString::compareNString(rawPtr, XMLUni::fgXMLNSColonString, 6)
-        ||  !XMLString::compareString(rawPtr, XMLUni::fgXMLNSString))
+        ||  XMLString::equals(rawPtr, XMLUni::fgXMLNSString))
         {
             const XMLCh* valuePtr = curPair->getValue();
 
             updateNSMap(rawPtr, valuePtr);
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
-            if (!XMLString::compareString(valuePtr, SchemaSymbols::fgURI_XSI)) {
+            if (XMLString::equals(valuePtr, SchemaSymbols::fgURI_XSI)) {
                 fSeeXsi = true;
             }
         }
@@ -1361,17 +1361,17 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
                 const XMLCh* valuePtr = curPair->getValue();
                 const XMLCh* suffPtr = attName.getLocalPart();
 
-                if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
+                if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
                     parseSchemaLocation(valuePtr);
-                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
+                else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
 
-                if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_TYPE)) {
+                if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE)) {
                         fXsiType.set(valuePtr);
                 }
-                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILL)
+                else if (XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL)
                          && fValidator && fValidator->handlesSchema()
-                         && !XMLString::compareString(valuePtr, SchemaSymbols::fgATTVAL_TRUE)) {
+                         && XMLString::equals(valuePtr, SchemaSymbols::fgATTVAL_TRUE)) {
                             ((SchemaValidator*)fValidator)->setNillable(true);
                 }
             }
@@ -1501,7 +1501,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
             if (root != 0)
             {
                 const XMLCh* newUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
-                if (XMLString::compareString(newUri, uri)) {
+                if (!XMLString::equals(newUri, uri)) {
                     if (fValidate)
                         fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
                     grammar = fGrammarResolver->getGrammar(newUri);
@@ -3095,7 +3095,7 @@ bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector*
 
             if (type == ContentSpecNode::Leaf) {
                 if (((uri == elementURI)
-                      && !XMLString::compareString(fElemMap->getLocalPart(), element->getLocalPart()))
+                      && XMLString::equals(fElemMap->getLocalPart(), element->getLocalPart()))
                     || comparator.isEquivalentTo(element, fElemMap)) {
 
                     nextState = cm->getNextState(currState, i);

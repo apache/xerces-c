@@ -568,7 +568,7 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 
                         // retrive the baseURI from the entity decl
                         const XMLCh* baseURI = erImpl->getBaseURI();
-                        if (baseURI != 0 && XMLString::compareString(baseURI,fDocument->getDocumentURI())) {
+                        if (baseURI != 0 && !XMLString::equals(baseURI,fDocument->getDocumentURI())) {
                             if (fScanner -> getDoNamespaces()) {
                                 ((DOMElement*)fCurrentNode)->setAttributeNS(DOMNodeImpl::getXmlURIString(), baseString, baseURI);
                             } else {
@@ -656,15 +656,7 @@ void AbstractDOMParser::startDocument()
     fCurrentNode   = fDocument;
     // set DOM error checking off
     fDocument->setErrorChecking(false);
-
-    const XMLCh* systemId = fScanner->getLocator()->getSystemId();
-    if (systemId) {
-        XMLBufBid bbURI(&fBufMgr);
-        XMLBuffer& bufURI = bbURI.getBuffer();
-        XMLString::fixURI(systemId, bufURI);
-
-        fDocument->setDocumentURI(bufURI.getRawBuffer());
-    }
+    fDocument->setDocumentURI(fScanner->getLocator()->getSystemId());
     fDocument->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
 }
 
@@ -719,7 +711,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
-            if (!XMLString::compareString(oneAttrib -> getName(), XMLNS))    //for xmlns=...
+            if (XMLString::equals(oneAttrib -> getName(), XMLNS))    //for xmlns=...
                 attrURIId = fScanner->getXMLNSNamespaceId();
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                 fScanner->getURIText(attrURIId, bufURI);   //get namespaceURI
@@ -810,7 +802,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         unsigned int uriId = fScanner->resolveQName(qualifiedName, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
 
                         const XMLCh* namespaceURI = 0;
-                        if (!XMLString::compareString(qualifiedName, XMLNS))    //for xmlns=...
+                        if (XMLString::equals(qualifiedName, XMLNS))    //for xmlns=...
                             uriId = fScanner->getXMLNSNamespaceId();
                         if (uriId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                             namespaceURI = fScanner->getURIText(uriId);
@@ -892,7 +884,7 @@ void AbstractDOMParser::XMLDecl(const   XMLCh* const version
                                 , const XMLCh* const standalone
                                 , const XMLCh* const actualEncStr)
 {
-    fDocument->setStandalone(!XMLString::compareString(XMLUni::fgYesString, standalone));
+    fDocument->setStandalone(XMLString::equals(XMLUni::fgYesString, standalone));
 
     fDocument->setVersion(version);
     fDocument->setEncoding(encoding);
@@ -1180,7 +1172,7 @@ void AbstractDOMParser::endAttList
 
                         XMLString::subString(prefix ,qualifiedName, 0, index);
 
-                        if (!XMLString::compareString(prefix,XMLNS))
+                        if (XMLString::equals(prefix,XMLNS))
                             buf.append(XMLUni::fgXMLNSURIName);
                         else
                             buf.append(XMLUni::fgXMLURIName);
@@ -1190,7 +1182,7 @@ void AbstractDOMParser::endAttList
                     }
                     else {
                         //   No prefix
-                        if (!XMLString::compareString(qualifiedName,XMLNS))
+                        if (XMLString::equals(qualifiedName,XMLNS))
                             buf.append(XMLUni::fgXMLNSURIName);
                     }
 
@@ -1245,14 +1237,7 @@ void AbstractDOMParser::entityDecl
     entity->setPublicId(entityDecl.getPublicId());
     entity->setSystemId(entityDecl.getSystemId());
     entity->setNotationName(entityDecl.getNotationName());
-    if (entityDecl.getBaseURI())
-    {
-        XMLBufBid bbURI(&fBufMgr);
-        XMLBuffer& bufURI = bbURI.getBuffer();
-        XMLString::fixURI(entityDecl.getBaseURI(), bufURI);
-
-        entity->setBaseURI(bufURI.getRawBuffer());
-    }
+    entity->setBaseURI(entityDecl.getBaseURI());
 
     DOMEntityImpl *previousDef = (DOMEntityImpl *)
 	    fDocumentType->getEntities()->setNamedItem( entity );
@@ -1323,14 +1308,7 @@ void AbstractDOMParser::notationDecl
     DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());
     notation->setPublicId(notDecl.getPublicId());
     notation->setSystemId(notDecl.getSystemId());
-    if (notDecl.getBaseURI())
-    {
-        XMLBufBid bbURI(&fBufMgr);
-        XMLBuffer& bufURI = bbURI.getBuffer();
-        XMLString::fixURI(notDecl.getBaseURI(), bufURI);
-
-        notation->setBaseURI(bufURI.getRawBuffer());
-    }
+    notation->setBaseURI(notDecl.getBaseURI());
 
     DOMNode* rem = fDocumentType->getNotations()->setNamedItem( notation );
     if (rem)

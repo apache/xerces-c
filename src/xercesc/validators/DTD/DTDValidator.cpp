@@ -222,7 +222,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
     //
     if (defType == XMLAttDef::Fixed && !preValidation)
     {
-        if (XMLString::compareString(attrValue, valueText))
+        if (!XMLString::equals(attrValue, valueText))
             emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
     }
 

@@ -216,7 +216,7 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
         }
 
 
-        if ((tableSlot != (DOMAttr *)-1) && XMLString::compareString(tableSlot->getValue(), id) == 0)
+        if ((tableSlot != (DOMAttr *)-1) && XMLString::equals(tableSlot->getValue(), id))
             return tableSlot;
 
         currentHash += initalHash;  // rehash

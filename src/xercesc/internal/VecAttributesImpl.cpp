@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:58  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 20:02:20  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/10/05 17:57:39  peiyongz
  * [BUG# 3831]: -1 returned from getIndex() needs to be checked
@@ -188,8 +191,8 @@ int VecAttributesImpl::getIndex(const XMLCh* const uri, const XMLCh* const local
 
         fScanner->getURIText(curElem->getURIId(), uriBuffer) ;
 
-        if ( (!XMLString::compareString(curElem->getName(), localPart)) &&
-             (!XMLString::compareString(uriBuffer.getRawBuffer(), uri)) )
+        if ( (XMLString::equals(curElem->getName(), localPart)) &&
+             (XMLString::equals(uriBuffer.getRawBuffer(), uri)) )
             return index ;
     }
     return -1;
@@ -205,7 +208,7 @@ int VecAttributesImpl::getIndex(const XMLCh* const qName ) const
     {
         const XMLAttr* curElem = fVector->elementAt(index);
 
-        if (!XMLString::compareString(curElem->getQName(), qName))
+        if (XMLString::equals(curElem->getQName(), qName))
             return index ;
     }
     return -1;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2002/09/24 20:12:48  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.15  2002/09/16 20:37:08  tng
  * Infinite loop for malformed xml (e.g. simple has "XXXX") w/ setexitonfirstfatal(false).
  *
@@ -272,7 +275,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         // character or element information item [children].
         //
         if (fNil) {
-            if (childCount > 0 || XMLString::compareString(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString))
+            if (childCount > 0 || !XMLString::equals(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString))
                 emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
 
         }
@@ -318,7 +321,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         if (fNil)
                             emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
 
-                        if (!XMLString::compareString(value, XMLUni::fgZeroLenString)) {
+                        if (XMLString::equals(value, XMLUni::fgZeroLenString)) {
                             // if this element didn't specified any value
                             // use default value
                             if (getScanner()->getDocHandler())
@@ -341,7 +344,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     }
                     else {
                         // no default value, then check nillable
-                        if (!XMLString::compareString(value, XMLUni::fgZeroLenString)) {
+                        if (XMLString::equals(value, XMLUni::fgZeroLenString)) {
                             if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::NILLABLE) == 0)
                                 fCurrentDV->validate(value);
                         }
@@ -436,7 +439,7 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
     if ((defType == XMLAttDef::Fixed || defType == XMLAttDef::Required_And_Fixed) && !preValidation)
     {
         const XMLCh* const valueText = attDef->getValue();
-        if (XMLString::compareString(attrValue, valueText))
+        if (!XMLString::equals(attrValue, valueText))
             emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
     }
 
@@ -563,7 +566,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
             if (!sGrammar) {
 
                 // Check built-in simple types
-                if (!XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
+                if (XMLString::equals(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
                     fXsiTypeValidator = fGrammarResolver->getDatatypeValidator(uriStr, localPart);
 
@@ -622,7 +625,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         if (destType) {
 
                             while (tempType) {
-                                if (!XMLString::compareString(tempType->getTypeName(), destType->getTypeName()))
+                                if (XMLString::equals(tempType->getTypeName(), destType->getTypeName()))
                                     break;
                                 tempType = tempType->getBaseComplexTypeInfo();
                             }
@@ -1407,7 +1410,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
     const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
 
-    if (XMLString::compareString(derivedName, baseName) || derivedURI != baseURI) {
+    if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
         ThrowXML(RuntimeException, XMLExcepts::PD_NameTypeOK1);
     }
 
@@ -1458,7 +1461,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
 
     if (baseDefVal && (baseFlags & SchemaSymbols::FIXED) != 0 &&
         ((derivedFlags & SchemaSymbols::FIXED) == 0 ||
-         XMLString::compareString(derivedDefVal, baseDefVal))) {
+         !XMLString::equals(derivedDefVal, baseDefVal))) {
         ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK3, derivedName);
     }
 

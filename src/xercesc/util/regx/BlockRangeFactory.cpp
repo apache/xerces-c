@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/24 19:59:36  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/02/05 13:20:06  tng
  * [Bug 5716] Can't parse with Validation more than one file.
  *
@@ -411,11 +414,11 @@ void BlockRangeFactory::buildRanges() {
         RangeToken* tok = tokFactory->createRange();
         tok->addRange(blockRanges[i*2], blockRanges[(i*2)+1]);
 
-        if (!foundSpecial && !XMLString::compareString((XMLCh*)fgBlockNames[i] , (XMLCh*) fgBlockIsSpecials)) {
+        if (!foundSpecial && XMLString::equals((XMLCh*)fgBlockNames[i] , (XMLCh*) fgBlockIsSpecials)) {
             tok->addRange(0xFFF0, 0xFFFD);
             foundSpecial = true;
         }
-        if (!foundPrivate && !XMLString::compareString((XMLCh*)fgBlockNames[i] , (XMLCh*) fgBlockIsPrivateUse)) {
+        if (!foundPrivate && XMLString::equals((XMLCh*)fgBlockNames[i] , (XMLCh*) fgBlockIsPrivateUse)) {
             tok->addRange(0xF0000, 0xFFFFD);
             tok->addRange(0x100000, 0x10FFFD);
             foundPrivate = true;

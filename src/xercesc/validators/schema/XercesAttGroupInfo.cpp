@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 20:12:48  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/11/20 20:21:49  knoaman
  * Add check for attribute derviation ok when redefining attribute group by restriction.
@@ -113,7 +116,7 @@ bool XercesAttGroupInfo::containsAttribute(const XMLCh* const name,
                 QName* attName = fAttributes->elementAt(i)->getAttName();
 
                 if (attName->getURI() == uri &&
-                    !XMLString::compareString(attName->getLocalPart(),name)) {
+                    XMLString::equals(attName->getLocalPart(),name)) {
                     return true;
                 }
             }
@@ -141,7 +144,7 @@ const SchemaAttDef* XercesAttGroupInfo::getAttDef(const XMLCh* const baseName,
         QName* attName = attDef->getAttName();
 
         if (uriId == (int) attName->getURI() &&
-			!XMLString::compareString(baseName, attName->getLocalPart())) {
+			XMLString::equals(baseName, attName->getLocalPart())) {
 
             return attDef;
         }

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/24 19:57:59  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/09/23 22:14:37  peiyongz
  * Code sharing and Array boundary checking added
  *
@@ -106,9 +109,9 @@
 InMemMsgLoader::InMemMsgLoader(const XMLCh* const msgDomain)
 :fMsgDomain(0)
 {
-    if (XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain)
-    &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
-    &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
+    if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)
+    &&  !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)
+    &&  !XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
@@ -140,21 +143,21 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     XMLCh* outPtr = toFill;
     const XMLCh* srcPtr = 0;
 
-    if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
+    if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
     {
         if ( msgToLoad > gXMLErrArraySize)
             return false;
         else
             srcPtr = gXMLErrArray[msgToLoad - 1];
     }
-     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
+     else if (XMLString::equals(fMsgDomain, XMLUni::fgExceptDomain))
     {
          if ( msgToLoad > gXMLExceptArraySize)
             return false;
          else
              srcPtr = gXMLExceptArray[msgToLoad - 1];
     }
-     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
+     else if (XMLString::equals(fMsgDomain, XMLUni::fgValidityDomain))
     {
          if ( msgToLoad > gXMLValidityArraySize)
             return false;

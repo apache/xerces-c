@@ -1775,7 +1775,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     // Make sure that its the end of the element that we expect
     XMLElementDecl* tempElement = topElem->fThisElement;
     if (fDoNamespaces && fGrammarType == Grammar::SchemaGrammarType) {
-        if ((topUri != uriId) || (XMLString::compareString(tempElement->getBaseName(), bbName.getRawBuffer())))
+        if ((topUri != uriId) || (!XMLString::equals(tempElement->getBaseName(), bbName.getRawBuffer())))
         {
             emitError
             (
@@ -1785,7 +1785,7 @@ void XMLScanner::scanEndTag(bool& gotData)
         }
     }
     else {
-        if (XMLString::compareString(tempElement->getFullName(), qnameBuf.getRawBuffer()))
+        if (!XMLString::equals(tempElement->getFullName(), qnameBuf.getRawBuffer()))
         {
             emitError
             (
@@ -2701,7 +2701,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
         if (fValidate)
         {
             //  If a DocType exists, then check if it matches the root name there.
-            if (fRootElemName && XMLString::compareString(fQNameBuf.getRawBuffer(), fRootElemName))
+            if (fRootElemName && !XMLString::equals(fQNameBuf.getRawBuffer(), fRootElemName))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
 
             //  Some validators may also want to check the root, call the
@@ -3332,7 +3332,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                     {
                         const XMLCh* rawPtr = curDef.getFullName();
                         if (!XMLString::compareNString(rawPtr, XMLUni::fgXMLNSColonString, 6)
-                        ||  !XMLString::compareString(rawPtr, XMLUni::fgXMLNSString))
+                        ||  XMLString::equals(rawPtr, XMLUni::fgXMLNSString))
                             updateNSMap(rawPtr, curDef.getValue());
                     }
                 }
@@ -3646,7 +3646,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         if (fValidate)
         {
             //  If a DocType exists, then check if it matches the root name there.
-            if (fRootElemName && XMLString::compareString(qnameRawBuf, fRootElemName))
+            if (fRootElemName && !XMLString::equals(qnameRawBuf, fRootElemName))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
 
             //  Some validators may also want to check the root, call the
@@ -3926,11 +3926,11 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
             emitError(XMLErrs::ExpectedDeclString);
 
         // See if it matches any of our expected strings
-        if (!XMLString::compareString(nameBuf.getRawBuffer(), XMLUni::fgVersionString))
+        if (XMLString::equals(nameBuf.getRawBuffer(), XMLUni::fgVersionString))
             curString = VersionString;
-        else if (!XMLString::compareString(nameBuf.getRawBuffer(), XMLUni::fgEncodingString))
+        else if (XMLString::equals(nameBuf.getRawBuffer(), XMLUni::fgEncodingString))
             curString = EncodingString;
-        else if (!XMLString::compareString(nameBuf.getRawBuffer(), XMLUni::fgStandaloneString))
+        else if (XMLString::equals(nameBuf.getRawBuffer(), XMLUni::fgStandaloneString))
             curString = StandaloneString;
         else
             curString = UnknownString;
@@ -3968,7 +3968,7 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         const XMLCh* rawValue = buffers[curString]->getRawBuffer();
         if (curString == VersionString)
         {
-            if (XMLString::compareString(rawValue, XMLUni::fgSupportedVersion))
+            if (!XMLString::equals(rawValue, XMLUni::fgSupportedVersion))
                 emitError(XMLErrs::UnsupportedXMLVersion, rawValue);
         }
          else if (curString == EncodingString)
@@ -3978,9 +3978,9 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         }
          else if (curString == StandaloneString)
         {
-            if (!XMLString::compareString(rawValue, XMLUni::fgYesString))
+            if (XMLString::equals(rawValue, XMLUni::fgYesString))
                 fStandalone = true;
-            else if (!XMLString::compareString(rawValue, XMLUni::fgNoString))
+            else if (XMLString::equals(rawValue, XMLUni::fgNoString))
                 fStandalone = false;
             else
             {
@@ -4159,9 +4159,9 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
         //  to map to by the NS spec. xmlns gets mapped to a special place holder
         //  URI that we define (so that it maps to something checkable.)
         //
-        if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
+        if (XMLString::equals(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
             uriId = fXMLNSNamespaceId;
-        else if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
+        else if (XMLString::equals(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
             uriId = fXMLNamespaceId;
         else
         {
