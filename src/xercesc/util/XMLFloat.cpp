@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/12/11 19:55:16  peiyongz
+ * set negZero/posZero for float.
+ *
  * Revision 1.5  2002/12/11 00:20:02  peiyongz
  * Doing businesss in value space. Converting out-of-bound value into special values.
  *
@@ -183,10 +186,12 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
         }
         else if (fValue > (-1)*FLT_MIN && fValue < 0)
         {
+            fType = NegZero;
             fValue = 0;
-        }
+        } 
         else if (fValue > 0 && fValue < FLT_MIN )
         {
+            fType = PosZero;
             fValue = 0;
         }
         else if  (fValue > FLT_MAX)
