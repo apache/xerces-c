@@ -55,30 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/03/02 19:55:07  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/06 07:48:16  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/01/25 23:07:34  roddey
- * Updated the Borland compiler header for all of the recent changes and
- * additions of stuff that needs to be defined per compiler.
- *
- * Revision 1.2  1999/12/02 19:02:57  roddey
- * Get rid of a few statically defined XMLMutex objects, and lazy eval them
- * using atomic compare and swap. I somehow let it get by me that we don't
- * want any static/global objects at all.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:28  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:22  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -122,6 +99,9 @@ typedef unsigned short  UTF16Ch;
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLUInt16;
 typedef unsigned int    XMLUInt32;
+
+//WLH-2000-08-18 -- Add more compiler quirk cross-defines
+#define _itoa  std::itoa
 
 
 // ---------------------------------------------------------------------------
