@@ -211,7 +211,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
           many platforms as there are. Again, due to limited resources
           we cannot do all the ports. We will help you make this port
           happen. Here are some <jump
-          href="build-misc.html#faq-4">Porting
+          href="program-others.html#PortingGuidelines">Porting
           Guidelines</jump>.</p>
 
             <p>We strongly encourage you to submit the changes that
