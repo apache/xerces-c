@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/27 12:19:00  tng
+ * Schema: AllContentModel UPA Check typo fix
+ *
  * Revision 1.1  2001/08/24 12:48:48  tng
  * Schema: AllContentModel
  *
@@ -303,7 +306,7 @@ void AllContentModel::checkUniqueParticleAttribution
 
     // check whether there is conflict between any two leaves
     for (i = 0; i < fCount; i++) {
-        for (j = 0; j < fCount; j++) {
+        for (j = i+1; j < fCount; j++) {
             // If this is text in a Schema mixed content model, skip it.
             if ( fIsMixed &&
                  (( fChildren[i]->getURI() == XMLElementDecl::fgPCDataElemId) ||
