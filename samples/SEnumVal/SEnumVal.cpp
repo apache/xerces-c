@@ -18,9 +18,12 @@
 // ---------------------------------------------------------------------------
 static void usage();
 
+void process(char* const);
 void processAttributes( XMLAttDefList& attList, bool margin = false );
-void processDatatypeValidator( const DatatypeValidator*, bool margin = false );
-void processContentSpecNode( const ContentSpecNode* specNode, bool margin = false );
+void processDatatypeValidator( const DatatypeValidator*, bool margin = false 
+);
+void processContentSpecNode( const ContentSpecNode* specNode, bool margin = 
+false );
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)
@@ -52,7 +55,6 @@ public :
         return fLocalForm;
     }
 
-
 private :
     // -----------------------------------------------------------------------
     //  Private data members
@@ -69,7 +71,6 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
     return target;
 }
 
-
 // ---------------------------------------------------------------------------
 //  Local helper methods
 // ---------------------------------------------------------------------------
@@ -83,7 +84,6 @@ static void usage()
             "  * = Default if not provided explicitly\n"
          << endl;
 }
-
 
 // ---------------------------------------------------------------------------
 //  Program entry point
@@ -105,206 +105,186 @@ int main(int argC, char* argV[])
     }
 
     // Check command line and extract arguments.
-    if (argC < 2)
-    {
-        usage();
-        XMLPlatformUtils::Terminate();
-        return 1;
-    }
-
     // We only have one required parameter, which is the file to process
-    if ((argC == 2) && (*(argV[1]) == '-'))
+    if ((argC != 2) ||
+        (*(argV[1]) == '-'))
     {
         usage();
         XMLPlatformUtils::Terminate();
         return 2;
     }
 
-    const char*              xmlFile   = argV[1];
-    SAXParser::ValSchemes    valScheme = SAXParser::Val_Never;
-
-    //
-    //  Create a Schema validator to be used for our validation work. Then create
-    //  a SAX parser object and pass it our validator. Then, according to what
-    //  we were told on the command line, set it to validate or not. He owns
-    //  the validator, so we have to allocate it.
-    //
-    //SchemaValidator* valToUse = new SchemaValidator;
-    SAXParser parser;//(valToUse);
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(true);
-    parser.setDoSchema(true);
-
-
-    //
-    //  Get the starting time and kick off the parse of the indicated
-    //  file. Catch any exceptions that might propogate out of it.
-    //
     try
     {
-        parser.parse(xmlFile);
+		process(argV[1]);
     }
-
     catch (const XMLException& e)
     {
-        cerr << "\nError during parsing: '" << xmlFile << "'\n"
+        cerr << "\nError during parsing: '" << argV[1] << "'\n"
              << "Exception message is:  \n"
              << StrX(e.getMessage()) << "\n" << endl;
         XMLPlatformUtils::Terminate();
         return 3;
     }
 
-    //
-    //  Now we will get an enumerator for the element pool from the validator
-    //  and enumerate the elements, printing them as we go. For each element
-    //  we get an enumerator for its attributes and print them also.
-    //
-	//SchemaGrammar* grammar = (SchemaGrammar*) valToUse->getGrammar();
-    SchemaGrammar* grammar = (SchemaGrammar*) parser.getValidator().getGrammar();
-    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = grammar->getElemEnumerator();
-    if (elemEnum.hasMoreElements())
-    {
-        while(elemEnum.hasMoreElements())
-        {
-            // Element's properties
-            const SchemaElementDecl& curElem = elemEnum.nextElement();
-            
-            // Name
-            cout << "Name:\t\t\t" << StrX(curElem.getFullName()) << "\n";
-
-            // Model Type
-            cout << "Model Type:\t\t";
-            switch( curElem.getModelType() )
-            {
-            case SchemaElementDecl::Empty:      cout << "Empty";    break;
-            case SchemaElementDecl::Any:        cout << "Any";      break;
-            case SchemaElementDecl::Mixed:      cout << "Mixed";    break;
-            case SchemaElementDecl::Children:   cout << "Children"; break;
-            case SchemaElementDecl::Simple:     cout << "Simple";   break;
-            default:                            cout << "Unknown";  break;
-            }
-            cout << "\n";
-
-            // Create Reason
-            cout << "Create Reason:\t";
-            switch( curElem.getCreateReason() )
-            {
-                case XMLElementDecl::NoReason:          cout << "Empty";            break;
-                case XMLElementDecl::Declared:          cout << "Declared";         break;
-                case XMLElementDecl::AttList:           cout << "AttList";          break;
-                case XMLElementDecl::InContentModel:    cout << "InContentModel";   break;
-                case XMLElementDecl::AsRootElem:        cout << "AsRootElem";       break;
-                case XMLElementDecl::JustFaultIn:       cout << "JustFaultIn";      break;
-
-            }
-            cout << "\n";
-            
-
-            // Content Spec Node
-            processContentSpecNode( curElem.getContentSpec() );
-
-            // Misc Flags
-            int mflags = curElem.getMiscFlags();
-            if( mflags !=0 )
-            {
-                cout << "Misc. Flags:\t";
-            }
-
-            if(       mflags == SchemaSymbols::INFINITY  )
-            {
-                cout << "Infinity ";
-            }
-            else 
-            {
-                if ( mflags & SchemaSymbols::NILLABLE  != 0 )
-                    cout << "Nillable ";
-
-                if ( mflags & SchemaSymbols::ABSTRACT  != 0 )
-                    cout << "Abstract ";
-
-                if ( mflags & SchemaSymbols::FIXED     != 0 )
-                    cout << "Fixed ";
-            }
-
-            if( mflags !=0 )
-            {
-                cout << "\n";
-            }
-
-            // Substitution Name
-            XMLCh* subsGroup = curElem.getSubstitutionGroupName();
-            if( subsGroup )
-            {
-                cout << "Substitution Name:\t" << StrX(subsGroup) << "\n";
-            }
-
-
-            // Block Set
-            /*
-            int blockSet = curElem.getBlockSet();
-            cout << "Block. Set:\t\t";
-
-            if( blockSet == SchemaSymbols::EMPTY_SET  )
-                cout << "Empty Set ";
-            else
-            {
-                if( blockSet & SchemaSymbols::SUBSTITUTION  )
-                    cout << "Substitution ";
-                if ( blockSet & SchemaSymbols::EXTENSION  != 0 )
-                    cout << "Extension ";
-                if ( blockSet & SchemaSymbols::RESTRICTION     != 0 )
-                    cout << "Restriction ";
-                if ( blockSet & SchemaSymbols::LIST  != 0 )
-                    cout << "List ";
-                if ( blockSet & SchemaSymbols::UNION     != 0 )
-                    cout << "Union ";
-                if ( blockSet & SchemaSymbols::ENUMERATION     != 0 )
-                    cout << "Enumeration ";
-            }
-            cout << "\n";
-            */
-
-
-            // Content Model
-            const XMLCh* fmtCntModel = curElem.getFormattedContentModel();
-            if( fmtCntModel != NULL )
-            {
-                cout << "Content Model:\t" << StrX(fmtCntModel) << "\n";
-            }
-
-            const ComplexTypeInfo* ctype = curElem.getComplexTypeInfo();
-            if( ctype != NULL)
-            {
-                cout << "ComplexType:\n";
-                cout << "\tTypeName:\t" << StrX(ctype->getTypeName()) << "\n";
-                
-                ContentSpecNode* cSpecNode = ctype->getContentSpec();
-                processContentSpecNode(cSpecNode, true );
-            }
-
-            // Datatype 
-            DatatypeValidator* dtValidator = curElem.getDatatypeValidator();
-            processDatatypeValidator( dtValidator );
-
-            // Get an enumerator for this guy's attributes if any
-            if ( curElem.hasAttDefs() )
-            {
-                processAttributes( curElem.getAttDefList() );
-            }
-
-            cout << "--------------------------------------------";
-            cout << endl;
-
-        }
-    }
-     else
-    {
-        cout << "The validator has no elements to display\n" << endl;
-    }
-    // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+	return 0;
+}
+
+void process(char* const xmlFile)
+{
+    //
+    //  Create a Schema validator to be used for our validation work. Then create
+    //  a SAX parser object and pass it our validator. Then, according to what
+    //  we were told on the command line, set it to validate or not. He owns
+    //  the validator, so we have to allocate it.
+    //
+    SAXParser parser;
+    parser.setValidationScheme(SAXParser::Val_Always);
+    parser.setDoNamespaces(true);
+    parser.setDoSchema(true);
+
+	parser.parse(xmlFile);
+
+    if (parser.getErrorCount())
+	{
+        cout << "\nErrors occured, no output available\n" << endl;
+		return;
+	}
+
+	if (!parser.getValidator().handlesSchema())
+	{
+		cout << "\n Non schema document, no output available\n" << endl;
+		return;
+	}
+
+	//
+	//  Now we will get an enumerator for the element pool from the validator
+	//  and enumerate the elements, printing them as we go. For each element
+	//  we get an enumerator for its attributes and print them also.
+	//
+	SchemaGrammar* grammar = (SchemaGrammar*) 
+parser.getValidator().getGrammar();
+	RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = 
+grammar->getElemEnumerator();
+
+	if (!elemEnum.hasMoreElements())
+	{
+		cout << "\nThe validator has no elements to display\n" << endl;
+		return;
+	}
+
+	while(elemEnum.hasMoreElements())
+	{
+		const SchemaElementDecl& curElem = elemEnum.nextElement();
+
+		// Name
+		cout << "Name:\t\t\t" << StrX(curElem.getFullName()) << "\n";
+
+		// Model Type
+		cout << "Model Type:\t\t";
+		switch( curElem.getModelType() )
+		{
+		case SchemaElementDecl::Empty:          cout << "Empty";         break;
+		case SchemaElementDecl::Any:            cout << "Any";           break;
+		case SchemaElementDecl::Mixed_Simple:   cout << "Mixed_Simple";  break;
+		case SchemaElementDecl::Mixed_Complex:  cout << "Mixed_Complex"; break;
+		case SchemaElementDecl::Children:       cout << "Children";      break;
+		case SchemaElementDecl::Simple:         cout << "Simple";        break;
+
+		default:                                cout << "Unknown";       break;
+		}
+
+		cout << "\n";
+
+		// Create Reason
+		cout << "Create Reason:\t";
+		switch( curElem.getCreateReason() )
+		{
+		case XMLElementDecl::NoReason:          cout << "Empty";            break;
+		case XMLElementDecl::Declared:          cout << "Declared";         break;
+		case XMLElementDecl::AttList:           cout << "AttList";          break;
+		case XMLElementDecl::InContentModel:    cout << "InContentModel";   break;
+		case XMLElementDecl::AsRootElem:        cout << "AsRootElem";       break;
+		case XMLElementDecl::JustFaultIn:       cout << "JustFaultIn";      break;
+
+		default:                            cout << "Unknown";  break;
+		}
+
+		cout << "\n";
+
+		// Content Spec Node
+		processContentSpecNode( curElem.getContentSpec() );
+
+		// Misc Flags
+		int mflags = curElem.getMiscFlags();
+		if( mflags !=0 )
+		{
+			cout << "Misc. Flags:\t";
+		}
+
+		if( mflags == SchemaSymbols::INFINITY  )
+		{
+			cout << "Infinity ";
+		}
+		else
+		{
+			if ( mflags & SchemaSymbols::NILLABLE  != 0 )
+				cout << "Nillable ";
+
+			if ( mflags & SchemaSymbols::ABSTRACT  != 0 )
+				cout << "Abstract ";
+
+			if ( mflags & SchemaSymbols::FIXED     != 0 )
+				cout << "Fixed ";
+		}
+
+		if( mflags !=0 )
+		{
+			cout << "\n";
+		}
+
+		// Substitution Name
+		XMLCh* subsGroup = curElem.getSubstitutionGroupName();
+		if( subsGroup )
+		{
+			cout << "Substitution Name:\t" << StrX(subsGroup) << "\n";
+		}
+
+		// Content Model
+		const XMLCh* fmtCntModel = curElem.getFormattedContentModel();
+		if( fmtCntModel != NULL )
+		{
+			cout << "Content Model:\t" << StrX(fmtCntModel) << "\n";
+		}
+
+		const ComplexTypeInfo* ctype = curElem.getComplexTypeInfo();
+		if( ctype != NULL)
+		{
+			cout << "ComplexType:\n";
+			cout << "\tTypeName:\t" << StrX(ctype->getTypeName()) << "\n";
+
+			ContentSpecNode* cSpecNode = ctype->getContentSpec();
+			processContentSpecNode(cSpecNode, true );
+		}
+
+		// Datatype
+		DatatypeValidator* dtValidator = curElem.getDatatypeValidator();
+		processDatatypeValidator( dtValidator );
+
+		// Get an enumerator for this guy's attributes if any
+		if ( curElem.hasAttDefs() )
+		{
+			processAttributes( curElem.getAttDefList() );
+		}
+
+		cout << "--------------------------------------------";
+		cout << endl;
+
+    }
+
+    return;
 }
 
 
@@ -313,12 +293,12 @@ int main(int argC, char* argV[])
 //---------------------------------------------------------------------
 void processAttributes( XMLAttDefList& attList, bool margin )
 {
-    if( attList.isEmpty() )
+    if ( attList.isEmpty() )
     {
         return;
     }
 
-    if( margin )
+    if ( margin )
     {
         cout << "\t";
     }
@@ -329,52 +309,16 @@ void processAttributes( XMLAttDefList& attList, bool margin )
         // Name
         SchemaAttDef& curAttDef = (SchemaAttDef&)attList.nextElement();
         cout << "\tName:\t\t\t" << StrX(curAttDef.getFullName()) << "\n";
-        
+
         // Type
         cout << "\tType:\t\t\t";
-        const XMLAttDef::AttTypes type = curAttDef.getType();
-        switch(type)
-        {
-        case XMLAttDef::CData:      cout << "CDATA";        break;
-        case XMLAttDef::ID:         cout << "ID";           break;
-        
-        case XMLAttDef::IDRef:
-        case XMLAttDef::IDRefs:     cout << "IDREF(S)";     break;
-        
-        case XMLAttDef::Entity:
-        case XMLAttDef::Entities:   cout << "ENTITY(IES)";  break;
-
-        case XMLAttDef::NmToken:
-        case XMLAttDef::NmTokens:   cout << "NMTOKEN(S)";   break;
-
-        case XMLAttDef::Notation:   cout << "NOTATION";     break;
-        case XMLAttDef::Enumeration:cout << "ENUMERATION";  break;
-
-        case XMLAttDef::Simple:     cout << "Simple";       break;
-
-        default:                    cout << "(" << type << ")";
-        }
+		cout << StrX(XMLAttDef::getAttTypeString(curAttDef.getType()));
         cout << "\n";
 
         // Default Type
         cout << "\tDefault Type:\t";
-        XMLAttDef::DefAttTypes defType = curAttDef.getDefaultType();
-        switch( defType )
-        {
-        case XMLAttDef::Default:                cout << "Default";      break;
-        case XMLAttDef::Required:               cout << "Required";     break;
-        case XMLAttDef::Implied:                cout << "Implied";      break;
-        case XMLAttDef::Fixed:                  cout << "Fixed";        break;
-        case XMLAttDef::Prohibited:             cout << "Prohibited";   break;
-        case XMLAttDef::Required_And_Fixed:     cout << "Required_And_Fixed";       break;
-        case XMLAttDef::ProcessContents_Strict: cout << "ProcessContents_Strict";   break;
-        case XMLAttDef::ProcessContents_Lax:    cout << "ProcessContents_Lax";      break;
-        case XMLAttDef::ProcessContents_Skip:   cout << "ProcessContents_Skip";     break;
-        default:
-            cout << "(" << defType << ")";
-        }
+		cout << StrX(XMLAttDef::getDefAttTypeString(curAttDef.getDefaultType()));
         cout << "\n";
-
 
         // Value
         if( curAttDef.getValue() )
@@ -396,12 +340,13 @@ void processAttributes( XMLAttDefList& attList, bool margin )
          processDatatypeValidator( dv, true );
 
         cout << "\n";
-    }   
+    }
 }
 
-void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin )
+void processDatatypeValidator( const DatatypeValidator* dtValidator, bool 
+margin )
 {
-    if( dtValidator == NULL ) 
+    if( !dtValidator )
     {
         return;
     }
@@ -417,6 +362,8 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
     case DatatypeValidator::String:         cout << "string";      break;
     case DatatypeValidator::AnyURI:         cout << "AnyURI";      break;
     case DatatypeValidator::QName:          cout << "QName";       break;
+	case DatatypeValidator::Name:           cout << "Name";        break;
+	case DatatypeValidator::NCName:         cout << "NCName";      break;
     case DatatypeValidator::Boolean:        cout << "Boolean";     break;
     case DatatypeValidator::Float:          cout << "Float";       break;
     case DatatypeValidator::Double:         cout << "Double";      break;
@@ -438,13 +385,14 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
     case DatatypeValidator::NOTATION:       cout << "NOTATION";    break;
     case DatatypeValidator::List:           cout << "List";        break;
     case DatatypeValidator::Union:          cout << "Union";       break;
+    case DatatypeValidator::AnySimpleType:  cout << "AnySimpleType"; break;
     }
-    
+
     cout << "\n";
 
     // Facets
 	RefHashTableOf<KVStringPair>* facets = dtValidator->getFacets();
-    if( facets != NULL )
+    if( facets )
     {
         RefHashTableOfEnumerator<KVStringPair> enumFacets(facets);
         if( enumFacets.hasMoreElements() )
@@ -452,16 +400,15 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
             cout << "Facets:\t\t\n";
         }
 
-
         while(enumFacets.hasMoreElements())
         {
             // Element's properties
             const KVStringPair& curPair = enumFacets.nextElement();
-            cout << "\t" << StrX( curPair.getKey() )    << "=" 
+            cout << "\t" << StrX( curPair.getKey() )    << "="
                          << StrX( curPair.getValue() )  << "\n";
         }
     }
-    
+
 }
 
 void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
@@ -470,7 +417,7 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
     {
         return;
     }
-    
+
     if( margin )
     {
         cout << "\t";
@@ -479,22 +426,39 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
     cout << "ContentType:\t";
     switch( cSpecNode->getType() )
     {
-        case ContentSpecNode::Leaf:             cout << "Leaf"; break;
-        case ContentSpecNode::ZeroOrOne:        cout << "ZeroOrOne"; break;
-        case ContentSpecNode::ZeroOrMore:       cout << "ZeroOrMore"; break;
-        case ContentSpecNode::OneOrMore:        cout << "OneOrMore"; break;
-        case ContentSpecNode::Choice:           cout << "Choice"; break;
-        case ContentSpecNode::Sequence:         cout << "Sequence"; break;
-        case ContentSpecNode::Any:              cout << "Any"; break;
-        case ContentSpecNode::Any_Other:        cout << "Any_Other"; break;
-        case ContentSpecNode::Any_NS:           cout << "Any_NS"; break;
-        case ContentSpecNode::Any_Lax:          cout << "Any_Lax"; break;
-        case ContentSpecNode::Any_Other_Lax:    cout << "Any_Other_Lax"; break;
-        case ContentSpecNode::Any_NS_Lax:       cout << "Any_NS_Lax"; break;
-        case ContentSpecNode::Any_Skip:         cout << "Any_Skip"; break;
-        case ContentSpecNode::Any_Other_Skip:   cout << "Any_Other_Skip"; break;
-        case ContentSpecNode::Any_NS_Skip:   cout << "Any_NS_Skip"; break;
-        case ContentSpecNode::UnknownType:      cout << "UnknownType"; break;
+        case ContentSpecNode::Leaf:             cout << "Leaf";           
+break;
+        case ContentSpecNode::ZeroOrOne:        cout << "ZeroOrOne";      
+break;
+        case ContentSpecNode::ZeroOrMore:       cout << "ZeroOrMore";     
+break;
+        case ContentSpecNode::OneOrMore:        cout << "OneOrMore";      
+break;
+        case ContentSpecNode::Choice:           cout << "Choice";         
+break;
+        case ContentSpecNode::Sequence:         cout << "Sequence";       
+break;
+		case ContentSpecNode::All:              cout << "All";            break;
+        case ContentSpecNode::Any:              cout << "Any";            
+break;
+        case ContentSpecNode::Any_Other:        cout << "Any_Other";      
+break;
+        case ContentSpecNode::Any_NS:           cout << "Any_NS";         
+break;
+        case ContentSpecNode::Any_Lax:          cout << "Any_Lax";        
+break;
+        case ContentSpecNode::Any_Other_Lax:    cout << "Any_Other_Lax";  
+break;
+        case ContentSpecNode::Any_NS_Lax:       cout << "Any_NS_Lax";     
+break;
+        case ContentSpecNode::Any_Skip:         cout << "Any_Skip";       
+break;
+        case ContentSpecNode::Any_Other_Skip:   cout << "Any_Other_Skip"; 
+break;
+        case ContentSpecNode::Any_NS_Skip:      cout << "Any_NS_Skip";    
+break;
+        case ContentSpecNode::UnknownType:      cout << "UnknownType";    
+break;
     }
     cout << "\n";
 }
