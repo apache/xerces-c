@@ -30,7 +30,7 @@ gmake</source>
 
           <p>The SAXCount sample parses an XML file and prints out a count of the number of
           elements in the file. To run SAXCount, enter the following </p>
-          <source>SAXCount &lt;XML File&gt;</source>
+<source>SAXCount &lt;XML File&gt;</source>
           <p>The following parameters may be set from the command line </p>
 <source>Usage:
     SAXCount [options] &lt;XML file>
@@ -38,11 +38,13 @@ gmake</source>
 Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
 
 This program prints the number of elements, attributes,
 white spaces and other non-white space characters in the input file.
 
-  * = Default if not provided explicitly</source>
+  * = Default if not provided explicitly
+</source>
           <p><em>-v=always</em> will force validation<br/>
              <em>-v=never</em> will not use any validation<br/>
              <em>-v=auto</em> will validate if a DOCTYPE declaration is present in the XML document</p>

@@ -41,8 +41,7 @@ gmake</source>
 			and reports if successful.</p>
 <source>PParse &lt;XML file&gt;</source>
 
-<source>
-Usage: PParse [options] &lt;file>
+<source>Usage: PParse [options] &lt;file>
 
 This sample program demonstrates the progressive parse capabilities of
 the parser system. It allows you to do a scanFirst() call followed by
@@ -52,9 +51,13 @@ ever it is you want. In our little test, our event handler looks for
 At that point, our progressive parse loop exits.
 
 Options:
-      -v            - Do validation [default is off]
+      -v=xxx        - Validation scheme [always | never | auto*]
       -n            - Enable namespace processing [default is off]
-      -?            - Show this help (must be the only parameter)</source>
+      -s            - Enable schema processing [default is off]
+      -?            - Show this help (must be the only parameter)
+
+  * = Default if not provided explicitly
+</source>
           	<p>The output is the following:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 PParse personal.xml

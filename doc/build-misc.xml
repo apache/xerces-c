@@ -52,7 +52,7 @@
         '<code>VCVARS32.BAT</code>' or a similar file. Then at the prompt
         enter:</p>
 
-        <source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
+<source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
 set ICUROOT=x:\icu
 cd x:\&XercesCSrcInstallDir;\scripts
 perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu</source>
@@ -66,7 +66,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         drop) to the target directory.</p>
 
         <p>For a description of options available, you can enter:</p>
-          <source>perl packageBinaries.pl</source>
+<source>perl packageBinaries.pl</source>
     </a>
     </faq>
 

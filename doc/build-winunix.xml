@@ -220,8 +220,7 @@ Usage: runConfigure "options"
 <source>runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative</source>
 
             <p>The response will be something like this:</p>
-<source>
-Generating makefiles with the following options ...
+<source>Generating makefiles with the following options ...
 Platform: linux
 C Compiler: gcc
 C++ Compiler: g++

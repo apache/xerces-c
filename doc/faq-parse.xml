@@ -36,7 +36,7 @@
         operation but don't point to the thread-safe version of the system libraries.
         For example, LIBPATH can be simply set as:</p>
 
-      <source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
+<source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
 
       <p>Where &lt;&XercesCProjectName;&gt; points to the directory where the
         &XercesCProjectName; application resides.</p>
@@ -48,7 +48,7 @@
         <ref>/lib</ref> in your LIBPATH variable. That is to say your LIBPATH may look
         like this:</p>
 
-      <source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
+<source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
 
       <p>Where /usr/lib is where your system libraries are.</p>
 

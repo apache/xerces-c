@@ -22,7 +22,7 @@ gmake</source>
 	        StdInParse in ' &XercesCInstallDir;-linux/bin' directory.</p>
 
 	        <p>To delete all the generated object files and executables, type:</p>
- <source>gmake clean</source>
+<source>gmake clean</source>
         </s3>
 
         <s3 title="Running StdInParse">
@@ -33,13 +33,17 @@ gmake</source>
           <p>The following parameters may be set from the command line </p>
 <source>Usage:
     StdInParse [options]
-    -v  Do a validating parse. [default is off]
-    -n  Enable namespace processing. [default is off]
-    -?  Show this help
+    -v=xxx      Validation scheme [always | never | auto]
+    -n          Enable namespace processing. [default is off]
+    -s          Enable schema processing. [default is off]
+    -?          Show this help
+
+  * = Default if not provided explicitly
 
 This program allows you to redirect a file into the program
 to be parsed. It will count the elements, characters, and
-spaces and display these stats at the end</source>
+spaces and display these stats at the end
+</source>
           <p>Here is a sample output from StdInParse:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 StdInParse &lt; personal.xml

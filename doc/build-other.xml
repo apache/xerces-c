@@ -90,7 +90,7 @@
           directory. Run <code>packageBinaries</code>, giving the source and target directories
           like this:</p>
 
-          <source>packageBinaries -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-os2</source>
+<source>packageBinaries -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-os2</source>
 
           <p>(Match the source directory to your system; the target directory can be
           anything you want.)</p>
@@ -149,8 +149,7 @@
                 We have had difficulty with the tar command on AS/400. This is under
                 investigation.  If you have trouble, we recommend the following work
                 around:</li></ul>
-<source>
-qsh:
+<source>qsh:
 gunzip -d &lt;tar file.gz&gt;
 pax -r -f &lt;uncompressed tar file&gt;</source>
 
@@ -162,8 +161,7 @@ pax -r -f &lt;uncompressed tar file&gt;</source>
                 <li>Set up the following environment variables in your build process
                 (use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
                 </ul>
-<source>
-XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
+<source>XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
 PLATFORM  - 'OS400'
 MAKE   - '/usr/bin/gmake'
 OUTPUTDIR  - &lt;identifies target as400 library for *module, *pgm and *srvpgm objects&gt;
@@ -179,8 +177,7 @@ ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source
                 <code>edtf '/usr/bin/egrep'</code> with the following source:</li>
                 </ul>
 
-<source>
-#!/usr/bin/sh
+<source>#!/usr/bin/sh
 /usr/bin/grep -e "$@"</source>
 
          <p>You may want to put the environment variables and library list
@@ -190,14 +187,13 @@ ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source
          <p><em>Configure</em></p>
 
          <p>To configure the make files for an AS/400 build do the following:</p>
-         <source>
-         qsh
-         cd &lt;full path to &XercesCName;&gt;/src
-         runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400</source>
+<source>qsh
+cd &lt;full path to &XercesCName;&gt;/src
+runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400</source>
 
          <p>Troubleshooting:</p>
-         <source>error: configure: error: installation or configuration problem:
-         C compiler cannot create executables.</source>
+<source>error: configure: error: installation or configuration problem:
+C compiler cannot create executables.</source>
 
          <p>If during <code>runConfigure</code> you see the above error message, it
          can mean one of two things. Either <code>QCXXN</code> is not on your library
@@ -206,14 +202,12 @@ ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source
          options. The second reason happens because the test modules already exist
          from a previous run of <code>runConfigure</code>. To correct the problem,
          do the following:</p>
-<source>
-DLTMOD &lt;your OUTPUTDIR library&gt;/CONFT* and
+<source>DLTMOD &lt;your OUTPUTDIR library&gt;/CONFT* and
 DLTPGM your &lt;OUTPUTDIR library&gt;/CONFT*</source>
 
         <p><em>Build</em></p>
 
-<source>
-qsh
+<source>qsh
 gmake -e</source>
 
          <p>The above gmake will result in a service program being created
@@ -232,8 +226,7 @@ gmake -e</source>
          After building the &XercesCName; service program, create a binding directory
          by doing the following (note, this binding directory is used when building
          the samples):</p>
-<source>
-qsh
+<source>qsh
 cd &lt;full path to &XercesCName;>/lib&gt;
 qar -cuv libxercesc1_1.a *.o
 command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/libxercesc1_1.a')
@@ -268,8 +261,7 @@ command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM)
          <code>runConfigure</code> enable the parser messages to be pulled from
          an AS/400 message file. To view the source for creating  the message file
          and the XML parser messages, see the following stream file:</p>
-<source>
-EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</source>
+<source>EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</source>
 
          <p>In the prolog of <code>CrtXMLMsgs</code> there are instructions to create
          the message file:</p>
@@ -290,8 +282,7 @@ EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</
          If you want to change either the message file name or explicitly qualify the
          library to match your product needs, you must edit the following <code>.cpp</code>
          files prior to your build.</p>
-<source>
-&lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
+<source>&lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
 &lt;full path to &XercesCName;&gt;/src/util/Platforms/OS400/OS400PlatformUtils.cpp</source>
 
          <p><em>Troubleshooting:</em></p>
@@ -301,8 +292,7 @@ EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</
         </s3>
 
         <s3 title="Building Samples on AS/400">
-<source>
-qsh
+<source>qsh
 cd &lt;full path to &XercesCName;&gt;/samples
 runConfigure -p os400 -x icc -c icc
 gmake -e</source>
