@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/24 01:30:50  chchou
+ * Fix bug #8 to support ignorable whitespace text nodes
+ *
  * Revision 1.6  2000/03/02 19:53:57  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -188,6 +191,20 @@ class CDOM_EXPORT DOM_Text: public DOM_CharacterData {
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      */
     DOM_Text splitText(unsigned int offset);
+
+    //@}
+    /** @name Non-standard (not defined by the DOM specification) functions. */
+    //@{
+
+    /**
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * Return true if this node contains ignorable whitespaces only.
+     * @return True if this node contains ignorable whitespaces only.
+     */
+    bool isIgnorableWhitespace();
+
     //@}
 
 protected:

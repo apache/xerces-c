@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.13  2000/03/24 01:31:12  chchou
+* Fix bug #8 to support ignorable whitespace text nodes
+*
 * Revision 1.12  2000/03/11 02:17:35  chchou
 * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
 *
@@ -127,6 +130,7 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/ElementImpl.hpp>
 #include <dom/AttrImpl.hpp>
+#include <dom/TextImpl.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -137,6 +141,7 @@ DOMParser::DOMParser(XMLValidator* const valToAdopt) :
 fErrorHandler(0)
 , fEntityResolver(0)
 , fExpandEntityReferences(false)
+, fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
 , fValidator(valToAdopt)
@@ -524,7 +529,7 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const bool            cdataSection)
 {
     // Ignore chars before the root element
-    if (!fWithinElement)
+    if (!fWithinElement || !fIncludeIgnorableWhitespace)
         return;
     
     if (fCurrentNode.getNodeType() == DOM_Node::TEXT_NODE)
@@ -535,6 +540,8 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
     else
     {
         DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
+        TextImpl *text = (TextImpl *) node.fImpl;
+        text -> setIgnorableWhitespace(true);
         fCurrentParent.appendChild(node);
         fCurrentNode = node;
     }

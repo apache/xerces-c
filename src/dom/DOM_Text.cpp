@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/24 01:30:50  chchou
+ * Fix bug #8 to support ignorable whitespace text nodes
+ *
  * Revision 1.4  2000/03/02 19:53:57  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -118,4 +121,10 @@ DOM_Text & DOM_Text::operator = (const DOM_NullPtr *other)
 DOM_Text DOM_Text::splitText(unsigned int offset)
 {
         return DOM_Text(((TextImpl *)fImpl)->splitText(offset));
+};
+
+
+bool DOM_Text::isIgnorableWhitespace()
+{
+        return ((TextImpl *)fImpl)->isIgnorableWhitespace();
 };

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/24 01:30:50  chchou
+ * Fix bug #8 to support ignorable whitespace text nodes
+ *
  * Revision 1.5  2000/03/02 19:54:05  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -93,6 +96,7 @@ static DOMString *gText;   // will be lazily initialized to point to "#text"
 TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &data) :
 CharacterDataImpl(ownerDoc, DStringPool::getStaticString("#text", &gText), 
                   DOM_Node::TEXT_NODE, data)
+, fIgnorableWhitespace(false)
 {
 };
 
@@ -138,3 +142,15 @@ TextImpl *TextImpl::splitText(unsigned int offset)
 
         return newText;
 };
+
+
+bool TextImpl::isIgnorableWhitespace()
+{
+        return fIgnorableWhitespace;
+}
+
+
+void TextImpl::setIgnorableWhitespace(bool ignorable)
+{
+        fIgnorableWhitespace = ignorable;
+}

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/24 01:30:50  chchou
+ * Fix bug #8 to support ignorable whitespace text nodes
+ *
  * Revision 1.6  2000/03/02 19:54:05  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -110,6 +113,11 @@ public:
     virtual NodeImpl *cloneNode(bool deep);
     virtual bool isTextImpl();
     virtual TextImpl *splitText(unsigned int offset);
+    virtual bool isIgnorableWhitespace();
+protected:
+    virtual void setIgnorableWhitespace(bool ignorable);
+    bool fIgnorableWhitespace;
+    friend class DOMParser;
 };
 
 #endif

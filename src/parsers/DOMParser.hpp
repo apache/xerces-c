@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/24 01:31:12  chchou
+ * Fix bug #8 to support ignorable whitespace text nodes
+ *
  * Revision 1.6  2000/03/03 01:29:34  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -274,6 +277,18 @@ public :
       */
     bool getExpandEntityReferences() const;
 
+    /** Get the 'include ignorable whitespace' flag.
+      *
+      * This method returns the state of the parser's include ignorable
+      * whitespace flag.
+      *
+      * @return 'true' if the include ignorable whitespace flag is set on
+      *         the parser, 'false' otherwise.
+      *
+      * @see #setIncludeIgnorableWhitespace
+      */
+    bool getIncludeIgnorableWhitespace() const;
+
     //@}
 
 
@@ -384,6 +399,26 @@ public :
       *               flag.
       */
     void setExpandEntityReferences(const bool expand);
+
+    /** Set the 'include ignorable whitespace' flag
+      *
+      * This method allows the user to specify whether a validating parser
+      * should include ignorable whitespaces as text nodes.  It has no effect
+      * on non-validating parsers which always include non-markup text.
+      * <p>When set to true (also the default), ignorable whitespaces will be
+      * added to the DOM tree as text nodes.  The method
+      * DOM_Text::isIgnorableWhitespace() will return true for those text
+      * nodes only.
+      * <p>When set to false, all ignorable whitespace will be discarded and
+      * no text node is added to the DOM tree.  Note: applications intended
+      * to process the "xml:space" attribute should not set this flag to false.
+      *
+      * @param include The new state of the include ignorable whitespace
+      *                flag.
+      *
+      * @see #getIncludeIgnorableWhitespace
+      */
+    void setIncludeIgnorableWhitespace(const bool include);
 
     //@}
 
@@ -1032,6 +1067,10 @@ private :
     //      its constituent text nodes or just created a single (end result)
     //      text node.
     //
+    //  fIncludeIgnorableWhitespace
+    //      Indicates whether ignorable whiltespace should be added to
+    //      the DOM tree for validating parsers.
+    //
     //  fNodeStack
     //      Used to track previous parent nodes during nested element events.
     //
@@ -1059,6 +1098,7 @@ private :
     EntityResolver*         fEntityResolver;
     ErrorHandler*           fErrorHandler;
     bool                    fExpandEntityReferences;
+    bool                    fIncludeIgnorableWhitespace;
     ValueStackOf<DOM_Node>* fNodeStack;
     bool                    fParseInProgress;
     XMLScanner*             fScanner;
@@ -1136,6 +1176,11 @@ inline bool DOMParser::getExpandEntityReferences() const
     return fExpandEntityReferences;
 }
 
+inline bool DOMParser::getIncludeIgnorableWhitespace() const
+{
+    return fIncludeIgnorableWhitespace;
+}
+
 inline const XMLScanner& DOMParser::getScanner() const
 {
     return *fScanner;
@@ -1148,6 +1193,11 @@ inline const XMLScanner& DOMParser::getScanner() const
 inline void DOMParser::setExpandEntityReferences(const bool expand)
 {
     fExpandEntityReferences = expand;
+}
+
+inline void DOMParser::setIncludeIgnorableWhitespace(const bool include)
+{
+    fIncludeIgnorableWhitespace = include;
 }
 
 
