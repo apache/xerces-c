@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2002/01/28 18:45:40  knoaman
+ * Update documentation for SAX2 feature 'namespace-prefixes'.
+ *
  * Revision 1.17  2002/01/28 17:08:33  knoaman
  * SAX2-ext's DeclHandler support.
  *
@@ -508,7 +511,7 @@ public:
     *
     * <br>http://xml.org/sax/features/validation (default: true)
     * <br>http://xml.org/sax/features/namespaces (default: true)
-    * <br>http://xml.org/sax/features/namespace-prefixes (default: true)
+    * <br>http://xml.org/sax/features/namespace-prefixes (default: false)
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
     * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
