@@ -1053,6 +1053,13 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
         }
     }
 
+
+    if(dv) {
+        if(nameEmpty) {
+            dv->setAnonymous();
+        }
+    }
+
     return dv;
 }
 
@@ -1077,6 +1084,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
 
     // Get the attributes of the complexType
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
+    bool isAnonymous = false;
 
     if (!name || !*name) {
 
@@ -1088,8 +1096,10 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
 
         if (recursingTypeName)
             name = recursingTypeName;
-        else
+        else {
             name = genAnonTypeName(fgAnonCNamePrefix);
+            isAnonymous = true;
+        }
     }
 
     if (!XMLString::isValidNCName(name)) {
@@ -1145,6 +1155,10 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
         // Register the type
         // ------------------------------------------------------------------
         typeInfo = new ComplexTypeInfo();
+        if(isAnonymous) {
+            typeInfo->setAnonymous(); 
+        }
+
         fCurrentScope = fScopeCount++;
         fComplexTypeRegistry->put((void*) fullName, typeInfo);
         typeInfo->setTypeName(fullName);
