@@ -105,8 +105,11 @@
 //	a mismatch between UniChar (the 16-bit type that the Unicode converter uses)
 //	and wchar_t (the type the compiler uses to represent a Unicode character).
 //	In the case of Metrowerks, these are the same size. For ProjectBuilder, they
-//	differ. TempUniBuf is also used for a few cases where we want to discard the
-//	output fromt he unicode converter.
+//	used to differ, but they are now the same since XMLCh is now always fixed
+//	as a 16 bit character, rather than floating with wchar_t as it used to.
+//	*** Most uses of this buffer should be removed from this code in time! ***
+//	TempUniBuf is also used for a few cases where we want to discard the
+//	output from the unicode converter.
 const std::size_t kTempUniBufCount = 256;
 typedef UniChar	TempUniBuf[kTempUniBufCount];
 
@@ -789,7 +792,7 @@ MacOSLCPTranscoder::~MacOSLCPTranscoder()
 //	In order to implement calcRequiredSize we have to go ahead and do the
 //	conversion, which seems quite painful. The Mac Unicode converter has
 //	no way of saying "don't actually do the conversion." So we end up
-//	converting twic. It would be nice if the calling code could do some
+//	converting twice. It would be nice if the calling code could do some
 //	extra buffering to avoid this result.
 // ---------------------------------------------------------------------------
 unsigned int
@@ -853,7 +856,7 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText)
 //	In order to implement calcRequiredSize we have to go ahead and do the
 //	conversion, which seems quite painful. The Mac Unicode converter has
 //	no way of saying "don't actually do the conversion." So we end up
-//	converting twic. It would be nice if the calling code could do some
+//	converting twice. It would be nice if the calling code could do some
 //	extra buffering to avoid this result.
 // ---------------------------------------------------------------------------
 unsigned int
@@ -896,7 +899,7 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 			passSrc = reinterpret_cast<const UniChar*>(src);
 		}
 		
-		char oBuf[kTempUniBufCount];
+		TempUniBuf oBuf;
 
 	    status = ConvertFromUnicodeToText(
 	    	mUnicodeToTextInfo,
