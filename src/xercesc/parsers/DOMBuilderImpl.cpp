@@ -635,9 +635,7 @@ void DOMBuilderImpl::resetCachedGrammarPool()
 
 Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey) const
 {
-    XMLSchemaDescription* gramDesc = getGrammarResolver()->getGrammarPool()->createSchemaDescription(nameSpaceKey);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    return getGrammarResolver()->getGrammar(gramDesc);
+    return getGrammarResolver()->getGrammar(nameSpaceKey);
 }
 
 Grammar* DOMBuilderImpl::getRootGrammar() const

@@ -117,9 +117,7 @@ bool XercesDOMParser::isUsingCachedGrammarInParse() const
 
 Grammar* XercesDOMParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    XMLSchemaDescription* gramDesc = getGrammarResolver()->getGrammarPool()->createSchemaDescription(nameSpaceKey);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    return getGrammarResolver()->getGrammar(gramDesc);
+    return getGrammarResolver()->getGrammar(nameSpaceKey);
 }
 
 Grammar* XercesDOMParser::getRootGrammar()

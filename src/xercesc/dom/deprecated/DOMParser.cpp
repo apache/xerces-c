@@ -262,9 +262,7 @@ bool DOMParser::isUsingCachedGrammarInParse() const
 
 Grammar* DOMParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpaceKey);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    return fGrammarResolver->getGrammar(gramDesc);
+    return fGrammarResolver->getGrammar(nameSpaceKey);
 }
 
 Grammar* DOMParser::getRootGrammar()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2003/07/31 17:05:48  peiyongz
+ * using getGrammar(URI)
+ *
  * Revision 1.24  2003/07/10 19:48:24  peiyongz
  * Stateless Grammar: Initialize scanner with grammarResolver,
  *
@@ -1715,9 +1718,7 @@ void SAX2XMLReaderImpl::resetCachedGrammarPool()
 
 Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpaceKey);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    return fGrammarResolver->getGrammar(gramDesc);
+    return fGrammarResolver->getGrammar(nameSpaceKey);
 }
 
 
