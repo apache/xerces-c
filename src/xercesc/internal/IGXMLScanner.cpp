@@ -564,10 +564,6 @@ void IGXMLScanner::commonInit()
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    /***
-       todo: to auto sense if grammar has ic or not, probably do it
-             at reset() or parse()
-    ***/
     fICHandler = new (fMemoryManager) IdentityConstraintHandler(this, fMemoryManager);
 
     // Create schemaLocation pair info

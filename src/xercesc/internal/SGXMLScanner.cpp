@@ -2106,10 +2106,6 @@ void SGXMLScanner::commonInit()
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    /***
-       todo: to auto sense if grammar has ic or not, probably do it
-             at reset() or parse()
-    ***/
     fICHandler = new (fMemoryManager) IdentityConstraintHandler(this, fMemoryManager);
 
     //  Add the default entity entries for the character refs that must always

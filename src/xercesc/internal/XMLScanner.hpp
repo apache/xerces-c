@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2004/04/13 18:57:54  peiyongz
+ * Unrelavant comment removal
+ *
  * Revision 1.34  2004/04/13 16:56:58  peiyongz
  * IdentityConstraintHandler
  *
@@ -801,10 +804,6 @@ protected:
     //  fValidationConstraintFatal
     //      This indicates whether we treat validation constraint errors as
     //      fatal errors or not. It defaults to false, but it can be changed.
-    //
-    //  fValidateConstraint
-    //      This indicates whether we perform identity constraint validation.
-    //      It defaults to false, but it can be changed.
     //
     //  fIDRefList
     //      This is a list of XMLRefInfo objects. This member lets us do all
