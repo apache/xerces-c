@@ -313,6 +313,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLCanRepGroup.obj"
 	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
@@ -400,37 +401,6 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -504,6 +474,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLEBCDICTranscoder.obj" \
 	"$(INTDIR)\XMLException.obj" \
 	"$(INTDIR)\XMLFloat.obj" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
@@ -639,6 +610,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StringDatatypeValidator.obj" \
 	"$(INTDIR)\TimeDatatypeValidator.obj" \
 	"$(INTDIR)\UnionDatatypeValidator.obj" \
+	"$(INTDIR)\XMLCanRepGroup.obj" \
 	"$(INTDIR)\YearDatatypeValidator.obj" \
 	"$(INTDIR)\YearMonthDatatypeValidator.obj" \
 	"$(INTDIR)\DTDAttDef.obj" \
@@ -782,8 +754,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res" \
-	"$(INTDIR)\XMLIBM1047Transcoder.obj"
+	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_4_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -1073,6 +1044,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLCanRepGroup.obj"
 	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
@@ -1161,37 +1133,6 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -1265,6 +1206,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLEBCDICTranscoder.obj" \
 	"$(INTDIR)\XMLException.obj" \
 	"$(INTDIR)\XMLFloat.obj" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
@@ -1400,6 +1342,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StringDatatypeValidator.obj" \
 	"$(INTDIR)\TimeDatatypeValidator.obj" \
 	"$(INTDIR)\UnionDatatypeValidator.obj" \
+	"$(INTDIR)\XMLCanRepGroup.obj" \
 	"$(INTDIR)\YearDatatypeValidator.obj" \
 	"$(INTDIR)\YearMonthDatatypeValidator.obj" \
 	"$(INTDIR)\DTDAttDef.obj" \
@@ -1543,8 +1486,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res" \
-	"$(INTDIR)\XMLIBM1047Transcoder.obj"
+	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_4_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -1834,6 +1776,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLCanRepGroup.obj"
 	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
@@ -1922,37 +1865,6 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -2026,6 +1938,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLEBCDICTranscoder.obj" \
 	"$(INTDIR)\XMLException.obj" \
 	"$(INTDIR)\XMLFloat.obj" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
@@ -2161,6 +2074,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StringDatatypeValidator.obj" \
 	"$(INTDIR)\TimeDatatypeValidator.obj" \
 	"$(INTDIR)\UnionDatatypeValidator.obj" \
+	"$(INTDIR)\XMLCanRepGroup.obj" \
 	"$(INTDIR)\YearDatatypeValidator.obj" \
 	"$(INTDIR)\YearMonthDatatypeValidator.obj" \
 	"$(INTDIR)\DTDAttDef.obj" \
@@ -2304,8 +2218,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res" \
-	"$(INTDIR)\XMLIBM1047Transcoder.obj"
+	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_4_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -2594,6 +2507,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLCanRepGroup.obj"
 	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
@@ -2682,37 +2596,6 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -2786,6 +2669,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLEBCDICTranscoder.obj" \
 	"$(INTDIR)\XMLException.obj" \
 	"$(INTDIR)\XMLFloat.obj" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
@@ -2921,6 +2805,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StringDatatypeValidator.obj" \
 	"$(INTDIR)\TimeDatatypeValidator.obj" \
 	"$(INTDIR)\UnionDatatypeValidator.obj" \
+	"$(INTDIR)\XMLCanRepGroup.obj" \
 	"$(INTDIR)\YearDatatypeValidator.obj" \
 	"$(INTDIR)\YearMonthDatatypeValidator.obj" \
 	"$(INTDIR)\DTDAttDef.obj" \
@@ -3064,8 +2949,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res" \
-	"$(INTDIR)\XMLIBM1047Transcoder.obj"
+	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_4_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -3073,6 +2957,36 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -4472,6 +4386,12 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\TimeDatatypeValidator.cpp
 SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\UnionDatatypeValidator.cpp
 
 "$(INTDIR)\UnionDatatypeValidator.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp
+
+"$(INTDIR)\XMLCanRepGroup.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
