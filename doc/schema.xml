@@ -1,70 +1,25 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 <s1 title="Schema">
-       <s2 title="Disclaimer">
-               <p>Schema is not fully supported in &XercesCName; yet.  But an
-               experimental implementation of a subset of the W3C XML
-               Schema language is now available for review in &XercesCName; &XercesCVersion;.
-               You should not consider this implementation complete or
-		correct. The limitations of this implementation are
-		detailed below.  Please read this document before using
-		&XercesCName; &XercesCVersion;.
-               </p>
-       </s2>
        <s2 title="Introduction">
-               <p>The &XercesCName; &XercesCVersion; contains an implementation
-               of a subset of the W3C XML Schema Language as specified
-               in the 2 May 2001 Recommendation for <jump
-               href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
-               and <jump href="http://www.w3.org/TR/xmlschema-2/">
-               Datatypes</jump>. The parsers contained in this package are
-               able to read and validate XML documents with the grammar specified
-               in either DTD or XML Schema format.
+               <p>This package contains an implementation of the W3C XML Schema
+                 Language, a recommendation of the Worldwide Web Consortium
+                 available in three parts:
+                 <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
+                 <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
+                 <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
+                 We consider this implementation complete except for the limitations cited below.
                </p>
-               <p>We intend to update this package until it implements all
-               the functionality of the current XML Schema Recommendation.
-               If you are interested in a particular unimplemented feature, or
-               if you have any feedback on the implementation design,
-               we welcome your input to the <jump href="mailto:&XercesCEmailAddress;">
-               Xerces-C mailing list &XercesCEmailAddress; </jump> .
+
+               <p>We would very much appreciate feedback on the package via the Xerces-C mailing list
+                 <jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress; </jump>, and we
+                 encourage the submission of bugs as described in
+                 <jump href="http://xml.apache.org/xerces-c/bug-report.html">Bug-Reporting</jump> page.
+                 Please read this document before using this package.
                </p>
        </s2>
        <anchor name="limitation"/>
        <s2 title="Limitations">
-               <p>The XML Schema implementation in the &XercesCName; &XercesCVersion; is a
-               subset of the features defined in the 2 May 2001 XML Schema Recommendation.
-               </p>
-       </s2>
-
-       <s2 title='Features/Datatypes Not Supported'>
-               <ul>
-                       <li>Identity Constraints</li>
-                       <li>Particle Derivation Constraint Checking </li>
-                       <li>Built-in Datatypes Not Supported</li>
-                       <ul>
-                                <li>Primitive Datatypes</li>
-                                <ul>
-                                      <li>duration</li>
-                                      <li>dateTime</li>
-                                      <li>time</li>
-                                      <li>date</li>
-                                      <li>gYearMonth</li>
-                                      <li>gYear</li>
-                                      <li>gMonthDay</li>
-                                      <li>gDay</li>
-                                      <li>gMonth</li>
-                                </ul>
-                       </ul>
-               </ul>
-
-
-               <p>Development is ongoing and we target to implement all the features of the
-               current XML Schema Recommendation before end of this year. Please note that
-               the date is tentative and subject to change.
-               </p>
-       </s2>
-
-       <s2 title="Other Limitations">
          <ul>
             <li>No interface is provided for exposing the post-schema
             validation infoset , beyond
@@ -85,34 +40,12 @@
             in the parser.  Large values for <code>minOccurs</code> should be
             avoided, and <code>unbounded</code> should be used instead of
             a large value for <code>maxOccurs</code>.</li>
-            <li>The parsers contained in this package are able to read and
-            validate XML documents with the grammar specified in either
-            DTD or XML Schema format, but not both.</li>
-            <li>The schema is specified by the xsi:schemaLocation or
-            xsi:noNamespaceSchemaLocation attribute on the root
-            element of the document. The xsi prefix must be bound to the
-            Schema document instance namespace, as specified by the
-            Recommendation. See the sample provided in the
-            Usage section.</li>
          </ul>
        </s2>
 
        <anchor name="usage"/>
        <s2 title="Usage">
-               <p>XML document specifies the XML Schema grammar location in the
-               xsi:schemaLocation attribute attached to the root / top-level element.
-               Here is an example with no target namspace:
-               </p>
-<source>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:noNamespaceSchemaLocation='personal.xsd'&gt;
-...
-&lt;/personnel&gt;
-</source>
-               <p>Please see the sample file, 'samples/data/personal-schema.xml' for
-               further detail.  And review the sample file 'samples/data/personal.xsd'
-               for an example of an XML Schema grammar.
-               </p>
+
                <p>Here is an example how to turn on schema processing in DOMParser
                (default is off).  Note that you must also turn on namespace support
                (default is off) for schema processing.
@@ -134,5 +67,85 @@ parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces"
 parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), true);
 parser->parse(xmlFile);
 </source>
+               <p>Review the sample file, 'samples/data/personal-schema.xml' and
+               'samples/data/personal.xsd' for an example of an XML Schema grammar.
+               </p>
+       </s2>
+
+       <anchor name="associate"/>
+       <s2 title="Assocating Schema Grammar with instance document">
+               <p>Schema grammars can be associated with instance documents in two ways.
+               </p>
+
+               <s3 title="Specifying Schema Grammar through method calls:">
+               <p>An application developer may use the methods <code>setExternalSchemaLocation</code>
+                if they use namespaces, and <code>setExternalNoNamespaceSchemaLocation</code> otherwise
+                to associate schemas with instance documents.
+                (For SAX2XMLReader, use the properites:
+                "http://apache.org/xml/properties/schema/external-schemaLocation" and
+                "http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation")
+               </p>
+               <p>Here is an example with no target namspace:
+               </p>
+<source>
+// Instantiate the DOM parser.
+DOMParser parser;
+parser.setDoNamespaces(true);
+parser.setDoSchema(true);
+parser.setExternalNoNamespaceSchemaLocation("personal.xsd");
+parser.parse("test.xml");
+
+// Instantiate the SAX2 XMLReader.
+SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+parser->setProperty(
+       XMLString::transcode("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"),
+       XMLString transcode("personal.xsd"));
+parser.parse("test.xml");
+</source>
+
+               <p>Here is an example with a target namespace. Note that it is an error to specify a
+                different namespace than the target namespace defined in the Schema.
+               </p>
+<source>
+// Instantiate the DOM parser.
+DOMParser parser;
+parser.setDoNamespaces(true);
+parser.setDoSchema(true);
+parser.setExternalSchemaLocation("http://my.com personal.xsd http://my2.com test2.xsd");
+parser.parse("test.xml");
+
+// Instantiate the SAX2 XMLReader.
+SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+parser->setProperty(
+       XMLString::transcode("http://apache.org/xml/properties/schema/external-SchemaLocation"),
+       XMLString transcode("http://my.com personal.xsd http://my2.com test2.xsd"));
+parser.parse("test");
+</source>
+               </s3>
+               <s3 title="Specifying Schema Grammar through attributes in the instance document:">
+               <p>If schema grammar was not specified externally through methods,
+                then each instance document that uses XML Schema grammars must specify the location of
+                the grammars it uses by using an xsi:schemaLocation attribute if they use
+                namespaces, and xsi:noNamespaceSchemaLocation attribute otherwise.
+               </p>
+               <p>Here is an example with no target namspace:
+               </p>
+<source>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='personal.xsd'&gt;
+...
+&lt;/personnel&gt;
+</source>
+               <p>Here is an example with a target namespace. Note that it is an error to specify a
+                different namespace than the target namespace defined in the Schema.
+               </p>
+<source>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;personnel xmlns="http://my.com"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://my.com personal.xsd"&gt;
+...
+&lt;/personnel&gt;
+</source>
+               </s3>
        </s2>
 </s1>
