@@ -56,6 +56,9 @@
 
  /**
   * $Log$
+  * Revision 1.6  2000/02/16 23:03:48  roddey
+  * More documentation updates
+  *
   * Revision 1.5  2000/02/16 21:42:58  aruna1
   * API Doc++ summary changes in
   *
@@ -135,7 +138,8 @@ public:
     /** @name Error Handler interface */
     //{@
 
-    /**
+    /** Called to report errors from the scanner or validator
+      *
       * This method is called back on by the scanner or validator (or any other
       * internal parser component which might need to report an error in the
       * future.) It contains all the information that the client code might
@@ -181,7 +185,8 @@ public:
         , const unsigned int        colNum
     ) = 0;
 
-    /**
+    /** Called before a new parse event to allow the handler to reset
+      *
       * This method is called by the scanner before a new parse event is
       * about to start. It gives the error handler a chance to reset its
       * internal state.

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/16 23:03:48  roddey
+ * More documentation updates
+ *
  * Revision 1.4  2000/02/16 21:42:58  aruna1
  * API Doc++ summary changes in
  *
@@ -111,10 +114,9 @@ public:
       */
     XMLEntityDecl();
 
-    /**
-      *  Constructor with a const entity name
+    /** Constructor with a const entity name
       *
-      *  @param  entName   The new name to give to this entity.
+      * @param  entName The new name to give to this entity.
       */
     XMLEntityDecl
     (
@@ -122,10 +124,10 @@ public:
     );
     
     /**
-      *  Constructor with a const entity name and value
+      * Constructor with a const entity name and value
       *
-      *  @param  entName   The new name to give to this entity.
-      *  @param  value    The new value to give to this entity name.
+      * @param  entName The new name to give to this entity.
+      * @param  value   The new value to give to this entity name.
       */
     XMLEntityDecl
     (
@@ -134,10 +136,10 @@ public:
     );
 
     /**
-      *  Constructor with a const entity name and single XMLCh value
+      * Constructor with a const entity name and single XMLCh value
       *
-      *  @param  entName   The new name to give to this entity.
-      *  @param  value    The new value to give to this entity name.
+      * @param  entName The new name to give to this entity.
+      * @param  value   The new value to give to this entity name.
       */
     XMLEntityDecl
     (
@@ -150,7 +152,7 @@ public:
     //@{
 
     /**
-      *  Deafult destructor
+      *  Default destructor
       */
     virtual ~XMLEntityDecl();
 
@@ -164,7 +166,8 @@ public:
     /** @name The pure virtual methods in this interface. */
     //@{
 
-    /**
+    /** Get the 'declared in internal subset' flag
+      *
       * Gets the state of the flag which indicates whether the entity was
       * declared in the internal or external subset. Some structural 
       * description languages might not have an internal subset concept, in
@@ -172,13 +175,15 @@ public:
       */
     virtual bool getDeclaredInIntSubset() const = 0;
 
-    /**
+    /** Get the 'is parameter entity' flag
+      *
       * Gets the state of the flag which indicates whether this entity is
       * a parameter entity. If not, then its a general entity.
       */
     virtual bool getIsParameter() const = 0;
 
-    /**
+    /** Get the 'is special char entity' flag
+      *
       * Gets the state of the flag that indicates whether this entity is
       * one of the special, intrinsically supported character entities.
       */

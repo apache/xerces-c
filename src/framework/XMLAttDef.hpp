@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/16 23:03:48  roddey
+ * More documentation updates
+ *
  * Revision 1.3  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -77,7 +80,8 @@
 
 class XMLAttr;
 
-/**
+/** Represents the core information of an atribute definition
+ *
  *  This class defines the basic characteristics of an attribute, no matter
  *  what type of validator is used. If a particular schema associates more
  *  information with an attribute it will create a derivative of this class.
@@ -88,6 +92,11 @@ class XMLAttr;
  *  attribute name, by providing a getKey() method to extract the key string.
  *  getKey(), in this case, just calls the virtual method getFullName() to
  *  get the fully qualified name, as defined by the derived class.
+ *
+ *  Note that the 'value' of an attribute type definition is the default or
+ *  of fixed value given to it in its definition. If the attribute is of the
+ *  enumerated or notation type, it will have an 'enumeration value' as well
+ *  which is a space separated list of its possible vlaues.
  */
 class XMLPARSER_EXPORT XMLAttDef
 {
@@ -145,8 +154,35 @@ public:
     // -----------------------------------------------------------------------
     //  Public, static methods
     // -----------------------------------------------------------------------
+
+    /** @name Public, static methods */
+    //{@
+
+    /** Get a string representation of the passed attribute type enum
+      *
+      * This method allows you to get a textual representation of an attriubte
+      * type, mostly for debug or display.
+      *
+      * @param attrType The attribute type value to get the string for.
+      *
+      * @return A const pointer to the static string that holds the text 
+      *         description of the passed type.
+      */
     static const XMLCh* getAttTypeString(const AttTypes attrType);
+
+    /** Get a string representation of the passed def attribute type enum
+      *
+      * This method allows you to get a textual representation of an default
+      * attributetype, mostly for debug or display.
+      *
+      * @param attrType The default attribute type value to get the string for.
+      *
+      * @return A const pointer to the static string that holds the text 
+      *         description of the passed default type.
+      */
     static const XMLCh* getDefAttTypeString(const DefAttTypes attrType);
+
+    //@}
 
 
     // -----------------------------------------------------------------------
@@ -155,43 +191,195 @@ public:
 
     /** @name Destructor */
     //@{
+
+    /**
+      *  Destructor
+      */
     virtual ~XMLAttDef();
     //@}
 
 
     // -----------------------------------------------------------------------
-    //  Support named pool element semantics
-    // -----------------------------------------------------------------------
-    const XMLCh* getKey() const;
-
-
-    // -----------------------------------------------------------------------
     //  The virtual attribute def interface
     // -----------------------------------------------------------------------
+
+    /** @name Virtual interface */
+    //{@
+
+    /** Get the full name of this attribute type
+      *
+      * The derived class should return a const pointer to the full name of
+      * this attribute. This will vary depending on the type of validator in
+      * use.
+      *
+      * @return A const pointer to the full name of this attribute type.
+      */
     virtual const XMLCh* getFullName() const = 0;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+
+    /** @name Getter methods */
+    //{@
+
+    /** Get the default type of this attribute type
+      *
+      * This method returns the 'default type' of the attribute. Default
+      * type in this case refers to the XML concept of a default type for
+      * an attribute, i.e. #FIXED, #IMPLIED, etc...
+      *
+      * @return The default type enum for this attribute type.
+      */
     DefAttTypes getDefaultType() const;
+
+    /** Get the enumeration value (if any) of this attribute type
+      *
+      * If the attribute is of an enumeration or notatin type, then this
+      * method will return a const reference to a string that contains the
+      * space separated values that can the attribute can have.
+      *
+      * @return A const pointer to a string that contains the space separated
+      *         legal values for this attribute.
+      */
     const XMLCh* getEnumeration() const;
+
+    /** Get the pool id of this attribute type
+      *
+      * This method will return the id of this attribute in the validator's
+      * attribute pool. It was set by the validator when this attribute was
+      * created.
+      *
+      * @return The pool id of this attribute type.
+      */
     unsigned int getId() const;
+
+    /** Support keyed collections for attribute types
+      *
+      * This method allows this class to meet the standard semantics for some
+      * commnly used internal hashed or keyed collection classes. What it
+      * returns depends upon the derived class because it is just an inline
+      * passthrough to getFullName().
+      *
+      * @return A const pointer to the string that makes up the collection
+      *         key for instances of this object.
+      */
+    const XMLCh* getKey() const;
+
+    /** Query whether the attribute was explicitly provided.
+      *
+      * When the scanner scans a start tag, it will ask the element decl
+      * object of the element type of that start tag to clear the 'provided'
+      * flag on all its attributes. As the scanner sees explicitly provided
+      * attributes, its turns on this flag to indicate that this attribute
+      * has been provided. In this way, the scanner can catch duplicated
+      * attributes and required attributes that aren't provided, and default
+      * in fixed/default valued attributes that are not explicitly provided.
+      *
+      * @return Returns a boolean value that indicates whether this attribute
+      *         was explicitly provided.
+      */
     bool getProvided() const;
+
+    /** Get the type of this attribute
+      *
+      * Gets the type of this attribute. This type is represented by an enum
+      * that convers the types of attributes allowed by XML, e.g. CDATA, NMTOKEN,
+      * NOTATION, etc...
+      *
+      * @return The attribute type enumeration value for this type of
+      *         attribute.
+      */
     AttTypes getType() const;
+
+    /** Get the default/fixed value of this attribute (if any.)
+      *
+      * If the attribute defined a default/fixed value, then it is stored
+      * and this method will retrieve it. If it has non, then a null pointer
+      * is returned.
+      *
+      * @return A const pointer to the default/fixed value for this attribute
+      *         type.
+      */
     const XMLCh* getValue() const;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+
+    /** @name Setter methods */
+    //{@
+
+    /** Set the default attribute type
+      *
+      * This method sets the default attribute type for this attribute.
+      * This setting controls whether the attribute is required, fixed,
+      * implied, etc...
+      * 
+      * @param  The new default attribute to set
+      */
     void setDefaultType(const XMLAttDef::DefAttTypes newValue);
+
+    /** Set the pool id for this attribute type.
+      *
+      * This method sets the pool id of this attribute type. This is usually
+      * called by the validator that creates the actual instance (which is of
+      * a derived type known only by the validator.)
+      *
+      * @param  The new pool id to set.
+      */
     void setId(const unsigned int newId);
+
+    /** Set or clear the 'provided' flag.
+      *
+      * This method will set or clear the 'provided' flag. This is called
+      * by the scanner as it is scanning a start tag and marking off the
+      * attributes that have been explicitly provided.
+      *
+      * @param  The new provided state to set
+      */
     void setProvided(const bool newValue);
+
+    /** Set the type of this attribute type.
+      *
+      * This method will set the type of the attribute. The type of an attribute
+      * controls how it is normalized and what kinds of characters it can hold.
+      *
+      * @param  The new attribute type to set
+      */
     void setType(const XMLAttDef::AttTypes newValue);
+
+    /** Set the default/fixed value of this attribute type.
+      *
+      * This method set the fixed/default value for the attribute. This value
+      * will be used when instances of this attribute type are faulted in. It
+      * <b>must</b> be a valid value for the type set by setType(). If the
+      * type is enumeration or notation, this must be one of the valid values
+      * set in the setEnumeration() call.
+      *
+      * @param  The new fixed/default value to set.
+      */
     void setValue(const XMLCh* const newValue);
+
+    /** Set the enumerated value of this attribute type.
+      *
+      * This method sets the enumerated/notation value list for this attribute
+      * type. It is a space separated set of possible values. These values must
+      * meet the constrains of the XML spec for such values of this type of
+      * attribute. This should only be set if the setType() method is used to
+      * set the type to the enumeration or notation types.
+      *
+      * @param  The new enumerated/notation value list to set.
+      */
     void setEnumeration(const XMLCh* const newValue);
 
+    //@}
 
 protected :
     // -----------------------------------------------------------------------
