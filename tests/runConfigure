@@ -58,6 +58,10 @@
 # 
 #
 # $Log$
+# Revision 1.4  2000/02/29 02:19:11  rahulj
+# No more compilation errors under HPUX 11.0. We do not build
+# DOMMemTest as it crashes the aCC compiler.
+#
 # Revision 1.3  2000/02/26 07:20:18  rahulj
 #  - The threading tests now work on HPUX.
 #  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
@@ -188,7 +192,7 @@ case $cppcompiler in
        standardLibFlags="-L/usr/lib -L/usr/ccs/lib -lC";;
 
    acc | aCC)
-       standardLibFlags="-L/usr/lib -L/opt/aCC/lib -lC";;
+       standardLibFlags="";;
 
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/29 02:19:13  rahulj
+ * No more compilation errors under HPUX 11.0. We do not build
+ * DOMMemTest as it crashes the aCC compiler.
+ *
  * Revision 1.7  2000/02/06 07:48:36  rahulj
  * Year 2K copyright swat.
  *
@@ -99,6 +103,10 @@
  
 /**
  * $Log$
+ * Revision 1.8  2000/02/29 02:19:13  rahulj
+ * No more compilation errors under HPUX 11.0. We do not build
+ * DOMMemTest as it crashes the aCC compiler.
+ *
  * Revision 1.7  2000/02/06 07:48:36  rahulj
  * Year 2K copyright swat.
  *
@@ -319,7 +327,8 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
 
     DTest make;
     DOM_Notation docNotation = make.createNotation(doc, "ourNotationNode");
-    DOM_DocumentType docType = (DOM_DocumentType &)doc.getFirstChild();
+    DOM_Node abc1 = doc.getFirstChild();
+    DOM_DocumentType docType = (DOM_DocumentType &) abc1;
     docType.getNotations().setNamedItem(docNotation);
     
     DOM_DocumentFragment docDocFragment = doc.createDocumentFragment();
@@ -331,9 +340,12 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
     DOM_Text docNode3 = doc.createTextNode(name + "docTextNode3");
     DOM_Text docNode4 = doc.createTextNode(name + "docTextNode4");
     
-    DOM_Entity docEntity = (DOM_Entity &) doc.getDoctype().getEntities().getNamedItem("ourEntityNode"); // Get the DOM_Entity node
-    DOM_DocumentType docDocType = (DOM_DocumentType &) doc.getFirstChild(); // Get the DOM_DocumentType node
-    DOM_EntityReference & entityReferenceText = (DOM_EntityReference &) doc.getLastChild().getLastChild().getLastChild().getFirstChild();
+    DOM_Node  abc2 =  doc.getDoctype().getEntities().getNamedItem("ourEntityNode"); // Get the DOM_Entity node
+    DOM_Entity docEntity = (DOM_Entity &) abc2;
+    DOM_Node  abc3 = doc.getFirstChild(); // Get the DOM_DocumentType node
+    DOM_DocumentType docDocType = (DOM_DocumentType &) abc3;
+    DOM_Node  abc4 = doc.getLastChild().getLastChild().getLastChild().getFirstChild();
+    DOM_EntityReference & entityReferenceText = (DOM_EntityReference &) abc4;
     DOM_Text entityReferenceText2 = doc.createTextNode("entityReferenceText information");
 //************************************************* ERROR TESTS
     DTest tests;
@@ -843,7 +855,8 @@ void DTest::testCharacterData(DOM_Document document)
     DOMString compareData, newData, resetData;
     bool OK = true;
 // For debugging*****   printf("\n          testCharacterData's outputs:\n");
-    charData = (DOM_CharacterData &) document.getDocumentElement().getElementsByTagName("dBodyLevel31").item(0).getFirstChild(); // charData gets textNode11
+    DOM_Node abc1 = document.getDocumentElement().getElementsByTagName("dBodyLevel31").item(0).getFirstChild(); // charData gets textNode11
+    charData = (DOM_CharacterData &) abc1;
     compareData = "dBodyLevel31'sChildTextNode11";
     if (!compareData.equals(charData.getData()))
     {
@@ -947,8 +960,9 @@ void DTest::testCharacterData(DOM_Document document)
     
 
 //!! Throws NO_MODIFICATION_ALLOWED_ERR ******** 
-    DOM_Text node = (DOM_Text &)document.getDocumentElement().getElementsByTagName("dBodyLevel24").
+    DOM_Node abc8 = document.getDocumentElement().getElementsByTagName("dBodyLevel24").
         item(0).getFirstChild().getChildNodes().item(0); // node gets ourEntityReference node's child text
+    DOM_Text node = (DOM_Text &) abc8;
 
     EXCEPTIONSTEST(node.appendData("new data"), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 112 );
     EXCEPTIONSTEST(node.deleteData(5, 10), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 113 );
@@ -1279,7 +1293,8 @@ void DTest::testDocumentType(DOM_Document document)
     }
      // Deep clone test comparison is in testNode & testDocument
 
-    docType = (DOM_DocumentType &) document.getFirstChild();
+    DOM_Node  abc9 = document.getFirstChild();
+    docType = (DOM_DocumentType &) abc9;
     compare = "ourEntityNode";
     docEntityMap = docType.getEntities();
     if (! compare.equals(docEntityMap.item(0).getNodeName()))
@@ -1295,7 +1310,8 @@ void DTest::testDocumentType(DOM_Document document)
         OK = false;
     }
     //  doc.appendChild(newDocumentTypeImpl);//!! Throws a HIERARCHY_REQUEST_ERR    ******* 
-    holdDocType = (DOM_DocumentType &) document.removeChild(document.getFirstChild()); //Tests removeChild and stores removed branch for tree reconstruction
+    DOM_Node abc10 = document.removeChild(document.getFirstChild()); //Tests removeChild and stores removed branch for tree reconstruction
+    holdDocType = (DOM_DocumentType &) abc10;
     document.insertBefore(newDocumentType, document.getDocumentElement());
     //** Other aspects of insertBefore are tested in docBuilder through appendChild*
 
@@ -1490,7 +1506,8 @@ void DTest::testElement(DOM_Document document)
 
     // Fetch the newly added attribute node back out of from the named node map,
     //  and check that we are returned the same node that we put in.
-    DOM_Attr fetchedAttr = (DOM_Attr &)nodeMap.getNamedItem("AnotherFirstElementAttribute");
+    DOM_Node abc12 = nodeMap.getNamedItem("AnotherFirstElementAttribute");
+    DOM_Attr fetchedAttr = (DOM_Attr &) abc12;
     if (fetchedAttr != newAttributeNode)
     {       
         printf("DOM_Element Tests Failure 003\n");
@@ -1524,8 +1541,11 @@ void DTest::testElement(DOM_Document document)
         }       
     //  printf("docElement's number " + i + " is: " + n.getNodeName());
     }
-    element = (DOM_Element &) document.getElementsByTagName("dBodyLevel21").item(0); // element gets DOM_Element test BodyLevel21 
-    element2 = (DOM_Element &) document.getElementsByTagName("dBodyLevel31").item(0); // element2 gets DOM_Element test BodyLevel31 
+    DOM_Node abc15 = document.getElementsByTagName("dBodyLevel21").item(0); // element gets DOM_Element test BodyLevel21 
+    element = (DOM_Element &) abc15;
+
+    DOM_Node abc16 = document.getElementsByTagName("dBodyLevel31").item(0); // element2 gets DOM_Element test BodyLevel31 
+    element2 = (DOM_Element &) abc16;
     DOM_NodeList text = ((DOM_Node &) element2).getChildNodes();
     int textSize = text.getLength();
     int j;
@@ -1589,7 +1609,8 @@ void DTest::testEntity(DOM_Document document)
     bool OK = true;
     DOMString compare;
 // For debugging*****   printf("\n          testEntity's outputs:\n\n");
-    entity = (DOM_Entity &) document.getDoctype().getEntities().getNamedItem("ourEntityNode");
+    DOM_Node abc20 = document.getDoctype().getEntities().getNamedItem("ourEntityNode");
+    entity = (DOM_Entity &) abc20;
     node = entity;
     node2 = entity.cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
@@ -1645,7 +1666,8 @@ void DTest::testEntityReference(DOM_Document document)
     DOM_Node node, node2;
     bool OK = true;
 // For debugging*****   printf("\n          testEntityReference's outputs:\n");
-    entityReference = (DOM_EntityReference &) document.getLastChild().getLastChild().getLastChild().getFirstChild();
+    DOM_Node abc30 = document.getLastChild().getLastChild().getLastChild().getFirstChild();
+    entityReference = (DOM_EntityReference &) abc30;
     node = entityReference;
     node2 = node.cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
@@ -1733,7 +1755,8 @@ void DTest::testNotation(DOM_Document document)
     bool OK = true;
     DOMString compare;
 // For debugging*****   printf("\n          testNotation's outputs:\n");
-    notation = (DOM_Notation &) document.getDoctype().getNotations().getNamedItem("ourNotationNode");
+	DOM_Node abc40 = document.getDoctype().getNotations().getNamedItem("ourNotationNode");
+    notation = (DOM_Notation &) abc40;
     node = notation;
     node2 = notation.cloneNode(true);//*****?
     // Check nodes for equality, both their name and value or lack thereof
@@ -1786,8 +1809,10 @@ void DTest::testPI(DOM_Document document)
     DOMString compare;
     bool OK = true;
 // For debugging*****   printf("\n          testPI's outputs:\n");
-    pI  = (DOM_ProcessingInstruction &) document.getDocumentElement().getFirstChild();// Get doc's DOM_ProcessingInstruction
-    pI2 = (DOM_ProcessingInstruction &)pI.cloneNode(true);//*****?
+	DOM_Node  abc50 = document.getDocumentElement().getFirstChild();// Get doc's DOM_ProcessingInstruction
+    pI  = (DOM_ProcessingInstruction &) abc50;
+	DOM_Node  abc51 = pI.cloneNode(true);//*****?
+    pI2 = (DOM_ProcessingInstruction &) abc51;
     // Check nodes for equality, both their name and value or lack thereof
     if (!(pI.getNodeName().equals(pI2.getNodeName()) &&         // Compares node names for equality
          (pI.getNodeValue() != null && pI2.getNodeValue() != null)  // Checks to make sure each node has a value node
@@ -1847,7 +1872,8 @@ void DTest::testText(DOM_Document document)
     DOMString compare;
     bool OK = true;
 // For debugging*****   printf("\n          testText's outputs:\n");
-    DOM_Element elem = (DOM_Element &)document.getDocumentElement().getElementsByTagName("dBodyLevel31").item(0);
+    DOM_Node abc70 = document.getDocumentElement().getElementsByTagName("dBodyLevel31").item(0);
+    DOM_Element elem = (DOM_Element &) abc70;
     node = elem.getFirstChild(); // charData gets textNode11
     text = (DOM_Text &) node;
     node2 = node.cloneNode(true);//*****?

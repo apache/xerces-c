@@ -267,7 +267,8 @@ static bool  processTestFile(DOMString fileName)
         fprintf(stderr, "Test file \"%s\" must have exactly one \"data\" element.\n", cFileName);
         return false;
     };
-    DOM_Element data = (DOM_Element &)nl.item(0);
+    DOM_Node tmpNode = nl.item(0);
+    DOM_Element data = (DOM_Element &) tmpNode;
 
 
     //
@@ -298,7 +299,9 @@ static bool  processTestFile(DOMString fileName)
         fprintf(stderr, "Test file \"%s\" must have exactly one \"udata\" element.\n", cFileName);
         return false;
     };
-    DOM_Element udata = (DOM_Element &)nl.item(0);
+
+	 DOM_Node tmpNode1 = nl.item(0);
+     DOM_Element udata = (DOM_Element &) tmpNode1;
 
     //
     //  Build up a string containing the character data contents of the udata element.
@@ -418,7 +421,8 @@ int main(int argc, char ** argv) {
     for (i=0; i<numFiles; i++)
     {
         ++gTestsRun;
-        DOMString fileName = ((DOM_Element &)list.item(i)).getAttribute("name");
+		DOM_Node tmpNode3 = list.item(i);
+        DOMString fileName = ((DOM_Element &) tmpNode3).getAttribute("name");
         if (processTestFile(fileName) == false)
             ++gTestsFailed;
     };

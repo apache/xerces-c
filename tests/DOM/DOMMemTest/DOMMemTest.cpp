@@ -66,6 +66,10 @@
 
 /**
  * $Log$
+ * Revision 1.17  2000/02/29 02:19:12  rahulj
+ * No more compilation errors under HPUX 11.0. We do not build
+ * DOMMemTest as it crashes the aCC compiler.
+ *
  * Revision 1.16  2000/02/17 21:56:02  andyh
  * Update to match W3C Dom Level 2 spec changes
  *
@@ -737,11 +741,13 @@ int  main()
         DOM_Notation    nt1 = doc.createNotation("Notation01");
         nt1.setPublicId("Notation01PublicId");
         notationMap.setNamedItem (nt1);
-        DOM_Notation    nt2 = (DOM_Notation &)notationMap.getNamedItem("Notation01");
+		DOM_Node  abc1 = notationMap.getNamedItem("Notation01");
+        DOM_Notation    nt2 = (DOM_Notation &) abc1;
         TASSERT(nt1==nt2);
         nt2 = DOM_Notation();
         nt1 = 0;
-        nt2 = (DOM_Notation &)notationMap.getNamedItem("Notation01");
+		DOM_Node abc6 = notationMap.getNamedItem("Notation01");
+        nt2 = (DOM_Notation &) abc6;
       
 
     }
@@ -909,7 +915,8 @@ int  main()
         DOMString s = root.getAttribute("CTestAttr");
         TASSERT(s.equals("CTestAttrValue"));
 
-        DOM_Element     cloned = (DOM_Element &)root.cloneNode(true);
+        DOM_Node abc2 = root.cloneNode(true);
+        DOM_Element     cloned = (DOM_Element &) abc2;
         DOM_Attr a = cloned.getAttributeNode("CTestAttr");
         TASSERT(a != 0);
         s = a.getValue();
