@@ -290,7 +290,7 @@ NodeImpl*  NodeImpl::getPreviousSibling()
 
 void *NodeImpl::getUserData()
 {
-    return userData;
+	return getOwnerDocument()->getUserData(this);
 };  
 
 
@@ -368,18 +368,18 @@ void NodeImpl::setReadOnly(bool readOnl, bool deep)
 }
 
 
-  void NodeImpl::setUserData(void * val)
-  {
-      userData = val;
-  };  
-  
-  
-  
-  DOMString NodeImpl::toString()
-  {
-      return DOMString("[")+getNodeName()+": "+getNodeValue()+"]";
-      // return getNodeName();
-  };    
+void NodeImpl::setUserData(void * val)
+{
+	getOwnerDocument()->setUserData(this, val);
+};  
+
+
+
+DOMString NodeImpl::toString()
+{
+	return DOMString("[")+getNodeName()+": "+getNodeValue()+"]";
+	// return getNodeName();
+};    
   
 //Introduced in DOM Level 2
   

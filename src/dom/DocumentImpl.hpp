@@ -119,6 +119,7 @@ private:
 
     NodeIterators               *iterators;
     TreeWalkers                 *treeWalkers;
+	RefHashTableOf<void>		*userData;
     friend class NodeIteratorImpl;
     friend class TreeWalkerImpl;
    	friend class DOMParser;
@@ -161,7 +162,12 @@ public:
     static  NodeIteratorImpl*   createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
     static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
     virtual XMLDeclImpl*        createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone);
+    virtual void*				getUserData();
+    virtual void				setUserData(void* value);
 
+	// helper functions to prevent storing userdata pointers on every node.
+    virtual void setUserData(NodeImpl* n, void* data);
+    virtual void* getUserData(NodeImpl* n);
 
     //Introduced in DOM Level 2
     virtual NodeImpl            *importNode(NodeImpl *source, bool deep);

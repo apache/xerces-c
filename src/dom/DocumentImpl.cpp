@@ -88,7 +88,7 @@
 #include "NodeIteratorImpl.hpp"
 #include "NodeIDMap.hpp"
 #include "DOM_Document.hpp"
-
+#include <util/HashPtr.hpp>
 
 DocumentImpl::DocumentImpl()
     : ParentNode(this)
@@ -99,6 +99,7 @@ DocumentImpl::DocumentImpl()
     iterators = 0L;
     treeWalkers = 0L;
     fNodeIDMap = 0;
+	userData = 0;
 
 };
 
@@ -119,6 +120,7 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     iterators = 0;
     treeWalkers = 0;
     fNodeIDMap = 0;
+	userData = 0;
 }
 
 void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
@@ -157,6 +159,8 @@ DocumentImpl::~DocumentImpl()
         delete treeWalkers;
     }
     
+	if (userData)
+		delete userData;
 
     delete namePool;
     // Do not delete docType and docElement pointers here.
@@ -742,4 +746,26 @@ bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
       int p=parent->getNodeType();
       int ch = child->getNodeType();
       return (kidOK[p] & 1<<ch) != 0;
-};
+}
+
+void DocumentImpl::setUserData(NodeImpl* n, void* data)
+{
+	if (!userData)
+		userData = new RefHashTableOf<void>(29, false, new HashPtr());
+	userData->put((void*)n,data);
+}
+
+void* DocumentImpl::getUserData(NodeImpl* n)
+{
+	return userData->get((void*)n);
+}
+
+void* DocumentImpl::getUserData()
+{
+	return getUserData(this);
+}
+
+void DocumentImpl::setUserData(void* val)
+{
+	setUserData(this, val);
+};  
