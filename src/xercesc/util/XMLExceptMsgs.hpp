@@ -402,9 +402,14 @@ public :
       , XSer_Inv_Buffer_Len                = 386
       , XSer_CreateObject_Fail             = 387
       , XSer_ObjCount_UppBnd_Exceed        = 388
-      , F_HighBounds                       = 389
-      , E_LowBounds                        = 390
-      , E_HighBounds                       = 391
+      , XSer_GrammarPool_Locked            = 389
+      , XSer_GrammarPool_Empty             = 390
+      , XSer_GrammarPool_NotEmpty          = 391
+      , XSer_StringPool_NotEmpty           = 392
+      , XSer_BinaryData_Version_NotSupported   = 393
+      , F_HighBounds                       = 394
+      , E_LowBounds                        = 395
+      , E_HighBounds                       = 396
     };
 
 };

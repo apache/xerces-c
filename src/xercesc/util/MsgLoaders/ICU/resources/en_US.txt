@@ -816,6 +816,11 @@ en_US {
 		"Invalid buffer length '{0}' " ,
 		"CreateObject fails  " ,
 		"Object count '{0}' exceed upper boundary '{1}' " ,
+		"Grammar Pool is locked by other party " ,
+		"Grammar Pool is empty " ,
+		"Grammar Pool is NOT empty " ,
+		"String Pool is NOT empty " ,
+		"Binary Data Version '{0}','{1}','{2}' not supported  " ,
 		"F_ End " ,
 		} 
 

@@ -799,6 +799,11 @@ $set 3
 386  Invalid buffer length '{0}'
 387  CreateObject fails 
 388  Object count '{0}' exceed upper boundary '{1}'
+389  Grammar Pool is locked by other party
+390  Grammar Pool is empty
+391  Grammar Pool is NOT empty
+392  String Pool is NOT empty
+393  Binary Data Version '{0}','{1}','{2}' not supported 
 
 
 $set 4
