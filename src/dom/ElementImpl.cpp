@@ -174,10 +174,10 @@ bool ElementImpl::isElementImpl()
 
 void ElementImpl::removeAttribute(const DOMString &nam)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-
+    if (getOwnerDocument()->getErrorChecking() && isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
     if (attributes != null)
     {    
     	AttrImpl *att = (AttrImpl *) attributes->getNamedItem(nam);
@@ -195,10 +195,10 @@ void ElementImpl::removeAttribute(const DOMString &nam)
 
 AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
+    if (getOwnerDocument()->getErrorChecking() && isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
     if (attributes != null)
     {
 	    AttrImpl *found = (AttrImpl *) attributes->getNamedItem(oldAttr->getName());
@@ -220,10 +220,10 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 
 AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
+    if (getOwnerDocument()->getErrorChecking() && isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
     AttrImpl* newAttr = (AttrImpl*)getAttributeNode(nam);
     if (!newAttr)
     {
@@ -243,10 +243,10 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 
 AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
+    if (getOwnerDocument()->getErrorChecking() && isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
     if (!(newAttr->isAttrImpl()))
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
 	if (attributes == 0)
@@ -297,10 +297,10 @@ DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName, const DOMString &fValue)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
+    if (getOwnerDocument()->getErrorChecking() && isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
     AttrImpl *newAttr =
       (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI,
                                                     qualifiedName);
@@ -320,10 +320,10 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
 void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
- 
+    if (getOwnerDocument()->getErrorChecking() && isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
     if (attributes != null)
     {   
 		AttrImpl *att =
@@ -347,14 +347,19 @@ AttrImpl *ElementImpl::getAttributeNodeNS(const DOMString &fNamespaceURI,
 
 AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
-    if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
-        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-	if (attributes == 0)
-		attributes = new AttrMapImpl(this, null);
+    if (getOwnerDocument()->getErrorChecking()) {
+        if (isReadOnly()) {
+            throw DOM_DOMException(
+                                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                                 null);
+        }
+        if (newAttr->getOwnerDocument() != this->getOwnerDocument()) {
+            throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+        }
+    }
+    if (attributes == 0) {
+        attributes = new AttrMapImpl(this, null);
+    }
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
     
     // This will throw INUSE if necessary

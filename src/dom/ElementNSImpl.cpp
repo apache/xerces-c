@@ -137,23 +137,28 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
     DOMString xmlns = NodeImpl::getXmlnsString();
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
 
-    if (isReadOnly())
-        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               null);
-    if(prefix != null && !DocumentImpl::isXMLName(prefix))
-        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-
-    if (namespaceURI == null)
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-
+    if (ownerDocument->getErrorChecking()) {
+        if (isReadOnly()) {
+            throw DOM_DOMException(
+                                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                                 null);
+        }
+        if (prefix != null && !DocumentImpl::isXMLName(prefix)) {
+            throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,
+                                   null);
+        }
+        if (namespaceURI == null) {
+            throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        }
+    }
     if (prefix == null || prefix.length() == 0) {
         name = localName;
         return;
     }
-
-    if (prefix.equals(xml) && !namespaceURI.equals(xmlURI))
+    if (ownerDocument->getErrorChecking() &&
+        (prefix.equals(xml) && !namespaceURI.equals(xmlURI))) {
         throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-
+    }
     const XMLCh *p = prefix.rawBuffer();
     for (int i = prefix.length(); --i >= 0;)
         if (*p++ == chColon)	//prefix is malformed

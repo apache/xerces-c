@@ -143,24 +143,29 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
     DOMString xmlns = NodeImpl::getXmlnsString();
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
 
-    if (isReadOnly())
-        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               null);
-    if (namespaceURI == null || localName.equals(xmlns))
-        throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-
-    if (prefix != null && !DocumentImpl::isXMLName(prefix))
-        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-
+    if (getOwnerDocument()->getErrorChecking()) {
+        if (isReadOnly()) {
+            throw DOM_DOMException(
+                                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                                 null);
+        }
+        if (namespaceURI == null || localName.equals(xmlns)) {
+            throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        }
+        if (prefix != null && !DocumentImpl::isXMLName(prefix)) {
+            throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,
+                                   null);
+        }
+    }
     if (prefix == null || prefix.length() == 0) {
         name = localName;
         return;
     }
-
-    if (prefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-        prefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
+    if (getOwnerDocument()->getErrorChecking() &&
+        (prefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
+         prefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))) {
         throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-
+    }
     const XMLCh *p = prefix.rawBuffer();
     for (int i = prefix.length(); --i >= 0;)
         if (*p++ == chColon)	//prefix is malformed

@@ -1310,16 +1310,6 @@ inline void DOMParser::startInputSource(const InputSource&)
 
 
 // ---------------------------------------------------------------------------
-//  DOMParser: Handlers for the XMLDocumentHandler interface
-// ---------------------------------------------------------------------------
-inline void DOMParser::endDocument()
-{
-    // Not used in DOM at this time
-}
-
-
-
-// ---------------------------------------------------------------------------
 //  DOMParser: Getter methods
 // ---------------------------------------------------------------------------
 inline DOM_Document DOMParser::getDocument()

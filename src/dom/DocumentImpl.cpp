@@ -101,9 +101,10 @@ DocumentImpl::DocumentImpl()
     iterators   = 0L;
     treeWalkers = 0L;
     fNodeIDMap  = 0;
-	userData    = 0;
+    userData    = 0;
     ranges      = 0;
     fChanges = 0;
+    errorChecking = true;
 };
 
 
@@ -123,9 +124,10 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     iterators   = 0;
     treeWalkers = 0;
     fNodeIDMap  = 0;
-	userData    = 0;
+    userData    = 0;
     ranges      = 0;
     fChanges = 0;
+    errorChecking = true;
 }
 
 void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
@@ -187,10 +189,12 @@ NodeImpl *DocumentImpl::cloneNode(bool deep) {
     DocumentImpl *newdoc = new DocumentImpl();
 
     // then the children by _importing_ them
-    if (deep)
+    if (deep) {
         for (ChildNode *n = firstChild; n != null; n = n->nextSibling) {
             newdoc->appendChild(newdoc->importNode(n, true));
 	}
+    }
+    newdoc->setErrorChecking(errorChecking);
     return newdoc;
 };
 
@@ -220,8 +224,9 @@ bool DocumentImpl::isDocumentImpl() {
 
 AttrImpl *DocumentImpl::createAttribute(const DOMString &nam)
 {
-    if(!isXMLName(nam))
+    if (errorChecking && !isXMLName(nam)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    }
     return new AttrImpl(this,nam);
 };
 
@@ -249,10 +254,9 @@ DocumentFragmentImpl *DocumentImpl::createDocumentFragment()
 
 DocumentTypeImpl *DocumentImpl::createDocumentType(const DOMString &nam)
 {
-    if (!isXMLName(nam))
-        throw DOM_DOMException(
-        DOM_DOMException::INVALID_CHARACTER_ERR, null);
-
+    if (errorChecking && !isXMLName(nam)) {
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
+    }
     return new DocumentTypeImpl(this, nam);
 };
 
@@ -263,10 +267,9 @@ DocumentTypeImpl *
                                      const DOMString &publicId,
                                      const DOMString &systemId)
 {
-    if (!isXMLName(qualifiedName))
-        throw DOM_DOMException(
-        DOM_DOMException::INVALID_CHARACTER_ERR, null);
-
+    if (errorChecking && !isXMLName(qualifiedName)) {
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
+    }
     return new DocumentTypeImpl(this, qualifiedName, publicId, systemId);
 };
 
@@ -274,8 +277,9 @@ DocumentTypeImpl *
 
 ElementImpl *DocumentImpl::createElement(const DOMString &tagName)
 {
-    if(!isXMLName(tagName))
+    if (errorChecking && !isXMLName(tagName)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    }
     DOMString pooledTagName = this->namePool->getPooledString(tagName);
     return new ElementImpl(this,pooledTagName);
 };
@@ -292,10 +296,9 @@ ElementImpl *DocumentImpl::createElement(const XMLCh *tagName)
 
 EntityImpl *DocumentImpl::createEntity(const DOMString &nam)
 {
-    if (!isXMLName(nam))
-        throw DOM_DOMException(
-        DOM_DOMException::INVALID_CHARACTER_ERR, null);
-
+    if (errorChecking && !isXMLName(nam)) {
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
+    }
     return new EntityImpl(this, nam);
 };
 
@@ -303,10 +306,9 @@ EntityImpl *DocumentImpl::createEntity(const DOMString &nam)
 
 EntityReferenceImpl *DocumentImpl::createEntityReference(const DOMString &nam)
 {
-    if (!isXMLName(nam))
-        throw DOM_DOMException(
-        DOM_DOMException::INVALID_CHARACTER_ERR, null);
-
+    if (errorChecking && !isXMLName(nam)) {
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
+    }
     return new EntityReferenceImpl(this, nam);
 };
 
@@ -314,10 +316,9 @@ EntityReferenceImpl *DocumentImpl::createEntityReference(const DOMString &nam)
 
 NotationImpl *DocumentImpl::createNotation(const DOMString &nam)
 {
-    if (!isXMLName(nam))
-        throw DOM_DOMException(
-        DOM_DOMException::INVALID_CHARACTER_ERR, null);
-
+    if (errorChecking && !isXMLName(nam)) {
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR, null);
+    }
     return new NotationImpl(this, nam);
 };
 
@@ -326,8 +327,9 @@ NotationImpl *DocumentImpl::createNotation(const DOMString &nam)
 ProcessingInstructionImpl *DocumentImpl::createProcessingInstruction(
                                           const DOMString &target, const DOMString &data)
 {
-    if(!isXMLName(target))
+    if (errorChecking && !isXMLName(target)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    }
     return new ProcessingInstructionImpl(this,target,data);
 };
 
@@ -415,13 +417,11 @@ DeepNodeListImpl *DocumentImpl::getElementsByTagName(const DOMString &tagname)
 NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
 {
     // Only one such child permitted
-    if(
-        (newChild->isElementImpl() && docElement!=null)
-        ||
-        (newChild->isDocumentTypeImpl() && docType!=null)
-        )
+    if (errorChecking &&
+        ((newChild->isElementImpl() && docElement!=null) ||
+         (newChild->isDocumentTypeImpl() && docType!=null))) {
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-
+    }
     ParentNode::insertBefore(newChild,refChild);
 
     // If insert succeeded, cache the kid appropriately
@@ -663,8 +663,9 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 ElementImpl *DocumentImpl::createElementNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName)
 {
-    if(!isXMLName(qualifiedName))
+    if (errorChecking && !isXMLName(qualifiedName)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    }
     //DOMString pooledTagName = this->namePool->getPooledString(qualifiedName);
     return new ElementNSImpl(this, fNamespaceURI, qualifiedName);
 }
@@ -673,8 +674,9 @@ ElementImpl *DocumentImpl::createElementNS(const DOMString &fNamespaceURI,
 AttrImpl *DocumentImpl::createAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName)
 {
-    if(!isXMLName(qualifiedName))
+    if (!isXMLName(qualifiedName)) {
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    }
     return new AttrNSImpl(this, fNamespaceURI, qualifiedName); 
 }
 

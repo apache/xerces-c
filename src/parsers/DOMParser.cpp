@@ -566,6 +566,15 @@ void DOMParser::startDocument()
     // Just set the document as the current parent and current node
     fCurrentParent = fDocument;
     fCurrentNode   = fDocument;
+    // set DOM error checking off
+    fDocument.setErrorChecking(false);
+}
+
+
+void DOMParser::endDocument()
+{
+    // set DOM error checking back on
+    fDocument.setErrorChecking(true);
 }
 
 

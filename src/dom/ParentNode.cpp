@@ -181,7 +181,9 @@ bool ParentNode::hasChildNodes()
 
 NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
  
-   if (newChild->isDocumentFragmentImpl()) {
+    bool errorChecking = ownerDocument->getErrorChecking();
+
+    if (newChild->isDocumentFragmentImpl()) {
         // SLOW BUT SAFE: We could insert the whole subtree without
         // juggling so many next/previous pointers. (Wipe out the
         // parent's child-list, patch the parent pointers, set the
@@ -199,12 +201,15 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 
         // No need to check kids for right-document; if they weren't,
         // they wouldn't be kids of that DocFrag.
-        for (NodeImpl *kid = newChild->getFirstChild(); // Prescan
-             kid != null; kid = kid->getNextSibling()) {
+        if (errorChecking) {
+            for (NodeImpl *kid = newChild->getFirstChild(); // Prescan
+                 kid != null; kid = kid->getNextSibling()) {
 
-            if (!DocumentImpl::isKidOK(this, kid)) {
-                throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,
+                if (!DocumentImpl::isKidOK(this, kid)) {
+                    throw DOM_DOMException(
+                                       DOM_DOMException::HIERARCHY_REQUEST_ERR,
                                        null);
+                }
             }
         }                       
 
@@ -219,29 +224,36 @@ NodeImpl *ParentNode::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         return newChild;
     }
 
-    if (isReadOnly()) {
-        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               null);
-    }
-    if (newChild->getOwnerDocument() != ownerDocument) {
-        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    }
-    if (!DocumentImpl::isKidOK(this, newChild)) {
-        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR, null);
-    }
-    // refChild must be a child of this node (or null)
-    if (refChild != null && refChild->getParentNode() != this) {
-        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
-    }
+    if (errorChecking) {
+        if (isReadOnly()) {
+            throw DOM_DOMException(
+                                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                                 null);
+        }
+        if (newChild->getOwnerDocument() != ownerDocument) {
+            throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+        }
+        if (!DocumentImpl::isKidOK(this, newChild)) {
+            throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,
+                                   null);
+        }
+        // refChild must be a child of this node (or null)
+        if (refChild != null && refChild->getParentNode() != this) {
+            throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+        }
 
-    // Prevent cycles in the tree
-    // newChild cannot be ancestor of this Node, and actually cannot be this
-    bool treeSafe = true;
-    for (NodeImpl *a = this; treeSafe && a != null; a = a->getParentNode()) {
-        treeSafe = (newChild != a);
-    }
-    if (!treeSafe) {
-        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR, null);
+        // Prevent cycles in the tree
+        // newChild cannot be ancestor of this Node,
+        // and actually cannot be this
+        bool treeSafe = true;
+        for (NodeImpl *a = this; treeSafe && a != null; a = a->getParentNode())
+        {
+            treeSafe = (newChild != a);
+        }
+        if (!treeSafe) {
+            throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,
+                                   null);
+        }
     }
 
     // Convert to internal type, to avoid repeated casting  
@@ -361,15 +373,18 @@ NodeImpl *ParentNode::item(unsigned int index) {
   
 NodeImpl *ParentNode::removeChild(NodeImpl *oldChild) 
 {
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
-    if (oldChild != null && oldChild->getParentNode() != this)
-        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
-    
+    if (ownerDocument->getErrorChecking()) {
+        if (isReadOnly()) {
+            throw DOM_DOMException(
+                                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                                 null);
+        }
+        if (oldChild != null && oldChild->getParentNode() != this) {
+            throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+        }
+    }
     //fix other ranges for change before deleting the node
-    if (this->getOwnerDocument() !=  null  ) {
+    if (getOwnerDocument() !=  null) {
         typedef RefVectorOf<RangeImpl> RangeImpls;
         RangeImpls* ranges = this->getOwnerDocument()->getRanges();
         if (ranges != null) {

@@ -160,6 +160,9 @@ private:
      */
     int fChanges;
 
+    /** Bypass error checking. */
+    bool errorChecking;
+
     friend class NodeIteratorImpl;
     friend class TreeWalkerImpl;
     friend class RangeImpl;
@@ -233,6 +236,35 @@ public:
 
     virtual void changed();
     virtual int changes();
+
+    /** 
+     * Sets whether the DOM implementation performs error checking
+     * upon operations. Turning off error checking only affects
+     * the following DOM checks:
+     * <ul>
+     * <li>Checking strings to make sure that all characters are
+     *     legal XML characters
+     * <li>Hierarchy checking such as allowed children, checks for
+     *     cycles, etc.
+     * </ul>
+     * <p>
+     * Turning off error checking does <em>not</em> turn off the
+     * following checks:
+     * <ul>
+     * <li>Read only checks
+     * <li>Checks related to DOM events
+     * </ul>
+     */
+    inline void setErrorChecking(bool check) {
+        errorChecking = check;
+    }
+
+    /**
+     * Returns true if the DOM implementation performs error checking.
+     */
+    inline bool getErrorChecking() {
+        return errorChecking;
+    }
 };
 
 #endif

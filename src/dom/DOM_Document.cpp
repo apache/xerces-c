@@ -253,3 +253,10 @@ DOM_Range    DOM_Document::createRange()
 }
 
 
+void DOM_Document::setErrorChecking(bool check) {
+    ((DocumentImpl *)fImpl)->setErrorChecking(check);
+}
+
+bool DOM_Document::getErrorChecking() {
+    return ((DocumentImpl *)fImpl)->getErrorChecking();
+}

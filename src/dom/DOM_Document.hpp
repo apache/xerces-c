@@ -588,6 +588,31 @@ public:
      */
     DOM_Element         getElementById(const DOMString &elementId);
 
+    /** 
+     * Sets whether the DOM implementation performs error checking
+     * upon operations. Turning off error checking only affects
+     * the following DOM checks:
+     * <ul>
+     * <li>Checking strings to make sure that all characters are
+     *     legal XML characters
+     * <li>Hierarchy checking such as allowed children, checks for
+     *     cycles, etc.
+     * </ul>
+     * <p>
+     * Turning off error checking does <em>not</em> turn off the
+     * following checks:
+     * <ul>
+     * <li>Read only checks
+     * <li>Checks related to DOM events
+     * </ul>
+     */
+    void setErrorChecking(bool check);
+
+    /**
+     * Returns true if the DOM implementation performs error checking.
+     */
+    bool getErrorChecking();
+
     //@}
 
 protected:
