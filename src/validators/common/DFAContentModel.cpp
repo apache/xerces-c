@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/08/17 16:12:51  peiyongz
+ * Fix to memory leak in buildDFA(),  patch from Nick Chiang (nchiang@ss8.com)
+ *
  * Revision 1.18  2001/08/16 21:52:40  peiyongz
  * stateTable created to optimize the identification of new state created.
  *
@@ -858,20 +861,15 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
     // Note on memory leak: Bugzilla#2707:
     // ===================================
-    // The CMBinary, pointed to by fHeadNode, will be released by 
-    // delete fLeafList[index], which in turn, release the objects 
-    // pointed to by nodeOrgContent and nodeEOC repectively.
+    // The CMBinary, pointed to by fHeadNode, shall be released by 
+    // deleted by itself.
     //
-    // But the qname needs to be released any way.
-    //
-    // Adding any of the following three deletes will
-    // cause "Unexpected exception during parsing ..." error.
-    //
-    // delete fHeadNode;  
-    // delete nodeOrgContent;
-    // delete nodeEOC;
+    // Change has been made to postTreeBuildInit() such that fLeafList[]
+    // would maintain its **OWN** copy of CMLeaf to avoid double deletion
+    // of CMLeaf.
     //
 
+    delete fHeadNode;
     delete qname;
 
     for (index = 0; index < fLeafCount; index++)
@@ -895,7 +893,6 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
 	delete [] fLeafSorter;
 
-    fHeadNode = 0;
 }
 
 
@@ -1086,7 +1083,14 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         //
         if (((CMLeaf*)nodeCur)->getElement()->getURI() != XMLContentModel::gEpsilonFakeId)
         {
-            fLeafList[newIndex] = (CMLeaf*)nodeCur;
+            //
+            // fLeafList make its own copy of the CMLeaf, so that
+            // delete[] fLeafList and delete the owner of the nodeCur
+            // will NOT delete the nodeCur --twice--,
+            // thuse to make delete the owner of the nodeCur possible.
+            //
+            fLeafList[newIndex] = new CMLeaf(((CMLeaf*)nodeCur)->getElement(), 
+                                           ((CMLeaf*)nodeCur)->getPosition()); 
             fLeafListType[newIndex] = ContentSpecNode::Leaf;
             ++newIndex;
         }
