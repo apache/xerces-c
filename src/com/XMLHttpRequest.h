@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:04  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:09  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -71,9 +74,9 @@
 
 class ATL_NO_VTABLE CXMLHttpRequest : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CXMLHttpRequest, &CLSID_XMLHttpRequest>,
+	public CComCoClass<CXMLHttpRequest, &CLSID_XMLHTTPRequest>,
 	public IObjectSafetyImpl<CXMLHttpRequest, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_IBMXMLLib>,
+	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces>,
 	public IObjectWithSiteImpl<CXMLHttpRequest>,
 	public ISupportErrorInfo,
 	public CWindowImpl<CXMLHttpRequest, CWindow, CWinTraits<0,0> >

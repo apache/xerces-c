@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:55  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -69,7 +72,7 @@
 
 class ATL_NO_VTABLE CXMLDOMAttribute : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IXMLDOMNodeImpl<IXMLDOMAttribute, &IID_IXMLDOMAttribute, &LIBID_IBMXMLLib>
+	public IXMLDOMNodeImpl<IXMLDOMAttribute, &IID_IXMLDOMAttribute, &LIBID_Xerces>
 {
 public:
 	CXMLDOMAttribute()

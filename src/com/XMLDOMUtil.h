@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:03  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:09  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -72,5 +75,7 @@ extern const int	g_DomNodeNameSize;
 void GetXML (const DOM_Node &node, _bstr_t &text);
 void GetText(const DOM_Node& node, _bstr_t &text);
 HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal);
+
+
 
 #endif // ___wrapnode_h___

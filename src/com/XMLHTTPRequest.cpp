@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:03  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:09  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -174,15 +177,8 @@ LRESULT CXMLHttpRequest::OnReadyStateChange(UINT uMsg, WPARAM wParam, LPARAM lPa
 
 STDMETHODIMP CXMLHttpRequest::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	static const IID* arr[] = 
-	{
-		&IID_IXMLHttpRequest
-	};
-	for (int i=0; i < sizeof(arr) / sizeof(arr[0]); i++)
-	{
-		if (InlineIsEqualGUID(*arr[i],riid))
-			return S_OK;
-	}
+	if (IsEqualGUID(IID_IXMLHttpRequest,riid))
+		return S_OK;
 	return S_FALSE;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:04  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -86,9 +89,26 @@
 #include "stdafx.h"
 #include "resource.h"
 #include <initguid.h>
-#include "xml4com.h"
 
 #include <util/PlatformUtils.hpp>
+#include "xml4com.h"
+
+//
+//   This file is generated from the type library compilation
+//       of xmldom.idl
+//
+//   The define prevent the Microsoft versions of DOMDocument
+//      and HTTPRequest from causing symbol clashes with ours
+#define CLSID_DOMDocument CLSID_MSDOMDocument
+#define CLSID_XMLHTTPRequest CLSID_MSXMLHTTPRequest
+#include "msxml_i.c"
+#undef CLSID_DOMDocument
+#undef CLSID_XMLHTTPRequest
+
+//
+//   This file is generated from the type library compilation
+//       of xml4com.idl
+//
 #include "xml4com_i.c"
 #include "XMLDOMDocument.h"
 #include "XMLHTTPRequest.h"
@@ -100,8 +120,8 @@ extern "C" HINSTANCE hProxyDll;
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_XMLDOMDocument, CXMLDOMDocument)
-OBJECT_ENTRY(CLSID_XMLHttpRequest, CXMLHttpRequest)
+OBJECT_ENTRY(CLSID_DOMDocument, CXMLDOMDocument)
+OBJECT_ENTRY(CLSID_XMLHTTPRequest, CXMLHttpRequest)
 END_OBJECT_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -117,7 +137,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 #endif
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-        _Module.Init(ObjectMap, hInstance, &LIBID_IBMXMLLib);
+        _Module.Init(ObjectMap, hInstance, &LIBID_Xerces);
         DisableThreadLibraryCalls(hInstance);
 		XMLPlatformUtils::Initialize();
     }

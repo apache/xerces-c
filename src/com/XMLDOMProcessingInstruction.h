@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:01  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:09  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -69,7 +72,7 @@
 
 class ATL_NO_VTABLE CXMLDOMProcessingInstruction : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IXMLDOMNodeImpl<IXMLDOMProcessingInstruction, &IID_IXMLDOMProcessingInstruction, &LIBID_IBMXMLLib>
+	public IXMLDOMNodeImpl<IXMLDOMProcessingInstruction, &IID_IXMLDOMProcessingInstruction, &LIBID_Xerces>
 {
 public:
 	CXMLDOMProcessingInstruction()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:55  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -78,6 +81,16 @@
 #endif
 #define _ATL_APARTMENT_THREADED
 
+#define DOMDocument _MSXMLDOMDocument
+#define XMLHTTPRequest _MSXMLHTTPRequest
+#define CLSID_DOMDocument CLSID_MSDOMDocument
+#define CLSID_XMLHTTPRequest CLSID_MSXMLHTTPRequest
+
+//
+//   suppress MSXML.H since we duplicate some of the information
+//      in xml4com.h
+//
+
 #include <atlbase.h>
 //You may derive a class from CComModule and use it if you want to override
 //something, but do not change the name of _Module
@@ -91,7 +104,21 @@ extern CComModule _Module;
 #include <process.h>
 #include <Wininet.h>
 
+#undef DOMDocument
+#undef XMLHTTPRequest
+#undef CLSID_DOMDocument
+#undef CLSID_XMLHTTPRequest
+
+//
+//   These are defined in xml4dom_i.c which is included in xml4dom.cpp
+//
+//
+extern const IID CLSID_DOMDocument;
+extern const IID CLSID_XMLHTTPRequest;
+extern const IID LIBID_Xerces;
+
 const long	MSG_READY_STATE_CHANGE = WM_APP + 0x0001;
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

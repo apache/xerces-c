@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:54  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -63,6 +66,7 @@
 
 
 #include <dom/DOM_Node.hpp>
+#include <dom/DOM_Document.hpp>
 #include "XMLDOMNodeList.h"
 #include "XMLDOMNamedNodeMap.h"
 #include "XMLDOMUtil.h"
@@ -221,12 +225,19 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_firstChild(IXMLDOMNod
 	if (NULL == pVal)
 		return E_POINTER;
 
+	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
+
 	HRESULT hr = S_OK;
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,get_DOM_Node().getFirstChild(),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = get_DOM_Node().getFirstChild();
+		//
+		//   returns Nothing if no children
+		//
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -246,12 +257,16 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_lastChild(IXMLDOMNode
 	if (NULL == pVal)
 		return E_POINTER;
 
+	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
+
 	HRESULT hr = S_OK;
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,get_DOM_Node().getLastChild(),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = get_DOM_Node().getLastChild();
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -271,12 +286,15 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_previousSibling(IXMLD
 	if (NULL == pVal)
 		return E_POINTER;
 
+	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
 	HRESULT hr = S_OK;
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,get_DOM_Node().getPreviousSibling(),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = get_DOM_Node().getPreviousSibling();
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -296,12 +314,16 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nextSibling(IXMLDOMNo
 	if (NULL == pVal)
 		return E_POINTER;
 
+	if(*pVal) (*pVal)->Release();
 	*pVal = NULL;
+
 	HRESULT hr = S_OK;
 
 	try
 	{
-		hr = wrapNode(m_pIXMLDOMDocument,get_DOM_Node().getNextSibling(),IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
+		DOM_Node n = get_DOM_Node().getNextSibling();
+		if(!n.isNull())
+			hr = wrapNode(m_pIXMLDOMDocument,n,IID_IXMLDOMNode, reinterpret_cast<LPVOID *> (pVal));
 	}
 	catch(...)
 	{
@@ -666,7 +688,24 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::put_text(BSTR newVal)
 
 	try
 	{
-		get_DOM_Node().setNodeValue(newVal);
+		if(NODE_ELEMENT == type)
+		{
+			//
+			//   remove all child elements
+			//
+			DOM_Node elem = get_DOM_Node();
+			DOM_Node child = elem.getLastChild();
+			while(!child.isNull())
+			{
+				elem.removeChild(child);
+				child = elem.getLastChild();
+			}
+			
+			DOM_Document doc = elem.getOwnerDocument();
+			elem.appendChild(doc.createTextNode(newVal));
+		}
+		else
+			get_DOM_Node().setNodeValue(newVal);
 	}
 	catch(...)
 	{

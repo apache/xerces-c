@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:00  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:10  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -69,7 +72,7 @@
 
 class ATL_NO_VTABLE CXMLDOMNodeList : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IXMLDOMNodeList, &IID_IXMLDOMNodeList, &LIBID_IBMXMLLib>,
+	public IDispatchImpl<IXMLDOMNodeList, &IID_IXMLDOMNodeList, &LIBID_Xerces>,
 	public NodeContainerImpl<DOM_NodeList>
 {
 public:

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:57  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:11  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -83,6 +86,7 @@
 #include "XMLDOMAttribute.h"
 #include "XMLDOMEntityReference.h"
 #include "BindStatusCallback.h"
+#include <dom/DocumentImpl.hpp>
 
 // I need to make sure the file is registered with long filenames
 HRESULT WINAPI CXMLDOMDocument::UpdateRegistry(BOOL bRegister)
@@ -144,6 +148,9 @@ HRESULT CXMLDOMDocument::FinalConstruct()
 	
 	m_pParseError->AddRef();
 	m_pIXMLDOMDocument = this;
+
+	m_Document = DOM_Document::createDocument();
+
 	return hr;
 }
 
@@ -183,7 +190,14 @@ void CXMLDOMDocument::warning(const SAXParseException& exception)
 
 void CXMLDOMDocument::error(const SAXParseException& exception)
 {
-	// ignore errors
+	m_pParseError->SetData(1,
+						   exception.getSystemId(),
+						   exception.getMessage(),
+						   _T(""),
+						   exception.getLineNumber(),
+						   exception.getColumnNumber(),
+						   0);
+	m_bParseError = true;
 }
 
 void CXMLDOMDocument::fatalError(const SAXParseException& exception)
@@ -233,15 +247,8 @@ LRESULT CXMLDOMDocument::OnReadyStateChange(UINT uMsg, WPARAM wParam, LPARAM lPa
 
 STDMETHODIMP CXMLDOMDocument::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	static const IID* arr[] = 
-	{
-		&IID_IXMLDOMDocument
-	};
-	for (int i=0; i < sizeof(arr) / sizeof(arr[0]); i++)
-	{
-		if (InlineIsEqualGUID(*arr[i],riid))
-			return S_OK;
-	}
+	if (IsEqualGUID(IID_IXMLDOMDocument,riid))
+		return S_OK;
 	return S_FALSE;
 }
 
@@ -348,7 +355,7 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 	try
 	{
 		elem = m_Document.getDocumentElement();
-		if (NULL == newVal) {
+		if (NULL == newVal && !elem.isNull()) {
 			m_Document.removeChild(elem);
 			return S_OK;
 		}
@@ -373,7 +380,10 @@ STDMETHODIMP CXMLDOMDocument::putref_documentElement(IXMLDOMElement  *newVal)
 
 	try
 	{
-		m_Document.replaceChild(*pNewValNode, elem);
+		if(elem.isNull())
+			m_Document.appendChild(*pNewValNode);
+		else
+			m_Document.replaceChild(*pNewValNode, elem);
 	}
 	catch(...)
 	{

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:57  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:11  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -77,14 +80,14 @@ class SAXParseException;
 
 class ATL_NO_VTABLE CXMLDOMDocument : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CXMLDOMDocument, &CLSID_XMLDOMDocument>,
+	public CComCoClass<CXMLDOMDocument, &CLSID_DOMDocument>,
 	public IObjectSafetyImpl<CXMLDOMDocument, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IXMLDOMNodeImpl<IXMLDOMDocument, &IID_IXMLDOMDocument, &LIBID_IBMXMLLib>,
+	public IXMLDOMNodeImpl<IXMLDOMDocument, &IID_IXMLDOMDocument, &LIBID_Xerces>,
 	public IObjectWithSiteImpl<CXMLDOMDocument>,
 	public ISupportErrorInfo,
 	public CProxyXMLDOMDocumentEvents< CXMLDOMDocument >,
 	public IConnectionPointContainerImpl<CXMLDOMDocument>,
-	public IProvideClassInfo2Impl<&CLSID_XMLDOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_IBMXMLLib>,
+	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces>,
 	public CWindowImpl<CXMLDOMDocument, CWindow, CWinTraits<0,0> >,
 	ErrorHandler
 {

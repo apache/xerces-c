@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:02  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:09  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -76,6 +79,8 @@
 #include "XMLDOMDocumentFragment.h"
 #include "XMLDOMNotation.h"
 #include "XMLDOMUtil.h"
+#include <util/PlatformUtils.hpp>
+
 
 const TCHAR* g_DomNodeName[] = 
 {	
@@ -122,6 +127,190 @@ void GetText(const DOM_Node& node, _bstr_t &text)
 		text += node.getNodeValue().rawBuffer();
 }
 
+
+
+template <class Base>
+class CComObjectPool
+{
+public:
+	CComObjectPool(unsigned long poolSize);
+
+	virtual ~CComObjectPool();
+
+	HRESULT WINAPI CreateInstance(Base** pp);
+
+	HRESULT Deactivate(Base* obj);
+
+private:
+	Base** m_pool;
+	unsigned long m_size;
+	unsigned long m_hit;
+	unsigned long m_attempt;
+	HRESULT Activate(Base* obj);
+};
+
+
+
+
+template <class Base>
+class CPooledComObject : public Base
+{
+public:
+	typedef Base _BaseClass;
+	CPooledComObject(void* = NULL)
+	{
+		_Module.Lock();
+	}
+	// Set refcount to 1 to protect destruction
+	~CPooledComObject()
+	{
+		m_dwRef = 1L;
+		FinalRelease();
+#ifdef _ATL_DEBUG_INTERFACES
+		_Module.DeleteNonAddRefThunk(_GetRawUnknown());
+#endif
+		_Module.Unlock();
+	}
+	//If InternalAddRef or InternalRelease is undefined then your class
+	//doesn't derive from CComObjectRoot
+	STDMETHOD_(ULONG, AddRef)() {return InternalAddRef();}
+	STDMETHOD_(ULONG, Release)()
+	{
+		ULONG l = InternalRelease();
+		if (l == 0) {
+			if(SUCCEEDED(m_pool.Deactivate(this))) {
+				FinalRelease();
+			}
+			else
+				delete this;
+		}
+		return l;
+	}
+	//if _InternalQueryInterface is undefined then you forgot BEGIN_COM_MAP
+	STDMETHOD(QueryInterface)(REFIID iid, void ** ppvObject)
+	{return _InternalQueryInterface(iid, ppvObject);}
+	template <class Q>
+	HRESULT STDMETHODCALLTYPE QueryInterface(Q** pp)
+	{
+		return QueryInterface(__uuidof(Q), (void**)pp);
+	}
+
+	static HRESULT WINAPI CreateInstance(Base** pp) {
+		return m_pool.CreateInstance(pp);
+	}
+
+private:
+	static CComObjectPool<Base> m_pool;
+};
+
+
+
+
+template <class Base>
+CComObjectPool<Base>::CComObjectPool<Base>(unsigned long poolSize) {
+	m_pool = NULL;
+	m_size = poolSize;
+	m_pool = new Base*[m_size];
+	for(unsigned long i = 0; i < m_size; i++)
+		m_pool[i] = NULL;
+	m_hit= 0;
+	m_attempt = 0;
+}
+
+template <class Base>
+CComObjectPool<Base>::~CComObjectPool<Base>() {
+	for(unsigned long i = 0; i < m_size; i++) {
+		if(m_pool[i]) delete m_pool[i];
+	}
+	delete [] m_pool;
+}
+
+template <class Base>
+HRESULT CComObjectPool<Base>::Deactivate(Base* obj) {
+	for(unsigned long i = 0; i < m_size; i++) {
+		if(m_pool[i] == NULL) {
+			m_pool[i] = obj;
+			return S_OK;
+		}
+	}
+	return E_FAIL;
+}
+
+template <class Base>
+HRESULT CComObjectPool<Base>::Activate(Base* p)
+{
+	p->SetVoid(NULL);
+	p->InternalFinalConstructAddRef();
+	HRESULT hRes = p->FinalConstruct();
+	p->InternalFinalConstructRelease();
+	return hRes;
+}
+
+
+template <class Base>
+HRESULT WINAPI CComObjectPool<Base>::CreateInstance(Base** pp) {
+	ATLASSERT(pp != NULL);
+	HRESULT hRes = E_OUTOFMEMORY;
+	Base* p = NULL;
+
+	m_attempt++;
+
+	for(unsigned long i = 0; i < m_size; i++) {
+		if(m_pool[i]) {
+			p = m_pool[i];
+			m_pool[i] = NULL;
+			hRes = Activate(p);
+			if (SUCCEEDED(hRes)) {
+				m_hit++;
+				break;
+			}
+			else {
+				delete p;
+				p = NULL;
+			}
+		}
+	}
+
+	if(FAILED(hRes)) {
+		ATLTRY(p = new CPooledComObject<Base>())
+		if (p != NULL) {
+			hRes = Activate(p);
+			if (hRes != S_OK) {
+				delete p;
+				p = NULL;
+			}
+		}
+	}
+	*pp = p;
+	return hRes;
+}
+
+
+CComObjectPool<CXMLDOMElement> CPooledComObject<CXMLDOMElement>::m_pool(6);
+typedef CPooledComObject<CXMLDOMElement> CPooledXMLDOMElementObj;
+
+CComObjectPool<CXMLDOMAttribute> CPooledComObject<CXMLDOMAttribute>::m_pool(6);
+typedef CPooledComObject<CXMLDOMAttribute> CPooledXMLDOMAttributeObj;
+
+CComObjectPool<CXMLDOMText> CPooledComObject<CXMLDOMText>::m_pool(6);
+typedef CPooledComObject<CXMLDOMText> CPooledXMLDOMTextObj;
+
+CComObjectPool<CXMLDOMCDATASection> CPooledComObject<CXMLDOMCDATASection>::m_pool(6);
+typedef CPooledComObject<CXMLDOMCDATASection> CPooledXMLDOMCDATASectionObj;
+
+CComObjectPool<CXMLDOMEntityReference> CPooledComObject<CXMLDOMEntityReference>::m_pool(6);
+typedef CPooledComObject<CXMLDOMEntityReference> CPooledXMLDOMEntityReferenceObj;
+
+CComObjectPool<CXMLDOMEntity> CPooledComObject<CXMLDOMEntity>::m_pool(6);
+typedef CPooledComObject<CXMLDOMEntity> CPooledXMLDOMEntityObj;
+
+CComObjectPool<CXMLDOMProcessingInstruction> CPooledComObject<CXMLDOMProcessingInstruction>::m_pool(6);
+typedef CPooledComObject<CXMLDOMProcessingInstruction> CPooledXMLDOMProcessingInstructionObj;
+
+CComObjectPool<CXMLDOMComment> CPooledComObject<CXMLDOMComment>::m_pool(6);
+typedef CPooledComObject<CXMLDOMComment> CPooledXMLDOMCommentObj;
+
+
 HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal)
 {
 	HRESULT hr = S_OK;
@@ -140,8 +329,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	{
 	case DOM_Node::ELEMENT_NODE:
 	{
-		CXMLDOMElementObj *pObj = NULL;
-		hr = CXMLDOMElementObj::CreateInstance(&pObj);
+		CXMLDOMElement *pObj = NULL;
+		hr = CPooledXMLDOMElementObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -167,8 +356,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::ATTRIBUTE_NODE:
 	{
-		CXMLDOMAttributeObj *pObj = NULL;
-		hr = CXMLDOMAttributeObj::CreateInstance(&pObj);
+		CXMLDOMAttribute *pObj = NULL;
+		hr = CPooledXMLDOMAttributeObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -194,8 +383,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::TEXT_NODE:
 	{
-		CXMLDOMTextObj *pObj = NULL;
-		hr = CXMLDOMTextObj::CreateInstance(&pObj);
+		CXMLDOMText *pObj = NULL;
+		hr = CPooledXMLDOMTextObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -221,8 +410,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::CDATA_SECTION_NODE:
 	{
-		CXMLDOMCDATASectionObj *pObj = NULL;
-		hr = CXMLDOMCDATASectionObj::CreateInstance(&pObj);
+		CXMLDOMCDATASection *pObj = NULL;
+		hr = CPooledXMLDOMCDATASectionObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -248,8 +437,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::ENTITY_REFERENCE_NODE:
 	{
-		CXMLDOMEntityReferenceObj *pObj = NULL;
-		hr = CXMLDOMEntityReferenceObj::CreateInstance(&pObj);
+		CXMLDOMEntityReference *pObj = NULL;
+		hr = CPooledXMLDOMEntityReferenceObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -275,8 +464,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::ENTITY_NODE:
 	{
-		CXMLDOMEntityObj *pObj = NULL;
-		hr = CXMLDOMEntityObj::CreateInstance(&pObj);
+		CXMLDOMEntity *pObj = NULL;
+		hr = CPooledXMLDOMEntityObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -302,8 +491,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::PROCESSING_INSTRUCTION_NODE:
 	{
-		CXMLDOMProcessingInstructionObj *pObj = NULL;
-		hr = CXMLDOMProcessingInstructionObj::CreateInstance(&pObj);
+		CXMLDOMProcessingInstruction *pObj = NULL;
+		hr = CPooledXMLDOMProcessingInstructionObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -329,8 +518,8 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	}
 	case DOM_Node::COMMENT_NODE:
 	{
-		CXMLDOMCommentObj *pObj = NULL;
-		hr = CXMLDOMCommentObj::CreateInstance(&pObj);
+		CXMLDOMComment *pObj = NULL;
+		hr = CPooledXMLDOMCommentObj::CreateInstance(&pObj);
 		if (S_OK != hr) 
 			return hr;
 	
@@ -470,50 +659,297 @@ HRESULT wrapNode(IXMLDOMDocument *pDoc, DOM_Node& node, REFIID iid, LPVOID *pVal
 	return hr;
 }
 
+
+class xmlstream {
+public:
+	xmlstream() {
+		m_length = 0;
+		m_alloc = 0;
+		m_buffer = 0;
+		m_next = 0;
+	}
+
+	~xmlstream() {
+		delete [] m_buffer;
+	}
+
+	xmlstream& operator<<(const XMLCh* other) {
+		//
+		//   get length of string
+		//
+		unsigned long len = 0;
+		for(const XMLCh* source = other; *source; source++,len++);
+
+		//
+		//    append to stream
+		//
+		append(other,len);
+		return *this;
+	}
+
+	xmlstream& operator<<(const DOMString& other) {
+		append(other.rawBuffer(),other.length());
+		return *this;
+	}
+
+	xmlstream& operator<<(const XMLCh other) {
+		append(&other,1);
+		return *this;
+	}
+
+	BSTR SysAllocString() {
+		if(m_length > 0)
+			return SysAllocStringLen(m_buffer,m_length);
+		return 0;
+	}
+
+private:
+	void append(const XMLCh* other,unsigned long length) {
+		const XMLCh* source = NULL;
+
+		if(m_length + length > m_alloc) {
+			unsigned long chunk = 4096;
+			if(length > chunk) chunk += length;
+			XMLCh* newbuf = new XMLCh[m_alloc+ chunk];
+			m_alloc += chunk;
+			m_next = newbuf + m_length;
+
+			//
+			//    copy old content into new buffer
+			//
+			XMLCh* dest = newbuf;
+			source = m_buffer;
+			for(unsigned long i = 0; i < m_length; i++,dest++,source++) {
+				*dest = *source;
+			}
+			delete [] m_buffer;
+			m_buffer = newbuf;
+		}
+
+		source = other;
+		for(unsigned long i = 0; i < length; i++,source++,m_next++) {
+			*m_next = *source;
+		}
+		m_length += length;
+	}
+
+	unsigned long m_length;
+	unsigned long m_alloc;
+	XMLCh* m_buffer;
+	XMLCh* m_next;
+};
+
+
+
+
+// ---------------------------------------------------------------------------
+//  outputContent
+//
+//  Write document content from a DOMString to a C++ ostream. Escape the
+//  XML special characters (<, &, etc.) unless this is suppressed by the
+//  command line option.
+// ---------------------------------------------------------------------------
+void outputContent(xmlstream& target, const DOMString &toWrite)
+{
+    
+        int            length = toWrite.length();
+        const XMLCh*   chars  = toWrite.rawBuffer();
+        
+        int index;
+        for (index = 0; index < length; index++)
+        {
+            switch (chars[index])
+            {
+            case chAmpersand :
+                target << XMLStrL("&amp;");
+                break;
+                
+            case chOpenAngle :
+                target << XMLStrL("&lt;");
+                break;
+                
+            case chCloseAngle:
+                target << XMLStrL("&gt;");
+                break;
+                
+            case chDoubleQuote :
+                target << XMLStrL("&quot;");
+                break;
+                
+            default:
+                // If it is none of the special characters, print it as such
+                target << toWrite.substringData(index, 1);
+                break;
+            }
+        }
+
+    return;
+}
+
+xmlstream& operator<<(xmlstream& target, const DOM_Node& toWrite)
+{
+    // Get the name and value out for convenience
+    DOMString   nodeName = toWrite.getNodeName();
+    DOMString   nodeValue = toWrite.getNodeValue();
+
+
+	switch (toWrite.getNodeType())
+    {
+		case DOM_Node::TEXT_NODE:
+        {
+            outputContent(target, nodeValue);
+            break;
+        }
+
+        case DOM_Node::PROCESSING_INSTRUCTION_NODE :
+        {
+            target  << XMLStrL("<?")
+                    << nodeName
+                    << XMLStrL(' ')
+                    << nodeValue
+                    << XMLStrL("?>");
+            break;
+        }
+
+        case DOM_Node::DOCUMENT_NODE :
+        {
+            //
+            //  Bug here:  we need to find a way to get the encoding name
+            //  for the default code page on the system where the program
+            //  is running, and plug that in for the encoding name.  
+            //
+            //target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
+            DOM_Node child = toWrite.getFirstChild();
+            while( child != 0)
+            {
+                target << child;
+                child = child.getNextSibling();
+            }
+            break;
+        }
+
+        case DOM_Node::ELEMENT_NODE :
+        {
+            // Output the element start tag.
+            target << XMLStrL('<') << nodeName;
+
+            // Output any attributes on this element
+            DOM_NamedNodeMap attributes = toWrite.getAttributes();
+            int attrCount = attributes.getLength();
+            for (int i = 0; i < attrCount; i++)
+            {
+                DOM_Node  attribute = attributes.item(i);
+
+                target  << XMLStrL(' ') << attribute.getNodeName()
+                        << XMLStrL(" = \"");
+                        //  Note that "<" must be escaped in attribute values.
+                        outputContent(target, attribute.getNodeValue());
+                        target << XMLStrL('"');
+            }
+
+            //
+            //  Test for the presence of children, which includes both
+            //  text content and nested elements.
+            //
+            DOM_Node child = toWrite.getFirstChild();
+            if (child != 0)
+            {
+                // There are children. Close start-tag, and output children.
+                target << XMLStrL(">");
+                while( child != 0)
+                {
+                    target << child;
+                    child = child.getNextSibling();
+                }
+
+                // Done with children.  Output the end tag.
+                target << XMLStrL("</") << nodeName << XMLStrL(">");
+            }
+            else
+            {
+                //
+                //  There were no children. Output the short form close of
+                //  the element start tag, making it an empty-element tag.
+                //
+                target << XMLStrL("/>");
+            }
+            break;
+        }
+
+        case DOM_Node::ENTITY_REFERENCE_NODE:
+        {
+            DOM_Node child;
+            for (child = toWrite.getFirstChild(); child != 0; child = child.getNextSibling())
+                target << child;
+            break;
+        }
+
+        case DOM_Node::CDATA_SECTION_NODE:
+        {
+            target << XMLStrL("<![CDATA[") << nodeValue << XMLStrL("]]>");
+            break;
+        }
+
+        case DOM_Node::COMMENT_NODE:
+        {
+            target << XMLStrL("<!--") << nodeValue << XMLStrL("-->");
+            break;
+        }
+
+        case DOM_Node::DOCUMENT_TYPE_NODE:
+        {
+			DOM_DocumentType doctype = (DOM_DocumentType &)toWrite;;
+
+			target << XMLStrL("<!DOCTYPE ") << nodeName ;
+			DOMString id = doctype.getPublicId();
+			if (id != 0)
+				target << XMLStrL(" PUBLIC \"") << id << XMLStrL("\"");
+			id = doctype.getSystemId();
+			if (id != 0)
+				target << XMLStrL(" SYSTEM \"") << id << XMLStrL("\"");
+			id = doctype.getInternalSubset(); 
+			if (id !=0)
+				target << XMLStrL(" [ ") << id  << XMLStrL("]");
+			target  << XMLStrL(">");
+            break;
+        }
+		case DOM_Node::ENTITY_NODE:
+        {
+			target << XMLStrL("<!ENTITY ") << nodeName;
+			DOMString id = ((DOM_Entity &)toWrite).getPublicId();
+			if (id != 0)
+				target << XMLStrL("PUBLIC \"") << id << XMLStrL("\"");
+			id = ((DOM_Entity &)toWrite).getSystemId();
+			if (id != 0)
+				target << XMLStrL("SYSTEM \"") << id << XMLStrL("\"");
+			id = ((DOM_Entity &)toWrite).getNotationName();
+			if (id != 0)
+				target << XMLStrL("NDATA \"") << id << XMLStrL("\"");
+
+            break;
+        }
+        case DOM_Node::XML_DECL_NODE:
+        {
+            target << XMLStrL("<?xml version=") << ((DOM_XMLDecl &)toWrite).getVersion();
+            DOMString str = ((DOM_XMLDecl &)toWrite).getEncoding();
+            if (str != 0)
+                target << XMLStrL(" encoding=") << str;
+            str = ((DOM_XMLDecl &)toWrite).getStandalone();
+            if (str != 0)
+                target << XMLStrL(" standalone=") << str;
+            target << XMLStrL("?>");
+            break;
+        }
+        default:
+            target << XMLStrL("<!-- Unrecognized node type -->");
+    }
+	return target;
+}
+
 void GetXML(const DOM_Node &node, _bstr_t &text)
 {
-	DOM_Node::NodeType type = static_cast<DOM_Node::NodeType> (node.getNodeType());
-	
-	if (DOM_Node::TEXT_NODE == type) {
-		_bstr_t value = node.getNodeValue().rawBuffer();
-		if (value.length() > 0) 
-			text += value; 
-
-		return;
-	}
-
-	_bstr_t tagName = node.getNodeName().rawBuffer();
-
-	text += _T("<");
-	text += tagName;
-
-	DOM_NamedNodeMap attrs = node.getAttributes();
-
-	int length = 0;
-	if (attrs != 0) {
-		length = attrs.getLength();
-		for (int i=0; i < length; ++i) {
-			DOM_Node attr = attrs.item(i);
-			text += _T(" ");
-			text += attr.getNodeName().rawBuffer();
-			text += _T("=\"");
-			text += attr.getNodeValue().rawBuffer();
-			text += _T("\"");
-		}
-	}
-
-	DOM_NodeList childs = node.getChildNodes();
-	length = childs.getLength();
-	if (length > 0) {
-		text += _T(">");
-		for (int i=0; i < length; ++i) {
-			DOM_Node child = childs.item(i);
-			GetXML(child,text);
-		}
-		text += _T("</");
-		text += tagName;
-		text += _T(">");
-	}
-	else
-		text += _T("/>");
+	xmlstream stream;
+	stream << node;
+	text.Assign(stream.SysAllocString());
 }
+

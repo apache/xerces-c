@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:54  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:12  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -63,6 +66,21 @@
 
 #ifndef ___ixmldomnodeimpl_h___
 #define ___ixmldomnodeimpl_h___
+
+
+//
+//   This macro is defined in MSXML.H's compatible with IE5
+//      and not defined in those from IE4.
+//
+//   To correct, install a IE5 or later version of the Microsoft Platform SDK
+//      and add \Program Files\Microsoft Platform SDK\Include as the first entry
+//      on the Directories tab on the dialog displayed after selecting Tools Options
+//      from the Visual Studio IDE.
+//
+#ifndef __IXMLDOMNode_INTERFACE_DEFINED__
+#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See comments for directions to correct this problem."
+#endif
+
 
 template <class T, const IID* piid, const GUID* plibid = &CComModule::m_libid, WORD wMajor = 1,
 WORD wMinor = 0, class tihclass = CComTypeInfoHolder>

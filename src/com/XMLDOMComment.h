@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:28:57  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:11  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -69,7 +72,7 @@
 
 class ATL_NO_VTABLE CXMLDOMComment : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IXMLDOMCharacterDataImpl<IXMLDOMComment, &IID_IXMLDOMComment, &LIBID_IBMXMLLib>
+	public IXMLDOMCharacterDataImpl<IXMLDOMComment, &IID_IXMLDOMComment, &LIBID_Xerces>
 {
 public:
 	CXMLDOMComment()

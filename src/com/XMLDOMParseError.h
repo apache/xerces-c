@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/06/03 00:29:01  andyh
+ * COM Wrapper changes from Curt Arnold
+ *
  * Revision 1.2  2000/03/30 02:00:10  abagchi
  * Initial checkin of working code with Copyright Notice
  *
@@ -66,7 +69,7 @@
 
 class ATL_NO_VTABLE CXMLDOMParseError : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IXMLDOMParseError, &IID_IXMLDOMParseError, &LIBID_IBMXMLLib>
+	public IDispatchImpl<IXMLDOMParseError, &IID_IXMLDOMParseError, &LIBID_Xerces>
 {
 public:
 	CXMLDOMParseError()
