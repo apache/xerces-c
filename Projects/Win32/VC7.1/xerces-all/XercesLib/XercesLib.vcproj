@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -26,10 +26,10 @@
 				PreprocessorDefinitions="NDEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/XercesLib.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -38,21 +38,21 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_6.dll"
+				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2_6.pdb"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/xerces-c_2_6.pdb"
 				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-c_2_6.map"
+				MapFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/xerces-c_2_6.map"
 				SubSystem="2"
 				BaseAddress="0x12000000"
-				ImportLibrary="..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2.lib"/>
+				ImportLibrary="..\..\..\..\..\Build\Win32\VC7.1\Release/xerces-c_2.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/XercesLib.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -76,8 +76,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -87,10 +87,10 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;PROJ_SAX2;_DEBUG;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XercesLib.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
@@ -100,20 +100,20 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_6D.dll"
+				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2_6D.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_6D.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2_6D.pdb"
 				SubSystem="2"
 				BaseAddress="0x12000000"
-				ImportLibrary="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2D.lib"/>
+				ImportLibrary="..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Debug/XercesLib.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool

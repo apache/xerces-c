@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -27,10 +27,10 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/DOMPrint.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/DOMPrint.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				CompileAs="0"/>
@@ -40,14 +40,14 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/DOMPrint.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/DOMPrint.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/DOMPrint.pdb"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/DOMPrint.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/DOMPrint.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/DOMPrint.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -71,8 +71,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -85,10 +85,10 @@
 				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/DOMPrint.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/DOMPrint.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -98,15 +98,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/DOMPrint.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/DOMPrint.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/DOMPrint.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/DOMPrint.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Debug/DOMPrint.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/DOMPrint.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool

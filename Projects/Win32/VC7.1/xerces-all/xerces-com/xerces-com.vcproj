@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_6.dll $(TargetDir)
-copy ..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_6.dll &quot;$(TargetDir)&quot;
+				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll $(TargetDir)
+copy ..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll &quot;$(TargetDir)&quot;
 regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
@@ -53,7 +53,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				AdditionalDependencies="odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\xml4com\Release/xerces-com.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release;..\..\..\..\..\Build\Win32\xml4com\Release"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release;..\..\..\..\..\Build\Win32\xml4com\Release"
 				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
 				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\Release/xerces-com.pdb"
 				SubSystem="2"
@@ -109,8 +109,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7\Debug\xerces-c_2_6D.dll &quot;$(TargetDir)&quot;
-copy ..\..\..\..\..\Build\Win32\VC7\Debug\xerces-c_2_6D.dll &quot;$(TargetDir)&quot;
+				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7.1\Debug\xerces-c_2_6D.dll &quot;$(TargetDir)&quot;
+copy ..\..\..\..\..\Build\Win32\VC7.1\Debug\xerces-c_2_6D.dll &quot;$(TargetDir)&quot;
 regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
@@ -121,7 +121,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				AdditionalDependencies="odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2D.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\xml4com\Debug/xerces-com.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug;..\..\..\..\..\Build\Win32\xml4com\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug;..\..\..\..\..\Build\Win32\xml4com\Debug"
 				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\Debug/xerces-com.pdb"

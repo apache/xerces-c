@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -26,10 +26,10 @@
 				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/XSValueTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XSValueTest.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -39,15 +39,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/XSValueTest.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XSValueTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/XSValueTest.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XSValueTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Debug/XSValueTest.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XSValueTest.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -71,8 +71,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -85,10 +85,10 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/XSValueTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/XSValueTest.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -97,14 +97,14 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/XSValueTest.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XSValueTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/XSValueTest.pdb"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XSValueTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/XSValueTest.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XSValueTest.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool

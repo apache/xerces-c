@@ -14,8 +14,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
 			ConfigurationType="10"
 			UseOfMFC="0">
 			<Tool
@@ -29,8 +29,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
 			ConfigurationType="10"
 			UseOfMFC="0">
 			<Tool

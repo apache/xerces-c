@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -27,10 +27,10 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/MemHandlerTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/MemHandlerTest.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -39,15 +39,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib xerces-depdom_2.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/MemHandlerTest.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/MemHandlerTest.exe"
 				Version="1.0"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/MemHandlerTest.pdb"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/MemHandlerTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/MemHandlerTest.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/MemHandlerTest.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -71,8 +71,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -86,10 +86,10 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/MemHandlerTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/MemHandlerTest.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -99,15 +99,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib xerces-depdom_2D.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/MemHandlerTest.exe"
+				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/MemHandlerTest.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/MemHandlerTest.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/MemHandlerTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Debug/MemHandlerTest.tlb"/>
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/MemHandlerTest.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
