@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/04 21:11:12  knoaman
+ * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
+ *
  * Revision 1.4  2002/12/24 17:59:07  tng
  * Build with ICU 2.4
  *
@@ -111,12 +114,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+bool TokenFactory::fRangeInitialized = false;
+
 // ---------------------------------------------------------------------------
 //  TokenFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
 TokenFactory::TokenFactory() :
-    fRangeInitialized(0)
-    , fTokens(new RefVectorOf<Token> (16, true))
+    fTokens(new RefVectorOf<Token> (16, true))
     , fEmpty(0)
     , fLineBegin(0)
     , fLineBegin2(0)
@@ -432,40 +436,46 @@ Token* TokenFactory::getGraphemePattern() {
 // ---------------------------------------------------------------------------
 void TokenFactory::initializeRegistry() {
 
-	XMLMutexLock lockInit(&fMutex);
-
     if (fRangeInitialized)
         return;
 
-    RangeTokenMap::instance()->initializeRegistry();
+    // Use a faux scope to synchronize while we do this
+    {
+        XMLMutexLock lockInit(&fMutex);
 
-	    // Add categories
-    RangeTokenMap::instance()->addCategory(fgXMLCategory);
-    RangeTokenMap::instance()->addCategory(fgASCIICategory);
-    RangeTokenMap::instance()->addCategory(fgUnicodeCategory);
-    RangeTokenMap::instance()->addCategory(fgBlockCategory);
+        if (!fRangeInitialized) {
 
-	// Add xml range factory
-    RangeFactory* rangeFact = new XMLRangeFactory();
-    RangeTokenMap::instance()->addRangeMap(fgXMLCategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+            RangeTokenMap::instance()->initializeRegistry();
 
-    // Add ascii range factory
-    rangeFact = new ASCIIRangeFactory();
-    RangeTokenMap::instance()->addRangeMap(fgASCIICategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+            // Add categories
+            RangeTokenMap::instance()->addCategory(fgXMLCategory);
+            RangeTokenMap::instance()->addCategory(fgASCIICategory);
+            RangeTokenMap::instance()->addCategory(fgUnicodeCategory);
+            RangeTokenMap::instance()->addCategory(fgBlockCategory);
 
-    // Add unicode range factory
-    rangeFact = new UnicodeRangeFactory();
-    RangeTokenMap::instance()->addRangeMap(fgUnicodeCategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+        	// Add xml range factory
+            RangeFactory* rangeFact = new XMLRangeFactory();
+            RangeTokenMap::instance()->addRangeMap(fgXMLCategory, rangeFact);
+            rangeFact->initializeKeywordMap();
 
-    // Add block range factory
-    rangeFact = new BlockRangeFactory();
-    RangeTokenMap::instance()->addRangeMap(fgBlockCategory, rangeFact);
-    rangeFact->initializeKeywordMap();
+            // Add ascii range factory
+            rangeFact = new ASCIIRangeFactory();
+            RangeTokenMap::instance()->addRangeMap(fgASCIICategory, rangeFact);
+            rangeFact->initializeKeywordMap();
 
-    fRangeInitialized = true;
+            // Add unicode range factory
+            rangeFact = new UnicodeRangeFactory();
+            RangeTokenMap::instance()->addRangeMap(fgUnicodeCategory, rangeFact);
+            rangeFact->initializeKeywordMap();
+
+            // Add block range factory
+            rangeFact = new BlockRangeFactory();
+            RangeTokenMap::instance()->addRangeMap(fgBlockCategory, rangeFact);
+            rangeFact->initializeKeywordMap();
+
+            fRangeInitialized = true;
+        }
+    }
 }
 
 /*

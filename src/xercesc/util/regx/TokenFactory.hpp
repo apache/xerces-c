@@ -153,6 +153,7 @@ private:
      *  objects.
      */
     void initializeRegistry();
+    friend class RangeTokenMap;
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -164,8 +165,8 @@ private:
     //  fToken
     //      Contains user created Token objects. Used for memory cleanup.
     // -----------------------------------------------------------------------
-    bool                fRangeInitialized;
-	XMLMutex            fMutex;
+    static bool         fRangeInitialized;
+    XMLMutex            fMutex;
     RefVectorOf<Token>* fTokens;
     Token*              fEmpty;
     Token*              fLineBegin;
@@ -179,8 +180,8 @@ private:
     Token*              fWordEnd;
     Token*              fWordBegin;
     Token*              fDot;
-	Token*              fCombiningChar;
-	Token*              fGrapheme;
+    Token*              fCombiningChar;
+    Token*              fGrapheme;
 };
 
 XERCES_CPP_NAMESPACE_END

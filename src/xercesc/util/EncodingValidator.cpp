@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/04 21:11:12  knoaman
+ * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -93,8 +96,6 @@ EncodingValidator::~EncodingValidator() {
 
     delete fEncodingRegistry;
     fEncodingRegistry = 0;
-
-    fInstance = 0;
 }
 
 // ---------------------------------------------------------------------------

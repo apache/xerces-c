@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/04 21:11:12  knoaman
+ * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -131,7 +134,7 @@ RangeTokenElemMap::~RangeTokenElemMap()
 //  RangeTokenMap: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RangeTokenMap::RangeTokenMap() :
-    fRegistryInitialized(0)
+    fRegistryInitialized(false)
     , fTokenRegistry(0)
     , fRangeMap(0)
     , fCategories(0)
@@ -152,8 +155,6 @@ RangeTokenMap::~RangeTokenMap() {
 
     delete fTokenFactory;
     fTokenFactory = 0;
-
-    fInstance = 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -167,7 +168,6 @@ RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
 
     if (!fTokenRegistry->containsKey(keyword))
 		return 0;
-
 
 	RangeTokenElemMap* elemMap = 0;
 
@@ -265,16 +265,22 @@ void RangeTokenMap::setRangeToken(const XMLCh* const keyword,
 // ---------------------------------------------------------------------------
 void RangeTokenMap::initializeRegistry() {
 
-	XMLMutexLock lockInit(&fMutex);
+    if (fRegistryInitialized)
+        return;
 
-	if (fRegistryInitialized)
-		return;
+    // Use a faux scope to synchronize while we do this
+    {
+        XMLMutexLock lockInit(&fMutex);
 
-    fTokenFactory = new TokenFactory();
-    fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
-    fRangeMap = new RefHashTableOf<RangeFactory>(29);
-	fCategories = new XMLStringPool();
-	fRegistryInitialized = true;
+        if (!fRegistryInitialized)
+        {
+            fTokenFactory = new TokenFactory();
+            fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
+            fRangeMap = new RefHashTableOf<RangeFactory>(29);
+	        fCategories = new XMLStringPool();
+	        fRegistryInitialized = true;
+        }
+    }
 }
 
 
@@ -303,8 +309,10 @@ RangeTokenMap* RangeTokenMap::instance() {
 //  Notification that lazy data has been deleted
 // -----------------------------------------------------------------------
 void RangeTokenMap::reinitInstance() {
-	delete fInstance;
-	fInstance = 0;
+
+    delete fInstance;
+    fInstance = 0;
+    TokenFactory::fRangeInitialized = false;
 }
 
 XERCES_CPP_NAMESPACE_END
