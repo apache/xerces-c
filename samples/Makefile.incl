@@ -247,7 +247,7 @@ endif
 #   export LOADMOD=USERID.LOAD                                    #
 #   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the IXM4C40X definition sidedeck    #
+# to specify your LOADMOD and the IXM4C50X definition sidedeck    #
 # dataset.  													  #
 ###################################################################
 
@@ -266,7 +266,7 @@ SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(IXM4C40X)'"
+LIBRARY_NAMES="//'${LOADEXP}(IXM4C50X)'"
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
 endif

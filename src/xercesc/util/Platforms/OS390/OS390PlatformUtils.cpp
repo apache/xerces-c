@@ -381,7 +381,7 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     // Find the last '/' in the path - this seperates the path from the
     // filename.  Then copy the pathname.
 
-    char* pathEnd = strrchr( tmpPos, '/' );
+    char* pathEnd = strrchr((char*) tmpPos, '/' );
     if( pathEnd == NULL ) pathEnd = tmpPos - 1;
     while( tmpPos <= pathEnd ) {
         switch( *tmpPos ) {
@@ -396,7 +396,7 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
     // Now we try to locate the extension, and copy that.
 
-    char* extStart = strrchr( fileName, '.' );
+    char* extStart = strrchr((char*) fileName, '.' );
     if ( extStart != NULL ) {
         tmpPos = extStart + 1;
         while( *tmpPos != '\0' ) {
@@ -438,6 +438,157 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    char* semicolon;
+    char* optStart;
+    int   optOffset = 0;
+    int   dsnSize = 0;
+    int   optSize = 0;
+
+    // Check if this is an MVS dataset. If it is we need to allow
+    // DCB options to be passed in the URI we get. The options
+    // will be after the ";" in the URI in this case.
+    if ((tmpFileName[0] == '/') && (tmpFileName[1] == '/'))
+    {
+       semicolon = strrchr((char*)tmpFileName,';');
+       if (semicolon == NULL)
+          dsnSize = strlen(tmpFileName);
+       else
+       {
+          dsnSize = semicolon - tmpFileName;
+          optStart = semicolon;
+          optStart++;
+          optOffset = optStart - tmpFileName;
+          optSize = (strlen(tmpFileName) - optOffset);
+        }
+
+        // Make a copy of the dataset name to pass to fopen
+        char* dsnbuf = new char[dsnSize + 1];
+        ArrayJanitor<char> janText1((char*)dsnbuf);
+        strncpy(dsnbuf, tmpFileName, dsnSize);
+
+        // If no options specified, then we just put a "wb" in there.
+        // Otherwise we put a "wb" followed by a comma followed by
+        // the options string.
+        if (optSize == 0)
+           optSize += 3;
+        else
+           optSize += 4;
+
+        // Save the options for fopen
+        char* optbuf = new char[optSize];
+        ArrayJanitor<char> janText2((char*)optbuf);
+        strcpy(optbuf, "wb");
+
+        if (optSize != 3)
+        {
+           strcpy(optbuf + 2, ",");
+           strncpy(optbuf +3, optStart, optSize);
+        }
+
+        return fopen(dsnbuf, optbuf);
+
+    }
+    else
+       return fopen(tmpFileName, "wb");
+
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    char* semicolon;
+    char* optStart;
+    int   optOffset = 0;
+    int   dsnSize = 0;
+    int   optSize = 0;
+
+    // Check if this is an MVS dataset. If it is we need to allow
+    // DCB options to be passed in the URI we get. The options
+    // will be after the ";" in the URI in this case.
+    if ((fileName[0] == '/') && (fileName[1] == '/'))
+    {
+       semicolon = strrchr((char*)fileName,';');
+       if (semicolon == NULL)
+          dsnSize = strlen(fileName);
+       else
+       {
+          dsnSize = semicolon - fileName;
+          optStart = semicolon;
+          optStart++;
+          optOffset = optStart - fileName;
+          optSize = (strlen(fileName) - optOffset);
+        }
+
+        // Make a copy of the dataset name to pass to fopen
+        char* dsnbuf = new char[dsnSize + 1];
+        ArrayJanitor<char> janText1((char*)dsnbuf);
+        strncpy(dsnbuf, fileName, dsnSize);
+
+        // If no options specified, then we just put a "wb" in there.
+        // Otherwise we put a "wb" followed by a comma followed by
+        // the options string.
+        if (optSize == 0)
+           optSize += 3;
+        else
+           optSize += 4;
+
+        // Save the options for fopen
+        char* optbuf = new char[optSize];
+        ArrayJanitor<char> janText2((char*)optbuf);
+        strcpy(optbuf, "wb");
+
+        if (optSize != 3)
+        {
+           strcpy(optbuf + 2, ",");
+           strncpy(optbuf +3, optStart, optSize);
+        }
+
+        return fopen(dsnbuf, optbuf);
+
+    }
+    else
+       return fopen(fileName, "wb");
+
+}
+
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush         )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    size_t bytesWritten = 0;
+
+    while (true)
+    {
+        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
+}
+
 unsigned int
 XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
                                 , const unsigned int    toRead
@@ -475,6 +626,10 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     //
     char* newSrc = XMLString::transcode(srcPath);
     ArrayJanitor<char> janText(newSrc);
+
+    if ( (newSrc != NULL) && (newSrc[0] != NULL) && (newSrc[1] != NULL) && //@DEM
+         (newSrc[0] == '/') && (newSrc[1] == '/') )       //@DEM
+        return XMLString::transcode(newSrc);              //@DEM
 
     // Use a local buffer that is big enough for the largest legal path
     char *absPath = new char[_POSIX_PATH_MAX];

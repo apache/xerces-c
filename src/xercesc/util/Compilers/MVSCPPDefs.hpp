@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/08/08 16:40:16  tng
+ * 390 Changes from Stephen Dulin.
+ *
  * Revision 1.4  2002/05/28 12:57:17  tng
  * Fix typo.
  *
@@ -131,7 +134,7 @@
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
-#define NO_NATIVE_BOOL
+//#define NO_NATIVE_BOOL
 
 
 // ---------------------------------------------------------------------------

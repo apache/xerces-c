@@ -407,9 +407,9 @@ MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -W l,dll ${LDFLAGS}
 ifeq (${TRANSCODER}, ICU)
 ## OS390BATCH
     ifeq (${OS390BATCH},1)
-	ALLLIBS = "//'${LOADEXP}(IXM20UCX)'"
+	ALLLIBS = "//'${LOADEXP}(IXM22UCX)'"
     else
-	ALLLIBS = ${ICUROOT}/lib/libicuuc.20.2.x
+	ALLLIBS = ${ICUROOT}/lib/libicuuc22.0.x
     endif
 else
 	ALLLIBS =
@@ -476,17 +476,27 @@ ifeq (${PLATFORM}, AIX)
     REAL_NAME=${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
 
 else
-
-    #
-    # LINK_NAME=libxerces-c.so
-    # SO_NAME  =libxerces-c.so.20
-    # REAL_NAME=libxerces-c.so.20.0
-    #
-    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-    SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
-    REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
-
+    ifeq (${PLATFORM}, OS390)
+        #
+        # LINK_NAME=libxerces-c.dll
+        # SO_NAME  =libxerces-c20.dll
+        # REAL_NAME=libxerces-c2_0_0.dll
+        #
+        LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+        SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+        REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+    else
+        #
+        # LINK_NAME=libxerces-c.so
+        # SO_NAME  =libxerces-c.so.20
+        # REAL_NAME=libxerces-c.so.20.0
+        #
+        LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+        SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+        REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+    endif
 endif
+
 
 FQ_LINK_NAME=${XML_LIB_DIR}/${LINK_NAME}
 FQ_SO_NAME  =${XML_LIB_DIR}/${SO_NAME}

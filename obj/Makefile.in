@@ -85,7 +85,7 @@ include ../src/xercesc/Makefile.incl
 LIB=${XERCESCROOT}/lib
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET = "//'${LOADMOD}(IXM4C40)'"
+BATCH_TARGET = "//'${LOADMOD}(IXM4C50)'"
 endif
 ifneq (${PLATFORM}, OS400)
 LIBNAME=libxerces-c
