@@ -83,8 +83,13 @@ XERCES_CPP_NAMESPACE_BEGIN
  * This is consistently achieved by taking the address of the value field and
  * changing it into a DOMString*, and then dereferencing it to get a DOMString.
  * The typical piece of code is:
- * DOMString *x = (DOMString *)&value;
+ * DOMString *x = (DomString *)&value;
  *  ... use of *x which is the DOMString ...
+ * This was amended by neilg after memory management was
+ * introduced.  Now a union exists which is either a 
+ * DOMString * or a ChildNode *.  This will be less efficient
+ * (one more dereference per access) but actually works on all the
+ * compilers we support.
  */
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
@@ -93,7 +98,7 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
     name = aName.clone();
     isSpecified(true);
     hasStringValue(true);
-    value = null;
+    value.child = null;
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
@@ -109,7 +114,7 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
      * be called on something that is not actually a DOMString... Really bad
      * things would then happen!!!
      */
-    value = null;
+    value.child = null;
     hasStringValue(other.hasStringValue());
 
     if (other.isIdAttr())
@@ -123,13 +128,27 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
         cloneChildren(other);
     }
     else {
-        // get the address of the value field of this as a DOMString*
-        DOMString *x = (DOMString*) &value;
-        // and the address of the value field of other as a DOMString*
-        DOMString *y = (DOMString*) &(other.value);
-        // We can now safely do the cloning and assignement, both operands
-        // being a DOMString their ref counts will be updated appropriately
-        *x = y->clone();
+        if(other.value.str == null) 
+        {
+            if(value.str != null)
+            {
+                *(value.str) == null;
+                delete value.str;
+            }
+       }
+       else
+       {
+            // get the address of the value field of this as a DOMString*
+            DOMString *x = (value.str == null
+                ?(value.str = new (getOwnerDocument()->getMemoryManager()) DOMString())
+                :value.str
+            );
+            // and the address of the value field of other as a DOMString*
+            DOMString *y = other.value.str;
+            // We can now safely do the cloning and assignement, both operands
+            // being a DOMString their ref counts will be updated appropriately
+            *x = y->clone();
+        }
     }
 };
 
@@ -139,8 +158,11 @@ AttrImpl::~AttrImpl() {
         // if value is a DOMString we must make sure its ref count is updated.
         // this is achieved by changing the address of the value field into a
         // DOMString* and setting the value field to null
-        DOMString *x = (DOMString *) &value;
-        *x = null;
+        if(value.str != null) 
+        {
+            *(value.str) == null;
+            delete value.str;
+        }
     }
 }
 
@@ -148,17 +170,21 @@ AttrImpl::~AttrImpl() {
 // create a real Text node as child if we don't have one yet
 void AttrImpl::makeChildNode() {
     if (hasStringValue()) {
-        if (value != null) {
+        if (value.child != null) {
             // change the address of the value field into a DOMString*
-            DOMString *x = (DOMString *) &value;
+            DOMString *x = (value.str == null
+                ?(value.str = new (getOwnerDocument()->getMemoryManager()) DOMString())
+                :value.str
+            );
             // create a Text node passing the DOMString it points to
             TextImpl *text =
               (TextImpl *) getOwnerDocument()->createTextNode(*x);
             // get the DOMString ref count to be updated by setting the value
             // field to null
             *x = null;
+            delete x;
             // finally reassign the value to the node address
-            value = text;
+            value.child = text;
             text->isFirstChild(true);
             text->previousSibling = text;
             text->ownerNode = this;
@@ -206,16 +232,19 @@ bool AttrImpl::getSpecified()
 
 DOMString AttrImpl::getValue()
 {
-    if (value == null) {
+    if (value.child == null) {
         return 0; // return "";
     }
     if (hasStringValue()) {
         // change value into a DOMString*
-        DOMString *x = (DOMString *) &value;
+        DOMString *x = (value.str == null
+            ?(value.str = new (getOwnerDocument()->getMemoryManager()) DOMString())
+            :value.str
+        );
         // return the DOMString it points to
         return *x;
     }
-    ChildNode *firstChild = (ChildNode *) value;
+    ChildNode *firstChild = value.child;
     ChildNode *node = firstChild->nextSibling;
     if (node == null) {
         return firstChild->getNodeValue().clone();
@@ -272,9 +301,9 @@ void AttrImpl::setValue(const DOMString &newvalue)
     if (isIdAttr())
         this->getOwnerDocument()->getNodeIDMap()->remove(this);
 
-    if (!hasStringValue() && value != null) {
+    if (!hasStringValue() && value.str != null) {
         NodeImpl *kid;
-        while ((kid = (ChildNode *) value) != null) { // Remove existing kids
+        while ((kid = value.child) != null) { // Remove existing kids
             removeChild(kid);
             if (kid->nodeRefCount == 0)
                 NodeImpl::deleteIf(kid);
@@ -283,12 +312,16 @@ void AttrImpl::setValue(const DOMString &newvalue)
 
     // directly store the string as the value by changing the value field
     // into a DOMString
-    DOMString *x = (DOMString *) &value;
+    DOMString *x = (value.str == null 
+        ?(value.str = new (getOwnerDocument()->getMemoryManager()) DOMString())
+        :value.str
+    );
     if (newvalue != null) {
         *x = newvalue.clone();
     }
     else {
         *x = null;
+        delete x;
     }
     hasStringValue(true);
     isSpecified(true);
@@ -349,7 +382,7 @@ NodeListImpl *AttrImpl::getChildNodes() {
 
 NodeImpl * AttrImpl::getFirstChild() {
     makeChildNode();
-    return (ChildNode *) value;
+    return value.child;
 }
 
 
@@ -360,13 +393,13 @@ NodeImpl * AttrImpl::getLastChild() {
 ChildNode * AttrImpl::lastChild() {
     // last child is stored as the previous sibling of first child
     makeChildNode();
-    return value != null ? ((ChildNode *) value)->previousSibling : null;
+    return value.child != null ? (value.child)->previousSibling : null;
 }
 
 void AttrImpl::lastChild(ChildNode *node) {
     // store lastChild as previous sibling of first child
-    if (value != null) {
-        ((ChildNode *) value)->previousSibling = node;
+    if (value.child != null) {
+        (value.child)->previousSibling = node;
     }
 }
 
@@ -374,7 +407,7 @@ unsigned int AttrImpl::getLength() {
     if (hasStringValue()) {
         return 1;
     }
-    ChildNode *node = (ChildNode *) value;
+    ChildNode *node = value.child;
     int length = 0;
     while (node != null) {
         length++;
@@ -385,7 +418,7 @@ unsigned int AttrImpl::getLength() {
 
 bool AttrImpl::hasChildNodes()
 {
-    return value != null;
+    return value.child != null;
 };
 
 
@@ -487,10 +520,10 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 
     // Attach before and after
     // Note: firstChild.previousSibling == lastChild!!
-    ChildNode *firstChild = (ChildNode *) value;
+    ChildNode *firstChild = value.child;
     if (firstChild == null) {
         // this our first and only child
-        value = newInternal; // firstChild = newInternal
+        value.child = newInternal; // firstChild = newInternal
         newInternal->isFirstChild(true);
         newInternal->previousSibling = newInternal;
     }
@@ -510,7 +543,7 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
                 newInternal->nextSibling = firstChild;
                 newInternal->previousSibling = firstChild->previousSibling;
                 firstChild->previousSibling = newInternal;
-                value = newInternal; // firstChild = newInternal;
+                value.child = newInternal; // firstChild = newInternal;
                 newInternal->isFirstChild(true);
             }
             else {
@@ -544,15 +577,15 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 NodeImpl *AttrImpl::item(unsigned int index) {
 
     if (hasStringValue()) {
-        if (index != 0 || value == null) {
+        if (index != 0 || value.child == null) {
             return null;
         }
         else {
             makeChildNode();
-            return (NodeImpl *) value;
+            return (NodeImpl *) (value.child);
         }
     }
-    ChildNode *nodeListNode = (ChildNode *) value;
+    ChildNode *nodeListNode = value.child;
     for (unsigned int nodeListIndex = 0;
          nodeListIndex < index && nodeListNode != null;
          nodeListIndex++) {
@@ -594,11 +627,11 @@ NodeImpl *AttrImpl::removeChild(NodeImpl *oldChild) {
 
     // Patch linked list around oldChild
     // Note: lastChild == firstChild->previousSibling
-    if (oldInternal == value) {
+    if (oldInternal == value.child) {
         // removing first child
         oldInternal->isFirstChild(false);
-        value = oldInternal->nextSibling; // firstChild = oldInternal->nextSibling
-        ChildNode *firstChild = (ChildNode *) value;
+        value.child = oldInternal->nextSibling; // firstChild = oldInternal->nextSibling
+        ChildNode *firstChild = value.child;
         if (firstChild != null) {
             firstChild->isFirstChild(true);
             firstChild->previousSibling = oldInternal->previousSibling;
@@ -609,7 +642,7 @@ NodeImpl *AttrImpl::removeChild(NodeImpl *oldChild) {
         prev->nextSibling = next;
         if (next == null) {
             // removing last child
-            ChildNode *firstChild = (ChildNode *) value;
+            ChildNode *firstChild = value.child;
             firstChild->previousSibling = prev;
         } else {
             // removing some other child in the middle
@@ -647,7 +680,7 @@ void AttrImpl::setReadOnly(bool readOnl, bool deep) {
             return;
         }
         // Recursively set kids
-        for (ChildNode *mykid = (ChildNode *) value;
+        for (ChildNode *mykid = value.child;
              mykid != null;
              mykid = mykid->nextSibling)
             if(! (mykid->isEntityReference()))
@@ -664,7 +697,7 @@ void AttrImpl::normalize()
         return;
     }
     ChildNode *kid, *next;
-    for (kid = (ChildNode *) value; kid != null; kid = next)
+    for (kid = value.child; kid != null; kid = next)
     {
         next = kid->nextSibling;
 

@@ -153,7 +153,10 @@ public:
     DOMString name;
 
     /** This can either be a DOMString or the first child node (ChildNode*). */
-    void *value;
+    union {
+        ChildNode *child;
+        DOMString *str;
+    } value;
 
 public:
     AttrImpl(DocumentImpl *ownerDocument, const DOMString &aName);
@@ -197,6 +200,7 @@ protected:
     void cloneChildren(const NodeImpl &other);
     ChildNode * lastChild();
     void lastChild(ChildNode *);
+    inline DOMString* valueToDOMString();
 
 };
 
