@@ -333,6 +333,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "SCMPrint"=".\SCMPrint\SCMPrint.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "SEnumVal"=".\SEnumVal\SEnumVal.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -493,6 +508,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name PSVIWriter
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name SCMPrint
     End Project Dependency
 }}}
 
