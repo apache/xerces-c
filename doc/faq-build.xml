@@ -378,10 +378,20 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Cannot load message domain, Xerces Panic Error">
     <q>"Cannot load message domain, Xerces Panic Error"?</q>
     <a>
-      <p>If the parser is built with icu message loader (like IBM XML4C binaries), or message
-         catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-         the directory, $XERCESCROOT/msg, where the message files reside.
+      <p>If the parser is built with icu message loader (like IBM XML4C binaries), 
+         you need to make sure that the message library, (for exact name
+         see <jump href="faq-distrib.html#faq-3">FAQ: Which DLL's do I need to distribute with my application?</jump>)
+         is located in a directory which is on the library search path.
+         Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to        
+         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable 
+         XERCESC_NLS_HOME, or at $XERCESCROOT/msg.
       </p>
+      <p>If the parser is built with message catalog loader, you need to make sure that the message
+         catalog file, XercesMessages_en_US.cat, is in the directory given at the call to XMLPlatformUtils::Initialize(),
+         or is located in the directory pointed to by the environment variable XERCESC_NLS_HOME, or  
+         at $XERCESCROOT/msg.
+      </p>      
+
     </a>
   </faq>
 

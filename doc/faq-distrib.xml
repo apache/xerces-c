@@ -150,7 +150,10 @@
                     libicudt*.sl for HP-UX.</li>
 
                 <li><em>The &XercesCName; Message file:</em><br></br>
-                    XercesMessages_en_US.res.</li>
+                    XercesMessages*.dll for Windows NT/2000, or<br></br>
+                    libXercesMessages*.a for AIX, or<br></br>
+                    libXercesMessages*.so for Solaris/Linux, or<br></br>
+                    libXercesMessages*.sl for HP-UX.</li>
 
             </ol>
         </a>

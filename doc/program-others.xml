@@ -539,6 +539,34 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 ..
 </source>
 
+
+    <anchor name="SpecifyLocationForMessageLoader"/>
+    <s2 title="Specify location for message loader">
+
+        <p>The &XercesCName; searches for message files at the default message directory, $XERCESCROOT/msg.
+        </p>
+
+        <p>Application can specify an alternative location for the message files in their
+        very first invocation to XMLPlatformUtils::Initialize() by supplying
+        a parameter for the alternative location intended.
+        </p>
+    </s2>
+
+<source>
+
+...
+    // Initialize the parser system
+    try
+    {
+         XMLPlatformUtils::Initialize("en_US", "/usr/application_root/msg_home");
+    }
+
+    catch ()
+    {
+    }
+..
+</source>
+
 <anchor name="UseSpecificScanner"/>
     <s2 title="Use Specific Scanner">
 
