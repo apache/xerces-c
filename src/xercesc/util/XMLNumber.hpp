@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/10/17 21:10:55  peiyongz
+ * loadNumber() added
+ *
  * Revision 1.9  2003/10/02 19:18:12  peiyongz
  * enum NumberType
  *
@@ -164,6 +167,9 @@ public:
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(XMLNumber)
+
+    static XMLNumber*          loadNumber(XMLNumber::NumberType   numType
+                                        , XSerializeEngine&       serEng);
 
 protected:
 

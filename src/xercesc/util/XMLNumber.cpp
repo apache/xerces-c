@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/10/17 21:10:55  peiyongz
+ * loadNumber() added
+ *
  * Revision 1.3  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -79,6 +82,14 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLNumber.hpp>
 
+//since we need to dynamically created each and every derivatives 
+//during deserialization by XSerializeEngine>>Derivative, we got
+//to include all hpp
+#include <xercesc/util/XMLDouble.hpp>
+#include <xercesc/util/XMLFloat.hpp>
+#include <xercesc/util/XMLDateTime.hpp>
+#include <xercesc/util/XMLBigDecimal.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 XMLNumber::XMLNumber()
@@ -96,6 +107,42 @@ IMPL_XSERIALIZABLE_NOCREATE(XMLNumber)
 void XMLNumber::serialize(XSerializeEngine& serEng)
 {
     // this class has no data to serialize/de-serilize
+}
+
+XMLNumber* XMLNumber::loadNumber(XMLNumber::NumberType  numType
+                               , XSerializeEngine&      serEng)
+{
+
+    switch((XMLNumber::NumberType) numType)
+    {
+    case XMLNumber::Float: 
+        XMLFloat* floatNum;
+        serEng>>floatNum;
+        return floatNum;
+        break;
+    case XMLNumber::Double:
+        XMLDouble* doubleNum;
+        serEng>>doubleNum;
+        return doubleNum;
+        break;
+    case XMLNumber::BigDecimal: 
+        XMLBigDecimal* bigdecimalNum;
+        serEng>>bigdecimalNum;
+        return bigdecimalNum;
+        break;
+    case XMLNumber::DateTime: 
+        XMLDateTime* datetimeNum;
+        serEng>>datetimeNum;
+        return datetimeNum;
+        break;
+    case XMLNumber::UnKnown:
+        return 0;
+        break;
+    default: //we treat this same as UnKnown
+        return 0;
+        break;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END
