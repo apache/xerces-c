@@ -111,7 +111,11 @@ all:: lib
 
 compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators
 
+ifeq (${PLATFORM},CYGWIN)
+lib:: ${FQ_SO_NAME}
+else
 lib:: ${FQ_REAL_NAME}
+endif
 
 Prepare::
 	@echo Preparing the directory structure for a build ...
@@ -159,9 +163,15 @@ Validators::
 	@echo Building "validators"
 	${MAKE} -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
 
+ifeq (${PLATFORM},CYGWIN)
+${FQ_SO_NAME}:: compile
+	@echo Building ${FQ_SO_NAME}
+	${MAKE} -C $(XML_OBJ_DIR)/.. -k $(MAKE_FLAGS)
+else
 ${FQ_REAL_NAME}:: compile
 	@echo Building ${FQ_REAL_NAME}
 	${MAKE} -C $(XML_OBJ_DIR)/.. -k $(MAKE_FLAGS)
+endif
 
 install::
 	${MAKE} -C $(UTIL_DIR) $@
