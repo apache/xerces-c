@@ -82,7 +82,7 @@ class DOMDocumentImpl;
 class DOMDocumentTypeImpl;
 class DOMElement;
 class GrammarResolver;
-
+class XMLGrammarPool;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
@@ -1307,11 +1307,16 @@ protected :
       *
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
+      *
+      * @param gramPool   Pointer to the grammar pool instance from 
+      *                   external application (through derivatives).
+      *                   The parser does NOT own it.
       */
     AbstractDOMParser
     (
-          XMLValidator* const valToAdopt = 0
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          XMLValidator* const   valToAdopt = 0
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+        , XMLGrammarPool* const gramPool = 0
     );
 
     //@}
@@ -1468,6 +1473,11 @@ private :
     //      Buffer for storing the internal subset information.
     //      Once complete (after DOCTYPE is finished scanning), send
     //      it to DocumentType Node
+    //
+    //   fGrammarPool
+    //      The grammar pool passed from external application (through derivatives).
+    //      which could be 0, not owned.
+    //
     // -----------------------------------------------------------------------
     bool                          fCreateEntityReferenceNodes;
     bool                          fIncludeIgnorableWhitespace;
@@ -1487,6 +1497,7 @@ private :
     XMLStringPool*                fURIStringPool;
     XMLValidator*                 fValidator;
     MemoryManager*                fMemoryManager;
+    XMLGrammarPool*               fGrammarPool;
     XMLBufferMgr                  fBufMgr;
     XMLBuffer&                    fInternalSubset;
 };

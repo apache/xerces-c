@@ -82,6 +82,7 @@ class XMLScanner;
 class XMLValidator;
 class Grammar;
 class GrammarResolver;
+class XMLGrammarPool;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
@@ -130,8 +131,9 @@ public :
       */
     DOMParser
     (
-          XMLValidator* const  valToAdopt = 0
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          XMLValidator* const   valToAdopt = 0
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+        , XMLGrammarPool* const gramPool = 0
     );
 
     /**
@@ -1737,6 +1739,10 @@ private :
     //      A flag to create a DOM_XMLDecl node in the ODM tree if it exists
     //      This is an extension to xerces implementation
     //
+    //   fGrammarPool
+    //      The grammar pool passed from external application (through derivatives).
+    //      which could be 0, not owned.
+    //
     // -----------------------------------------------------------------------
     bool                    fToCreateXMLDeclTypeNode;
     bool                    fCreateEntityReferenceNodes;
@@ -1755,6 +1761,7 @@ private :
     XMLStringPool*          fURIStringPool;
     XMLValidator*           fValidator;
     MemoryManager*          fMemoryManager;
+    XMLGrammarPool*         fGrammarPool;
 };
 
 

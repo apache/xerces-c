@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/06/20 18:47:21  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.8  2003/05/15 18:25:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -95,6 +98,7 @@ class DOMBuilder;
 class DOMWriter;
 class DOMInputSource;
 class MemoryManager;
+class XMLGrammarPool;
 
 /**
   * <p><code>DOMImplementationLS</code> contains the factory methods for
@@ -197,9 +201,10 @@ public:
      * @see DOMBuilder
      * @since DOM Level 3
      */
-    virtual DOMBuilder* createDOMBuilder(const short mode,
-                                         const XMLCh* const schemaType,
-                                         MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
+    virtual DOMBuilder* createDOMBuilder(const short            mode,
+                                         const XMLCh* const     schemaType,
+                                         MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager,
+                                         XMLGrammarPool*  const gramPool = 0) = 0;
 
 
     /**

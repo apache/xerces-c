@@ -1294,7 +1294,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-        XSDDOMParser parser(0, fMemoryManager);
+        XSDDOMParser parser(0, fMemoryManager, 0);
 
         parser.setValidationScheme(XercesDOMParser::Val_Never);
         parser.setDoNamespaces(true);
@@ -1562,7 +1562,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         }
     }
 
-    XSDDOMParser parser(0, fMemoryManager);
+    XSDDOMParser parser(0, fMemoryManager, 0);
 
     parser.setValidationScheme(XercesDOMParser::Val_Never);
     parser.setDoNamespaces(true);

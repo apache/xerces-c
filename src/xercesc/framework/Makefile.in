@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2003/06/20 18:51:31  peiyongz
+# Stateless Grammar Pool :: Part I
+#
 # Revision 1.8  2003/04/21 15:48:39  knoaman
 # Include MemoryManger header file.
 #
@@ -163,16 +166,20 @@ FRAMEWORK_CPP_PUBHEADERS = \
 	XMLBufferMgr.hpp \
 	XMLContentModel.hpp \
 	XMLDocumentHandler.hpp \
+	XMLDTDDescription.hpp \
 	XMLElementDecl.hpp \
 	XMLEntityDecl.hpp \
 	XMLEntityHandler.hpp \
 	XMLErrorCodes.hpp \
 	XMLErrorReporter.hpp \
 	XMLFormatter.hpp \
+	XMLGrammarDescription.hpp \
+	XMLGrammarPool.hpp \
 	XMLNotationDecl.hpp \
 	XMLPScanToken.hpp \
 	XMLRecognizer.hpp \
 	XMLRefInfo.hpp \
+	XMLSchemaDescription.hpp \
 	XMLValidator.hpp \
 	XMLValidityCodes.hpp
 

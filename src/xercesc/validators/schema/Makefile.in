@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2003/06/20 19:03:03  peiyongz
+# Stateless Grammar Pool :: Part I
+#
 # Revision 1.7  2003/01/29 19:48:06  gareth
 # updated for PSVIDefs.hpp
 #
@@ -173,6 +176,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	XercesAttGroupInfo.hpp \
 	XercesElementWildcard.hpp \
 	XercesGroupInfo.hpp \
+	XMLSchemaDescriptionImpl.hpp \
 	XUtil.hpp \
 	XSDDOMParser.hpp \
 	XSDLocator.hpp \
@@ -198,6 +202,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	XercesAttGroupInfo.$(TO) \
 	XercesElementWildcard.$(TO) \
 	XercesGroupInfo.$(TO) \
+	XMLSchemaDescriptionImpl.$(TO) \	
 	XUtil.$(TO) \
 	XSDDOMParser.$(TO) \
 	XSDLocator.$(TO) \

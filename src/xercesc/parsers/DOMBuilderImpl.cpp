@@ -87,10 +87,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DOMBuilderImpl: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DOMBuilderImpl::DOMBuilderImpl( XMLValidator* const  valToAdopt
-                              , MemoryManager* const manager) :
+DOMBuilderImpl::DOMBuilderImpl( XMLValidator* const   valToAdopt
+                              , MemoryManager* const  manager
+                              , XMLGrammarPool* const gramPool) :
 
-AbstractDOMParser(valToAdopt, manager)
+AbstractDOMParser(valToAdopt, manager, gramPool)
 , fAutoValidation(false)
 , fValidation(false)
 , fErrorHandler(0)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/06/20 18:55:54  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.19  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -251,8 +254,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SAXParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SAXParser::SAXParser( XMLValidator* const  valToAdopt
-                    , MemoryManager* const manager) :
+SAXParser::SAXParser( XMLValidator* const   valToAdopt
+                    , MemoryManager* const  manager
+                    , XMLGrammarPool* const gramPool):
 
     fParseInProgress(false)
     , fElemDepth(0)
@@ -268,6 +272,7 @@ SAXParser::SAXParser( XMLValidator* const  valToAdopt
     , fURIStringPool(0)
     , fValidator(valToAdopt)
     , fMemoryManager(manager)
+    , fGrammarPool(gramPool)
     , fElemQNameBuf(1023, manager)
 {
     try
@@ -293,7 +298,7 @@ SAXParser::~SAXParser()
 void SAXParser::initialize()
 {
     // Create grammar resolver and string pool to pass to scanner
-    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fGrammarPool, fMemoryManager);
     fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     // Create our scanner and tell it what validator to use

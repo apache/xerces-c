@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2003/06/20 19:03:03  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.32  2003/05/18 14:02:08  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -257,6 +260,8 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -983,10 +988,10 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
     //  And enumerate all the complextype info in the grammar
     //    and do Unique Particle Attribution Checking
 
-    RefHashTableOfEnumerator<Grammar> grammarEnum = fGrammarResolver->getGrammarEnumerator();
+    RefHashTableOfEnumerator<GrammarEntry> grammarEnum = fGrammarResolver->getGrammarEnumerator();
     while (grammarEnum.hasMoreElements())
     {
-        SchemaGrammar& sGrammar = (SchemaGrammar&) grammarEnum.nextElement();
+        SchemaGrammar& sGrammar = (SchemaGrammar&) *(grammarEnum.nextElement().getGrammar());
         if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType || sGrammar.getValidated())
              continue;
 

@@ -115,9 +115,10 @@ public:
     // ------------------------------------------------------------
     // Introduced in DOM Level 3
     // Experimental - subject to change
-    virtual DOMBuilder*         createDOMBuilder(const short mode,
-                                                 const XMLCh* const schemaType,
-                                                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    virtual DOMBuilder*         createDOMBuilder(const short           mode,
+                                                 const XMLCh* const    schemaType,
+                                                 MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager,
+                                                 XMLGrammarPool* const gramPool = 0);
     virtual DOMWriter*          createDOMWriter(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual DOMInputSource*     createDOMInputSource();
 

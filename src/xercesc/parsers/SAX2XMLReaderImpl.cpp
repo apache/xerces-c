@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/06/20 18:55:54  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.21  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -292,7 +295,8 @@ const XMLCh gDTDEntityStr[] =
     chOpenSquare, chLatin_d, chLatin_t, chLatin_d, chCloseSquare, chNull
 };
 
-SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const manager) :
+SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
+                                   , XMLGrammarPool* const gramPool):
 
     fNamespacePrefix(false)
     , fAutoValidation(false)
@@ -317,6 +321,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const manager) :
     , fURIStringPool(0)
     , fValidator(0)
     , fMemoryManager(manager)
+    , fGrammarPool(gramPool)
     , fStringBuffers(manager)
 {
     try
@@ -341,7 +346,7 @@ SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
 void SAX2XMLReaderImpl::initialize()
 {
     // Create grammar resolver and string pool that we pass to the scanner
-    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fGrammarPool, fMemoryManager);
     fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     //  Create a scanner and tell it what validator to use. Then set us

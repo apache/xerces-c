@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/06/20 18:58:45  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.8  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -99,33 +102,57 @@
  */
 
 #include <xercesc/validators/common/GrammarResolver.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
+#include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
+
+#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Constructor and Destructor
 // ---------------------------------------------------------------------------
-GrammarResolver::GrammarResolver(MemoryManager* const manager) :
-    fCacheGrammar(false)
-    , fUseCachedGrammar(false)
-    , fStringPool(109, manager)
-    , fGrammarRegistry(0)
-    , fCachedGrammarRegistry(0)
-    , fDataTypeReg(0)
-    , fMemoryManager(manager)	 
+GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
+                               , MemoryManager*  const manager)
+:fCacheGrammar(false)
+,fUseCachedGrammar(false)
+,fGrammarPoolFromExternalApplication(true)
+,fStringPool(109, manager)
+,fGrammarBucket(0)
+,fDataTypeReg(0)
+,fMemoryManager(manager)
+,fGrammarPool(gramPool)
 {
-    fGrammarRegistry = new (manager) RefHashTableOf<Grammar>(29, true,  manager);
+
+    fGrammarBucket = new (manager) RefHashTableOf<GrammarEntry>(29, true,  manager);
+
+    if (!gramPool)
+    {
+        /***
+         * We need to instantiate a default grammar pool object so that
+         * all grammars and grammar components could be created through
+         * the Factory methods
+         */
+        fGrammarPool = new (manager) XMLGrammarPoolImpl(manager);     
+        fGrammarPoolFromExternalApplication=false;
+    }
+
 }
 
 GrammarResolver::~GrammarResolver()
-{
-   delete fGrammarRegistry;
-   delete fCachedGrammarRegistry;
-   if (fDataTypeReg)
+{  
+    delete fGrammarBucket;
+
+    if (fDataTypeReg)
       delete fDataTypeReg;
+
+   /***
+    *  delete the grammar pool iff it is created by this resolver
+    */
+   if (!fGrammarPoolFromExternalApplication)
+       delete fGrammarPool;
 }
 
 // ---------------------------------------------------------------------------
@@ -166,97 +193,162 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
     return dv;
 }
 
-Grammar* GrammarResolver::getGrammar( const XMLCh* const nameSpaceKey )
+//Deprecated
+Grammar* GrammarResolver::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    if (!nameSpaceKey) {
+    if (!nameSpaceKey)
         return 0;
-    }
 
-    Grammar* aGrammar = fGrammarRegistry->get(nameSpaceKey);
+    // we don't care the leakage
+    XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
+    return getGrammar(gramDesc);
 
-    if (!aGrammar && fUseCachedGrammar && fCachedGrammarRegistry)
-        aGrammar = fCachedGrammarRegistry->get(nameSpaceKey);
-
-    return aGrammar;
 }
 
-RefHashTableOfEnumerator<Grammar>
+Grammar* GrammarResolver::getGrammar( XMLGrammarDescription* const gramDesc)
+{
+    if (!gramDesc)
+        return 0;
+
+    GrammarEntry* gramEntry = fGrammarBucket->get(gramDesc->getGrammarKey());
+
+    if (gramEntry)
+        return gramEntry->getGrammar();
+
+    /***
+     * if not found locally, try grammarPool if necessary
+     */
+    if (fUseCachedGrammar)
+        return fGrammarPool->retrieveGrammar(gramDesc);
+
+    return 0;
+}
+
+RefHashTableOfEnumerator<GrammarEntry>
 GrammarResolver::getGrammarEnumerator() const
 {
-    return RefHashTableOfEnumerator<Grammar>(fGrammarRegistry);
+    return RefHashTableOfEnumerator<GrammarEntry>(fGrammarBucket);
 }
 
 bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
 {
-   return fGrammarRegistry->containsKey( nameSpaceKey );
+   return fGrammarBucket->containsKey( nameSpaceKey );
 }
 
-void GrammarResolver::putGrammar( const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt ){
-
-   if (fCacheGrammar)
-       fCachedGrammarRegistry->put((void*) nameSpaceKey, grammarToAdopt);
-
-   fGrammarRegistry->put( (void*) nameSpaceKey, grammarToAdopt );
+//Deprecated
+void GrammarResolver::putGrammar( const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt )
+{
+    // we don't care the leakage
+    XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
+    putGrammar(gramDesc, grammarToAdopt);
 }
 
+void GrammarResolver::putGrammar(XMLGrammarDescription* const gramDesc, Grammar* const grammarToAdopt)
+{
+    if (!gramDesc || !grammarToAdopt)
+        return;
+
+    /***
+     * the grammar will be either in the grammarpool, or in the grammarbucket
+     */
+    if (fCacheGrammar)
+       fGrammarPool->cacheGrammar(gramDesc, grammarToAdopt);
+    else
+    {
+        /***
+         * The grammarEntry in the GrammarBucket can use the parser's memory,
+         * since itself won't go into the GrammarPool while its contained 
+         * GrammarDescription and Grammar will.
+         */
+        GrammarEntry *theEntry = new (fMemoryManager) GrammarEntry(gramDesc, grammarToAdopt);
+        fGrammarBucket->put( (void*) gramDesc->getGrammarKey(), theEntry );
+    }
+
+}
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: methods
 // ---------------------------------------------------------------------------
 void GrammarResolver::reset() {
-   fGrammarRegistry->removeAll();
+   fGrammarBucket->removeAll();
 }
 
 void GrammarResolver::resetCachedGrammar()
 {
-    if (fCachedGrammarRegistry)
-        fCachedGrammarRegistry->removeAll();
+    fGrammarPool->clear();
+
 }
 
 void GrammarResolver::cacheGrammars()
 {
-    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
-    ValueVectorOf<XMLCh*> keys(8, fMemoryManager);
-    unsigned int keyCount = 0;
+    RefHashTableOfEnumerator<GrammarEntry> grammarEnum(fGrammarBucket);
 
-    //Check if a grammar has already been cached.
-    while (grammarEnum.hasMoreElements()) {
-
+    /***
+     * It is up to the GrammarPool to handle duplicated grammar
+     *
+     * Destroy the grammarEntry but reuse the grammar and description
+     * embedded.
+     *
+     */
+    while (grammarEnum.hasMoreElements()) 
+    {
         XMLCh* grammarKey = (XMLCh*) grammarEnum.nextElementKey();
+        GrammarEntry* theEntry = fGrammarBucket->orphanKey(grammarKey);
+        XMLGrammarDescription* description = theEntry->getDescription();
+        Grammar*               grammar     = theEntry->getGrammar();
+        theEntry->nullGrammar();
+        theEntry->nullDescription();
+        delete theEntry;
 
-        if (fCachedGrammarRegistry && fCachedGrammarRegistry->containsKey(grammarKey)) {
-            ThrowXML(RuntimeException, XMLExcepts::GC_ExistingGrammar);
-        }
-
-        keys.addElement(grammarKey);
-        keyCount++;
+        fGrammarPool->cacheGrammar(description, grammar);
     }
 
-    if (!fCachedGrammarRegistry)
-        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true, fMemoryManager);
-
-    // Cache
-    for (unsigned int i=0; i<keyCount; i++) {
-
-        XMLCh* grammarKey = keys.elementAt(i);
-        Grammar* grammar = fGrammarRegistry->orphanKey(grammarKey);
-        fCachedGrammarRegistry->put((void*) grammarKey, grammar);
-    }
 }
-
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Setter methods
 // ---------------------------------------------------------------------------
-void GrammarResolver::cacheGrammarFromParse(const bool aValue) {
-
-    if (aValue && !fCachedGrammarRegistry) {
-        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true, fMemoryManager);
-    }
+void GrammarResolver::cacheGrammarFromParse(const bool aValue)
+{
 
     fCacheGrammar = aValue;
-    fGrammarRegistry->removeAll();
-    fGrammarRegistry->setAdoptElements(!fCacheGrammar);
+    fGrammarBucket->removeAll();
+    fGrammarBucket->setAdoptElements(!fCacheGrammar);
+}
+
+Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
+{
+    // we don't care the leakage
+    XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
+    return orphanGrammar(gramDesc);
+}
+
+Grammar* GrammarResolver::orphanGrammar(XMLGrammarDescription* const gramDesc)
+{
+    if (!gramDesc)
+        return 0;
+
+    if (fCacheGrammar)
+        return fGrammarPool->orphanGrammar(gramDesc);
+
+    GrammarEntry* theEntry = fGrammarBucket->orphanKey(gramDesc->getGrammarKey());
+    if (theEntry)
+    {
+        Grammar* aGrammar = theEntry->getGrammar();
+        theEntry->nullGrammar();
+        delete theEntry;
+        return aGrammar;
+    }
+
+    return 0;
+}
+
+XMLGrammarDescription* GrammarResolver::getGrammarDescription(const XMLCh* const nameSpaceKey)
+{
+    if (XMLString::equals(XMLUni::fgDTDEntityString, nameSpaceKey))
+        return (XMLGrammarDescription*) fGrammarPool->createDTDDescription(nameSpaceKey);
+    else 
+        return (XMLGrammarDescription*) fGrammarPool->createSchemaDescription(nameSpaceKey);
 }
 
 XERCES_CPP_NAMESPACE_END

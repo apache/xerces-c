@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/06/20 18:55:54  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.23  2003/05/15 18:26:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -249,7 +252,7 @@ class XMLScanner;
 class XMLValidator;
 class Grammar;
 class GrammarResolver;
-
+class XMLGrammarPool;
 
 /**
   * This class implements the SAX 'Parser' interface and should be
@@ -302,8 +305,9 @@ public :
       */
     SAXParser
     (
-          XMLValidator* const  valToAdopt = 0
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          XMLValidator*   const valToAdopt = 0
+        , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
+        , XMLGrammarPool* const gramPool = 0 
     );
 
     /**
@@ -2010,6 +2014,10 @@ private:
     //      The scanner being used by this parser. It is created internally
     //      during construction.
     //
+    //   fGrammarPool
+    //      The grammar pool passed from external application (through derivatives).
+    //      which could be 0, not owned.
+    //
     // -----------------------------------------------------------------------
     bool                 fParseInProgress;
     unsigned int         fElemDepth;
@@ -2026,6 +2034,7 @@ private:
     XMLStringPool*       fURIStringPool;
     XMLValidator*        fValidator;
     MemoryManager*       fMemoryManager;
+    XMLGrammarPool*      fGrammarPool;
     XMLBuffer            fElemQNameBuf;
 };
 

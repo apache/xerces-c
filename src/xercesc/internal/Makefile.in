@@ -91,6 +91,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	VecAttributesImpl.hpp \
 	IGXMLScanner.hpp \
 	WFXMLScanner.hpp \
+	XMLGrammarPoolImpl.hpp \
 	XMLInternalErrorHandler.hpp \
 	XMLReader.hpp \
 	XMLScanner.hpp \
@@ -102,7 +103,7 @@ INTERNAL_C_FILES =
 
 INTERNAL_CPP_OBJECTS = \
 	DGXMLScanner.$(TO) \
-	ElemStack.$(TO) \
+	ElemStack.$(TO) \	
 	IGXMLScanner.$(TO) \
 	IGXMLScanner2.$(TO) \
 	MemoryManagerImpl.$(TO) \
@@ -111,6 +112,7 @@ INTERNAL_CPP_OBJECTS = \
 	VecAttrListImpl.$(TO) \
 	VecAttributesImpl.$(TO) \
 	WFXMLScanner.$(TO) \
+	XMLGrammarPoolImpl.$(TO) \
 	XMLReader.$(TO) \
 	XMLScanner.$(TO) \
 	XMLScannerResolver.$(TO)

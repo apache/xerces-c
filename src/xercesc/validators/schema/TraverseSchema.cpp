@@ -518,7 +518,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // Parse input source
     // ------------------------------------------------------------------
     if (!fParser)
-        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager);
+        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager, 0);
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
@@ -697,7 +697,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // Parse input source
     // ------------------------------------------------------------------
     if (!fParser)
-        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager);
+        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager, 0);
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
@@ -7527,7 +7527,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // Parse input source
     // ------------------------------------------------------------------
     if (!fParser)
-        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager);
+        fParser = new (fMemoryManager) XSDDOMParser(0,fMemoryManager, 0);
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);

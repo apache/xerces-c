@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/06/20 18:55:54  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.21  2003/05/22 02:10:51  knoaman
  * Default the memory manager.
  *
@@ -242,6 +245,7 @@ class ContentHandler;
 class LexicalHandler;
 class DeclHandler;
 class GrammarResolver;
+class XMLGrammarPool;
 
 /**
   * This class implements the SAX2 'XMLReader' interface and should be
@@ -273,7 +277,10 @@ public :
     /** @name Constructors and Destructor */
     //@{
     /** The default constructor */
-	SAX2XMLReaderImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	SAX2XMLReaderImpl(
+                            MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+                          , XMLGrammarPool* const gramPool = 0 
+                          );
 
     /** The destructor */	
 	~SAX2XMLReaderImpl() ;
@@ -1778,6 +1785,10 @@ private :
     //  fHasExternalSubset
     //      Indicate if the document has external DTD subset.
     //
+    //   fGrammarPool
+    //      The grammar pool passed from external application (through derivatives).
+    //      which could be 0, not owned.
+    //
     // -----------------------------------------------------------------------
     bool                        fNamespacePrefix;
     bool                        fAutoValidation;
@@ -1803,7 +1814,8 @@ private :
     XMLStringPool*              fURIStringPool;
     XMLValidator*               fValidator;
     MemoryManager*              fMemoryManager;
-    XMLBufferMgr		        fStringBuffers ;
+    XMLGrammarPool*             fGrammarPool;
+    XMLBufferMgr		fStringBuffers;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser

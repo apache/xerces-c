@@ -102,8 +102,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-AbstractDOMParser::AbstractDOMParser( XMLValidator* const valToAdopt
-                                    , MemoryManager* const manager) :
+AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
+                                    , MemoryManager* const  manager
+                                    , XMLGrammarPool* const gramPool) :
 
   fCreateEntityReferenceNodes(true)
 , fIncludeIgnorableWhitespace(true)
@@ -123,6 +124,7 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const valToAdopt
 , fURIStringPool(0)
 , fValidator(valToAdopt)
 , fMemoryManager(manager)
+, fGrammarPool(gramPool)
 , fBufMgr(manager)
 , fInternalSubset(fBufMgr.bidOnBuffer())
 {
@@ -149,7 +151,7 @@ AbstractDOMParser::~AbstractDOMParser()
 void AbstractDOMParser::initialize()
 {
     //  Create grammar resolver and string pool to pass to the scanner
-    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fGrammarPool, fMemoryManager);
     fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     //  Create a scanner and tell it what validator to use. Then set us

@@ -99,8 +99,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DOMParser::DOMParser( XMLValidator* const  valToAdopt
-                    , MemoryManager* const manager) :
+DOMParser::DOMParser( XMLValidator* const   valToAdopt
+                    , MemoryManager* const  manager
+                    , XMLGrammarPool* const gramPool) :
 
     fToCreateXMLDeclTypeNode(false)
     , fCreateEntityReferenceNodes(true)
@@ -116,6 +117,7 @@ DOMParser::DOMParser( XMLValidator* const  valToAdopt
     , fURIStringPool(0)
     , fValidator(valToAdopt)
     , fMemoryManager(manager)
+    , fGrammarPool(gramPool)
 {
     try
     {
@@ -140,7 +142,7 @@ DOMParser::~DOMParser()
 void DOMParser::initialize()
 {
     // Create grammar resolver and URI string pool to pass to the scanner
-    fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
+    fGrammarResolver = new (fMemoryManager) GrammarResolver(fGrammarPool, fMemoryManager);
     fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     //  Create a scanner and tell it what validator to use. Then set us

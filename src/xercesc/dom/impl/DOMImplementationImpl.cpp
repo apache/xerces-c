@@ -281,14 +281,15 @@ bool DOMImplementation::loadDOMExceptionMsg
 // DOMImplementationLS Virtual interface
 // ------------------------------------------------------------
 //Introduced in DOM Level 3
-DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short mode,
-                                                    const XMLCh* const schemaType,
-                                                    MemoryManager* const manager)
+DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short           mode,
+                                                    const XMLCh* const    schemaType,
+                                                    MemoryManager* const  manager,
+                                                    XMLGrammarPool* const gramPool)
 {
     if (mode == DOMImplementationLS::MODE_ASYNCHRONOUS)
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
-    return new (manager) DOMBuilderImpl(0, manager);
+    return new (manager) DOMBuilderImpl(0, manager, gramPool);
 }
 
 

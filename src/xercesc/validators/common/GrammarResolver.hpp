@@ -71,7 +71,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DatatypeValidator;
 class DatatypeValidatorFactory;
-
+class XMLGrammarPool;
+class XMLGrammarDescription;
+class GrammarEntry;
 
 /**
  * This class embodies the representation of a Grammar pool Resolver.
@@ -89,7 +91,10 @@ public:
      *
      * Default Constructor
      */
-    GrammarResolver(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    GrammarResolver(
+                    XMLGrammarPool* const gramPool
+                  , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
+                    );
     /**
       * Destructor
       */
@@ -116,13 +121,14 @@ public:
      * @return Grammar abstraction associated with the NameSpace key.
      */
     Grammar* getGrammar( const XMLCh* const nameSpaceKey ) ;
+    Grammar* getGrammar( XMLGrammarDescription* const gramDesc ) ;
 
     /**
      * Get an enumeration of Grammar in the Grammar pool
      *
      * @return enumeration of Grammar in Grammar pool
      */
-    RefHashTableOfEnumerator<Grammar> getGrammarEnumerator() const;
+    RefHashTableOfEnumerator<GrammarEntry> getGrammarEnumerator() const;
 
 
     /**
@@ -169,6 +175,8 @@ public:
      * @param  grammarToAdopt  Grammar abstraction used by validator.
      */
     void putGrammar(const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt );
+    void putGrammar(XMLGrammarDescription* const nameSpaceKey
+                  , Grammar* const               grammarToAdopt );
 
     /**
      * Returns the Grammar with Namespace Key associated from the Grammar Pool
@@ -178,9 +186,10 @@ public:
      * @param  nameSpaceKey    Key to associate with Grammar abstraction
      */
     Grammar* orphanGrammar(const XMLCh* const nameSpaceKey);
+    Grammar* orphanGrammar(XMLGrammarDescription* const nameSpaceKey);
 
     /**
-     * Cache the grammars in fGrammarRegistry to fCachedGrammarRegistry.
+     * Cache the grammars in fGrammarBucket to fCachedGrammarRegistry.
      * If a grammar with the same key is already cached, an exception is
      * thrown and none of the grammars will be cached.
      */
@@ -195,13 +204,16 @@ public:
     //@}
 
 private:
+
+    XMLGrammarDescription* getGrammarDescription(const XMLCh* const);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fStringPool            The string pool used by TraverseSchema to store
     //                         element/attribute names and prefixes.
     //
-    //  fGrammarRegistry       The parsed Grammar Pool, if no caching option.
+    //  fGrammarBucket       The parsed Grammar Pool, if no caching option.
     //
     //  fCachedGrammarRegistry The cached Grammar Pool.  It represents a
     //                         mapping between Namespace and a Grammar
@@ -213,11 +225,12 @@ private:
     // -----------------------------------------------------------------------
     bool                       fCacheGrammar;
     bool                       fUseCachedGrammar;
+    bool                       fGrammarPoolFromExternalApplication;
     XMLStringPool              fStringPool;
-    RefHashTableOf<Grammar>*   fGrammarRegistry;
-    RefHashTableOf<Grammar>*   fCachedGrammarRegistry;
+    RefHashTableOf<GrammarEntry>*   fGrammarBucket;
     DatatypeValidatorFactory*  fDataTypeReg;
     MemoryManager*             fMemoryManager;
+    XMLGrammarPool*            fGrammarPool;
 };
 
 inline XMLStringPool* GrammarResolver::getStringPool() {
@@ -229,15 +242,6 @@ inline XMLStringPool* GrammarResolver::getStringPool() {
 inline void GrammarResolver::useCachedGrammarInParse(const bool aValue)
 {
     fUseCachedGrammar = aValue;
-}
-
-inline Grammar*
-GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey) {
-
-    if (fCacheGrammar)
-        return fCachedGrammarRegistry->orphanKey(nameSpaceKey);
-
-    return fGrammarRegistry->orphanKey(nameSpaceKey);
 }
 
 XERCES_CPP_NAMESPACE_END

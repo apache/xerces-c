@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/06/20 18:56:45  peiyongz
+ * Stateless Grammar Pool :: Part I
+ *
  * Revision 1.4  2003/05/15 18:27:11  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -91,6 +94,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 class MemoryManager;
+class XMLGrammarPool;
 
 /**
   * Creates a SAX2 parser (SAX2XMLReader).
@@ -108,14 +112,18 @@ protected:                // really should be private, but that causes compiler 
 	~XMLReaderFactory() ;
 
 public:
-	static SAX2XMLReader * createXMLReader(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) ;
+	static SAX2XMLReader * createXMLReader( 
+                                               MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+                                             , XMLGrammarPool* const gramPool = 0
+                                               ) ;
 	static SAX2XMLReader * createXMLReader(const XMLCh* className)  ;
 };
 
 
-inline SAX2XMLReader * XMLReaderFactory::createXMLReader(MemoryManager* const manager)
+inline SAX2XMLReader * XMLReaderFactory::createXMLReader(MemoryManager* const  manager
+                                                       , XMLGrammarPool* const gramPool)
 {
-	return (SAX2XMLReader*)(new (manager) SAX2XMLReaderImpl(manager));
+	return (SAX2XMLReader*)(new (manager) SAX2XMLReaderImpl(manager, gramPool));
 }
 
 inline SAX2XMLReader * XMLReaderFactory::createXMLReader(const XMLCh * className)

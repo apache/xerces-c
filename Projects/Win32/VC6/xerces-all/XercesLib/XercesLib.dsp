@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# ADD CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FR /FD /c
 # ADD BASE MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -70,8 +70,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
-# SUBTRACT CPP /Fr /YX
+# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fr /FD /c
+# SUBTRACT CPP /YX
 # ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -1095,6 +1095,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDocumentHandler.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDTDDescription.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLElementDecl.cpp
 # End Source File
 # Begin Source File
@@ -1131,6 +1135,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLFormatter.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarPool.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp
 # End Source File
 # Begin Source File
@@ -1152,6 +1164,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRecognizer.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.hpp
 # End Source File
 # Begin Source File
 
@@ -1256,6 +1272,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -1832,6 +1856,14 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDValidator.cpp
 
 SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDValidator.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\XMLDTDDescriptionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\XMLDTDDescriptionImpl.hpp
+# End Source File
 # End Group
 # Begin Group "schema"
 
@@ -2079,6 +2111,14 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XMLSchemaDescriptionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XMLSchemaDescriptionImpl.hpp
 # End Source File
 # Begin Source File
 
