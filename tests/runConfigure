@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2001/06/09 18:06:50  jberry
+# Add MacOS build support for tests
+#
 # Revision 1.8  2001/02/13 13:10:50  tng
 # Update samples/tests files for on UnixWare 7.1.1 with gcc 2.95.  Add UNIXWARE platform defines to Makefile.incl, add recognition of sysv5uw7 to configure.in, and add unixware as recognized platform to runConfigure.  Updated by Hiram Clawson.
 #
@@ -96,7 +99,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'solaris', 'hp-10', 'hp-11', 'ptx')"
+    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'solaris', 'hp-10', 'hp-11', 'ptx', 'macosx')"
     echo "       -c <C compiler name> (e.g. gcc or xlc_r)"
     echo "       -x <C++ compiler name> (e.g. g++ or xlC_r)"
     echo "       -d (specifies that you want to build debug version)"
@@ -183,7 +186,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | unixware | linux | solaris | hp-10 | hp-11 | ptx)
+   aix | unixware | linux | solaris | hp-10 | hp-11 | ptx | macosx)
        # platform has been recognized
        ;;
    *)
