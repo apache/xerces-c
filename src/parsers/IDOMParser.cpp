@@ -1046,9 +1046,9 @@ void IDOMParser::endAttList
                         XMLString::subString(prefix ,qualifiedName, 0, index);
 
                         if (!XMLString::compareString(prefix,XMLNS))
-                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+                            buf.append(XMLUni::fgXMLNSURIName);
                         else
-                            fScanner->getURIText(fScanner->getXMLNamespaceId(), buf);
+                            buf.append(XMLUni::fgXMLURIName);
 
                         if (index > 999)
                             delete prefix;
@@ -1056,7 +1056,7 @@ void IDOMParser::endAttList
                     else {
                         //   No prefix
                         if (!XMLString::compareString(qualifiedName,XMLNS))
-                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+                            buf.append(XMLUni::fgXMLNSURIName);
                     }
 
                     insertAttr = (IDAttrImpl *) fDocument->createAttributeNS(

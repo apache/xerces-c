@@ -1008,14 +1008,14 @@ void DOMParser::endAttList
                         DOMString prefix = qualifiedName.substringData(0, index);
 
                         if (prefix.equals(XMLNS))
-                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+                            buf.append(XMLUni::fgXMLNSURIName);
                         else
-                            fScanner->getURIText(fScanner->getXMLNamespaceId(), buf);
+                            buf.append(XMLUni::fgXMLURIName);
                     }
                     else {
                         //   No prefix
                         if (qualifiedName.equals(XMLNS))
-                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+                            buf.append(XMLUni::fgXMLNSURIName);
                     }
 
                     insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
