@@ -1885,7 +1885,6 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
     }
     // fModel may need updating:
     if(getPSVIHandler())
-    //&& fGrammarType == Grammar::SchemaGrammarType)
         fModel = fGrammarResolver->getXSModel();
 }
 
