@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/07/09 15:22:36  knoaman
+ * complete <any> declaration.
+ *
  * Revision 1.14  2001/06/13 20:50:56  peiyongz
  * fIsMixed: to handle mixed Content Model
  *
@@ -276,16 +279,13 @@ DFAContentModel::validateContent( QName** const        children
                 }
                 else if ((type & 0x0f)== ContentSpecNode::Any)
                 {
-                    unsigned int uri = inElem->getURI();
-                    if ((uri == emptyNamespaceId) || (uri == curElem->getURI())) {
-                        nextState = fTransTable[curState][elemIndex];
-                        if (nextState != XMLContentModel::gInvalidTrans)
+                    nextState = fTransTable[curState][elemIndex];
+                    if (nextState != XMLContentModel::gInvalidTrans)
                             break;
-                    }
                 }
-                else if ((type & 0x0f) == ContentSpecNode::Any_Local)
+                else if ((type & 0x0f) == ContentSpecNode::Any_NS)
                 {
-                    if (curElem->getURI() == emptyNamespaceId)
+                    if (inElem->getURI() == curElem->getURI())
                     {
                         nextState = fTransTable[curState][elemIndex];
                         if (nextState != XMLContentModel::gInvalidTrans)
@@ -376,17 +376,13 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             }
             else if ((type & 0x0f)== ContentSpecNode::Any)
             {
-                unsigned int uri = inElem->getURI();
-                if ((uri == emptyNamespaceId) || (uri == curElem->getURI()))
-                {
-                    nextState = fTransTable[curState][elemIndex];
-                    if (nextState != XMLContentModel::gInvalidTrans)
+                nextState = fTransTable[curState][elemIndex];
+                if (nextState != XMLContentModel::gInvalidTrans)
                         break;
-                }
             }
-            else if ((type & 0x0f) == ContentSpecNode::Any_Local)
+            else if ((type & 0x0f) == ContentSpecNode::Any_NS)
             {
-                if (curElem->getURI() == emptyNamespaceId)
+                if (inElem->getURI() == curElem->getURI())
                 {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
@@ -860,17 +856,11 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
     // Get the spec type of the passed node
     const ContentSpecNode::NodeTypes curType = curNode->getType();
 
-    if ((curType & 0x0f) == ContentSpecNode::Any)
+    if ((curType & 0x0f) == ContentSpecNode::Any
+        || (curType & 0x0f) == ContentSpecNode::Any_Other
+        || (curType & 0x0f) == ContentSpecNode::Any_NS)
     {
         retNode = new CMAny(curType, curNode->getElement()->getURI(), fLeafCount++);
-    }
-    else if ((curType & 0x0f) == ContentSpecNode::Any_Other)
-    {
-        retNode = new CMAny(curType, curNode->getElement()->getURI(), fLeafCount++);
-    }
-    else if ((curType & 0x0f) == ContentSpecNode::Any_Local)
-    {
-        retNode = new CMAny(curType, 0, fLeafCount++);
     }
     else if (curType == ContentSpecNode::Leaf)
     {
@@ -1014,7 +1004,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
 
     // Recurse as required
     if ( ((curType & 0x0f) == ContentSpecNode::Any)       ||
-         ((curType & 0x0f) == ContentSpecNode::Any_Local) ||
+         ((curType & 0x0f) == ContentSpecNode::Any_NS) ||
          ((curType & 0x0f) == ContentSpecNode::Any_Other)  )
     {
         QName* qname = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, ((CMAny*) nodeCur)->getURI());

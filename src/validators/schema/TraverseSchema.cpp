@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2001/07/09 15:22:45  knoaman
+ * complete <any> declaration.
+ *
  * Revision 1.26  2001/07/09 14:29:44  knoaman
  * Fixes for import/include declarations
  *
@@ -1185,25 +1188,23 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
     // Set default node type based on 'processContents' value
     // ------------------------------------------------------------------
     ContentSpecNode::NodeTypes anyType = ContentSpecNode::Any;
-    ContentSpecNode::NodeTypes anyLocalType = ContentSpecNode::Any_Local;
+    ContentSpecNode::NodeTypes anyLocalType = ContentSpecNode::Any_NS;
     ContentSpecNode::NodeTypes anyOtherType = ContentSpecNode::Any_Other;
 
-    if (XMLString::stringLen(processContents) != 0) {
+    if (XMLString::stringLen(processContents) > 0
+        && XMLString::compareString(processContents, fgStrict)) {
 
-        if (XMLString::compareString(processContents, fgStrict) != 0) {
-            // Do nothing
-        }
-        else if (XMLString::compareString(processContents, fgLax) == 0) {
+        if (!XMLString::compareString(processContents, fgLax)) {
 
             anyType = ContentSpecNode::Any_Lax;
             anyOtherType = ContentSpecNode::Any_Other_Lax;
-            anyLocalType = ContentSpecNode::Any_Local_Lax;
+            anyLocalType = ContentSpecNode::Any_NS_Lax;
         }
-        else if (XMLString::compareString(processContents, fgSkip) == 0) {
+        else if (!XMLString::compareString(processContents, fgSkip)) {
 
             anyType = ContentSpecNode::Any_Skip;
             anyOtherType = ContentSpecNode::Any_Other_Skip;
-            anyLocalType = ContentSpecNode::Any_Local_Skip;
+            anyLocalType = ContentSpecNode::Any_NS_Skip;
         }
     }
 
@@ -1213,22 +1214,24 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
     int emptyURI = fURIStringPool->addOrFind(XMLUni::fgZeroLenString);
     ContentSpecNode* retSpecNode = 0;
     QName elemName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString,
-                   fTargetNSURI);
+                   emptyURI);
 
     if (XMLString::stringLen(nameSpace) == 0
-        || XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY) == 0) {
+        || !XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
 
         retSpecNode = new ContentSpecNode(&elemName);
         retSpecNode->setType(anyType);
     }
-    else if (XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER) == 0) {
+    else if (!XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER)) {
 
+        elemName.setURI(fTargetNSURI);
         retSpecNode = new ContentSpecNode(&elemName);
         retSpecNode->setType(anyOtherType);
     }
     else {
 
         RefVectorOf<XMLCh>* nameSpaceTokens = XMLString::tokenizeString(nameSpace);
+        ValueVectorOf<unsigned int> uriList(8);
         ContentSpecNode* firstNode = 0;
         ContentSpecNode* secondNode = 0;
         unsigned int tokensSize = nameSpaceTokens->size();
@@ -1238,25 +1241,24 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
             const XMLCh* tokenElem = nameSpaceTokens->elementAt(i);
             int uriIndex = emptyURI;
 
-            if (XMLString::compareString(tokenElem,
-                        SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL) == 0) {
+            if (XMLString::compareString(tokenElem,SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL)) { // not ##local
 
-                elemName.setURI(uriIndex);
-                firstNode = new ContentSpecNode(&elemName);
-                firstNode->setType(anyLocalType);
-            }
-            else {
-
-                if (XMLString::compareString(tokenElem,
-                        SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE) == 0) {
+                if (!XMLString::compareString(tokenElem,SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE)) {
                     uriIndex = fTargetNSURI;
                 }
-
-                uriIndex = fURIStringPool->addOrFind(tokenElem);
-                elemName.setURI(uriIndex);
-                firstNode = new ContentSpecNode(&elemName);
-                firstNode->setType(anyType);
+                else {
+                    uriIndex = fURIStringPool->addOrFind(tokenElem);
+                }
             }
+
+            if (locationsContain(&uriList, uriIndex)) {
+                continue;
+            }
+
+            uriList.addElement(uriIndex);
+            elemName.setURI(uriIndex);
+            firstNode = new ContentSpecNode(&elemName);
+            firstNode->setType(anyLocalType);
 
             if (secondNode == 0) {
                 secondNode = firstNode;

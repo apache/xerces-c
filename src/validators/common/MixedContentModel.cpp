@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/07/09 15:22:37  knoaman
+ * complete <any> declaration.
+ *
  * Revision 1.10  2001/06/12 22:13:33  peiyongz
  * validateContentSpecial() : apply SubstitutionGroupComparator.isEquivalentTo()
  *
@@ -254,12 +257,9 @@ MixedContentModel::validateContent( QName** const         children
                 }
             }
             else if (type == ContentSpecNode::Any) {
-                unsigned int uri = inChild->getURI();
-                if ((uri != emptyNamespaceId) && (uri != curChild->getURI()))
-                    return outIndex;
             }
-            else if (type == ContentSpecNode::Any_Local) {
-                if (curChild->getURI() != emptyNamespaceId)
+            else if (type == ContentSpecNode::Any_NS) {
+                if (inChild->getURI() != curChild->getURI())
                     return outIndex;
             }
             else if (type == ContentSpecNode::Any_Other) {
@@ -303,12 +303,10 @@ MixedContentModel::validateContent( QName** const         children
                     }
                 }
                 else if (type == ContentSpecNode::Any) {
-                    unsigned int uri = inChild->getURI();
-                    if ((uri == emptyNamespaceId) || (uri == curChild->getURI()))
-                        break;
+                    break;
                 }
-                else if (type == ContentSpecNode::Any_Local) {
-                    if (curChild->getURI() == emptyNamespaceId)
+                else if (type == ContentSpecNode::Any_NS) {
+                    if (inChild->getURI() == curChild->getURI())
                         break;
                 }
                 else if (type == ContentSpecNode::Any_Other) {
@@ -348,7 +346,7 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
     if ((curType == ContentSpecNode::Leaf)      ||
         (curType == ContentSpecNode::Any)       ||
         (curType == ContentSpecNode::Any_Other) ||
-        (curType == ContentSpecNode::Any_Local)   )
+        (curType == ContentSpecNode::Any_NS)   )
     {
         toFill.addElement(curNode->getElement());
         toType.addElement(curType);
@@ -408,12 +406,9 @@ int MixedContentModel::validateContentSpecial(QName** const           children
                     return outIndex;
             }
             else if (type == ContentSpecNode::Any) {
-                unsigned int uri = inChild->getURI();
-                if ((uri != emptyNamespaceId) && (uri != curChild->getURI()))
-                    return outIndex;
             }
-            else if (type == ContentSpecNode::Any_Local) {
-                if (curChild->getURI() != emptyNamespaceId)
+            else if (type == ContentSpecNode::Any_NS) {
+                if (inChild->getURI() != curChild->getURI())
                     return outIndex;
             }
             else if (type == ContentSpecNode::Any_Other) {
@@ -448,12 +443,10 @@ int MixedContentModel::validateContentSpecial(QName** const           children
                         break;
                 }
                 else if (type == ContentSpecNode::Any) {
-                    unsigned int uri = inChild->getURI();
-                    if ((uri == emptyNamespaceId) || (uri == curChild->getURI()))
-                        break;
+                    break;
                 }
-                else if (type == ContentSpecNode::Any_Local) {
-                    if (curChild->getURI() == emptyNamespaceId)
+                else if (type == ContentSpecNode::Any_NS) {
+                    if (inChild->getURI() == curChild->getURI())
                         break;
                 }
                 else if (type == ContentSpecNode::Any_Other) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/07/09 15:22:36  knoaman
+ * complete <any> declaration.
+ *
  * Revision 1.7  2001/05/11 13:27:18  tng
  * Copyright update.
  *
@@ -124,13 +127,13 @@ public :
         , Sequence
         , Any
         , Any_Other
-        , Any_Local = 8
+        , Any_NS = 8
         , Any_Lax = 22
         , Any_Other_Lax = 23
-        , Any_Local_Lax = 24
+        , Any_NS_Lax = 24
         , Any_Skip = 38
         , Any_Other_Skip = 39
-        , Any_Local_Skip = 40
+        , Any_NS_Skip = 40
 
         , UnknownType = -1
     };

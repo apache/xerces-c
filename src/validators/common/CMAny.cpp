@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/07/09 15:22:35  knoaman
+ * complete <any> declaration.
+ *
  * Revision 1.4  2001/06/07 20:58:38  tng
  * Fix no newline at the end warning.  By Pei Yong Zhang.
  *
@@ -90,7 +93,7 @@ CMAny::CMAny( const   ContentSpecNode::NodeTypes  type
 {
     if ((type != ContentSpecNode::Any)
     &&  (type != ContentSpecNode::Any_Other)
-    &&  (type != ContentSpecNode::Any_Local))
+    &&  (type != ContentSpecNode::Any_NS))
     {
 		ThrowXML1(RuntimeException,
 		          XMLExcepts::CM_NotValidSpecTypeForNode,

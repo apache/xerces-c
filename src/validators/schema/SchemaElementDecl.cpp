@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/07/09 15:22:43  knoaman
+ * complete <any> declaration.
+ *
  * Revision 1.9  2001/06/13 20:51:18  peiyongz
  * fIsMixed: to handle mixed Content Model
  *
@@ -308,9 +311,15 @@ SchemaElementDecl::formatContentModel() const
         //  pretty long, but very few will be longer than one K. The buffer
         //  will expand to handle the more pathological ones.
         //
-        XMLBuffer bufFmt;
-        getContentSpec()->formatSpec(bufFmt);
-        newValue = XMLString::replicate(bufFmt.getRawBuffer());
+        const ContentSpecNode* specNode = getContentSpec();
+
+        if (specNode) {
+            XMLBuffer bufFmt;
+        
+
+            specNode->formatSpec(bufFmt);
+            newValue = XMLString::replicate(bufFmt.getRawBuffer());
+        }
     }
     return newValue;
 }
@@ -327,7 +336,17 @@ XMLContentModel* SchemaElementDecl::makeContentModel()
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-         cmRet = createChildModel(true);
+        ContentSpecNode* specNode = getContentSpec();
+
+        if(!specNode)
+            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+
+        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
+            cmRet = new MixedContentModel(false, this);
+        }
+        else {
+            cmRet = createChildModel(true);
+        }
     }
      else if (fModelType == Children)
     {
@@ -373,7 +392,7 @@ XMLContentModel* SchemaElementDecl::createChildModel(const bool isMixed)
     //
     if (((specNode->getType() & 0x0f) == ContentSpecNode::Any) ||
        ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Other) ||
-       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Local)) {
+       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_NS)) {
        // let fall through to build a DFAContentModel
     }
     else if (isMixed)

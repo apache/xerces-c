@@ -2664,21 +2664,18 @@ bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector*
                    && !(XMLString::compareString(fElemMap->getLocalPart(), element->getLocalPart())))
                     break;
             } else if (type == ContentSpecNode::Any) {
-                if (uri == fEmptyNamespaceId || uri == elementURI)
-                    break;
-            } else if (type == ContentSpecNode::Any_Local) {
-                if (elementURI == fEmptyNamespaceId)
+                break;
+            } else if (type == ContentSpecNode::Any_NS) {
+                if (uri == elementURI)
                     break;
             } else if (type == ContentSpecNode::Any_Other) {
                 if (uri != elementURI)
                     break;
             } else if (type == ContentSpecNode::Any_Skip) {
-                if (uri == fEmptyNamespaceId || uri == elementURI) {
-                    skipThisOne = true;
-                    break;
-                }
-            } else if (type == ContentSpecNode::Any_Local_Skip) {
-                if (elementURI == fEmptyNamespaceId) {
+                skipThisOne = true;
+                break;
+            } else if (type == ContentSpecNode::Any_NS_Skip) {
+                if (uri == elementURI) {
                     skipThisOne = true;
                     break;
                 }
@@ -2688,12 +2685,10 @@ bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector*
                     break;
                 }
             } else if (type == ContentSpecNode::Any_Lax) {
-                if (uri == fEmptyNamespaceId || uri == elementURI) {
-                    laxThisOne = true;
-                    break;
-                }
-            } else if (type == ContentSpecNode::Any_Local_Lax) {
-                if (elementURI == fEmptyNamespaceId) {
+                laxThisOne = true;
+                break;
+            } else if (type == ContentSpecNode::Any_NS_Lax) {
+                if (uri == elementURI) {
                     laxThisOne = true;
                     break;
                 }
