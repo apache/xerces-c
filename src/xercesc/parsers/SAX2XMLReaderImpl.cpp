@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/05/29 21:37:47  knoaman
+ * Add baseURI to resolveEntity to support DOMInputSource.
+ *
  * Revision 1.5  2002/05/28 20:44:14  tng
  * [Bug 9104] prefixes dissapearing when schema validation turned on.
  *
@@ -1239,7 +1242,8 @@ void SAX2XMLReaderImpl::resetEntities()
 
 
 InputSource* SAX2XMLReaderImpl::resolveEntity(   const   XMLCh* const    publicId
-                                               , const   XMLCh* const    systemId)
+                                               , const   XMLCh* const    systemId
+                                               , const   XMLCh* const    baseURI)
 {
     // Just map to the SAX entity resolver handler
     if (fEntityResolver)

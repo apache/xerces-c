@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/29 21:37:47  knoaman
+ * Add baseURI to resolveEntity to support DOMInputSource.
+ *
  * Revision 1.4  2002/05/28 20:44:14  tng
  * [Bug 9104] prefixes dissapearing when schema validation turned on.
  *
@@ -1488,6 +1491,7 @@ public :
     (
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
+        , const XMLCh* const    baseURI
     );
 
     /**

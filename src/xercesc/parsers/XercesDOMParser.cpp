@@ -170,7 +170,9 @@ void XercesDOMParser::resetErrors()
 //  XercesDOMParser: Implementation of XMLEntityHandler interface
 // ---------------------------------------------------------------------------
 InputSource*
-XercesDOMParser::resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId)
+XercesDOMParser::resolveEntity(const XMLCh* const publicId,
+                               const XMLCh* const systemId,
+                               const XMLCh* const baseURI)
 {
     //
     //  Just map it to the SAX entity resolver. If there is not one installed,

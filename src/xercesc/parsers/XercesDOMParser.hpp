@@ -320,6 +320,7 @@ public :
     (
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
+        , const XMLCh* const    baseURI
     );
 
     /** Handle a 'start input source' event
