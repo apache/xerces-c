@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.4  1999/12/01 01:08:20  aruna1
+# Added notempinc for AIX
+#
 # Revision 1.3  1999/11/12 20:31:23  rahulj
 # Replaced XML4CROOT with XERCESCROOT.
 #
@@ -105,7 +108,7 @@ endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, AIX)
-CMP= -c ${CXXFLAGS}
+CMP= -c ${CXXFLAGS} -qnotempinc
 CC=xlC_r -D${PLATFORM}
 LINK =  ${CC}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
