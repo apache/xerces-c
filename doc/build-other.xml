@@ -320,8 +320,10 @@ gmake </source>
 			remote context that has no access to the GUI.
 			</li>
 			
-			<li>Supports builds from Metroworks CodeWarrior, Apple Project Builder,
-			and Mac OS X shell.
+			<li>Supports builds from Metroworks CodeWarrior, Apple Xcode,
+			and Mac OS X shell. Projects for Apple Project Builder are still included,
+			but may not be up to date (you may need to revise the projects to accomodate
+			recent file additions, deletions, or other changes in &XercesCName;).
 			</li>
 		</ol>
 		
@@ -395,10 +397,10 @@ gmake </source>
 		
 		</s3>
 		
-		<s3 title="Building &XercesCName; with Project Builder">
+		<s3 title="Building &XercesCName; with Xcode">
 		
 			<p>Projects are included to build the &XercesCName; library and DOMPrint sample under
-			Apple's Project Builder for Mac OS X. The following notes apply:
+			Apple's Xcode for Mac OS X. The following notes apply:
 			</p>
 			
 			<ul>
@@ -406,7 +408,7 @@ gmake </source>
 				tools must be used to unpack archives: gnutar is your friend.
 				</li>
 				
-				<li>The Project Builder project builds XercesLib as the framework
+				<li>The Xcode project builds XercesLib as the framework
 				Xerces.framework. This framework, however, does not currently include a
 				correct set of public headers. Any referencing code must have an include
 				path directive that points into the &XercesCName; src directory.
@@ -415,6 +417,14 @@ gmake </source>
 				<li>The DOMPrint project illustrates one such usage of the Xerces.framework.
 				</li>
 			</ul>
+
+			<p>Projects for Apple's Project Builder environment, which is no longer supported
+			under Mac OS X 10.3, are provided but may be out of date. You may need to add or
+			delete files from the project in order to support changes in &XercesCName;. Please feel
+			free to submit patches against these projects If you care about the Project Builder
+			projects, and want to keep them up to date.
+			</p>
+			
 		</s3>
 		
 		<s3 title="Building &XercesCName; from the Mac OS X command line">
