@@ -100,12 +100,12 @@ BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib xerces-depdom_2.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOM.lib"
+	"$(OUTDIR)\xerces-depdom_2.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -188,12 +188,12 @@ BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib xerces-depdom_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
+	"$(OUTDIR)\xerces-depdom_2D.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -276,12 +276,12 @@ BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib xerces-depdom_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
+	"$(OUTDIR)\xerces-depdom_2D.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -362,12 +362,12 @@ BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib xerces-depdom_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOM.lib"
+	"$(OUTDIR)\xerces-depdom_2.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<

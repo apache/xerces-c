@@ -99,11 +99,11 @@ BSC32_FLAGS=/o"$(OUTDIR)\DeprecatedDOMCount.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /machine:I386 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib xerces-depdom_2.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /machine:I386 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
 	"$(OUTDIR)\xerces-c_2.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOM.lib"
+	"$(OUTDIR)\xerces-depdom_2.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -185,11 +185,11 @@ BSC32_FLAGS=/o"$(OUTDIR)\DeprecatedDOMCount.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /debug /machine:I386 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib xerces-depdom_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /debug /machine:I386 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
+	"$(OUTDIR)\xerces-depdom_2D.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -271,11 +271,11 @@ BSC32_FLAGS=/o"$(OUTDIR)\DeprecatedDOMCount.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib xerces-depdom_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOMD.lib"
+	"$(OUTDIR)\xerces-depdom_2D.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -355,11 +355,11 @@ BSC32_FLAGS=/o"$(OUTDIR)\DeprecatedDOMCount.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /machine:IX86 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib xerces-depdom_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\DeprecatedDOMCount.pdb" /machine:IX86 /out:"$(OUTDIR)\DeprecatedDOMCount.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\DeprecatedDOMCount.obj" \
 	"$(OUTDIR)\xerces-c_2.lib" \
-	"$(OUTDIR)\xercesDeprecatedDOM.lib"
+	"$(OUTDIR)\xerces-depdom_2.lib"
 
 "$(OUTDIR)\DeprecatedDOMCount.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<

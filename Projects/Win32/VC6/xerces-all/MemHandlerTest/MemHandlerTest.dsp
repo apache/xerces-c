@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib  /version:1.0 /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib  xerces-depdom_2.lib /version:1.0 /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "MemHandlerTest - Win32 Debug"
 
@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib  /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib xerces-depdom_2D.lib /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 
 !ELSEIF  "$(CFG)" == "MemHandlerTest - Win64 Debug"
 
@@ -103,8 +103,7 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 
 # ADD BSC32 
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib  /subsystem:console /debug  /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug  /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib xerces-depdom_2D.lib /subsystem:console /debug  /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32  /pdb:none
 
 !ELSEIF  "$(CFG)" == "MemHandlerTest - Win64 Release"
@@ -130,8 +129,7 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 
 # ADD BSC32 
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib  /version:1.0 /subsystem:console  /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes  /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib xerces-depdom_2.lib /version:1.0 /subsystem:console /incremental:yes  /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
 # SUBTRACT LINK32  /pdb:none
 
 !ENDIF 
