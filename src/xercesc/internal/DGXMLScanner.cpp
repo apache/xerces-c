@@ -170,11 +170,15 @@ DGXMLScanner::~DGXMLScanner()
 // ---------------------------------------------------------------------------
 NameIdPool<DTDEntityDecl>* DGXMLScanner::getEntityDeclPool()
 {
+    if(!fGrammar)
+        return 0;
     return ((DTDGrammar*)fGrammar)->getEntityDeclPool();
 }
 
 const NameIdPool<DTDEntityDecl>* DGXMLScanner::getEntityDeclPool() const
 {
+    if(!fGrammar)
+        return 0;
     return ((DTDGrammar*)fGrammar)->getEntityDeclPool();
 }
 

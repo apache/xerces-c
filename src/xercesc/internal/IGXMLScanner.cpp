@@ -180,11 +180,15 @@ IGXMLScanner::~IGXMLScanner()
 // ---------------------------------------------------------------------------
 NameIdPool<DTDEntityDecl>* IGXMLScanner::getEntityDeclPool()
 {
+    if(!fDTDGrammar)
+        return 0;
     return fDTDGrammar->getEntityDeclPool();
 }
 
 const NameIdPool<DTDEntityDecl>* IGXMLScanner::getEntityDeclPool() const
 {
+    if(!fDTDGrammar)
+        return 0;
     return fDTDGrammar->getEntityDeclPool();
 }
 
