@@ -74,6 +74,10 @@ THISLIB=${LIB_DIR}/${LIBNAME}
 LIBRARY_NAMES=-l${LIBNAME}
 LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
 
+ifndef XERCESCOUT
+XERCESCOUT=${XERCESCROOT}
+endif
+
 TO = o
 ####################### PLATFORM DEPENDENCIES #####################
 
@@ -293,7 +297,7 @@ endif
 #   export LOADMOD=USERID.LOAD                                    #
 #   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the IXM4C51X definition sidedeck    #
+# to specify your LOADMOD and the IXM4C52X definition sidedeck    #
 # dataset.  													  #
 ###################################################################
 
@@ -312,7 +316,7 @@ SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(IXM4C51X)'"
+LIBRARY_NAMES="//'${LOADEXP}(IXM4C52X)'"
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
 endif

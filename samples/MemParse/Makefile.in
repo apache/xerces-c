@@ -78,15 +78,15 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
-include ../../version.incl
+include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 APP_NAME=MemParse
 
-OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
-EXEC=	${XERCESCROOT}/bin
+OUTDIR= ${XERCESCOUT}/bin/obj/${APP_NAME}
+EXEC=	${XERCESCOUT}/bin
 OBJS=	${OUTDIR}/MemParse.o ${OUTDIR}/MemParseHandlers.o
-SRC=	${XERCESCROOT}/samples/${APP_NAME}
+SRC=	${XERCESCOUT}/samples/${APP_NAME}
 HEADER_FILES= ${SRC}/MemParse.hpp ${SRC}/MemParseHandlers.hpp
 
 ## OS390BATCH

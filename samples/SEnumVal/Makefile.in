@@ -55,6 +55,9 @@
 #
 # $Id$
 # $Log$
+# Revision 1.7  2003/07/28 20:02:41  neilg
+# fix to permit the samples source to be copied from a non-writable to a writable part of the filesystem, then compiled.  Binaries will also be dropped in a writable directory.  This should make experimentation easier on multi-user systems.  Patch by Steve Dulin
+#
 # Revision 1.6  2002/08/19 15:13:38  tng
 # [Bug 11229] bogus -I statements order in CXXFLAGS.
 #
@@ -93,15 +96,15 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
-include ../../version.incl
+include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 APP_NAME=SEnumVal
 
-OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
-EXEC=	${XERCESCROOT}/bin
+OUTDIR= ${XERCESCOUT}/bin/obj/${APP_NAME}
+EXEC=	${XERCESCOUT}/bin
 OBJS=	${OUTDIR}/SEnumVal.o
-SRC=	${XERCESCROOT}/samples/${APP_NAME}
+SRC=	${XERCESCOUT}/samples/${APP_NAME}
 HEADER_FILES=
 
 ## OS390BATCH

@@ -77,15 +77,15 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
-include ../../version.incl
+include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 APP_NAME=EnumVal
 
-OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
-EXEC=	${XERCESCROOT}/bin
+OUTDIR= ${XERCESCOUT}/bin/obj/${APP_NAME}
+EXEC=	${XERCESCOUT}/bin
 OBJS=	${OUTDIR}/EnumVal.o
-SRC=	${XERCESCROOT}/samples/${APP_NAME}
+SRC=	${XERCESCOUT}/samples/${APP_NAME}
 HEADER_FILES=
 
 ## OS390BATCH

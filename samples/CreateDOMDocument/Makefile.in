@@ -78,15 +78,15 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
-include ../../version.incl
+include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 APP_NAME=CreateDOMDocument
 
-OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
-EXEC=	${XERCESCROOT}/bin
+OUTDIR= ${XERCESCOUT}/bin/obj/${APP_NAME}
+EXEC=	${XERCESCOUT}/bin
 OBJS=	${OUTDIR}/CreateDOMDocument.o
-SRC=	${XERCESCROOT}/samples/${APP_NAME}
+SRC=	${XERCESCOUT}/samples/${APP_NAME}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)

@@ -79,15 +79,15 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
-include ../../version.incl
+include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 APP_NAME=DOMPrint
 
-OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
-EXEC=	${XERCESCROOT}/bin
+OUTDIR= ${XERCESCOUT}/bin/obj/${APP_NAME}
+EXEC=	${XERCESCOUT}/bin
 OBJS=	${OUTDIR}/DOMPrint.o ${OUTDIR}/DOMTreeErrorReporter.o ${OUTDIR}/DOMPrintFilter.o ${OUTDIR}/DOMPrintErrorHandler.o
-SRC=	${XERCESCROOT}/samples/${APP_NAME}
+SRC=	${XERCESCOUT}/samples/${APP_NAME}
 HEADER_FILES=${SRC}/DOMTreeErrorReporter.hpp ${SRC}/DOMPrintFilter.hpp ${SRC}/DOMPrintErrorHandler.hpp
 
 ## OS390BATCH
