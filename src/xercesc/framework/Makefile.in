@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.4  2002/06/18 20:02:27  knoaman
+# Add Wrapper4DOMInputSource.
+#
 # Revision 1.3  2002/06/18 19:16:48  knoaman
 # Added Wrapper4InputSource.
 #
@@ -135,6 +138,7 @@ FRAMEWORK_CPP_PUBHEADERS = \
 	StdInInputSource.hpp \
 	StdOutFormatTarget.hpp \
 	URLInputSource.hpp \
+	Wrapper4DOMInputSource.hpp \
 	Wrapper4InputSource.hpp \
 	XMLAttDef.hpp \
 	XMLAttDefList.hpp \
@@ -167,6 +171,7 @@ FRAMEWORK_CPP_OBJECTS = \
 	StdInInputSource.$(TO) \
 	StdOutFormatTarget.$(TO) \
 	URLInputSource.$(TO) \
+	Wrapper4DOMInputSource.$(TO) \
 	Wrapper4InputSource.$(TO) \
 	XMLAttDef.$(TO) \
 	XMLAttr.$(TO) \
