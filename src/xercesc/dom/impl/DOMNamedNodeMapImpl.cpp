@@ -127,6 +127,7 @@ DOMNode * DOMNamedNodeMapImpl::item(XMLSize_t index) const
         XMLSize_t thisBucket=fBuckets[i]->size();
         if(index>=count && index<(count+thisBucket))
             return fBuckets[i]->elementAt(index-count);
+        count+=thisBucket;
     }
     return NULL;
 }
