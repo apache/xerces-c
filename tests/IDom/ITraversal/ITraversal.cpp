@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2002/02/04 19:02:37  tng
+ * Memory leak fix in samples / test cases.
+ *
  * Revision 1.5  2002/02/01 22:44:51  peiyongz
  * sane_include
  *
@@ -330,6 +333,8 @@ int  main()
             nd = iter->previousNode();
             TASSERT(nd == E131);
 
+            delete filter;
+
         }
 
 
@@ -370,6 +375,8 @@ int  main()
             TASSERT(nd == E13);
             nd = iter->previousNode();
             TASSERT(nd == E122);
+
+            delete filter;
         }
 
 
@@ -396,6 +403,7 @@ int  main()
             nd = iter->previousNode();
             TASSERT(nd == textNode2);
 
+            delete filter;
         }
 
 
@@ -416,6 +424,7 @@ int  main()
             nd = iter->nextNode();
             TASSERT(nd == 0);
 
+            delete filter;
         }
 
 
@@ -436,7 +445,7 @@ int  main()
             nd = iter->nextNode();
             TASSERT(nd == 0);
 
-
+            delete filter;
         }
 
 
@@ -456,6 +465,7 @@ int  main()
             nd = iter->nextNode();
             TASSERT(nd == 0);
 
+            delete filter;
         }
 
 
@@ -554,6 +564,7 @@ int  main()
             TASSERT(tw->firstChild() == 0);   //E11 rejected and no children is TEXT
             TASSERT(tw->getCurrentNode() == root);
             TASSERT(tw->nextNode() == 0);    //E11 rejected so can't get to textNode1
+
         }
 
         delete doc;
