@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/03/02 21:10:35  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.13  2000/03/02 19:55:19  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -637,19 +640,13 @@ FileHandle XMLPlatformUtils::openStdInHandle()
     return (FileHandle)fdopen(dup(0), "rb");
 }
 
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
+}
 
-
-// ======================================================================
-// This is the software attic. It contains stuff no longer used.
-// Don't look at it unless you have a ladder.
-// ======================================================================
 /**************** Beginning of code attic *******************************
-
-
-
 void XMLPlatformUtils::platformInit()
 {
 }
-
-
 ********************* End of code attic *******************************/

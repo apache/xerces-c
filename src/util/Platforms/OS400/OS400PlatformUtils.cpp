@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/03/02 21:10:38  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.1  2000/02/10 17:58:07  abagchi
  * Initial checkin
  *
@@ -816,5 +819,10 @@ return;
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
     return (FileHandle)fdopen(dup(0), "rb");
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
 }
 

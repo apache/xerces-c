@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/02 21:10:36  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.7  2000/03/02 20:42:40  abagchi
  * Fixed typo in XMLExcepts
  *
@@ -692,4 +695,9 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 #endif // APP_NO_THREADS
 
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
+}
 

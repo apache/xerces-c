@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/02 21:10:37  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.10  2000/03/02 19:55:29  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -750,5 +753,10 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
     return (FileHandle)fdopen(dup(0), "rb");
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/02 21:10:39  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.5  2000/03/02 20:42:42  abagchi
  * Fixed typo in XMLExcepts
  *
@@ -633,5 +636,10 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
         return (FileHandle)fdopen(dup(0), "rb");
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
 }
 

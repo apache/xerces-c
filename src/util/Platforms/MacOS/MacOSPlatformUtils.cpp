@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/02 21:10:37  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.3  2000/03/02 19:55:26  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -858,5 +861,10 @@ int strnicmp(const char *s1, const char *s2, int n)
         if (!c1) return 0;
     }
     return 0;
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/03/02 21:10:36  abagchi
+ * Added empty function platformTerm()
+ *
  * Revision 1.12  2000/03/02 20:42:41  abagchi
  * Fixed typo in XMLExcepts
  *
@@ -687,170 +690,8 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 #endif // APP_NO_THREADS
 
-
-
-
-// ======================================================================
-// This is the software attic. It contains stuff no longer used.
-// Don't look at it unless you have a ladder.
-// ======================================================================
-/**************** Beginning of code attic *******************************
-
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
- 
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
+void XMLPlatformUtils::platformTerm()
 {
-  WriteCharStr(stderr, toWrite);
+    // We don't have any termination requirements at this time
 }
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-   WriteUStrStdErr(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-   WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-   WriteCharStr(stdout, toWrite);
-}
-
-void XMLPlatformUtils::platformInit()
-{
-    //
-    // The atomicOps mutex needs to be created early.
-    // Normally, mutexes are created on first use, but there is a
-    // circular dependency between compareAndExchange() and
-    // mutex creation that must be broken.
-
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
-
-    // Here you would also set the fgLibLocation global variable
-    // XMLPlatformUtils::fgLibLocation is the variable to be set
-
-    static const char*  sharedLibEnvVar = "LD_LIBRARY_PATH";
-    char*               libraryPath = 0;
-    char                libName[256];
-
-    // Construct the library name from the global variables
-
-    strcpy(libName, Xerces_DLLName);
-    strcat(libName, gXercesVersionStr);
-    strcat(libName, ".so");
-
-    char* libEnvVar = getenv(sharedLibEnvVar);
-    char* libPath = NULL;
-
-    if (libEnvVar == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
-    }
-
-    //
-    // Its necessary to create a copy because strtok() modifies the
-    // string as it returns tokens. We don't want to modify the string
-    // returned to by getenv().
-    //
-
-    libPath = new char[strlen(libEnvVar) + 1];
-    strcpy(libPath, libEnvVar);
-
-
-    // First do the searching process for the first directory listing
-
-    char*  allPaths = libPath;
-    char*  libPathName;
-
-    while ((libPathName = strtok(allPaths, ":")) != NULL)
-    {
-        FILE*  dummyFptr = 0;
-        allPaths = 0;
-
-        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        dummyFptr = (FILE *) fopen(libfile, "rb");
-        delete [] libfile;
-        if (dummyFptr != NULL)
-        {
-            fclose(dummyFptr);
-            libraryPath = new char[strlen(libPathName)+1];
-            strcpy((char *) libraryPath, libPathName);
-            break;
-        }
-
-    } // while
-
-    delete libPath;
-
-    XMLPlatformUtils::fgLibLocation = libraryPath;
-
-    if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
-    }
-}
-
-XMLTransService* XMLPlatformUtils::makeTransService()
-{
-#if defined (XML_USE_ICU_TRANSCODER)
-    //
-    //  We need to figure out the path to the Intl converter files.
-    //
-
-    static const char * icuDataEnvVar   = "ICU_DATA";
-    char *              intlPath        = 0;
-
-    char* envVal = getenv(icuDataEnvVar);
-
-    // Check if environment variable is set...
-    if (envVal != NULL)
-    {
-        unsigned int pathLen = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-
-        ICUTransService::setICUPath(intlPath);
-        delete intlPath;
-
-        return new ICUTransService;
-    }
-
-    //
-    //  If the environment variable ICU_DATA is not set, assume that the
-    //  converter files are stored relative to the Xerces-C library.
-    //
-
-    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
-                         strlen("/icu/data/") + 1;
-    intlPath = new char[lent];
-    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
-    strcat(intlPath, "/icu/data/");
-
-    ICUTransService::setICUPath(intlPath);
-    delete intlPath;
-
-    return new ICUTransService;
-
-
-#else
-
-    // Use native transcoding services.
-    // same as -DXML_USE_INMEM_MESSAGELOADER
-    return new IconvTransService;
-
-#endif
-
-} // XMLPlatformUtils::makeTransService
-
-********************* End of code attic *******************************/
 
