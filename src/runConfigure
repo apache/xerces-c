@@ -79,7 +79,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
-            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx' )"
+            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
     echo "       -d (specifies that you want to build debug version)"
@@ -201,7 +201,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx)
+   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64)
        # platform has been recognized
        ;;
    *)
@@ -398,7 +398,7 @@ export NETACCESSOR
 #
 
 case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | icc | ICC)
+   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
       ;;
 
    *)

@@ -356,6 +356,19 @@ SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 endif
 
+#=============== TRU64 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, TRU64)
+PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${XERCESCROOT}/.cxx_repository
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -ptr ${XERCESCROOT}/.cxx_repository
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+ifeq (${TRANSCODER}, ICU)
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc -lrt
+else
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt
+endif
+SHLIBSUFFIX=.so
+endif
+
 ###################### STANDARD TOOLS #############################
 ifeq (${PLATFORM}, OS400)
 CP = -cp -fph

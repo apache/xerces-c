@@ -45,6 +45,7 @@ case "${host}" in
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
+        *-*-osf*)	platform=TRU64 ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
@@ -101,6 +102,7 @@ util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \
 util/Platforms/IRIX/Makefile \
 util/Platforms/UnixWare/Makefile \
+util/Platforms/Tru64/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \

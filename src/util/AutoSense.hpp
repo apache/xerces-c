@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/08/01 18:26:02  aruna1
+ * Tru64 support added
+ *
  * Revision 1.13  2000/07/18 18:25:58  andyh
  * Mac OS update.
  * Contributed by James Berry <jberry@criticalpath.com>
@@ -171,6 +174,8 @@
     #define XML_MACOS
 #elif defined(MACOSX)
     #define XML_MACOSX
+#elif defined(__alpha) && defined(__osf__)
+    #define XML_TRU64
 #else
     #error Code requires port to host OS!
 #endif
@@ -228,6 +233,8 @@
     #elif defined(XML_OS2)
         #define XML_IBMVAOS2
     #endif
+#elif defined(XML_TRU64) && defined(__DECCXX)
+    #define XML_DECCXX
 #elif defined(__MWERKS__)
     #define XML_METROWERKS
 #elif defined(__OS400__)

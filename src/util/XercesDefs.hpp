@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/08/01 18:26:02  aruna1
+ * Tru64 support added
+ *
  * Revision 1.4  2000/07/29 05:36:37  jberry
  * Fix misspelling in Mac OS port
  *
@@ -200,6 +203,10 @@ static const unsigned int   gXercesRevision   = 0;
 #include	<util/Platforms/OS400/OS400Defs.hpp>
 #endif
 
+#if defined(XML_TRU64)
+#include	<util/Platforms/Tru64/Tru64Defs.hpp>
+#endif
+
 
 // ---------------------------------------------------------------------------
 //  And now we subinclude a header according to the development environment
@@ -268,6 +275,10 @@ static const unsigned int   gXercesRevision   = 0;
 
 #if defined(XML_AS400)
 #include	<util/Compilers/OS400SetDefs.hpp>
+#endif
+
+#if defined(XML_TRU64)
+#include	<util/Compilers/DECCXXDefs.hpp>
 #endif
 
 

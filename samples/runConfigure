@@ -56,84 +56,9 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
+
 #
-# $Log$
-# Revision 1.12  2000/04/12 20:32:54  abagchi
-# Included some more PTX changes
-#
-# Revision 1.11  2000/04/04 21:34:50  abagchi
-# Added PTX support
-#
-# Revision 1.10  2000/04/03 19:27:38  abagchi
-# Included changes for SGI IRIX 6.5
-#
-# Revision 1.9  2000/02/19 00:21:04  abagchi
-# Changed AS400 to AS400-OS400
-#
-# Revision 1.8  2000/02/09 22:05:52  abagchi
-# AS/400 change
-#
-# Revision 1.7  2000/02/06 07:47:16  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.6  2000/02/05 01:07:29  rahulj
-# Under Solaris for some unknown reason test -e did not work.
-# Changed it to test -x.
-#
-# Revision 1.5  2000/02/01 18:49:08  aruna1
-# updated instructions
-#
-# Revision 1.4  2000/01/05 20:52:16  abagchi
-# Added a few echo statements to clarify what is actually happening
-# inside runConfigure. There were a few questions on why we need this
-# wrapper script. We don't, it's just a convenience.
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.3  1999/12/02 18:10:51  dirkx
-# Changed exit codes from -1 to '1'. Added indirection.
-#
-# Date: Thu, 2 Dec 1999 17:47:39 +0000
-# From: Jonathan McDowell <noodles@earth.li>
-# Reply-To: xerces-dev@xml.apache.org
-# To: xerces-dev@xml.apache.org, rahulj@apache.org
-# Subject: Re: runConfigure script & bash
-#
-#
-# On Mon, Nov 29, 1999 at 10:29:13AM -0800, Rahul Jain wrote:
-#
-# > > I'm quite happy to produce a patch that makes it work under both
-# > > FreeBSD's sh and bash - I would assume this would work under most sh
-# > > like shells.
-# > Please post the changes for FreeBSD and I will test the changes on
-# > other unix's and do the integration.
-#
-# I sat down to do this today and found that it can be trivially fixed by
-# changing all the "exit -1" instances to "exit 1" - it seems the /bin/sh
-# with FreeBSD doesn't like negative result codes. It seems a bit
-# pointless to submit a patch for this, so can someone with CVS access
-# change this please?
-#
-# J.
-#
-# --
-#
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.2  1999/11/12 19:12:40  abagchi
-# Changed instances of XML4CROOT to XERCESCROOT
-#
-# Revision 1.1.1.1  1999/11/09 01:09:26  twl
-# Initial checkin
-#
-# Revision 1.4  1999/11/08 20:43:34  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#
+# $Id$
 #
 
 #
@@ -146,7 +71,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
-'hp-10', 'hp-11', 'os400', 'irix', 'ptx')"
+'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64')"
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
@@ -239,7 +164,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | os400 | irix | ptx)
+   aix | linux | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64)
        # platform has been recognized
        ;;
    *)
@@ -282,6 +207,8 @@ fi
 
    icc | ICC)
        ;;
+	cxx)
+		;;
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
       ;;

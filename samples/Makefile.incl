@@ -210,7 +210,7 @@ endif
 #   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
 # to specify your LOADMOD and the IXM4C31 definition sidedeck     #
-# dataset.  							  #
+# dataset.  													  #
 ###################################################################
 
 ifeq (${PLATFORM}, OS390)
@@ -235,3 +235,12 @@ endif
 LIBRARY_SEARCH_PATHS=
 endif
 
+#=============== TRU64 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, TRU64)
+CMP= -c ${CXXFLAGS}
+CC = cxx -c -D${PLATFORM}
+LINK = cxx -D${PLATFORM}
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+
+SHLIBSUFFIX=.so
+endif
