@@ -6,7 +6,7 @@
     <PROJECT value="..\..\..\..\..\Build\Win32\BCB6\XercesLib.dll"/>
     <OBJFILES value="..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\Win32PlatformUtils.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\Win32MsgLoader.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\InMemMsgLoader.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\Win32TransService.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinHTTPURLInputStream.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\WinSockNetAccessor.obj
@@ -321,7 +321,7 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG"/>
+    <USERDEFINES value="PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_INMEM_MESSAGELOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="Xerceslib.cpp"/>
     <INCLUDEPATH value="..\..\..\..\..\src;$(BCB)\include"/>
@@ -333,7 +333,7 @@
     <IDLCFLAGS value="-I..\..\..\..\..\src\xercesc -I$(BCB)\include -src_suffix cpp 
       -DPLATFORM_WIN32 -D_CRTDBG_MAP_ALLOC -DPROJ_XMLPARSER -DPROJ_XMLUTIL 
       -DPROJ_PARSERS -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS 
-      -DXML_SINGLEDLL -DXML_USE_WIN32_TRANSCODER -DXML_USE_WIN32_MSGLOADER 
+      -DXML_SINGLEDLL -DXML_USE_WIN32_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER 
       -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -boa"/>
     <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b -k -y -v -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
@@ -354,7 +354,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h" FORMNAME="" UNITNAME="resource" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc" FORMNAME="" UNITNAME="Version" CONTAINERID="RC" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32PlatformUtils.cpp" FORMNAME="" UNITNAME="Win32PlatformUtils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp" FORMNAME="" UNITNAME="Win32MsgLoader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\InMemMsgLoader.cpp" FORMNAME="" UNITNAME="InMemMsgLoader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp" FORMNAME="" UNITNAME="Win32TransService" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp" FORMNAME="" UNITNAME="BinHTTPURLInputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp" FORMNAME="" UNITNAME="WinSockNetAccessor" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
