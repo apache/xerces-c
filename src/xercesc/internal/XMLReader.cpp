@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,22 +61,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/BitOps.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/TransService.hpp>
-#include <xercesc/util/UTFDataFormatException.hpp>
 #include <xercesc/util/XMLEBCDICTranscoder.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
-#include <xercesc/internal/CharTypeTables.hpp>
-#include <xercesc/internal/XMLReader.hpp>
-#include <xercesc/internal/XMLScanner.hpp>
-#include <string.h>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -417,9 +412,9 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
 
 XMLReader::~XMLReader()
 {
-    delete [] fEncodingStr;
-    delete [] fPublicId;
-    delete [] fSystemId;
+    XMLString::release(&fEncodingStr);
+    XMLString::release(&fPublicId);
+    XMLString::release(&fSystemId);
     delete fStream;
     delete fTranscoder;
 }
@@ -1138,7 +1133,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5))
         {
-            delete [] inputEncoding;
+            XMLString::release(&inputEncoding);
 
             if ((fEncoding != XMLRecognizer::UTF_16L)
             &&  (fEncoding != XMLRecognizer::UTF_16B))
@@ -1150,11 +1145,11 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             newBaseEncoding = fEncoding;
 
             if (fEncoding == XMLRecognizer::UTF_16L) {
-                delete [] fEncodingStr;
+                XMLString::release(&fEncodingStr);
                 fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString);
             }
             else {
-                delete [] fEncodingStr;
+                XMLString::release(&fEncodingStr);
                 fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString);
             }
         }
@@ -1162,7 +1157,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
              ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
              ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3))
         {
-            delete [] inputEncoding;
+            XMLString::release(&inputEncoding);
 
             if ((fEncoding != XMLRecognizer::UCS_4L)
             &&  (fEncoding != XMLRecognizer::UCS_4B))
@@ -1175,12 +1170,12 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
 
             if (fEncoding == XMLRecognizer::UCS_4L) {
 
-                delete [] fEncodingStr;
+                XMLString::release(&fEncodingStr);
                 fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString);
             }
             else {
 
-                delete [] fEncodingStr;
+                XMLString::release(&fEncodingStr);
                 fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString);
             }
         }
@@ -1190,7 +1185,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             // None of those special cases, so just replicate the new name
             // and use it directly to create the transcoder
             //
-            delete [] fEncodingStr;
+            XMLString::release(&fEncodingStr);
             fEncodingStr = inputEncoding;
 
             XMLTransService::Codes failReason;
@@ -1205,7 +1200,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
      else
     {
         // Store the new encoding string since it is just an intrinsic
-        delete [] fEncodingStr;
+        XMLString::release(&fEncodingStr);
         fEncodingStr = inputEncoding;
     }
 

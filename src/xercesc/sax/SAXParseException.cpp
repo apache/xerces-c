@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/04/21 21:07:38  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:56:26  tng
  * C++ Namespace Support.
  *
@@ -135,8 +138,8 @@ SAXParseException::SAXParseException(const SAXParseException& toCopy) :
 
 SAXParseException::~SAXParseException()
 {
-    delete [] fPublicId;
-    delete [] fSystemId;
+    XMLString::release(&fPublicId);
+    XMLString::release(&fSystemId);
 }
 
 
@@ -153,8 +156,8 @@ SAXParseException::operator=(const SAXParseException& toAssign)
     fColumnNumber = toAssign.fColumnNumber;
     fLineNumber = toAssign.fLineNumber;
 
-    delete [] fPublicId;
-    delete [] fSystemId;
+    XMLString::release(&fPublicId);
+    XMLString::release(&fSystemId);
     fPublicId = XMLString::replicate(toAssign.fPublicId);
     fSystemId = XMLString::replicate(toAssign.fSystemId);
 

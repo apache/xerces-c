@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/04/21 21:07:38  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:56:26  tng
  * C++ Namespace Support.
  *
@@ -99,9 +102,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 InputSource::~InputSource()
 {
-    delete [] fEncoding;
-    delete [] fPublicId;
-    delete [] fSystemId;
+    XMLString::release(&fEncoding);
+    XMLString::release(&fPublicId);
+    XMLString::release(&fSystemId);
 }
 
 
@@ -110,21 +113,21 @@ InputSource::~InputSource()
 // ---------------------------------------------------------------------------
 void InputSource::setEncoding(const XMLCh* const encodingStr)
 {
-    delete [] fEncoding;
+    XMLString::release(&fEncoding);
     fEncoding = XMLString::replicate(encodingStr);
 }
 
 
 void InputSource::setPublicId(const XMLCh* const publicId)
 {
-    delete [] fPublicId;
+    XMLString::release(&fPublicId);
     fPublicId = XMLString::replicate(publicId);
 }
 
 
 void InputSource::setSystemId(const XMLCh* const systemId)
 {
-    delete [] fSystemId;
+    XMLString::release(&fSystemId);
     fSystemId = XMLString::replicate(systemId);
 }
 
