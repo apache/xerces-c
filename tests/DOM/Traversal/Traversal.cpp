@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2002/06/25 16:23:16  tng
+ * DOM L3: use release()
+ *
  * Revision 1.11  2002/06/04 16:14:44  tng
  * Use proper feature in DOMImplementationRegistry::getDOMImplementation
  *
@@ -251,7 +254,9 @@ int  main()
 
         XMLString::transcode("Attr01", tempStr, 3999);
         DOMAttr*        attr01  = doc->createAttribute(tempStr);
-        E11->setAttributeNode(attr01);
+        DOMNode* rem = E11->setAttributeNode(attr01);
+        if (rem)
+            rem->release();
 
         XMLString::transcode("FirstSiblingChild2", tempStr, 3999);
         DOMElement*     E112 = doc->createElement(tempStr);
@@ -263,7 +268,9 @@ int  main()
 
         XMLString::transcode("Attr01", tempStr, 3999);
         DOMAttr* attr02 = doc->createAttribute(tempStr);
-        E12->setAttributeNode(attr02);
+        rem = E12->setAttributeNode(attr02);
+        if (rem)
+            rem->release();
 
         XMLString::transcode("SecondSiblingChild2", tempStr, 3999);
         DOMElement*     E122 = doc->createElement(tempStr);
@@ -595,7 +602,7 @@ int  main()
             TASSERT(tw->getRoot() != doc);
         }
 
-        delete doc;
+        doc->release();
 
     };
 

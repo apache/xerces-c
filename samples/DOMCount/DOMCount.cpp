@@ -304,7 +304,7 @@ int main(int argC, char* argV[])
         try
         {
             // reset document pool
-            parser->setFeature(XMLUni::fgXercesResetDocumentPool, true);
+            parser->resetDocumentPool();
 
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
             doc = parser->parseURI(xmlFile);
@@ -366,7 +366,7 @@ int main(int argC, char* argV[])
     //
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.
     //
-    delete parser;
+    parser->release();
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

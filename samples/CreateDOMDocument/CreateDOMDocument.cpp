@@ -150,7 +150,7 @@ int main(int argC, char* argV[])
     }
 
     {
-         //  Nest entire test in an inner block.
+        //  Nest entire test in an inner block.
         //  The tree we create below is the same that the XercesDOMParser would
         //  have created, except that no whitespace text nodes would be created.
 
@@ -197,12 +197,11 @@ int main(int argC, char* argV[])
         cout << "The tree just created contains: " << elementCount
              << " elements." << endl;
 
-        delete doc;
+        doc->release();
 
    }
 
     XMLPlatformUtils::Terminate();
     return 0;
 }
-
 

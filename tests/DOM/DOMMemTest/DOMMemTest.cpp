@@ -153,7 +153,7 @@ void DOMBasicTests()
         //  as memory leaks.
         DOMDocument*   doc;
         doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
-        delete doc;
+        doc->release();
     }
 
     //
@@ -185,7 +185,7 @@ void DOMBasicTests()
 
         DOMNodeList*    nodeList = doc->getElementsByTagName(X("*"));
 
-        delete doc;
+        doc->release();
     }
 
 
@@ -206,7 +206,7 @@ void DOMBasicTests()
         rootEl->appendChild(textNode);
 
         DOMNodeList*    nodeList = doc->getElementsByTagName(X("*"));
-        delete doc;
+        doc->release();
     };
 
 
@@ -222,15 +222,20 @@ void DOMBasicTests()
         doc->appendChild(rootEl);
         {
             DOMAttr*        attr01  = doc->createAttribute(X("Attr01"));
-            rootEl->setAttributeNode(attr01);
+            DOMNode* rem = rootEl->setAttributeNode(attr01);
+            if (rem)
+                rem->release();
+
         }
 
 
         {
             DOMAttr* attr02 = doc->createAttribute(X("Attr01"));
-            rootEl->setAttributeNode(attr02);
+            DOMNode* rem = rootEl->setAttributeNode(attr02);
+            if (rem)
+                rem->release();
         }
-        delete doc;
+        doc->release();
 
     };
 
@@ -247,12 +252,17 @@ void DOMBasicTests()
 
         DOMAttr*        attr01  = doc->createAttribute(X("Attr02"));
 
-        rootEl->setAttributeNode(attr01);
+        DOMNode* rem = rootEl->setAttributeNode(attr01);
+        if (rem)
+            rem->release();
+
 
         DOMAttr*        attr02 = doc->createAttribute(X("Attr02"));
 
-        rootEl->setAttributeNode(attr02);
-        delete doc;
+        rem = rootEl->setAttributeNode(attr02);
+        if (rem)
+            rem->release();
+        doc->release();
     }
 
 
@@ -270,12 +280,15 @@ void DOMBasicTests()
 
         DOMAttr*        attr01  = doc->createAttribute(X("Attr03"));
 
-        rootEl->setAttributeNode(attr01);
+        DOMNode* rem = rootEl->setAttributeNode(attr01);
+        if (rem)
+            rem->release();
+
 
         attr01->setValue(X("Attr03Value1"));
 
         attr01->setValue(X("Attr03Value2"));
-        delete doc;
+        doc->release();
     }
 
 
@@ -293,12 +306,14 @@ void DOMBasicTests()
 
         DOMAttr*        attr01  = doc->createAttribute(X("Attr04"));
 
-        rootEl->setAttributeNode(attr01);
+        DOMNode* rem = rootEl->setAttributeNode(attr01);
+        if (rem)
+            rem->release();
 
         attr01->setValue(X("Attr04Value1"));
 
         DOMNode* value = attr01->getFirstChild();
-        delete doc;
+        doc->release();
     }
 
 
@@ -320,7 +335,7 @@ void DOMBasicTests()
 
         txt1->splitText(6);
         rootEl->normalize();
-        delete doc;
+        doc->release();
 
     }
 
@@ -342,7 +357,9 @@ void DOMBasicTests()
 
         DOMNotation*    nt1 = doc->createNotation(X("Notation01"));
 
-        notationMap->setNamedItem (nt1);
+        DOMNode* rem = notationMap->setNamedItem (nt1);
+        if (rem)
+            rem->release();
 
         DOMNode*  abc1 = notationMap->getNamedItem(X("Notation01"));
 
@@ -354,7 +371,7 @@ void DOMBasicTests()
         DOMNode* abc6 = notationMap->getNamedItem(X("Notation01"));
 
         nt2 = (DOMNotation*) abc6;
-        delete doc;
+        doc->release();
     }
 
 
@@ -380,7 +397,7 @@ void DOMBasicTests()
         TASSERT(nnm != nnm2);
         nnm = nnm2;
         TASSERT(nnm == nnm2);
-        delete doc;
+        doc->release();
     }
 
 
@@ -405,8 +422,8 @@ void DOMBasicTests()
 
         TASSERT(el2->getOwnerDocument() == doc2);
         TASSERT(doc1 != doc2);
-        delete doc1;
-        delete doc2;
+        doc1->release();
+        doc2->release();
     }
 
 
@@ -438,7 +455,7 @@ void DOMBasicTests()
         nl = el->getChildNodes();
         nodeListLen = nl->getLength();
         TASSERT(nodeListLen == 1);
-        delete doc;
+        doc->release();
     }
 
 
@@ -468,7 +485,7 @@ void DOMBasicTests()
         TASSERT(nl != nl2);
         nl2 = nl;
         TASSERT(nl == nl2);
-        delete doc;
+        doc->release();
     }
 
 
@@ -493,7 +510,7 @@ void DOMBasicTests()
          {
              TASSERT(false);  // Wrong exception thrown.
          }
-         delete doc;
+         doc->release();
     }
 
 
@@ -518,7 +535,7 @@ void DOMBasicTests()
         TASSERT(n1 != 0);
         n1 = n2 = n3 = 0;
         TASSERT(n1 == 0);
-        delete doc;
+        doc->release();
     }
 
 
@@ -551,7 +568,7 @@ void DOMBasicTests()
         TASSERT(a != 0);
         s = a->getValue();
         TASSERT(!XMLString::compareString(s, X("CTestAttrValue")));
-        delete doc;
+        doc->release();
 
     }
 
@@ -582,7 +599,7 @@ void DOMBasicTests()
         TASSERT(!XMLString::compareString(tn2->getNodeValue(), XMLUni::fgZeroLenString));
 
         EXCEPTION_TEST(tn->splitText(6), DOMException::INDEX_SIZE_ERR);
-        delete doc;
+        doc->release();
     }
 
 
@@ -738,7 +755,7 @@ void DOMNSTests()
         TASSERT(doc->isSupported(X("MutationEvents"), XMLUni::fgZeroLenString)   == false);
 
         TASSERT(doc->isSupported(X("HTMLEvents"), 0)   == false);
-        delete doc;
+        doc->release();
     }
 
 
@@ -767,7 +784,7 @@ void DOMNSTests()
         TASSERT(nnm->getLength() == 0);
         nnm = dt->getNotations();
         TASSERT(nnm->getLength() == 0);
-        delete dt;
+        dt->release();
 
         //
         // Qualified name without prefix should also work.
@@ -795,7 +812,7 @@ void DOMNSTests()
         EXCEPTION_TEST(impl->createDocumentType(X("doc::Name"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
 
         EXCEPTION_TEST(impl->createDocumentType(X("doc:N:ame"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
-        delete dt;
+        dt->release();
 
     }
 
@@ -811,7 +828,7 @@ void DOMNSTests()
         DOMDocument*           doc = impl->createDocument(XMLUni::fgZeroLenString, X("a"), dt);
 
         doc->getNodeName();
-        delete doc;
+        doc->release();
     }
 
     //
@@ -871,13 +888,13 @@ void DOMNSTests()
             TASSERT(false);  // Wrong exception thrown.
         }
 
-        delete doc;
+        doc->release();
         // Creating a document with null NamespaceURI and DocumentType
         doc = impl->createDocument(X("pubId"), X("foo:docName"), 0);
 
         // Namespace tests of createDocument are covered by createElementNS below
-        delete doc;
-        delete dt;
+        doc->release();
+        dt->release();
     }
 
 
@@ -1004,8 +1021,8 @@ void DOMNSTests()
 
         //Prefix of readonly Element can not be changed.
         //However, there is no way to create such DOMElement* for testing yet.
-        delete doc;
-        delete dt;
+        doc->release();
+        dt->release();
     }
 
 
@@ -1144,8 +1161,8 @@ void DOMNSTests()
 
         //Prefix of readonly Attribute can not be changed.
         //However, there is no way to create such DOMAttribute for testing yet.
-        delete doc;
-        delete dt;
+        doc->release();
+        dt->release();
     }
 
 
@@ -1262,15 +1279,16 @@ void DOMNSTests()
         TASSERT(nl->getLength() == 6);
         TASSERT(nla->getLength() == 0);
 
-        rootEl->removeChild(elc);
+        DOMNode* rem = rootEl->removeChild(elc);
+        rem->release();
         TASSERT(nl->getLength() == 5);
         TASSERT(nla->getLength() == 0);
 
         ela->appendChild(elc);
         TASSERT(nl->getLength() == 6);
         TASSERT(nla->getLength() == 1);
-        delete doc;
-        delete dt;
+        doc->release();
+        dt->release();
     }
 
 
@@ -1295,19 +1313,9 @@ void DOMNSTests()
         //
 
         DOMAttr* attra = doc->createAttributeNS(X("http://nsa"), X("a:attra"));
-        rootEl->setAttributeNodeNS(attra);
-
-        DOMAttr* attrb = doc->createAttributeNS(X("http://nsb"), X("attrb"));
-        rootEl->setAttributeNodeNS(attrb);
-
-        DOMAttr* attrc = doc->createAttributeNS(XMLUni::fgZeroLenString, X("attrc"));
-        rootEl->setAttributeNodeNS(attrc);
-
-        DOMAttr* attrd = doc->createAttributeNS(X("http://nsa"), X("d:attra"));
-        rootEl->setAttributeNodeNS(attrd);
-
-        DOMAttr* attre = doc->createAttributeNS(X("http://nse"), X("attrb"));
-        rootEl->setAttributeNodeNS(attre);
+        DOMNode* rem = rootEl->setAttributeNodeNS(attra);
+        if (rem)
+            rem->release();
 
         //
         // Check that the attribute nodes were created with the correct properties.
@@ -1323,7 +1331,32 @@ void DOMNSTests()
         TASSERT(!XMLString::compareString(attra->getPrefix(), X("a")));
         TASSERT(attra->getSpecified() == true);
         TASSERT(!XMLString::compareString(attra->getValue(), XMLUni::fgZeroLenString));
+
+        //
+        // Create a set of attributes and hang them on the root element.
+        //
+
+        DOMAttr* attrb = doc->createAttributeNS(X("http://nsb"), X("attrb"));
+        rem = rootEl->setAttributeNodeNS(attrb);
+        if (rem)
+            rem->release();
+
+        DOMAttr* attrc = doc->createAttributeNS(XMLUni::fgZeroLenString, X("attrc"));
+        rem = rootEl->setAttributeNodeNS(attrc);
+        if (rem)
+            rem->release();
+
+        // this one will replace the attra
+        DOMAttr* attrd = doc->createAttributeNS(X("http://nsa"), X("d:attra"));
+        rem = rootEl->setAttributeNodeNS(attrd);
         TASSERT(attra->getOwnerElement() == 0);
+        if (rem)
+            rem->release();
+
+        DOMAttr* attre = doc->createAttributeNS(X("http://nse"), X("attrb"));
+        rem = rootEl->setAttributeNodeNS(attre);
+        if (rem)
+            rem->release();
 
         // Test methods of NamedNodeMap
         DOMNamedNodeMap* nnm = rootEl->getAttributes();
@@ -1349,8 +1382,8 @@ void DOMNSTests()
 
         TASSERT(rootEl->hasAttributeNS(X("http://nsa"), X("attra")) == true);
         TASSERT(rootEl->hasAttributeNS(X("http://nsa"), X("wrong")) == false);
-        delete doc;
-        delete dt;
+        doc->release();
+        dt->release();
     }
 
 
@@ -1360,6 +1393,47 @@ void DOMNSTests()
 
 }
 
+
+//---------------------------------------------------------------------------------------
+//
+//   DOMReleaseTests    Test if the release() function
+//
+//---------------------------------------------------------------------------------------
+void DOMReleaseTests()
+{
+	XMLCh tempStr[4000];
+	XMLCh tempStr2[4000];
+	XMLCh tempStr3[4000];
+	XMLString::transcode("status", tempStr, 3999);
+	XMLString::transcode("true", tempStr2, 3999);
+	XMLString::transcode("root", tempStr3, 3999);
+
+	//create document
+	DOMDocument*  cpXMLDocument;
+	cpXMLDocument = DOMImplementation::getImplementation()->createDocument();
+	//create root element
+	DOMElement*   cpRoot = cpXMLDocument->createElement(tempStr3);
+	//create status attribute
+	cpRoot->setAttribute(tempStr,tempStr2);
+	DOMAttr* pAttr = cpRoot->getAttributeNode(tempStr);
+
+	//simulate setting the attribute value
+   //   The setValue and setAttribute should call release internally so that
+   //   the overall memory usage is not increased
+    int i = 0;
+	for(i=0;i<200000;i++)
+	{
+		 pAttr->setValue(tempStr2);
+	}
+	for(i=0;i<200000;i++)
+	{
+		//same problem
+		cpRoot->removeAttribute(tempStr);
+		cpRoot->setAttribute(tempStr,tempStr2);
+	}
+	cpXMLDocument->release();
+
+}
 
 
 //---------------------------------------------------------------------------------------
@@ -1382,6 +1456,7 @@ int  mymain()
 
     DOMBasicTests();
     DOMNSTests();
+    DOMReleaseTests();
 
     //
     //  Print Final allocation stats for full set of tests

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2002/06/25 16:22:52  tng
+ * DOM L3: use release()
+ *
  * Revision 1.21  2002/06/12 18:31:17  tng
  * DOM L3: test the DOMUserDataHandler and set/getUserData
  *
@@ -400,7 +403,9 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     DOMNotation* docNotation = make.createNotation(doc, tempStr);
     DOMNode*  abc1 = doc->getFirstChild();
     DOMDocumentType* docType = (DOMDocumentType*) abc1;
-    docType->getNotations()->setNamedItem(docNotation);
+    DOMNode* rem = docType->getNotations()->setNamedItem(docNotation);
+    if (rem)
+        rem->release();
 
     DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
 
@@ -682,7 +687,7 @@ int main(int argc, char **argv)
          DOMTest::testDocumentFragmentNode = 0;
          DOMTest::testNotationNode = 0;
 
-         delete d;
+         d->release();
 
     };
 
@@ -717,7 +722,9 @@ bool DOMTest::testAttr(DOMDocument* document)
     // ((DOMElement*)node)->setAttributeNode(testAttribute);
     // attributeNode = ((DOMElement*)node)->getAttributeNode("testAttribute");
     DOMElement* el = (DOMElement*)node;
-    el->setAttributeNode(testAttribute);
+    DOMNode* rem = el->setAttributeNode(testAttribute);
+    if (rem)
+        rem->release();
 
     XMLString::transcode("testAttribute", tempStr, 3999);
     attributeNode = el->getAttributeNode(tempStr);
@@ -1820,7 +1827,8 @@ bool DOMTest::testDocumentType(DOMDocument* document)
     document->insertBefore(newDocumentType, document->getDocumentElement());
     //** Other aspects of insertBefore are tested in docBuilder through appendChild*
 
-    document->removeChild(document->getFirstChild()); //Removes newDocumentType for tree restoral
+    DOMNode* rem = document->removeChild(document->getFirstChild()); //Removes newDocumentType for tree restoral
+    rem->release();
     document->insertBefore(holdDocType, document->getFirstChild()); //Reattaches removed branch to restore tree to the original
 
     // Test the user data
@@ -2046,7 +2054,9 @@ bool DOMTest::testElement(DOMDocument* document)
     // This test is incorrect.  It assumes that there is a defined ordering of the entries
     //  in a nodeMap, but there is no ordering required.
 #ifdef TheFollowingCheckIsInvalid
-    element->setAttributeNode(newAttributeNode);
+    DOMNode* rem2 = element->setAttributeNode(newAttributeNode);
+    if (rem2)
+        rem2->release();
     nodeMap = element->getAttributes();
     int size = nodeMap->getLength();
     int k;
@@ -2072,7 +2082,9 @@ bool DOMTest::testElement(DOMDocument* document)
         printf("DOMElement* Tests Failure 001\n");
         OK = false;
     };
-    element->setAttributeNode(newAttributeNode);
+    DOMNode* rem = element->setAttributeNode(newAttributeNode);
+    if (rem)
+        rem->release();
     size = nodeMap->getLength();
     if (size != 3)
     {
@@ -2167,7 +2179,9 @@ bool DOMTest::testElement(DOMDocument* document)
 
     XMLString::transcode("FirstElementLastAttribute", tempStr, 3999);
     element->removeAttribute(tempStr);
-    element->removeAttributeNode(newAttributeNode);
+    rem = element->removeAttributeNode(newAttributeNode);
+    if (rem)
+        rem->release();
 
     //  doc->getLastChild()->setNodeValue("This shouldn't work");//!! Throws a NO_MODIFICATION_ALLOWED_ERR***
 

@@ -241,7 +241,7 @@ int  main()
 
             DOMText*     E210 = doc->createTextNode(xInsertedText);
 
-            delete doc;
+            doc->release();
 
 
         }
@@ -946,7 +946,8 @@ int  main()
             DOMNodeList* nol = foo->getChildNodes();
 
             //removing moo
-            foo->removeChild(nol->item(1));
+            DOMNode* rem = foo->removeChild(nol->item(1));
+            rem->release();
             TASSERT(newrange->getStartOffset()==1);
             TASSERT(!XMLString::compareString(newrange->getStartContainer()->getNodeName(),xfoo));
             TASSERT(newrange->getEndOffset()==3);
@@ -959,9 +960,9 @@ int  main()
             TASSERT(!XMLString::compareString(newtestrange->getEndContainer()->getNodeName(),xfoo));
             TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
 
-            delete doc;
-            delete doc2;
-            delete doc3;
+            doc->release();
+            doc2->release();
+            doc3->release();
         }
     } //creating the dom tree and tests
 
