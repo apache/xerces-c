@@ -69,7 +69,7 @@ AC_SUBST(cppflags)
 cflags=${CFLAGS}
 AC_SUBST(cflags)
 
-ldflags=${LDCFLAGS}
+ldflags=${LDFLAGS}
 AC_SUBST(ldflags)
 
 libs=${LIBS}
@@ -111,6 +111,7 @@ util/MsgLoaders/ICU/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
+util/NetAccessors/libWWW/Makefile \
 validators/Makefile \
 validators/common/Makefile \
 validators/datatype/Makefile \

@@ -56,6 +56,23 @@
 
 /**
  * $Log$
+ * Revision 1.4  2001/03/02 14:39:21  tng
+ * Enabling libWWW NetAccessor support under UNIX. Tested with latest tarball of libWWW
+ * (w3c-libwww-5.3.2) under RedHat Linux 6.1.  Added by Martin Kalen.
+ *
+ * There is one MAJOR problem with the use of libwww and the patches
+ * below, which someone with knowledge of libwww filters etc. might want
+ * to look into. Default behavior for content-type text/xml is to consume
+ * all xml data before it reaches the simple HTML presenter. Hence, only
+ * files with content-type text/html will actually reach the xerces-c
+ * library. If you have a *.xml file on the webbserver, processing of the
+ * file will throw an exception stating "The main XML document cannot be
+ * empty" (correct in a xerces point of view since if you enable debug
+ * build you will see that libwww "eats" all text/xml).
+ *
+ * See "Diffs for enabling libWWW NetAccessor support under UNIX" posted in March 1, 2001
+ * in the xerces-c-dev mailing list for further information.
+ *
  * Revision 1.3  2000/05/15 22:31:31  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -75,15 +92,12 @@
  *
  */
 
-#include <string.h>
-
-#include <WWWInit.h>
-
 #include <util/XMLNetAccessor.hpp>
-#include <util/NetAccessors/BinURLInputStream.hpp>
+#include <util/NetAccessors/libWWW/BinURLInputStream.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLExceptMsgs.hpp>
-
+#include <strings.h>
+#include <WWWInit.h>
 
 
 //
@@ -155,7 +169,7 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
     
     if (status == NO)
     {
-        ThrowXML1(NetAccessorException, XML4CExcepts::NetAcc_InternalError,
+        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_InternalError,
             "Cannot determine length of remote file.");
     }
 }

@@ -377,17 +377,17 @@ case $netaccessor in
 
    libwww)
        NETACCESSOR=LibWWW
-       if test -z ${LIBWWWROOT} ; then
-           echo "You have not defined your LIBWWWROOT environment variable. Cannot proceed further ..."
+       if test -z "`libwww-config --libs 2>/dev/null`" ; then
+           echo "Netaccessor is libwww, but libwww-config is not found. Cannot proceed further."
            exit ${ERROR_EXIT_CODE};
        fi
-       netaccessorDefines="-DXML_USE_NETACCESSOR_LIBWWW -I${LIBWWWROOT}/include" ;
-       netaccessorLibs="-L${LIBWWWROOT}/lib -lwww";
+       netaccessorDefines="-DXML_USE_NETACCESSOR_LIBWWW `libwww-config --cflags`"
+       netaccessorLibs="`libwww-config --libs`"
        USELIBWWW=1;;
 
    *)
-      echo "I do not recognize the netaccessor option '$netaccessor'. Please type '${0} -h' for help."
-      exit ${ERROR_EXIT_CODE};;
+       echo "I do not recognize the netaccessor option '$netaccessor'. Please type '${0} -h' for help."
+       exit ${ERROR_EXIT_CODE};;
 esac
 fi
 
@@ -470,4 +470,3 @@ echo If the result of the above commands look OK to you, go to the directory
 echo ${XERCESCROOT}/src and type \"gmake\" to make the XERCES-C system.
 
 exit  0;
-

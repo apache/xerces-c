@@ -23,7 +23,7 @@
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
  * 
- * 4. The names "[PRODUCT NAME]" and "Apache Software Foundation" must
+ * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
  *    software without prior written permission. For written 
  *    permission, please contact apache\@apache.org.
@@ -56,6 +56,23 @@
 
 /**
  * $Log$
+ * Revision 1.2  2001/03/02 14:39:27  tng
+ * Enabling libWWW NetAccessor support under UNIX. Tested with latest tarball of libWWW
+ * (w3c-libwww-5.3.2) under RedHat Linux 6.1.  Added by Martin Kalen.
+ *
+ * There is one MAJOR problem with the use of libwww and the patches
+ * below, which someone with knowledge of libwww filters etc. might want
+ * to look into. Default behavior for content-type text/xml is to consume
+ * all xml data before it reaches the simple HTML presenter. Hence, only
+ * files with content-type text/html will actually reach the xerces-c
+ * library. If you have a *.xml file on the webbserver, processing of the
+ * file will throw an exception stating "The main XML document cannot be
+ * empty" (correct in a xerces point of view since if you enable debug
+ * build you will see that libwww "eats" all text/xml).
+ *
+ * See "Diffs for enabling libWWW NetAccessor support under UNIX" posted in March 1, 2001
+ * in the xerces-c-dev mailing list for further information.
+ *
  * Revision 1.1  2000/02/17 22:06:19  rahulj
  * Moved the four LibWWW files to its own sub-directory in the
  * NetAccessor directory.
@@ -74,7 +91,7 @@
 #define LIBWWWNETACCESSOR_HPP
 
 
-#include <util/XML4CDefs.hpp>
+#include <util/XercesDefs.hpp>
 #include <util/XMLURL.hpp>
 #include <util/BinInputStream.hpp>
 #include <util/XMLNetAccessor.hpp>
@@ -93,11 +110,19 @@ public :
     ~LibWWWNetAccessor();
 
     BinInputStream* makeNew(const XMLURL&  urlSource);
+    const XMLCh* getId() const;
 
 private :
+    static const XMLCh fgMyName[];
+
     LibWWWNetAccessor(const LibWWWNetAccessor&);
     void operator=(const LibWWWNetAccessor&);
 
-};
+}; // LibWWWNetAccessor
+
+inline const XMLCh* LibWWWNetAccessor::getId() const
+{
+    return fgMyName;
+}
 
 #endif // LIBWWWNETACCESSOR_HPP
