@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/06/23 21:06:21  peiyongz
+ * to solve unresolved symbol on Solaris
+ *
  * Revision 1.1  2003/06/20 18:38:39  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -81,7 +84,7 @@ public :
     // -----------------------------------------------------------------------
     //@{
 
-    XMLGrammarPoolImpl(MemoryManager* memMgr);
+    XMLGrammarPoolImpl(MemoryManager* const memMgr);
 
     ~XMLGrammarPoolImpl();
     //@}
