@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/02/09 01:31:22  abagchi
+ * Fixed calcRequiredSize() for OS390BATCH
+ *
  * Revision 1.1  2000/02/08 02:14:11  abagchi
  * Initial checkin
  *
@@ -79,7 +82,7 @@
 #endif
 //
 //  Cannot use the OS/390 c/c++ towupper and towlower functions in the
-//  Unicode encironment. We will use mytoupper and mytolower here.
+//  Unicode environment. We will use mytoupper and mytolower here.
 //
 #undef towupper
 #undef towlower
@@ -282,13 +285,15 @@ void Iconv390TransService::upperCase(XMLCh* const toUpperCase) const
 // ---------------------------------------------------------------------------
 unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
 {
+    unsigned int retVal;
+
     if (!srcText)
         return 0;
 
+#ifdef OS390BATCH
     //
     // Cannot use mbstowcs in a non-POSIX environment(???).
     //
-    unsigned int retVal;
     if (!__isPosixOn()) {
         const unsigned charLen = mblen(srcText, MB_CUR_MAX);
         if (charLen == -1)
@@ -301,6 +306,7 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
         }
     }
     else
+#endif
         retVal = ::mbstowcs(NULL, srcText, 0);
 
     if (retVal == -1)
