@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/05 18:19:09  peiyongz
+ * Documentation update
+ *
  * Revision 1.6  2003/10/29 16:16:48  peiyongz
  * GrammarPool' serialization/deserialization support
  *
@@ -267,31 +270,30 @@ public :
       * 1. Context: Serialize/Deserialize All Grammars In One Session
       *
       *    Since it is common that a declaration in one grammar may reference 
-      *    to definitions in another grammar, it is required to serialize those 
+      *    to definitions in other grammars, it is required to serialize those 
       *    related (or interdependent) grammars in to one persistent data store 
       *    in one serialization session (storing), and deserialize them from the
       *    persistent data store in one deserialization session (loading) back
       *    to the grammar pool.    
       *
-      * 2. Multiple serialization
+      * 2. Multiple serializations
       *
       *    It is acceptable that client application requests more than one 
-      *    gramamr serialization on a particular grammar pool, to track the 
+      *    grammar serialization on a particular grammar pool, to track the 
       *    different grammars cached, or for whatever reasons that client 
-      *    application is interested in. However it is strongly recommended that 
-      *    the client application requests no more than one gramamr deserialization
-      *    and only does it when the grammar pool is empty.
+      *    application is interested in. 
       *
-      *    For multiple serializations, if the same file name is given, then the 
-      *    last result will be in the file (overwriting mode), if different file 
-      *    names are given, then we have multiple data stores for each serialization.
-      *
-      * 3. Multiple deserialization
+      * 3. Multiple deserializations
       * 
       *    Request for grammar deserialization either after the grammar pool has 
       *    its own cached grammars, or request for more than one grammar 
       *    deserialization, may cause undesired and unpredictable consequence
-      *    and therefore is NOT supported.
+      *    and therefore client application shall be aware that individual 
+      *    implementationis may NOT support this.
+      *
+      *    However it is strongly recommended that the client application requests 
+      *    no more than one grammar deserialization even a particular implementation
+      *    may allow multiple deserializations.
       *
       * 4. Locking
       *
@@ -306,6 +308,14 @@ public :
       *    deserialization, thus a grammar pool may decide if it supports
       *    a binary data created by a different release of Xerces.
       * 
+      * 6. Clean up
+      *
+      *    The client application shall be aware that in the event of an exception
+      *    thrown due to a corrupted data store during deserialization, implementation
+      *    may not be able to clean up all resources allocated, and therefore it is 
+      *    client application's responsibility to clean up those unreleased resources.
+      *
+      *
       */
     virtual void     serializeGrammars(BinOutputStream* const)  = 0; 
     virtual void     deserializeGrammars(BinInputStream* const) = 0;       

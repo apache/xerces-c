@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/05 18:19:45  peiyongz
+ * Documentation update
+ *
  * Revision 1.8  2003/10/29 16:16:08  peiyongz
  * GrammarPool' serialization/deserialization support
  *
@@ -244,6 +247,44 @@ public :
     // -----------------------------------------------------------------------
     // serialization and deserialization support
     // -----------------------------------------------------------------------
+
+    /***
+      *
+      * Multiple serializations
+      *
+      *    For multiple serializations, if the same file name is given, then the 
+      *    last result will be in the file (overwriting mode), if different file 
+      *    names are given, then there are multiple data stores for each serialization.
+      *
+      * Multiple deserializations
+      * 
+      *    Not supported
+      *
+      * Versioning
+      *
+      *    Only binary data serialized with the current XercesC Version is supported.
+      *
+      * Clean up
+      *
+      *    In the event of an exception thrown due to a corrupted data store during 
+      *    deserialization, this implementation may not be able to clean up all resources 
+      *    allocated, and therefore it is the client application's responsibility to 
+      *    clean up those unreleased resources.
+      *
+      * Coupling of Grammars and StringPool
+      *
+      *    This implementation assumes that StringPool shall always be 
+      *    serialized/deserialized together with the grammars. In the case that such a
+      *    coupling is not desired, client application can modify this behaviour by 
+      *    either derivate from this imlementation and overwrite the serializeGrammars()
+      *    and/or deserializeGrammars() to decouple grammars and string pool, or
+      *    Once deserializeGrammars() is done, insert another StringPool through
+      *    setStringPool().
+      *
+      *    Client application shall be aware of the unpredicatable/undefined consequence 
+      *    of this decoupling.
+      */
+
     virtual void     serializeGrammars(BinOutputStream* const); 
     virtual void     deserializeGrammars(BinInputStream* const); 
 
