@@ -76,6 +76,7 @@
 #include <util/TransENameMap.hpp>
 
 
+
 // ---------------------------------------------------------------------------
 //  Local, static data
 //
@@ -152,6 +153,18 @@ XMLTransService::~XMLTransService()
     gMappings = 0;       //   the it, and so will be deleted by gMapping's destructor.
 }
 
+// ---------------------------------------------------------------------------
+//	Allow user specific encodings to be added to the mappings table.
+//	Should be called after platform init
+// ---------------------------------------------------------------------------
+void XMLTransService::addEncoding(const XMLCh* const encoding,
+								  ENameMap* const ownMapping) {
+
+	if (gMappings) {
+
+		gMappings->put((void *) encoding, ownMapping);
+	}
+}
 
 // ---------------------------------------------------------------------------
 //  XLMTranscoder: Non-virtual API
@@ -259,7 +272,6 @@ XMLLCPTranscoder::~XMLLCPTranscoder()
 {
 }
 
-
 // ---------------------------------------------------------------------------
 //  XLMTranscoder: Hidden Init Method
 //
@@ -267,6 +279,7 @@ XMLLCPTranscoder::~XMLLCPTranscoder()
 // ---------------------------------------------------------------------------
 void XMLTransService::initTransService()
 {
+
     //
     //  Create our hash table that we will fill with mappings. The default
     //  is to adopt the elements, which is fine with us.
@@ -286,6 +299,7 @@ void XMLTransService::initTransService()
     gMappings->put((void*)XMLUni::fgUSASCIIEncodingString2, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString2));
     gMappings->put((void*)XMLUni::fgUSASCIIEncodingString3, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString3));
     gMappings->put((void*)XMLUni::fgUSASCIIEncodingString4, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString4));
+
 
     //
     //  Add in our mappings for UTF-8
@@ -418,4 +432,5 @@ void XMLTransService::initTransService()
     //  this one, so there is just one mapping.
     //
     gMappings->put((void*)XMLUni::fgWin1252EncodingString, new ENameMapFor<XMLWin1252Transcoder>(XMLUni::fgWin1252EncodingString));
+
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/01/25 19:19:32  tng
+ * Let user add their encoding to the intrinsic mapping table.  Added by Khaled Noaman.
+ *
  * Revision 1.11  2000/04/12 22:57:45  roddey
  * A couple of fixes to comments and parameter names to make them
  * more correct.
@@ -112,6 +115,7 @@
 class XMLPlatformUtils;
 class XMLLCPTranscoder;
 class XMLTranscoder;
+class ENameMap;
 
 
 //
@@ -195,6 +199,17 @@ public :
     virtual bool supportsSrcOfs() const = 0;
 
     virtual void upperCase(XMLCh* const toUpperCase) const = 0;
+
+	// -----------------------------------------------------------------------
+    //	Allow users to add their own encodings to the intrinsinc mapping
+	//	table
+	//	Usage:
+	//		XMLTransService::addEncoding (
+	//			gMyEncodingNameString
+    //			, new ENameMapFor<MyTransClassType>(gMyEncodingNameString)
+	//		);
+    // -----------------------------------------------------------------------
+	static void addEncoding(const XMLCh* const encoding, ENameMap* const ownMapping);
 
 
 protected :
