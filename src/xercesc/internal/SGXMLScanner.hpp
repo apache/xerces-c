@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/11/27 22:52:37  knoaman
+ * PSVIElement implementation
+ *
  * Revision 1.13  2003/11/27 06:10:31  neilg
  * PSVIAttribute implementation
  *
@@ -108,8 +111,7 @@
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
-#include <xercesc/framework/psvi/PSVIAttribute.hpp>
-#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -123,6 +125,8 @@ class ContentLeafNameTypeVector;
 class SchemaAttDef;
 class XMLContentModel;
 class XSModel;
+class PSVIAttributeList;
+class PSVIElement;
 
 //  This is a scanner class, which process XML Schema grammar.
 class XMLPARSER_EXPORT SGXMLScanner : public XMLScanner
@@ -292,6 +296,13 @@ private :
     Grammar* loadXMLSchemaGrammar(const InputSource& src, const bool toCache = false);
 
     // -----------------------------------------------------------------------
+    //  PSVI handling methods
+    // -----------------------------------------------------------------------
+    void endElementPSVI(SchemaElementDecl* const elemDecl,
+                        DatatypeValidator* const memberDV);
+    void resetPSVIElemContext();
+
+    // -----------------------------------------------------------------------
     //  Data members
     //
     //  fRawAttrList
@@ -355,6 +366,8 @@ private :
     RefHash2KeysTableOf<unsigned int>*      fUndeclaredAttrRegistryNS;
     PSVIAttributeList *                     fPSVIAttrList;
     XSModel*                                fModel;
+    PSVIElement*                            fPSVIElement;
+    PSVIElemContext                         fPSVIElemContext;
 };
 
 inline const XMLCh* SGXMLScanner::getName() const

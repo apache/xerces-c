@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/11/27 22:52:37  knoaman
+ * PSVIElement implementation
+ *
  * Revision 1.21  2003/11/27 06:10:31  neilg
  * PSVIAttribute implementation
  *
@@ -267,7 +270,8 @@ public:
     ComplexTypeInfo* getCurrentTypeInfo() const;
     DatatypeValidator *getCurrentDatatypeValidator() const;
     DatatypeValidator *getMostRecentAttrValidator() const;
-    bool getErrorOccurred();
+    bool getErrorOccurred() const;
+    bool getIsElemSpecified() const;
 
 private:
     // -----------------------------------------------------------------------
@@ -399,8 +403,10 @@ private:
     //
     //  fTypeStack
     //      Stack of complex type declarations.
+    //
     //  fMostRecentAttrValidator
     //      DatatypeValidator that validated attribute most recently processed
+    //
     //  fErrorOccurred
     //      whether an error occurred in the most recent operation
     // -----------------------------------------------------------------------
@@ -418,6 +424,7 @@ private:
     ValueStackOf<ComplexTypeInfo*>* fTypeStack;
     DatatypeValidator *             fMostRecentAttrValidator;
     bool                            fErrorOccurred;
+    bool                            fElemIsSpecified;
 };
 
 
@@ -517,9 +524,14 @@ SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
     return false;
 }
 
-inline bool SchemaValidator::getErrorOccurred()
+inline bool SchemaValidator::getErrorOccurred() const
 {
     return fErrorOccurred;
+}
+
+inline bool SchemaValidator::getIsElemSpecified() const
+{
+    return fElemIsSpecified;
 }
 
 XERCES_CPP_NAMESPACE_END

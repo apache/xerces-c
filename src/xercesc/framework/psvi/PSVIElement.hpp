@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/27 22:52:37  knoaman
+ * PSVIElement implementation
+ *
  * Revision 1.4  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -166,6 +169,21 @@ public:
     /** methods needed by implementation */
 
     //@{
+    void reset
+    (
+        const VALIDITY_STATE            validityState
+        , const ASSESSMENT_TYPE         assessmentType
+        , const XMLCh* const            validationContext
+        , bool                          isSpecified
+        , XSElementDeclaration* const   elemDecl
+        , XSTypeDefinition* const       typeDef
+        , XSSimpleTypeDefinition* const memberType
+        , XSModel* const                schemaInfo
+        , const XMLCh* const            defaultValue
+        , const XMLCh* const            normalizedValue = 0
+        , const XMLCh* const            canonicalValue = 0
+        , XSNotationDeclaration* const  notationDecl = 0
+    );
 
     //@}
 

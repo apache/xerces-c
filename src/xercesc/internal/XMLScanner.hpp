@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2003/11/27 22:52:37  knoaman
+ * PSVIElement implementation
+ *
  * Revision 1.28  2003/11/24 05:09:38  neilg
  * implement new, statless, method for detecting duplicate attributes
  *
@@ -319,6 +322,22 @@ class Grammar;
 class XMLValidator;
 class MemoryManager;
 class PSVIHandler;
+
+
+struct PSVIElemContext
+{
+    bool               fIsSpecified;
+    bool               fErrorOccurred;
+    bool               fPreviousError;
+    int                fElemDepth;
+    int                fFullValidationDepth;
+    int                fNoneValidationDepth;
+    const XMLCh*       fValidationRoot;
+    DatatypeValidator* fCurrentDV;
+    DatatypeValidator* fPreviousDV;
+    ComplexTypeInfo*   fCurrentTypeInfo;
+    ComplexTypeInfo*   fPreviousTypeInfo;
+};
 
 //  This is the mondo scanner class, which does the vast majority of the
 //  work of parsing. It handles reading in input and spitting out events

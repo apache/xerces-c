@@ -80,9 +80,8 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/XMLDTDDescription.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
-#include <xercesc/framework/psvi/PSVIAttribute.hpp>
-#include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
-#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
+#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+#include <xercesc/framework/psvi/PSVIElement.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
@@ -271,9 +270,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 );
                                 if(fGrammarType == Grammar::SchemaGrammarType) {
                                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
-                                    if(getPSVIHandler() )
+                                    if (getPSVIHandler())
                                     {
                                         attrValid = PSVIItem::VALIDITY_INVALID;
+                                        fPSVIElemContext.fErrorOccurred = true;
                                     }                                
                                 }
                             }
@@ -292,9 +292,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 );
                                 if(fGrammarType == Grammar::SchemaGrammarType) {
                                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
-                                    if(getPSVIHandler() )
+                                    if (getPSVIHandler())
                                     {
                                         attrValid = PSVIItem::VALIDITY_INVALID;
+                                        fPSVIElemContext.fErrorOccurred = true;
                                     }
                                 }
                             }
@@ -333,6 +334,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , attDef->getFullName()
                         , elemDecl->getFullName()
                     );
+                    fPSVIElemContext.fErrorOccurred = true;
                 }
             }
             else
@@ -377,6 +379,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , namePtr
                             , elemDecl->getFullName()
                         );
+                        fPSVIElemContext.fErrorOccurred = true;
                     }
                 }
             }
@@ -394,7 +397,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(!attDef && !attDefForWildCard)
                 {
                     if(!laxThisOne && !skipThisOne)
+                    {
                         attrValid = PSVIItem::VALIDITY_INVALID;
+                        fPSVIElemContext.fErrorOccurred = true;
+                    }
                     else if(laxThisOne)
                     {
                         attrValid = PSVIItem::VALIDITY_NOTKNOWN;
@@ -482,7 +488,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     );
                     attrValidator = ((SchemaValidator*)fValidator)->getMostRecentAttrValidator();
                     if(getPSVIHandler() && ((SchemaValidator *)fValidator)->getErrorOccurred())
+                    {
+                        fPSVIElemContext.fErrorOccurred = true;
                         attrValid = PSVIItem::VALIDITY_INVALID;
+                    }
                 }
                 else // no decl; default DOMTypeInfo to anySimpleType
                     attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
@@ -555,8 +564,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 {
                     ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
                 }
-
-
             }
 
             // now fill in the PSVIAttributes entry for this attribute:
@@ -744,6 +751,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         if(fGrammarType == Grammar::SchemaGrammarType) 
                         {
                             ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
+                            fPSVIElemContext.fErrorOccurred = true;
                         }
                     }
                     else if ((defType == XMLAttDef::Default) ||
@@ -757,6 +765,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             if(fGrammarType == Grammar::SchemaGrammarType)
                             {
                                 ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
+                                fPSVIElemContext.fErrorOccurred = true;
                             }
                         }
                     }
@@ -881,6 +890,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 fURIStringPool->getValueForId(attQName->getURI())
                             );
                             prohibitedAttr->updateValidity(PSVIItem::VALIDITY_INVALID);
+                            fPSVIElemContext.fErrorOccurred = true;
                         }
                     }
                 }
@@ -1227,6 +1237,15 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fErrorCount = 0;
     fHasNoDTD = true;
     fSeeXsi = false;
+
+    // Reset PSVI context
+    if (fPSVIHandler)
+    {
+        if (!fPSVIElement)
+            fPSVIElement = new (fMemoryManager) PSVIElement(fMemoryManager);
+
+        resetPSVIElemContext();
+    }
 
     // Reset the validators
     fDTDValidator->reset();

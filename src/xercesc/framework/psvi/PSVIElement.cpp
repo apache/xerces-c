@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/27 22:52:37  knoaman
+ * PSVIElement implementation
+ *
  * Revision 1.3  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -76,7 +79,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-PSVIElement::PSVIElement(MemoryManager* const manager ):  
+PSVIElement::PSVIElement(MemoryManager* const manager):  
         PSVIItem(manager),
         fElementDecl(0),
         fNotationDecl(0),
@@ -86,7 +89,7 @@ PSVIElement::PSVIElement(MemoryManager* const manager ):
 
 XSTypeDefinition* PSVIElement::getTypeDefinition()
 {
-    return fElementDecl->getTypeDefinition();
+    return fType;
 }
 
     /**
@@ -102,27 +105,34 @@ XSTypeDefinition* PSVIElement::getTypeDefinition()
      */
 XSSimpleTypeDefinition* PSVIElement::getMemberTypeDefinition() 
 {
-    XSTypeDefinition* typeDef = fElementDecl->getTypeDefinition();
-    if (typeDef->getTypeCategory() == XSTypeDefinition::COMPLEX_TYPE)
-    {
-        if (((XSComplexTypeDefinition*)typeDef)->getContentType() == XSComplexTypeDefinition::CONTENTTYPE_SIMPLE)
-        {
-            typeDef = ((XSComplexTypeDefinition*)typeDef)->getSimpleType();
-            if (((XSSimpleTypeDefinition*)typeDef)->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
-            {
+    return fMemberType;
+}
 
-            }
-        }        
-    }
-    else
-    {
-        // Simple Type...
-        if (((XSSimpleTypeDefinition*)typeDef)->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
-        {
-
-        }
-    }
-    return 0;
+void PSVIElement::reset( const VALIDITY_STATE          validityState
+                       , const ASSESSMENT_TYPE         assessmentType
+                       , const XMLCh* const            validationContext
+                       , bool                          isSpecified
+                       , XSElementDeclaration* const   elemDecl
+                       , XSTypeDefinition* const       typeDef
+                       , XSSimpleTypeDefinition* const memberType
+                       , XSModel* const                schemaInfo
+                       , const XMLCh* const            defaultValue
+                       , const XMLCh* const            normalizedValue
+                       , const XMLCh* const            canonicalValue
+                       , XSNotationDeclaration* const  notationDecl)
+{
+    fValidationContext = validationContext;
+    fValidityState = validityState;
+    fAssessmentType = assessmentType;
+    fIsSpecified = isSpecified;
+    fType = typeDef;
+    fMemberType = memberType;
+    fElementDecl = elemDecl;
+    fNotationDecl = notationDecl;
+    fSchemaInfo = schemaInfo;
+    fDefaultValue = defaultValue;
+    fNormalizedValue = normalizedValue;
+    fCanonicalValue = canonicalValue;
 }
 
 XERCES_CPP_NAMESPACE_END
