@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2005/02/02 09:29:48  amassari
+ * Removed warnings
+ *
  * Revision 1.11  2004/11/19 00:50:22  cargilld
  * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
@@ -421,11 +424,8 @@ template <class TVal> void ValueHashTableOfEnumerator<TVal>::findNext()
             return;
 
         // Else find the next non-empty bucket
-        while (true)
+        while (fToEnum->fBucketList[fCurHash]==0)
         {
-            if (fToEnum->fBucketList[fCurHash])
-                break;
-
             // Bump to the next hash value. If we max out return
             fCurHash++;
             if (fCurHash == fToEnum->fHashModulus)

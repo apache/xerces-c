@@ -961,7 +961,7 @@ int XMLString::compareNString(  const   XMLCh* const    str1
     const XMLCh* psz2 = str2;
 
     unsigned int curCount = 0;
-    while (true)
+    while (curCount < maxChars)
     {
         // If an inequality, then return difference
         if (*psz1 != *psz2)
@@ -976,13 +976,11 @@ int XMLString::compareNString(  const   XMLCh* const    str1
         psz2++;
 
         //
-        //  Bump the count of chars done. If it equals the max then we are
-        //  equal for the requested count, so break out and return equal.
+        //  Bump the count of chars done. 
         //
         curCount++;
-        if (curCount == maxChars)
-            break;
     }
+    // If we inspected all the maxChars, then we are equal.
     return 0;
 }
 

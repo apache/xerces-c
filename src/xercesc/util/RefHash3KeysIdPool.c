@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.18  2005/02/02 09:29:48  amassari
+ * Removed warnings
+ *
  * Revision 1.17  2005/01/12 20:06:55  cargilld
  * Remove warning messages.
  *
@@ -576,11 +579,8 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::findNext()
             return;
 
         // Else find the next non-empty bucket
-        while (true)
+        while (fToEnum->fBucketList[fCurHash]==0)
         {
-            if (fToEnum->fBucketList[fCurHash])
-                break;
-
             // Bump to the next hash value. If we max out return
             fCurHash++;
             if (fCurHash == fToEnum->fHashModulus)
