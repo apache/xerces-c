@@ -644,6 +644,22 @@ SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLBigDecimal.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLBigDecimal.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLBigInteger.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLBigInteger.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.cpp
 # End Source File
 # Begin Source File
@@ -1671,6 +1687,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidatorFactory.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
 # End Source File
 # Begin Source File
@@ -1796,6 +1820,14 @@ SOURCE=..\..\..\..\..\src\validators\schema\SchemaGrammar.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\schema\SchemaGrammar.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaInfo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaInfo.hpp
 # End Source File
 # Begin Source File
 
