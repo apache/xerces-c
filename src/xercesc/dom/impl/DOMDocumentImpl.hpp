@@ -114,7 +114,7 @@ typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
 typedef RefHashTableOf<DOMUserDataRecord> DOMNodeUserDataTable;
 typedef RefStackOf<DOMNode>               DOMNodePtr;
 
-class CDOM_EXPORT DOMDocumentImpl: public DOMDocument , public XMemory{
+class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMDocument {
 public:
     // -----------------------------------------------------------------------
     //  data types
