@@ -72,7 +72,6 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
-#include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/framework/psvi/PSVIHandler.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
@@ -81,10 +80,10 @@
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
+#include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#include <xercesc/util/XMLResourceIdentifier.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -3614,7 +3613,13 @@ void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 
 void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
 
-    Grammar* grammar = fGrammarResolver->getGrammar(uri);
+    Grammar* grammar = 0;
+ 
+    {
+        XMLSchemaDescriptionImpl    theSchemaDescription(uri, fMemoryManager);   
+        theSchemaDescription.setLocationHints(loc); 
+        grammar = fGrammarResolver->getGrammar(&theSchemaDescription);
+    }
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         XSDDOMParser parser(0, fMemoryManager, 0);

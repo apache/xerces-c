@@ -78,21 +78,20 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
-#include <xercesc/framework/XMLDTDDescription.hpp>
-#include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 #include <xercesc/framework/psvi/PSVIElement.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
+#include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
+#include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
-#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1201,8 +1200,11 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    fDTDGrammar = (DTDGrammar*) fGrammarResolver->getGrammar(XMLUni::fgDTDEntityString);
-	
+    {
+        XMLDTDDescriptionImpl   theDTDDescription(XMLUni::fgDTDEntityString, fMemoryManager);
+        fDTDGrammar = (DTDGrammar*) fGrammarResolver->getGrammar(&theDTDDescription);
+    }
+
     if (!fDTDGrammar) {
 
         fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
@@ -1693,7 +1695,13 @@ void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 
 void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
 
-    Grammar* grammar = fGrammarResolver->getGrammar(uri);
+    Grammar* grammar = 0;
+ 
+    {
+        XMLSchemaDescriptionImpl    theSchemaDescription(uri, fMemoryManager);   
+        theSchemaDescription.setLocationHints(loc); 
+        grammar = fGrammarResolver->getGrammar(&theSchemaDescription);
+    }
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         XSDDOMParser parser(0, fMemoryManager, 0);
