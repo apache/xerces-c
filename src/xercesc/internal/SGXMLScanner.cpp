@@ -1041,7 +1041,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
             fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
             if (((SchemaValidator*) fValidator)->getErrorOccurred())
                 fPSVIElemContext.fErrorOccurred = true;
-            else if (fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
+            else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
                 psviMemberType = fValidationContext->getValidatingMemberType();
         }
 
@@ -1795,7 +1795,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             {
                 if (((SchemaValidator*) fValidator)->getErrorOccurred())
                     fPSVIElemContext.fErrorOccurred = true;
-                else if (fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
+                // note that if we're empty, won't be a current DV
+                else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
                         psviMemberType = fValidationContext->getValidatingMemberType();
             }
 
