@@ -1198,8 +1198,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  not find it.
     XMLElementDecl* elemDecl = 0;
     bool wasAdded = false;
-    bool errorBeforeElementFound = false;
-    bool laxBeforeElementFound = false;
     const XMLCh* nameRawBuf = &qnameRawBuf[prefixColonPos + 1];
     const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
 
@@ -1235,10 +1233,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     XMLValid::GrammarNotFound
                     ,uriStr
                 );
-                errorBeforeElementFound = true;
             } 
-            else if(errorCondition)
-                laxBeforeElementFound = true;
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -1281,11 +1276,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         XMLValid::ElementNotUnQualified
                         , elemDecl->getFullName()
                     );
-                    errorBeforeElementFound = true;
                 }
-                else if(errorCondition) 
-                    laxBeforeElementFound = true;
-
             }
         }
 
@@ -1343,12 +1334,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 (
                     XMLValid::GrammarNotFound
                   , XMLUni::fgZeroLenString
-                );
-                errorBeforeElementFound = true;
-                
+                );                
             }
-            else if(errorCondition)
-                laxBeforeElementFound = true; 
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -1385,10 +1372,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         XMLValid::GrammarNotFound
                         ,original_uriStr
                     );
-                    errorBeforeElementFound = true;
                 }
-                else if(errorCondition)
-                    laxBeforeElementFound = true; 
 
                 elemDecl = fGrammar->getElemDecl
                            (
@@ -1403,7 +1387,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         XMLValid::ElementNotQualified
                         , elemDecl->getFullName()
                     );
-                    errorBeforeElementFound = true;
                 }
             }
         }

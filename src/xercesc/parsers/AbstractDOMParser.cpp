@@ -759,12 +759,9 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl&)
     if (!fCreateEntityReferenceNodes) return;
 
     DOMEntityReferenceImpl *erImpl = 0;
-    DOMNode* firstChild = 0;
 
-    if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+    if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE)
         erImpl = (DOMEntityReferenceImpl *) fCurrentParent;
-        firstChild = erImpl->getFirstChild();
-    }
 
     fCurrentParent = fNodeStack->pop();
 

@@ -2274,8 +2274,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  generic element decl object. We tell him to fault one in if he does
     //  not find it.
     bool wasAdded = false;
-    bool errorBeforeElementFound = false;
-    bool laxBeforeElementFound = false;
 
     const XMLCh* nameRawBuf = &qnameRawBuf[prefixColonPos + 1];
     const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
@@ -2320,10 +2318,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     XMLValid::GrammarNotFound
                     ,uriStr
                 );
-                errorBeforeElementFound = true;
             }
-            else if(errorCondition)
-                laxBeforeElementFound = true;
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -2368,10 +2363,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         XMLValid::ElementNotUnQualified
                         , elemDecl->getFullName()
                     );
-                    errorBeforeElementFound = true;
                 }
-                else if(errorCondition)
-                    laxBeforeElementFound = true;
             }
         }
 
@@ -2451,10 +2443,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     XMLValid::GrammarNotFound
                   , XMLUni::fgZeroLenString
                 );
-                errorBeforeElementFound = true;
             }
-            else if(errorCondition)
-                laxBeforeElementFound = true;
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -2492,10 +2481,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         XMLValid::GrammarNotFound
                         ,original_uriStr
                     );
-                    errorBeforeElementFound = true;
                 }
-                else if(errorCondition)
-                    laxBeforeElementFound = true;
 
                 elemDecl = fGrammar->getElemDecl
                            (
@@ -2510,7 +2496,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         XMLValid::ElementNotQualified
                         , elemDecl->getFullName()
                     );
-                    errorBeforeElementFound = true;
                 }
             }
         }
