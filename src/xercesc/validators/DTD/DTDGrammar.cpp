@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/06 15:03:45  peiyongz
+ * initialize data member
+ *
  * Revision 1.11  2003/10/17 21:14:30  peiyongz
  * using XTemplateSerializer
  *
@@ -131,6 +134,7 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     , fElemNonDeclPool(0)
     , fEntityDeclPool(0)
     , fNotationDeclPool(0)
+    , fRootElemId(0)
     , fValidated(false)
     , fGramDesc(0)
 {
