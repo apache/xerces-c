@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/03/10 17:35:17  amassari
+ * Fix documentation for binToText (bug# 9207)
+ *
  * Revision 1.23  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -1103,7 +1106,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1122,7 +1125,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1141,7 +1144,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1160,7 +1163,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1179,7 +1182,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1198,7 +1201,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1217,7 +1220,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
@@ -1236,7 +1239,7 @@ public:
 
     /** Converts binary data to a text string based a given radix
       *
-      * @param toFormat The beginning of the input string to convert
+      * @param toFormat The number to convert
       * @param toFill The buffer that will hold the output on return. The
       *        size of this buffer should at least be 'maxChars + 1'.
       * @param maxChars The maximum number of output characters that can be
