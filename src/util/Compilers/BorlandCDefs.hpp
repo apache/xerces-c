@@ -60,6 +60,23 @@
 
 
 // ---------------------------------------------------------------------------
+// The following values represent various compiler version levels stored in
+// the precompiler macro __BORLANDC__, along with the associated C++Builder
+// IDE and compiler versions.
+//
+//      __BORLANDC__         IDE             Compiler
+//      ------------    --------------  ------------------
+//         0x510        BCB1            Borland C++ 5.1
+//         0x530        BCB3            Borland C++ 5.3
+//         0x540        BCB4            Borland C++ 5.4
+//         0x550        BCB5            Borland C++ 5.5
+//         0x551        BCB5 (patch 1)  Borland C++ 5.5.1
+//
+// Thus, a single copy of this file may be used to define a build environment
+// for any Borland C++Builder compiler.
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
 //  the export keyword is from the project's viewpoint or the client's.
 //  These defines provide the platform specific keywords that they need
@@ -85,8 +102,11 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-// typedef wchar_t  XMLCh;
+#if (__BORLANDC__ < 0x550)
 typedef unsigned short  XMLCh;
+#else
+typedef wchar_t  XMLCh;
+#endif (__BORLANDC__ < 0x550)
 
 // ---------------------------------------------------------------------------
 //  Define our version of a strict UTF16 character
