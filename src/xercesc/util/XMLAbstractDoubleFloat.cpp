@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/09/25 15:23:25  peiyongz
+ * add sizeof(XMLCh) when allocating memory
+ *
  * Revision 1.14  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -465,7 +468,7 @@ void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
 
         int rawDataLen = 0;
         serEng >> rawDataLen;
-        fRawData = (XMLCh*) fMemoryManager->allocate(rawDataLen+1);
+        fRawData = (XMLCh*) fMemoryManager->allocate((rawDataLen+1) * sizeof(XMLCh));
         serEng.read(fRawData, rawDataLen);
         fRawData[rawDataLen] = 0;
 

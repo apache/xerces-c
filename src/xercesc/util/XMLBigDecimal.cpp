@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/09/25 15:23:25  peiyongz
+ * add sizeof(XMLCh) when allocating memory
+ *
  * Revision 1.11  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -403,13 +406,13 @@ void XMLBigDecimal::serialize(XSerializeEngine& serEng)
         serEng>>fScale;
         serEng>>fRawDataLen;
 
-        fRawData = (XMLCh*) fMemoryManager->allocate(fRawDataLen+1);
+        fRawData = (XMLCh*) fMemoryManager->allocate((fRawDataLen+1) * sizeof(XMLCh));
         serEng.read(fRawData, fRawDataLen);
         fRawData[fRawDataLen] = 0;
 
         int intValLen = 0;
         serEng>>intValLen;
-        fIntVal = (XMLCh*) fMemoryManager->allocate(intValLen+1);
+        fIntVal = (XMLCh*) fMemoryManager->allocate((intValLen+1) * sizeof(XMLCh));
         serEng.read(fIntVal, intValLen);
         fIntVal[intValLen] = 0;
     }
