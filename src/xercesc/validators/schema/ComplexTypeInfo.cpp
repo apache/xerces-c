@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/06 22:29:24  knoaman
+ * Remove unnecessary data/methods.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
+ * sane_include
  *
  * Revision 1.27  2002/01/15 19:09:16  knoaman
  * Fix for bug 5807.
@@ -169,7 +172,6 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fScopeDefined(Grammar::TOP_LEVEL_SCOPE)
     , fElementId(XMLElementDecl::fgInvalidElemId)
     , fContentType(SchemaElementDecl::Empty)
-    , fRecursingTypeIndex(-1)
     , fTypeName(0)
     , fBaseDatatypeValidator(0)
     , fDatatypeValidator(0)

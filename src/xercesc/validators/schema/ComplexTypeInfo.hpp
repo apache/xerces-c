@@ -128,7 +128,6 @@ public:
     SchemaElementDecl*       elementAt(const unsigned int index);
     XMLContentModel*         getContentModel(const bool checkUPA = false);
     const XMLCh*             getFormattedContentModel ()   const;
-    int                      getRecursingTypeIndex() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -152,7 +151,6 @@ public:
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
     void setContentModel(XMLContentModel* const newModelToAdopt);
-    void setRecursingTypeIndex(const int anIndex);
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -208,7 +206,6 @@ private:
     int                                fScopeDefined;
     unsigned int                       fElementId;
     int                                fContentType;
-    int                                fRecursingTypeIndex;
     XMLCh*                             fTypeName;
     DatatypeValidator*                 fBaseDatatypeValidator;
     DatatypeValidator*                 fDatatypeValidator;
@@ -371,10 +368,6 @@ inline XMLContentModel* ComplexTypeInfo::getContentModel(const bool checkUPA)
     return fContentModel;
 }
 
-inline int ComplexTypeInfo::getRecursingTypeIndex() const {
-
-    return fRecursingTypeIndex;
-}
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Setter methods
@@ -482,10 +475,6 @@ ComplexTypeInfo::setContentModel(XMLContentModel* const newModelToAdopt)
     fContentModel = newModelToAdopt;
 }
 
-inline void ComplexTypeInfo::setRecursingTypeIndex(const int anIndex) {
-
-    fRecursingTypeIndex = anIndex;
-}
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Helper methods
