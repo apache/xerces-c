@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/07 22:53:44  jpolast
+ * fixes for when 'namespaces' feature is turned off:
+ *   * namespaces-prefixes only used when namespaces is on
+ *   * URIs not looked up when namespaces is off, blank string instead
+ *   * default validation scheme is validation on, auto-validation off.
+ *
  * Revision 1.1  2000/08/02 18:04:41  jpolast
  * initial checkin of sax2 implemenation
  * submitted by Simon Fell (simon@fell.com)
@@ -149,9 +155,9 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	// SAX2 default is for namespaces-prefixes to be on
 	fnamespacePrefix = true;
 
-	// SAX2 default: validation on, auto-validation on
+	// SAX2 default: validation on, auto-validation off
 	fValidation = true;
-	fautoValidation = true;
+	fautoValidation = false;
 	
 	fPrefixes    = new RefStackOf<XMLBuffer> (10, false) ;
 	tempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
@@ -381,7 +387,6 @@ startElement(   const   XMLElementDecl&         elemDecl
                 , const bool                    isRoot)
 {
  
-	
 	// Bump the element depth counter if not empty
     if (!isEmpty)
         fElemDepth++;
@@ -389,11 +394,6 @@ startElement(   const   XMLElementDecl&         elemDecl
     if (fDocHandler)
 	{
 	
-		if (!fnamespacePrefix)
-		{
-			tempAttrVec->removeAllElements();
-		}
-		
 		if (getDoNamespaces())
 		{
             unsigned int numPrefix = 0;
@@ -402,6 +402,10 @@ startElement(   const   XMLElementDecl&         elemDecl
 			const XMLCh*   nsURI    = 0;
 			const XMLAttr* tempAttr = 0;
 
+            if (!fnamespacePrefix)
+			{
+                tempAttrVec->removeAllElements();
+			}
 
 			for (unsigned int i = 0; i < attrCount; i++)
 			{
@@ -438,28 +442,43 @@ startElement(   const   XMLElementDecl&         elemDecl
 				fAttrList.setVector(tempAttrVec, tempAttrVec->size(), fScanner->getValidator());
 			else
                 fAttrList.setVector(&attrList, attrCount, fScanner->getValidator());
+
+			// call startElement() with namespace declarations
+			XMLBufBid URIBufferBid ( &fStringBuffers ) ;
+			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
+
+			fScanner->getValidator()->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
+			
+			fDocHandler->startElement(URIBuffer.getRawBuffer(), 
+										elemDecl.getBaseName(), 
+										elemDecl.getFullName(), 
+										fAttrList); 
+		}
+		else
+		{
+			fAttrList.setVector(&attrList, attrCount, fScanner->getValidator());
+			fDocHandler->startElement(XMLUni::fgEmptyString, 
+										elemDecl.getBaseName(), 
+										elemDecl.getFullName(), 
+										fAttrList); 
 		}
 
-		XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-		XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
-
-		fScanner->getValidator()->getURIText(elemURLId, URIBuffer);
-		
-		fDocHandler->startElement(URIBuffer.getRawBuffer(), 
-									elemDecl.getBaseName(), 
-									elemDecl.getFullName(), 
-									fAttrList); 
 
         // If its empty, send the end tag event now
         if (isEmpty)
 		{
-            fDocHandler->endElement(	URIBuffer.getRawBuffer(), 
-										elemDecl.getBaseName(), 
-										elemDecl.getFullName() ); 
 
 			// call endPrefixMapping appropriately.
 			if (getDoNamespaces())
 			{
+				XMLBufBid URIBufferBid ( &fStringBuffers ) ;
+				XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
+
+				fScanner->getValidator()->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
+			
+				fDocHandler->endElement(	URIBuffer.getRawBuffer(), 
+											elemDecl.getBaseName(), 
+											elemDecl.getFullName() ); 
 				unsigned int numPrefix = prefixCounts->pop();
 				for (unsigned int i = 0; i < numPrefix; ++i)
 				{
@@ -467,6 +486,13 @@ startElement(   const   XMLElementDecl&         elemDecl
 					fDocHandler->endPrefixMapping( buf->getRawBuffer() );
 					fStringBuffers.releaseBuffer(*buf) ;
 				}
+			}
+			else
+			{
+				fDocHandler->endElement(XMLUni::fgEmptyString, 
+							elemDecl.getBaseName(), 
+							elemDecl.getFullName() ); 
+
 			}
 
 		}
@@ -498,17 +524,18 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
     // Just map to the SAX document handler
     if (fDocHandler)
 	{
-		XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-		XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
-
-		fScanner->getValidator()->getURIText(uriId, URIBuffer ) ;
-        fDocHandler->endElement(	URIBuffer.getRawBuffer(), 
-									elemDecl.getBaseName(), 
-									elemDecl.getFullName() ); 
 
 		// get the prefixes back so that we can call endPrefixMapping()
         if (getDoNamespaces())
 		{
+			XMLBufBid URIBufferBid ( &fStringBuffers ) ;
+			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
+
+			fScanner->getValidator()->getURIText(uriId, URIBuffer ) ;
+			fDocHandler->endElement(	URIBuffer.getRawBuffer(), 
+										elemDecl.getBaseName(), 
+										elemDecl.getFullName() ); 
+
 			unsigned int numPrefix = prefixCounts->pop();
 			for (unsigned int i = 0; i < numPrefix; i++)
 			{
@@ -516,6 +543,12 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 				fDocHandler->endPrefixMapping( buf->getRawBuffer() );
 				fStringBuffers.releaseBuffer(*buf) ;
 			}
+		}
+		else
+		{
+			fDocHandler->endElement(XMLUni::fgEmptyString, 
+										elemDecl.getBaseName(), 
+										elemDecl.getFullName() ); 
 		}
 	
 	}
