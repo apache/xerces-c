@@ -1549,7 +1549,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         if (!document.isNull()) {
 
             DOM_Element root = document.getDocumentElement();// This is what we pass to TraverserSchema
-            if (!root.isNull()) {
+            if (!root.isNull())
             {
                 //
                 //  Since we have seen a grammar, set our validation flag
