@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2002/06/18 19:59:12  knoaman
+# Remove DOMInputSourceWrapper.
+#
 # Revision 1.7  2002/06/12 17:10:16  tng
 # Add KeyRefPair (similar to KeyValuePair but using reference instead of value).
 #
@@ -354,7 +357,6 @@ UTIL_CPP_PUBHEADERS = \
     BitOps.hpp \
     BitSet.hpp \
     CountedPointer.hpp \
-    DOMInputSourceWrapper.hpp \
     EmptyStackException.hpp \
     FlagJanitor.hpp \
     HashBase.hpp \
@@ -458,7 +460,6 @@ UTIL_CPP_OBJECTS = \
     BinInputStream.$(TO) \
     BinMemInputStream.$(TO) \
     BitSet.$(TO) \
-    DOMInputSourceWrapper.$(TO) \
     HashXMLCh.$(TO) \
     HashPtr.$(TO) \
     HeaderDummy.$(TO) \
