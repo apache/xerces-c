@@ -141,6 +141,35 @@ DOMNode *DOMAttrMapImpl::removeNamedItemNS(const XMLCh *namespaceURI, const XMLC
     return removed;
 }
 
+// remove the name using index
+// avoid calling findNamePoint again if the index is already known
+DOMNode * DOMAttrMapImpl::removeNamedItemAt(XMLSize_t index)
+{
+    DOMNode* removed = DOMNamedNodeMapImpl::removeNamedItemAt(index);
+
+    // Replace it if it had a default value
+    // (DOM spec level 1 - Element Interface)
+    if (hasDefaults() && (removed != 0))
+    {
+        DOMAttrMapImpl* defAttrs = ((DOMElementImpl*)fOwnerNode)->getDefaultAttributes();
+
+        const XMLCh* localName = removed->getLocalName();
+        DOMAttr* attr = 0;
+        if (localName)
+            attr = (DOMAttr*)(defAttrs->getNamedItemNS(removed->getNamespaceURI(), localName));
+        else
+            attr = (DOMAttr*)(defAttrs->getNamedItem(((DOMAttr*)removed)->getName()));
+
+        if (attr != 0)
+        {
+            DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
+            setNamedItem(newAttr);
+        }
+    }
+
+    return removed;
+}
+
 /**
  * Get this AttributeMap in sync with the given "defaults" map.
  * @param defaults The default attributes map to sync with.

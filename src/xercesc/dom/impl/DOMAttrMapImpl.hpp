@@ -98,6 +98,7 @@ public:
 
     virtual DOMNode *removeNamedItem(const XMLCh *name);
     virtual DOMNode *removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName);
+    virtual DOMNode *removeNamedItemAt(XMLSize_t index);
 
     void reconcileDefaultAttributes(const DOMAttrMapImpl* defaults);
     void moveSpecifiedAttributes(DOMAttrMapImpl* srcmap);
