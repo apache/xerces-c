@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/09 22:38:08  abagchi
+ * Changed copy constructor to make it work on SunOS 5.7
+ *
  * Revision 1.1  2000/03/02 19:54:48  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -87,7 +90,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    XMLDeleterFor(T* toDelete);
+    XMLDeleterFor(T* const toDelete);
     ~XMLDeleterFor();
 
 
