@@ -33,18 +33,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "DOMIDTest"=".\DOMIDTest\DOMIDTest.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
 Project: "DOMMemTest"=".\DOMMemTest\DOMMemTest.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -105,6 +93,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "DeprecatedDOMCount"=".\DeprecatedDOMCount\DeprecatedDOMCount.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "EncodingTest"=".\EncodingTest\EncodingTest.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -121,96 +124,6 @@ Package=<4>
 ###############################################################################
 
 Project: "EnumVal"=".\EnumVal\EnumVal.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "IDOMCount"=".\IDOMCount\IDOMCount.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "IDOMMemTest"=".\IDOMMemTest\IDOMMemTest.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "IDOMPrint"=".\IDOMPrint\IDOMPrint.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "IDOMTest"=".\IDOMTest\IDOMTest.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "IRangeTest"=".\IRangeTest\IRangeTest.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "ITraversal"=".\IDOMTraversalTest\ITraversal.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -441,13 +354,13 @@ Package=<4>
     Project_Dep_Name DOMTest
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name DOMTraversalTest
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name EncodingTest
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name EnumVal
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name InitTermTest
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name MemParse
@@ -456,19 +369,25 @@ Package=<4>
     Project_Dep_Name PParse
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name Redirect
+    Project_Dep_Name RangeTest
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name SAXCount
+    Project_Dep_Name Redirect
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name SAX2Count
     End Project Dependency
     Begin Project Dependency
+    Project_Dep_Name SAX2Print
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name SAXCount
+    End Project Dependency
+    Begin Project Dependency
     Project_Dep_Name SAXPrint
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name SAX2Print
+    Project_Dep_Name SEnumVal
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name StdInParse
@@ -480,34 +399,10 @@ Package=<4>
     Project_Dep_Name XercesLib
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name DOMIDTest
+    Project_Dep_Name DOMTraversalTest
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name RangeTest
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name IDOMCount
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name IDOMPrint
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name IRangeTest
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name ITraversal
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name IDOMTest
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name InitTermTest
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name SEnumVal
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name IDOMMemTest
+    Project_Dep_Name DeprecatedDOMCount
     End Project Dependency
 }}}
 
