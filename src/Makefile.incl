@@ -125,10 +125,10 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lc -lgen -zmuldefs
+                  -licu-uc -licudata -lc -lgen
     else
         ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -lc -lgen -zmuldefs
+                  -lc -lgen
     endif
   endif
   SHLIBSUFFIX=.so
