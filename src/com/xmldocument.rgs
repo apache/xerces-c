@@ -1,0 +1,26 @@
+HKCR
+{
+	IBMXML.XMLDOMDocument.1 = s 'IBM XML Parser for COM Class'
+	{
+		CLSID = s '{79516F6F-3AEA-11D3-BC47-0004ACB7DBEB}'
+	}
+	IBMXML.XMLDOMDocument = s 'IBM XML Parser for COM Class'
+	{
+		CLSID = s '{79516F6F-3AEA-11D3-BC47-0004ACB7DBEB}'
+		CurVer = s 'IBMXML.XMLDOMDocument.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {79516F6F-3AEA-11D3-BC47-0004ACB7DBEB} = s 'IBM XML Parser for COM Class'
+		{
+			ProgID = s 'IBMXML.XMLDOMDocument.1'
+			VersionIndependentProgID = s 'IBMXML.XMLDOMDocument'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%XMLMODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{79516F60-3AEA-11D3-BC47-0004ACB7DBEB}'
+		}
+	}
+}

@@ -1,0 +1,52 @@
+// xml4com.idl : IDL source 
+//
+ 
+// This file will be processed by the MIDL tool to
+// produce the type library (xml4com.tlb) and marshalling code.
+
+import "oaidl.idl"; 
+
+[
+	uuid(79516F60-3AEA-11D3-BC47-0004ACB7DBEB),
+	version(1.0),
+	helpstring("xml4com 1.0 Type Library")
+]
+library IBMXMLLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	import "xmldom.idl";
+	
+	[
+		object,
+		uuid(35ADBB42-47B2-4b22-9D2E-1DA260EE5007),
+		hidden,
+		oleautomation,
+		helpstring("IIBMXMLDOMNodeIdentity Interface"),
+		pointer_default(unique)
+	]
+	interface IIBMXMLDOMNodeIdentity : IUnknown
+	{
+		[propget, helpstring("property NodeId")] HRESULT NodeId([out, retval] long *pVal);
+	};
+
+	[
+		uuid(79516F6F-3AEA-11D3-BC47-0004ACB7DBEB),
+		helpstring("XMLDOMDocument Class")
+	]
+	coclass XMLDOMDocument
+	{
+		[default] interface IXMLDOMDocument;
+		[default, source] dispinterface XMLDOMDocumentEvents;
+	};
+
+	[
+	  uuid(1C598E82-9AB9-456b-9C24-D711F08F3584),
+	  helpstring("XMLHttpRequest class.")
+	]
+	coclass XMLHttpRequest
+	{
+		[default] interface IXMLHttpRequest;
+	};
+};

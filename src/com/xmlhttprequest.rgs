@@ -1,0 +1,26 @@
+HKCR
+{
+	IBMXML.XMLHttpRequest.1 = s 'IBM XML Http Request'
+	{
+		CLSID = s '{1C598E82-9AB9-456b-9C24-D711F08F3584}'
+	}
+	IBMXML.XMLHttpRequest = s 'IBM XML Http Request'
+	{
+		CLSID = s '{1C598E82-9AB9-456b-9C24-D711F08F3584}'
+		CurVer = s 'IBMXML.XMLHttpRequest.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {1C598E82-9AB9-456b-9C24-D711F08F3584} = s 'IBM XML Http Request'
+		{
+			ProgID = s 'IBMXML.XMLHttpRequest.1'
+			VersionIndependentProgID = s 'IBMXML.XMLHttpRequest'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%XMLMODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{79516F60-3AEA-11D3-BC47-0004ACB7DBEB}'
+		}
+	}
+}
