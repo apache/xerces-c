@@ -402,6 +402,11 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
     {
         AbstractDOMParser::useScanner((const XMLCh*) value);
     }
+    else if (XMLString::equals(name, XMLUni::fgXercesParserUseDocumentFromImplementation))
+    {
+        useImplementation((const XMLCh*) value);
+    }
+
     else
       throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 }

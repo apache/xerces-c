@@ -72,7 +72,6 @@
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/framework/XMLBufferMgr.hpp>
 
-
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLPScanToken;
@@ -700,12 +699,21 @@ public :
 
     /** Set the scanner to use when scanning the XML document
       *
-      * This method allows users to set the the scanner to use
+      * This method allows users to set the  scanner to use
       * when scanning a given XML document.
       *
       * @param scannerName The name of the desired scanner
       */
     void useScanner(const XMLCh* const scannerName);
+
+    /** Set the implementation to use when creating the  document
+      *
+      * This method allows users to set the implementation to use
+      * to create the document when parseing.
+      *
+      * @param implementationFeatures The names of the desired features the implementation should have.
+      */
+    void useImplementation(const XMLCh* const implementationFeatures);
 
     //@}
 
@@ -1442,6 +1450,11 @@ private :
     //      The scanner used for this parser. This is created during the
     //      constructor.
     //
+    //  fImplementationFeatures
+    //      The implementation features that we use to get an implementation
+    //      for use in creating the DOMDocument used during parse. If this is
+    //      null then the default DOMImplementation is used
+    //
     //  fNodeStack
     //      Used to track previous parent nodes during nested element events.
     //
@@ -1486,6 +1499,7 @@ private :
     bool                          fCreateCommentNodes;
     bool                          fDocumentAdoptedByUser;
     XMLScanner*                   fScanner;
+    XMLCh*                        fImplementationFeatures;
     DOMNode*                      fCurrentParent;
     DOMNode*                      fCurrentNode;
     DOMEntity*                    fCurrentEntity;
@@ -1564,6 +1578,11 @@ inline void AbstractDOMParser::setCreateCommentNodes(const bool create)
     fCreateCommentNodes = create;
 }
 
+inline void AbstractDOMParser::useImplementation(const XMLCh* const implementationFeatures)
+{
+    delete[] fImplementationFeatures;
+    fImplementationFeatures = XMLString::replicate(implementationFeatures);
+}
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Protected getter methods

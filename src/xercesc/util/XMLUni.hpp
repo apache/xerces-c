@@ -250,6 +250,7 @@ public :
     static const XMLCh fgXercesCacheGrammarFromParse[];
     static const XMLCh fgXercesUseCachedGrammarInParse[];
     static const XMLCh fgXercesScannerName[];
+    static const XMLCh fgXercesParserUseDocumentFromImplementation[];
     static const XMLCh fgXercesCalculateSrcOfs[];
     static const XMLCh fgXercesStandardUriConformant[];
 

@@ -77,6 +77,7 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/impl/DOMAttrImpl.hpp>
 #include <xercesc/dom/DOMCDATASection.hpp>
@@ -113,6 +114,7 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
 , fCreateCommentNodes(true)
 , fDocumentAdoptedByUser(false)
 , fScanner(0)
+, fImplementationFeatures(0)
 , fCurrentParent(0)
 , fCurrentNode(0)
 , fCurrentEntity(0)
@@ -178,6 +180,8 @@ void AbstractDOMParser::cleanUp()
     delete fGrammarResolver;
     delete fURIStringPool;
 
+    delete[] fImplementationFeatures;
+
     if (fValidator)
         delete fValidator;
 }
@@ -198,7 +202,6 @@ void AbstractDOMParser::reset()
 
     fDocument = 0;
     resetDocType();
-
     fCurrentParent   = 0;
     fCurrentNode     = 0;
     fCurrentEntity   = 0;
@@ -753,7 +756,11 @@ void AbstractDOMParser::resetDocument()
 
 void AbstractDOMParser::startDocument()
 {
-    fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument(fMemoryManager);
+    if(fImplementationFeatures == 0)
+        fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument(fMemoryManager);
+    else 
+        fDocument = (DOMDocumentImpl *)DOMImplementationRegistry::getDOMImplementation(fImplementationFeatures)->createDocument(fMemoryManager);
+
     // Just set the document as the current parent and current node
     fCurrentParent = fDocument;
     fCurrentNode   = fDocument;
