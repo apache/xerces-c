@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/05/28 20:20:26  tng
+ * Add option '-n' to SAX2Print.
+ *
  * Revision 1.10  2002/04/17 20:18:08  tng
  * [Bug 7493] The word "occured" is misspelled and it is a global error.
  *
@@ -124,6 +127,7 @@ static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_CharRef;
 static char*                    xmlFile         = 0;
 static SAX2XMLReader::ValSchemes valScheme      = SAX2XMLReader::Val_Auto;
 static bool					        expandNamespaces= false ;
+static bool                     doNamespaces    = true;
 static bool                     doSchema        = true;
 static bool                     schemaFullChecking = false;
 static bool                     namespacePrefixes = false;
@@ -142,10 +146,12 @@ static void usage()
             "Options:\n"
              "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].\n"
              "    -v=xxx      Validation scheme [always | never | auto*].\n"
-             "    -e          Expand Namespace Alias with URI's.\n"
+             "    -e          Expand Namespace Alias with URI's. Defaults to off.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
              "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
              "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
+             "    -n          Disable namespace processing. Defaults to on.\n"
+             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
              "    -s          Disable schema processing. Defaults to on.\n"
              "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
              "    -?          Show this help.\n\n"
@@ -245,6 +251,11 @@ int main(int argC, char* argV[])
                 return 2;
             }
         }
+         else if (!strcmp(argV[parmInd], "-n")
+              ||  !strcmp(argV[parmInd], "-N"))
+        {
+            doNamespaces = false;
+        }
          else if (!strcmp(argV[parmInd], "-s")
               ||  !strcmp(argV[parmInd], "-S"))
         {
@@ -306,6 +317,7 @@ int main(int argC, char* argV[])
         parser->setFeature(XMLUni::fgSAX2XercesDynamic, false);
     }
 
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
     parser->setFeature(XMLUni::fgSAX2XercesSchema, doSchema);
     parser->setFeature(XMLUni::fgSAX2XercesSchemaFullChecking, schemaFullChecking);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);

@@ -196,10 +196,12 @@ XML file.
 Options:
     -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
     -v=xxx      Validation scheme [always | never | auto*].
-    -e          Expand Namespace Alias with URI's.
+    -e          Expand Namespace Alias with URI's. Defaults to off.
     -x=XXX      Use a particular encoding for output (LATIN1*).
     -f          Enable full schema constraint checking processing. Defaults to off.
     -p          Enable namespace-prefixes feature. Defaults to off.
+    -n          Disable namespace processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -s          Disable schema processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -?          Show this help.
