@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/08/22 18:28:01  peiyongz
+ * Memory leak: delete the bufffer allocated by ::toString()
+ *
  * Revision 1.13  2001/08/21 18:42:53  peiyongz
  * Bugzilla# 2816: cleanUp() declared with external linkage and called
  *                          before defined as inline
@@ -862,12 +865,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         try
                         {
                              // ask parent do a complete check
-                             numBase->checkContent(getMaxInclusive()->toString(), false);
+                            XMLCh* value1 = getMaxInclusive()->toString();
+                            ArrayJanitor<XMLCh> jan(value1);
+                            numBase->checkContent(value1, false);
                         }
                         catch ( XMLException& )
                         {
-                            XMLCh* value1 = getMaxInclusive()->toString();
-                            ArrayJanitor<XMLCh> jan(value1);
                             ThrowXML1(InvalidDatatypeFacetException
                                     , XMLExcepts::FACET_maxIncl_notFromBase
                                     , value1
@@ -880,12 +883,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         try
                         {
                              // ask parent do a complete check
-                             numBase->checkContent(getMaxExclusive()->toString(), false);
+                            XMLCh* value1 = getMaxExclusive()->toString();
+                            ArrayJanitor<XMLCh> jan(value1);
+                            numBase->checkContent(value1, false);
                         }
                         catch ( XMLException& )
                         {
-                            XMLCh* value1 = getMaxExclusive()->toString();
-                            ArrayJanitor<XMLCh> jan(value1);
                             ThrowXML1(InvalidDatatypeFacetException
                                     , XMLExcepts::FACET_maxExcl_notFromBase
                                     , value1
@@ -898,12 +901,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         try
                         {
                              // ask parent do a complete check
-                             numBase->checkContent(getMinInclusive()->toString(), false);
+                            XMLCh* value1 = getMinInclusive()->toString();
+                            ArrayJanitor<XMLCh> jan(value1);
+                            numBase->checkContent(value1, false);
                         }
                         catch ( XMLException& )
                         {
-                            XMLCh* value1 = getMinInclusive()->toString();
-                            ArrayJanitor<XMLCh> jan(value1);
                             ThrowXML1(InvalidDatatypeFacetException
                                     , XMLExcepts::FACET_minIncl_notFromBase
                                     , value1
@@ -916,12 +919,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         try
                         {
                              // ask parent do a complete check
-                             numBase->checkContent(getMinExclusive()->toString(), false);
+                            XMLCh* value1 = getMinExclusive()->toString();
+                            ArrayJanitor<XMLCh> jan(value1);
+                            numBase->checkContent(value1, false);
                         }
                         catch ( XMLException& )
                         {
-                            XMLCh* value1 = getMinExclusive()->toString();
-                            ArrayJanitor<XMLCh> jan(value1);
                             ThrowXML1(InvalidDatatypeFacetException
                                     , XMLExcepts::FACET_minExcl_notFromBase
                                     , value1
@@ -1075,6 +1078,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             if ( theData->getScale() > fFractionDigits )
             {
                 XMLCh* value = theData->toString();
+                ArrayJanitor<XMLCh> jan(value);
                 XMLString::binToText(theData->getScale(), value1, BUF_LEN, 10);
                 XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10);
                 ThrowXML3(InvalidDatatypeFacetException
