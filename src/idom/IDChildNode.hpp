@@ -1,5 +1,5 @@
-#ifndef ChildNode_HEADER_GUARD_
-#define ChildNode_HEADER_GUARD_
+#ifndef IDChildNode_HEADER_GUARD_
+#define IDChildNode_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1

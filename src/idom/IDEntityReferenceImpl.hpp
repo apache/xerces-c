@@ -1,5 +1,5 @@
-#ifndef EntityReferenceImpl_HEADER_GUARD_
-#define EntityReferenceImpl_HEADER_GUARD_
+#ifndef IDEntityReferenceImpl_HEADER_GUARD_
+#define IDEntityReferenceImpl_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
