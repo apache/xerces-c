@@ -55,8 +55,8 @@
 # 
 #
 # $Log$
-# Revision 1.2  1999/11/12 19:12:37  abagchi
-# Changed instances of XML4CROOT to XERCESCROOT
+# Revision 1.3  1999/11/12 20:31:23  rahulj
+# Replaced XML4CROOT with XERCESCROOT.
 #
 # Revision 1.1.1.1  1999/11/09 01:09:25  twl
 # Initial checkin
@@ -72,7 +72,7 @@ INCLUDES= -I. -I${XERCESCROOT}/include
 LIB_DIR=${XERCESCROOT}/lib
 LIBNAME=xerces-c
 THISLIB=${LIB_DIR}/${LIBNAME}
-VER=3_0
+VER=1_0
 ifdef ICUROOT
    ICU_LIB_DIR=${ICUROOT}/lib
    ICU_LIBNAME=icu-uc

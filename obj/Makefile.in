@@ -55,8 +55,11 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:10:49  twl
-# Initial revision
+# Revision 1.2  1999/11/12 20:38:43  rahulj
+# Replaced XML4CROOT with XERCESCROOT.
+#
+# Revision 1.1.1.1  1999/11/09 01:10:49  twl
+# Initial checkin
 #
 # Revision 1.2  1999/11/08 20:43:14  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -79,16 +82,16 @@ PREFIX = @prefix@
 
 include ../src/Makefile.incl
 
-LIB=${XML4CROOT}/lib
+LIB=${XERCESCROOT}/lib
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
 BATCH_TARGET = "//'${LOADMOD}(XML4C30)'"
 endif
-LIBNAME=libIXXML4C
+LIBNAME=libxerces-c
 THISLIB=${LIB}/${LIBNAME}
-VER=3_0
+VER=1_0
 
-ALL_OBJECTS_DIR=${XML4CROOT}/obj
+ALL_OBJECTS_DIR=${XERCESCROOT}/obj
 ALL_OBJECTS=$(wildcard $(ALL_OBJECTS_DIR)/*.o)
 
 #######################################################
