@@ -760,20 +760,20 @@ access the Schema information stored in internal data structures.
 Name:			personnel
 Model Type:		Children
 Create Reason:	Declared
-ContentType:	OneOrMore
-Content Model:	(person)+
+ContentType:	
+Content Model:	(person,)
 ComplexType:
 	TypeName:	,C0
-	ContentType:	OneOrMore
+	ContentType:	
 --------------------------------------------
 Name:			person
 Model Type:		Children
 Create Reason:	Declared
-ContentType:	Sequence
-Content Model:	(name,email*,url*,link?)
+ContentType:	
+Content Model:	((name,email,url),link)
 ComplexType:
 	TypeName:	,C1
-	ContentType:	Sequence
+	ContentType:	
 Attributes:
 	Name:			salary
 	Type:			CDATA
