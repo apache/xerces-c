@@ -60,12 +60,14 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
 // These functions are needed because MacOS doesn't define them
 //	(these routines are defined in CW 8 by extras.h, but there is no MachO
 //	library for extras).
 
-#if __MACH__ && __MWERKS__
+#if __MACH__
 // Compare lexigraphically two strings
 int stricmp(const char *s1, const char *s2)
 {
@@ -96,4 +98,74 @@ int strnicmp(const char *s1, const char *s2, const unsigned int n)
     return 0;
 }
 #endif
+
+
+#if defined(_WIN32) || defined(WIN32)
+int mbswcslen(const char * s, const unsigned int n)
+{
+	int     result;
+	char *  source;
+	int count = -1;
+	size_t  source_len;
+	
+	source_len = strlen(s);
+
+    source      = (char *)s;
+    
+    for (count = 0; count < n; count++)
+    {
+    	if (*source)
+    	{
+        	result = mbtowc(0, source, source_len);
+        	if (result > 0)
+        	{
+        		source += result;
+        		source_len -= result;
+        	}
+        	else
+        		return((size_t)-1);								/*- mm 011102 -*/
+        }
+        else
+        	break;
+    }
+
+	return(count);
+}
+
+int wcsmbslen(const wchar_t * pwcs, const unsigned int n)
+{
+	int     count = 0;
+	int     result;
+	wchar_t * source;
+	char    temp[3];
+	
+	if (!pwcs)
+		return (0);
+	
+	source = (wchar_t*)pwcs;
+	
+	while(count <= n)
+	{
+		if (!*source)
+		{
+			break;
+		}
+		else
+		{
+			result = wctomb(temp, *source++);
+			if ((count + result) <= n)
+			{
+				count += result;
+			}
+			else
+				break;
+		}
+	}
+			
+	return(count);
+}
+#endif
+
+
+
 

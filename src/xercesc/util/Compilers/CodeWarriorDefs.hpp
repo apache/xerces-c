@@ -64,9 +64,15 @@
 // ---------------------------------------------------------------------------
 //  Include some runtime files that will be needed product wide
 // ---------------------------------------------------------------------------
-//#include <sys/types.h>  // for size_t and ssize_t
-//#include <limits.h>  // for MAX of size_t and ssize_t
+//#include <sys/types.h>  	// for size_t and ssize_t
+//#include <limits.h>		// for MAX of size_t and ssize_t
 //#include <extras.h>
+
+#if defined(_WIN32) || defined(WIN32)
+#include <wchar.h>
+#include <wctype.h>
+#endif
+ 
 
 // ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
@@ -74,9 +80,14 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#define PLATFORM_EXPORT __declspec(export)
-#define PLATFORM_IMPORT __declspec(import)
-
+#if defined(macintosh)
+#define PLATFORM_EXPORT		__declspec(export)
+#define PLATFORM_IMPORT		__declspec(import)
+#elif defined(_WIN32) || defined(WIN32)
+#define PLATFORM_EXPORT     __declspec(dllexport)
+#define PLATFORM_IMPORT     __declspec(dllimport)
+#endif
+ 
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
 //  If the compiler can handle boolean itself, do not define it
@@ -100,7 +111,11 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
+#if defined(macintosh)
 typedef unsigned short  XMLCh;
+#elif defined(_WIN32) || defined(WIN32)
+typedef wchar_t			XMLCh;
+#endif
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers
@@ -143,6 +158,12 @@ typedef int             XMLInt32;
 #if __MACH__ && __MWERKS__
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
+#endif
+
+#if __MWERKS__ && (defined(_WIN32) || defined(WIN32))
+/* used in place of calling mbstowcs or wcstombs with a NULL destination */
+int mbswcslen(const char * s, const unsigned int n);
+int wcsmbslen(const wchar_t * pwcs, const unsigned int n);
 #endif
 
 // ---------------------------------------------------------------------------
