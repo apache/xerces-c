@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:09  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/07 17:45:52  knoaman
+ * SAX2 documentation update.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/08/30 22:21:37  andyh
  * Unix Build script fixes.  Clean up some UNIX compiler warnings.
@@ -79,6 +82,15 @@
 #include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
 #include <xercesc/sax/SAXException.hpp>
 
+/**
+  * Creates a SAX2 parser (SAX2XMLReader).
+  *
+  * <p>Note: The parser object returned by XMLReaderFactory is owned by the
+  * calling users, and it's the responsiblity of the users to delete that
+  * parser object, once they no longer need it.</p>
+  *
+  * @see SAX2XMLReader#SAX2XMLReader
+  */
 class SAX2_EXPORT XMLReaderFactory
 {
 protected:                // really should be private, but that causes compiler warnings.

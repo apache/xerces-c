@@ -37,19 +37,25 @@
         parser->parse(xmlFile);
     }
     catch (const XMLException&amp; toCatch) {
+        delete parser;
         cout &lt;&lt; "Exception message is: \n"
              &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
         return -1;
     }
     catch (const SAXParseException&amp; toCatch) {
+        delete parser;
         cout &lt;&lt; "Exception message is: \n"
              &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
         return -1;
     }
     catch (...) {
+        delete parser;
         cout &lt;&lt; "Unexpected Exception \n" ;
         return -1;
     }
+
+    delete parser;
+    return 0;
 }</source>
     </s2>
 
