@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/03/10 16:05:11  peiyongz
+ * assignment operator
+ *
  * Revision 1.1  2003/03/09 17:06:16  peiyongz
  * PanicHandler
  *
@@ -147,7 +150,7 @@ private:
     PanicHandler(const PanicHandler&);
     
     /** Assignment operator */
-    void operator=(const PanicHandler&);
+    PanicHandler& operator=(const PanicHandler&);
 };
 
 XERCES_CPP_NAMESPACE_END

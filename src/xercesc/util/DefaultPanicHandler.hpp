@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/03/10 16:05:11  peiyongz
+ * assignment operator
+ *
  * Revision 1.1  2003/03/09 17:06:16  peiyongz
  * PanicHandler
  *
@@ -116,7 +119,7 @@ private:
     DefaultPanicHandler(const PanicHandler&);
     
     /** Assignment operator */
-    void operator=(const DefaultPanicHandler&);
+    DefaultPanicHandler& operator=(const DefaultPanicHandler&);
 
 };
 
