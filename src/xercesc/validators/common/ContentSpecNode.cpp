@@ -69,6 +69,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
+#include <xercesc/validators/schema/SchemaSymbols.hpp>
 
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Copy Constructor
@@ -228,3 +229,75 @@ void ContentSpecNode::formatSpec(XMLBuffer&      bufToFill) const
     if (fType == ContentSpecNode::Leaf)
         bufToFill.append(chCloseParen);
 }
+
+int ContentSpecNode::getMinTotalRange() const {
+
+    int min = fMinOccurs;
+
+    if (fType == ContentSpecNode::Sequence
+        || fType == ContentSpecNode::All
+        || fType == ContentSpecNode::Choice) {
+
+        int minFirst = fFirst->getMinTotalRange();
+
+        if (fSecond) {
+
+            int minSecond = fSecond->getMinTotalRange();
+
+            if (fType == ContentSpecNode::Choice) {
+                min = min * ((minFirst < minSecond)? minFirst : minSecond);
+            }
+            else {
+                min = min * (minFirst + minSecond);
+            }
+        }
+        else
+            min = min * minFirst;
+    }
+
+    return min;
+}
+
+int ContentSpecNode::getMaxTotalRange() const {
+
+    int max = fMaxOccurs;
+
+    if (max == SchemaSymbols::UNBOUNDED) {
+         return SchemaSymbols::UNBOUNDED;
+    }
+
+    if (fType == ContentSpecNode::Sequence
+        || fType == ContentSpecNode::All
+        || fType == ContentSpecNode::Choice) {
+
+        int maxFirst = fFirst->getMaxTotalRange();
+
+        if (maxFirst == SchemaSymbols::UNBOUNDED) {
+             return SchemaSymbols::UNBOUNDED;
+        }
+
+        if (fSecond) {
+
+            int maxSecond = fSecond->getMaxTotalRange();
+
+            if (maxSecond == SchemaSymbols::UNBOUNDED) {
+                return SchemaSymbols::UNBOUNDED;
+            }
+            else {
+
+                if (fType == ContentSpecNode::Choice) {
+                    max = max * (maxFirst > maxSecond) ? maxFirst : maxSecond;
+                }
+                else {
+                    max = max * (maxFirst + maxSecond);
+                }
+            }
+        }
+        else {
+            max = max * maxFirst;
+        }
+    }
+
+    return max;
+}
+

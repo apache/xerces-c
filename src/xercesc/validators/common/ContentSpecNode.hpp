@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/21 15:41:48  knoaman
+ * Move behavior from TraverseSchema.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.19  2001/12/06 17:50:42  tng
  * Performance Enhancement. The ContentSpecNode constructor always copied the QName
@@ -234,6 +237,9 @@ public :
     //  Miscellaneous
     // -----------------------------------------------------------------------
     void formatSpec (XMLBuffer&      bufToFill)   const;
+    bool hasAllContent();
+    int  getMinTotalRange() const;
+    int  getMaxTotalRange() const;
 
 
 private :
@@ -499,6 +505,18 @@ inline void ContentSpecNode::setAdoptFirst(bool newState)
 inline void ContentSpecNode::setAdoptSecond(bool newState)
 {
     fAdoptSecond = newState;
+}
+
+// ---------------------------------------------------------------------------
+//  ContentSpecNode: Miscellaneous
+// ---------------------------------------------------------------------------
+inline bool ContentSpecNode::hasAllContent() {
+
+    if (fType == ContentSpecNode::ZeroOrOne) {
+        return (fFirst->getType() == ContentSpecNode::All);
+    }
+
+    return (fType == ContentSpecNode::All);
 }
 
 #endif
