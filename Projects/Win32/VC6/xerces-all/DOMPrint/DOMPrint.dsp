@@ -94,6 +94,14 @@ SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrint.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintErrorHandler.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintErrorHandler.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintFilter.cpp
 # End Source File
 # Begin Source File

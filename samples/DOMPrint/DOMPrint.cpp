@@ -60,14 +60,10 @@
 
 // ---------------------------------------------------------------------------
 //  This sample program invokes the XercesDOMParser to build a DOM tree for
-//  the specified input file. It then invokes DOMWriter::writeToString() to 
-//  serialize the resultant DOM tree in to an XMLCh stream, if no error occurs 
-//  during the parsing. 
+//  the specified input file. It then invokes DOMWriter::writeNode() to 
+//  serialize the resultant DOM tree in to an StdOutmyFormTarget, if no error 
+//  occurs during the parsing. 
 //
-//  If "-wverify" is specified, the parser will parse the resultant string
-//  for the second time to verify the serialized result from the first parse,
-//  and invokes DOMWriter::writeNode() to serialize the resultant DOM tree.
-//  
 //  Note: since any combination of characters can be the end of line sequence,
 //        the resultant XML stream may NOT be well formed any more.
 //
@@ -87,16 +83,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/dom/impl/DOMWriterImpl.hpp>
+
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/impl/DOMWriterImpl.hpp>
-#include <xercesc/dom/impl/DOMDocumentTypeImpl.hpp>
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "DOMTreeErrorReporter.hpp"
 #include "DOMPrintFilter.hpp"
+#include "DOMPrintErrorHandler.hpp"
 
 #include <string.h>
 #include <stdlib.h>
@@ -120,11 +117,11 @@
 //      Indicates whether entity reference nodes needs to be created or not
 //      Defaults to false
 //
-//  gEncodingName
+//  gOutputEncoding
 //      The encoding we are to output in. If not set on the command line,
 //      then it is defaults to the encoding of the input XML file.
 //
-//  gEndOfLineSequence
+//  gMyEOLSequence
 //      The end of line sequence we are to output. 
 //
 //  gValScheme
@@ -139,21 +136,12 @@ static bool                     gSchemaFullChecking    = false;
 static bool                     gDoCreate              = true;
 
 // options for DOMWriter's features
-static const XMLCh*             gEncodingName          = 0;
-static const XMLCh*             gEndOfLineSequence     = 0;
+static const XMLCh*             gOutputEncoding        = 0;
+static const XMLCh*             gMyEOLSequence         = 0;
 
-static bool                     gCanonicalForm               = false;
-static bool                     gFormatPrettyPrint           = false;
-static bool                     gNormalizeCharacters         = false;
-static bool                     gValidation                  = false;
-static bool                     gSplitCdataSections          = true;
-static bool                     gDiscardDefaultContent       = true;
-static bool                     gEntityReferenceExpansion    = true;
-static bool                     gWhitespaceInElementContent  = true;
-
-static bool                     gVerifyResult                = false;
-static bool                     gUseFilter                   = false;
-static DOMPrintFilter          *gFilter = 0;
+static bool                     gSplitCdataSections    = true;
+static bool                     gDiscardDefaultContent = true;
+static bool                     gUseFilter             = false;
 
 static XercesDOMParser::ValSchemes    gValScheme       = XercesDOMParser::Val_Auto;
 
@@ -174,20 +162,13 @@ void usage()
             "    -n          Enable namespace processing. Default is off.\n"
             "    -s          Enable schema processing. Default is off.\n"
             "    -f          Enable full schema constraint checking. Defaults is off.\n"
-            "    -weol=xxx   Set the character sequence as end of line.\n"
             "    -wenc=XXX   Use a particular encoding for output. Default is\n"
             "                the same encoding as the input XML file. UTF-8 if\n"
             "                input XML file has not XML declaration.\n"
-            "    -wcnf       canonical-form.                default off \n"
-            "    -wfpp       format-pretty-print.           default off \n"
-            "    -wnch       normalize-characters.          default off \n"
-            "    -wval       validation.                    default off \n"
-            "    -wscs       split-cdata-sections.          default on  \n"
-			"    -wddc       discard-default-content.       default on  \n"
-            "    -went       entity-reference-expansion.    default on  \n"
-            "    -wwec       whitespace-in-element-content. default on  \n"
-			"    -wfilter    use DOMPrintFilter.            default off \n"
-			"    -wverify    verify the result from writeToString(). default off \n"
+            "    -weol=xxx   Set the end of line sequence. \n"
+            "    -wscs=xxx   Enable/Disable split-cdata-sections.      default on  \n"
+			"    -wddc=xxx   Enable/Disable discard-default-content.   default on  \n"
+			"    -wflt=xxx   Enable/Disable filtering.                 default off \n"
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n\n"
             "The parser has intrinsic support for the following encodings:\n"
@@ -196,18 +177,6 @@ void usage()
           <<  endl;
 }
 
-void setFeature(DOMWriter* ptr, const XMLCh* const featName, bool toState)
-{
-	try
-	{
-		ptr->setFeature(featName, toState);
-	}
-	catch(const DOMException&)
-	{
-		//absorb it here
-	}
-
-}
 // ---------------------------------------------------------------------------
 //
 //  main
@@ -295,52 +264,58 @@ int main(int argC, char* argV[])
          else if (!strncmp(argV[parmInd], "-wenc=", 6))
         {
              // Get out the encoding name
-             gEncodingName = XMLString::transcode( &(argV[parmInd][6]) );
+             gOutputEncoding = XMLString::transcode( &(argV[parmInd][6]) );
         }			
          else if (!strncmp(argV[parmInd], "-weol=", 6))
         {
              // Get out the end of line
-             gEndOfLineSequence = XMLString::transcode( &(argV[parmInd][6]) );
+             gMyEOLSequence = XMLString::transcode( &(argV[parmInd][6]) );
         }			
-		 else if (!strcmp(argV[parmInd], "-wcnf"))
+         else if (!strncmp(argV[parmInd], "-wddc=", 6))
         {
-            gCanonicalForm = !gCanonicalForm;
+            const char* const parm = &argV[parmInd][6];
+
+            if (!strcmp(parm, "on"))
+				gDiscardDefaultContent = true;
+            else if (!strcmp(parm, "off"))
+				gDiscardDefaultContent = false;
+            else
+            {
+                cerr << "Unknown -wddc= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
+                return 2;
+            }
+
         }
-         else if (!strcmp(argV[parmInd], "-wddc"))
+         else if (!strncmp(argV[parmInd], "-wcsc=", 6))
         {
-            gDiscardDefaultContent = !gDiscardDefaultContent;
+            const char* const parm = &argV[parmInd][6];
+
+            if (!strcmp(parm, "on"))
+				gSplitCdataSections = true;
+			else if (!strcmp(parm, "off"))
+				gSplitCdataSections = false;
+            else
+            {
+                cerr << "Unknown -wcsc= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
+                return 2;
+            }
         }
-         else if (!strcmp(argV[parmInd], "-went"))
+         else if (!strncmp(argV[parmInd], "-wflt=", 6))
         {
-            gEntityReferenceExpansion = !gEntityReferenceExpansion;
-        }
-         else if (!strcmp(argV[parmInd], "-wfpp"))
-        {
-            gFormatPrettyPrint = !gFormatPrettyPrint;
-        }
-         else if (!strcmp(argV[parmInd], "-wnch"))
-        {
-            gNormalizeCharacters = !gNormalizeCharacters;
-        }
-         else if (!strcmp(argV[parmInd], "-wscs"))
-        {
-            gSplitCdataSections = !gSplitCdataSections;
-        }
-         else if (!strcmp(argV[parmInd], "-wval"))
-        {
-            gValidation = !gValidation;
-        }
-         else if (!strcmp(argV[parmInd], "-wwec"))
-        {
-            gWhitespaceInElementContent = !gWhitespaceInElementContent;
-        }
-         else if (!strcmp(argV[parmInd], "-wverify"))
-        {
-            gVerifyResult = !gVerifyResult;
-        }
-         else if (!strcmp(argV[parmInd], "-wfilter"))
-        {
-            gUseFilter = !gUseFilter;
+            const char* const parm = &argV[parmInd][6];
+
+            if (!strcmp(parm, "on"))
+				gUseFilter = true;
+			else if (!strcmp(parm, "off"))
+				gUseFilter = false;
+            else
+            {
+                cerr << "Unknown -wflt= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
+                return 2;
+            }
         }
          else
         {
@@ -409,58 +384,59 @@ int main(int argC, char* argV[])
     // If the parse was successful, output the document data from the DOM tree
     if (!errorsOccured && !errReporter->getSawErrors())
     {
-        DOMNode        *doc = parser->getDocument();
-		DOMWriter      *theSerializer = new DOMWriterImpl();
+		DOMPrintFilter   *myFilter = 0;
 
         try
         {
-			theSerializer->setNewLine(gEndOfLineSequence);
-			theSerializer->setEncoding(gEncodingName);
+			// get a serializer, an instance of DOMWriter
+			DOMWriter      *theSerializer = new DOMWriterImpl();
+			//DOMImplementation* impl = DOMImplementation::getImplementation();
+			//DOMWriter *theSerializer = ((DOMImplementationLS*)impl)->createWriter();
 
-			setFeature(theSerializer, DOMWriter::CanonicalForm,              gCanonicalForm);
-			setFeature(theSerializer, DOMWriter::FormatPrettyPrint,          gFormatPrettyPrint);
-			setFeature(theSerializer, DOMWriter::NormalizeCharacters,        gNormalizeCharacters);
-			setFeature(theSerializer, DOMWriter::Validation,                 gValidation);
-			setFeature(theSerializer, DOMWriter::SplitCdataSections,         gSplitCdataSections);
-			setFeature(theSerializer, DOMWriter::DiscardDefaultContent,      gDiscardDefaultContent);
-			setFeature(theSerializer, DOMWriter::Entities,                   gEntityReferenceExpansion);
-			setFeature(theSerializer, DOMWriter::WhitespaceInElementContent, gWhitespaceInElementContent);
+			// set user specified end of line sequence and output encoding
+			theSerializer->setNewLine(gMyEOLSequence);
+			theSerializer->setEncoding(gOutputEncoding);
 
+			// Set user's own error handler
+			// set user's own filter 
 			if (gUseFilter)
 			{
-				gFilter = new DOMPrintFilter(); 
-				theSerializer->setFilter(gFilter);
+				myFilter = new DOMPrintFilter; 
+				theSerializer->setFilter(myFilter);
 			}
 
-			XMLCh* retString = theSerializer->writeToString(*doc);
-			char *memString = XMLString::transcode(retString);		
-			delete [] retString;      // release the memory allocated by writeToString()
+		    DOMErrorHandler *myErrorHandler = new DOMPrintErrorHandler();
+			theSerializer->setErrorHandler(myErrorHandler);
 
-            cout<<memString;
-			cout<<flush;
-
-			if (gVerifyResult)
-			{
-               /***
-                  verify the output stream
-				***/
-				//MemBufInputSource* memBufIS = MemBufInputSource
-				MemBufInputSource memBufIS((const XMLByte*)memString
-                                         , strlen(memString)
-                                         , "verifyResult"
-										 , false);
-
-				parser->reset();
-				parser->parse(memBufIS);
-				DOMNode *doc2 = parser->getDocument();
-				StdOutFormatTarget formatTarget;
-				theSerializer->writeNode(&formatTarget, *doc2);
-			}
+			// set feature if the serializer supports the feature
+			if (theSerializer->canSetFeature(DOMWriter::SplitCdataSections, gSplitCdataSections))
+				theSerializer->setFeature(DOMWriter::SplitCdataSections, gSplitCdataSections);
 			
-			delete [] memString; // release the memory from the transcoder
+			if (theSerializer->canSetFeature(DOMWriter::DiscardDefaultContent, gDiscardDefaultContent))
+				theSerializer->setFeature(DOMWriter::DiscardDefaultContent, gDiscardDefaultContent);
+
+			//
+			// Instantiate a format target to receive the resultant
+			// XML stream from the serializer.
+            //
+			// StdOutFormatTarget prints the resultant XML stream
+			// to stdout once it receive any thing from the serializer.
+			//
+			StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
+			DOMNode                     *doc = parser->getDocument();
+			theSerializer->writeNode(myFormTarget, *doc);
+
+			delete theSerializer;
+
+            // 
+			// Filter, formatTarget and error handler 
+			// are NOT owned by the serializer.
+			//
+			delete myFormTarget;      
+			delete myErrorHandler;   
 
 			if (gUseFilter)
-				delete gFilter;
+				delete myFilter;      	
 
         }
         catch (XMLException& e)
@@ -471,7 +447,6 @@ int main(int argC, char* argV[])
             retval = 4;
         }
 
-		delete theSerializer;
     }
     else
         retval = 4;
@@ -491,8 +466,8 @@ int main(int argC, char* argV[])
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-	delete (void *)gEncodingName;        // const problems.
-	delete (void *)gEndOfLineSequence;   // const problems.
+	delete (void *)gOutputEncoding;        // const problems.
+	delete (void *)gMyEOLSequence;         // const problems.
 
     return retval;
 }
