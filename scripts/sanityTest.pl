@@ -159,7 +159,7 @@ system ("EnumVal personal.xml");
 system ("CreateDOMDocument");
 
 #
-#  Run some selected test cases
+#  Run the test cases
 #
 
 #  Run DOMIDTest
@@ -185,5 +185,8 @@ system ("IRangeTest");
 
 #  Run ITraversal
 system ("ITraversal");
+
+#  Run InitTestTerm
+system ("InitTermTest personal.xml");
 
 chdir "..".$pathsep."..";
