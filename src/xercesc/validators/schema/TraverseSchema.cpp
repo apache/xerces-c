@@ -475,7 +475,7 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
             contents = ((DOMText*) textContent)->getData();    
     }
 
-    if (contents)
+    if (contents && !fScanner->getIgnoreAnnotations())
     {
         XSAnnotation* theAnnotation = 0;
 
