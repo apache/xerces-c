@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/03/01 23:18:28  peiyongz
+ * Instantiate XSerializeEngine with GrammarPool
+ *
  * Revision 1.18  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -357,7 +360,7 @@ void XMLGrammarPoolImpl::serializeGrammars(BinOutputStream* const binOut)
         ThrowXMLwithMemMgr(XSerializationException, XMLExcepts::XSer_GrammarPool_Empty, getMemoryManager());
     }
         
-    XSerializeEngine  serEng(binOut, getMemoryManager());
+    XSerializeEngine  serEng(binOut, this);
 
     //version information
     serEng<<gXercesMajVersion;
@@ -411,7 +414,7 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     
     try 
     {
-        XSerializeEngine  serEng(binIn, memMgr);
+        XSerializeEngine  serEng(binIn, this);
 
         //version information
         unsigned int  MajVer;
