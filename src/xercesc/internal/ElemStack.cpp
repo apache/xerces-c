@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/04/23 21:20:40  peiyongz
+ * fCommentOrPISeen to keep track if any comment or PI seen for the current
+ * element
+ *
  * Revision 1.10  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -235,6 +239,7 @@ unsigned int ElemStack::addLevel()
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
+    fStack[fStackTop]->fCommentOrPISeen = false;
     fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;
@@ -269,6 +274,7 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
+    fStack[fStackTop]->fCommentOrPISeen = false;
     fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;

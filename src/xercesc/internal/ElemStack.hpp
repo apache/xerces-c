@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/04/23 21:20:40  peiyongz
+ * fCommentOrPISeen to keep track if any comment or PI seen for the current
+ * element
+ *
  * Revision 1.7  2003/10/22 20:22:30  knoaman
  * Prepare for annotation support.
  *
@@ -208,6 +212,7 @@ public :
         unsigned int        fMapCount;
 
         bool                fValidationFlag;
+        bool                fCommentOrPISeen;
         int                 fCurrentScope;
         Grammar*            fCurrentGrammar;
         unsigned int        fCurrentURI;
@@ -244,6 +249,9 @@ public :
 
     void setValidationFlag(bool validationFlag);
     bool getValidationFlag();
+
+    inline void setCommentOrPISeen();
+    inline bool getCommentOrPISeen() const;
 
     void setCurrentScope(int currentScope);
     int getCurrentScope();
@@ -545,6 +553,17 @@ inline bool ElemStack::getValidationFlag()
 inline void ElemStack::setValidationFlag(bool validationFlag)
 {
     fStack[fStackTop-1]->fValidationFlag = validationFlag;
+    return;
+}
+
+inline bool ElemStack::getCommentOrPISeen() const
+{
+    return fStack[fStackTop-1]->fCommentOrPISeen;
+}
+
+inline void ElemStack::setCommentOrPISeen()
+{
+    fStack[fStackTop-1]->fCommentOrPISeen = true;
     return;
 }
 
