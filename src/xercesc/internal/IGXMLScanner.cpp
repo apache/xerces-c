@@ -113,6 +113,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistry(0)
     , fUndeclaredAttrRegistryNS(0)
+    , fModel(0)
 {
     try
     {
@@ -159,6 +160,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistry(0)
     , fUndeclaredAttrRegistryNS(0)
+    , fModel(0)
 {
     try
     {	

@@ -114,6 +114,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fElemCount(0)
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistryNS(0)
+    , fModel(0)
 {
     try
     {
@@ -163,6 +164,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fElemCount(0)
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistryNS(0)
+    , fModel(0)
 {
     try
     {	

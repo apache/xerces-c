@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/26 16:20:00  knoaman
+ * Store XSModel.
+ *
  * Revision 1.12  2003/11/24 05:09:38  neilg
  * implement new, statless, method for detecting duplicate attributes
  *
@@ -119,6 +122,7 @@ class IdentityConstraint;
 class ContentLeafNameTypeVector;
 class SchemaAttDef;
 class XMLContentModel;
+class XSModel;
 
 //  This is an integrated scanner class, which does DTD/XML Schema grammar
 //  processing.
@@ -360,6 +364,7 @@ private :
     RefHashTableOf<unsigned int>*           fAttDefRegistry;
     RefHashTableOf<unsigned int>*           fUndeclaredAttrRegistry;
     RefHash2KeysTableOf<unsigned int>*      fUndeclaredAttrRegistryNS;
+    XSModel*                                fModel;
 };
 
 inline const XMLCh* IGXMLScanner::getName() const
