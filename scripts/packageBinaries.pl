@@ -28,11 +28,11 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_3_0");
-    print (" -o \$HOME/xerces-c_1_3_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_4_0");
+    print (" -o \$HOME/xerces-c_1_4_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src_1_3_0");
-    print (" -o\\xerces-c_1_3_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src_1_4_0");
+    print (" -o\\xerces-c_1_4_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -45,6 +45,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
 # Set up the environment variables for ICU
 # As of Version 3, ICU is not a required component of XERCES-C
 $ICUROOT = $ENV{'ICUROOT'};
+$ICU_DATA = $ENV{'ICU_DATA'};
 if (!length($ICUROOT)) {
     print "You have not defined your ICU install directory.\n";
     print "To build with ICU, you must set an environment variable called ICUROOT\n";
@@ -251,12 +252,18 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem("cp -fv $BUILDDIR/*.exe $targetdir/bin");
     
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
-        # Copy the ICU dlls
+        # Copy the ICU dlls and libs
         psystem("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
+        if (length($ICU_DATA) > 0) {
+            psystem("cp -fv $ICUROOT/data/icudata.dll $targetdir/bin");
+            psystem("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
+        }
+        else {
         psystem("cp -fv $ICUROOT/bin/$buildmode/icudata.dll $targetdir/bin");
-        # Copy the ICU libs
+            psystem("cp -fv $ICUROOT/bin/$buildmode/icudata.lib $targetdir/lib");
+        }
+
         psystem("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
-        psystem("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
     }
     psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
@@ -731,8 +738,8 @@ sub change_windows_project_for_ICU() {
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
         $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"$ICUROOT\\include" \/D "PROJ_XMLPARSER"/g;
-        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\bin\\Debug"/g;
-        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"$ICUROOT\\lib\\Release" \/libpath:"$ICUROOT\\bin\\Release"/g;
+        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\bin\\Debug" \/libpath:"$ICUROOT\\data"/g;
+        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"$ICUROOT\\lib\\Release" \/libpath:"$ICUROOT\\bin\\Release" \/libpath:"$ICUROOT\\data"/g;
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
         $line =~ s/user32\.lib/user32\.lib icuuc\.lib icudata\.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;

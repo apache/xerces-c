@@ -96,17 +96,20 @@ sub package_sources {
    print ("Targetdir is : " . $srctargetdir . "\n");
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
 
+   # Select APache style or IBM Alphaworks style docs
+   $styleFile = "style-apachexml.jar";
+   if (length($ICUROOT) > 0) {
+   	change_documentation_entities("$srctargetdir/doc/dtd/entities.ent");
+   	change_doxygen("$srctargetdir/doc/Doxyfile");
+   	change_createdocs_bat("$srctargetdir/createdocs.bat");
+   	$styleFile = "style-ibm.zip";
+   }
+
+   # Now create the API documentation from the XML sources
    chdir ("$srctargetdir/doc");
    system ("doxygen");
 
    # Now create the User documentation from the XML sources
-   
-   # Select APache style or IBM Alphaworks style docs.
-   $styleFile = "style-apachexml.jar";
-   if (length($ICUROOT) > 0) {
-   	change_documentation_entities("$srctargetdir/doc/dtd/entities.ent");
-   	$styleFile = "style-ibm.zip";
-   }
 
    if ($platform =~ m/Windows/ || $platform =~ m/CYGWIN_NT/) {
       $RM = "rm";
@@ -285,12 +288,50 @@ sub change_documentation_entities()
         while ($line = <FIZZLE>) {
                 $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
                 $line =~ s/"Xerces-C"/"XML4C"/g;
-                $line =~ s/"1\.3\.0"/"3\.3\.0"/g;
+                $line =~ s/"1\.4\.0"/"3\.4\.0"/g;
                 $line =~ s/"Xerces"/"XML4C"/g;
-                $line =~ s/"xerces-c-1_3_0"/"xml4c-3_3_0"/g;
-                $line =~ s/"xerces-c-src-1_3_0"/"xml4c-src-3_3_0"/g;
+                $line =~ s/"xerces-c1_4_0"/"xml4c-3_4_0"/g;
+                $line =~ s/"xerces-c-src1_4_0"/"xml4c-src-3_4_0"/g;
                 $line =~ s/xerces-c-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
-                $line =~ s/xml\.apache\.org\/dist/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
+                $line =~ s/xml\.apache\.org\/dist\/xerces-c/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
+                print FIZZLEOUT $line;
+        }
+        close (FIZZLEOUT);
+        close (FIZZLE);
+        unlink ($thefiledotbak);
+}
+
+sub change_doxygen()
+{
+        my ($thefile) = @_;
+        print "\nConverting Doxygen ($thefile) for ICU usage...";
+        my $thefiledotbak = $thefile . ".bak";
+        rename ($thefile, $thefiledotbak);
+
+        open (FIZZLE, $thefiledotbak);
+        open (FIZZLEOUT, ">$thefile");
+        while ($line = <FIZZLE>) {
+                $line =~ s/Xerces-C/XML4C/g;
+                $line =~ s/1\.3\.0/3\.3\.1/g;
+                $line =~ s/header.html/header_ibm.html/g;
+                print FIZZLEOUT $line;
+        }
+        close (FIZZLEOUT);
+        close (FIZZLE);
+        unlink ($thefiledotbak);
+}
+
+sub change_createdocs_bat()
+{
+        my ($thefile) = @_;
+        print "\nConverting createdocs.bat ($thefile) for ICU usage...";
+        my $thefiledotbak = $thefile . ".bak";
+        rename ($thefile, $thefiledotbak);
+
+        open (FIZZLE, $thefiledotbak);
+        open (FIZZLEOUT, ">$thefile");
+        while ($line = <FIZZLE>) {
+                $line =~ s/style-apachexml.jar/style-ibm.zip/g;
                 print FIZZLEOUT $line;
         }
         close (FIZZLEOUT);

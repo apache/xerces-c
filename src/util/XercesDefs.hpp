@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/01/12 22:09:07  tng
+ * Various update for Xerces 1.4
+ *
  * Revision 1.9  2000/11/07 18:14:39  andyh
  * Fix incorrect version number in gXercesMinVersion.
  * From Pieter Van-Dyck
@@ -144,11 +147,11 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_3"
-static const char* const    gXercesVersionStr = "1_3";
-static const char* const    gXercesFullVersionStr = "1_3_0";
+#define Xerces_DLLVersionStr "1_4"
+static const char* const    gXercesVersionStr = "1_4";
+static const char* const    gXercesFullVersionStr = "1_4_0";
 static const unsigned int   gXercesMajVersion = 1;
-static const unsigned int   gXercesMinVersion = 3;
+static const unsigned int   gXercesMinVersion = 4;
 static const unsigned int   gXercesRevision   = 0;
 
 
