@@ -759,7 +759,7 @@ void DGXMLScanner::scanEndTag(bool& gotData)
                 : XMLUni::fgZeroLenString
         );
         // pass back type name information
-        fDocHandler->elementTypeInfo(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString); 
+        fDocHandler->elementTypeInfo(0, 0); 
     }
 
     // If this was the root, then done with content
@@ -1594,7 +1594,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                                   : XMLUni::fgZeroLenString
             );
             // pass back type name information
-            fDocHandler->elementTypeInfo(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString); 
+            fDocHandler->elementTypeInfo(0, 0); 
         }
 
         // Pop the element stack back off since it'll never be used now

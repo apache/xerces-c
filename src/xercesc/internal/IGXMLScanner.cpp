@@ -1254,7 +1254,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
         }
         else 
         {
-            fDocHandler->elementTypeInfo(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString); 
+            fDocHandler->elementTypeInfo(0, 0); 
         }
     }
 
@@ -3033,7 +3033,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             }
             else 
             {
-                fDocHandler->elementTypeInfo(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString); 
+                fDocHandler->elementTypeInfo(0, 0); 
             }
         }
 

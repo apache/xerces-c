@@ -61,8 +61,8 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMTypeInfoImpl::DOMTypeInfoImpl(const XMLCh* n, const XMLCh* nURI, DOMDocumentImpl *impl) {
-    name = impl->getPooledString(n);
-    namespaceURI = impl->getPooledString(nURI);
+    name = n?impl->getPooledString(n):n;
+    namespaceURI = nURI?impl->getPooledString(nURI):nURI;
 }
 
 DOMTypeInfoImpl::DOMTypeInfoImpl() : name(0), namespaceURI(0) {}
