@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XMLUTIL_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /I "\icu_1_3_1\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "PROJ_XMLUTIL" /D "XML_USE_ICU_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
+# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /I "\icu_1_4b\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "PROJ_XMLUTIL" /D "XML_USE_ICU_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib icuuc.lib /nologo /base:"0x10000000" /version:3.0 /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release/IXUtil.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" /libpath:"\icu_1_3_1\Lib\Release"
+# ADD LINK32 kernel32.lib user32.lib icuuc.lib /nologo /base:"0x10000000" /version:3.0 /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release/IXUtil.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" /libpath:"\icu_1_4b\Lib\Release"
 # SUBTRACT LINK32 /profile
 
 !ELSEIF  "$(CFG)" == "XMLUtil - Win32 Debug"
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XMLUTIL_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /I "\icu_1_3_1\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "PROJ_XMLUTIL" /D "XML_USE_ICU_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /GZ /c
+# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /I "\icu_1_4b\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "PROJ_XMLUTIL" /D "XML_USE_ICU_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -82,7 +82,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib icuuc.lib /nologo /base:"0x10000000" /version:3.0 /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/IXUtil.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" /libpath:"\icu_1_3_1\Lib\Debug"
+# ADD LINK32 kernel32.lib user32.lib icuuc.lib /nologo /base:"0x10000000" /version:3.0 /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/IXUtil.dll" /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" /libpath:"\icu_1_4b\Lib\Debug"
 # SUBTRACT LINK32 /profile
 
 !ENDIF 
@@ -128,23 +128,11 @@ SOURCE=..\..\..\..\..\src\util\PlatformUtils.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\StdOut.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\StringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TextOutputStream.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\TransService.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\URL.cpp
 # End Source File
 # Begin Source File
 
@@ -178,6 +166,10 @@ SOURCE=..\..\..\..\..\src\util\XMLUCSTranscoder.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLUni.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLURL.cpp
 # End Source File
 # Begin Source File
 
@@ -297,19 +289,15 @@ SOURCE=..\..\..\..\..\src\util\RuntimeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\StdOut.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\StringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TextOutputStream.hpp
+SOURCE=..\..\..\..\..\src\util\TranscodingException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TranscodingException.hpp
+SOURCE=..\..\..\..\..\src\util\TransENameMap.hpp
 # End Source File
 # Begin Source File
 
@@ -322,10 +310,6 @@ SOURCE=..\..\..\..\..\src\util\UnexpectedEOFException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\UnsupportedEncodingException.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\URL.hpp
 # End Source File
 # Begin Source File
 
@@ -398,6 +382,10 @@ SOURCE=..\..\..\..\..\src\util\XMLUCS4Transcoder.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLUni.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLURL.hpp
 # End Source File
 # Begin Source File
 
