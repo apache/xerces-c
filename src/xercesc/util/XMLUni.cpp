@@ -1254,8 +1254,8 @@ const XMLCh XMLUni::fgXercesUseCachedGrammarInParse[] =
     ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
     ,   chLatin_u, chLatin_s, chLatin_e, chDash, chLatin_c, chLatin_a, chLatin_c
     ,   chLatin_h, chLatin_e, chLatin_d, chLatin_G, chLatin_r, chLatin_a, chLatin_m
-    ,   chLatin_m, chLatin_a, chLatin_r, chLatin_I, chLatin_n, chLatin_P, chLatin_r
-    ,   chLatin_s, chLatin_e, chNull
+    ,   chLatin_m, chLatin_a, chLatin_r, chLatin_I, chLatin_n, chLatin_P, chLatin_a
+    ,   chLatin_r, chLatin_s, chLatin_e, chNull
 };
 
 //Xerces: http://apache.org/xml/features/validation/ignoreCachedDTD
