@@ -108,6 +108,11 @@ public:
     void setAdoptContentSpec(const bool toAdopt);
     void addElement(SchemaElementDecl* const toAdd);
 
+	// -----------------------------------------------------------------------
+    //  Query methods
+    // -----------------------------------------------------------------------
+    bool containsElement(const SchemaElementDecl* const elem);
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators
@@ -169,6 +174,23 @@ inline void XercesGroupInfo::setContentSpec(ContentSpecNode* const other) {
 inline void XercesGroupInfo::addElement(SchemaElementDecl* const elem) {
 
     fElements->addElement(elem);
+}
+
+
+// ---------------------------------------------------------------------------
+//  XercesGroupInfo: Query methods
+// ---------------------------------------------------------------------------}
+inline bool XercesGroupInfo::containsElement(const SchemaElementDecl* const elem) {
+
+    unsigned int elemSize = fElements->size();
+
+    for (unsigned int i=0; i < elemSize; i++) {
+        if (fElements->elementAt(i) == elem) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #endif

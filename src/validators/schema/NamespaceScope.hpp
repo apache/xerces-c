@@ -122,6 +122,8 @@ public :
                    const unsigned int uriId);
 
     unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap) const;
+    unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap,
+                                       int depthLevel) const;
 
 
     // -----------------------------------------------------------------------
@@ -172,6 +174,15 @@ private :
     StackElem**   fStack;
 };
 
+
+// ---------------------------------------------------------------------------
+//  NamespaceScope: Stack access
+// ---------------------------------------------------------------------------
+inline unsigned int
+NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) const {
+
+    return getNamespaceForPrefix(prefixToMap, (int)(fStackTop - 1));
+}
 
 // ---------------------------------------------------------------------------
 //  NamespaceScope: Miscellaneous methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/07/31 15:26:54  knoaman
+ * Added support for <attributeGroup>.
+ *
  * Revision 1.3  2001/05/11 17:17:41  tng
  * Schema: DatatypeValidator fixes.  By Pei Yong Zhang.
  *
@@ -105,6 +108,10 @@ public :
         , const XMLAttDef::AttTypes              type
         , const XMLAttDef::DefAttTypes           defType
         , const XMLCh* const                     enumValues = 0
+    );
+    SchemaAttDef
+    (
+          const SchemaAttDef*                   other
     );
     ~SchemaAttDef();
 

@@ -21,11 +21,11 @@
             <Message Id="NoNameRefAttribute" Text="Attribute must have a name or a ref - attribute declaration ignored"/>
             <Message Id="GlobalNoNameElement" Text="Globally-declared element must have a name - element declaration ignored"/>
             <Message Id="NoNameRefElement" Text="Element must have a name or a ref attribute - element ignored"/>
-            <Message Id="NoNameRefGroup" Text="&lt;group&gt; must have a name or a ref attribute - element ignored"/>
+            <Message Id="NoNameRefGroup" Text="&lt;group&gt; must have a name or a ref attribute - declaration ignored"/>
+            <Message Id="NoNameRefAttGroup" Text="&lt;attributeGroup&gt; must have a name or a ref attribute - declaration ignored"/>
             <Message Id="AnonComplexTypeWithName" Text="Anonymous complexType in element {0} has a name attribute"/>
             <Message Id="AnonSimpleTypeWithName" Text="Anonymous simpleType in element {0} has a name attribute"/>
             <Message Id="InvalidElementContent" Text="The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)"/>
-            <Message Id="InvalidAttributeName" Text="Invalid attribute name: {0} - declaration ignored"/>
             <Message Id="UntypedElement" Text="Untyped element: {0}"/>
             <Message Id="SimpleTypeContentError" Text="Error in content of simpleType"/>
             <Message Id="ExpectedSimpleTypeInList" Text="Expected simpleType in 'list' declaration for {0}"/>
@@ -50,7 +50,6 @@
             <Message Id="BaseTypeNotFound" Text="Base type could not be found: {0}"/>
             <Message Id="NoAttributeInSchema" Text="No attribute '{0}' was defined in schema: {1}"/>
             <Message Id="DatatypeValidatorCreationError" Text="Error creating datatype validator: {0}"/>
-            <Message Id="InvalidComplexTypeName" Text="Error: Invalid complexType name - '{0}' is not a valid NCName"/>
             <Message Id="InvalidChildFollowingSimpleContent" Text="Invalid child following the simpleContent child in the complexType"/>
             <Message Id="InvalidChildFollowingConplexContent" Text="Invalid child following the complexContent child in the complexType"/>
             <Message Id="InvalidComplexTypeBlockValue" Text="The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
@@ -63,11 +62,9 @@
             <Message Id="AttributeWithTypeAndSimpleType" Text="Attribute declarations may not contain both a type and a simpleType declaration"/>
             <Message Id="AttributeSimpleTypeNotFound" Text="SimpleType ({0}:{1}) for attribute: {2} not found"/>
             <Message Id="ElementWithFixedAndDefault" Text="An element cannot have both 'fixed' and 'default' present at the same time"/>
-            <Message Id="ElementWithNameRef" Text="Element name:{0} has also a ref defined - name ignored"/>
-            <Message Id="GroupWithNameRef" Text="group:'{0}' has also a ref defined - name ignored"/>
+            <Message Id="DeclarationWithNameRef" Text="{0}:'{1}' has also a ref defined - name ignored"/>
             <Message Id="BadAttWithRef" Text="ref cannot appear with any of type, abstract, block, final, nullable, default or fixed"/>
-            <Message Id="InvalidElementName" Text="Invalid element name: {0} - declaration ignored"/>
-            <Message Id="InvalidGroupName" Text="Invalid group name:'{0}' - declaration ignored"/>
+            <Message Id="InvalidDeclarationName" Text="Invalid {0} name:'{1}' - declaration ignored"/>
             <Message Id="GlobalElementWithRef" Text="Globally-declared element {0} cannot have a ref attribute - ref ignored"/>
             <Message Id="ElementWithTypeAndAnonType" Text="Element '{0}' cannot have both a type attribute and a simpleType/complexType type child"/>
             <Message Id="NotSimpleOrMixedElement" Text="Element {0} has a fixed or default value and must have a mixed simple or simple content model"/>
@@ -110,7 +107,7 @@
             <Message Id="NoNameGlobalElement" Text="Global &lt;{0}&gt; must have a name - declaration ignored"/>
             <Message Id="NoCircularDefinition" Text="No circular definitions are allowed: '{0}'"/>
             <Message Id="DuplicateGlobalType" Text="Global {0}:'{1}' declared more than once or also declared as {2}"/>
-            <Message Id="DuplicateGlobalGroup" Text="Global group:'{1}' declared more than once"/>
+            <Message Id="DuplicateGlobalDeclaration" Text="Global {0}:'{1}' declared more than once"/>
             <Message Id="WS_CollapseExpected" Text="Invalid value '{0}' for facet 'whiteSpace'. Value should be 'collapse'."/>
             <Message Id="Import_1_1" Text="The namespace of an &lt;import&gt; element must be different from the targetNamespace of the &lt;import&gt;ing schema"/>
             <Message Id="Import_1_2" Text="If the namespace on an &lt;import&gt; element is not present, the &lt;import&gt;ing schema must have a targetNamespace"/>
@@ -120,15 +117,17 @@
             <Message Id="EmptyComplexRestrictionDerivation" Text="The content of complexType is EMPTY, but base is not empty or does not have emptiable particle."/>
             <Message Id="MixedOrElementOnly" Text="The content type of the base type:'{0}' and derived type:'{1}' must both be mixed or element-only."/>
             <Message Id="InvalidContentRestriction" Text="The content type is not a valid restriction of the content type of the base."/>
-            <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/>
+            <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/> 
             <Message Id="AtomicItemType" Text="The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)"/>
             <Message Id="MemberTypeNoUnion" Text="The {member type definitions} must all have {variety} of atomic or list"/>
             <Message Id="GroupContentError" Text="The group:'0' must contain (all | choice | sequence)"/>
+            <Message Id="AttGroupContentError" Text="The attributeGroup:'0' must match (annotation?. ((attribute | attributeGroup)*, anyAttribute?))"/>
             <Message Id="MinMaxOnGroupChild" Text="The child of a model group definition must not specify either the minOccurs or maxOccurs attribute."/>
-            <Message Id="GroupNotFound" Text="The group:'{0}' not found in the schema"/>
+            <Message Id="DeclarationNotFound" Text="The {0} -'{1}:{2}'- not found in the schema"/>
             <Message Id="AllContentLimited" Text="A group whose content is 'all' must only appear as the content type of a complex type definition."/>
             <Message Id="BadMinMaxAllCT" Text="When a model group has {compositor} 'all' which constitutes the {content type} of a complex type, minOccurs=maxOccurs=1"/>
             <Message Id="BadMinMaxAllElem" Text="In an 'all' schema component, the value of minCoccurs/maxOccurs of an element must be '0' or '1'."/>
+            <Message Id="NoCircularAttGroup" Text="Circular attributeGroup reference -{0}- is disallowed outside &lt;redefine&gt;"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
@@ -300,7 +299,7 @@
             <Message Id="GroupContentRestricted" Text="Error: {0} content must be one of element, group, modelGroupRef. Saw {1}"/>
             <Message Id="UnknownBaseDatatype" Text="Unknown base type {0} for type {1}."/>
             <Message Id="OneOfTypeRefArchRef" Text="Can only have one of type and ref attributes."/>
-            <Message Id="NoContentForRef" Text="Cannot have child content for an element/group declaration that has a ref attribute"/>
+            <Message Id="NoContentForRef" Text="A &lt;{0}&gt; declaration that has a ref attribute, cannot have child content."/>
             <Message Id="IncorrectDefaultType" Text="Incorrect type for {0}'s default value: {1}"/>
             <Message Id="IllegalAttContent" Text="Illegal content {0} in attribute group"/>
             <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/>

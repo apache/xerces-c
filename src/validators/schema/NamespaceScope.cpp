@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/07/31 15:26:54  knoaman
+ * Added support for <attributeGroup>.
+ *
  * Revision 1.2  2001/05/11 13:27:33  tng
  * Copyright update.
  *
@@ -178,9 +181,9 @@ void NamespaceScope::addPrefix(const XMLCh* const prefixToAdd,
     curRow->fMapCount++;
 }
 
-
 unsigned int
-NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) const {
+NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap,
+                                      const int depthLevel) const {
 
     //
     //  Map the prefix to its unique id, from the prefix string pool. If its
@@ -196,7 +199,7 @@ NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) const {
     //  Start at the stack top and work backwards until we come to some
     //  element that mapped this prefix.
     //
-    int startAt = (int)(fStackTop - 1);
+    int startAt = depthLevel;
     for (int index = startAt; index >= 0; index--)
     {
         // Get a convenience pointer to the current element

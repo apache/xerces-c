@@ -58,138 +58,165 @@
  * $Id$
  */
 
-#if !defined(SCHEMAINFO_HPP)
-#define SCHEMAINFO_HPP
+#if !defined(XERCESATTGROUPINFO_HPP)
+#define XERCESATTGROUPINFO_HPP
 
 
-/** When in a <redefine>, type definitions being used (and indeed
-  * refs to <group>'s and <attributeGroup>'s) may refer to info
-  * items either in the schema being redefined, in the <redefine>,
-  * or else in the schema doing the redefining.  Because of this
-  * latter we have to be prepared sometimes to look for our type
-  * definitions outside the schema stored in fSchemaRootElement.
-  * This simple class does this; it's just a linked list that
-  * lets us look at the <schema>'s on the queue; note also that this
-  * should provide us with a mechanism to handle nested <redefine>'s.
-  * It's also a handy way of saving schema info when importing/including.
+/**
+  * The class act as a place holder to store attributeGroup information.
+  *
+  * The class is intended for internal use.
   */
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <dom/DOM_Element.hpp>
+#include <util/RefVectorOf.hpp>
+#include <validators/schema/SchemaAttDef.hpp>
 
-class SchemaInfo
+
+
+class VALIDATORS_EXPORT XercesAttGroupInfo
 {
 public:
     // -----------------------------------------------------------------------
-    //  Constructor/Destructor
+    //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    SchemaInfo(const bool elemDefaultQualified,
-               const bool attrDefaultQualified,
-               const int blockDefault,
-               const int finalDefault,
-               const unsigned int namespaceScopeLevel,
-               XMLCh* const schemaURL,
-               const DOM_Element& root,
-               SchemaInfo* const nextRoot,
-               SchemaInfo* const prevRoot);
-    ~SchemaInfo();
-
+    XercesAttGroupInfo();
+	~XercesAttGroupInfo();
 
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    SchemaInfo*  getNext() const;
-    SchemaInfo*  getPrev() const;
-    XMLCh*       getCurrentSchemaURL() const;
-    DOM_Element  getRoot() const;
-    int          getBlockDefault() const;
-    int          getFinalDefault() const;
-    unsigned int getNamespaceScopeLevel() const;
-    bool         isElementDefaultQualified() const;
-    bool         isAttributeDefaultQualified() const;
-
+    unsigned int        attributeCount() const;
+    unsigned int        anyAttributeCount() const; 
+    SchemaAttDef*       attributeAt(const unsigned int index);
+    const SchemaAttDef* attributeAt(const unsigned int index) const;
+    SchemaAttDef*       anyAttributeAt(const unsigned int index);
+    const SchemaAttDef* anyAttributeAt(const unsigned int index) const;
+    
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setNext(SchemaInfo* const nextInfo);    
+    void addAttDef(SchemaAttDef* const toAdd, const bool toClone = false);
+    void addAnyAttDef(SchemaAttDef* const toAdd, const bool toClone = false);
+
+	// -----------------------------------------------------------------------
+    //  Query methods
+    // -----------------------------------------------------------------------
+    bool containsAttribute(const XMLCh* const name, const unsigned int uri);
 
 private:
     // -----------------------------------------------------------------------
+    //  Unimplemented contstructors and operators
+    // -----------------------------------------------------------------------
+    XercesAttGroupInfo(const XercesAttGroupInfo& elemInfo);
+    XercesAttGroupInfo& operator= (const XercesAttGroupInfo& other);
+
+    // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool               fElementDefaultQualified;
-    bool               fAttributeDefaultQualified;
-    int                fBlockDefault;
-    int                fFinalDefault;
-    unsigned int       fNamespaceScopeLevel;
-    XMLCh*             fCurrentSchemaURL;
-    DOM_Element        fSchemaRootElement;
-    SchemaInfo*        fNext;
-    SchemaInfo*        fPrev;
+    RefVectorOf<SchemaAttDef>* fAttributes;
+    RefVectorOf<SchemaAttDef>* fAnyAttributes;
 };
 
 // ---------------------------------------------------------------------------
-//  SchemaInfo: Getter methods
+//  XercesAttGroupInfo: Getter methods
 // ---------------------------------------------------------------------------
-inline bool SchemaInfo::isAttributeDefaultQualified() const {
+inline unsigned int XercesAttGroupInfo::attributeCount() const {
 
-    return fAttributeDefaultQualified;
+    if (fAttributes) {
+        return fAttributes->size();
+    }
+
+    return 0;
 }
 
+inline unsigned int XercesAttGroupInfo::anyAttributeCount() const {
 
-inline bool SchemaInfo::isElementDefaultQualified() const {
+    if (fAnyAttributes) {
+        return fAnyAttributes->size();
+    }
 
-    return fElementDefaultQualified;
+    return 0;
 }
 
-inline int SchemaInfo::getBlockDefault() const {
+inline SchemaAttDef*
+XercesAttGroupInfo::attributeAt(const unsigned int index) {
 
-    return fBlockDefault;
+    if (fAttributes) {
+        return fAttributes->elementAt(index);
+    }
+
+    return 0;
 }
 
-inline int SchemaInfo::getFinalDefault() const {
+inline const SchemaAttDef* 
+XercesAttGroupInfo::attributeAt(const unsigned int index) const {
 
-    return fFinalDefault;
+    if (fAttributes) {
+        return fAttributes->elementAt(index);
+    }
+
+    return 0;
 }
 
-inline unsigned int SchemaInfo::getNamespaceScopeLevel() const {
-    return fNamespaceScopeLevel;
+inline SchemaAttDef*
+XercesAttGroupInfo::anyAttributeAt(const unsigned int index) {
+
+    if (fAnyAttributes) {
+        return fAnyAttributes->elementAt(index);
+    }
+
+    return 0;
 }
 
-inline XMLCh* SchemaInfo::getCurrentSchemaURL() const {
+inline const SchemaAttDef* 
+XercesAttGroupInfo::anyAttributeAt(const unsigned int index) const {
 
-    return fCurrentSchemaURL;
+    if (fAnyAttributes) {
+        return fAnyAttributes->elementAt(index);
+    }
+
+    return 0;
 }
-
-inline DOM_Element SchemaInfo::getRoot() const {
-
-    return fSchemaRootElement;
-}
-
-inline SchemaInfo* SchemaInfo::getNext() const {
-
-    return fNext;
-}
-
-inline SchemaInfo* SchemaInfo::getPrev() const {
-
-    return fPrev;
-}
-
 
 // ---------------------------------------------------------------------------
-//  SchemaInfo: Setter methods
+//  XercesAttGroupInfo: Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaInfo::setNext(SchemaInfo* const nextInfo) {
+inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
+                                             const bool toClone) {
 
-    fNext = nextInfo;
+    if (!fAttributes) {
+        fAttributes = new RefVectorOf<SchemaAttDef>(4);
+    }
+
+    if (toClone) {
+        fAttributes->addElement(new SchemaAttDef(toAdd));
+    }
+    else {
+        fAttributes->addElement(toAdd);
+    }
+}
+
+inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
+                                                const bool toClone) {
+
+    if (!fAnyAttributes) {   
+        fAnyAttributes = new RefVectorOf<SchemaAttDef>(2);
+    }
+
+    if (toClone) {
+        fAnyAttributes->addElement(new SchemaAttDef(toAdd));
+    }
+    else {
+        fAnyAttributes->addElement(toAdd);
+    }
 }
 
 #endif
 
 /**
-  * End of file SchemaInfo.hpp
+  * End of file XercesGroupInfo.hpp
   */
 

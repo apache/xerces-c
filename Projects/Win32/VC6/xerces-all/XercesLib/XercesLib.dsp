@@ -2003,6 +2003,14 @@ SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\schema\XercesAttGroupInfo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\XercesAttGroupInfo.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\schema\XercesGroupInfo.cpp
 # End Source File
 # Begin Source File

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/07/31 15:27:10  knoaman
+ * Added support for <attributeGroup>.
+ *
  * Revision 1.7  2001/07/24 18:33:46  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -85,7 +88,6 @@
 #if !defined(SCHEMAGRAMMAR_HPP)
 #define SCHEMAGRAMMAR_HPP
 
-#include <dom/DOM_Element.hpp>
 #include <framework/XMLNotationDecl.hpp>
 #include <util/RefHash3KeysIdPool.hpp>
 #include <util/NameIdPool.hpp>
@@ -109,6 +111,8 @@
 class DatatypeValidatorFactory;
 class ComplexTypeInfo;
 class NamespaceScope;
+class XercesGroupInfo;
+class XercesAttGroupInfo;
 
 // ---------------------------------------------------------------------------
 //  typedef declaration
@@ -200,28 +204,26 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool getElementDefaultQualified() const;
-    bool getAttributeDefaultQualified() const;
     RefHash3KeysIdPoolEnumerator<SchemaElementDecl> getElemEnumerator() const;
     RefHashTableOf<XMLAttDef>* getAttributeDeclRegistry() const;
     RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
+    RefHashTableOf<XercesGroupInfo>* getGroupInfoRegistry() const;
+    RefHashTableOf<XercesAttGroupInfo>* getAttGroupInfoRegistry() const;
     DatatypeValidatorFactory* getDatatypeRegistry() const;
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
-    DOM_Element getGroupElement(const XMLCh* const name);
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setElementDefaultQualified(const bool toSet);
-    void setAttributeDefaultQualified(const bool toSet);
     void setTargetNamespace(const XMLCh* const targetNamespace);
     void setAttributeDeclRegistry(RefHashTableOf<XMLAttDef>* const attReg);
     void setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other);
+    void setGroupInfoRegistry(RefHashTableOf<XercesGroupInfo>* const other);
+    void setAttGroupInfoRegistry(RefHashTableOf<XercesAttGroupInfo>* const other);
     void setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry);
     void setNamespaceScope(NamespaceScope* const nsScope);
     void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
-    void addGlobalGroup(const DOM_Element& groupElem);
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -230,8 +232,6 @@ public:
     (
         XMLElementDecl* const elemDecl
     )   const;
-
-    void releaseGroupElement(unsigned int index);
 
 private:
 
@@ -262,6 +262,12 @@ private:
     //  fComplexTypeRegistry
     //      Stores complexType declaration info
     //
+    //  fGroupInfoRegistry
+    //      Stores global <group> declaration info
+    //
+    //  fAttGroupInfoRegistry
+    //      Stores global <attributeGroup> declaration info
+    //
     //  fDatatypeRegistry
     //      Datatype validator factory
     //
@@ -271,34 +277,23 @@ private:
     //  fValidSubstitutionGroups
     //      Valid list of elements that can substitute a given element
     // -----------------------------------------------------------------------
-    bool                                   fElementDefaultQualified;
-    bool                                   fAttributeDefaultQualified;
+    XMLCh*                                 fTargetNamespace;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
     RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
     NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
-    XMLCh*                                 fTargetNamespace;
     RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
     RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
+    RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
+    RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
     DatatypeValidatorFactory*              fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
-    ValueVectorOf<DOM_Element>*            fGlobalGroups;
 };
 
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Getter methods
 // ---------------------------------------------------------------------------
-inline bool SchemaGrammar::getElementDefaultQualified() const {
-
-    return fElementDefaultQualified;
-}
-
-inline bool SchemaGrammar::getAttributeDefaultQualified() const {
-
-    return fAttributeDefaultQualified;
-}
-
 inline RefHash3KeysIdPoolEnumerator<SchemaElementDecl>
 SchemaGrammar::getElemEnumerator() const
 {
@@ -314,6 +309,18 @@ inline RefHashTableOf<ComplexTypeInfo>*
 SchemaGrammar::getComplexTypeRegistry() const {
 
     return fComplexTypeRegistry;
+}
+
+inline RefHashTableOf<XercesGroupInfo>*
+SchemaGrammar::getGroupInfoRegistry() const {
+
+    return fGroupInfoRegistry;
+}
+
+inline RefHashTableOf<XercesAttGroupInfo>*
+SchemaGrammar::getAttGroupInfoRegistry() const {
+
+    return fAttGroupInfoRegistry;
 }
 
 inline DatatypeValidatorFactory* SchemaGrammar::getDatatypeRegistry() const {
@@ -335,16 +342,6 @@ SchemaGrammar::getValidSubstitutionGroups() const {
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
-inline void SchemaGrammar::setElementDefaultQualified(const bool toSet) {
-
-    fElementDefaultQualified = toSet;
-}
-
-inline void SchemaGrammar::setAttributeDefaultQualified(const bool toSet) {
-
-    fAttributeDefaultQualified = toSet;
-}
-
 inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace) {
     fTargetNamespace = XMLString::replicate(targetNamespace);
 }
@@ -359,6 +356,18 @@ inline void
 SchemaGrammar::setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other) {
 
     fComplexTypeRegistry = other;
+}
+
+inline void
+SchemaGrammar::setGroupInfoRegistry(RefHashTableOf<XercesGroupInfo>* const other) {
+
+    fGroupInfoRegistry = other;
+}
+
+inline void
+SchemaGrammar::setAttGroupInfoRegistry(RefHashTableOf<XercesAttGroupInfo>* const other) {
+
+    fAttGroupInfoRegistry = other;
 }
 
 inline void
@@ -378,28 +387,6 @@ SchemaGrammar::setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const
     fValidSubstitutionGroups = other;
 }
 
-inline void
-SchemaGrammar::addGlobalGroup(const DOM_Element& groupElem) {
-
-    if (!fGlobalGroups) {
-        fGlobalGroups = new ValueVectorOf<DOM_Element>(8);
-    }
-
-    fGlobalGroups->addElement(groupElem);
-}
-
-
-// ---------------------------------------------------------------------------
-//  SchemaGrammar: Helper methods
-// ---------------------------------------------------------------------------
-inline void SchemaGrammar::releaseGroupElement(unsigned int index) {
-
-    if (!fGlobalGroups || index < 0 || fGlobalGroups->size() <= index) {
-        return;
-    }
-
-    fGlobalGroups->setElementAt(DOM_Element(), index);
-}
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Virtual methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/07/31 15:26:54  knoaman
+ * Added support for <attributeGroup>.
+ *
  * Revision 1.2  2001/05/11 13:27:33  tng
  * Copyright update.
  *
@@ -113,6 +116,19 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     , fElemId(XMLElementDecl::fgInvalidElemId)
 {
     fAttName = new QName(prefix, localPart, uriId);
+}
+
+SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
+
+    XMLAttDef(other->getValue(), other->getType(),
+              other->getDefaultType(), other->getEnumeration())
+    , fElemId(XMLElementDecl::fgInvalidElemId)
+    , fAttName(0)
+    , fDatatypeValidator(other->getDatatypeValidator())
+{
+    QName* otherName = other->getAttName();
+    fAttName = new QName(otherName->getPrefix(), 
+                         otherName->getLocalPart(), otherName->getURI());
 }
 
 SchemaAttDef::~SchemaAttDef()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/07/31 15:27:10  knoaman
+ * Added support for <attributeGroup>.
+ *
  * Revision 1.5  2001/07/24 18:33:46  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -82,24 +85,25 @@
 #include <validators/schema/NamespaceScope.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
+#include <validators/schema/XercesGroupInfo.hpp>
+#include <validators/schema/XercesAttGroupInfo.hpp>
 
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
 SchemaGrammar::SchemaGrammar() :
-    fElementDefaultQualified(false)
-    , fAttributeDefaultQualified(false)
+    fTargetNamespace(0)
     , fElemDeclPool(0)
     , fGroupElemDeclPool(0)
     , fNotationDeclPool(0)
-    , fTargetNamespace(0)
     , fAttributeDeclRegistry(0)
     , fComplexTypeRegistry(0)
+    , fGroupInfoRegistry(0)
+    , fAttGroupInfoRegistry(0)
     , fDatatypeRegistry(0)
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
-    , fGlobalGroups(0)
 {
     //
     //  Init all the pool members.
@@ -127,14 +131,13 @@ SchemaGrammar::~SchemaGrammar()
     delete fTargetNamespace;
     delete fAttributeDeclRegistry;
     delete fComplexTypeRegistry;
-    delete fGlobalGroups;
+    delete fGroupInfoRegistry;
+    delete fAttGroupInfoRegistry;
     delete fNamespaceScope;
     delete fValidSubstitutionGroups;
 }
 
-// -----------------------------------------------------------------------
-//  Virutal methods
-// -----------------------------------------------------------------------
+
 // -----------------------------------------------------------------------
 //  Virtual methods
 // -----------------------------------------------------------------------
@@ -177,21 +180,6 @@ void SchemaGrammar::reset()
     fNotationDeclPool->removeAll();
 }
 
-DOM_Element SchemaGrammar::getGroupElement(const XMLCh* const name) {
 
-    if (fGlobalGroups) {
 
-        unsigned int groupSize = fGlobalGroups->size();
 
-        for (unsigned int i=0; i< groupSize; i++) {
-
-            DOM_Element elem = fGlobalGroups->elementAt(i);
-
-            if (elem.getAttribute(SchemaSymbols::fgATT_NAME).equals(name)) {
-                return elem;
-            }
-        }
-    }
-
-    return DOM_Element();
-}

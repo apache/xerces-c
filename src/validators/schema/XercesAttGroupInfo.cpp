@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 2001, International
+ * originally based on software copyright (c) 1999, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,62 +56,63 @@
 
 /*
  * $Log$
- * Revision 1.4  2001/07/31 15:26:54  knoaman
+ * Revision 1.1  2001/07/31 15:26:54  knoaman
  * Added support for <attributeGroup>.
  *
- * Revision 1.3  2001/07/09 14:29:43  knoaman
- * Fixes for import/include declarations
- *
- * Revision 1.2  2001/05/11 13:27:36  tng
- * Copyright update.
- *
- * Revision 1.1  2001/05/10 16:33:16  knoaman
- * Traverse Schema Part III + error messages.
+ * Revision 1.1  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
  *
  */
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <validators/schema/SchemaInfo.hpp>
-#include <util/XMLString.hpp>
-
+#include <validators/schema/XercesAttGroupInfo.hpp>
+#include <util/QName.hpp>
 
 // ---------------------------------------------------------------------------
-//  SchemaInfo: Constructors and Destructor
+//  XercesAttGroupInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaInfo::SchemaInfo(const bool elemDefaultQualified,
-                       const bool attrDefaultQualified,
-                       const int blockDefault,
-                       const int finalDefault,
-                       const unsigned int namespaceScopeLevel,
-                       XMLCh* const schemaURL,
-                       const DOM_Element& root,
-                       SchemaInfo* const nextRoot,
-                       SchemaInfo* const prevRoot)
-    : fElementDefaultQualified(elemDefaultQualified)
-    , fAttributeDefaultQualified(attrDefaultQualified)
-    , fBlockDefault(blockDefault)
-    , fFinalDefault(finalDefault)
-    , fNamespaceScopeLevel(namespaceScopeLevel)
-    , fCurrentSchemaURL(XMLString::replicate(schemaURL))
-    , fSchemaRootElement(root)
-    , fNext(nextRoot)
-    , fPrev(prevRoot)
+XercesAttGroupInfo::XercesAttGroupInfo()
+    : fAttributes(0)
+    , fAnyAttributes(0)
 {
+
 }
 
 
-SchemaInfo::~SchemaInfo()
+XercesAttGroupInfo::~XercesAttGroupInfo()
 {
-    delete [] fCurrentSchemaURL;
-    delete fNext;
-    fNext = 0;
+    delete fAttributes;
+    delete fAnyAttributes;
 }
 
+bool XercesAttGroupInfo::containsAttribute(const XMLCh* const name,
+                                           const unsigned int uri) {
+
+    if (fAttributes) {
+
+        unsigned int attCount = fAttributes->size();
+
+        if (attCount) {
+
+            for (unsigned int i=0; i < attCount; i++) {
+
+                QName* attName = fAttributes->elementAt(i)->getAttName();
+
+                if (attName->getURI() == uri &&
+                    !XMLString::compareString(attName->getLocalPart(),name)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
 
 /**
-  * End of file SchemaInfo.cpp
+  * End of file XercesGroupInfo.cpp
   */
 
 

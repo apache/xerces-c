@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2001/07/31 15:26:54  knoaman
+# Added support for <attributeGroup>.
+#
 # Revision 1.14  2001/07/24 20:13:30  knoaman
 # Added support for <group> + extra constraint checking for complexType
 #
@@ -135,6 +138,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SchemaInfo.hpp \
 	GeneralAttributeCheck.hpp \
 	XercesGroupInfo.hpp \
+	XercesAttGroupInfo.hpp \
 	TraverseSchema.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
@@ -155,6 +159,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SchemaInfo.$(TO) \
 	GeneralAttributeCheck.$(TO) \
 	XercesGroupInfo.$(TO) \
+	XercesAttGroupInfo.$(TO) \
 	TraverseSchema.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
