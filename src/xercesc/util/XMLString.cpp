@@ -1353,7 +1353,7 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
 
 	// check if all chars are valid char
 	// check if overflow/underflow occurs
-	if ( ( (endptr - nptr) != trimmedStrLen) ||
+	if ( ( (endptr - nptr) != (int) trimmedStrLen) ||
          (errno == ERANGE)                      )
 		return false;
 
@@ -1384,7 +1384,7 @@ int XMLString::parseInt(const XMLCh* const toConvert)
     long retVal = strtol(nptr, &endptr, 10);
 
 	// check if all chars are valid char
-	if ( (endptr - nptr) != trimmedStrLen)
+	if ( (endptr - nptr) != (int) trimmedStrLen)
 		ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
 	// check if overflow/underflow occurs
