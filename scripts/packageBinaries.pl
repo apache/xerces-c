@@ -16,8 +16,8 @@ $targetdir = $opt_o;
 # Check for the environment variables and exit if error
 if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("Usage is: packageBinaries <options>\n");
-	print ("          options are:  -s <source_directory>\n");
-	print ("                        -o <target_directory>\n");
+    print ("          options are:  -s <source_directory>\n");
+    print ("                        -o <target_directory>\n");
     print ("                        -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
     print ("                        -x <C++ compiler name> (e.g. g++, CC, aCC, c++ or xlC_r)\n");
     print ("                        -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
@@ -150,14 +150,15 @@ if ($platform =~ m/Windows/) {
     
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
-    $xcopycommand = "xcopy $XERCESCROOT\\src\\D*.hpp $targetdir\\include";
-	system ("del  $targetdir\\include\\dom\\*Impl.hpp");
-	system ("del  $targetdir\\include\\dom\\DS*.hpp");
+    $xcopycommand = "xcopy $XERCESCROOT\\src\\*.hpp $targetdir\\include";
     $xcopycommand =~ s/\//\\/g;
     system ("$xcopycommand /S /C /I /R");
     $xcopycommand = "xcopy $XERCESCROOT\\src\\*.c $targetdir\\include";
     $xcopycommand =~ s/\//\\/g;
     system ("$xcopycommand /S /C /I /R");
+
+    system ("rm  $targetdir/include/dom/*Impl.hpp");
+    system ("rm  $targetdir/include/dom/DS*.hpp");    
     
 	if (length($ICUROOT) > 0) {
         system("cp -Rfv $ICUROOT/include/* $targetdir/include");
