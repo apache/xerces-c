@@ -166,7 +166,7 @@ parser.setDoSchema(true);
 parser.setDoNamespaces(true);
 
 // Enable grammar caching
-parser.cacheGrammarFromParsing(true);
+parser.cacheGrammarFromParse(true);
 
 // Let's parse the XML document. The parser will cache any grammars encounterd.
 parser.parse(xmlFile);
