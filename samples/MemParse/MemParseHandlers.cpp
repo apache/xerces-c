@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/01/12 20:43:22  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.7  2004/09/08 13:55:32  peiyongz
  * Apache License Version 2.0
  *
@@ -61,10 +64,9 @@
 //  MemParseHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
 MemParseHandlers::MemParseHandlers() :
-
-    fElementCount(0)
-    , fAttrCount(0)
+    fAttrCount(0)
     , fCharacterCount(0)
+    , fElementCount(0)
     , fSpaceCount(0)
 {
 }
@@ -77,20 +79,20 @@ MemParseHandlers::~MemParseHandlers()
 // ---------------------------------------------------------------------------
 //  MemParseHandlers: Implementation of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void MemParseHandlers::startElement(const   XMLCh* const    name
+void MemParseHandlers::startElement(const   XMLCh* const    /* name */
                                     ,       AttributeList&  attributes)
 {
     fElementCount++;
     fAttrCount += attributes.getLength();
 }
 
-void MemParseHandlers::characters(  const   XMLCh* const    chars
+void MemParseHandlers::characters(  const   XMLCh* const    /* chars */
                                     , const unsigned int    length)
 {
     fCharacterCount += length;
 }
 
-void MemParseHandlers::ignorableWhitespace( const   XMLCh* const chars
+void MemParseHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
                                             , const unsigned int length)
 {
     fSpaceCount += length;

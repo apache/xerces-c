@@ -34,10 +34,10 @@
 // ---------------------------------------------------------------------------
 PParseHandlers::PParseHandlers() :
 
-    fElementCount(0)
-    , fAttrCount(0)
+    fAttrCount(0)
     , fCharacterCount(0)
-    , fSpaceCount(0)
+    , fElementCount(0)
+    , fSpaceCount(0) 
 {
 }
 
@@ -49,20 +49,20 @@ PParseHandlers::~PParseHandlers()
 // ---------------------------------------------------------------------------
 //  PParseHandlers: Overrides of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void PParseHandlers::startElement(const   XMLCh* const    name
+void PParseHandlers::startElement(const   XMLCh* const    /* name */
                                     ,       AttributeList&  attributes)
 {
     fElementCount++;
     fAttrCount += attributes.getLength();
 }
 
-void PParseHandlers::characters(  const   XMLCh* const    chars
+void PParseHandlers::characters(  const   XMLCh* const    /* chars */ 
 								    , const unsigned int    length)
 {
     fCharacterCount += length;
 }
 
-void PParseHandlers::ignorableWhitespace( const   XMLCh* const chars
+void PParseHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
 										    , const unsigned int length)
 {
     fSpaceCount += length;

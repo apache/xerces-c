@@ -180,9 +180,9 @@ void PSVIWriterHandlers::resetDocument() {
 // ---------------------------------------------------------------------------
 //  PSVIWriterHandlers: Implementation of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void PSVIWriterHandlers::startElement(	const XMLCh* const uri,
-										const XMLCh* const localname,
-										const XMLCh* const qname,
+void PSVIWriterHandlers::startElement(	const XMLCh* const /* uri */,
+										const XMLCh* const /* localname */,
+										const XMLCh* const /* qname */,
 										const Attributes& attrs) {
 	fAttributesInfo->removeAllElements();
 	for (unsigned int i=0; i<attrs.getLength(); i++) {
@@ -197,9 +197,9 @@ void PSVIWriterHandlers::startElement(	const XMLCh* const uri,
 	}
 }
 
-void PSVIWriterHandlers::endElement(	const XMLCh* const uri, 
-										const XMLCh* const localname, 
-										const XMLCh* const qname) {
+void PSVIWriterHandlers::endElement(	const XMLCh* const /* uri */, 
+										const XMLCh* const /* localname */, 
+										const XMLCh* const /* qname */) {
 }
 
 void PSVIWriterHandlers::startDocument() {
@@ -232,19 +232,19 @@ void PSVIWriterHandlers::endDocument() {
 }
 
 void PSVIWriterHandlers::characters(	const XMLCh* const chars,
-									const unsigned int length) {
+									const unsigned int /* length */ ) {
 	processChildren();
 	sendIndentedElement(PSVIUni::fgCharacter);
 	sendElementValue(PSVIUni::fgTextContent, chars);
 	sendUnindentedElement(PSVIUni::fgCharacter);
 }
 
-void PSVIWriterHandlers::ignorableWhitespace(	const XMLCh* const chars,
-												const unsigned int length) {
+void PSVIWriterHandlers::ignorableWhitespace(	const XMLCh* const /* chars */,
+												const unsigned int /* length */) {
 	//ignore it  
 }
 
-void PSVIWriterHandlers::comment(const XMLCh* const chars, const unsigned int length) {
+void PSVIWriterHandlers::comment(const XMLCh* const chars, const unsigned int /* length */) {
 	processChildren();
 	sendIndentedElement(PSVIUni::fgComment);
 	sendElementValue(PSVIUni::fgContent, chars);
@@ -360,8 +360,8 @@ void PSVIWriterHandlers::handleAttributesPSVI(	const XMLCh* const localName,
 	sendElementValue(PSVIUni::fgBaseURI, fBaseUri);
 }
 
-void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const localName, 
-											const XMLCh* const uri,
+void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const /* localName */, 
+											const XMLCh* const /* uri */,
 											PSVIElement* elementInfo ) {
 
     processActualValue(elementInfo);
@@ -409,8 +409,8 @@ void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const localName,
  *
  ***/
 void 
-PSVIWriterHandlers::handlePartialElementPSVI( const XMLCh*       const localName, 
-                                              const XMLCh*       const uri,
+PSVIWriterHandlers::handlePartialElementPSVI( const XMLCh*       const /* localName */, 
+                                              const XMLCh*       const /* uri */,
                                                     PSVIElement*       elementInfo ) 
 {
 
@@ -640,7 +640,7 @@ void PSVIWriterHandlers::processSchemaAnnotations(XSAnnotationList* annotations)
 	}
 }
 
-void PSVIWriterHandlers::processSchemaErrorCode(StringList* errors) {
+void PSVIWriterHandlers::processSchemaErrorCode(StringList* /* errors */ ) {
 	//REVISIT
 	//ErrorCodes not yet supported
 }
@@ -1018,14 +1018,17 @@ void PSVIWriterHandlers::processParticle(XSParticle* particle) {
 		}
 		sendIndentedElement(PSVIUni::fgTerm);
 		switch (particle->getTermType()) {
-                                                case XSParticle::TERM_ELEMENT:
+            case XSParticle::TERM_ELEMENT:
 				processElementDeclarationOrRef(particle->getElementTerm());
 				break;
-                                               case XSParticle::TERM_MODELGROUP:
+            case XSParticle::TERM_MODELGROUP:
 				processModelGroup(particle->getModelGroupTerm());
 				break;
-                                               case XSParticle::TERM_WILDCARD:
+            case XSParticle::TERM_WILDCARD:
 				processWildcard(particle->getWildcardTerm());
+                break;
+            default:
+                break;
 		}
 		sendUnindentedElement(PSVIUni::fgTerm);
 		sendUnindentedElement(PSVIUni::fgParticle);
@@ -1191,7 +1194,7 @@ void PSVIWriterHandlers::processTypeDefinitionRef(const XMLCh* enclose, XSTypeDe
 	}
 }
 
-void PSVIWriterHandlers::processAttributeDeclarationRef(const XMLCh* enclose, XSAttributeDeclaration* attrDecl) {
+void PSVIWriterHandlers::processAttributeDeclarationRef(const XMLCh* /* enclose */, XSAttributeDeclaration* attrDecl) {
 	if (attrDecl == NULL) {
 		sendElementEmpty(PSVIUni::fgDeclaration);
 	} else {

@@ -17,6 +17,9 @@
 //REVISIT
 /*
  * $Log$
+ * Revision 1.6  2005/01/12 20:43:21  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.5  2004/09/08 13:55:32  peiyongz
  * Apache License Version 2.0
  *
@@ -94,14 +97,12 @@ int main(int argC, char* argV[])
 
 	static const char*				encodingName		= "UTF8";
 	static XMLFormatter::UnRepFlags unRepFlags			= XMLFormatter::UnRep_CharRef;
-    const char*						xmlFile				= 0;
-    SAX2XMLReader::ValSchemes		valScheme			= SAX2XMLReader::Val_Auto;
+    const char*						xmlFile				= 0;    
     bool							doList				= false; //REVISIT
     bool							schemaFullChecking	= false;
     bool							errorOccurred		= false;
     const char*						psviOut				= 0;
-    const char*						errorOut			= 0;
-    const char*						output				= 0;
+    const char*						errorOut			= 0;    
     XMLFormatTarget* 				psviTarget 			= 0;
     XMLFormatTarget* 				errorTarget 		= 0;
     XMLFormatter* 					psviFormatter 		= 0;

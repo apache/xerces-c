@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2005/01/12 20:43:22  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.23  2004/09/08 13:55:31  peiyongz
  * Apache License Version 2.0
  *
@@ -319,6 +322,8 @@ int main(int argC, char* argV[])
 
                             case XMLAttDef::Enumeration :
                                 XERCES_STD_QUALIFIER cout << "ENUMERATION";
+                                break;
+                            default:
                                 break;
                         }
 

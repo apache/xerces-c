@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/01/12 20:43:20  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.6  2004/09/08 13:55:34  peiyongz
  * Apache License Version 2.0
  *
@@ -57,9 +60,9 @@
 // ---------------------------------------------------------------------------
 StdInParseHandlers::StdInParseHandlers() :
 
-    fElementCount(0)
-    , fAttrCount(0)
+    fAttrCount(0)
     , fCharacterCount(0)
+    , fElementCount(0)
     , fSpaceCount(0)
 {
 }
@@ -72,25 +75,25 @@ StdInParseHandlers::~StdInParseHandlers()
 // ---------------------------------------------------------------------------
 //  StdInParseHandlers: Implementation of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void StdInParseHandlers::endElement(const XMLCh* const name)
+void StdInParseHandlers::endElement(const XMLCh* const /* name */)
 {
 }
 
 void
-StdInParseHandlers::startElement(   const   XMLCh* const    name
+StdInParseHandlers::startElement(   const   XMLCh* const    /* name */
                                     ,       AttributeList&  attributes)
 {
     fElementCount++;
     fAttrCount += attributes.getLength();
 }
 
-void StdInParseHandlers::characters(const   XMLCh* const    chars
+void StdInParseHandlers::characters(const   XMLCh* const    /* chars */
 								    , const unsigned int    length)
 {
     fCharacterCount += length;
 }
 
-void StdInParseHandlers::ignorableWhitespace(const  XMLCh* const chars
+void StdInParseHandlers::ignorableWhitespace(const  XMLCh* const /* chars */
 										    , const unsigned int length)
 {
     fSpaceCount += length;

@@ -86,7 +86,7 @@ private :
 //  main
 // ---------------------------------------------------------------------------
 
-int main(int argC, char* argV[])
+int main(int argC, char* /* argV[] */)
 {
     // Initialize the XML4C2 system.
     try

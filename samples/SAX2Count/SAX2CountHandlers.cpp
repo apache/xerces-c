@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/01/12 20:43:21  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.6  2004/09/08 13:55:33  peiyongz
  * Apache License Version 2.0
  *
@@ -52,9 +55,9 @@
 // ---------------------------------------------------------------------------
 SAX2CountHandlers::SAX2CountHandlers() :
 
-    fElementCount(0)
-    , fAttrCount(0)
+    fAttrCount(0)
     , fCharacterCount(0)
+    , fElementCount(0)
     , fSpaceCount(0)
     , fSawErrors(false)
 {
@@ -67,22 +70,22 @@ SAX2CountHandlers::~SAX2CountHandlers()
 // ---------------------------------------------------------------------------
 //  SAX2CountHandlers: Implementation of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void SAX2CountHandlers::startElement(const XMLCh* const uri
-                                   , const XMLCh* const localname
-                                   , const XMLCh* const qname
+void SAX2CountHandlers::startElement(const XMLCh* const /* uri */
+                                   , const XMLCh* const /* localname */
+                                   , const XMLCh* const /* qname */
                                    , const Attributes& attrs)
 {
     fElementCount++;
     fAttrCount += attrs.getLength();
 }
 
-void SAX2CountHandlers::characters(  const   XMLCh* const    chars
+void SAX2CountHandlers::characters(  const   XMLCh* const   /* chars */
 								    , const unsigned int    length)
 {
     fCharacterCount += length;
 }
 
-void SAX2CountHandlers::ignorableWhitespace( const   XMLCh* const chars
+void SAX2CountHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
 										    , const unsigned int length)
 {
     fSpaceCount += length;

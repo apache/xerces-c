@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2005/01/12 20:43:21  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.10  2004/09/08 13:55:33  peiyongz
  * Apache License Version 2.0
  *
@@ -122,13 +125,13 @@ SAX2PrintHandlers::~SAX2PrintHandlers()
 // ---------------------------------------------------------------------------
 //  SAX2PrintHandlers: Overrides of the output formatter target interface
 // ---------------------------------------------------------------------------
-void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite)
+void SAX2PrintHandlers::writeChars(const XMLByte* const /* toWrite */)
 {
 }
 
 void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite,
                                    const unsigned int count,
-                                   XMLFormatter* const formatter)
+                                   XMLFormatter* const /* formatter */)
 {
     // For this one, just dump them to the standard output
     // Surprisingly, Solaris was the only platform on which
@@ -136,7 +139,7 @@ void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite,
     // Without the cast, it was printing the pointer value in hex.
     // Quite annoying, considering every other platform printed
     // the string with the explicit cast to char* below.
-  XERCES_STD_QUALIFIER cout.write((char *) toWrite, (int) count);
+    XERCES_STD_QUALIFIER cout.write((char *) toWrite, (int) count);
 	XERCES_STD_QUALIFIER cout.flush();
 }
 
@@ -172,18 +175,18 @@ void SAX2PrintHandlers::warning(const SAXParseException& e)
 // ---------------------------------------------------------------------------
 //  SAX2PrintHandlers: Overrides of the SAX DTDHandler interface
 // ---------------------------------------------------------------------------
-void SAX2PrintHandlers::unparsedEntityDecl(const     XMLCh* const name
-                                          , const   XMLCh* const publicId
-                                          , const   XMLCh* const systemId
-                                          , const   XMLCh* const notationName)
+void SAX2PrintHandlers::unparsedEntityDecl(const    XMLCh* const /* name */
+                                          , const   XMLCh* const /* publicId */
+                                          , const   XMLCh* const /* systemId */
+                                          , const   XMLCh* const /* notationName */)
 {
     // Not used at this time
 }
 
 
-void SAX2PrintHandlers::notationDecl(const   XMLCh* const name
-                                    , const XMLCh* const publicId
-                                    , const XMLCh* const systemId)
+void SAX2PrintHandlers::notationDecl(const  XMLCh* const /* name */
+                                    , const XMLCh* const /* publicId */
+                                    , const XMLCh* const /* systemId */)
 {
     // Not used at this time
 }
