@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/08 21:06:16  peiyongz
+ * move comment to *hpp for API doc generation
+ *
  * Revision 1.4  2002/11/04 22:24:21  peiyongz
  * Locale setting for message loader
  *
@@ -267,18 +270,6 @@ void XMLPlatformUtils::Initialize(const char* const locale)
 
     /***
      *  Locale setting for Message Loader
-     *
-     *  Noticed: The locale is set iff the Initialize() is invoked for the 
-     *           very first time, thus to ensure that each and every message 
-     *           loaders, in this process space, share the same locale.
-     *
-     *           All subsequent invocations of Initialize() have no effect on the 
-     *           message loaders, either instantiated, or to be instantiated.
-     *
-     *           To set to a different locale, client application needs to 
-     *           Terminate() (or multiple Terminate() in the case where multiple
-     *           Initialize() have been invoked before) and then followed by an
-     *           Initialize(new_locale).
      *
      ***/
     XMLMsgLoader::setLocale(locale);

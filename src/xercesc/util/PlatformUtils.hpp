@@ -157,6 +157,20 @@ public :
     /** Perform per-process parser initialization
       *
       * Initialization <b>must</b> be called first in any client code.
+      * 
+      * The locale is set iff the Initialize() is invoked for the very first time, 
+      * to ensure that each and every message loaders, in the process space, share 
+      * the same locale.
+      *
+      * All subsequent invocations of Initialize(), with a different locale, have 
+      * no effect on the message loaders, either instantiated, or to be instantiated.
+      *
+      * To set to a different locale, client application needs to Terminate() (or 
+      * multiple Terminate() in the case where multiple Initialize() have been invoked 
+      * before), followed by Initialize(new_locale).
+      * 
+      * The default locale is "en_US".
+      *
       */
     static void Initialize(const char* const locale = XMLUni::fgXercescDefaultLocale);
 
