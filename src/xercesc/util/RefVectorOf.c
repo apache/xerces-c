@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2002/12/17 21:06:02  gareth
+ * Removed defaulting from parameters in c files as windows and gcc 3.2 say this is wrong.
+ *
  * Revision 1.5  2002/12/17 17:17:58  gareth
  * added abstract base class BaseRefVectorOf from which both RefVectorOf and RefArrayVectorOf inherit
  * the new RefArrayVectorOf has proper destructor for array deletion
@@ -108,7 +111,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefVectorOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> RefVectorOf<TElem>::RefVectorOf(const unsigned int maxElems, const bool adoptElems = true) : BaseRefVectorOf<TElem>(maxElems, adoptElems)
+template <class TElem> RefVectorOf<TElem>::RefVectorOf(const unsigned int maxElems, const bool adoptElems) : BaseRefVectorOf<TElem>(maxElems, adoptElems)
 {
 }
 
