@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/03/03 23:04:38  peiyongz
+ * deallocate fRootName when loaded
+ *
  * Revision 1.2  2003/10/14 15:20:42  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -126,6 +129,12 @@ void XMLDTDDescriptionImpl::serialize(XSerializeEngine& serEng)
     }
     else
     {
+        //the original root name which came from the ctor needs deallocated
+        if (fRootName)
+        {
+            XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);
+        }
+
         serEng.readString((XMLCh*&)fRootName);
     }
 
