@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/10/15 18:11:02  knoaman
+ * [Bug 13489]: missing 'return' in Token.cpp
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -399,7 +402,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 	case T_NEGATIVELOOKAHEAD:
 	case T_LOOKBEHIND:
 	case T_NEGATIVELOOKBEHIND:
-		FC_CONTINUE;
+		return FC_CONTINUE;
 //	default:
 //		throw;
 	}
