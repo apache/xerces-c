@@ -55,7 +55,7 @@
  */
 
 /*
- * $Id
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -100,10 +100,10 @@ enum Teststate {
 // ---------------------------------------------------------------------------
 //  Declare functions
 // ---------------------------------------------------------------------------
-int TestInit4DOM(const char* xmlFile, Teststate theState);
-int TestInit4DOM(const char* xmlFile, Teststate theState);
-int TestInit4SAX(const char* xmlFile, Teststate theState);
-int TestInit4SAX2(const char* xmlFile, Teststate theState);
+int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
+int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
+int TestInit4SAX(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
+int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
 
 // ---------------------------------------------------------------------------
 //  Define macro
@@ -210,59 +210,163 @@ int TestInit4SAX2(const char* xmlFile, Teststate theState);
 // ---------------------------------------------------------------------------
 //  DOM Parser
 // ---------------------------------------------------------------------------
-int TestInit4DOM(const char* xmlFile, Teststate theState)
+int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState)
 {
     TESTINITPRE;
     DOMParser* parser = new DOMParser;
+    parser->setDoNamespaces(gDoNamespaces);
+    parser->setDoSchema(gDoSchema);
+    parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     TESTINITPOST;
 }
 
 // ---------------------------------------------------------------------------
 //  IDOM Parser
 // ---------------------------------------------------------------------------
-int TestInit4IDOM(const char* xmlFile, Teststate theState)
+int TestInit4IDOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState)
 {
     TESTINITPRE;
     IDOMParser* parser = new IDOMParser;
+    parser->setDoNamespaces(gDoNamespaces);
+    parser->setDoSchema(gDoSchema);
+    parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     TESTINITPOST;
 }
 
 // ---------------------------------------------------------------------------
 //  SAX Parser
 // ---------------------------------------------------------------------------
-int TestInit4SAX(const char* xmlFile, Teststate theState)
+int TestInit4SAX(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState)
 {
     TESTINITPRE;
     SAXParser* parser = new SAXParser;
+    parser->setDoNamespaces(gDoNamespaces);
+    parser->setDoSchema(gDoSchema);
+    parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     TESTINITPOST;
 }
 
 // ---------------------------------------------------------------------------
 //  SAX2 XML Reader
 // ---------------------------------------------------------------------------
-int TestInit4SAX2(const char* xmlFile, Teststate theState)
+int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState)
 {
     TESTINITPRE;
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+
+    XMLCh* doNamespaceFeature = XMLString::transcode("http://xml.org/sax/features/namespaces");
+    parser->setFeature(doNamespaceFeature, gDoNamespaces);
+
+    XMLCh* doSchemaFeature = XMLString::transcode("http://apache.org/xml/features/validation/schema");
+    parser->setFeature(doSchemaFeature, gDoSchema);
+
+    XMLCh* fullSchemaCheckFeature = XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking");
+    parser->setFeature(fullSchemaCheckFeature, gSchemaFullChecking);
+
+    delete [] doNamespaceFeature;
+    delete [] doSchemaFeature;
+    delete [] fullSchemaCheckFeature;
+
     TESTINITPOST;
+}
+
+// ---------------------------------------------------------------------------
+//
+//  Usage()
+//
+// ---------------------------------------------------------------------------
+void usage()
+{
+    cout << "\nUsage:\n"
+            "    InitTermTest [options] <XML file>\n\n"
+            "This program tests the XMLPlatformUtils::Initialize()/Terminate()\n"
+            "pair by calling it a number of times.  All four parsers\n"
+            "(DOMParser, IDOMParser, SAXParser and SAX2XMLReader) are invoked\n"
+            "to parse the specified XML file.\n\n"
+            "Options:\n"
+            "    -n          Enable namespace processing. Default is off.\n"
+            "    -s          Enable schema processing. Default is off.\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n"
+		      "    -?          Show this help.\n"
+          <<  endl;
 }
 
 // ---------------------------------------------------------------------------
 //  Main
 // ---------------------------------------------------------------------------
 int main(int argC, char* argV[]) {
+
+    // ---------------------------------------------------------------------------
+    //  Local data
+    //
+    //  gDoNamespaces
+    //      Indicates whether namespace processing should be done.
+    //
+    //  gDoSchema
+    //      Indicates whether schema processing should be done.
+    //
+    //  gSchemaFullChecking
+    //      Indicates whether full schema constraint checking should be done.
+    //
+    // ---------------------------------------------------------------------------
+    bool gDoNamespaces          = false;
+    bool gDoSchema              = false;
+    bool gSchemaFullChecking    = false;
+
     // Check command line and extract arguments.
-    if (argC != 2)
+    if (argC < 2)
     {
-        cout << "\nUsage:\n"
-                "    InitTermTest <XML file>\n\n"
-                "This program tests the XMLPlatformUtils::Initialize()/Terminate()\n"
-                "pair by calling it a number of times."
-             << endl;
+        usage();
         return 1;
     }
 
-    char* xmlFile = argV[1];
+    // See if non validating dom parser configuration is requested.
+    int parmInd;
+    for (parmInd = 1; parmInd < argC; parmInd++)
+    {
+        // Break out on first parm not starting with a dash
+        if (argV[parmInd][0] != '-')
+            break;
+
+        // Watch for special case help request
+        if (!strcmp(argV[parmInd], "-?"))
+        {
+            usage();
+            return 2;
+        }
+         else if (!strcmp(argV[parmInd], "-n")
+              ||  !strcmp(argV[parmInd], "-N"))
+        {
+            gDoNamespaces = true;
+        }
+         else if (!strcmp(argV[parmInd], "-s")
+              ||  !strcmp(argV[parmInd], "-S"))
+        {
+            gDoSchema = true;
+        }
+         else if (!strcmp(argV[parmInd], "-f")
+              ||  !strcmp(argV[parmInd], "-F"))
+        {
+            gSchemaFullChecking = true;
+        }
+         else
+        {
+            cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it.\n" << endl;
+        }
+    }
+
+    //
+    //  And now we have to have only one parameter left and it must be
+    //  the file name.
+    //
+    if (parmInd + 1 != argC)
+    {
+        usage();
+        return 1;
+    }
+
+    char* xmlFile = argV[parmInd];
     bool error = false;
 
     //
@@ -275,55 +379,55 @@ int main(int argC, char* argV[]) {
             return 4;
         }
 
-        if (TestInit4DOM(xmlFile, Once))
+        if (TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
             error = true;
-        if (TestInit4IDOM(xmlFile, Once))
+        if (TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
             error = true;
-        if (TestInit4SAX(xmlFile, Once))
+        if (TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
             error = true;
-        if (TestInit4SAX2(xmlFile, Once))
+        if (TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
             error = true;
     }
 
-    if (error || TestInit4DOM(xmlFile, Multiple))
+    if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
         error = true;
-    if (error || TestInit4IDOM(xmlFile, Multiple))
+    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
         error = true;
-    if (error || TestInit4SAX(xmlFile, Multiple))
+    if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
         error = true;
-    if (error || TestInit4SAX2(xmlFile, Multiple))
+    if (error || TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
         error = true;
 /*
  * The following Limit test is a stress test that can run a long time
  * Commented out for regular sanity test
  */
 /*
-    if (error || TestInit4DOM(xmlFile, Limit))
+    if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
-    if (error || TestInit4IDOM(xmlFile, Limit))
+    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
-    if (error || TestInit4SAX(xmlFile, Limit))
+    if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
-    if (error || TestInit4SAX2(xmlFile, Limit))
+    if (error || TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
 
-    if (error || TestInit4DOM(xmlFile, ExceedLimit))
+    if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
         error = true;
-    if (error || TestInit4IDOM(xmlFile, ExceedLimit))
+    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
         error = true;
-    if (error || TestInit4SAX(xmlFile, ExceedLimit))
+    if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
         error = true;
-    if (error || TestInit4SAX2(xmlFile, ExceedLimit))
+    if (error || TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
         error = true;
 */
 
-    if (error || TestInit4DOM(xmlFile, UnEven))
+    if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
         error = true;
-    if (error || TestInit4IDOM(xmlFile, UnEven))
+    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
         error = true;
-    if (error || TestInit4SAX(xmlFile, UnEven))
+    if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
         error = true;
-    if (error || TestInit4SAX2(xmlFile, UnEven))
+    if (error || TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
         error = true;
 
     if (error) {
