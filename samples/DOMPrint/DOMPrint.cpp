@@ -179,6 +179,11 @@ static bool                     gWriteBOM              = false;
 
 static XercesDOMParser::ValSchemes    gValScheme       = XercesDOMParser::Val_Auto;
 
+
+//	Prototypes for internally used functions
+void usage();
+
+
 // ---------------------------------------------------------------------------
 //
 //  Usage()
