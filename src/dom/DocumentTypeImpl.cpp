@@ -73,7 +73,8 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
 {
     name = dtName.clone();
     entities = new NamedNodeMapImpl(this);
-    notations= new NamedNodeMapImpl(this);
+    notations = new NamedNodeMapImpl(this);
+	elements = new NamedNodeMapImpl(this);
     
 };
 
@@ -93,7 +94,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
 
     entities = new NamedNodeMapImpl(this);
     notations= new NamedNodeMapImpl(this);
-    
+	elements = new NamedNodeMapImpl(this);    
 };
 
 
@@ -105,6 +106,7 @@ DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
         cloneChildren(other);
     entities = other.entities->cloneMap(this);
     notations= other.notations->cloneMap(this);
+	elements = other.elements->cloneMap(this);
     
     //DOM Level 2
     publicId		= other.publicId.clone();
@@ -127,6 +129,11 @@ DocumentTypeImpl::~DocumentTypeImpl()
         notations->removeAll();
         NamedNodeMapImpl::removeRef(notations);
     }
+	if (elements != null)
+	{
+		elements->removeAll();
+		NamedNodeMapImpl::removeRef(elements);
+	}
 };
 
 
@@ -162,6 +169,10 @@ NamedNodeMapImpl *DocumentTypeImpl::getEntities()
     return entities;
 };
 
+NamedNodeMapImpl *DocumentTypeImpl::getElements()
+{
+    return elements;
+};
 
 DOMString DocumentTypeImpl::getName()
 {

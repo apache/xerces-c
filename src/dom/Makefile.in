@@ -103,6 +103,7 @@ DOM_CPP_PUBHEADERS = \
 
 DOM_CPP_PRIVHEADERS =  \
 	AttrImpl.hpp \
+	AttrMapImpl.hpp \
 	AttrNSImpl.hpp \
 	CDATASectionImpl.hpp \
 	CharacterDataImpl.hpp \
@@ -140,6 +141,7 @@ DOM_C_FILES =
 
 DOM_CPP_OBJECTS = \
 	AttrImpl.$(TO) \
+	AttrMapImpl.$(TO) \
 	AttrNSImpl.$(TO) \
 	CDATASectionImpl.$(TO) \
 	CharacterDataImpl.$(TO) \

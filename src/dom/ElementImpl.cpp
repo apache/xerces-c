@@ -57,7 +57,7 @@
 /*
  * $Id$
  */
-
+ 
 #include "DeepNodeListImpl.hpp"
 #include "DocumentImpl.hpp"
 #include "DocumentTypeImpl.hpp"
@@ -74,6 +74,7 @@ ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
 {
     name = eName.clone();
     attributes = null;
+	setupDefaultAttributes();
 };
 
 
@@ -82,10 +83,11 @@ ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
 {
     name = other.name.clone();
 	attributes = null;
+	setupDefaultAttributes();
     if (deep)
         cloneChildren(other);
 	if (other.attributes != null)
-		attributes = other.attributes->cloneMap(this);
+		attributes = other.attributes->cloneAttrMap(this);
 };
 
 
@@ -141,7 +143,7 @@ DOMString ElementImpl::getAttribute(const DOMString &nam)
 
 AttrImpl *ElementImpl::getAttributeNode(const DOMString &nam)
 {
-    return (attributes == null) ? null : (AttrImpl *)(attributes->getNamedItem(nam));
+    return (attributes == 0) ? null : (AttrImpl *)(attributes->getNamedItem(nam));
 };
 
 
@@ -204,12 +206,12 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 	    // If it is in fact the right object, remove it.
     
 	    if (found == oldAttr)
-	    {
 	        attributes->removeNamedItem(oldAttr->getName());
-	        return found;
-	    }
 	    else
 	        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+
+        return found;	
+		
 	}
 	return null;	// just to keep the compiler happy
 };
@@ -225,8 +227,8 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
     AttrImpl* newAttr = (AttrImpl*)getAttributeNode(nam);
     if (!newAttr)
     {
-		if (attributes == null)
-			attributes = new NamedNodeMapImpl(this);
+		if (attributes == 0)
+			attributes = new AttrMapImpl(this, null);
         newAttr = (AttrImpl*)ownerDocument->createAttribute(nam);
         attributes->setNamedItem(newAttr);
     }
@@ -247,8 +249,8 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
     
     if (!(newAttr->isAttrImpl()))
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-	if (attributes == null)
-		attributes = new NamedNodeMapImpl(this);
+	if (attributes == 0)
+		attributes = new AttrMapImpl(this, null);
     AttrImpl *oldAttr =
       (AttrImpl *) attributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
@@ -302,8 +304,8 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
       (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI,
                                                     qualifiedName);
     newAttr->setNodeValue(fValue);
-	if (attributes == null)
-		attributes = new NamedNodeMapImpl(this);
+	if (attributes == 0)
+		attributes = new AttrMapImpl(this, null);
     AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
 
     if (oldAttr) {
@@ -350,8 +352,8 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
     
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-	if (attributes == null)
-		attributes = new NamedNodeMapImpl(this);
+	if (attributes == 0)
+		attributes = new AttrMapImpl(this, null);
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(newAttr->getNamespaceURI(), newAttr->getLocalName());
     
     // This will throw INUSE if necessary
@@ -420,7 +422,7 @@ NodeImpl *ElementImpl::NNM_removeNamedItem(const DOMString &nnm_name)
 NodeImpl *ElementImpl::NNM_setNamedItem(NodeImpl *nnm_arg)
 {
 	if (getAttributes() == null)
-		attributes = new NamedNodeMapImpl(this);
+		attributes = new AttrMapImpl(this);
 	return attributes->setNamedItem(nnm_arg);
 }
 
@@ -443,7 +445,7 @@ NodeImpl *ElementImpl::NNM_getNamedItemNS(const DOMString &nnm_namespaceURI, con
 NodeImpl *ElementImpl::NNM_setNamedItemNS(NodeImpl *nnm_arg)
 {
 	if (getAttributes() == null)
-		attributes = new NamedNodeMapImpl(this);
+		attributes = new AttrMapImpl(this);
 	return getAttributes()->setNamedItemNS(nnm_arg);
 }
 
@@ -460,4 +462,34 @@ void ElementImpl::NNM_setOwnerDocument(DocumentImpl *nnm_doc)
 {
 	if (getAttributes() != null)
 		getAttributes()->setOwnerDocument(nnm_doc);
+}
+
+
+// util functions for default attributes
+// returns the default attribute map for this node from the owner document
+AttrMapImpl *ElementImpl::getDefaultAttributes()
+{
+	if ((ownerNode == null) || (getOwnerDocument() == null))
+		return null;
+
+	DocumentImpl *tmpdoc = getOwnerDocument();
+	if (tmpdoc->getDoctype() == null)
+		return null;
+	
+	NodeImpl *eldef = tmpdoc->getDoctype()->getElements()->getNamedItem(getNodeName());
+	return (eldef == null) ? null : (AttrMapImpl *)(eldef->getAttributes());
+}
+
+// resets all attributes for this node to their default values
+void ElementImpl::setupDefaultAttributes()
+{
+	if ((ownerNode == null) || (getOwnerDocument() == null) || (getOwnerDocument()->getDoctype() == null))
+		return;
+
+	if (attributes != 0)
+		delete attributes;
+	
+	AttrMapImpl* defAttrs = getDefaultAttributes();
+	if (defAttrs) 
+		attributes = new AttrMapImpl(this, defAttrs);
 }

@@ -264,7 +264,7 @@ void NamedNodeMapImpl::removeRef(NamedNodeMapImpl *This)
 //
 NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
 {
-    if(arg->getOwnerDocument()!= ownerNode->getOwnerDocument())
+    if(arg->getOwnerDocument() != ownerNode->getOwnerDocument())
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     if (readOnly)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -414,3 +414,23 @@ void NamedNodeMapImpl::setOwnerDocument(DocumentImpl *doc) {
     }
 }
 
+
+void NamedNodeMapImpl::cloneContent(NamedNodeMapImpl *srcmap) {
+	if ((srcmap != null) && (srcmap->nodes != null))
+	{
+		if (nodes != null)
+			delete nodes;
+		nodes = new NodeVector(srcmap->nodes->size());
+		for (unsigned int i = 0; i < srcmap->nodes->size(); i++)
+		{
+			NodeImpl *n = srcmap->nodes->elementAt(i);
+ 			NodeImpl *clone = n->cloneNode(true);
+			clone->specified(n->specified());
+			clone->ownerNode = ownerNode;
+			clone->owned(true);
+			nodes->addElement(clone);
+//			n = null;
+//			clone = null;
+		}
+	}
+}

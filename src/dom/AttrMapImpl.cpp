@@ -1,6 +1,3 @@
-#ifndef NamedNodeMapImpl_HEADER_GUARD_
-#define NamedNodeMapImpl_HEADER_GUARD_
-
 /*
  * The Apache Software License, Version 1.1
  * 
@@ -57,70 +54,94 @@
  * <http://www.apache.org/>.
  */
 
+
 /*
  * $Id$
  */
 
-//
-//  This file is part of the internal implementation of the C++ XML DOM.
-//  It should NOT be included or used directly by application programs.
-//
-//  Applications should include the file <dom/DOM.hpp> for the entire
-//  DOM API, or DOM_*.hpp for individual DOM classes, where the class
-//  name is substituded for the *.
-//
-
-#include <util/XercesDefs.hpp>
+#include "AttrMapImpl.hpp"
+#include "NamedNodeMapImpl.hpp"
 #include "NodeImpl.hpp"
+#include "ElementImpl.hpp"
 
-class NodeVector;
-class DocumentImpl;
-class NodeImpl;
+AttrMapImpl::AttrMapImpl(NodeImpl *ownerNod)
+	: NamedNodeMapImpl(ownerNod)
+{
+	hasDefaults(false);
+}
 
-class CDOM_EXPORT NamedNodeMapImpl {
-protected:
-    NodeVector       *nodes;
-    NodeImpl         *ownerNode;    // the node this map belongs to
-    bool              readOnly;
-    int               refCount;
-    static int        gLiveNamedNodeMaps;
-    static int        gTotalNamedNodeMaps;
-    
-    
-    friend class      DOM_NamedNodeMap;
-    friend class      DomMemDebug;
-    friend class      ElementImpl;
-   	friend class	  DocumentImpl;
+AttrMapImpl::AttrMapImpl(NodeImpl *ownerNod, NamedNodeMapImpl *defaults)
+	: NamedNodeMapImpl(ownerNod)
+{
+	hasDefaults(false);
+	if (defaults != null) 
+	{
+		if (defaults->getLength() > 0) 
+		{
+			hasDefaults(true);
+			cloneContent(defaults);
+		}
+	} 
+}
 
-	virtual void	cloneContent(NamedNodeMapImpl *srcmap);
-    
-public:
-    NamedNodeMapImpl(NodeImpl *ownerNode);
-    
-    virtual                 ~NamedNodeMapImpl();
-    virtual NamedNodeMapImpl *cloneMap(NodeImpl *ownerNode);
-    static  void            addRef(NamedNodeMapImpl *);
-    virtual int             findNamePoint(const DOMString &name);
-    virtual unsigned int    getLength();
-    virtual NodeImpl        *getNamedItem(const DOMString &name);
-    virtual NodeImpl        *item(unsigned int index);
-    virtual void            removeAll();
-    virtual NodeImpl        *removeNamedItem(const DOMString &name);
-    static  void            removeRef(NamedNodeMapImpl *);
-    virtual NodeImpl        *setNamedItem(NodeImpl *arg);
-    virtual void            setReadOnly(bool readOnly, bool deep);
+AttrMapImpl::~AttrMapImpl()
+{
+}
 
-    //Introduced in DOM Level 2
-    virtual int             findNamePoint(const DOMString &namespaceURI,
-	const DOMString &localName);
-    virtual NodeImpl        *getNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &localName);
-    virtual NodeImpl        *setNamedItemNS(NodeImpl *arg);
-    virtual NodeImpl        *removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &localName);
+AttrMapImpl *AttrMapImpl::cloneAttrMap(NodeImpl *ownerNode)
+{
+	AttrMapImpl *newmap = new AttrMapImpl(ownerNode);
+	newmap->cloneContent(this);
+	newmap->attrDefaults = this->attrDefaults;
+	return newmap;
+}
 
-    virtual void setOwnerDocument(DocumentImpl *doc);
-};
+bool AttrMapImpl::hasDefaults()
+{
+	return attrDefaults;
+}
 
-#endif
+void AttrMapImpl::hasDefaults(bool value)
+{
+	attrDefaults = value;
+}
 
+NodeImpl *AttrMapImpl::removeNamedItem(const DOMString &name)
+{
+	NodeImpl* removed = NamedNodeMapImpl::removeNamedItem(name);
+
+	// Replace it if it had a default value
+	// (DOM spec level 1 - Element Interface)
+	if (hasDefaults() && (removed != null))
+	{
+		AttrMapImpl* defAttrs = ((ElementImpl*)ownerNode)->getDefaultAttributes();
+		AttrImpl* attr = (AttrImpl*)(defAttrs->getNamedItem(name));
+		if (attr != null)
+		{
+			AttrImpl* newAttr = (AttrImpl*)attr->cloneNode(true);
+			setNamedItem(newAttr);
+		}
+	}
+
+	return removed;
+}
+
+NodeImpl *AttrMapImpl::removeNamedItemNS(const DOMString &namespaceURI, const DOMString &localName)
+{
+	NodeImpl* removed = NamedNodeMapImpl::removeNamedItemNS(namespaceURI, localName);
+
+	// Replace it if it had a default value
+	// (DOM spec level 2 - Element Interface)
+	if (hasDefaults() && (removed != null))
+	{
+		AttrMapImpl* defAttrs = ((ElementImpl*)ownerNode)->getDefaultAttributes();
+		AttrImpl* attr = (AttrImpl*)(defAttrs->getNamedItemNS(namespaceURI, localName));
+		if (attr != null)
+		{
+			AttrImpl* newAttr = (AttrImpl*)attr->cloneNode(true);
+			setNamedItem(newAttr);
+		}
+	}
+
+	return removed;
+}

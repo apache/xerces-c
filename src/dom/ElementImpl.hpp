@@ -73,6 +73,7 @@
 
 #include <util/XercesDefs.hpp>
 #include "AttrImpl.hpp"
+#include "AttrMapImpl.hpp"
 #include "ChildAndParentNode.hpp"
 
 class DeepNodeListImpl;
@@ -80,7 +81,7 @@ class DeepNodeListImpl;
 class CDOM_EXPORT ElementImpl: public ChildAndParentNode {
 protected:
     DOMString name;
-    NamedNodeMapImpl *attributes;
+    AttrMapImpl *attributes;
     
 public:
     ElementImpl(DocumentImpl *ownerDoc, const DOMString &name);
@@ -135,6 +136,10 @@ public:
     virtual NodeImpl       *NNM_setNamedItemNS(NodeImpl *nnm_arg);
     virtual NodeImpl       *NNM_removeNamedItemNS(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName);
     virtual void            NNM_setOwnerDocument(DocumentImpl *nnm_doc);
+    
+	// default attribute helper functions
+	virtual AttrMapImpl *getDefaultAttributes();
+	virtual void setupDefaultAttributes();
 
 
 };

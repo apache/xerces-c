@@ -1,5 +1,5 @@
-#ifndef NamedNodeMapImpl_HEADER_GUARD_
-#define NamedNodeMapImpl_HEADER_GUARD_
+#ifndef AttrMapImpl_HEADER_GUARD_
+#define AttrMapImpl_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -57,10 +57,6 @@
  * <http://www.apache.org/>.
  */
 
-/*
- * $Id$
- */
-
 //
 //  This file is part of the internal implementation of the C++ XML DOM.
 //  It should NOT be included or used directly by application programs.
@@ -70,57 +66,32 @@
 //  name is substituded for the *.
 //
 
+/*
+ * $Id$
+ */
+
 #include <util/XercesDefs.hpp>
+#include "AttrImpl.hpp"
 #include "NodeImpl.hpp"
+#include "NamedNodeMapImpl.hpp"
 
-class NodeVector;
-class DocumentImpl;
-class NodeImpl;
+class NamedNodeMapImpl;
 
-class CDOM_EXPORT NamedNodeMapImpl {
-protected:
-    NodeVector       *nodes;
-    NodeImpl         *ownerNode;    // the node this map belongs to
-    bool              readOnly;
-    int               refCount;
-    static int        gLiveNamedNodeMaps;
-    static int        gTotalNamedNodeMaps;
-    
-    
-    friend class      DOM_NamedNodeMap;
-    friend class      DomMemDebug;
-    friend class      ElementImpl;
-   	friend class	  DocumentImpl;
+class CDOM_EXPORT AttrMapImpl : public NamedNodeMapImpl  
+{
+private:
+	bool attrDefaults;
 
-	virtual void	cloneContent(NamedNodeMapImpl *srcmap);
-    
 public:
-    NamedNodeMapImpl(NodeImpl *ownerNode);
-    
-    virtual                 ~NamedNodeMapImpl();
-    virtual NamedNodeMapImpl *cloneMap(NodeImpl *ownerNode);
-    static  void            addRef(NamedNodeMapImpl *);
-    virtual int             findNamePoint(const DOMString &name);
-    virtual unsigned int    getLength();
-    virtual NodeImpl        *getNamedItem(const DOMString &name);
-    virtual NodeImpl        *item(unsigned int index);
-    virtual void            removeAll();
-    virtual NodeImpl        *removeNamedItem(const DOMString &name);
-    static  void            removeRef(NamedNodeMapImpl *);
-    virtual NodeImpl        *setNamedItem(NodeImpl *arg);
-    virtual void            setReadOnly(bool readOnly, bool deep);
+	AttrMapImpl(NodeImpl *ownerNod);
+	AttrMapImpl(NodeImpl *ownerNod, NamedNodeMapImpl *defaults);
+	virtual ~AttrMapImpl();
+	virtual AttrMapImpl *cloneAttrMap(NodeImpl *ownerNode);
+	virtual bool hasDefaults();
+	virtual void hasDefaults(bool value);
 
-    //Introduced in DOM Level 2
-    virtual int             findNamePoint(const DOMString &namespaceURI,
-	const DOMString &localName);
-    virtual NodeImpl        *getNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &localName);
-    virtual NodeImpl        *setNamedItemNS(NodeImpl *arg);
-    virtual NodeImpl        *removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &localName);
-
-    virtual void setOwnerDocument(DocumentImpl *doc);
+    virtual NodeImpl *removeNamedItem(const DOMString &name);
+    virtual NodeImpl *removeNamedItemNS(const DOMString &namespaceURI, const DOMString &localName);
 };
 
 #endif
-

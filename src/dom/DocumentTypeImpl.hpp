@@ -82,6 +82,7 @@ private:
     DOMString			name;
     NamedNodeMapImpl	*entities;
     NamedNodeMapImpl	*notations;
+	NamedNodeMapImpl	*elements;
 	DOMString			publicId;
     DOMString			systemId;
 	DOMString			internalSubset;
@@ -111,6 +112,7 @@ public:
     virtual NamedNodeMapImpl * getEntities();
     virtual DOMString          getName();
     virtual NamedNodeMapImpl * getNotations();
+	virtual NamedNodeMapImpl * getElements();
     virtual void               setNodeValue(const DOMString &arg); 
     virtual void               setReadOnly(bool readOnly, bool deep);
    
