@@ -329,7 +329,7 @@ catch (const XMLException&amp; toCatch) {
   <faq title="How to write out a DOM tree into an XML file?">
      <q>How to write out a DOM tree into an XML file?</q>
      <a>
-      <p>This feature is not yet availabe in the parser. Take a look at the DOMPrint sample
+      <p>This feature is not yet available in the parser. Take a look at the DOMPrint sample
          for an example on parsing  XML file, then writing it out back to the screen. You
          can use that code.</p>
     </a>
@@ -368,7 +368,7 @@ catch (const XMLException&amp; toCatch) {
           calling that.
       </p>
       <p>
-          NOTE that userData should be considered a nonportable, experimental feature
+          NOTE that userData should be considered a non-portable, experimental feature
           of the Xerces DOM. It may evaporate entirely in favor of a scheme based on
           the DOM Level 3 "node key" mechanism, when that becomes officially
           available.
@@ -520,7 +520,7 @@ catch (const XMLException&amp; toCatch) {
           full Unicode character set, which includes all of the characters from all major
           national, international and industry character sets.</li>
         <li>Efficient. utf-8 has the smaller storage requirements for documents
-          that are primarily composed of of characters from the Latin alphabet. utf-16 is
+          that are primarily composed of characters from the Latin alphabet. utf-16 is
           more efficient for encoding Asian languages. But both encodings cover all
           languages without loss.</li>
       </ul>
@@ -599,7 +599,7 @@ catch (const XMLException&amp; toCatch) {
          other APIs which take a char* assume that the source text is in the local
          code page. If this is not true, you must transcode the text yourself. You
          can do this using local transcoding support on your OS, such as Iconv on
-         Unix or or IBM's ICU package. However, if your transcoding needs are simple,
+         Unix or IBM's ICU package. However, if your transcoding needs are simple,
          you can achieve some better portability by using the Xerces parser's
          transcoder wrappers. You get a transcoder like this:
        </p>
@@ -627,7 +627,7 @@ catch (const XMLException&amp; toCatch) {
          3. This object is really just a wrapper around the underlying transcoding
             system actually in use by your version of Xerces, and does whatever is
             necessary to handle differences between the XMLCh representation and the
-            representation uesd by that underying transocding system.
+            representation used by that underlying transcoding system.
          </li>
 		 <li>
          4. The transcoder object has two primary APIs, transcodeFrom() and
@@ -689,7 +689,7 @@ catch (const XMLException&amp; toCatch) {
       </p>
       <p>The parser owns the returned pointer.  The memory allocated for
          the returned pointer will be destroyed when the parser is deleted.
-         To ensure assessiblity of the returned information after the parser
+         To ensure accessibility of the returned information after the parser
          is deleted, callers need to copy and store the returned information
          somewhere else; otherwise you may get unexpected result.  Since the returned
          pointer is a generic void pointer, see
@@ -710,7 +710,7 @@ catch (const XMLException&amp; toCatch) {
 
       <p>When DTD is referenced, the parser will try to read it, because DTDs can
          provide a lot more information than just validation. It defines entities and
-         notations, external uparsed entities, default attributes, character
+         notations, external unparsed entities, default attributes, character
          entities, etc... So it will always try to read it if present, even if
          validation is turned off.
       </p>

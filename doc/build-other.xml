@@ -28,7 +28,7 @@
                 <ul>
                 <li>There is one option when building the XML4C parser on iSeries.
                 For code page translation, you can use the iSeries
-                native <code>Iconv400</code> support or ICU as the transcoder plugin. If you choose ICU, follow the instructions
+                native <code>Iconv400</code> support or ICU as the transcoder plug in. If you choose ICU, follow the instructions
                 to build the ICU service program with the ICU download. Those instructions
                 are not included here.</li>
 
@@ -40,7 +40,7 @@
 
                 <ul>
                 <li>Make sure that you have the requirements installed on your iSeries.
-                We highly recommend that you read the writeup that accompanies the
+                We highly recommend that you read the write up that accompanies the
                 iSeries Tools for Developers PRPQ. There are install instructions as well as
                 information about how modules, programs and service programs can be
                 created in Unix-like fashion using gnu utilities. Note that symbolic
@@ -146,7 +146,7 @@ FAILURE: spawnp()  with errno = 3491
 GMAKE: vfork: Argument list too long.
 </source>
 
-         <p>If this is the case, you can manually create the service progam by doing the following:</p>
+         <p>If this is the case, you can manually create the service program by doing the following:</p>
 
 <source>CL:
 CRTSRVPGM  (&lt;OUTPUTDIR-library&gt;/libxercesc)  MODULE(&lt;OUTPUTDIR-library&gt;/*ALL) EXPORT(*ALL) TEXT('XML4C parser version xxx')
@@ -450,7 +450,7 @@ gmake </source>
             configuration files for the samples you have on your system.</li>
 
 
-          <li>Go to the first step above in the "Building asmples for OS/2" section.</li>
+          <li>Go to the first step above in the "Building samples for OS/2" section.</li>
         </ul>
         </s3>
 

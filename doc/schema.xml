@@ -76,7 +76,7 @@ parser->parse(xmlFile);
        </s2>
 
        <anchor name="associate"/>
-       <s2 title="Assocating Schema Grammar with instance document">
+       <s2 title="Associating Schema Grammar with instance document">
                <p>Schema grammars can be associated with instance documents in two ways.
                </p>
 
@@ -84,11 +84,11 @@ parser->parse(xmlFile);
                <p>An application developer may associate schemas with instance documents through
                   methods <code>setExternalSchemaLocation</code> if they use namespaces, and
                   <code>setExternalNoNamespaceSchemaLocation</code> otherwise.
-                (For SAX2XMLReader, use the properites:
+                (For SAX2XMLReader, use the properties:
                 "http://apache.org/xml/properties/schema/external-schemaLocation" and
                 "http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation")
                </p>
-               <p>Here is an example with no target namspace:
+               <p>Here is an example with no target namespace:
                </p>
 <source>
 // Instantiate the DOM parser.
@@ -138,7 +138,7 @@ parser.parse("test.xml");
                 the grammars it uses by using an xsi:schemaLocation attribute if they use
                 namespaces, and xsi:noNamespaceSchemaLocation attribute otherwise.
                </p>
-               <p>Here is an example with no target namspace:
+               <p>Here is an example with no target namespace:
                </p>
 <source>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

@@ -42,7 +42,7 @@ stdin: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
           ignorable white-space is counted separately from regular characters.</p>
 <source>StdInParse -v=never &lt; personal.xml
 stdin: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
-          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
+          <p>Note that the sum of spaces and characters in both versions is the same.</p>
 
           <note>The time reported by the program may be different depending on your
           machine processor.</note>

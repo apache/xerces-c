@@ -27,7 +27,7 @@
     <p>Read the <jump href="program-dom.html">DOM Programming Guide</jump> document
       or jump directly to:</p>
     <ul>
-      <li><jump href="program-dom.html#JAVAandCPP">Comparision of Java and C++ DOM's</jump></li>
+      <li><jump href="program-dom.html#JAVAandCPP">Comparison of Java and C++ DOM's</jump></li>
       <ul>
         <li><jump href="program-dom.html#AccessAPI">Accessing the API from application code</jump></li>
         <li><jump href="program-dom.html#ClassNames">Class Names</jump></li>
@@ -47,7 +47,7 @@
       or jump directly to:</p>
     <ul>
       <li><jump href="program-idom.html#ConstructIDOMParser">Constructing a parser</jump></li>
-      <li><jump href="program-idom.html#DOMandIDOM">Comparision of C++ DOM and IDOM</jump></li>
+      <li><jump href="program-idom.html#DOMandIDOM">Comparison of C++ DOM and IDOM</jump></li>
       <ul>
         <li><jump href="program-idom.html#Motivation">Motivation behind new design</jump></li>
         <li><jump href="program-idom.html#IDOMClassNames">Class Names</jump></li>

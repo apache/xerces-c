@@ -101,7 +101,7 @@
 		       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB6\Xerces-all\Xerces-all.bpg </li>
     	   </ul>
 
-		   <p> Each project in the group refers a directory belog \Xerces-all.
+		   <p> Each project in the group refers a directory below \Xerces-all.
 		       For example, the XercesLib project files are contained in the directory
            </p>
 
@@ -130,7 +130,7 @@
         to build the system. You must first make sure you
         have these tools installed on your system before proceeding.
         If you don not have required tools, ask your system administrator
-        to get them for you. These tools are free under the GNU Public Licence
+        to get them for you. These tools are free under the GNU Public License
         and may be obtained from the
         <jump href="http://www.gnu.org">Free Software Foundation</jump>.</p>
 
@@ -396,7 +396,7 @@ Usage: runConfigure "options"
        -z &lt;extra compiler options&gt;
 </source>
 
-         <note><em>NOTE:</em>The code samples in this section assume that you are are working on the Linux binary drop.
+         <note><em>NOTE:</em>The code samples in this section assume that you are working on the Linux binary drop.
          If you are using some other UNIX flavor, please replace '-linux' with the appropriate
          platform name in the code samples.</note>
 

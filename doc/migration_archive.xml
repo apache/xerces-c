@@ -114,7 +114,7 @@
         <li><link anchor="NewFeatures2">New features in &XercesCName; &XercesCVersion152;</link></li>
         <ul>
             <li><link anchor="Schema2">Schema Subset Support</link></li>
-            <li><link anchor="IDOM2">Experiemental IDOM</link></li>
+            <li><link anchor="IDOM2">Experimental IDOM</link></li>
         </ul>
       </ul>
     </s2>
@@ -148,7 +148,7 @@
         <anchor name="Speed2"/>
         <s3 title="Speed">
             <p>Much work was done to speed up this version. Some of the
-            new features, such as experiemental IDOM ended
+            new features, such as experimental IDOM ended
             up eating up some of these gains, but overall the new version
             is significantly faster than previous versions, even while doing
             more.</p>
@@ -210,7 +210,7 @@
         </s3>
 
         <anchor name="IDOM2"/>
-        <s3 title="Experiemental IDOM">
+        <s3 title="Experimental IDOM">
            <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
               to migrate from DOM to the experimental IDOM, please refer to
               <jump href="program-idom.html">
@@ -366,7 +366,7 @@
             <code>validators/DTD</code> directory.</li>
 
             <li>The error code definitions which were earlier in
-            <code>internal/ErrorCodes.hpp</code> are now splitup into
+            <code>internal/ErrorCodes.hpp</code> are now split up into
             the following files:</li>
 
             <ul>
@@ -574,7 +574,7 @@ myParser.setDoNamespaces(true);</source>
         directory have been moved to their more correct location in
         the src/framework/ directory. These are classes used by the
         outside world and should have been framework classes to begin
-        with. Also, to avoid name classes in the absense of C++ namespace
+        with. Also, to avoid name classes in the absence of C++ namespace
         support, some of these clashes have been renamed to make them
         more XML specific and less likely to clash. More
         classes might end up being moved to framework as well.</p>
@@ -590,7 +590,7 @@ myParser.setDoNamespaces(true);</source>
     <anchor name="LoadableMessageText"/>
     <s2 title="Loadable Message Text">
 
-        <p>The system now supoprts loadable message text, instead of
+        <p>The system now supports loadable message text, instead of
         having it hard coded into the program. The current drop still
         just supports English, but it can now support other
         languages. Anyone interested in contributing any translations
@@ -654,7 +654,7 @@ myParser.setDoNamespaces(true);</source>
 
         <p>Another abstract framework added in the src/util/ directory
         is to support pluggable transcoding services. The
-        XMLTransService class is an abtract API that can be derived
+        XMLTransService class is an abstract API that can be derived
         from, to support any desired transcoding
         service. XMLTranscoder is the abstract API for a particular
         instance of a transcoder for a particular encoding. The

@@ -87,7 +87,7 @@
     <tr>
         <td>2001-10-25</td>
         <td>Mark Weaver</td>
-        <td>[Bug 4213] BinHTTPURLInputStream initialisation not thread safe.
+        <td>[Bug 4213] BinHTTPURLInputStream initialization not thread safe.
         </td>
     </tr>
 
@@ -200,7 +200,7 @@
     <tr>
         <td>2001-10-22</td>
         <td>Linda Swan</td>
-        <td>castToNodeImpl is inconsistent with other cast routinesin IDCasts.
+        <td>castToNodeImpl is inconsistent with other cast routines in IDCasts.
         </td>
     </tr>
 
@@ -661,7 +661,7 @@
     <tr>
         <td>2001-07-10</td>
         <td>Tinny Ng</td>
-        <td>Give proper error messsage when scanning external id.
+        <td>Give proper error message when scanning external id.
         </td>
     </tr>
 
@@ -732,7 +732,7 @@
     <tr>
         <td>2001-07-08</td>
         <td>James Berry</td>
-        <td>Simplify file existance checks.
+        <td>Simplify file existence checks.
         </td>
     </tr>
 
@@ -1198,9 +1198,9 @@
     <tr>
         <td>2001-05-22</td>
         <td>James Berry</td>
-        <td>Check for existance of MacOS Unicode Converter routines prior to instanciating our
+        <td>Check for existence of MacOS Unicode Converter routines prior to instantiating our
 	 transcoder object; Xerces will thus panic, rather than crash, if they don't exist.
-	 Add support to check for existance of MacOS Unicode Converter to avoid calling through NULL pointer.
+	 Add support to check for existence of MacOS Unicode Converter to avoid calling through NULL pointer.
         </td>
     </tr>
 
@@ -1821,7 +1821,7 @@
     <tr>
         <td >2000-11-30</td>
         <td >Tinny Ng</td>
-        <td >reuseValidator - fix bugs (spurious errors) that occured on reuse due to
+        <td >reuseValidator - fix bugs (spurious errors) that occurred on reuse due to
              pools already containing some items.
         </td>
     </tr>
@@ -1872,7 +1872,7 @@
    <tr>
         <td >2000-11-01</td>
         <td >Tinny Ng</td>
-        <td >Scanner bug fix:  with progessive parsing, namesapce and validation
+        <td >Scanner bug fix:  with progressive parsing, namespace and validation
              options were not being set correctly.  Symptoms included failure to detect
              ignorable white space.
         </td>
@@ -2065,7 +2065,7 @@
     <tr>
         <td >2000-09-28</td>
         <td >Andy Heninger</td>
-        <td >DOMParser MemoryLeak fixed.  Occured when a document redefined the
+        <td >DOMParser MemoryLeak fixed.  Occurred when a document redefined the
               a builtin entity, e.g. &lt;.
         </td>
     </tr>
@@ -2807,7 +2807,7 @@
     <tr>
         <td >2000-04-19</td>
         <td >Anupam Bagchi</td>
-        <td >API document generation changed to DOxygen from Doc++</td>
+        <td >API document generation changed to Doxygen from Doc++</td>
     </tr>
     <tr>
         <td >2000-04-18</td>

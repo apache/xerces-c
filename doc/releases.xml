@@ -15,7 +15,7 @@
         <td>2002-03-06</td>
         <td>PeiYong Zhang</td>
         <td>Schema: Allow [+]? [0]* '.'? [0]* and normalize the input to positive zero string.
-            And similarly input comforming to '-' [0]* '.'? [0]* is normalized to negative zero.
+            And similarly input conforming to '-' [0]* '.'? [0]* is normalized to negative zero.
         </td>
     </tr>
 
@@ -137,7 +137,7 @@
         <td>2002-02-18</td>
         <td>James Berry</td>
         <td>Add support for building with new MacOSURLAccessCF NetAccessor that doesn't
-            require Carbon but can allow Xerces to live soley within CoreServices layer.
+            require Carbon but can allow Xerces to live solely within CoreServices layer.
         </td>
     </tr>
 
@@ -849,7 +849,7 @@
     <tr>
         <td>2001-11-28</td>
         <td>PeiYong Zhang</td>
-        <td>DOMMemTest: delete compiler generated temperary DOMString object "Hello Goodbye".
+        <td>DOMMemTest: delete compiler generated temporary DOMString object "Hello Goodbye".
         </td>
     </tr>
 

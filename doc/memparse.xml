@@ -83,7 +83,7 @@ MemParse -v=never</source>
 &lt;/company&gt;
 
 Parsing took 10 ms (4 elements, 1 attributes, 0 spaces, 111 characters).</source>
-          <p>Note that the sum of spaces and chracters in both versions is the same.</p>
+          <p>Note that the sum of spaces and characters in both versions is the same.</p>
 
           <note>The time reported by the system may be different, depending on your
           processor type.</note>

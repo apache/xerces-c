@@ -84,7 +84,7 @@
                 <li>DeclHandler* SAX2XMLReader::getDeclarationHandler() const</li>
                 <li>void SAX2XMLReader::setDeclarationHandler(DeclHandler* const handler)</li>
               </ul>
-              <li>To conform to DOM Level 2 specifiction, the following methods are added:</li>
+              <li>To conform to DOM Level 2 specification, the following methods are added:</li>
               <ul>
                 <li>DOM_Node DOM_NodeIterator::getRoot()</li>
                 <li>DOM_Node DOM_TreeWalker::getRoot()</li>
@@ -119,7 +119,7 @@
                   <li>static XMLCh* decode(const XMLCh* const inputData,
                          unsigned int*      outputLength);</li>
                   </ul>
-              <li>To conform to DOM Level 2 specifiction, the DOM_Node::supports and IDOM_Node::supports
+              <li>To conform to DOM Level 2 specification, the DOM_Node::supports and IDOM_Node::supports
                   are modified to</li>
               <ul>
                 <li>bool DOM_Node::isSupported(const DOMString &amp;feature, const DOMString &amp;version) const</li>

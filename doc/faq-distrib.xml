@@ -131,7 +131,7 @@
             script, go to the \&lt;&XercesCProjectName;&gt;\scripts directory, and type:</p>
 <source>perl packageBinaries.pl</source>
 
-            <p>You will get a message that somewhat looks like this (changes always happpen,
+            <p>You will get a message that somewhat looks like this (changes always happen,
             we are evolving you see!): </p>
 
 <source>Usage is: packageBinaries &lt;options&gt;
@@ -218,7 +218,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             <jump href="http://xml.apache.org/cocoon/index.html">Cocoon</jump>.</p>
 
 	    <p>The API documentation is automatically generated using
-		<jump href="http://www.stack.nl/~dimitri/doxygen/">doxygen</jump> and
+		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
 		<jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
 
         </a>

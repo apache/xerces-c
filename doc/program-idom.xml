@@ -58,7 +58,7 @@ int main (int argc, char* args[]) {
     </s2>
 
     <anchor name="DOMandIDOM"/>
-    <s2 title="Comparision of C++ DOM and IDOM">
+    <s2 title="Comparison of C++ DOM and IDOM">
       <p>
         This section outlines the differences between the C++ DOM and IDOM APIs.
       </p>
@@ -145,7 +145,7 @@ docRootNode.appendChild(aNode);
          allocator per document.  The storage for a DOM document is
          associated with the document node object.
          The advantage here is that allocation would require no synchronization
-         in most cases (based on the the same threading model that we
+         in most cases (based on the same threading model that we
          have now - one thread active per document, but any number of
          documents running in parallel with separate threads).
       </p>
@@ -165,7 +165,7 @@ docRootNode.appendChild(aNode);
          memory is automatically taken care of by the reference counting.
       </p>
 
-      <p>In C++ IDOM, there is an implict and explict object deletion.
+      <p>In C++ IDOM, there is an implicit and explicit object deletion.
       </p>
     </s2>
 
@@ -236,21 +236,21 @@ docRootNode.appendChild(aNode);
     <anchor name="IDOMMemExplicit"/>
       <s2 title="Explicit Object Deletion">
       <p>If user is manually building a DOM tree in memory using the document factory methods,
-         then the user needs to explicilty delete the document object to free all the allocated memory.
+         then the user needs to explicitly delete the document object to free all the allocated memory.
          It normally falls under the following 3 scenarios:
       </p>
         <ul>
            <li>If a user is manually creating a DOM document using the document implementation
                factory methods, IDOM_DOMImplementation::getImplementation()->createDocument,
-               then the user needs to explicilty delete the document object to free all
+               then the user needs to explicitly delete the document object to free all
                allocated memory. </li>
            <li>If a user is creating a DocumentType object using the document implementation factory
                method, IDOM_DOMImplementation::getImplementation()->createDocumentType, then
-               the user also needs to explicilty delete the document type object to free the
+               the user also needs to explicitly delete the DocumentType object to free the
                allocated memory.</li>
            <li>Special case:  If a user is creating a DocumentType using the document
                implementation factory method, and clone the node WITHOUT assigning a document
-               owner to that documentType object, then the cloned node also needs to be explicitly
+               owner to that DocumentType object, then the cloned node also needs to be explicitly
                deleted.</li>
         </ul>
 
@@ -258,7 +258,7 @@ docRootNode.appendChild(aNode);
 
       <source>
 // C++ IDOM - explicit deletion
-// use the document implementation factory method to create a document type and a document
+// use the document implementation factory method to create a DocumentType and a document
 IDOM_DocumentType* myDocType;
 IDOM_Document*   myDocument;
 IDOM_Node*       root;
@@ -301,7 +301,7 @@ delete myDocument;
       <source>
 // C++ IDOM - explicit deletion
 // manually build a DOM document
-// clone the document type object which does not have an owner yet
+// clone the DocumentType object which does not have an owner yet
 IDOM_DocumentType* myDocType1;
 IDOM_DocumentType* myDocType;
 IDOM_Document*   myDocument;
@@ -327,7 +327,7 @@ delete myDocument;
       <source>
 // C++ IDOM - explicit deletion
 // manually build a DOM document
-// clone the document type object that has an owner already
+// clone the DocumentType object that has an owner already
 //   thus no need to delete the cloned object
 IDOM_DocumentType* myDocType1;
 IDOM_DocumentType* myDocType;

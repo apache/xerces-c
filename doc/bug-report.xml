@@ -26,7 +26,7 @@
         </p>
     </s2>
 			
-    <s2 title="Search frist">
+    <s2 title="Search first">
         <p> Check the <jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump> database
             before submitting your bug report to avoid creating a duplicate report.
             Even the bug has been reported already, you may add a comment to the existing report

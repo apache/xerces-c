@@ -150,7 +150,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
         <table>
             <tr><td colspan="2"><em>http://xml.org/sax/features/namespace-prefixes</em></td></tr>
-            <tr><td><em>true:</em></td><td> Report the orignal prefixed names and attributes used for Namespace declarations </td></tr>
+            <tr><td><em>true:</em></td><td> Report the original prefixed names and attributes used for Namespace declarations </td></tr>
             <tr><td><em>false:</em></td><td> Do not report attributes used for Namespace declarations, and optionally do not report original prefixed names. (default)</td></tr>
         </table>
 
@@ -184,7 +184,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema-full-checking</em></td></tr>
             <tr><td><em>true:</em></td><td> Enable full schema constraint checking, including checking
                          which may be time-consuming or memory intensive. Currently, particle unique
-                         attribution constraint checking and particle derivation resriction checking
+                         attribution constraint checking and particle derivation restriction checking
                          are controlled by this option. </td></tr>
             <tr><td><em>false:</em></td><td> Disable full schema constraint checking (default). </td></tr>
         </table>
@@ -222,7 +222,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
        <p>Property values can be queried using the function <code>void* SAX2XMLReader::getFeature(const XMLCh* const)</code>.
         The parser owns the returned pointer, and the memory allocated for the returned pointer will
-        be destroyed when the parser is deleted.  To ensure assessiblity of the returned information after
+        be destroyed when the parser is deleted.  To ensure accessibility of the returned information after
         the parser is deleted, callers need to copy and store the returned information somewhere else.
         Since the returned pointer is a generic void pointer, check the column "Value Type" below to learn
         exactly what type of object each property returns for replication.</p>
