@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.29  2003/01/28 18:31:47  peiyongz
+ * Bug#13694: Allow Xerces to write the BOM to XML files
+ *
  * Revision 1.28  2003/01/24 20:21:46  tng
  * DOMWriter: Call XMLFormatTarget::flush when done.
  *
@@ -181,6 +184,7 @@ static const int NORMALIZE_CHARACTERS_ID          = 0x4;
 static const int SPLIT_CDATA_SECTIONS_ID          = 0x5;
 static const int VALIDATION_ID                    = 0x6;
 static const int WHITESPACE_IN_ELEMENT_CONTENT_ID = 0x7;
+static const int BYTE_ORDER_MARK_ID               = 0x8;
 
 //    feature                      true                       false
 // ================================================================================
@@ -207,7 +211,8 @@ static bool  featuresSupported[] = {
     false, true,  // normalize-characters
     true,  true,  // split-cdata-sections
     false, true,  // validation
-    true,  false  // whitespace-in-element-content
+    true,  false, // whitespace-in-element-content
+    true,  true   // byte-order-mark
 };
 
 // default end-of-line sequence
@@ -370,6 +375,11 @@ static const XMLCh  gFalse[] =
     chLatin_e,     chSingleQuote, chLF, chNull
 };
 
+static const XMLByte  BOM_utf16be[] = {(XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
+static const XMLByte  BOM_utf16le[] = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte) 0};
+static const XMLByte  BOM_ucs4be[]  = {(XMLByte)0x00, (XMLByte)0x00, (XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
+static const XMLByte  BOM_ucs4le[]  = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte)0x00, (XMLByte)0x00, (XMLByte) 0};
+
 //
 // Notification of the error though error handler
 //
@@ -426,11 +436,12 @@ DOMWriterImpl::DOMWriterImpl()
     setFeature(CANONICAL_FORM_ID,                false);
     setFeature(DISCARD_DEFAULT_CONTENT_ID,       true );
     setFeature(ENTITIES_ID,                      true );
-    setFeature(FORMAT_PRETTY_PRINT_ID,             false);
+    setFeature(FORMAT_PRETTY_PRINT_ID,           false);
     setFeature(NORMALIZE_CHARACTERS_ID,          false);
     setFeature(SPLIT_CDATA_SECTIONS_ID,          true );
     setFeature(VALIDATION_ID,                    false);
     setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
+    setFeature(BYTE_ORDER_MARK_ID,               false);
 }
 
 bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
@@ -778,9 +789,13 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
     case DOMNode::DOCUMENT_NODE: // Not to be shown to Filter
         {
+
+            // output BOM if needed
+            processBOM();          
+            
             setURCharRef();
             const DOMDocument *docu = (const DOMDocument*)nodeToWrite;
-
+        
             //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
             //[24] VersionInfo  ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
             //[80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' | "'" EncName
@@ -1220,6 +1235,8 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
         featureId = VALIDATION_ID;
     else if (XMLString::equals(featName, XMLUni::fgDOMWRTWhitespaceInElementContent))
         featureId = WHITESPACE_IN_ELEMENT_CONTENT_ID;
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTBOM))
+        featureId = BYTE_ORDER_MARK_ID;
 
     //feature name not resolvable
     if (featureId == INVALID_FEATURE_ID)
@@ -1478,6 +1495,59 @@ void DOMWriterImpl::release()
 {
     DOMWriterImpl* writer = (DOMWriterImpl*) this;
     delete writer;
+}
+
+void DOMWriterImpl::processBOM()
+{
+    // if the feature is not set, don't output bom
+    if (!getFeature(BYTE_ORDER_MARK_ID))
+        return;
+
+    if ((XMLString::compareIString(fEncoding, XMLUni::fgUTF16LEncodingString)  == 0) ||
+        (XMLString::compareIString(fEncoding, XMLUni::fgUTF16LEncodingString2) == 0)  )
+    {
+        fFormatter->writeBOM(BOM_utf16le, 2);
+    }
+    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUTF16BEncodingString)  == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16BEncodingString2) == 0)  )
+    {
+        fFormatter->writeBOM(BOM_utf16be, 2);
+    }
+    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString)  == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString2) == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString3) == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString4) == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUTF16EncodingString5) == 0)  ) 
+    {
+#if defined(ENDIANMODE_LITTLE)
+            fFormatter->writeBOM(BOM_utf16le, 2);
+#elif defined(ENDIANMODE_BIG)
+            fFormatter->writeBOM(BOM_utf16be, 2);
+#endif
+    }
+    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUCS4LEncodingString)  == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4LEncodingString2) == 0)  )
+    {
+        fFormatter->writeBOM(BOM_ucs4le, 4);
+    }
+    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUCS4BEncodingString)  == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4BEncodingString2) == 0)  )
+    {
+        fFormatter->writeBOM(BOM_ucs4be, 4);
+    }
+    else if ((XMLString::compareIString(fEncoding, XMLUni::fgUCS4EncodingString)  == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4EncodingString2) == 0) ||
+             (XMLString::compareIString(fEncoding, XMLUni::fgUCS4EncodingString3) == 0)  )
+    {
+#if defined(ENDIANMODE_LITTLE)
+        fFormatter->writeBOM(BOM_ucs4le, 4);
+#elif defined(ENDIANMODE_BIG)
+        fFormatter->writeBOM(BOM_ucs4be, 4);
+#endif
+    }
+
+    return;
+
 }
 
 XERCES_CPP_NAMESPACE_END

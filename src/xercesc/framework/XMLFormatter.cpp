@@ -460,7 +460,16 @@ XMLFormatter& XMLFormatter::operator<<(const XMLCh toFormat)
     return *this;
 }
 
-
+/**
+ * the parameter, count, is needed since stringLen()
+ * does not work on a BOM like "0xFE0xFF0x000x00" or
+ * "0x000x000xFF0xFE"
+ **/
+void XMLFormatter::writeBOM(const XMLByte* const toFormat
+                          , const unsigned int   count)
+{
+    fTarget->writeChars(toFormat, count, this);    
+}
 
 // ---------------------------------------------------------------------------
 //  XMLFormatter: Private helper methods

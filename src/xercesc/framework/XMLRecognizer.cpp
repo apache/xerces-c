@@ -151,12 +151,15 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
         return UTF_8;
 
     //
-    //  We know its at least two bytes, so lets check for a UTF-16 BOM. That
-    //  is quick to check and enough to identify two major encodings.
+    //  Checking BOM for UCS-4BE, UCS-4LE, UTF-16BE and UTF-16LE
     //
-    if ((rawBuffer[0] == 0xFE) && (rawBuffer[1] == 0xFF))
+    if ((rawBuffer[0] == 0x00) && (rawBuffer[1] == 0x00) && (rawBuffer[2] == 0xFE) && (rawBuffer[3] == 0xFF))
+        return UCS_4B;
+    else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE) && (rawBuffer[2] == 0x00) && (rawBuffer[3] == 0x00))
+        return UCS_4L;
+    else if ((rawBuffer[0] == 0xFE) && (rawBuffer[1] == 0xFF) && (rawBuffer[2] == 0x00) && (rawBuffer[3] != 0x00))
         return UTF_16B;
-    else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE))
+    else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE) && (rawBuffer[2] != 0x00) && (rawBuffer[3] == 0x00))
         return UTF_16L;
 
     //

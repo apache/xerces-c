@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/01/28 18:32:33  peiyongz
+ * Bug#13694: Allow Xerces to write the BOM to XML files
+ *
  * Revision 1.5  2003/01/24 20:20:22  tng
  * Add method flush to XMLFormatTarget
  *
@@ -307,6 +310,10 @@ public:
     (
         const   XMLCh           toFormat
     );
+
+    void XMLFormatter::writeBOM(const XMLByte* const toFormat
+                              , const unsigned int   count);
+
     //@}
 
     // -----------------------------------------------------------------------

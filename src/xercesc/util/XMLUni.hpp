@@ -283,6 +283,7 @@ public :
     static const XMLCh fgDOMWRTSplitCdataSections[];
     static const XMLCh fgDOMWRTValidation[];
     static const XMLCh fgDOMWRTWhitespaceInElementContent[];
+    static const XMLCh fgDOMWRTBOM[];
 
     // Locale
     static const char  fgXercescDefaultLocale[];

@@ -1323,6 +1323,20 @@ const XMLCh XMLUni::fgDOMWRTWhitespaceInElementContent[] =
 	chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t, chNull
 };
 
+//Xerces: http://apache.org/xml/features/dom/byte-order-mark
+const XMLCh XMLUni::fgDOMWRTBOM[] =
+{
+    chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash,
+    chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h,
+    chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+    chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e,
+    chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s,
+    chForwardSlash, chLatin_d, chLatin_o, chLatin_m, chForwardSlash,
+    chLatin_b, chLatin_y, chLatin_t, chLatin_e, chDash,
+    chLatin_o, chLatin_r, chLatin_d, chLatin_e, chLatin_r, chDash,
+    chLatin_m, chLatin_a, chLatin_r, chLatin_k, chNull
+};
+
 // en_US
 const char XMLUni::fgXercescDefaultLocale[] = "en_US";
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/01/28 18:31:47  peiyongz
+ * Bug#13694: Allow Xerces to write the BOM to XML files
+ *
  * Revision 1.11  2003/01/20 16:50:13  tng
  * DOMWriter fix:
  * 1. wrong wrong nested cdata message
@@ -415,6 +418,8 @@ private:
     void printIndent(int level) const;
     //does the actual work for processNode while keeping track of the level
     void processNode(const DOMNode* const nodeToWrite, int level);
+
+    void processBOM();
 
     // -----------------------------------------------------------------------
     //  Private data members
