@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.33  2003/05/05 21:23:21  neilg
+ * use of the new DOMNodeSPtr typedef and its friends to enable reference counting in
+ * the DOMWriter implementation for applications that require it.
+ *
  * Revision 1.32  2003/04/02 03:14:42  peiyongz
  * Bug#18594: DOMWriter does not recognize Document Fragment
  *
@@ -174,6 +178,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
+#include <xercesc/DOM/DOMSPtr.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -836,7 +841,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
             *fFormatter << gXMLDecl_endtag;
 
-            DOMNode *child = nodeToWrite->getFirstChild();
+            DOMNodeSPtr child = nodeToWrite->getFirstChild();
             while( child != 0)
             {
                 processNode(child, level);
@@ -899,7 +904,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
                 for (int i = 0; i < attrCount; i++)
                 {
-                    DOMNode  *attribute = attributes->item(i);
+					DOMAttrSPtr  attribute = (DOMAttr*)attributes->item(i);
 
                     // Not to be shown to Filter
 
@@ -947,7 +952,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             //  Test for the presence of children, which includes both
             //  text content and nested elements.
             //
-            DOMNode *child = nodeToWrite->getFirstChild();
+            DOMNodeSPtr child = nodeToWrite->getFirstChild();
             if (child != 0)
             {
                 // There are children. Close start-tag, and output children.
@@ -1037,7 +1042,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 // check if the referenced entity is defined or not
                 if (nodeToWrite->getOwnerDocument()->getDoctype()->getEntities()->getNamedItem(nodeName))
                 {
-                    DOMNode *child;
+                    DOMNodeSPtr child;
                     for (child = nodeToWrite->getFirstChild();
                     child != 0;
                     child = child->getNextSibling())
