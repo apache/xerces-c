@@ -1445,7 +1445,8 @@ MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
 StdInParse/Makefile \
-EnumVal/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+EnumVal/Makefile \
+CreateDOMDocument/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1544,7 +1545,8 @@ MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
 StdInParse/Makefile \
-EnumVal/Makefile"}
+EnumVal/Makefile \
+CreateDOMDocument/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
@@ -1618,5 +1620,4 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
-echo Also look at http://xml.apache.org/xerces-c/samples.html
 
