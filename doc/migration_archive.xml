@@ -2,9 +2,9 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Migration Archive">
-    <s2 title="Migrating from XML4C 2.x to &XercesCName; &XercesCVersion140;">    
+    <s2 title="Migrating from XML4C 2.x to &XercesCName; &XercesPreCVersion;">
        <p>This document is a discussion of the technical differences between
-       XML4C 2.x code base and the new &XercesCName; &XercesCVersion140; code base.</p>
+       XML4C 2.x code base and the new &XercesCName; &XercesPreCVersion; code base.</p>
 
        <p>Topics discussed are:</p>
        <ul>
@@ -14,7 +14,7 @@
             <li><link anchor="BugFixes">Bug Fixes</link></li>
             <li><link anchor="Speed">Speed</link></li>
         </ul>
-        <li><link anchor="Summary">Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;</link></li>
+        <li><link anchor="Summary">Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesPreCVersion;</link></li>
         <li><link anchor="Samples">The Samples</link></li>
         <li><link anchor="ParserClasses">Parser Classes</link></li>
         <li><link anchor="DOMLevel2">DOM Level 2 support</link></li>
@@ -68,15 +68,15 @@
 
 
     <anchor name="Summary"/>
-    <s2 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;">
+    <s2 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesPreCVersion;">
 
         <p>As mentioned, there are some major architectural changes
-        between the 2.3.x and &XercesCName; &XercesCVersion140; releases
+        between the 2.3.x and &XercesCName; &XercesPreCVersion; releases
         of the parser, and as a result the code has undergone
         significant restructuring. The list below mentions the public
         api's which existed in 2.3.x and no longer exist in
-        &XercesCName; &XercesCVersion140;. It also mentions the
-        &XercesCName; &XercesCVersion140; api which will give you the
+        &XercesCName; &XercesPreCVersion;. It also mentions the
+        &XercesCName; &XercesPreCVersion; api which will give you the
         same functionality.  Note: This list is not exhaustive. The
         API docs (and ultimately the header files) supplement this
         information.</p>

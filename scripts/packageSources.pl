@@ -289,6 +289,7 @@ sub change_documentation_entities()
                 $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
                 $line =~ s/"Xerces-C\+\+"/"XML4C"/g;
                 $line =~ s/"1\.5\.1"/"3\.5\.1"/g;
+                $line =~ s/"1\.4\.0"/"3\.3\.1"/g;
                 $line =~ s/"Xerces"/"XML4C"/g;
                 $line =~ s/"xerces-c1_5_1"/"xml4c-3_5_1"/g;
                 $line =~ s/"xerces-c-src1_5_1"/"xml4c-src-3_5_1"/g;

@@ -2,9 +2,9 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Migration">
-    <s2 title="Migrating from &XercesCName; &XercesCVersion140; to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; &XercesPreCVersion; to &XercesCName; &XercesCVersion;">
       <p>This document is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion140; code base and the new &XercesCName; &XercesCVersion; code base.</p>
+      &XercesCName; &XercesPreCVersion; code base and the new &XercesCName; &XercesCVersion; code base.</p>
 
       <p>Topics discussed are:</p>
       <ul>
@@ -68,7 +68,7 @@
     <s2 title="Changes required to migrate to &XercesCName; &XercesCVersion;">
 
         <p>There are some architectural changes between the &XercesCName;
-		&XercesCVersion140; and the &XercesCName; &XercesCVersion; releases
+		&XercesPreCVersion; and the &XercesCName; &XercesCVersion; releases
         of the parser, and as a result, some code has undergone restructuring
 		as shown below. </p>
 
@@ -85,7 +85,7 @@
 
         <anchor name="DTDValidator"/>
         <s3 title="DTDValidator">
-		    <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesCVersion140;
+		    <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesPreCVersion;
 			    or earlier. In &XercesCName; &XercesCVersion;, this process is broken down into three components:
             </p>
             <ul>
@@ -138,7 +138,7 @@
 
     <s2 title="Migration Archive">
 
-       <p> For migration information from XML4C 2.x to &XercesCName; &XercesCVersion140;,
+       <p> For migration information from XML4C 2.x to &XercesCName; &XercesPreCVersion;,
 	   please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>

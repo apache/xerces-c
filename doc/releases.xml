@@ -926,7 +926,7 @@
 
 <s2 title="Release Archive">
 
-    <p> For release information about &XercesCName; &XercesCVersion140; or earlier,
+    <p> For release information about &XercesCName; &XercesPreCVersion; or earlier,
         please refer to <jump href="releases_archive.html">Release Archive</jump>.
     </p>
 </s2>
