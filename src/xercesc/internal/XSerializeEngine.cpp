@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/09/19 16:04:01  peiyongz
+ * Resolve compilation error on 64bit platform (can convert (void* const) to int).
+ *
  * Revision 1.1  2003/09/18 18:31:24  peiyongz
  * OSU: Object Serialization Utilities
  *
@@ -813,7 +816,7 @@ inline void XSerializeEngine::ensurePointer(void* const ptr) const
 {
 
     TEST_THROW_ARG1( (ptr == 0)
-                   , (int)ptr
+                   , 0
                    , XMLExcepts::XSer_Inv_Null_Pointer
                    )
 
