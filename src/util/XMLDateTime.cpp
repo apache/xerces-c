@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/14 22:04:03  peiyongz
+ * Patch to apply check on Year and more rigorous on other fields as well.
+ *
  * Revision 1.3  2001/11/12 20:36:54  peiyongz
  * SchemaDateTimeException defined
  *
@@ -636,14 +639,14 @@ void XMLDateTime::parseYear()
     //
     int sign = findUTCSign((fBuffer[0] == chDash) ? 1 : 0);
 
-    if (sign == -1) 
+    if (sign == NOT_FOUND) 
     {
         fValue[CentYear] = parseIntYear(fEnd);
     }
     else 
     {
         fValue[CentYear] = parseIntYear(sign);
-        getTimeZone (sign);
+        getTimeZone(sign);
     }
 
     //initialize values 
@@ -702,6 +705,7 @@ void XMLDateTime::parseYearMonth()
 
     // get date
     getYearMonth();
+    fValue[Day] = DAY_DEFAULT;
     parseTimeZone();
 
     validateDateTime();
@@ -1010,24 +1014,6 @@ void XMLDateTime::getYearMonth()
                 , fBuffer);
         //("Year separator is missing or misplaced");
 
-    int length = yearSeparator - start;
-    if (length < 4) 
-    {
-        ThrowXML1(SchemaDateTimeException
-                , XMLExcepts::DateTime_year_tooShort
-                , fBuffer);
-        //"Year must have 'CCYY' format");
-    }
-    else if (length > 4 && 
-             fBuffer[start] == chDigit_0)
-    {
-        ThrowXML1(SchemaDateTimeException
-                , XMLExcepts::DateTime_year_leadingZero
-                , fBuffer);
-        //"Leading zeros are required if the year value would otherwise have fewer than four digits; 
-        // otherwise they are forbidden");
-    }
-
     fValue[CentYear] = parseIntYear(yearSeparator);
     fStart = yearSeparator + 1;  //skip the '-' and point to the first M
 
@@ -1194,7 +1180,8 @@ void XMLDateTime::validateDateTime() const
     }
 
     //validate days
-    if ( fValue[Day] > maxDayInMonthFor( fValue[CentYear], fValue[Month])) 
+    if ( fValue[Day] > maxDayInMonthFor( fValue[CentYear], fValue[Month]) ||
+         fValue[Day] == 0 ) 
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_day_invalid
@@ -1203,8 +1190,11 @@ void XMLDateTime::validateDateTime() const
     }
 
     //validate hours
-    if ( fValue[Hour] < 0  ||
-         fValue[Hour] > 23  ) 
+    if ((fValue[Hour] < 0)  || 
+        (fValue[Hour] > 23) || 
+        ((fValue[Hour] == 24) && ((fValue[Minute] !=0) || 
+                                  (fValue[Second] !=0) ||
+                                  (fValue[MiliSecond] !=0)))) 
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_hour_invalid
@@ -1212,7 +1202,7 @@ void XMLDateTime::validateDateTime() const
         //("Hour must have values 0-23");
     }
 
-    //validate
+    //validate minutes
     if ( fValue[Minute] < 0 ||
          fValue[Minute] > 59 )
     {
@@ -1222,7 +1212,7 @@ void XMLDateTime::validateDateTime() const
         //"Minute must have values 0-59");
     }
 
-    //validate
+    //validate seconds
     if ( fValue[Second] < 0 ||
          fValue[Second] > 60 )
     {
@@ -1232,9 +1222,9 @@ void XMLDateTime::validateDateTime() const
         //"Second must have values 0-60");
     }
 
-    //validate
-    if ( fTimeZone[hh] < -14 || 
-         fTimeZone[hh] > 14 )
+    //validate time-zone hours
+    if ( (abs(fTimeZone[hh]) > 14) ||
+         ((abs(fTimeZone[hh]) == 14) && (fTimeZone[mm] != 0)) )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_tz_hh_invalid
@@ -1242,9 +1232,8 @@ void XMLDateTime::validateDateTime() const
         //"Time zone should have range -14..+14");
     }
 
-    //validate
-    if ( fTimeZone[mm] < -59 || 
-         fTimeZone[mm] > 59   )
+    //validate time-zone minutes
+    if ( abs(fTimeZone[mm]) > 59 )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_min_invalid
@@ -1311,6 +1300,27 @@ int XMLDateTime::parseInt(const int start, const int end) const
 //
 int XMLDateTime::parseIntYear(const int end) const
 {
+    // skip the first leading '-'
+    int start = ( fBuffer[0] == chDash ) ? fStart + 1 : fStart;
+
+    int length = end - start;
+    if (length < 4) 
+    {
+        ThrowXML1(SchemaDateTimeException
+                , XMLExcepts::DateTime_year_tooShort
+                , fBuffer);
+        //"Year must have 'CCYY' format");
+    }
+    else if (length > 4 && 
+             fBuffer[start] == chDigit_0)
+    {
+        ThrowXML1(SchemaDateTimeException
+                , XMLExcepts::DateTime_year_leadingZero
+                , fBuffer);
+        //"Leading zeros are required if the year value would otherwise have fewer than four digits; 
+        // otherwise they are forbidden");
+    }
+
     bool negative = (fBuffer[0] == chDash);
     int  yearVal = parseInt((negative ? 1 : 0), end);
     return ( negative ? (-1) * yearVal : yearVal );
