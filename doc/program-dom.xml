@@ -668,11 +668,11 @@
         DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
         // optionally you can set some features on this builder
-        if (parser->canSetFeature(XMLUni::fgDOMValidation, true)
+        if (parser->canSetFeature(XMLUni::fgDOMValidation, true))
             parser->setFeature(XMLUni::fgDOMValidation, true);
-        if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true)
+        if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true))
             parser->setFeature(XMLUni::fgDOMNamespaces, true);
-        if (parser->canSetFeature((XMLUni::fgDOMDatatypeNormalization, true)
+        if (parser->canSetFeature((XMLUni::fgDOMDatatypeNormalization, true))
             parser->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
 
 
