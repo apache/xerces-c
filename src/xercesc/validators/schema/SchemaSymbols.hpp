@@ -249,27 +249,27 @@ public :
     static const int   fgINT_MAX_VALUE;
 
     enum {
-        EMPTY_SET = 0,
-        SUBSTITUTION = 1,
-        EXTENSION = 2,
-        RESTRICTION = 4,
-        LIST = 8,
-        UNION = 16,
-        ENUMERATION = 32
+        XSD_EMPTYSET = 0,
+        XSD_SUBSTITUTION = 1,
+        XSD_EXTENSION = 2,
+        XSD_RESTRICTION = 4,
+        XSD_LIST = 8,
+        XSD_UNION = 16,
+        XSD_ENUMERATION = 32
     };
 
     // group orders
     enum {
-        CHOICE = 0,
-        SEQUENCE= 1,
-        ALL = 2
+        XSD_CHOICE = 0,
+        XSD_SEQUENCE= 1,
+        XSD_ALL = 2
     };
 
     enum {
-        UNBOUNDED = -1,
-        NILLABLE = 1,
-        ABSTRACT = 2,
-        FIXED = 4
+        XSD_UNBOUNDED = -1,
+        XSD_NILLABLE = 1,
+        XSD_ABSTRACT = 2,
+        XSD_FIXED = 4
     };
 
 };

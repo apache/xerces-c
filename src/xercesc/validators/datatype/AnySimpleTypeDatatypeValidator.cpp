@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/13 20:16:51  knoaman
+ * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
+ *
  * Revision 1.4  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -88,7 +91,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  AnySimpleTypeDatatypeValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 AnySimpleTypeDatatypeValidator::AnySimpleTypeDatatypeValidator()
-    : DatatypeValidator(0, 0, SchemaSymbols::RESTRICTION, DatatypeValidator::AnySimpleType)
+    : DatatypeValidator(0, 0, SchemaSymbols::XSD_RESTRICTION, DatatypeValidator::AnySimpleType)
 {
 
 }

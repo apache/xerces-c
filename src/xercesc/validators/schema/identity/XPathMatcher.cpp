@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/01/13 20:16:52  knoaman
+ * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
+ *
  * Revision 1.5  2003/01/13 16:30:19  knoaman
  * [Bug 14469] Validator doesn't enforce xsd:key.
  *
@@ -348,7 +351,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
 				continue;
 
             DatatypeValidator* dv = ((SchemaElementDecl*) &elemDecl)->getDatatypeValidator();
-            bool isNillable = (((SchemaElementDecl *) &elemDecl)->getMiscFlags() & SchemaSymbols::NILLABLE) != 0;
+            bool isNillable = (((SchemaElementDecl *) &elemDecl)->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) != 0;
 
             matched(elemContent, dv, isNillable);
             fMatched[i] = 0;

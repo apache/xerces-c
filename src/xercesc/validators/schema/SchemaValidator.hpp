@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/01/13 20:16:51  knoaman
+ * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
+ *
  * Revision 1.11  2003/01/09 22:34:54  tng
  * [Bug 14955] error validating parser.
  *
@@ -454,8 +457,8 @@ SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
                                      const int min2, const int max2) {
 
     if (min1 >= min2 &&
-        (max2 == SchemaSymbols::UNBOUNDED ||
-         (max1 != SchemaSymbols::UNBOUNDED && max1 <= max2))) {
+        (max2 == SchemaSymbols::XSD_UNBOUNDED ||
+         (max1 != SchemaSymbols::XSD_UNBOUNDED && max1 <= max2))) {
         return true;
     }
     return false;

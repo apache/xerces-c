@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/01/13 20:16:51  knoaman
+ * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
+ *
  * Revision 1.5  2002/11/04 14:49:42  tng
  * C++ Namespace Support.
  *
@@ -173,7 +176,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
             (pElemDecl->getURI() == exemplar->getURI()))
         {
             // time to check for block value on element
-            if((pElemDecl->getBlockSet() & SchemaSymbols::SUBSTITUTION) != 0)
+            if((pElemDecl->getBlockSet() & SchemaSymbols::XSD_SUBSTITUTION) != 0)
                 return false;
 
             foundIt = true;
@@ -198,7 +201,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
 
         return((anElementDV == 0) ||
             ((anElementDV == exemplarDV) ||
-            ((exemplarBlockSet & SchemaSymbols::RESTRICTION) == 0)));
+            ((exemplarBlockSet & SchemaSymbols::XSD_RESTRICTION) == 0)));
     }
 
     // now we have to make sure there are no blocks on the complexTypes that this is based upon

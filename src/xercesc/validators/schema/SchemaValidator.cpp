@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2003/01/13 20:16:51  knoaman
+ * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
+ *
  * Revision 1.24  2002/12/20 22:10:47  tng
  * XML 1.1
  *
@@ -458,7 +461,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         else {
                             // this element has specified some value
                             // if the flag is FIXED, then this value must be same as default value
-                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::FIXED) != 0) {
+                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_FIXED) != 0) {
                                 if (fCurrentDV->compare(value, elemDefaultValue) != 0 )
                                     emitError(XMLValid::FixedDifferentFromActual, elemDecl->getFullName());
                             }
@@ -473,7 +476,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     else {
                         // no default value, then check nillable
                         if (XMLString::equals(value, XMLUni::fgZeroLenString)) {
-                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::NILLABLE) == 0)
+                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) == 0)
                                 fCurrentDV->validate(value);
                         }
                         else if (fNil) {
@@ -726,7 +729,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         }
                         else {
                             // the type is derived from ancestor
-                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::RESTRICTION)
+                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION)
                                 emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
                             if (elemDef->hasAttDefs()) {
                                 // if we have an attribute but xsi:type's type is simple, we have a problem...
@@ -818,7 +821,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                             }
                             else {
                                 // the type is derived from ancestor
-                                if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::RESTRICTION)
+                                if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION)
                                     emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
                                 if (elemDef->hasAttDefs()) {
                                     // if we have an attribute but xsi:type's type is simple, we have a problem...
@@ -848,14 +851,14 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     // Check whether this element is abstract.  If so, an error
     //
     int miscFlags = ((SchemaElementDecl*)elemDef)->getMiscFlags();
-    if ((miscFlags & SchemaSymbols::ABSTRACT) != 0) {
+    if ((miscFlags & SchemaSymbols::XSD_ABSTRACT) != 0) {
         emitError(XMLValid::NoDirectUseAbstractElement, elemDef->getFullName());
     }
 
     //
     // Check whether this element allows Nillable
     //
-    if (fNil && (miscFlags & SchemaSymbols::NILLABLE) == 0 ) {
+    if (fNil && (miscFlags & SchemaSymbols::XSD_NILLABLE) == 0 ) {
         fNil = false;
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
     }
@@ -1237,7 +1240,7 @@ void SchemaValidator::checkParticleDerivation(SchemaGrammar* const currentGramma
     ComplexTypeInfo* baseTypeInfo = 0;
     ContentSpecNode* curSpecNode = 0;
 
-    if (curTypeInfo->getDerivedBy() == SchemaSymbols::RESTRICTION
+    if (curTypeInfo->getDerivedBy() == SchemaSymbols::XSD_RESTRICTION
         && ((baseTypeInfo = curTypeInfo->getBaseComplexTypeInfo()) != 0)
         && ((curSpecNode = curTypeInfo->getContentSpec()) != 0)) {
 
@@ -1602,16 +1605,16 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     int derivedFlags = derivedElemDecl->getMiscFlags();
     int baseFlags = baseElemDecl->getMiscFlags();
 
-    if (((baseFlags & SchemaSymbols::NILLABLE) == 0) &&
-		((derivedFlags & SchemaSymbols::NILLABLE) != 0)) {
+    if (((baseFlags & SchemaSymbols::XSD_NILLABLE) == 0) &&
+		((derivedFlags & SchemaSymbols::XSD_NILLABLE) != 0)) {
         ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK2, derivedName);
     }
 
     const XMLCh* derivedDefVal = derivedElemDecl->getDefaultValue();
     const XMLCh* baseDefVal = baseElemDecl->getDefaultValue();
 
-    if (baseDefVal && (baseFlags & SchemaSymbols::FIXED) != 0 &&
-        ((derivedFlags & SchemaSymbols::FIXED) == 0 ||
+    if (baseDefVal && (baseFlags & SchemaSymbols::XSD_FIXED) != 0 &&
+        ((derivedFlags & SchemaSymbols::XSD_FIXED) == 0 ||
          !XMLString::equals(derivedDefVal, baseDefVal))) {
         ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK3, derivedName);
     }
@@ -1737,7 +1740,7 @@ SchemaValidator::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
         return;
 
     for (; rInfo && rInfo != bInfo; rInfo = rInfo->getBaseComplexTypeInfo()) {
-        if (rInfo->getDerivedBy() != SchemaSymbols::RESTRICTION) {
+        if (rInfo->getDerivedBy() != SchemaSymbols::XSD_RESTRICTION) {
 
             rInfo = 0;
             break;
@@ -2011,7 +2014,7 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
     int derivedMin = derivedSpecNode->getMinOccurs() * derivedCount;
     int derivedMax = derivedSpecNode->getMaxOccurs();
 
-    if (derivedMax != SchemaSymbols::UNBOUNDED) {
+    if (derivedMax != SchemaSymbols::XSD_UNBOUNDED) {
         derivedMax *= derivedCount;
     }
 

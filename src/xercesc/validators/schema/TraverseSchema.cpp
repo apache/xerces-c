@@ -1043,7 +1043,7 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
         // Remark: some code will be repeated in list|restriction| union but it
         //         is cleaner that way
         if (XMLString::equals(varietyName, SchemaSymbols::fgELT_LIST)) { //traverse List
-            if ((baseRefContext & SchemaSymbols::LIST) != 0) {
+            if ((baseRefContext & SchemaSymbols::XSD_LIST) != 0) {
 
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType);
                 popCurrentTypeNameStack();
@@ -2397,7 +2397,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
         if (subsGroupName && *subsGroupName) {
 
-            if (elemDecl->getMiscFlags() & SchemaSymbols::ABSTRACT )
+            if (elemDecl->getMiscFlags() & SchemaSymbols::XSD_ABSTRACT )
             {
                 reportSchemaError
                 (
@@ -2782,7 +2782,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
         }
 
         if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
-            baseValidator = checkForSimpleTypeValidator(content, SchemaSymbols::LIST);
+            baseValidator = checkForSimpleTypeValidator(content, SchemaSymbols::XSD_LIST);
         }
         else {
 
@@ -2795,7 +2795,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
     }
     else { // base was provided - get proper validator
 
-        baseValidator = findDTValidator(contentElem, typeName, baseTypeName, SchemaSymbols::LIST);
+        baseValidator = findDTValidator(contentElem, typeName, baseTypeName, SchemaSymbols::XSD_LIST);
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), true);
     }
 
@@ -2880,7 +2880,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
     }
     else { // base was provided - get proper validator
 
-        baseValidator = findDTValidator(contentElem, typeName, baseTypeName, SchemaSymbols::RESTRICTION);
+        baseValidator = findDTValidator(contentElem, typeName, baseTypeName, SchemaSymbols::XSD_RESTRICTION);
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), true);
     }
 
@@ -3050,7 +3050,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
 
             const XMLCh* memberTypeName = unionMembers.nextToken();
 
-            baseValidator = findDTValidator(contentElem, typeName, memberTypeName, SchemaSymbols::UNION);
+            baseValidator = findDTValidator(contentElem, typeName, memberTypeName, SchemaSymbols::XSD_UNION);
 
             if (baseValidator == 0) {
 
@@ -3087,7 +3087,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
 
         if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
 
-            baseValidator = checkForSimpleTypeValidator(content, baseRefContext | SchemaSymbols::UNION);
+            baseValidator = checkForSimpleTypeValidator(content, baseRefContext | SchemaSymbols::XSD_UNION);
 
             if (baseValidator == 0) {
 
@@ -3186,12 +3186,12 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
         fAttributeCheck.checkAttributes(simpleContent, GeneralAttributeCheck::E_Restriction, this);
-        typeInfo->setDerivedBy(SchemaSymbols::RESTRICTION);
+        typeInfo->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
     }
     else if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
         fAttributeCheck.checkAttributes(simpleContent, GeneralAttributeCheck::E_Extension, this);
-        typeInfo->setDerivedBy(SchemaSymbols::EXTENSION);
+        typeInfo->setDerivedBy(SchemaSymbols::XSD_EXTENSION);
     }
     else {
         reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContent);
@@ -3217,7 +3217,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     if (baseValidator != 0) {
 
         // check that the simpleType does not preclude derivation by extension
-        if ((baseValidator->getFinalSet() & SchemaSymbols::EXTENSION) == typeInfo->getDerivedBy()) {
+        if ((baseValidator->getFinalSet() & SchemaSymbols::XSD_EXTENSION) == typeInfo->getDerivedBy()) {
 
             reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::DisallowedSimpleTypeExtension,
                               baseName, typeName);
@@ -3250,7 +3250,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
         if (baseTypeInfo->getContentType() != SchemaElementDecl::Simple) {
 
             // Schema Errata: E1-27
-            if (typeInfo->getDerivedBy() == SchemaSymbols::RESTRICTION
+            if (typeInfo->getDerivedBy() == SchemaSymbols::XSD_RESTRICTION
                 && ((baseTypeInfo->getContentType() == SchemaElementDecl::Mixed_Simple
                     || baseTypeInfo->getContentType() == SchemaElementDecl::Mixed_Complex)
                     && emptiableParticle(baseTypeInfo->getContentSpec()))) {
@@ -3274,7 +3274,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     //Skip over any annotations in the restriction or extension elements
     DOMElement* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true);
 
-    if (typeInfo->getDerivedBy() == SchemaSymbols::RESTRICTION) {
+    if (typeInfo->getDerivedBy() == SchemaSymbols::XSD_RESTRICTION) {
 
         //Schema Spec: 5.11: Complex Type Definition Properties Correct: 2
         if (typeInfo->getBaseDatatypeValidator() != 0) {
@@ -3553,10 +3553,10 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     const XMLCh* const complexContentName = complexContent->getLocalName();
 
     if (XMLString::equals(complexContentName, SchemaSymbols::fgELT_RESTRICTION)) {
-        typeInfo->setDerivedBy(SchemaSymbols::RESTRICTION);
+        typeInfo->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
     }
     else if (XMLString::equals(complexContentName, SchemaSymbols::fgELT_EXTENSION)) {
-        typeInfo->setDerivedBy(SchemaSymbols::EXTENSION);
+        typeInfo->setDerivedBy(SchemaSymbols::XSD_EXTENSION);
     }
     else {
 
@@ -4569,7 +4569,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
 
     if (XMLString::equals(blockVal, SchemaSymbols::fgATTVAL_POUNDALL)) {
 
-        blockSet = SchemaSymbols::EXTENSION + SchemaSymbols::RESTRICTION + SchemaSymbols::SUBSTITUTION;
+        blockSet = SchemaSymbols::XSD_EXTENSION + SchemaSymbols::XSD_RESTRICTION + SchemaSymbols::XSD_SUBSTITUTION;
         return blockSet;
     }
 
@@ -4582,8 +4582,8 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
         if (XMLString::equals(token, SchemaSymbols::fgATTVAL_SUBSTITUTION)
 			&& blockType == ES_Block) {
 
-            if ((blockSet & SchemaSymbols::SUBSTITUTION) == 0 ) {
-                blockSet += SchemaSymbols::SUBSTITUTION;
+            if ((blockSet & SchemaSymbols::XSD_SUBSTITUTION) == 0 ) {
+                blockSet += SchemaSymbols::XSD_SUBSTITUTION;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionRepeated);
@@ -4591,8 +4591,8 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
-            if ((blockSet & SchemaSymbols::EXTENSION) == 0) {
-                blockSet += SchemaSymbols::EXTENSION;
+            if ((blockSet & SchemaSymbols::XSD_EXTENSION) == 0) {
+                blockSet += SchemaSymbols::XSD_EXTENSION;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
@@ -4600,8 +4600,8 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
-            if ((blockSet & SchemaSymbols::RESTRICTION) == 0 ) {
-                blockSet += SchemaSymbols::RESTRICTION;
+            if ((blockSet & SchemaSymbols::XSD_RESTRICTION) == 0 ) {
+                blockSet += SchemaSymbols::XSD_RESTRICTION;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::RestrictionRepeated);
@@ -4629,8 +4629,8 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
 
     if (XMLString::equals(finalVal, SchemaSymbols::fgATTVAL_POUNDALL)) {
 
-        finalSet = SchemaSymbols::RESTRICTION + SchemaSymbols::LIST +
-                   SchemaSymbols::UNION + SchemaSymbols::EXTENSION;
+        finalSet = SchemaSymbols::XSD_RESTRICTION + SchemaSymbols::XSD_LIST +
+                   SchemaSymbols::XSD_UNION + SchemaSymbols::XSD_EXTENSION;
         return finalSet;
     }
 
@@ -4643,8 +4643,8 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         if (XMLString::equals(token, SchemaSymbols::fgELT_UNION)
             && finalType == S_Final) {
 
-            if ((finalSet & SchemaSymbols::UNION) == 0) {
-                finalSet += SchemaSymbols::UNION;
+            if ((finalSet & SchemaSymbols::XSD_UNION) == 0) {
+                finalSet += SchemaSymbols::XSD_UNION;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UnionRepeated);
@@ -4653,8 +4653,8 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)
                  && finalType != S_Final) {
 
-            if ((finalSet & SchemaSymbols::EXTENSION) == 0) {
-                finalSet += SchemaSymbols::EXTENSION;
+            if ((finalSet & SchemaSymbols::XSD_EXTENSION) == 0) {
+                finalSet += SchemaSymbols::XSD_EXTENSION;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
@@ -4663,8 +4663,8 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         else if (XMLString::equals(token, SchemaSymbols::fgELT_LIST)
                  && finalType == S_Final) {
 
-            if ((finalSet & SchemaSymbols::LIST) == 0 ) {
-                finalSet += SchemaSymbols::LIST;
+            if ((finalSet & SchemaSymbols::XSD_LIST) == 0 ) {
+                finalSet += SchemaSymbols::XSD_LIST;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ListRepeated);
@@ -4672,8 +4672,8 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
-            if ((finalSet & SchemaSymbols::RESTRICTION) == 0 ) {
-                finalSet += SchemaSymbols::RESTRICTION;
+            if ((finalSet & SchemaSymbols::XSD_RESTRICTION) == 0 ) {
+                finalSet += SchemaSymbols::XSD_RESTRICTION;
             }
             else {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::RestrictionRepeated);
@@ -5055,7 +5055,7 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
         DatatypeValidator* subsValidator = subsElemDecl->getDatatypeValidator();
 
         if (subsValidator && subsValidator->isSubstitutableBy(validator)
-            && ((subsElemDecl->getFinalSet() & SchemaSymbols::RESTRICTION) == 0)) {
+            && ((subsElemDecl->getFinalSet() & SchemaSymbols::XSD_RESTRICTION) == 0)) {
                 return true;
         }
     }
@@ -5119,7 +5119,7 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
 
         if (XMLString::equals(nillable, SchemaSymbols::fgATTVAL_TRUE)
             || XMLString::equals(nillable, fgValueOne)) {
-            elementMiscFlags += SchemaSymbols::NILLABLE;
+            elementMiscFlags += SchemaSymbols::XSD_NILLABLE;
         }
     }
 
@@ -5127,12 +5127,12 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
 
         if (XMLString::equals(abstract, SchemaSymbols::fgATTVAL_TRUE)
             || XMLString::equals(abstract, fgValueOne)) {
-            elementMiscFlags += SchemaSymbols::ABSTRACT;
+            elementMiscFlags += SchemaSymbols::XSD_ABSTRACT;
         }
     }
 
     if (isFixedVal) {
-        elementMiscFlags += SchemaSymbols::FIXED;
+        elementMiscFlags += SchemaSymbols::XSD_FIXED;
     }
 
     const XMLCh* prefix = getPrefix(name);
@@ -5395,7 +5395,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
     bool isMaxUnbounded = XMLString::equals(maxOccursStr, fgUnbounded);
 
     if (isMaxUnbounded) {
-        maxOccurs = SchemaSymbols::UNBOUNDED;
+        maxOccurs = SchemaSymbols::XSD_UNBOUNDED;
         if (specNode)
             specNode->setMaxOccurs(maxOccurs);
     }
@@ -5492,7 +5492,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
 
     if (baseTypeInfo) {
 
-        if (typeDerivedBy == SchemaSymbols::RESTRICTION) {
+        if (typeDerivedBy == SchemaSymbols::XSD_RESTRICTION) {
 
             // check to see if the baseType permits derivation by restriction
             if((baseTypeInfo->getFinalSet() & typeDerivedBy) != 0) {
@@ -5525,7 +5525,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             processElements(ctElem, baseTypeInfo, typeInfo);
         }
     }
-    else if (isBaseAnyType && typeDerivedBy == SchemaSymbols::EXTENSION && !isMixed) {
+    else if (isBaseAnyType && typeDerivedBy == SchemaSymbols::XSD_EXTENSION && !isMixed) {
 
         reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::MixedOrElementOnly, baseLocalPart, typeName);
         throw TraverseSchema::InvalidComplexTypeInfo; //REVISIT - should we continue
@@ -5599,7 +5599,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
 
         ContentSpecNode* baseSpecNode = baseTypeInfo->getContentSpec();
 
-        if (typeDerivedBy == SchemaSymbols::RESTRICTION) {
+        if (typeDerivedBy == SchemaSymbols::XSD_RESTRICTION) {
 
             //check derivation valid - content type is empty (5.2)
             if (!typeInfo->getContentSpec()) {
@@ -5649,7 +5649,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
     // -------------------------------------------------------------
     // Set the content type
     // -------------------------------------------------------------
-    if (isBaseAnyType && typeDerivedBy == SchemaSymbols::EXTENSION) {
+    if (isBaseAnyType && typeDerivedBy == SchemaSymbols::XSD_EXTENSION) {
 
         ContentSpecNode* anySpecNode = new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
                                                                      XMLUni::fgZeroLenString,
@@ -5658,7 +5658,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
 
         anySpecNode->setType(ContentSpecNode::Any_Lax);
         anySpecNode->setMinOccurs(0);
-        anySpecNode->setMaxOccurs(SchemaSymbols::UNBOUNDED);
+        anySpecNode->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
 
         if (!specNode) {
             typeInfo->setContentSpec(anySpecNode);
@@ -5988,7 +5988,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
     SchemaAttDef* baseAttWildCard = (baseTypeInfo) ? baseTypeInfo->getAttWildCard() : 0;
     Janitor<SchemaAttDef> janBaseAttWildCard(0);
 
-    if (derivedBy == SchemaSymbols::EXTENSION) {
+    if (derivedBy == SchemaSymbols::XSD_EXTENSION) {
 
         if (isBaseAnyType) {
 
@@ -6019,7 +6019,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotExpressibleWildCardIntersection);
         }
     }
-    else if (baseAttWildCard && derivedBy == SchemaSymbols::EXTENSION) {
+    else if (baseAttWildCard && derivedBy == SchemaSymbols::XSD_EXTENSION) {
 
         if (isBaseAnyType) {
 
@@ -6039,7 +6039,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
     bool baseWithAttributes = (baseTypeInfo && baseTypeInfo->hasAttDefs());
     bool childWithAttributes = (typeInfo->hasAttDefs() || typeInfo->getAttWildCard());
 
-    if (derivedBy == SchemaSymbols::RESTRICTION && childWithAttributes) {
+    if (derivedBy == SchemaSymbols::XSD_RESTRICTION && childWithAttributes) {
 
         if (!baseWithAttributes && !baseAttWildCard) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_1);
@@ -6066,7 +6066,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
             // if found a duplicate, then skip the one from the base type
             if (typeInfo->getAttDef(localPart, attName->getURI()) != 0) {
 
-                if (derivedBy == SchemaSymbols::EXTENSION) {
+                if (derivedBy == SchemaSymbols::XSD_EXTENSION) {
                     reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttInDerivation, localPart);
                 }
 

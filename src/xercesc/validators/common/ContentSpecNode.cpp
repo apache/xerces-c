@@ -264,8 +264,8 @@ int ContentSpecNode::getMaxTotalRange() const {
 
     int max = fMaxOccurs;
 
-    if (max == SchemaSymbols::UNBOUNDED) {
-         return SchemaSymbols::UNBOUNDED;
+    if (max == SchemaSymbols::XSD_UNBOUNDED) {
+         return SchemaSymbols::XSD_UNBOUNDED;
     }
 
     if (fType == ContentSpecNode::Sequence
@@ -274,16 +274,16 @@ int ContentSpecNode::getMaxTotalRange() const {
 
         int maxFirst = fFirst->getMaxTotalRange();
 
-        if (maxFirst == SchemaSymbols::UNBOUNDED) {
-             return SchemaSymbols::UNBOUNDED;
+        if (maxFirst == SchemaSymbols::XSD_UNBOUNDED) {
+             return SchemaSymbols::XSD_UNBOUNDED;
         }
 
         if (fSecond) {
 
             int maxSecond = fSecond->getMaxTotalRange();
 
-            if (maxSecond == SchemaSymbols::UNBOUNDED) {
-                return SchemaSymbols::UNBOUNDED;
+            if (maxSecond == SchemaSymbols::XSD_UNBOUNDED) {
+                return SchemaSymbols::XSD_UNBOUNDED;
             }
             else {
 

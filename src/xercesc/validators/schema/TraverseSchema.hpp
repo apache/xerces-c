@@ -187,7 +187,7 @@ private:
                                                   const bool isMixed);
     DatatypeValidator*  traverseSimpleTypeDecl(const DOMElement* const childElem,
                                                const bool topLevel = true,
-                                               int baseRefContext = SchemaSymbols::EMPTY_SET);
+                                               int baseRefContext = SchemaSymbols::XSD_EMPTYSET);
     int                 traverseComplexTypeDecl(const DOMElement* const childElem,
                                                 const bool topLevel = true,
                                                 const XMLCh* const recursingTypeName = 0);
@@ -309,7 +309,7 @@ private:
       * Return a dataype validator if valid type, otherwise 0.
       */
     DatatypeValidator* checkForSimpleTypeValidator(const DOMElement* const content,
-                                                   int baseRefContext = SchemaSymbols::EMPTY_SET);
+                                                   int baseRefContext = SchemaSymbols::XSD_EMPTYSET);
 
     /**
       * Process complexType content of an element
