@@ -249,7 +249,7 @@
             <Message Id="StrPool_IllegalId" Text="String pool id was not legal"/>
             <Message Id="Trans_CouldNotCreateDefCvtr" Text="Could not create a default transcoder"/>
             <Message Id="Trans_InvalidSizeReq" Text="The maximum size to xlat is larger than the declared block size"/>
-            <Message Id="Trans_Unrepresentable" Text="Unicode char {0} is representable in encoding {1}"/>
+            <Message Id="Trans_Unrepresentable" Text="Unicode char {0} is not representable in encoding {1}"/>
             <Message Id="Trans_NotValidForEncoding" Text="Character {0} is not valid for encoding {1}"/>
             <Message Id="Trans_BadBlockSize" Text="The requested block size is not equal to the size set during construction"/>
             <Message Id="Trans_BadSrcSeq" Text="An invalid multi-byte source text sequence was encountered"/>
