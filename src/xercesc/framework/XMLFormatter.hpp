@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/09/08 21:48:36  peiyongz
+ * Restore pre2.3 constructors
+ *
  * Revision 1.15  2003/05/30 16:11:43  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -305,6 +308,24 @@ public:
         ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
 
+    XMLFormatter
+    (
+        const   XMLCh* const            outEncoding
+        ,       XMLFormatTarget* const  target
+        , const EscapeFlags             escapeFlags = NoEscapes
+        , const UnRepFlags              unrepFlags = UnRep_Fail
+        ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    XMLFormatter
+    (
+        const   char* const             outEncoding
+        ,       XMLFormatTarget* const  target
+        , const EscapeFlags             escapeFlags = NoEscapes
+        , const UnRepFlags              unrepFlags = UnRep_Fail
+        ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
+    );
+    
     ~XMLFormatter();
     //@}
 

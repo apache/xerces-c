@@ -282,6 +282,35 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
     fIsXML11 = XMLString::equals(docVersion, XMLUni::fgVersion1_1);
 }
 
+XMLFormatter::XMLFormatter( const   char* const             outEncoding
+                            ,       XMLFormatTarget* const  target
+                            , const EscapeFlags             escapeFlags
+                            , const UnRepFlags              unrepFlags
+                            ,       MemoryManager* const    manager)
+{
+    XMLFormatter(outEncoding
+               , "1.0"
+               , target
+               , escapeFlags
+               , unrepFlags
+               , manager);
+}
+
+
+XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
+                            ,       XMLFormatTarget* const  target
+                            , const EscapeFlags             escapeFlags
+                            , const UnRepFlags              unrepFlags
+                            ,       MemoryManager* const    manager)
+{
+    XMLFormatter(outEncoding
+               , XMLUni::fgVersion1_0
+               , target
+               , escapeFlags
+               , unrepFlags
+               , manager);
+}
+
 XMLFormatter::~XMLFormatter()
 {
     fMemoryManager->deallocate(fAposRef); //delete [] fAposRef;
