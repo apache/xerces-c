@@ -9,6 +9,7 @@
     <li><link anchor="BuildUNIX">Building &XercesCName; on UNIX.</link></li>
     <li><link anchor="BuildWinVisualAge">Building &XercesCName; on Windows using Visual Age.</link></li>
     <li><link anchor="BuildOS2VisualAge">Building &XercesCName; on OS/2 using Visual Age.</link></li>
+    <li><link anchor="BuildAS400">Building &XercesCName; on AS/400.</link></li>
     <li><link anchor="BuildMac">Building &XercesCName; on Macintosh.</link></li>
     <li><link anchor="BuildICU">Building ICU.</link></li>
     <li><link anchor="BuildDocs">How to build the User Documentation?.</link></li>
@@ -381,6 +382,219 @@ gmake</source>
             </s3>
     </s2>
 
+    <anchor name="BuildAS400"/>
+    <s2 title="Building on AS/400">
+            <p>The following addresses the requirements and build of
+	       &XercesCName; natively on the AS/400.
+            </p>
+            <s3 title="Building &XercesCName; library">
+                <p><em>Requirements:</em></p>
+
+                <ul>
+                    <li><code>QSHELL</code> interpreter installed (install base option 30, operating system)</li>
+                    <li>QShell Utilities,  PRPQ  5799-XEH</li>
+                    <li>ILE C++ for AS/400,  PRPQ 5799-GDW</li>
+                    <li>GNU facilities  (the gnu facilities are currently available by request
+                    only.  Send e-mail to <jump href="mailto:rchasgo400@us.ibm.com">rchasgo400@us.ibm.com</jump>)</li>
+                </ul>
+
+                <p><em>Recommendations:</em></p>
+
+                <ul>
+				<li>There are a couple of options when building the XML4C parser on AS/400.
+				For messaging support, you can use the in memory message option or the
+				message file support. For code page translation, you can use the AS/400
+				native Iconv400 support or ICU. If you choose ICU, follow the instructions
+				to build the ICU service program with the ICU download. Those instructions
+				are not included here.</li>
+
+    			<li>Currently we recommend that you take the options of MsgFile and
+    			Iconv400 (see below)</li>
+                </ul>
+
+                <p><em>Setup Instructions:</em></p>
+
+				<ul>
+				<li>Make sure that you have the requirements installed on your AS/400.
+				We highly recommend that you read the writeup that accompanies the gnu
+				facilities download.  There are install instructions as well as
+				information about how modules, programs and service programs can be
+				created in Unix-like fashion using gnu utilities.  Note that symbolic
+				links are use in the file system to point to actual AS/400 <code>*module</code>,
+				<code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
+				<li>Download the tar file  (unix version) to the AS/400
+				(using a mapped drive), and decompress and <code>untar</code> the source.
+				We have had difficulty with the tar command on AS/400. This is under
+				investigation.  If you have trouble, we recommend the following work
+				around:</li></ul>
+<source>
+qsh:
+gunzip -d &lt;tar file.gz&gt;
+pax -r -f &lt;uncompressed tar file&gt;</source>
+
+				<ul>
+				<li>Create AS400 target library. This library will be the target
+				for the resulting  modules and  &XercesCName; service program. You will
+				specify this library on the <code>OUTPUTDIR</code> environment variable
+				in step 4</li>
+				<li>Set up the following environment variables in your build process
+				(use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
+				</ul>
+<source>
+XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
+PLATFORM  - 'OS400'
+MAKE   - '/usr/bin/gmake'
+OUTPUTDIR  - &lt;identifies target as400 library for *module, *pgm and *srvpgm objects&gt;
+ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source>
+
+				<ul>
+				<li>Add <code>QCXXN</code>, to your build process library list.
+				This results in the resolution of <code>CRTCPPMOD</code> used by the
+				<code>icc</code> compiler.</li>
+
+				<li>The runConfigure instruction below uses <code>'egrep'</code>.
+				This is not on the AS/400 but you can create it by doing the following:
+				<code>edtf '/usr/bin/egrep'</code> with the following source:</li>
+				</ul>
+
+<source>
+#!/usr/bin/sh
+/usr/bin/grep -e "$@"</source>
+
+<p>You may want to put the environment variables and library list
+setup instructions in a <code>CL</code> program so you will not forget these steps
+during your build.</p>
+
+<p><em>Configure</em></p>
+
+<p>To configure the make files for an AS/400 build do the following:</p>
+<source>
+qsh
+cd &lt;full path to &XercesCName;&gt;/src
+runConfigure -p os400 -x icc -c icc -m MsgFile -t Iconv400</source>
+
+<p>Troubleshooting:</p>
+<source>error: configure: error: installation or configuration problem:
+C compiler cannot create executables.</source>
+
+<p>If during <code>runConfigure</code> you see the above error message, it
+can mean one of two things. Either <code>QCXXN</code> is not on your library
+list  <em>OR</em> the <code>runConfigure</code> cannot create the temporary
+modules (<code>CONFTest1</code>, etc) it uses to test out the compiler
+options. The second reason happens because the test modules already exist
+from a previous run of <code>runConfigure</code>. To correct the problem,
+do the following:</p>
+<source>
+DLTMOD &lt;your OUTPUTDIR library&gt;/CONFT* and
+DLTPGM your &lt;OUTPUTDIR library&gt;/CONFT*</source>
+
+<p><em>Build</em></p>
+
+<source>
+qsh
+gmake -e</source>
+
+<p>The above gmake will result in a service program being created
+in your specified library and a symbolic link to that service program
+placed in &lt;path to &XercesCName;/lib&gt;. You can either bind your
+XML application programs directly to the parser's service program
+via the <code>BNDSRVPGM</code> option on the <code>CRTPGM</code> or
+<code>CRTSRVPGM</code> command  or you can specify a binding directory
+on your <code>icc</code>  command. To specify an archive file to bind to,
+use the  <code>-L, -l</code> binding options on icc.  An archive file
+on AS/400 is a binding directory. To create an archive file, use
+<code>qar</code> command.  (see the gnu facilities write up).
+</p>
+
+<p>
+After building the &XercesCName; service program, create a binding directory
+by doing the following (note, this binding directory is used when building
+the samples):</p>
+<source>
+qsh
+cd &lt;full path to &XercesCName;>/lib&gt;
+qar -cuv libxercesc1_1.a *.o
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/libxercesc1_1.a')
+command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
+
+
+<p><em>Troubleshooting:</em></p>
+<p>If you are on a V4R3 system, you will get a bind problem
+<code>'descriptor  QlgCvtTextDescToDesc not found'</code> using Iconv400.
+On V4R3 the system doesn't automatically pick up the <code>QSYS/QLGUSR</code> service
+program for you when resolving this function. This is not the case on V4R4.
+To fix this, you can either manually create the service program after creating
+all the resulting modules in your &lt;OUTPUTDIR&gt; library or you can create
+a symbolic link to a binding directory that points to  the <code>QLGUSR</code>
+service program and then specify  an additional <code>-L, -l</code> on the
+<code>EXTRA_LINK_OPTIONS</code> in <code>Makefile.incl</code>.
+See the <code>ln</code> and <code>qar</code> function in the gnu utilities.</p>
+
+<p>To build for transcoder ICU:</p>
+<ol>
+ <li>Make sure you have an <code>ICUROOT</code> path set up so that you can
+ find the ICU header files (usually <code>/usr/local</code>)</li>
+ <li>Make sure you have created a binding directory (symbolic link)
+ in the file system so that you can bind the &XercesCName; service program
+ to the ICU service program and specify that on the <code>EXTRA_LINK_OPTIONS</code>
+ in <code>src/Makefile.incl</code> (usually the default is a link
+ in <code>/usr/local/lib</code>).</li>
+</ol>
+
+<p><em>Creating AS400 XML parser message file:</em></p>
+<p>As specified earlier, the <code>-m</code> MsgFile support on the
+<code>runConfigure</code> enable the parser messages to be pulled from
+an AS/400 message file. To view the source for creating  the message file
+and the XML parser messages, see the following stream file:</p>
+<source>
+EDTF &lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/CrtXMLMsgs</source>
+
+<p>In the prolog of <code>CrtXMLMsgs</code> there are instructions to create
+the message file:</p>
+<ol>
+<li>Use the <code>CPYFRMSTMF</code> to copy the CL source to an AS/400 source
+physical file. Note that the target source file needs to have record length
+of about 200 bytes to avoid any truncation.</li>
+<li>Create the CL program to create the message file and add the various
+message descriptions</li>
+<li>Call the CL program, providing the name of the message file
+(use <code>QXMLMSG</code> as default) and a library  (this can be any
+library, including any product library in which you wish to embed
+the xml parser)</li>
+</ol>
+
+<p>Note that the &XercesCName; source code for resolving parser messages is
+using by default message file  <code>QXMLMSG, *LIBL</code>.
+If you want to change either the message file name or explicitly qualify the
+library to match your product needs, you must edit the following <code>.cpp</code>
+files prior to your build.</p>
+<source>
+&lt;full path to &XercesCName;&gt;/src/util/MsgLoaders/MsgFile/MsgLoader.cpp
+&lt;full path to &XercesCName;&gt;/src/util/Platforms/OS400/OS400PlatformUtils.cpp</source>
+
+<p><em>Troubleshooting:</em></p>
+<p>If you are using the parser and are failing to get any  message text
+for error codes, it may be because of the <code>*LIBL</code> resolution
+of the message file.</p>
+</s3>
+
+<s3 title="Building Samples on AS/400">
+<source>
+qsh
+cd &lt;full path to &XercesCName;&gt;/samples
+runConfigure -p os400 -x icc -c icc
+gmake -e</source>
+
+<p><em>Troubleshooting:</em></p>
+<p>If you take a <code>'sed'</code> error, while trying to make the samples.
+This is an AS400 anomaly having to do with certain new line character and
+the <code>sed</code> function. A temporary work around is to use <code>EDTF</code>
+on the configure stream file (<code>../samples/configure</code>) and delete the
+following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
+</p>
+
+            </s3>
+    </s2>
 
     <anchor name="BuildMac"/>
     <s2 title="Building on Macintosh using CodeWarrior">
@@ -658,7 +872,7 @@ gmake</source>
       isolated to a couple of files, which should ease the porting
       effort.  Here are the basic steps that should be followed to
       port &XercesCProjectName;.</p>
-            
+
       <ol>
 
         <li>The directory 'src/util/Platforms' contains the
@@ -681,14 +895,14 @@ gmake</source>
         Probably the comments in the Win32 and Visual C++ will be
         the best to follow, since that is where the main
         development is done.</li>
-                
+
         <li>Next, edit the file XML4CDefs.hpp , which is where all
             of the fundamental stuff comes into the system. You will
             see conditional sections in there where the above
             per-platform and per-environment headers are brought in.
             Add the new ones for your platform under the appropriate
             conditionals.</li>
-    
+
         <li>Now edit 'AutoSense.hpp'. Here we set canonical &XercesCProjectName;
             internal #define tokens which indicate the platform and
             compiler. These definitions are based on known platform
@@ -703,7 +917,7 @@ gmake</source>
             careful. If you are using say another compiler on Win32,
             probably it will use similar tokens so that the platform
             will get picked up already using what is already there.</li>
-        
+
         <li>Once this is done, you will then need to implement a
             version of the 'platform utilities' for your platform.
             Each operating system has a file which implements some
@@ -717,7 +931,7 @@ gmake</source>
             methods are there (with dummy returns where needed to make
             the compiler happy.) Once you've done that, you can start
             to get it to build without any real implementation.</li>
-        
+
         <li>Once you have the system building, then start
             implementing your own platform utilties methods. Follow
             the comments in the Win32 version as to what they do, the
@@ -728,7 +942,7 @@ gmake</source>
       </ol>
       <p>That is the work required in a nutshell!</p>
     </s2>
-    
+
 
     <anchor name="WCharT"/>
     <s2 title="What should I define XMLCh to be?">
