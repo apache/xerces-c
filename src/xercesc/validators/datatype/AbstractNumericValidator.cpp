@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2004/12/01 17:44:20  cargilld
+ * Minor code cleanup.
+ *
  * Revision 1.12  2004/09/08 13:56:52  peiyongz
  * Apache License Version 2.0
  *
@@ -107,6 +110,9 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber*         const theDat
 {
     int thisFacetsDefined = getFacetsDefined();
     int result;
+
+    if (thisFacetsDefined == 0)
+        return;
 
     try
     {
