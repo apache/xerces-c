@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/08/08 18:33:44  peiyongz
+ * fix: unresolved symbol warning for 'pow'.
+ *
  * Revision 1.7  2001/07/25 19:07:42  peiyongz
  * Fix to AIX compilation error: The function abs must have a prototype.
  *
@@ -89,7 +92,6 @@
 #include <util/NumberFormatException.hpp>
 #include <util/TransService.hpp>
 #include <util/Janitor.hpp>
-#include <math.h>
 
 /**
  * Constructs a BigDecimal from a string containing an optional (plus | minus)
@@ -367,7 +369,4 @@ XMLCh*  XMLBigDecimal::toString() const
 //
 //
 //
-double XMLBigDecimal::doubleValue() const
-{
-    return (double)(fIntVal->intValue()) * (double) pow(10.0, (double) getScale() * -1);
-}
+

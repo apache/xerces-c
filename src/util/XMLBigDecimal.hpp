@@ -116,8 +116,6 @@ public:
 
     unsigned int          getTotalDigit() const;
 
-    double                doubleValue() const;
-
 	/**
 	 *  Return string representation of the decimal value.
      *  A decimal point will be included as necessary, 
