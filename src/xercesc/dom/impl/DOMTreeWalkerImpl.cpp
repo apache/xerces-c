@@ -499,6 +499,6 @@ short DOMTreeWalkerImpl::acceptNode (DOMNode* node) {
 
 void DOMTreeWalkerImpl::release()
 {
-    DOMTreeWalkerImpl* tree = (DOMTreeWalkerImpl*) this;
-    delete tree;
+    // for performance reason, do not recycle pointer
+    // chance that this is allocated again and again is not usual
 }

@@ -383,9 +383,10 @@ void DOMParentNode::normalize()
             next->getNodeType() == DOMNode::TEXT_NODE )
         {
             ((DOMTextImpl *) kid)->appendData(((DOMTextImpl *) next)->getData());
-            DOMNode* rem = removeChild(next);
-            if (rem)
-                rem->release();
+            // revisit:
+            //   should I release the removed node?
+            //   not released in case user still referencing it externally
+            removeChild(next);
             next = kid; // Don't advance; there might be another.
         }
 

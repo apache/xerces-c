@@ -840,8 +840,8 @@ const DOMNode* DOMRangeImpl::getCommonAncestorContainer() const
 void DOMRangeImpl::release()
 {
     detach();
-    DOMRangeImpl* range = (DOMRangeImpl*) this;
-    delete range;
+    // for performance reason, do not recycle pointer
+    // chance that this is allocated again and again is not usual
 }
 
 //---------------------
@@ -1312,7 +1312,7 @@ DOMDocumentFragment* DOMRangeImpl::traverseCommonAncestors( DOMNode*startAncesto
  * as "right boundary" nodes are: H, I, and D.
  *
  */
-DOMNode*DOMRangeImpl::traverseRightBoundary( DOMNode*root, int how )
+DOMNode* DOMRangeImpl::traverseRightBoundary( DOMNode*root, int how )
 {
     DOMNode*next = getSelectedNode( fEndContainer, fEndOffset-1 );
     bool isFullySelected = ( next!=fEndContainer );
@@ -1391,7 +1391,7 @@ DOMNode*DOMRangeImpl::traverseRightBoundary( DOMNode*root, int how )
  * as "left boundary" nodes are: F, G, and B.
  *
  */
-DOMNode*DOMRangeImpl::traverseLeftBoundary( DOMNode*root, int how )
+DOMNode* DOMRangeImpl::traverseLeftBoundary( DOMNode*root, int how )
 {
     DOMNode*next = getSelectedNode( getStartContainer(), getStartOffset() );
     bool isFullySelected = ( next!=getStartContainer() );
@@ -1438,7 +1438,7 @@ DOMNode*DOMRangeImpl::traverseLeftBoundary( DOMNode*root, int how )
  * have been previously detected and been routed to traverseTextNode.
  *
  */
-DOMNode*DOMRangeImpl::traverseNode( DOMNode* n, bool isFullySelected, bool isLeft, int how )
+DOMNode* DOMRangeImpl::traverseNode( DOMNode* n, bool isFullySelected, bool isLeft, int how )
 {
     if ( isFullySelected )
         return traverseFullySelected( n, how );
@@ -1453,7 +1453,7 @@ DOMNode*DOMRangeImpl::traverseNode( DOMNode* n, bool isFullySelected, bool isLef
  * selected.
  *
  */
-DOMNode*DOMRangeImpl::traverseFullySelected( DOMNode* n, int how )
+DOMNode* DOMRangeImpl::traverseFullySelected( DOMNode* n, int how )
 {
     switch( how )
     {
@@ -1467,9 +1467,10 @@ DOMNode*DOMRangeImpl::traverseFullySelected( DOMNode* n, int how )
         }
         return n;
     case DELETE_CONTENTS:
-        DOMNode* rem = n->getParentNode()->removeChild(n);
-        if (rem)
-            rem->release();
+        // revisit:
+        //   should I release the removed node?
+        //   not released in case user still referencing it externally
+        n->getParentNode()->removeChild(n);
         return 0;
     }
     return 0;
@@ -1481,7 +1482,7 @@ DOMNode*DOMRangeImpl::traverseFullySelected( DOMNode* n, int how )
  * selected and is not a text node.
  *
  */
-DOMNode*DOMRangeImpl::traversePartiallySelected( DOMNode*n, int how )
+DOMNode* DOMRangeImpl::traversePartiallySelected( DOMNode*n, int how )
 {
     switch( how )
     {
@@ -1501,7 +1502,7 @@ DOMNode*DOMRangeImpl::traversePartiallySelected( DOMNode*n, int how )
  * both the start and end points of the range.
  *
  */
-DOMNode*DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
+DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
 {
     const XMLCh* txtValue = n->getNodeValue();
 
@@ -1625,7 +1626,7 @@ DOMNode*DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
  * first node selected is the parent node itself.
  *
  */
-DOMNode*DOMRangeImpl::getSelectedNode( DOMNode*container, int offset )
+DOMNode* DOMRangeImpl::getSelectedNode( DOMNode*container, int offset )
 {
     if ( container->getNodeType() == DOMNode::TEXT_NODE )
         return container;
@@ -1694,7 +1695,7 @@ void DOMRangeImpl::recurseTreeAndCheck(DOMNode* start, DOMNode* end)
 }
 
 
-DOMNode*DOMRangeImpl::removeChild(DOMNode* parent, DOMNode* child)
+DOMNode* DOMRangeImpl::removeChild(DOMNode* parent, DOMNode* child)
 {
     fRemoveChild = child; //only a precaution measure not to update this range data before removal
     DOMNode*n = parent->removeChild(child);

@@ -393,7 +393,8 @@ void DOMNodeIteratorImpl::removeNode (DOMNode* node) {
 void DOMNodeIteratorImpl::release()
 {
     detach();
-    DOMNodeIteratorImpl* iter = (DOMNodeIteratorImpl*) this;
-    delete iter;
+
+    // for performance reason, do not recycle pointer
+    // chance that this is allocated again and again is not usual
 }
 
