@@ -464,7 +464,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
     catch (...) //NetAccessorException&
     {
         delete newStream;
-        return 0;
+        throw;
     }
 
     // Set the next available reader number on this reader
