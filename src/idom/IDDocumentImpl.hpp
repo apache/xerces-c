@@ -307,12 +307,6 @@ inline void * operator new[](size_t amt, IDOM_Document *doc)
     return p;
 }
 
-//define a dummy delete to get rid of matching warning
-inline void operator delete(void* ptr, IDOM_Document *doc)
-{
-    return;
-}
-
 //define the global one
 inline void * operator new[](size_t amt)
 {
