@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/02/27 18:32:33  tng
+ * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
+ *
  * Revision 1.2  2001/02/27 14:48:55  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -86,7 +89,7 @@
 #include <validators/common/ContentLeafNameTypeVector.hpp>
 
 class ContentSpecNode;
-class DTDElementDecl;
+class XMLElementDecl;
 
 
 //
@@ -110,7 +113,7 @@ public :
     // -----------------------------------------------------------------------
     MixedContentModel
     (
-        const   DTDElementDecl& parentElem
+        const   XMLElementDecl& parentElem
     );
 
     ~MixedContentModel();

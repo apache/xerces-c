@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/02/27 18:32:32  tng
+ * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
+ *
  * Revision 1.3  2001/02/27 14:48:54  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -98,7 +101,6 @@
 #include <framework/XMLElementDecl.hpp>
 #include <framework/XMLValidator.hpp>
 #include <validators/common/ContentSpecNode.hpp>
-#include <validators/DTD/DTDElementDecl.hpp>
 #include <validators/common/MixedContentModel.hpp>
 #include <validators/common/CMStateSet.hpp>
 
@@ -106,7 +108,7 @@
 // ---------------------------------------------------------------------------
 //  MixedContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MixedContentModel::MixedContentModel(const DTDElementDecl& parentElem)
+MixedContentModel::MixedContentModel(const XMLElementDecl& parentElem)
 {
     //
     //  Create a vector of unsigned ints that will be filled in with the

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/02/27 18:32:31  tng
+ * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
+ *
  * Revision 1.3  2001/02/27 14:48:51  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -98,12 +101,12 @@
 // ---------------------------------------------------------------------------
 #include <util/RuntimeException.hpp>
 #include <framework/XMLValidator.hpp>
+#include <framework/XMLElementDecl.hpp>
 #include <validators/common/CMBinaryOp.hpp>
 #include <validators/common/CMLeaf.hpp>
 #include <validators/common/CMUnaryOp.hpp>
 #include <validators/common/DFAContentModel.hpp>
 #include <validators/common/ContentSpecNode.hpp>
-#include <validators/DTD/DTDElementDecl.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -127,7 +130,7 @@ static const unsigned int   gEpsilonFakeId  = 0xFFFFFFF2;
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DFAContentModel::DFAContentModel(const DTDElementDecl& elemDecl) :
+DFAContentModel::DFAContentModel(const XMLElementDecl& elemDecl) :
 
     fElemDecl(elemDecl)
     , fElemMap(0)

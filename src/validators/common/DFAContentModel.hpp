@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/02/27 18:32:32  tng
+ * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
+ *
  * Revision 1.2  2001/02/27 14:48:52  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -93,7 +96,7 @@ class ContentSpecNode;
 class CMLeaf;
 class CMNode;
 class CMStateSet;
-class DTDElementDecl;
+class XMLElementDecl;
 
 //
 //  DFAContentModel is the heavy weight derivative of ContentModel that does
@@ -113,7 +116,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DFAContentModel(const DTDElementDecl& elemDecl);
+    DFAContentModel(const XMLElementDecl& elemDecl);
     virtual ~DFAContentModel();
 
 
@@ -241,7 +244,7 @@ private :
     //      fTransTableSize is the number of valid entries in the transition
     //      table, and in the other related tables such as fFinalStateFlags.
     // -----------------------------------------------------------------------
-    const DTDElementDecl&   fElemDecl;
+    const XMLElementDecl&   fElemDecl;
     unsigned int*           fElemMap;
     unsigned int            fElemMapSize;
     bool                    fEmptyOk;
