@@ -870,7 +870,7 @@ void    DOMDocumentImpl::deleteHeap()
     while (fCurrentBlock != 0)
     {
         void *nextBlock = *(void **)fCurrentBlock;
-        delete [] fCurrentBlock;
+        delete [] (char*) fCurrentBlock;
         fCurrentBlock = nextBlock;
     }
 
