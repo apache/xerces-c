@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/08/10 12:34:25  knoaman
+ * Fix compilation error.
+ *
  * Revision 1.5  2001/08/09 15:23:16  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -220,7 +223,7 @@ inline void SchemaAttDef::resetNamespaceList() {
     }
 }
 
-inline void SchemaAttDef::setNamespaceList(const ValueVectorOf<unsigned int>* toSet) {
+inline void SchemaAttDef::setNamespaceList(const ValueVectorOf<unsigned int>* const toSet) {
 
     if (toSet && toSet->size()) {
 
