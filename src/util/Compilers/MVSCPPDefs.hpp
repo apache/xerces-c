@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/10/17 00:52:00  andyh
+ * Change XMLCh back to unsigned short on all platforms.
+ *
  * Revision 1.6  2000/03/09 18:54:44  abagchi
  * Added header-guards to include inlines only once
  *
@@ -119,8 +122,8 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-//typedef unsigned short XMLCh;
-typedef wchar_t XMLCh;
+typedef unsigned short XMLCh;
+// typedef wchar_t XMLCh;
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers

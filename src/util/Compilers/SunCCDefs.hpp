@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/10/17 00:52:00  andyh
+ * Change XMLCh back to unsigned short on all platforms.
+ *
  * Revision 1.10  2000/10/13 23:38:37  andyh
  * Solaris:  change detection for native support for type bool to defined(_BOOL)
  * Contributed by Edward Bortner.
@@ -116,7 +119,7 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-typedef wchar_t XMLCh;
+typedef unsigned short XMLCh;
 
 
 // ---------------------------------------------------------------------------
