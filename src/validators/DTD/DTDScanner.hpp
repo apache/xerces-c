@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/21 14:25:56  knoaman
+ * Fix for bug 1946
+ *
  * Revision 1.3  2001/05/11 13:27:10  tng
  * Copyright update.
  *
@@ -209,6 +212,7 @@ private:
     bool scanPublicLiteral(XMLBuffer& toFill);
     bool scanSystemLiteral(XMLBuffer& toFill);
     void scanTextDecl();
+    bool isReadingExternalEntity();
 
 
     // -----------------------------------------------------------------------
@@ -264,6 +268,11 @@ private:
     //
     //  fEmptyNamespaceId
     //      The uri for all DTD decls
+    //
+    //  fDocTypeReaderId
+    //      The original reader in the fReaderMgr - to be compared against the
+    //      current reader to decide whether we are processing an external/internal
+    //      declaration
     // -----------------------------------------------------------------------
     DocTypeHandler*                 fDocTypeHandler;
     DTDAttDef*                      fDumAttDef;
@@ -278,6 +287,7 @@ private:
     NameIdPool<DTDEntityDecl>*      fPEntityDeclPool;
     NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
     unsigned int                    fEmptyNamespaceId;
+    unsigned int                    fDocTypeReaderId;
 };
 
 
@@ -320,5 +330,14 @@ inline void DTDScanner::setScannerInfo(XMLScanner* const      owningScanner
     else
         fEmptyNamespaceId = 0;
 
+    fDocTypeReaderId = fReaderMgr->getCurrentReaderNum();
 }
+
+// -----------------------------------------------------------------------
+//  Helper methods
+// -----------------------------------------------------------------------
+inline bool DTDScanner::isReadingExternalEntity() {
+    return (fDocTypeReaderId != fReaderMgr->getCurrentReaderNum());
+}
+
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/21 14:25:53  knoaman
+ * Fix for bug 1946
+ *
  * Revision 1.8  2001/06/04 13:25:50  tng
  * the start tag "<?xml" could be followed by (#x20 | #x9 | #xD | #xA)+.  Fixed by Pei Yong Zhang.
  *
@@ -158,6 +161,7 @@ DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, NameIdPool<DTDEntityDecl>* entity
     , fDTDGrammar(dtdGrammar)
     , fPEntityDeclPool(0)
     , fEntityDeclPool(entityDeclPool)
+    , fDocTypeReaderId(0)
 {
     fPEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
 }
@@ -443,6 +447,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         //
         decl = new DTDAttDef(bufToUse.getRawBuffer());
         decl->setId(fNextAttrId++);
+        decl->setExternalAttDeclaration(isReadingExternalEntity());
         parentElem.addAttDef(decl);
     }
 
@@ -619,6 +624,7 @@ void DTDScanner::scanAttListDecl()
         //
         elemDecl = new DTDElementDecl(bbName.getRawBuffer(), fEmptyNamespaceId);
         elemDecl->setCreateReason(XMLElementDecl::AttList);
+        elemDecl->setExternalElemDeclaration(isReadingExternalEntity());
         fDTDGrammar->putElemDecl((XMLElementDecl*) elemDecl);
     }
 
@@ -1066,6 +1072,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         {
             decl = new DTDElementDecl(bufToUse.getRawBuffer(), fEmptyNamespaceId);
             decl->setCreateReason(XMLElementDecl::InContentModel);
+            decl->setExternalElemDeclaration(isReadingExternalEntity());
             fDTDGrammar->putElemDecl(decl);
         }
         curNode = new ContentSpecNode(decl->getElementName());
@@ -1235,8 +1242,10 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     {
                         decl = new DTDElementDecl(bufToUse.getRawBuffer(), fEmptyNamespaceId);
                         decl->setCreateReason(XMLElementDecl::InContentModel);
+                        decl->setExternalElemDeclaration(isReadingExternalEntity());
                         fDTDGrammar->putElemDecl(decl);
                     }
+
                     ContentSpecNode* tmpLeaf = new ContentSpecNode(decl->getElementName());
 
                     // Check for a repetition character after the leaf
@@ -1583,6 +1592,7 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     {
         rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
         rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+        rootDecl->setExternalElemDeclaration(isReadingExternalEntity());
         fDTDGrammar->setRootElemId(fDTDGrammar->putElemDecl(rootDecl));
     }
 
@@ -1829,6 +1839,7 @@ void DTDScanner::scanElementDecl()
         //  the decl pool.
         //
         decl = new DTDElementDecl(bbName.getRawBuffer(), fEmptyNamespaceId);
+        decl->setExternalElemDeclaration(isReadingExternalEntity());
         fDTDGrammar->putElemDecl(decl);
     }
 
@@ -3325,6 +3336,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             {
                 decl = new DTDElementDecl(nameBuf.getRawBuffer(), fEmptyNamespaceId);
                 decl->setCreateReason(XMLElementDecl::InContentModel);
+                decl->setExternalElemDeclaration(isReadingExternalEntity());
                 fDTDGrammar->putElemDecl(decl);
             }
 

@@ -162,6 +162,7 @@ XMLAttDef::XMLAttDef(const  XMLAttDef::AttTypes     type
     , fType(type)
     , fValue(0)
     , fCreateReason(XMLAttDef::NoReason)
+    , fExternalAttribute(false)
 {
 }
 
@@ -177,6 +178,7 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
     , fType(type)
     , fValue(0)
     , fCreateReason(XMLAttDef::NoReason)
+    , fExternalAttribute(false)
 {
     try
     {

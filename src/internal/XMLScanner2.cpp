@@ -436,7 +436,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     else if ((defType == XMLAttDef::Default) ||
                              (defType == XMLAttDef::Fixed)  )
                     {
-                        if (fStandalone)
+                        if (fStandalone && curDef.isExternal())
                         {
                             //
                             // XML 1.0 Section 2.9
@@ -1540,6 +1540,14 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
     const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
 
     //
+    // Get attribute def - to check to see if it's declared externally or not
+    //
+    bool  added = false;
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
+    const XMLAttDef* attDef = topElem->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+
+    //
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
     //  handler on every round.
@@ -1699,7 +1707,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
                         //
-                        if (fValidate && fStandalone)
+                        if (fValidate && fStandalone && isAttExternal)
                         {
                              //
                              // Can't have a standalone document declaration of "yes" if  attribute
@@ -1789,15 +1797,6 @@ void XMLScanner::scanCDSection()
             ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
-        if (fValidate && fStandalone && (XMLReader::isWhitespace(nextCh)))
-        {
-            //
-            // This document is standalone; this ignorable CDATA whitespace is forbidden.
-            // XML 1.0, Section 2.9
-            //
-            emitError(XMLErrs::BadStandalone);
-        }
-
         //
         //  If this is a close square bracket it could be our closing
         //  sequence.
@@ -1843,6 +1842,25 @@ void XMLScanner::scanCDSection()
 
         // Add it to the buffer
         bbCData.append(nextCh);
+    }    
+
+    // See if the text contains whitespace
+    if (fValidate)
+    {        
+        const XMLCh* rawBuf = bbCData.getRawBuffer();
+        const unsigned int len = bbCData.getLen();
+        const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
+        const ElemStack::StackElem* topElem = fElemStack.topElement();
+
+        if (topElem) {
+
+            if ((fStandalone) && (topElem->fThisElement->isExternal())) {
+
+                // Error - standalone should have a value of "no" as whitespace detected in an
+                // element type with element content whose element declaration was external
+                emitError(XMLErrs::BadStandalone);
+            }
+        }
     }
 }
 

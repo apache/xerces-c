@@ -995,7 +995,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
 {
     //	Bump the error count
     incrementErrorCount();
-
+    
     if (fErrorReporter)
     {
         //
@@ -2565,7 +2565,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
 		            else if ((defType == XMLAttDef::Default) ||
 		                     (defType == XMLAttDef::Fixed)  )
 					{
-		                if (fStandalone)
+		                if (fStandalone && curDef.isExternal())
 		                {
 			                //
 			                // XML 1.0 Section 2.9
@@ -3246,9 +3246,8 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         }
          else if (curString == EncodingString)
         {
-            //if (!XMLString::stringLen(rawValue))
             if (!XMLString::isValidEncName(rawValue))
-             emitError(XMLErrs::BadXMLEncoding, rawValue);
+                emitError(XMLErrs::BadXMLEncoding, rawValue);
         }
          else if (curString == StandaloneString)
         {

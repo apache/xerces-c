@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/06/21 14:25:28  knoaman
+ * Fix for bug 1946
+ *
  * Revision 1.15  2001/05/11 13:25:32  tng
  * Copyright update.
  *
@@ -505,7 +508,7 @@ class XMLPARSER_EXPORT XMLElementDecl
     /** Set the element decl to indicate external declaration
       *
       */
-    void setExternalElemDeclaration();
+    void setExternalElemDeclaration(const bool aValue);
 
     //@}
 
@@ -681,9 +684,9 @@ inline void XMLElementDecl::setId(const unsigned int newId)
 }
 
 
-inline void XMLElementDecl::setExternalElemDeclaration()
+inline void XMLElementDecl::setExternalElemDeclaration(const bool aValue)
 {
-    fExternalElement = true;
+    fExternalElement = aValue;
 }
 
 #endif

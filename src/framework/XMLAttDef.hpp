@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/06/21 14:25:26  knoaman
+ * Fix for bug 1946
+ *
  * Revision 1.10  2001/05/11 13:25:31  tng
  * Copyright update.
  *
@@ -343,6 +346,15 @@ public:
       */
     CreateReasons getCreateReason() const;
 
+    /** Indicate whether this attribute has been declared externally
+      *
+      * This method returns a boolean that indicates whether this attribute
+      * has been declared externally.
+      *
+      * @return true if this attribute has been declared externally, else false.
+      */
+    bool isExternal() const;
+
     //@}
 
 
@@ -423,6 +435,11 @@ public:
       */
     void setCreateReason(const CreateReasons newReason);
 
+    /**
+      * Set the attribute decl to indicate external declaration
+      */
+    void setExternalAttDeclaration(const bool aValue);
+
     //@}
 
 protected :
@@ -489,6 +506,9 @@ private :
     //      This flag tells us how this attribute got created.  Sometimes even
     //      the attribute was not declared for the element, we want to fault
     //      fault it into the pool to avoid lots of redundant errors.
+    //
+    //  fExternalAttribute
+    //      This flag indicates whether or not the attribute was declared externally.
     // -----------------------------------------------------------------------
     DefAttTypes     fDefaultType;
     XMLCh*          fEnumeration;
@@ -496,7 +516,8 @@ private :
     bool            fProvided;
     AttTypes        fType;
     XMLCh*          fValue;
-    CreateReasons       fCreateReason;
+    CreateReasons   fCreateReason;
+    bool            fExternalAttribute;
 };
 
 
@@ -539,6 +560,11 @@ inline XMLAttDef::CreateReasons XMLAttDef::getCreateReason() const
     return fCreateReason;
 }
 
+inline bool XMLAttDef::isExternal() const
+{
+    return fExternalAttribute;
+}
+
 
 // ---------------------------------------------------------------------------
 //  XMLAttDef: Setter methods
@@ -579,6 +605,11 @@ inline void
 XMLAttDef::setCreateReason(const XMLAttDef::CreateReasons newReason)
 {
     fCreateReason = newReason;
+}
+
+inline void XMLAttDef::setExternalAttDeclaration(const bool aValue)
+{
+    fExternalAttribute = aValue;
 }
 
 #endif
