@@ -628,6 +628,7 @@
             <Message Id="XMLNUM_DBL_FLT_maxPos" Text=" Value '{0}' shall be less than the max Negative value '{1}' "/>
             <Message Id="XMLNUM_DBL_FLT_minNegPos" Text=" Value '{0}' shall be in the range of '{1}', '{2}' "/>
             <Message Id="XMLNUM_DBL_FLT_InvalidType" Text=" Type '{0}' is invalid: internal error "/>
+            <Message Id="XMLNUM_DBL_FLT_No_Exponent" Text=" Value '{0}' shall have exponent. "/>
             <Message Id="Regex_Result_Not_Set" Text="A result is not set."/>
             <Message Id="Regex_CompactRangesError" Text="CompactRanges - Internal Error"/>
             <Message Id="Regex_MergeRangesTypeMismatch" Text="Merge Ranges - Mismatched type"/>
