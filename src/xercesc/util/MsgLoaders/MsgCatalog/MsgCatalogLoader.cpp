@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/02 21:58:43  peiyongz
+ * nls support
+ *
  * Revision 1.7  2002/11/12 17:27:12  tng
  * DOM Message: add new domain for DOM Messages.
  *
@@ -140,27 +143,38 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
 
-    // Try to get the module handle
-    char* tempLoc = setlocale(LC_ALL, "");
-    char catfile[1024];
-
-    memset(catfile, 0, sizeof catfile);
+    // Prepare the path info
+    char catpath[1024];
+    memset(catpath, 0, sizeof catpath);
     char *nlsHome = getenv("XERCESC_NLS_HOME");
-
     if (nlsHome)
     {
-        strcpy(catfile, nlsHome);
-        strcat(catfile, "/msg/");
+        strcpy(catpath, nlsHome);
+        strcat(catpath, "/msg/");
     }
 
-    strcat(catfile, "XMLMessages.cat");
+    // Prepare user-specified locale specific cat file
+    char catuser[1024];
+    memset(catuser, 0, sizeof catuser);
+    strcpy(catuser, catpath);
+    strcat(catuser, "XMLMessages_");
+    strcat(catuser, XMLMsgLoader::getLocale());
+    strcat(catuser, ".cat");
+        
+    char catdefault[1024];
+    memset(catdefault, 0, sizeof catdefault);
+    strcpy(catdefault, catpath);
+    strcat(catdefault, "XMLMessages_en_US.cat");
 
-    fCatalogHandle = catopen(catfile , 0);
-    if ((int)fCatalogHandle == -1)
+   /**
+    * To open user-specified locale specific cat file
+    * and default cat file if necessary
+    */
+    if ( ((int)(fCatalogHandle=catopen(catuser, 0)) == -1) &&
+         ((int)(fCatalogHandle=catopen(catdefault, 0)) == -1)   )
     {
         // Probably have to call panic here
-        printf("Could not open catalog XMLMessages\n");
-        // TBD: Tell user what the locale is
+        printf("Could not open catalog:\n %s\n or %s\n", catuser, catdefault);
         exit(1);
     }
 
