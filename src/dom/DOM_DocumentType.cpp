@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/10 02:14:39  chchou
+ * add null DOM_DocumentType constructor
+ *
  * Revision 1.5  2000/03/02 19:53:55  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -86,12 +89,22 @@
 #include "DOM_DocumentType.hpp"
 #include "DocumentTypeImpl.hpp"
 #include "DOM_NamedNodeMap.hpp"
+#include <assert.h>
 
 
 
 DOM_DocumentType::DOM_DocumentType()
 : DOM_Node(null)
 {
+};
+
+
+DOM_DocumentType::DOM_DocumentType(int nullPointer)
+: DOM_Node(null)
+{
+    //Note: the assert below has no effect in release build
+    //needs to revisit later
+    assert(nullPointer == 0);
 };
 
 

@@ -66,6 +66,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2000/03/10 02:15:15  chchou
+ * add null DOM_DocumentType constructor
+ *
  * Revision 1.18  2000/03/02 19:55:44  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -1160,6 +1163,9 @@ int  main()
         {
             TASSERT(false);  // Wrong exception thrown.
         }
+
+        // Creating a document with null NamespaceURI and DocumentType
+        doc = impl.createDocument(docNSURI, qName, 0);
 
         // Namespace tests of createDocument are covered by createElementNS below
     }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/10 02:14:39  chchou
+ * add null DOM_DocumentType constructor
+ *
  * Revision 1.7  2000/03/02 19:53:55  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -120,6 +123,15 @@ public:
       *
       */
     DOM_DocumentType();
+
+    /**
+      * Constructor for a null DOM_DocumentType.
+      * This allows passing 0 directly as a null DOM_DocumentType to
+      * function calls that take DOM_DocumentType as parameters.
+      *
+      * @param nullPointer Must be 0.
+      */
+    DOM_DocumentType(int nullPointer);
 
     /**
       * Copy constructor.  Creates a new <code>DOM_Comment</code> that refers to the
