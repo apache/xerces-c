@@ -19,7 +19,6 @@
       or jump directly to:</p>
     <ul>
        <li><jump href="build-other.html#iSeries">Building &XercesCName; on iSeries (AS/400)</jump></li>
-       <li><jump href="build-other.html#OS2VisualAge">Building &XercesCName; on OS/2 using Visual Age C++</jump></li>
        <li><jump href="build-other.html#Mac">Building &XercesCName; on Macintosh</jump></li>
     </ul>
   </s2>

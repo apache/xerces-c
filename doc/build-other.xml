@@ -130,9 +130,9 @@ gmake</source>
          name based on the parser version (using apache xerces versioning)):</p>
 <source>qsh:
 cd &lt;full path to &XercesCName;&gt;/lib
-qar -cuv &XercesCUnixLib;.a *.o
+qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
 will results in
-command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesCUnixLib;.a')
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesCUnixLib;&XercesCUnixSoName;.so')
 command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
 
 
@@ -161,8 +161,8 @@ OPTION(*DUPPROC *DUPVAR)
 <source>
 qsh:
 cd &lt;full path to &XercesCName;&gt;/lib
-ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesCUnixLib;.o
-qar -cuv &XercesCUnixLib;.a *.o
+ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesCUnixLib;&XercesCUnixSoName;.so
+qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
 </source>
 
          <p>If you are on a v4 system using the ILE C++ PRPQ compiler (which is referred
@@ -170,14 +170,14 @@ qar -cuv &XercesCUnixLib;.a *.o
          to the source:</p>
 
          <ul>
-         <li>src/xercesc/dom/DocumentImpl.cpp</li>
-         <li>src/xercesc/dom/DocumentImpl.hpp</li>
-         <li>src/xercesc/idom/IDDocumentImpl.cpp</li>
-         <li>src/xercesc/idom/IDDocumentImpl.hpp</li>
+         <li>src/xercesc/dom/impl/DOMDocumentImpl.cpp</li>
+         <li>src/xercesc/dom/impl/DOMDocumentImpl.hpp</li>
+         <li>src/xercesc/dom/deprecated/DocumentImpl.cpp</li>
+         <li>src/xercesc/dom/deprecated/DocumentImpl.hpp</li>
          <li>src/xercesc/validators/common/ContentSpecNode.hpp</li>
          </ul>
 
-         <p>Update  the following routines in src/xercesc/dom/DocumentImpl.cpp as follows:</p>
+         <p>Update  the following routines in src/xercesc/dom/deprecated/DocumentImpl.cpp as follows:</p>
 <source>
  void DocumentImpl::setUserData(NodeImpl* n, void* data)
  {
@@ -210,7 +210,7 @@ qar -cuv &XercesCUnixLib;.a *.o
  }
 </source>
 
-         <p>To update src/xercesc/dom/DoumentImpl.hpp as follows:</p>
+         <p>To update src/xercesc/dom/deprecated/DoumentImpl.hpp as follows:</p>
 
 <source>
  #ifdef __OS400__
@@ -221,9 +221,9 @@ qar -cuv &XercesCUnixLib;.a *.o
  #endif
 </source>
 
-          <p>Update  the following routines in src/xercesc/idom/IDDocumentImpl.cpp as follows:</p>
+          <p>Update  the following routines in src/xercesc/dom/impl/DOMDocumentImpl.cpp as follows:</p>
 <source>
- void IDDocumentImpl::setUserData(IDOM_Node* n, void* data)
+ void DOMDocumentImpl::setUserData(DOMNode* n, void* data)
  {
 	if (!fUserData &amp;&amp; data)
  #ifdef __OS400__
@@ -242,7 +242,7 @@ qar -cuv &XercesCUnixLib;.a *.o
  #endif
  }
 
- void* IDDocumentImpl::getUserData(const IDOM_Node* n) const
+ void* DOMDocumentImpl::getUserData(const DOMNode* n) const
  {
 	if (fUserData)
  #ifdef __OS400__
@@ -256,7 +256,7 @@ qar -cuv &XercesCUnixLib;.a *.o
  }
 </source>
 
-          <p>To update src/xercesc/idom/IDDocumentImpl.hpp:</p>
+          <p>To update src/xercesc/dom/impl/DOMDocumentImpl.hpp:</p>
 <source>
  #ifdef __OS400__
     RefHashTableOf&lt;char&gt;        *fUserData;
@@ -295,163 +295,6 @@ runConfigure -p os400 -x icc -c icc
 gmake </source>
 
         </s3>
-    </s2>
-
-    <anchor name="OS2VisualAge"/>
-    <s2 title="Building &XercesCName; on OS/2 using Visual Age C++">
-          <p>Here are the steps you need to build &XercesCName; from the source distribution using
-          <jump href="http://www-4.ibm.com/software/ad/vacpp/">Visual Age C++ compiler</jump>.
-          on OS/2.</p>
-          <s3 title="Building &XercesCName; library">
-             <p><em>Requirements:</em></p>
-                <ul>
-                    <li>VisualAge C++ Version 4.0 with Fixpak 1:
-                    <br/>Download the
-                    <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
-                    from the IBM VisualAge C++ Corrective Services web page.</li>
-                </ul>
-
-             <p>There are two ways to build &XercesCName;. The "From Existing" method only
-                  requires VAC++. The "From Scratch" method requires both Object Rexx and VAC++
-                  installed.</p>
-
-          <p><em>The &quot;From Existing&quot; Method</em></p>
-          <ol>
-            <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
-            find and edit the VAC++ configuration file <code>project_options.icc</code>.</li>
-
-            <li>Change the directory on the first line <code>'BASE_DIR = "..."'</code>
-            to match the base directory of the &XercesCName; sources on your system.
-            Note that the directory path must use double backslashes <code>"\\"</code>!</li>
-
-            <li>Save <code>project_options.icc</code></li>
-
-            <li>Start the Command Line in the VAC++ folder.</li>
-
-            <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
-
-            <li>Run <code>build.cmd</code>. This does a migration build.</li>
-
-            <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
-            This file should contain only informational messages, almost all complaining
-            about constant values in comparisons.</li>
-
-            <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
-            The library file is an import library for the DLL.</li>
-          </ol>
-
-          <p><em>The &quot;From Scratch&quot; Method</em></p>
-          <ol>
-            <li>If you are not currently running <code>Object Rexx</code>,
-            run the <code>SWITCHRX</code> command from a command line,
-            answer <code>"yes"</code> to switching to <code>Object Rexx</code>, and follow the
-            instructions to reboot. You can switch back to <code>"Classic Rexx"</code> by running
-            <code>SWITCHRX</code> again. But you probably won't need to switch back since
-            <code>Object Rexx</code> runs almost 100% of Classic Rexx programs.</li>
-
-            <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
-            run <code>genICC.cmd</code>. This builds the VAC++ configuration files for
-            the sources you have on your system.</li>
-
-            <li>Check the generated <code>ICC</code> files to ensure that they didn't pick up some
-            non-OS/2 platform stuff. This happens when new platform-specific directories
-            are added to Xerces. If they did pick up new non-OS/2 stuff, either edit it out
-            of the <code>ICC</code> file or add them to the "ignore" array in <code>genICC.cmd</code> and
-            re-run <code>genICC</code>.</li>
-
-            <li>Start the Command Line in the VAC++ folder.</li>
-
-            <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
-
-            <li>Run <code>build.cmd</code> This does a migration build.</li>
-
-            <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
-            This file should contain only informational messages, almost all complaining about constant
-            values in comparisons.</li>
-
-            <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
-            The library file is an import library for the DLL.)</li>
-
-          </ol>
-
-         <p><em>Packaging the Binaries</em></p>
-
-          <p>There is an <code>Object Rexx</code> program that will package the binaries and headers.
-          (See step 1 of the "From scratch" method on how to switch to <code>Object Rexx</code>.) The
-          <code>packageBinaries.cmd</code> file is in the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code>
-          directory. Run <code>packageBinaries</code>, giving the source and target directories
-          like this:</p>
-
-<source>packageBinaries -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-os2</source>
-
-          <p>(Match the source directory to your system; the target directory can be
-          anything you want.)</p>
-
-          <note>If you don't want to use the <code>Object Rexx</code> program, you'll need to
-          manually  copy the "*.hpp" and "*.c" files to an include directory.
-          (Be sure to maintain the same directory structure that you find under
-          <code>&XercesCSrcInstallDir;</code>.)</note>
-          </s3>
-
-        <s3 title="Building Samples">
-         <p>Building the &XercesCName; samples using IBM Visual Age C++ Professional 4.0
-          for OS/2 (VAC++).</p>
-
-         <ul>
-         <li> In the <code>&XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory,
-         find and edit the VAC++ configuration file <code>basedir.icc</code>.</li>
-
-         <li>All of the directories used to build the samples are defined in
-         <code>basedir.icc</code>. You need to edit the directories to match your system.
-         Here are the directories you need to assign:
-
-                SRC_DIR -- <code>&XercesCSrcInstallDir;</code>
-                           This is where VAC++ should look to find the samples
-                           directories containing the source files.
-                BASE_DIR -- The install directory <code>&XercesCSrcInstallDir;</code>.
-                		VAC++ will store the compiled samples in the <code>bin</code>
-                		directory under BASE_DIR. It will also look for the
-                		<code>xerces-c.lib</code> file in the <code>lib</code> directory under BASE_DIR.
-
-            Other directories are set based on these two. You can choose to override them
-            if you wish.</li>
-
-         <li>Save <code>basedir.icc</code></li>
-
-         <li>Start the Command Line in the VAC++ folder.</li>
-
-         <li>Navigate to the <code>&XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory.</li>
-
-         <li>Run <code>bldsamples.cmd</code></li>
-
-         <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
-         This file should contain only informational messages, almost all complaining about constant
-            values in comparisons.</li>
-
-         <li>You should now have several executable files.</li>
-
-        </ul>
-
-        <p>Rebuilding the Configuration Files</p>
-
-        <p>Although it shouldn't be necessary, if you want to rebuild the VAC++
-        configuration files, you'll need to have Object Rexx running on your system:</p>
-
-        <ul>
-         <li> If you are not currently running Object Rexx, run the SWITCHRX command from
-            a command line, answer "yes" to switching to Object Rexx, and follow the
-            instructions to reboot. (Note: You can switch back to "Classic Rexx" by
-            running SWITCHRX again. But you probably won't need to switch back since
-            Object Rexx runs almost 100% of Classic Rexx programs.)</li>
-
-         <li>In the Projects\OS2\VACPP40 directory, run genICC.cmd. This builds the VAC++
-            configuration files for the samples you have on your system.</li>
-
-
-          <li>Go to the first step above in the "Building samples for OS/2" section.</li>
-        </ul>
-        </s3>
-
     </s2>
 
     <anchor name="Mac"/>
