@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.8  2000/02/24 20:18:07  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.7  2000/02/24 02:12:53  aruna1
  * ReaderMgr:;getReaderDepth() added
  *

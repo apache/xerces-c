@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/02/24 20:11:30  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.3  2000/02/15 23:17:37  andyh
  * Update Doc++ API comments
  * NameSpace bugfix and update to track W3C

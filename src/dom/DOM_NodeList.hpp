@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.7  2000/02/24 20:11:28  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.6  2000/02/10 20:38:46  abagchi
  * Added docs for equality operators
  *

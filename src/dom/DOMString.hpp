@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.10  2000/02/24 20:11:27  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.9  2000/02/16 22:54:56  abagchi
  * Switched the order of CDOM_EXPORT DomString for operators, to make OS/390 happy
  *

@@ -57,8 +57,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.7  2000/02/24 20:11:29  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.6  2000/02/10 23:35:11  andyh
  * Update DOM_DOMImplementation::CreateDocumentType and
  * DOM_DocumentType to match latest from W3C

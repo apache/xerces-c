@@ -54,10 +54,13 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.4  2000/02/24 20:16:49  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.3  2000/02/09 21:42:38  abagchi
- * Copyright swatswat
+ * Copyright swat
  *
  * Revision 1.2  2000/01/12 23:52:48  roddey
  * These are trivial changes required to get the C++ and Java versions

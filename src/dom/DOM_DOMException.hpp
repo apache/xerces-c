@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.6  2000/02/24 20:11:27  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.5  2000/02/10 19:52:08  abagchi
  * Added docs for enum
  *
