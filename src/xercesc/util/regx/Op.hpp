@@ -139,8 +139,8 @@ private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    Op(const Op&);
-    void operator=(const Op&);
+    Op(const Op&) {ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);};
+    void operator=(const Op&) {ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);};
 
     // -----------------------------------------------------------------------
     //  Private data members
