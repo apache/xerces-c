@@ -395,7 +395,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  was issued, which is all we care about.
             //
 
-            if (attDefForWildCard && (wasAdded || (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn))) {
+            if (attDefForWildCard && (wasAdded || (!wasAdded && attDef->getCreateReason() == XMLAttDef::JustFaultIn))) {
                 normalizeAttValue
                 (
                     attDefForWildCard
@@ -718,7 +718,7 @@ bool XMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
             retVal = false;
         }
 
-        if (type == XMLAttDef::CData)
+        if (type == XMLAttDef::CData || type > XMLAttDef::Notation)
         {
             if (!escaped)
             {
