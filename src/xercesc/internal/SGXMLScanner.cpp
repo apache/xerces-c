@@ -3605,7 +3605,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
 void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 {
     BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr, fMemoryManager);
-    ArrayJanitor<BaseRefVectorOf<XMLCh> > janLoc(schemaLocation);
+    Janitor<BaseRefVectorOf<XMLCh> > janLoc(schemaLocation);
 
     unsigned int size = schemaLocation->size();
     if (size % 2 != 0 ) {
