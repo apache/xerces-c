@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/02/23 04:36:55  jberry
+ * Minor bug fixes to FreeBSD port
+ *
  * Revision 1.7  2002/12/12 16:28:48  peiyongz
  * MsgCatalogLoader added.
  *
@@ -333,7 +336,7 @@ FileHandle XMLPlatformUtils::openStdInHandle()
     if (nfd == -1)
 	ThrowXML(XMLPlatformUtilsException,
 		XMLExcepts::File_CouldNotDupHandle);
-    return (FileHandle) fdopen(dup(0), "r");
+    return (FileHandle) fdopen(nfd, "r");
 }
 
 unsigned int
@@ -375,15 +378,10 @@ void XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
         bytesWritten = fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
 
         if(ferror((FILE*)theFile))
-	{
-#if 0
-	    ThrowXML(XMLPlatformUtilsException,
-		     XMLExcepts::File_CouldNotWriteToFile);
-#else
-            ThrowXML(XMLPlatformUtilsException,
-		     XMLExcepts::File_CouldNotReadFromFile);
-#endif
-	}
+		{
+			ThrowXML(XMLPlatformUtilsException,
+				XMLExcepts::File_CouldNotWriteToFile);
+		}
 
         if (bytesWritten < (size_t) toWrite) //incomplete write
         {
