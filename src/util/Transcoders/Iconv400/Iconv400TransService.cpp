@@ -872,6 +872,8 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode)
     //  the best guess as to the storage needed.
     //
     const int32_t srcLen = (int32_t)strlen(toTranscode);
+    // Allocate unicode string of equivalent length in unicode bytes
+    retVal = new XMLCh[srcLen+1];
 
     // Now lock while we do these calculations
     UErrorCode err = U_ZERO_ERROR;
@@ -887,15 +889,15 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode)
         targetCap = ucnv_toUChars
         (
             fConverter
-            , 0
-            , 0
+            , retVal
+            , srcLen+1
             , toTranscode
             , srcLen
             , &err
         );
 
         if (err != U_BUFFER_OVERFLOW_ERROR)
-            return 0;
+	{
 
         err = U_ZERO_ERROR;
         retVal = new XMLCh[targetCap];
@@ -907,8 +909,9 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode)
             , toTranscode
             , srcLen
             , &err
-        );
-    }
+           );
+	 }
+   }
 
     if (U_FAILURE(err))
     {

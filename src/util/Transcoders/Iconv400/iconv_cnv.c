@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2001/06/19 19:31:04  tng
+ * Latest AS/400 update.
+ *
  * Revision 1.2  2000/09/12 17:06:49  aruna1
  * Replaced INDEX_OUTOFBOUNDS error to BUFFER_OVERFLOW error for toUnicode and from_Unicode functions for compatibility with icu 1.6
  *
@@ -192,7 +195,6 @@ void   ucnv_fromUnicode (UConverter * _this,
 			 int flush,
 			 UErrorCode * err)
 {
-  UCNV_TYPE myConvType;
   /*
    * Check parameters in for all conversions
    */
@@ -203,7 +205,6 @@ void   ucnv_fromUnicode (UConverter * _this,
       return;
     }
   
-  myConvType = _this->sharedData->conversionType;  
  
   /*calls the specific conversion routines */
   Converter_fromUnicode(_this,target,targetLimit,source,sourceLimit,
@@ -224,7 +225,6 @@ void   ucnv_toUnicode (UConverter * _this,
   /*
    * Check parameters in for all conversions
    */
-  UCNV_TYPE myConvType;
   if (U_FAILURE (*err))   return;
   if ((_this == NULL) || ((UChar *) targetLimit < *target) || (sourceLimit < *source))
     {
@@ -232,7 +232,6 @@ void   ucnv_toUnicode (UConverter * _this,
       return;
     }
 
-  myConvType = _this->sharedData->conversionType;
   
 
   /*calls the specific conversion routines */
@@ -383,10 +382,10 @@ int32_t ucnv_toUChars (const UConverter * converter,
   /*Not in pure pre-flight mode */
   if (targetSize > 0)
     {
-
+     /*  Changed from (targetSize * 2) to (targetSize) */
       ucnv_toUnicode (&myConverter,
 		      &myTarget,
-		      target + (targetSize * 2) - 1,	  /*Save a spot for the Null terminator */
+		      target + (targetSize-1),	  /*Save a spot for the Null terminator */
 		      &mySource,
 		      mySource_limit,
 		      NULL,
@@ -657,8 +656,7 @@ void Converter_fromUnicode(UConverter * _this,
   int chardone;
   const UChar *mySource = *source;
   unsigned char *myTarget = (unsigned char *) *target;
-  int32_t mySourceIndex = 0;
-  int32_t myTargetIndex = 0;
+
   int32_t targetLength = targetLimit - (char *) myTarget;
   int32_t sourceLength = (sourceLimit - mySource) * 2;
   unsigned char targetChar = 0x00;
@@ -683,8 +681,6 @@ void Converter_fromUnicode(UConverter * _this,
         *err = U_INVALID_CHAR_FOUND;
 	return;
 	}
-   *target += myTargetIndex;
-  *source += mySourceIndex;
 
 
   return;
@@ -701,12 +697,9 @@ void Convert_toUnicode(UConverter * _this,
 {
   char *mySource = (char *) *source;
   UChar *myTarget = *target;
-  int32_t mySourceIndex = 0;
-  int32_t myTargetIndex = 0;
-  int32_t targetLength = targetLimit - myTarget;
+
+  int32_t targetLength = (targetLimit - myTarget)*2;  /* multiply by 2 */
   int32_t sourceLength = (sourceLimit - (char *) mySource);
-  UChar *myToUnicode = NULL;
-  UChar targetUniChar = 0x0000;
   int chardone;
   /* pick up the iconv handle */
   errno = 0;
@@ -734,8 +727,6 @@ void Convert_toUnicode(UConverter * _this,
 
 }
   
-  *target += myTargetIndex;
-  *source += mySourceIndex;
 
   return;
 }
