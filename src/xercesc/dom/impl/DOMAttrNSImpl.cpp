@@ -237,6 +237,10 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
 
         if (index >= 3999)
             delete[] newName;
+
+        // Before we carry on, we should check if the prefix or localName are valid XMLName
+        if (!DOMDocumentImpl::isXMLName(fPrefix) || !DOMDocumentImpl::isXMLName(fLocalName))
+            throw DOMException(DOMException::NAMESPACE_ERR, 0);
     }
 
     // DOM Level 3: namespace URI is never empty string.
