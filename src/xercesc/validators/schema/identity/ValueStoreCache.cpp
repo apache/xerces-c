@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/26 23:48:09  knoaman
+ * Fix for ValueStore's null pointer.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
@@ -194,6 +197,10 @@ void ValueStoreCache::transplant(IdentityConstraint* const ic) {
     } else {
         fGlobalICMap->put(ic, newVals);
     }
+
+    ValueStore* valueStore = new ValueStore(ic, fScanner);
+    fValueStores->addElement(valueStore);
+    fIC2ValueStoreMap->put(ic, valueStore);
 }
 
 /**
