@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/08/01 18:49:32  peiyongz
+ * AnyRUIDatatypeValidator
+ *
  * Revision 1.8  2001/05/16 15:24:51  tng
  * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
  *
@@ -1022,6 +1025,11 @@ const XMLCh SchemaSymbols::fgDT_URIREFERENCE[] =
 {
     chLatin_u, chLatin_r, chLatin_i, chLatin_R, chLatin_e, chLatin_f,
     chLatin_e, chLatin_r, chLatin_e, chLatin_n, chLatin_c, chLatin_e, chNull
+};
+
+const XMLCh SchemaSymbols::fgDT_ANYURI[] =
+{
+    chLatin_a, chLatin_n, chLatin_y, chLatin_U, chLatin_R, chLatin_I, chNull
 };
 
 const XMLCh SchemaSymbols::fgDT_QNAME[] =

@@ -235,6 +235,7 @@ public :
     static const XMLCh fgDT_FLOAT[];
     static const XMLCh fgDT_DOUBLE[];
     static const XMLCh fgDT_URIREFERENCE[];
+    static const XMLCh fgDT_ANYURI[];
     static const XMLCh fgDT_QNAME[];
     static const XMLCh fgDT_NORMALIZEDSTRING[];
     static const XMLCh fgRegEx_XOption[];

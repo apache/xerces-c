@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/08/01 18:49:16  peiyongz
+ * AnyRUIDatatypeValidator
+ *
  * Revision 1.20  2001/07/26 20:48:02  peiyongz
  * FloatDatatypeValidator
  *
@@ -143,6 +146,7 @@
 #include <validators/datatype/UnionDatatypeValidator.hpp>
 #include <validators/datatype/DoubleDatatypeValidator.hpp>
 #include <validators/datatype/FloatDatatypeValidator.hpp>
+#include <validators/datatype/AnyURIDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -408,10 +412,8 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new DoubleDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,
                        new FloatDatatypeValidator());
-/*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,
                        new AnyURIDatatypeValidator());
-*/
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME,
                        new QNameDatatypeValidator());
 /*
