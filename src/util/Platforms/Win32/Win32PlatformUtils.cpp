@@ -69,6 +69,7 @@
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <windows.h>
+#include <stdlib.h>
 
 #ifdef _DEBUG
  #ifdef _MSC_VER
