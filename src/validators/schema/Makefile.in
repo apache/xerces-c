@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2001/03/21 21:39:19  knoaman
+# Schema symbols and Datatype validator part I
+#
 # Revision 1.1  2001/02/27 18:48:22  tng
 # Schema: Add SchemaAttDef, SchemaElementDecl, SchemaAttDefList.
 #
@@ -81,7 +84,8 @@ SUBMODULE = schema
 VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SchemaAttDef.hpp \
 	SchemaAttDefList.hpp \
-	SchemaElementDecl.hpp
+	SchemaElementDecl.hpp \
+	SchemaSymbols.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
 
@@ -90,7 +94,8 @@ VALIDATORS_SCHEMA_C_FILES =
 VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SchemaAttDef.$(TO) \
 	SchemaAttDefList.$(TO) \
-	SchemaElementDecl.$(TO)
+	SchemaElementDecl.$(TO) \
+	SchemaSymbols.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
 

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2001/03/21 21:39:15  knoaman
+# Schema symbols and Datatype validator part I
+#
 # Revision 1.1  2001/02/15 18:41:50  tng
 # Schema: Exception Handling added by Pei Yong Zhang.  Add NumberFormatException, ParseException,
 # InvalidDatatypeFacetException, and InvalidDatatypeValueException.  The associated
@@ -82,13 +85,17 @@ SUBMODULE = datatype
 
 VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	InvalidDatatypeFacetException.hpp \
-	InvalidDatatypeValueException.hpp
+	InvalidDatatypeValueException.hpp \
+	DatatypeValidator.hpp \
+	DatatypeValidatorFactory.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
 
 VALIDATORS_DATATYPE_C_FILES =
 
-VALIDATORS_DATATYPE_CPP_OBJECTS =
+VALIDATORS_DATATYPE_CPP_OBJECTS = \
+	DatatypeValidator.$(TO) \
+	DatatypeValidatorFactory.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
 
