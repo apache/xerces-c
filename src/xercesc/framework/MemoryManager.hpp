@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.2  2003/04/27 17:17:01  jberry
+  * Add include for stdlib to pull in size_t declaration
+  *
   * Revision 1.1  2003/04/21 15:47:45  knoaman
   * Initial check-in.
   *
@@ -66,6 +69,8 @@
 #define MEMORYMANAGER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <stdlib.h>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
