@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/10/25 15:07:46  tng
+ * Thread safe the static instance.
+ *
  * Revision 1.9  2001/10/23 23:14:55  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -155,7 +158,7 @@ AttributeInfo::AttributeInfo(const XMLCh* const name,
     try {
         if (defaultValue) {
             fDefaultValue = XMLString::replicate(defaultValue);
-        }    
+        }
     }
     catch(...) {
         cleanUp();
@@ -201,7 +204,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes = new AttributeInfo*[Att_Count];
 
-    fAttributes[Att_Abstract_D] = 
+    fAttributes[Att_Abstract_D] =
         new AttributeInfo(SchemaSymbols::fgATT_ABSTRACT, Att_Optional_Default,
                           SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
 
@@ -209,11 +212,11 @@ void GeneralAttributeCheck::setUpAttributes() {
         new AttributeInfo(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT, Att_Optional_Default,
                           SchemaSymbols::fgATTVAL_UNQUALIFIED, DT_Form);
 
-    fAttributes[Att_Base_R] = 
+    fAttributes[Att_Base_R] =
         new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Required,
                           0, DT_QName);
 
-    fAttributes[Att_Base_N] = 
+    fAttributes[Att_Base_N] =
         new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Optional_NoDefault,
                           0, DT_QName);
 
@@ -244,7 +247,7 @@ void GeneralAttributeCheck::setUpAttributes() {
     fAttributes[Att_Final1_N] =
         new AttributeInfo(SchemaSymbols::fgATT_FINAL, Att_Optional_NoDefault,
                           0, DT_Final1);
-        
+
     fAttributes[Att_Final_D_D] =
         new AttributeInfo(SchemaSymbols::fgATT_FINALDEFAULT, Att_Optional_Default,
                           XMLUni::fgZeroLenString, DT_Final);
@@ -348,7 +351,7 @@ void GeneralAttributeCheck::setUpAttributes() {
     fAttributes[Att_System_N] =
         new AttributeInfo(SchemaSymbols::fgATT_SYSTEM, Att_Optional_NoDefault,
                           0, DT_AnyURI);
-        
+
     fAttributes[Att_Target_N_N] =
         new AttributeInfo(SchemaSymbols::fgATT_TARGETNAMESPACE, Att_Optional_NoDefault,
                           0, 0);
@@ -389,10 +392,10 @@ void GeneralAttributeCheck::setUpValidators() {
     DatatypeValidatorFactory dvFactory;
 
     dvFactory.expandRegistryToFullSchemaSet();
-    fValidators[DT_NonNegInt] = 
+    fValidators[DT_NonNegInt] =
         dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
 
-    fValidators[DT_Boolean] = 
+    fValidators[DT_Boolean] =
         dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_BOOLEAN);
 
     // TO DO - add remaining valdiators
@@ -781,18 +784,24 @@ GeneralAttributeCheck* GeneralAttributeCheck::instance() {
 	static XMLRegisterCleanup instanceCleanup;
 
     if (!fInstance) {
+        GeneralAttributeCheck* t = new GeneralAttributeCheck();
+        if (XMLPlatformUtils::compareAndSwap((void **)&fInstance, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            instanceCleanup.registerCleanup(reinitInstance);
+        }
 
-        fInstance = new GeneralAttributeCheck();
-		instanceCleanup.registerCleanup(reinitInstance);
     }
-
     return fInstance;
 }
 
 // -----------------------------------------------------------------------
 //  Notification that lazy data has been deleted
 // -----------------------------------------------------------------------
-void 
+void
 GeneralAttributeCheck::reinitInstance() {
 	delete fInstance;
 	fInstance = 0;
@@ -851,7 +860,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
             prefixContext = localRefPrefix;
         }
-        else {        
+        else {
             // We should report an error
             return;
         }
@@ -881,7 +890,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
             }
             else {
                 if (attInfo->getDefaultOption() == Att_Required) {
-                    schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
+                    schema->reportSchemaError(XMLUni::fgXMLErrDomain,
                         XMLErrs::AttributeRequired, attName, contextStr, elemName);
                 }
             }
@@ -902,7 +911,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
             break;
         }
 
-        // Bypass attributes that start with xml 
+        // Bypass attributes that start with xml
         DOMString attName = attribute.getNodeName();
         aBuffer.set(attName.rawBuffer(), attName.length());
         XMLCh* tmpName = aBuffer.getRawBuffer();
@@ -951,7 +960,7 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
         }
         break;
     case DT_MinOccurs1:
-        if (XMLString::compareString(attValue, fgValueZero) != 0 
+        if (XMLString::compareString(attValue, fgValueZero) != 0
             && XMLString::compareString(attValue, fgValueOne) != 0) {
             isInvalid = true;
         }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/10/25 15:06:49  tng
+ * Thread safe the static instance.
+ *
  * Revision 1.24  2001/10/23 23:14:22  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -357,54 +360,60 @@ void DatatypeValidatorFactory::reinitRegistry() {
 // ---------------------------------------------------------------------------
 void DatatypeValidatorFactory::initializeDTDRegistry()
 {
-	static XMLRegisterCleanup builtInRegistryCleanup;
+    if (fRegistryExpanded)
+        return;
 
-	if (fRegistryExpanded)
-		return;
+    static XMLRegisterCleanup builtInRegistryCleanup;
 
     if (fBuiltInRegistry == 0) {
+        RefHashTableOf<DatatypeValidator>* t = new RefHashTableOf<DatatypeValidator>(109);
+        if (XMLPlatformUtils::compareAndSwap((void **)&fBuiltInRegistry, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            builtInRegistryCleanup.registerCleanup(reinitRegistry);
+        }
 
-        fBuiltInRegistry = new RefHashTableOf<DatatypeValidator>(109);
-		builtInRegistryCleanup.registerCleanup(reinitRegistry);
     }
 
-
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_STRING,
+    fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_STRING,
                        new StringDatatypeValidator());
-        fBuiltInRegistry->put((void*) XMLUni::fgIDString,
+    fBuiltInRegistry->put((void*) XMLUni::fgIDString,
                        new IDDatatypeValidator());
-        fBuiltInRegistry->put((void*) XMLUni::fgIDRefString,
+    fBuiltInRegistry->put((void*) XMLUni::fgIDRefString,
                        new IDREFDatatypeValidator());
-        fBuiltInRegistry->put((void*) XMLUni::fgEntityString,
+    fBuiltInRegistry->put((void*) XMLUni::fgEntityString,
                        new ENTITYDatatypeValidator());
-        fBuiltInRegistry->put((void*) XMLUni::fgNotationString,
+    fBuiltInRegistry->put((void*) XMLUni::fgNotationString,
                        new NOTATIONDatatypeValidator());
 
 
-        // Create 'IDREFS' datatype validator
-	    createDatatypeValidator(XMLUni::fgIDRefsString,
+    // Create 'IDREFS' datatype validator
+	 createDatatypeValidator(XMLUni::fgIDRefsString,
                     getDatatypeValidator(XMLUni::fgIDRefString), 0, 0, true, 0, false);
 
-        // Create 'ENTITIES' datatype validator
-        createDatatypeValidator(XMLUni::fgEntitiesString,
+    // Create 'ENTITIES' datatype validator
+    createDatatypeValidator(XMLUni::fgEntitiesString,
 		            getDatatypeValidator(XMLUni::fgEntityString), 0, 0, true, 0, false);
 
-        RefHashTableOf<KVStringPair>* facets = new RefHashTableOf<KVStringPair>(2);
+    RefHashTableOf<KVStringPair>* facets = new RefHashTableOf<KVStringPair>(2);
 
-        facets->put((void*) SchemaSymbols::fgELT_PATTERN ,
+    facets->put((void*) SchemaSymbols::fgELT_PATTERN ,
                     new KVStringPair(SchemaSymbols::fgELT_PATTERN,fgTokPattern));
-        facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
+    facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
                     new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_COLLAPSE));
 
-        // Create 'NMTOKEN' datatype validator
-        createDatatypeValidator(XMLUni::fgNmTokenString,
+    // Create 'NMTOKEN' datatype validator
+    createDatatypeValidator(XMLUni::fgNmTokenString,
                     getDatatypeValidator(SchemaSymbols::fgDT_STRING),facets, 0, false, 0, false);
 
-        // Create 'NMTOKENS' datatype validator
-        createDatatypeValidator(XMLUni::fgNmTokensString,
-		            getDatatypeValidator(XMLUni::fgNmTokenString), 0, 0, true, 0, false);
+    // Create 'NMTOKENS' datatype validator
+    createDatatypeValidator(XMLUni::fgNmTokensString,
+	                 getDatatypeValidator(XMLUni::fgNmTokenString), 0, 0, true, 0, false);
 
-        fRegistryExpanded = 1;
+    fRegistryExpanded = 1;
 }
 
 

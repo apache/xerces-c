@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/10/25 15:06:26  tng
+ * Thread safe the static instance.
+ *
  * Revision 1.4  2001/10/23 23:13:41  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -271,14 +274,20 @@ void RangeTokenMap::initializeRegistry() {
 //  RangeTokenMap: Instance methods
 // ---------------------------------------------------------------------------
 RangeTokenMap* RangeTokenMap::instance() {
-	static XMLRegisterCleanup instanceCleanup;
+    static XMLRegisterCleanup instanceCleanup;
 
-	if (!fInstance) {
+    if (!fInstance) {
+        RangeTokenMap* t = new RangeTokenMap();
+        if (XMLPlatformUtils::compareAndSwap((void **)&fInstance, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            instanceCleanup.registerCleanup(reinitInstance);
+        }
 
-		fInstance = new RangeTokenMap();
-		instanceCleanup.registerCleanup(reinitInstance);
-	}
-	
+    }
     return (fInstance);
 }
 
