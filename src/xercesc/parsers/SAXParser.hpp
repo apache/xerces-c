@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2003/10/20 13:41:10  amassari
+ * Added getGrammarResolver API
+ *
  * Revision 1.24  2003/06/20 18:55:54  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -1954,6 +1957,12 @@ protected :
       */
     const XMLScanner& getScanner() const;
 
+    /** Get the Grammar resolver
+      *
+      * This provides derived classes with access to the grammar resolver.
+      */
+    GrammarResolver* getGrammarResolver() const;
+
 
 private:
     // -----------------------------------------------------------------------
@@ -2075,6 +2084,11 @@ inline const ErrorHandler* SAXParser::getErrorHandler() const
 inline const XMLScanner& SAXParser::getScanner() const
 {
     return *fScanner;
+}
+
+inline GrammarResolver* SAXParser::getGrammarResolver() const
+{
+    return fGrammarResolver;
 }
 
 XERCES_CPP_NAMESPACE_END
