@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl5
 
-push(@INC, "/home/xml4c/bin", "/home/xml4c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
+push(@INC, "/home/xerces-c/bin", "/home/xerces-c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
 
 require "getopt.pl";
 
@@ -9,7 +9,7 @@ $|=1;   # Force a flush after every print
 
 # Extract the source and target directories
 &Getopt('sopcxmntr');
-$XML4CROOT = $opt_s;
+$XERCESCROOT = $opt_s;
 $targetdir = $opt_o;
 $ccompiler = $opt_c;
 $cppcompiler = $opt_x;
@@ -19,7 +19,7 @@ $transcoder = $opt_t;
 $thread = $opt_r;
 
 # Check for the environment variables and exit if error
-if (!length($XML4CROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
+if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
         print ("Usage is: packageBinaries <options>\n");
 		print ("          options are:  -s <source_directory>\n");
 		print ("                        -o <target_directory>\n");
@@ -30,22 +30,22 @@ if (!length($XML4CROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
         print ("                        -t <transcoder> can be 'icu' or 'native'\n");
         print ("                        -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)\n");
         print ("                        -h to get help on these commands\n");
-        print ("Example: perl packageBinaries.pl -s\$HOME/xml4csrc3_0_0 -o\$HOME/xml4c3_0_0 -cgcc -xg++ -minmem -nfileonly -tnative\n");
+        print ("Example: perl packageBinaries.pl -s\$HOME/xerces-c_1_0_0d01 -o\$HOME/xerces-c_1_0_0d01bin -cgcc -xg++ -minmem -nfileonly -tnative\n");
         exit(-1);
 }
 
 # Set up the environment variables for ICU
-# As of Version 3, ICU is not a required component of XML4C
+# As of Version 3, ICU is not a required component of XERCES-C
 $ICUROOT = $ENV{'ICUROOT'};
 if (!length($ICUROOT)) {
        print "You have not defined your ICU install directory.\n";
-	   print "You must set an environment variable called ICUROOT to package ICU with XML4C.\n";
-	   print "Proceeding to build XML4C without ICU...\n";
+	   print "You must set an environment variable called ICUROOT to package ICU with XERCES-C.\n";
+	   print "Proceeding to build XERCES-C without ICU...\n";
 }
 
 # Check if the source directory exists or not
-if (!(-e $XML4CROOT)) {
-        print ("The directory $XML4CROOT does not exist. Cannot proceed any further.\n");
+if (!(-e $XERCESCROOT)) {
+        print ("The directory $XERCESCROOT does not exist. Cannot proceed any further.\n");
         exit(-1);
 }
 
@@ -57,7 +57,7 @@ if (-e $targetdir) {
 }
 
 #Fix the backslashes on the Windows platform
-$XML4CROOT =~ s/\\/\//g;
+$XERCESCROOT =~ s/\\/\//g;
 $ICUROOT =~ s/\\/\//g;
 $targetdir =~ s/\\/\//g;
 
@@ -72,9 +72,9 @@ close (PLATFORM);
 print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n";
 
 #Construct the name of the zip file by extracting the last directory name
-$zipfiles = $targetdir;
-$zipfiles =~ m/\/(\w*$)/;
-$zipfiles = $1 . "/*";
+$zipfiles = $targetdir . "/*";
+# $zipfiles =~ m/\/(\w*$)/;
+# $zipfiles = $1 . "/*";
 
 $buildmode = "Release";    # Universally, why do you want to package Debug builds anyway?
 
@@ -138,61 +138,61 @@ if ($platform =~ m/Windows/) {
 		}
 
         #Clean up all the dependency files, causes problems for nmake
-        chdir ("$XML4CROOT");
+        chdir ("$XERCESCROOT");
         system ("del /s /f *.dep");
 
-        # Make the XML4C dll
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/IXXML4C3");
-        print "Executing: nmake -f XXML4C3.mak clean CFG=\"IXXML4C3 - $platformname $buildmode\"";
-        system("nmake -f IXXML4C3.mak clean CFG=\"IXXML4C3 - $platformname $buildmode\"");
-        print "Executing: nmake -f IXXML4C3.mak all CFG=\"IXXML4C3 - $platformname $buildmode\"";
-        system("nmake -f IXXML4C3.mak all CFG=\"IXXML4C3 - $platformname $buildmode\"");
+        # Make the XERCES-C dll
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib");
+        print "Executing: nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"";
+        system("nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"");
+        print "Executing: nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"";
+        system("nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"");
 
         # Make the SAXCount sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/SAXCount");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXCount");
         system "nmake -f SAXCount.mak clean CFG=\"SAXCount - $platformname $buildmode\"";
         print "Executing: nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"";
         system("nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"");
 
         # Make the SAXPrint sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/SAXPrint");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXPrint");
         system "nmake -f SAXPrint.mak clean CFG=\"SAXPrint - $platformname $buildmode\"";
         print "Executing: nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"";
         system("nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"");
 
         # Make the DOMCount sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/DOMCount");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMCount");
         system "nmake -f DOMCount.mak clean CFG=\"DOMCount - $platformname $buildmode\"";
         print "Executing: nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"";
         system("nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"");
 
         # Make the DOMPrint sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/DOMPrint");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMPrint");
         system "nmake -f DOMPrint.mak clean CFG=\"DOMPrint - $platformname $buildmode\"";
         print "Executing: nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"";
         system("nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"");
 
         # Make the Redirect sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/Redirect");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/Redirect");
         system "nmake -f Redirect.mak clean CFG=\"Redirect - $platformname $buildmode\"";
         print "Executing: nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"";
         system("nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"");
 
 
         # Make the MemParse sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/MemParse");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/MemParse");
         system "nmake -f MemParse.mak clean CFG=\"MemParse - $platformname $buildmode\"";
         print "Executing: nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"";
         system("nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"");
 
         # Make the PParse sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/PParse");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/PParse");
         system "nmake -f PParse.mak clean CFG=\"PParse - $platformname $buildmode\"";
         print "Executing: nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"";
         system("nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"");
 
         # Make the StdInParse sample
-        chdir ("$XML4CROOT/Projects/Win32/VC6/IXXML4C3/StdInParse");
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/StdInParse");
         system "nmake -f StdInParse.mak clean CFG=\"StdInParse - $platformname $buildmode\"";
         print "Executing: nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"";
         system("nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"");
@@ -211,15 +211,15 @@ if ($platform =~ m/Windows/) {
 
         # Decide where you want the build copied from
         chdir ($targetdir);
-        $BUILDDIR = $XML4CROOT . "/Build/Win32/VC6/" . $buildmode;
+        $BUILDDIR = $XERCESCROOT . "/Build/Win32/VC6/" . $buildmode;
         print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
 
         # Populate the include output directory
         print ("\n\nCopying headers files ...\n");
-        $xcopycommand = "xcopy $XML4CROOT\\src\\*.hpp $targetdir\\include";
+        $xcopycommand = "xcopy $XERCESCROOT\\src\\*.hpp $targetdir\\include";
         $xcopycommand =~ s/\//\\/g;
         system ("$xcopycommand /S /C /I /R");
-        $xcopycommand = "xcopy $XML4CROOT\\src\\*.c $targetdir\\include";
+        $xcopycommand = "xcopy $XERCESCROOT\\src\\*.c $targetdir\\include";
         $xcopycommand =~ s/\//\\/g;
         system ("$xcopycommand /S /C /I /R");
 
@@ -236,7 +236,7 @@ if ($platform =~ m/Windows/) {
 			system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
 			system("cp -fv $ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $targetdir/bin");
 		}
-        system("cp -fv $BUILDDIR/IXXML4C3.lib $targetdir/lib");
+        system("cp -fv $BUILDDIR/xerces-c_1.lib $targetdir/lib");
 
         # Copy the locale files
 		if (length($ICUROOT) > 0) {
@@ -246,23 +246,23 @@ if ($platform =~ m/Windows/) {
 
         # Populate the samples directory
         print ("\n\nCopying sample files ...\n");
-        system("cp -Rfv $XML4CROOT/samples/Projects/* $targetdir/samples/Projects");
-        system("cp -Rfv $XML4CROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
-        system("cp -Rfv $XML4CROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
-        system("cp -Rfv $XML4CROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
-        system("cp -Rfv $XML4CROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
-        system("cp -Rfv $XML4CROOT/samples/Redirect/* $targetdir/samples/Redirect");
-        system("cp -Rfv $XML4CROOT/samples/MemParse/* $targetdir/samples/MemParse");
-        system("cp -Rfv $XML4CROOT/samples/PParse/* $targetdir/samples/PParse");
-        system("cp -Rfv $XML4CROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
-        system("cp -Rfv $XML4CROOT/samples/data/* $targetdir/samples/data");
+        system("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
+        system("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+        system("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+        system("cp -Rfv $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+        system("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+        system("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+        system("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+        system("cp -Rfv $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+        system("cp -Rfv $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+        system("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
 
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
-        system("cp -Rfv $XML4CROOT/doc/* $targetdir/doc");
-        system("cp -Rfv $XML4CROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
-        system("cp $XML4CROOT/Readme.html $targetdir");
-        system("cp $XML4CROOT/doc/license.html $targetdir");
+        system("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
+        system("cp -Rfv $XERCESCROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
+        system("cp $XERCESCROOT/Readme.html $targetdir");
+        system("cp $XERCESCROOT/doc/license.html $targetdir");
 
         # Now package it all up using ZIP
         chdir ("$targetdir/..");
@@ -359,13 +359,13 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 		}
 
         # make the source files
-        chdir ("$XML4CROOT/src");
+        chdir ("$XERCESCROOT/src");
 
         system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
         system ("gmake");
 
         # Now build the samples
-        chdir ("$XML4CROOT/samples");
+        chdir ("$XERCESCROOT/samples");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
         system ("gmake");
 
@@ -373,14 +373,14 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 
         # Populate the include output directory
         print ("\n\nCopying headers files ...\n");
-        system("cp -Rf $XML4CROOT/src/sax/*.hpp $targetdir/include/sax");
-        system("cp -Rf $XML4CROOT/src/framework/*.hpp $targetdir/include/framework");
-        system("cp -Rf $XML4CROOT/src/dom/DOM*.hpp $targetdir/include/dom");
-        system("cp -Rf $XML4CROOT/src/internal/*.hpp $targetdir/include/internal");
-        system("cp -Rf $XML4CROOT/src/internal/*.c $targetdir/include/internal");
-        system("cp -Rf $XML4CROOT/src/parsers/*.hpp $targetdir/include/parsers");
-        system("cp -Rf $XML4CROOT/src/util/*.hpp $targetdir/include/util");
-        system("cp -Rf $XML4CROOT/src/util/*.c $targetdir/include/util");
+        system("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
+        system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
+        system("cp -Rf $XERCESCROOT/src/dom/DOM*.hpp $targetdir/include/dom");
+        system("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
+        system("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
+        system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
+        system("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
+        system("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
 		
 		if (length($ICUROOT) > 0) {
 			print "\nInternational files are being copied from \'" . $ICUROOT . "\'";
@@ -389,14 +389,14 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 
         # Populate the binary output directory
         print ("\n\nCopying binary outputs ...\n");
-        system("cp -Rf $XML4CROOT/bin/* $targetdir/bin");
+        system("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
 		if (length($ICUROOT) > 0) {
 			system("cp -f $ICUROOT/source/tools/makeconv/makeconv $targetdir/bin");
 			system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
 		}
-        system("cp -f $XML4CROOT/lib/*.a $targetdir/lib");
-        system("cp -f $XML4CROOT/lib/*.so $targetdir/lib");
-        system("cp -f $XML4CROOT/lib/*.sl $targetdir/lib");
+        system("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
+        system("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
+        system("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
 
         system("rm -rf $targetdir/bin/obj");
 
@@ -410,25 +410,25 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         print ("\n\nCopying sample files ...\n");
         foreach $iii ('config.guess', 'config.h.in', 'config.sub', 'configure', 'configure.in',
                 'install-sh', 'runConfigure', 'Makefile.in', 'Makefile.incl', 'Makefile') {
-                system("cp -f $XML4CROOT/samples/$iii $targetdir/samples");
+                system("cp -f $XERCESCROOT/samples/$iii $targetdir/samples");
         }
 
-        system("cp -Rf $XML4CROOT/samples/data/* $targetdir/samples/data");
-        system("cp -Rf $XML4CROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
-        system("cp -Rf $XML4CROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
-        system("cp -Rf $XML4CROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
-        system("cp -Rf $XML4CROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
-        system("cp -Rf $XML4CROOT/samples/Redirect/* $targetdir/samples/Redirect");
-        system("cp -Rf $XML4CROOT/samples/MemParse/* $targetdir/samples/MemParse");
-        system("cp -Rf $XML4CROOT/samples/PParse/* $targetdir/samples/PParse");
-        system("cp -Rf $XML4CROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+        system("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");
+        system("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
+        system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
+        system("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
+        system("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
+        system("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
+        system("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
+        system("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
+        system("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
 
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
-        system("cp -Rf $XML4CROOT/doc/* $targetdir/doc");
-        system("cp -Rf $XML4CROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
-        system("cp $XML4CROOT/Readme.html $targetdir");
-        system("cp $XML4CROOT/doc/license.html $targetdir");
+        system("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
+        system("cp -Rf $XERCESCROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
+        system("cp $XERCESCROOT/Readme.html $targetdir");
+        system("cp $XERCESCROOT/doc/license.html $targetdir");
 
         # Change the directory permissions
         system ("chmod 644 `find $targetdir -type f`");

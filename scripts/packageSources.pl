@@ -1,17 +1,17 @@
 #!/usr/bin/perl
 
-push(@INC, "/home/xml4c/bin", "/home/xml4c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
+push(@INC, "/home/xerces-c/bin", "/home/xerces-c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
 require "getopt.pl";
 
 $|=1;   # Force a flush after every print
 
-# Set up the environment variables for XML4C and ICU
-$XML4CROOT = $ENV{'XML4CROOT'};
+# Set up the environment variables for XERCES-C and ICU
+$XERCESCROOT = $ENV{'XERCESCROOT'};
 $ICUROOT = $ENV{'ICUROOT'};
 
 # Check for the environment variables and exit if error
-if (!length($XML4CROOT)) {
-        print "You must set an environment variable called XML4CROOT to work with this script.\n";
+if (!length($XERCESCROOT)) {
+        print "You must set an environment variable called XERCESCROOT to work with this script.\n";
         exit(-1);
 }
 
@@ -19,10 +19,10 @@ if (!length($XML4CROOT)) {
 $OUTPUTDIR = $opt_o;
 
 # Check for the environment variables and exit if error
-if (!length($XML4CROOT) || !length($OUTPUTDIR)) {
-        print ("Usage is: packageSources -s<output_directory>\n");
-        print ("Example: perl packageSources.pl -od:\\xml4csrc3_0_0\n");
-        print ("         perl packageSources.pl -o\$HOME/xml4csrc3_0_0");
+if (!length($XERCESCROOT) || !length($OUTPUTDIR)) {
+        print ("Usage is: packageSources -o<output_directory>\n");
+        print ("Example: perl packageSources.pl -od:\\xerces-c_1_0_0d01\n");
+        print ("         perl packageSources.pl -o\$HOME/xerces-c_1_0_0d01");
         exit(-1);
 }
 
@@ -34,11 +34,11 @@ if (!length($XML4CROOT) || !length($OUTPUTDIR)) {
 # }
 
 #Fix the backslashes on the Windows platform
-$XML4CROOT =~ s/\\/\//g;
+$XERCESCROOT =~ s/\\/\//g;
 $ICUROOT =~ s/\\/\//g;
 
-# Read the target version from the file $XML4CROOT/src/util/XML4CDefs.hpp
-$versionfile = "$XML4CROOT/src/util/XML4CDefs.hpp";
+# Read the target version from the file $XERCESCROOT/src/util/XML4CDefs.hpp
+$versionfile = "$XERCESCROOT/src/util/XML4CDefs.hpp";
 $openresult = open (VERSIONFILE, "<$versionfile");
 
 if ($openresult == 0) {
@@ -58,7 +58,7 @@ close(VERSIONFILE);
 
 $binarytargetdir =~ s/\./_/g;    # Substitute the dots
 $binarytargetdir =~ s/\s/_/g;    # Substitute the blanks
-$binarydirectoryname = "xml4c" . $binarytargetdir;  # Is the name of the binary directory
+$binarydirectoryname = "xerces-c_" . $binarytargetdir;  # Is the name of the binary directory
 $binarytargetdir =~ s/\\/\//g;   # Fix the backslashes, if they exist, probably doesn't
 
 # Now check if the target directory exists, exit if it does
@@ -79,12 +79,12 @@ $platform =~ m/(^\w*\s)/;
 $platform = $1;
 close (PLATFORM);
 
-print "\nPackaging XML4C sources in " . $srctargetdir . " on platform " . $platform . "...\n";
+print "\nPackaging XERCES-C sources in " . $srctargetdir . " on platform " . $platform . "...\n";
 
 # Build the API docs
 $docppfilelist = "";
 
-$hppdir = "$XML4CROOT/src/sax";
+$hppdir = "$XERCESCROOT/src/sax";
 chdir ($hppdir);
 opendir (THISDIR, $hppdir);
 @allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
@@ -94,7 +94,7 @@ foreach $hppfile (@allhppfiles) {
        $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
 }
 
-$hppdir = "$XML4CROOT/src/dom";
+$hppdir = "$XERCESCROOT/src/dom";
 chdir ($hppdir);
 opendir (THISDIR, $hppdir);
 @allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
@@ -105,11 +105,11 @@ foreach $hppfile (@alldomhppfiles) {
        $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
 }
 
-$docppfilelist = $docppfilelist . " $XML4CROOT/src/dom/DOMString.hpp";
-$docppfilelist = $docppfilelist . " $XML4CROOT/src/framework/XMLDocumentHandler.hpp";
-$docppfilelist = $docppfilelist . " $XML4CROOT/src/framework/XMLEntityHandler.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/dom/DOMString.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/framework/XMLDocumentHandler.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/framework/XMLEntityHandler.hpp";
 
-system ("doc++ -d $XML4CROOT/doc/apiDocs -B $XML4CROOT/doc/tail.html -a -G -k -H -S $docppfilelist");
+system ("doc++ -d $XERCESCROOT/doc/apiDocs -B $XERCESCROOT/doc/tail.html -a -G -k -H -S $docppfilelist");
 
 &package_sources();
 
@@ -125,8 +125,8 @@ sub package_sources {
    print ("\nCopying source tree ...\n");
    system ("mkdir $srctargetdir");
    print ("Targetdir is : " . $srctargetdir . "\n");
-   system("cp -Rf $XML4CROOT/* $srctargetdir");
-   system("cp $XML4CROOT/doc/license.html $srctargetdir");
+   system("cp -Rf $XERCESCROOT/* $srctargetdir");
+   system("cp $XERCESCROOT/doc/license.html $srctargetdir");
 
    if ($platform =~ m/Windows/) {
       $RM = "rm";
@@ -238,10 +238,10 @@ sub change_version_number()
         my $thefiledotbak = $thefile . ".bak";
         rename ($thefile, $thefiledotbak);
 
-        $dll_name = "xml4c" . $libraryversion;
+        $dll_name = "xerces-c_" . $libraryversion;
         $dll_name =~ tr/a-z/A-Z/;
         my $srcversion_num = $version_num;
-        $srcversion_num =~ s/xml4c2/xml4csrc2/ig;
+        $srcversion_num =~ s/xml4c2/xerces_1/ig;
         open (FIZZLE, $thefiledotbak);
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
