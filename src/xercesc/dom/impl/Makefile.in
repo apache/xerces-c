@@ -109,6 +109,7 @@ DOM_IMPL_CPP_PRIVHEADERS =  \
 	DOMNodeIteratorImpl.hpp \
 	DOMNodeListImpl.hpp \
 	DOMNodeVector.hpp \
+	DOMNormalizer.hpp \
 	DOMNotationImpl.hpp \
 	DOMParentNode.hpp \
 	DOMProcessingInstructionImpl.hpp \
@@ -151,6 +152,7 @@ DOM_IMPL_CPP_OBJECTS = \
 	DOMNodeIteratorImpl.$(TO) \
 	DOMNodeListImpl.$(TO) \
 	DOMNodeVector.$(TO) \
+	DOMNormalizer.$(TO) \
 	DOMNotationImpl.$(TO) \
 	DOMParentNode.$(TO) \
 	DOMProcessingInstructionImpl.$(TO) \
