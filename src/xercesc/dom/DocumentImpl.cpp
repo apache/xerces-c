@@ -512,6 +512,7 @@ void DocumentImpl::unreferenced()
 NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 {
     NodeImpl *newnode=null;
+    bool oldErrorCheckingFlag = errorChecking;
 
     switch (source->getNodeType())
     {
@@ -581,8 +582,12 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         newnode = createCDATASection(source->getNodeValue());
         break;
     case DOM_Node::ENTITY_REFERENCE_NODE :
-        newnode = createEntityReference(source->getNodeName());
-	newnode -> isReadOnly(false); //allow deep import temporarily
+        {
+            EntityReferenceImpl* newentityRef = createEntityReference(source->getNodeName());
+            newnode=newentityRef;
+            errorChecking = false;
+            newentityRef->setReadOnly(false, true); //allow deep import temporarily
+        }
         break;
     case DOM_Node::ENTITY_NODE :
         {
@@ -662,8 +667,10 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
             newnode->appendChild(importNode(srckid, true));
         }
     if (newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE
-        || newnode->getNodeType() == DOM_Node::ENTITY_NODE)
+        || newnode->getNodeType() == DOM_Node::ENTITY_NODE) {
          ((EntityReferenceImpl*)newnode)->setReadOnly(true, true);
+         errorChecking = oldErrorCheckingFlag;
+    }
 
     return newnode;
 };

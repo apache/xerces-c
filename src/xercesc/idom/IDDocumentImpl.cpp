@@ -512,6 +512,7 @@ void IDDocumentImpl::setNodeValue(const XMLCh *x)
 IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
 {
     IDOM_Node *newnode=0;
+    bool oldErrorCheckingFlag = errorChecking;
 
     switch (source->getNodeType())
     {
@@ -555,8 +556,12 @@ IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
         newnode = createCDATASection(source->getNodeValue());
         break;
     case IDOM_Node::ENTITY_REFERENCE_NODE :
-        newnode = createEntityReference(source->getNodeName());
-        castToNodeImpl(newnode) -> isReadOnly(false); //allow deep import temporarily
+        {
+            IDEntityReferenceImpl* newentityRef = (IDEntityReferenceImpl*)createEntityReference(source->getNodeName());
+            newnode=newentityRef;
+            errorChecking = false;
+            newentityRef->setReadOnly(false, true); //allow deep import temporarily
+        }
         break;
     case IDOM_Node::ENTITY_NODE :
         {
@@ -636,8 +641,10 @@ IDOM_Node *IDDocumentImpl::importNode(IDOM_Node *source, bool deep)
             newnode->appendChild(importNode(srckid, true));
         }
         if (newnode->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE
-            || newnode->getNodeType() == IDOM_Node::ENTITY_NODE)
+            || newnode->getNodeType() == IDOM_Node::ENTITY_NODE) {
             castToNodeImpl(newnode)->setReadOnly(true, true);
+            errorChecking = oldErrorCheckingFlag;
+        }
 
         return newnode;
 }
