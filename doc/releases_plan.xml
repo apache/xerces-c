@@ -6,7 +6,7 @@
 <s2 title="&XercesCName; Future Releases Plan">
 <p>This document highlights the release plan for &XercesCName;.</p>
 <s3 title="Current Status"><p>&XercesCName; 1.7.0 - released on March 8, 2002.</p></s3>
-<s3 title="Next Target Release"><p>&XercesCName; 1.8.0 - plan to be released in June or July.</p></s3>
+<s3 title="Next Target Release"><p>&XercesCName; 2.0.0 - plan to be released in June or July.</p></s3>
 <s3 title="&XercesCName; Features list">
 <p> The following table lists the TODO items for &XercesCName;.  It does not include fixing
 bugs that are opened in Bugzilla; unless such Bugzilla bug involves a major development
@@ -38,21 +38,6 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
-            optionally ignore external DTD</td>
-        <td>Tinny Ng</td>
-        <td>May</td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Update 32 bit Solaris binary distribution from Solaris 2.6 to Solaris 2.7</td>
-        <td>Tinny Ng</td>
-        <td>May</td>
-        <td></td>
-    </tr>
-
-    <tr>
         <td>[Bug 6095] Modify .so name to have version number</td>
         <td>PeiYong Zhang</td>
         <td>April</td>
@@ -74,21 +59,14 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Produce 64 bit binary distribution for Solaris</td>
-        <td>PeiYong Zhang</td>
-        <td>May</td>
-        <td></td>
-    </tr>
-
-    <tr>
         <td>Produce 64 bit binary distribution for HP</td>
         <td>PeiYong Zhang</td>
         <td>May</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>
-        <td>Produce 64 bit binary distribution for Windows</td>
+        <td>Produce 64 bit binary distribution for Solaris</td>
         <td>PeiYong Zhang</td>
         <td>June</td>
         <td></td>
@@ -102,35 +80,57 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Claim IDOM as non-experimental</td>
+        <td>Produce 64 bit binary distribution for Linux</td>
+        <td>PeiYong Zhang</td>
+        <td>June</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Reorganization and Apache Recommended DOM C++ Binding</td>
+        <td>Tinny Ng</td>
+        <td>May</td>
+        <td>Complete</td>
+    </tr>
+
+    <tr>
+        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
+            optionally ignore external DTD</td>
         <td>Tinny Ng</td>
         <td>May</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Core: DOMImplementationSource</td>
+        <td>Update 32 bit Solaris binary distribution from Solaris 2.6 to Solaris 2.7</td>
         <td>Tinny Ng</td>
         <td>June</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Core: Document: set/getEncoding, set/getVersion, set/getStandalone, adoptNode</td>
+        <td>DOM L3 Core: DOMImplementationSource</td>
         <td>Tinny Ng</td>
         <td>June</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Core: Node: isSameNode, isEqualNode, getInterface</td>
+        <td>DOM L3 Core: Document: set/getEncoding, set/getVersion, set/getStandalone, adoptNode</td>
         <td>Tinny Ng</td>
         <td>June</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Core: UserDataHandler, and Node: get/setUserData</td>
+        <td>DOM L3 Core: Node: isSameNode, isEqualNode, getInterface</td>
+        <td>Tinny Ng</td>
+        <td>June</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM L3 Core: UserDataHandler, and Node: get/setUserData</td>
         <td>Tinny Ng</td>
         <td>June</td>
         <td></td>
@@ -138,43 +138,36 @@ Those features that have 'Complete' status will be included in the 'Next Target 
 
 
     <tr>
-        <td>DOM Level 3 Core: DOMErrorHandler, DOMError, DOMLocator</td>
+        <td>DOM L3 Core: Entity: set/getEncoding, set/getVersion</td>
         <td>Tinny Ng</td>
         <td>June</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Core: Entity: set/getEncoding, set/getVersion</td>
-        <td>Tinny Ng</td>
-        <td>June</td>
-        <td></td>
+        <td>DOM L3 Core: DOMErrorHandler, DOMError, DOMLocator</td>
+        <td>Khaled Noaman</td>
+        <td>May</td>
+        <td>Complete</td>
     </tr>
 
     <tr>
         <td>DOM L3 Load: DOMInputSource, DOMEntityResolver, DOMBuilder</td>
         <td>Khaled Noaman</td>
         <td>May</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
     <tr>
-        <td>DOM L3 Save: DOMImplementationLS, DocumentLS, DOMWriter</td>
+        <td>DOM L3 Save: DOMWriter</td>
         <td>PeiYong Zhang</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM L3 Abstract Schema: ASModel</td>
+        <td>Grammar Caching</td>
         <td>Khaled Noaman</td>
-        <td>May</td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>DOM L3 Abstract Schema Load: ASDOMBuilder</td>
-        <td>Khaled Noaman</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 

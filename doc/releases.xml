@@ -12,6 +12,63 @@
     </tr>
 
     <tr>
+        <td>2002-05-27</td>
+        <td>Tinny Ng</td>
+        <td>Add DOMDocumentRange and DOMDocumentTraversal.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-27</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Lazily store top-level components to eliminate unnecessary traversal
+            of DOM tree when looking up for a top level component.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-27</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Use pre-built element-attribute map table.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-27</td>
+        <td>Tinny Ng</td>
+        <td>To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-27</td>
+        <td>Tinny Ng</td>
+        <td>Define XMLSize, XMLSSize_t and their associate MAX.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-24</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Eliminate mulitple calls to addRange and sort in regx.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-23</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Use XMLBufferMgr instead of local creation of XMLBuffer(s).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-22</td>
+        <td>Khaled Noaman</td>
+        <td>DOM L3: Add AbstractDOMParser, DOMError, DOMErrorHandler, and DOMLocator.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-05-21</td>
         <td>Tinny Ng</td>
         <td>DOM Reorganization (rename IDOM and deprecate old DOM) and other documentation update.
