@@ -434,10 +434,10 @@ void TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationEl
 
         const XMLCh* name = child->getLocalName();
 
-        if (XMLString::compareString(name, SchemaSymbols::fgELT_APPINFO)) {
+        if (!XMLString::compareString(name, SchemaSymbols::fgELT_APPINFO)) {
             fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Appinfo, this);
         }
-        else if (XMLString::compareString(name, SchemaSymbols::fgELT_DOCUMENTATION)) {
+        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_DOCUMENTATION)) {
             fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Documentation, this);
         }
         else {
