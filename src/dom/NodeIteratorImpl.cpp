@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
  * Revision 1.3  1999/11/23 01:48:16  rahulj
  * Changed 0L to 0. CC under HPUX is happy now.
  *
@@ -165,7 +170,7 @@ void NodeIteratorImpl::setFilter (DOM_NodeFilter filter) {
 
 DOM_Node NodeIteratorImpl::nextNode () {
 	if (fDetached)
-		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
 	DOM_Node result;
 
@@ -214,7 +219,7 @@ DOM_Node NodeIteratorImpl::nextNode () {
 
 DOM_Node NodeIteratorImpl::previousNode () {
 	if (fDetached)
-		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 		
 	DOM_Node result;
 
@@ -259,7 +264,7 @@ DOM_Node NodeIteratorImpl::previousNode () {
 /** The node is accepted if it passes the whatToShow and the filter. */
 bool NodeIteratorImpl::acceptNode (DOM_Node node) {
 	if (fDetached)
-		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     if (fNodeFilter == 0) {
         return ((fWhatToShow & ((1 << node.getNodeType()) - 1)) != 0);
@@ -291,7 +296,7 @@ DOM_Node NodeIteratorImpl::matchNodeOrParent (DOM_Node node) {
 
 DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
 	if (fDetached)
-		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     if (node.isNull()) return fRoot;
 
@@ -334,7 +339,7 @@ DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
 
 DOM_Node NodeIteratorImpl::previousNode (DOM_Node node) {
 	if (fDetached)
-		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     DOM_Node result;
 
@@ -367,7 +372,7 @@ DOM_Node NodeIteratorImpl::previousNode (DOM_Node node) {
 
 void NodeIteratorImpl::removeNode (DOM_Node node) {
 	if (fDetached)
-		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     // Implementation note: Fix-up means setting the current node properly
     // after a remove.

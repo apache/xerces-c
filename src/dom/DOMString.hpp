@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:48  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:48  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:12  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -264,6 +269,15 @@ public:
     XMLCh       *rawBuffer() const;
 
     /**
+      * Returns a copy of the string, transcoded to the local code page. The
+      * caller is responsible for cleaning up this buffer.
+      *
+      * @return A pointer to a newly allocated buffer of char elements, which
+      *         represents the original string, but in the local encoding.
+      */
+    char        *transcode() const;
+
+    /**
       * Returns a sub-string of the <code>DOMString</code> starting at a specified position.
       *
       * @param offset The offset from the beginning from which the sub-string is being requested.
@@ -321,7 +335,7 @@ public:
       * @param other The object to be compared with
       * @return Either -1, 0, or 1 based on the comparison. 
       */
-    int         strcmp(const DOMString &other) const;
+    int         compareString(const DOMString &other) const;
 
     /**
       * Tells if a <code>DOMString</code> contains the same character data

@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:18  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:26  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:18  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:32  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -126,7 +131,7 @@ DOMString ProcessingInstructionImpl::getTarget()
 void ProcessingInstructionImpl::setData(const DOMString &arg)
 {
     if(readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
     
     value = arg;

@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:43  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:43  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:44:24  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -114,7 +119,7 @@ DocumentImpl::DocumentImpl(const DOMString &namespaceURI,
 : NodeImpl(null, namespaceURI, qualifiedName, DOM_Node::DOCUMENT_NODE, false, null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
 	    DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     docType=doctype;
     if (doctype != null)
@@ -159,7 +164,7 @@ bool DocumentImpl::isDocumentImpl() {
 AttrImpl *DocumentImpl::createAttribute(const DOMString &nam)
 {
     if(!isXMLName(nam))
-        throw new DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     return new AttrImpl(this,nam);
 };
 
@@ -188,7 +193,7 @@ DocumentFragmentImpl *DocumentImpl::createDocumentFragment()
 DocumentTypeImpl *DocumentImpl::createDocumentType(const DOMString &nam)
 {
     if (!isXMLName(nam))
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::INVALID_CHARACTER_ERR, null);
 
     return new DocumentTypeImpl(this, nam);
@@ -199,7 +204,7 @@ DocumentTypeImpl *DocumentImpl::createDocumentType(const DOMString &nam)
 ElementImpl *DocumentImpl::createElement(const DOMString &tagName)
 {
     if(!isXMLName(tagName))
-        throw new DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     DOMString pooledTagName = this->namePool->getPooledString(tagName);
     return new ElementImpl(this,pooledTagName);
 };
@@ -217,7 +222,7 @@ ElementImpl *DocumentImpl::createElement(const XMLCh *tagName)
 EntityImpl *DocumentImpl::createEntity(const DOMString &nam)
 {
     if (!isXMLName(nam))
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::INVALID_CHARACTER_ERR, null);
 
     return new EntityImpl(this, nam);
@@ -228,7 +233,7 @@ EntityImpl *DocumentImpl::createEntity(const DOMString &nam)
 EntityReferenceImpl *DocumentImpl::createEntityReference(const DOMString &nam)
 {
     if (!isXMLName(nam))
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::INVALID_CHARACTER_ERR, null);
 
     return new EntityReferenceImpl(this, nam);
@@ -239,7 +244,7 @@ EntityReferenceImpl *DocumentImpl::createEntityReference(const DOMString &nam)
 NotationImpl *DocumentImpl::createNotation(const DOMString &nam)
 {
     if (!isXMLName(nam))
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::INVALID_CHARACTER_ERR, null);
 
     return new NotationImpl(this, nam);
@@ -251,7 +256,7 @@ ProcessingInstructionImpl *DocumentImpl::createProcessingInstruction(
                                           const DOMString &target, const DOMString &data)
 {
     if(!isXMLName(target))
-        throw new DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     return new ProcessingInstructionImpl(this,target,data);
 };
 
@@ -429,7 +434,7 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 
     case DOM_Node::DOCUMENT_NODE : // Document can't be child of Document
     default:                                                // Unknown node type
-        throw new DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     }
 
     // If deep, replicate and attach the kids.
@@ -452,7 +457,7 @@ NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
         ||
         (newChild->isDocumentTypeImpl() && docType!=null)
         )
-        throw new DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
 
     NodeImpl::insertBefore(newChild,refChild);
 
@@ -518,7 +523,7 @@ NodeImpl *DocumentImpl::removeChild(NodeImpl *oldChild)
 
 void DocumentImpl::setNodeValue(const DOMString &x)
 {
-    throw new DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
 };
 
 
@@ -547,7 +552,7 @@ ElementImpl *DocumentImpl::createElementNS(const DOMString &namespaceURI,
     if (namespaceURI == null || namespaceURI.length() == 0)
 	return createElement(qualifiedName);
     if(!isXMLName(qualifiedName))
-        throw new DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     //DOMString pooledTagName = this->namePool->getPooledString(qualifiedName);
     return new ElementImpl(this, namespaceURI, qualifiedName);
 }
@@ -559,7 +564,7 @@ AttrImpl *DocumentImpl::createAttributeNS(const DOMString &namespaceURI,
     if (namespaceURI == null || namespaceURI.length() == 0)
 	return createAttribute(qualifiedName);
     if(!isXMLName(qualifiedName))
-        throw new DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     return new AttrImpl(this, namespaceURI, qualifiedName); 
 }
 

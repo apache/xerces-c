@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:47  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:47  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:12  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -803,7 +808,38 @@ XMLCh *DOMString::rawBuffer() const
 };
 
 
-int DOMString::strcmp(const DOMString &other) const
+char *DOMString::transcode() const
+{
+    if (!fHandle)
+    {
+        char* retP = new char[1];
+        *retP = 0;
+        return retP;
+    }
+
+    // We've got some data, so cap it off first
+    XMLCh* srcP = fHandle->fDSData->fData;
+    srcP[fHandle->fLength] = 0;
+
+    //
+    //  Find out how many chars we need and allocate a buffer big enough
+    //  for that plus a null.
+    //
+    const unsigned int charsNeeded = getDomConverter()->calcRequiredSize(srcP);
+    char* retP = new char[charsNeeded + 1];
+
+    if (!getDomConverter()->transcode(srcP, retP, charsNeeded))
+    {
+        // <TBD> We should throw something here?
+    }
+
+    // Cap it off and return it
+    retP[charsNeeded] = 0;
+    return retP;
+}
+
+
+int DOMString::compareString(const DOMString &other) const
 {
     // Note: this strcmp does not match the semantics
     //       of the standard C strcmp.  All it needs to do is

@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:13  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:13  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:29  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -346,7 +351,7 @@ bool NodeImpl::hasChildNodes()
 
 NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     if(  !(newChild->getOwnerDocument() == ownerDocument   ||
@@ -354,7 +359,7 @@ NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         ( this->isDocumentImpl() &&
         newChild->getOwnerDocument() == (DocumentImpl *)this ) 
         ) )
-        throw new DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     
     // Convert to internal type, to avoid repeated casting  
     //   (left over from the original Java.  Meaningless in this version.)
@@ -365,11 +370,11 @@ NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     for(NodeImpl *a=this->parentNode;treeSafe && a!=null;a=a->parentNode)
         treeSafe=(newInternal!=a);
     if(!treeSafe)
-        throw new DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     
     // refChild must in fact be a child of this node (or null)
     if(refChild!=null && refChild->parentNode != this)
-        throw new DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
     
     if (newInternal->isDocumentFragmentImpl())
     {
@@ -395,14 +400,14 @@ NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         kid=kid->getNextSibling())
         {
             if(!isKidOK(this,kid))
-                throw new DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+                throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
         }                       
         while(newInternal->hasChildNodes())     // Move
             insertBefore(newInternal->getFirstChild(),refChild);
     }
     
     else if(!isKidOK(this, newInternal))
-        throw new DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     
     else
     {
@@ -509,11 +514,11 @@ tree structure is legal.
   NodeImpl *NodeImpl::removeChild(NodeImpl *oldChild) 
   {
       if (readOnly)
-          throw new DOM_DOMException(
+          throw DOM_DOMException(
           DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
       
       if (oldChild != null && oldChild->parentNode != this)
-          throw new DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+          throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
       
       // Patch tree past oldChild
       NodeImpl *prev = oldChild->previousSibling;
@@ -565,7 +570,7 @@ tree structure is legal.
   this instanceof Document && 
   newChild.getOwnerDocument() != (Document) this)
   {
-  throw new DOMExceptionImpl(DOMException.WRONG_DOCUMENT_ERR, null);
+  throw DOMExceptionImpl(DOMException.WRONG_DOCUMENT_ERR, null);
   }
       *********************************************************************/
       insertBefore(newChild, oldChild);
@@ -579,7 +584,7 @@ tree structure is legal.
   void NodeImpl::setNodeValue(const DOMString &val)
   {
       if (readOnly)
-          throw new DOM_DOMException(
+          throw DOM_DOMException(
           DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
       
       // Default behavior, overridden in some subclasses
@@ -642,7 +647,7 @@ DOMString NodeImpl::getLocalName()
 void NodeImpl::setPrefix(const DOMString &prefix)
 {
     if (readOnly)
-	throw new DOM_DOMException(
+	throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     if (isAttrImpl() || isElementImpl()) {
 	name = this -> prefix = prefix;

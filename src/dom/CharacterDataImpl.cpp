@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:41  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:24  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:41  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:11  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -88,7 +93,7 @@ CharacterDataImpl::~CharacterDataImpl() {
 void CharacterDataImpl::appendData(const DOMString &data)
 {
     if(readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     value.appendData(data);
@@ -104,10 +109,10 @@ NodeImpl *CharacterDataImpl::cloneNode(bool deep)
 void CharacterDataImpl::deleteData(int offset, int count)
 {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     if (count < 0)
-        throw new DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
     
     
     //int tailLength = Math.max(value.length() - count - offset, 0);
@@ -117,11 +122,11 @@ void CharacterDataImpl::deleteData(int offset, int count)
     //}
     //catch (StringIndexOutOfBoundsException e)
     //{
-    //      throw new DOM_DOMException(DOMException.INDEX_SIZE_ERR, null);
+    //      throw DOM_DOMException(DOMException.INDEX_SIZE_ERR, null);
     
     int len = value.length();
     if (offset < 0 || offset >= len)
-        throw new DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
     
     value.deleteData(offset, count);
 };
@@ -156,11 +161,11 @@ void CharacterDataImpl::insertData(int offset, const DOMString &data)
 {
     
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     if (offset<0 || offset>value.length())
-        throw new DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
     
     value.insertData(offset, data);
 }
@@ -170,7 +175,7 @@ void CharacterDataImpl::insertData(int offset, const DOMString &data)
 void CharacterDataImpl::replaceData(int offset, int count, const DOMString &data)
 {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     deleteData(offset, count);
     insertData(offset, data);
@@ -182,7 +187,7 @@ void CharacterDataImpl::replaceData(int offset, int count, const DOMString &data
 void CharacterDataImpl::setData(const DOMString &arg)
 {
     if (readOnly)
-        throw new DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     value = arg.clone();
 };
 
@@ -194,7 +199,7 @@ DOMString CharacterDataImpl::substringData(int offset, int count)
 {
     
     if(count < 0 || offset < 0 || offset > value.length()-1)
-        throw new DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR,null);
     
     return value.substringData(offset, count);
 };
