@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2000/02/17 00:58:07  abagchi
+# Replaced IBM1047 with IBM1140
+#
 # Revision 1.15  2000/02/08 02:28:34  abagchi
 # Added IBM 1047 Transcoder
 #
@@ -200,7 +203,7 @@ UTIL_CPP_PUBHEADERS = \
 	XML4CDefs.hpp \
 	XML88591Transcoder.hpp \
 	XMLASCIITranscoder.hpp \
-	XMLIBM1047Transcoder.hpp \
+	XMLIBM1140Transcoder.hpp \
 	XMLEBCDICTranscoder.hpp \
 	XMLEnumerator.hpp \
 	XMLExceptMsgs.hpp \
@@ -246,10 +249,9 @@ UTIL_CPP_OBJECTS = \
 	TransService.$(TO) \
 	XML88591Transcoder.$(TO) \
 	XMLASCIITranscoder.$(TO) \
-        XMLIBM1047Transcoder.$(TO) \
+        XMLIBM1140Transcoder.$(TO) \
 	XMLEBCDICTranscoder.$(TO) \
 	XMLException.$(TO) \
-	XMLIBM1047Transcoder.$(TO) \
 	XMLString.$(TO) \
 	XMLUCSTranscoder.$(TO) \
 	XMLUTF16Transcoder.$(TO) \
