@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/26 16:12:23  knoaman
+ * Add a method to return the XSObject mapped to a schema grammar component
+ *
  * Revision 1.9  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -744,6 +747,11 @@ XSNamespaceItem* XSModel::getNamespaceItem(const XMLCh* const key)
     if (fParent)
         return fParent->getNamespaceItem(key);
     return 0;
+}
+
+XSObject* XSModel::getXSObject(void* key)
+{
+    return fObjFactory->getObjectFromMap(key, this);
 }
 
 

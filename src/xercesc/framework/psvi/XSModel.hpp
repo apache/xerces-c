@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/26 16:12:23  knoaman
+ * Add a method to return the XSObject mapped to a schema grammar component
+ *
  * Revision 1.8  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -298,6 +301,15 @@ public:
     XMLStringPool*  getURIStringPool();
 
     XSNamespaceItem* getNamespaceItem(const XMLCh* const key);
+
+    /**
+      * Get the XSObject (i.e. XSElementDeclaration) that corresponds to
+      * to a schema grammar component (i.e. SchemaElementDecl)
+      * @param key schema component object
+      *
+      * @return the corresponding XSObject
+      */
+    XSObject* getXSObject(void* key);
 
     //@}
 private:
