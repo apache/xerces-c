@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2004/03/09 20:59:28  peiyongz
+ * restore key string from string pool from datatypevalidator
+ *
  * Revision 1.8  2004/03/01 23:20:46  peiyongz
  * For RefHashTableOf/RefHash2KeysTableOf/RefHashTable3KeysIdPool,
  * resovle "key string" either from the data itself or the GrammarPool's StringPool.
@@ -1295,7 +1298,15 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
 
         while (e.hasMoreElements())
         {
-            DatatypeValidator* data = objToStore->get(e.nextElementKey());            
+            /***
+             * to do: verify valid id
+             *
+             *    XMLCh*  key = (XMLCh*) e.nextElementKey();
+             *    unsigned int id = serEng.getStringPool()->getId(key);
+             *    if (id == 0)
+             *        throw exception
+             ***/
+            DatatypeValidator* data = objToStore->get(e.nextElementKey());
             DatatypeValidator::storeDV(serEng, data);
         }
     }
@@ -1329,12 +1340,37 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
         serEng>>itemNumber;
 
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {
+        {           
             DatatypeValidator*  data;
             data = DatatypeValidator::loadDV(serEng);
 
-            XMLCh*  key = (XMLCh*) data->getTypeName();
-            (*objToLoad)->put((void*)key, data);
+            /***
+             *   restore the key
+             ***/
+            XMLCh*       typeUri   = (XMLCh*) data->getTypeUri();
+            XMLCh*       typeLocal = (XMLCh*) data->getTypeLocalName();
+            unsigned int uriLen    = XMLString::stringLen(typeUri);
+            unsigned int localLen  = XMLString::stringLen(typeLocal);
+            XMLCh*       typeKey   = (XMLCh*) serEng.getMemoryManager()->allocate
+                                     (
+                                       (uriLen + localLen + 2) * sizeof(XMLCh)
+                                     );
+            // "typeuri,typeLocal"
+            XMLString::moveChars(typeKey, typeUri, uriLen+1);
+            typeKey[uriLen] = chComma;
+            XMLString::moveChars(&typeKey[uriLen+1], typeLocal, localLen+1);
+            typeKey[uriLen + localLen + 1] = chNull;
+            ArrayJanitor<XMLCh> janName(typeKey, serEng.getMemoryManager());
+            
+            /*
+             * get the string from string pool
+             *
+             *  to do:
+             ***/
+            unsigned int id = serEng.getStringPool()->getId(typeKey);   
+            XMLCh* refKey = (XMLCh*) serEng.getStringPool()->getValueForId(id);      
+
+            (*objToLoad)->put((void*)refKey, data);
         }
     }
 }
