@@ -59,6 +59,13 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/10/09 18:55:58  jberry
+ * - Fix Mac OS X support. GCC in this environment sets wchar_t to a 32 bit
+ *   value which requires an additional transcoding stage (bleh...)
+ * - Improve sensitivity to environment in order to support a broader
+ *   range of system versions.
+ * - Fix a few compiler sensitivities.
+ *
  * Revision 1.1  2000/07/18 18:26:16  andyh
  * Mac OS update.
  * Contributed by James Berry <jberry@criticalpath.com>
@@ -90,8 +97,13 @@
  */
 
 #include <util/TransService.hpp>
-#include <UnicodeConverter.h>
 #include <cstddef>
+
+#if TARGET_API_MAC_CARBON
+	#include <Carbon.h>
+#else
+	#include <UnicodeConverter.h>
+#endif
 
 //
 //  The transcoding service has to provide a couple of required string
@@ -153,6 +165,8 @@ protected :
 
 private :
 	friend class XMLPlatformUtils;
+	
+	bool	mHasUnicodeCollation;	// True if unicode collation is available
 	
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -297,12 +311,6 @@ private :
     // -----------------------------------------------------------------------
     TextToUnicodeInfo	mTextToUnicodeInfo;
     UnicodeToTextInfo	mUnicodeToTextInfo;
-    
-    enum {
-    	kTempBufSize	= 512
-    };
-    
-    char mTempBuf[kTempBufSize];			// Temp buf used while in calcRequiredSize
-};
+ };
 
 #endif
