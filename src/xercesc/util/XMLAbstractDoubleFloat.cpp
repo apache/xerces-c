@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.29  2004/09/09 20:09:30  peiyongz
+ * getDataOverflowed()
+ *
  * Revision 1.28  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -140,6 +143,7 @@ XMLAbstractDoubleFloat::XMLAbstractDoubleFloat(MemoryManager* const manager)
 : fValue(0)
 , fType(Normal)
 , fDataConverted(false)
+, fDataOverflowed(false)
 , fSign(0)
 , fRawData(0)
 , fFormattedString(0)

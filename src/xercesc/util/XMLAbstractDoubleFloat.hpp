@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2004/09/09 20:09:30  peiyongz
+ * getDataOverflowed()
+ *
  * Revision 1.23  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -175,6 +178,8 @@ public:
 
     inline  bool          isDataConverted()  const;
 
+    inline  bool          isDataOverflowed()  const;
+
     inline  double        getValue() const;
 
     /***
@@ -246,6 +251,7 @@ protected:
     double                  fValue;
     LiteralType             fType;
     bool                    fDataConverted;
+    bool                    fDataOverflowed;
 
 private:
     int                     fSign;
@@ -277,6 +283,11 @@ inline MemoryManager* XMLAbstractDoubleFloat::getMemoryManager() const
 inline bool XMLAbstractDoubleFloat::isDataConverted() const
 {
     return fDataConverted;
+}
+
+inline bool XMLAbstractDoubleFloat::isDataOverflowed() const
+{
+    return fDataOverflowed;
 }
 
 inline double XMLAbstractDoubleFloat::getValue() const

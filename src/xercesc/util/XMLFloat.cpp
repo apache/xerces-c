@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2004/09/09 20:09:30  peiyongz
+ * getDataOverflowed()
+ *
  * Revision 1.15  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -154,35 +157,32 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
     // check if overflow/underflow occurs
     if (errno == ERANGE)
     {
+
+        fDataConverted = true;
+
         if ( fValue < 0 )
         {
             if (fValue > (-1)*DBL_MIN)
             {
-                fDataConverted = true;
                 fValue = 0;
             }
             else
             {
                 fType = NegINF;
-                fDataConverted = true;
+                fDataOverflowed = true;
             }
         }
         else if ( fValue > 0)
         {
             if (fValue < DBL_MIN )
             {
-                fDataConverted = true;
                 fValue = 0;
             }
             else
             {
                 fType = PosINF;
-                fDataConverted = true;
+                fDataOverflowed = true;
             }
-        }
-        else
-        {
-            fDataConverted = true;
         }
     }
     else
@@ -194,6 +194,7 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
         {
             fType = NegINF;
             fDataConverted = true;
+            fDataOverflowed = true;
         }
         else if (fValue > (-1)*FLT_MIN && fValue < 0)
         {
@@ -209,6 +210,7 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
         {
             fType = PosINF;
             fDataConverted = true;
+            fDataOverflowed = true;
         }
     }
 }
