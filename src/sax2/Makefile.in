@@ -81,7 +81,7 @@ SAX2_CPP_PUBHEADERS = \
 	ContentHandler.hpp \
 	DefaultHandler.hpp \
 	LexicalHandler.hpp \
-        DeclHandler.hpp \
+	DeclHandler.hpp \
 	SAX2XMLReader.hpp \
 	XMLReaderFactory.hpp
 
