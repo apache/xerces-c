@@ -7,14 +7,27 @@
   <separator/>
 
      <document id="index"       label="Readme"             source="readme.xml"/>
-     <document id="install"     label="Installation"       source="install.xml"/>
-     <external href="http://&XercesDistDir;/"              label="Download"/>
      <document id="releases"    label="Release Info"     source="releases.xml"/>
      <hidden id="releases_archive"                   source="releases_archive.xml"/>
      <hidden id="releases_plan"                      source="releases_plan.xml"/>
 
+  <separator/>
+
+     <document id="install"     label="Installation"       source="install.xml"/>
+     <external href="http://&XercesDistDir;/"              label="Download"/>
+     <document id="build"       label="Build Instructions" source="build.xml"/>
+     <hidden   id="build-winunix" source="build-winunix.xml"/>
+     <hidden   id="build-other" source="build-other.xml"/>
+     <hidden   id="build-misc"  source="build-misc.xml"/>
 
   <separator/>
+
+     <group    id="faqs"        label="FAQs">
+        <entry id="faq-distrib" source="faq-distrib.xml"/>
+        <entry id="faq-build"   source="faq-build.xml"/>
+        <entry id="faq-parse"   source="faq-parse.xml"/>
+        <entry id="faq-other"   source="faq-other.xml"/>
+     </group>
 
      <document id="samples"     label="Samples"      source="samples.xml"/>
      <hidden   id="saxcount"    source="saxcount.xml"/>
@@ -32,21 +45,10 @@
      <hidden   id="senumval"    source="senumval.xml"/>
 
      <document id="api"         label="API Docs"     source="apidocs.xml"/>
-     <external href="ApacheDOMC++Binding.html"     label="DOM C++ Binding"/>
 
   <separator/>
 
-     <group    id="faqs"        label="FAQs">
-        <entry id="faq-distrib" source="faq-distrib.xml"/>
-        <entry id="faq-build"   source="faq-build.xml"/>
-        <entry id="faq-parse"   source="faq-parse.xml"/>
-        <entry id="faq-other"   source="faq-other.xml"/>
-     </group>
-
-     <document id="build"       label="Build Instructions" source="build.xml"/>
-     <hidden   id="build-winunix" source="build-winunix.xml"/>
-     <hidden   id="build-other" source="build-other.xml"/>
-     <hidden   id="build-misc"  source="build-misc.xml"/>
+     <external href="ApacheDOMC++Binding.html"     label="DOM C++ Binding"/>
 
      <document id="program"     label="Programming"  source="program.xml"/>
      <hidden   id="program-sax"           source="program-sax.xml"/>
