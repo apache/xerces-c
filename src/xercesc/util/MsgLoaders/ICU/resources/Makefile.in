@@ -95,6 +95,7 @@ CHECK_VARS=
 # build any resources.
 RESLIBNAME=lib$(RESNAME)
 RESTARGET=lib$(RESNAME)$(ICUSHLIBSUFFIX)
+PKGTARGET=lib$(PKGNAME)$(ICUSHLIBSUFFIX)
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
@@ -114,6 +115,7 @@ $(TARGET): $(OBJECTS)
 $(RESTARGET): $(RESFILES)
 	@echo building ${FQ_RESLIB_REAL_NAME}
 	$(PKGDATA) --name $(PKGNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST)
+	mv $(PKGTARGET) $(RESTARGET)
 	mv $(RESTARGET) ${FQ_RESLIB_REAL_NAME}
 	@echo symlink ${FQ_RESLIB_SO_NAME}
 	ln -s ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
@@ -133,7 +135,7 @@ check: $(TARGET)
 	$(INVOKE) $(CHECK_VARS) ./$(TARGET) $(CHECK_ARGS) | tee $(TARGET).out
 
 ## resources
-$(PKGNAME)_%.res: %.txt
+$(RESNAME)_%.res: %.txt
 	@echo "generating $@"
 	$(GENRB) $(GENRBOPT) $^
 
