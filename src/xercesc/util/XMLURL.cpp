@@ -221,8 +221,8 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fHasInvalidChar(false)
 {
 	try
-	{
-		setURL(baseURL, relativeURL);
+	{	
+        setURL(baseURL, relativeURL);
 	}
     catch(const OutOfMemoryException&)
     {
@@ -424,6 +424,7 @@ XMLURL::XMLURL(const XMLURL& toCopy) :
     catch(...)
     {
         cleanup();
+        throw;
     }
 }
 
@@ -537,6 +538,35 @@ void XMLURL::setURL(const XMLCh* const    baseURL
 			}
 		}
 	}
+}
+
+// this version of setURL doesn't throw a malformedurl exception
+// instead it returns false when it failed (or when it would of
+// thrown a malformedurl exception)
+bool XMLURL::setURL(const XMLCh* const    baseURL
+                  , const XMLCh* const    relativeURL
+                  , XMLURL& xmlURL)
+{
+    cleanup();
+
+    // Parse our URL string
+    if (parse(relativeURL, xmlURL))
+    {
+	    //  If its relative and the base is non-null and non-empty, then
+	    //  parse the base URL string and conglomerate them.
+	    //
+	    if (isRelative() && baseURL && *baseURL)
+	    {		   
+	        XMLURL basePart(fMemoryManager);
+            if (parse(baseURL, basePart)  && conglomerateWithBase(basePart, false))
+            {    
+		        return true;			                    
+		    }
+	    }
+        else
+            return true;
+    }
+    return false;
 }
 
 void XMLURL::setURL(const XMLURL&         baseURL

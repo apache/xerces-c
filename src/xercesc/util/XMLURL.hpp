@@ -175,8 +175,11 @@ public:
         const   XMLURL&         baseURL
         , const XMLCh* const    relativeURL
     );
-
-
+    // a version of setURL that doesn't throw malformed url exceptions
+    bool setURL(
+        const XMLCh* const    baseURL
+        , const XMLCh* const    relativeURL
+        , XMLURL& xmlURL);
     // -----------------------------------------------------------------------
     //  Miscellaneous methods
     // -----------------------------------------------------------------------

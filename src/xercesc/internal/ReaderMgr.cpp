@@ -544,6 +544,10 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         LastExtEntityInfo lastInfo;
         getLastExtEntityInfo(lastInfo);
 
+// Keep this #if 0 block as it was exposing a threading problem on AIX.
+// Got rid of the problem by changing XMLURL to not throw malformedurl
+// exceptions.        
+#if 0
         try
         {
             XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer(), fMemoryManager);
@@ -576,6 +580,28 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
             else
                 throw e;
         }
+#else
+        XMLURL urlTmp(fMemoryManager);
+        if ((!urlTmp.setURL(lastInfo.systemId, expSysId.getRawBuffer(), urlTmp)) ||
+            (urlTmp.isRelative()))
+        {
+            if (!fStandardUriConformant)
+                srcToFill = new (fMemoryManager) LocalFileInputSource
+                (
+                    lastInfo.systemId
+                    , expSysId.getRawBuffer()
+                    , fMemoryManager
+                );
+            else
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
+        }
+        else
+        {
+            if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
+            srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
+        }        
+#endif
     }
 
     // Put a janitor on the input source
@@ -653,29 +679,10 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
         LastExtEntityInfo lastInfo;
         getLastExtEntityInfo(lastInfo);
 
-        try
+        XMLURL urlTmp(fMemoryManager);
+        if ((!urlTmp.setURL((!baseURI || !*baseURI) ? lastInfo.systemId : baseURI, expSysId.getRawBuffer(), urlTmp)) ||
+            (urlTmp.isRelative()))
         {
-            XMLURL urlTmp((!baseURI || !*baseURI) ? lastInfo.systemId : baseURI, expSysId.getRawBuffer(), fMemoryManager);
-
-            if (urlTmp.isRelative())
-            {
-                ThrowXMLwithMemMgr
-                (
-                    MalformedURLException
-                    , XMLExcepts::URL_NoProtocolPresent
-                    , fMemoryManager
-                );
-            }
-            else {
-                if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-            }
-        }
-
-        catch(const MalformedURLException& e)
-        {
-            // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
@@ -684,8 +691,14 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                     , fMemoryManager
                 );
             else
-                throw e;
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }
+        else
+        {
+            if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
+            srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
+        }        
     }
 
     // Put a janitor on the input source

@@ -3769,28 +3769,10 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             ReaderMgr::LastExtEntityInfo lastInfo;
             fReaderMgr.getLastExtEntityInfo(lastInfo);
 
-            try
+            XMLURL urlTmp(fMemoryManager);
+            if ((!urlTmp.setURL(lastInfo.systemId, expSysId.getRawBuffer(), urlTmp)) ||
+                (urlTmp.isRelative()))
             {
-                XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
-                if (urlTmp.isRelative())
-                {
-                    ThrowXMLwithMemMgr
-                    (
-                        MalformedURLException
-                        , XMLExcepts::URL_NoProtocolPresent
-                        , fMemoryManager
-                    );
-                }
-                else {
-                    if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
-                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-                }
-            }
-
-            catch(const MalformedURLException& e)
-            {
-                // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
                 if (!fStandardUriConformant)
                     srcToFill = new (fMemoryManager) LocalFileInputSource
                     (
@@ -3799,8 +3781,14 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         , fMemoryManager
                     );
                 else
-                    throw e;
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
             }
+            else
+            {
+                if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
+            }        
         }
 
         // Put a janitor on the input source
@@ -3929,27 +3917,10 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
 
-        try
+        XMLURL urlTmp(fMemoryManager);
+        if ((!urlTmp.setURL(lastInfo.systemId, expSysId.getRawBuffer(), urlTmp)) ||
+            (urlTmp.isRelative()))
         {
-            XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
-            if (urlTmp.isRelative())
-            {
-                ThrowXMLwithMemMgr
-                (
-                    MalformedURLException
-                    , XMLExcepts::URL_NoProtocolPresent
-                    , fMemoryManager
-                );
-            }
-            else {
-                if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-            }
-        }
-        catch(const MalformedURLException& e)
-        {
-            // Its not a URL, so lets assume its a local file name if non-standard uri is allowed
             if (!fStandardUriConformant)
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
@@ -3958,8 +3929,14 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
                     , fMemoryManager
                 );
             else
-                throw e;
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }
+        else
+        {
+            if (fStandardUriConformant && urlTmp.hasInvalidChar())
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
+            srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
+        }              
     }
 
     return srcToFill;

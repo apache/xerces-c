@@ -6448,28 +6448,25 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
     //  the update resolveEntity accepting nameSpace, a schemImport could
     //  pass a null schemaLocation)
     if (!srcToFill && loc) {
-
-        try {
-
-            XMLURL urlTmp(fSchemaInfo->getCurrentSchemaURL(), normalizedURI, fMemoryManager);
-
-            if (urlTmp.isRelative()) {
-                ThrowXMLwithMemMgr(MalformedURLException,
-                         XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
-            }
-            else {
-                if (fScanner->getStandardUriConformant() && urlTmp.hasInvalidChar())
-                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-            }
-        }
-        catch(const MalformedURLException& e) {
-            // Its not a URL, so lets assume its a local file name if non-standard URI is allowed
-            if (!fScanner->getStandardUriConformant())
-                srcToFill = new (fMemoryManager) LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),normalizedURI, fMemoryManager);
+        XMLURL urlTmp(fMemoryManager);
+        if ((!urlTmp.setURL(fSchemaInfo->getCurrentSchemaURL(), normalizedURI, urlTmp)) ||
+            (urlTmp.isRelative()))
+        {
+           if (!fScanner->getStandardUriConformant())
+                srcToFill = new (fMemoryManager) LocalFileInputSource
+                (   fSchemaInfo->getCurrentSchemaURL()
+                    , normalizedURI                    
+                    , fMemoryManager
+                );
             else
-                throw e;
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }
+        else
+        {
+             if (fScanner->getStandardUriConformant() && urlTmp.hasInvalidChar())
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
+             srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
+        }          
     }
 
     return srcToFill;
