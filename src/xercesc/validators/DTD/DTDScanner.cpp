@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/01/16 21:30:14  tng
+ * [Bug 16151] Memory leak in DTDScanner with ill-formed DTD declaration.  Fix by David Bertoni.
+ *
  * Revision 1.20  2002/12/24 16:12:19  tng
  * For performance reason, move the character check to scancharref.
  *
@@ -1268,8 +1271,8 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     &&  (opCh != chCloseParen))
     {
         // Not a legal char, so delete our node and return failure
-        fScanner->emitError(XMLErrs::ExpectedSeqChoiceLeaf);
         delete curNode;
+        fScanner->emitError(XMLErrs::ExpectedSeqChoiceLeaf);
         return 0;
     }
 
@@ -3303,8 +3306,8 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                 // Has to be the closing paren now.
                 if (!fReaderMgr->skippedChar(chCloseParen))
                 {
-                    fScanner->emitError(XMLErrs::UnterminatedContentModel);
                     delete headNode;
+                    fScanner->emitError(XMLErrs::UnterminatedContentModel);
                     return false;
                 }
 
@@ -3344,8 +3347,8 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             // Get a name token
             if (!fReaderMgr->getName(nameBuf))
             {
-                fScanner->emitError(XMLErrs::ExpectedElementName);
                 delete headNode;
+                fScanner->emitError(XMLErrs::ExpectedElementName);
                 return false;
             }
 
