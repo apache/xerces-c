@@ -77,7 +77,7 @@ OSVER = @osver@
 TRANSCODER = @transcoder@
 
 include ../version.incl
-include ../src/Makefile.incl
+include ../src/xercesc/Makefile.incl
 
 LIB=${XERCESCROOT}/lib
 ## OS390BATCH
