@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/10/19 15:08:53  knoaman
+ * Performance improvement
+ *
  * Revision 1.12  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -341,34 +344,35 @@ void QName::setName(const XMLCh* const    rawName
                   , const unsigned int    uriId)
 {
     //set the rawName
-    unsigned int newLen;
-
-    newLen = XMLString::stringLen(rawName);
-    if (!fRawNameBufSz || (newLen > fRawNameBufSz))
-    {
-        fMemoryManager->deallocate(fRawName); //delete [] fRawName;
-        fRawNameBufSz = newLen + 8;
-        fRawName = (XMLCh*) fMemoryManager->allocate
-        (
-            (fRawNameBufSz + 1) * sizeof(XMLCh)
-        ); //new XMLCh[fRawNameBufSz + 1];
-    }
-    XMLString::moveChars(fRawName, rawName, newLen + 1);
-
+    unsigned int newLen = XMLString::stringLen(rawName);
     //find out the prefix and localPart from the rawName
     const int colonInd = XMLString::indexOf(rawName, chColon);
+
     if (colonInd >= 0)
     {
+        if (!fRawNameBufSz || (newLen > fRawNameBufSz))
+        {
+            fMemoryManager->deallocate(fRawName); //delete [] fRawName;
+            fRawNameBufSz = newLen + 8;
+            fRawName = (XMLCh*) fMemoryManager->allocate
+            (
+                (fRawNameBufSz + 1) * sizeof(XMLCh)
+            ); //new XMLCh[fRawNameBufSz + 1];
+        }
+        XMLString::moveChars(fRawName, rawName, newLen + 1);
         setNPrefix(rawName, colonInd);
     }
-     else
+    else
     {
         // No colon, so we just have a name with no prefix
         setPrefix(XMLUni::fgZeroLenString);
+
+        // And clean up any QName and leave it undone until/if asked for again
+        if (fRawName)
+            *fRawName = 0;
     }
 
     setNLocalPart(&rawName[colonInd+1], newLen-colonInd-1);
-
 
     // And finally store the URI id parameter
     fURIId = uriId;

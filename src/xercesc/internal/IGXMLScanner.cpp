@@ -1634,10 +1634,6 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         fElemStack.addChild(elemDecl->getElementName(), true);
     }
 
-    //  Ask the element decl to clear out the 'provided' flag on all of its
-    //  att defs.
-    elemDecl->resetDefs();
-
     // Skip any whitespace after the name
     fReaderMgr.skipPastSpaces();
 

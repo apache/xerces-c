@@ -93,8 +93,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     }
 
     const bool hasDefs = (currType && fValidate)
-            ? currType->resetDefs()
-            : elemDecl->resetDefs();
+            ? currType->hasAttDefs()
+            : elemDecl->hasAttDefs();
 
     // another set of attributes; increment element counter
     fElemCount++;

@@ -101,50 +101,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
 
 void DTDValidator::faultInAttr(XMLAttr& toFill, const XMLAttDef& attDef) const
 {
-    //
-    //  At this level, we cannot set the URI id. So we just set it to zero
-    //  and leave it at that. The scanner, who called us, will look at the
-    //  prefix we stored (if any), resolve it, and store the URL id if any.
-    //
-    const XMLCh* fullName = attDef.getFullName();
-    const int colonInd = XMLString::indexOf(fullName, chColon);
-    if (colonInd == -1)
-    {
-        // There is no prefix, so we just do a simple and quick setting
-        toFill.set
-        (
-            0
-            , fullName
-            , XMLUni::fgZeroLenString
-            , attDef.getValue()
-            , attDef.getType()
-        );
-    }
-     else
-    {
-        //
-        //  There is a colon, so we have to split apart the name and prefix
-        //  part.
-        //
-        XMLCh* tmpNameBuf = XMLString::replicate(fullName, getScanner()->getMemoryManager());
-        ArrayJanitor<XMLCh> janNameBuf(tmpNameBuf, getScanner()->getMemoryManager());
-
-        // Put a null where the colon is, to split it into two strings
-        tmpNameBuf[colonInd] = chNull;
-
-        //
-        //  And now we can set the attribute object with the prefix and name
-        //  parts.
-        //
-        toFill.set
-        (
-            0
-            , &tmpNameBuf[colonInd+1]
-            , tmpNameBuf
-            , attDef.getValue()
-            , attDef.getType()
-        );
-    }
+    toFill.set(0, attDef.getFullName(), attDef.getValue(), attDef.getType());
 }
 
 void DTDValidator::reset()
@@ -433,6 +390,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
     //  We also check all of the attributes as well.
     //
     NameIdPoolEnumerator<DTDElementDecl> elemEnum = fDTDGrammar->getElemEnumerator();
+    fDTDGrammar->setValidated(true);
     while (elemEnum.hasMoreElements())
     {
         const DTDElementDecl& curElem = elemEnum.nextElement();
