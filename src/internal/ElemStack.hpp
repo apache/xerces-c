@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/07 13:47:47  tng
+ * Schema: Fix unmatched end tag for qualified/unqualifed start tag.
+ *
  * Revision 1.9  2001/05/28 20:55:19  tng
  * Schema: Store Grammar in ElemStack as well.
  *
@@ -180,6 +183,7 @@ public :
         bool                fValidationFlag;
         int                 fCurrentScope;
         Grammar*            fCurrentGrammar;
+        unsigned int        fCurrentURI;
     };
 
     enum MapModes
@@ -221,6 +225,9 @@ public :
 
     void setCurrentGrammar(Grammar* currentGrammar);
     Grammar* getCurrentGrammar();
+
+    void setCurrentURI(unsigned int uri);
+    unsigned int getCurrentURI();
 
     // -----------------------------------------------------------------------
     //  Prefix map methods
@@ -357,6 +364,17 @@ inline Grammar* ElemStack::getCurrentGrammar()
 inline void ElemStack::setCurrentGrammar(Grammar* currentGrammar)
 {
     fStack[fStackTop-1]->fCurrentGrammar = currentGrammar;
+    return;
+}
+
+inline unsigned int ElemStack::getCurrentURI()
+{
+    return fStack[fStackTop-1]->fCurrentURI;
+}
+
+inline void ElemStack::setCurrentURI(unsigned int uri)
+{
+    fStack[fStackTop-1]->fCurrentURI = uri;
     return;
 }
 

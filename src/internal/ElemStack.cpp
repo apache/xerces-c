@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/08/07 13:47:47  tng
+ * Schema: Fix unmatched end tag for qualified/unqualifed start tag.
+ *
  * Revision 1.14  2001/06/18 21:33:57  peiyongz
  * Memory leak fix: to addlevel(), by Erik Rydgren.
  *
@@ -183,11 +186,11 @@ unsigned int ElemStack::addLevel()
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
-    else 
-    {     
+    else
+    {
         // Cleanup the old element before reuse
         unsigned int childCount = fStack[fStackTop]->fChildCount;
-        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)    
+        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)
             delete fStack[fStackTop]->fChildren[childIndex];
     }
 
@@ -197,6 +200,7 @@ unsigned int ElemStack::addLevel()
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
+    fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;
 
@@ -223,11 +227,11 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
-    else 
-    {     
+    else
+    {
         // Cleanup the old element before reuse
         unsigned int childCount = fStack[fStackTop]->fChildCount;
-        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)    
+        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)
             delete fStack[fStackTop]->fChildren[childIndex];
     }
 
@@ -237,6 +241,7 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
+    fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;
 

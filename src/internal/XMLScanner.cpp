@@ -1603,6 +1603,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     //  the element stack top contains the prefix to URI mappings for this
     //  element.
     //
+    unsigned int topUri = fElemStack.getCurrentURI();
     const ElemStack::StackElem* topElem = fElemStack.popTop();
 
     // See if it was the root element, to avoid multiple calls below
@@ -1611,8 +1612,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     // Make sure that its the end of the element that we expect
     XMLElementDecl* tempElement = topElem->fThisElement;
     if (fDoNamespaces && fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
-        if ((tempElement->getURI() != uriId) ||
-            (XMLString::compareString(tempElement->getBaseName(), bbName.getRawBuffer())))
+        if ((topUri != uriId) || (XMLString::compareString(tempElement->getBaseName(), bbName.getRawBuffer())))
         {
             emitError
             (
@@ -3008,6 +3008,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  decl because we didn't know it yet.
     //
     fElemStack.setElement(elemDecl, fReaderMgr.getCurrentReaderNum());
+    fElemStack.setCurrentURI(uriId);
+
     if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
         ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
         if (typeinfo)
