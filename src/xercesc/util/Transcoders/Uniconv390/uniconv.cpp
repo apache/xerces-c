@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -155,7 +155,7 @@ uniconv_t uniconv_open(const char *destenc, const char *srcenc) {
    int destis390;
 
    errno = 0;
-   handle_area = malloc (sizeof(CUNBCPRM)+DDA_NEEDED+WORK_BUFFER_SIZE);
+   handle_area = malloc (sizeof(CUNBCPRM)+DDA_NEEDED+WORK_BUFFER_SIZE+8);
    tmpp = (CUNBCPRM *) handle_area;
    if (tmpp==NULL)
       return (uniconv_t)-1;
@@ -171,9 +171,11 @@ uniconv_t uniconv_open(const char *destenc, const char *srcenc) {
       free(handle_area);
       return (uniconv_t)-1;
    }
-   tmpp->Wrk_Buf_Ptr=(void*) (((unsigned int) handle_area) + sizeof(CUNBCPRM)+DDA_NEEDED);
+   tmpp->Wrk_Buf_Ptr=(void*) (((unsigned int) handle_area) + sizeof(CUNBCPRM)+DDA_NEEDED +8);
    tmpp->Wrk_Buf_Len=WORK_BUFFER_SIZE;
-   tmpp->DDA_Buf_Ptr=(void*) ((unsigned int) handle_area + sizeof(CUNBCPRM));
+   // Doubleword align the DDA area
+   tmpp->DDA_Buf_Ptr=(void*) ((unsigned int) handle_area + sizeof(CUNBCPRM) +7);
+   tmpp->DDA_Buf_Ptr = (void*) ((unsigned int) tmpp->DDA_Buf_Ptr & ~7);
    tmpp->DDA_Buf_Len=DDA_NEEDED;
    // This flag tells the services to automatically refresh the handle if it
    // becomes invalid.
@@ -204,7 +206,6 @@ uniconv_t uniconv_open(const char *destenc, const char *srcenc) {
    }
 
    if (tmpp->Return_Code != CUN_RC_OK) {
-// printf("uniconv_open() Error!!! rc=%d rs=%d\n",tmpp->Return_Code,tmpp->Reason_Code);   // remove this after function test
       free(handle_area);
       errno=EINVAL;
       handle_area = (uniconv_t)-1;
@@ -272,7 +273,6 @@ int uniconv(uniconv_t cd, char **inbuf,  size_t *inbytesleft,
       else if (tmpp->Reason_Code == CUN_RS_MBC_INCOMPLETE)
          errno=EINVAL;
       else {
- printf("uniconv() Error!!! rc=%d rs=%d\n",tmpp->Return_Code,tmpp->Reason_Code); // remove after function test
          errno=EBADF;
          return -1;
       }
@@ -334,14 +334,11 @@ void * handle_area;
             break;
          }
       } else {
-// printf("CUNLASE: Unicode Services is a Failure!\n");
-// printf("CUNLASE rc=%d rs=%d\n",tmpp->Return_Code,tmpp->Reason_Code);
          errno = ENOSYS;
          break;
       }
    }
    if (tmpp->Return_Code != CUN_RC_OK) {
-// printf("uniconv_case_open() Error!!! rc=%d rs=%d\n",tmpp->Return_Code,tmpp->Reason_Code); // remove after function test.
       free(handle_area);
       errno=EINVAL;
       handle_area = (uniconv_t)-1;
@@ -406,8 +403,6 @@ unichar_t uniconv_caseit (uniconv_t cd,unichar_t inchar) {
             break;
          }
       } else {
-// printf("CUNLASE: Unicode Services is a Failure!\n");
-// printf("CUNLASE rc=%d rs=%d\n",tmpp->Return_Code,tmpp->Reason_Code);
          errno = ENOSYS;
          break;
       }

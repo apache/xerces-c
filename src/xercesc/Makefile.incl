@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -490,8 +490,10 @@ endif
 
 #================ OS/390 SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, OS390)
-PLATFORM_CPP_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++
-PLATFORM_C_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" cc
+PLATFORM_CPP_COMPILER = _CXX_CXXSUFFIX="cpp" c++
+PLATFORM_C_COMPILER = _CXX_CXXSUFFIX="cpp" cc
+##PLATFORM_CPP_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++
+##PLATFORM_C_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" cc
 PLATFORM_LIBRARIES=
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -504,7 +506,7 @@ MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -W l,dll ${LDFLAGS}
 ifeq (${TRANSCODER}, ICU)
 ## OS390BATCH
     ifeq (${OS390BATCH},1)
-    ALLLIBS = "//'${LOADEXP}(IXM24UCX)'"
+    ALLLIBS = "//'${LOADEXP}(IXM26UCX)'"
     else
     ALLLIBS = ${ICUROOT}/lib/libicuuc26.1.x
     endif
@@ -512,7 +514,7 @@ else
 ifeq (${TRANSCODER}, Uniconv390)
 ## OS390BATCH
     ifeq (${OS390BATCH},1)
-	 ALLLIBS = "//'${LOADEXP}(IXM24UCX)'"
+	 ALLLIBS = "//'${LOADEXP}(IXM26UCX)'"
     else
 	 ALLLIBS = ${ICUROOT}/lib/libicuuc26.1.x
     endif

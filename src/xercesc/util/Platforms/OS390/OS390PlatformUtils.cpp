@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -869,15 +869,13 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     Path390 pathobj;
     pathobj.setPath(newSrc);
 
-    char* retPath = 0;
     // Use a local buffer that is big enough for the largest legal path
     char *absPath = (char*) fgMemoryManager->allocate((_POSIX_PATH_MAX) * sizeof(char));//new char[_POSIX_PATH_MAX];
     ArrayJanitor<char> janText2(absPath, fgMemoryManager);
 
     if ( (pathobj.getPathType() == PATH390_HFS) || (pathobj.getPathType() == PATH390_OTHER) ) {
        //get the absolute path
-       char* retPath = realpath(pathobj.getfopenPath(), absPath);
-       if (!retPath) {
+       if (getcwd(absPath, _POSIX_PATH_MAX) == NULL) {
           ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
           }
        return XMLString::transcode(absPath, manager);

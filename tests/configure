@@ -1373,6 +1373,7 @@ case "${host}" in
                             *)            osver=HPUX11;;
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
+        *-*ibm-openedition*|*-*-os390*) platform=OS390;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
         *-*-osf*)       platform=TRU64 ;;
@@ -1481,7 +1482,11 @@ s%\[%\\&%g
 s%\]%\\&%g
 s%\$%$$%g
 EOF
-DEFS=`sed -f conftest.defs confdefs.h | tr '\012' ' '`
+if test "$platform"="OS400" || test "$platform" = "OS390";then
+DEFS=`sed -f conftest.defs confdefs.h | tr '\n' ' '`          
+else                                                          
+DEFS=`sed -f conftest.defs confdefs.h | tr '\012' ' '`        
+fi                                                            
 rm -f conftest.defs
 
 

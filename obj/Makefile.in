@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -86,7 +86,7 @@ include ../src/xercesc/Makefile.incl
 LIB=${XERCESCROOT}/lib
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET = "//'${LOADMOD}(IXM4C51)'"
+BATCH_TARGET = "//'${LOADMOD}(IXM4C54)'"
 endif
 ifneq (${PLATFORM}, OS400)
 ifeq (${PLATFORM}, CYGWIN)
