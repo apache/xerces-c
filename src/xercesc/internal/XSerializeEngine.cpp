@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2004/02/20 20:57:39  peiyongz
+ * Bug#27046: path from David Bertoni
+ *
  * Revision 1.14  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -114,8 +117,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 const bool XSerializeEngine::toWriteBufferLen = true;
 const bool XSerializeEngine::toReadBufferLen  = true;
-      int  XSerializeEngine::defaultBufferLen = 0;
-      int  XSerializeEngine::defaultDataLen   = 0;
 
 static const int noDataFollowed = -1;
 

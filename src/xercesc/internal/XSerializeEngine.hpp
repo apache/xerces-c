@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/02/20 20:57:39  peiyongz
+ * Bug#27046: path from David Bertoni
+ *
  * Revision 1.14  2004/02/11 20:38:50  peiyongz
  * Fix to bug#26864, thanks to David Bertoni.
  *
@@ -129,9 +132,6 @@ public:
     
 
     static const bool toReadBufferLen;
-    static int defaultBufferLen;
-    static int defaultDataLen;
-
 
     typedef unsigned int   XSerializedObjectId_t;
 
@@ -381,9 +381,38 @@ public:
       *
       ***/
            void           readString(XMLCh*&        toRead
-                                   , int&           bufferLen    = defaultBufferLen
-                                   , int&           dataLen      = defaultDataLen
+                                   , int&           bufferLen
+                                   , int&           dataLen
                                    , bool           toReadBufLen = false);
+
+     /***
+       *
+       *  Read a stream of XMLCh from the internal buffer.
+       *
+       *  Read the bufferLen first if requested, then the length
+       *  of the stream followed by the stream.
+       *
+       *  Param
+       *     toRead:       the pointer to the buffer to hold the XMLCh stream
+       *     bufferLen:    the size of the buffer created
+       *
+       *  Return:
+       *
+       ***/
+            inline void     readString(XMLCh*&        toRead
+                                    , int&            bufferLen);
+ 
+     /***
+       *
+       *  Read a stream of XMLCh from the internal buffer.
+       *
+       *  Param
+       *     toRead:       the pointer to the buffer to hold the XMLCh stream
+       *
+       *  Return:
+       *
+       ***/
+            inline void      readString(XMLCh*&        toRead);
 
     /***
       *
@@ -402,10 +431,45 @@ public:
       *
       ***/
            void           readString(XMLByte*&      toRead
-                                   , int&           bufferLen    = defaultBufferLen
-                                   , int&           dataLen      = defaultDataLen
+                                   , int&           bufferLen
+                                   , int&           dataLen
                                    , bool           toReadBufLen = false);
 
+
+     /***
+       *
+       *  Read a stream of XMLByte from the internal buffer.
+       *
+       *  Read the bufferLen first if requested, then the length
+       *  of the stream followed by the stream.
+       *
+       *  Param
+       *     toRead:       the pointer to the buffer to hold the XMLByte stream
+       *     bufferLen:    the size of the buffer created
+       *
+       *  Return:
+       *
+       ***/
+            inline void       readString(XMLByte*&      toRead
+                                       , int&           bufferLen);
+ 
+     /***
+       *
+       *  Read a stream of XMLByte from the internal buffer.
+       *
+       *  Read the bufferLen first if requested, then the length
+       *  of the stream followed by the stream.
+       *
+       *  Param
+       *     toRead:       the pointer to the buffer to hold the XMLByte stream
+       *     bufferLen:    the size of the buffer created
+       *     dataLen:       the length of the stream
+       *     toReadBufLen: specify if the bufferLen need to be read or not
+       *
+       *  Return:
+       *
+       ***/
+            inline void       readString(XMLByte*&      toRead);
 
     /***
       *
@@ -716,6 +780,34 @@ inline size_t XSerializeEngine::allignAdjust() const
 inline void XSerializeEngine::allignBufCur()
 {
     fBufCur+=allignAdjust();
+}
+
+inline void XSerializeEngine::readString(XMLCh*&        toRead
+                                       , int&           bufferLen)
+{
+    int  dummyDataLen;                
+    readString(toRead, bufferLen, dummyDataLen);
+}
+
+inline void XSerializeEngine::readString(XMLCh*&        toRead)
+{
+    int  dummyBufferLen;
+    int  dummyDataLen;
+    readString(toRead, dummyBufferLen, dummyDataLen);
+}
+
+inline void XSerializeEngine::readString(XMLByte*&      toRead
+                                       , int&           bufferLen)
+{
+    int  dummyDataLen;
+    readString(toRead, bufferLen, dummyDataLen);
+}
+
+inline void XSerializeEngine::readString(XMLByte*&      toRead)
+{
+    int  dummyBufferLen;
+    int  dummyDataLen;
+    readString(toRead, dummyBufferLen, dummyDataLen);
 }
 
 /***
