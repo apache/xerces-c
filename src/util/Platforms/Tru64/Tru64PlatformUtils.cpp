@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -69,6 +69,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 #include    <util/Janitor.hpp>
 #include    <util/PlatformUtils.hpp>
@@ -161,32 +162,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 #endif
 
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
-// ---------------------------------------------------------------------------
-
-static pthread_mutex_t* gAtomicOpMutex =0 ;
-
-void XMLPlatformUtils::platformInit()
-{
-  //
-  // The gAtomicOpMutex mutex needs to be created 
-  // because compareAndSwap and incrementlocation and decrementlocation 
-  // does not have the atomic system calls for usage
-  // Normally, mutexes are created on first use, but there is a
-  // circular dependency between compareAndExchange() and
-  // mutex creation that must be broken.
-
-  gAtomicOpMutex = new pthread_mutex_t;	
-
-  if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
-	delete gAtomicOpMutex;
-	gAtomicOpMutex = 0;
-    panic( XMLPlatformUtils::Panic_SystemInit );
-  }
-}
-
-
-// ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Private Static Methods
 // ---------------------------------------------------------------------------
 
@@ -260,7 +235,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     reasonStr = "Cannot initialize the system or mutex";
 
   fprintf(stderr, "%s\n", reasonStr);
-    
+
   exit(-1);
 }
 
@@ -311,7 +286,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
   return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName) 
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 {
   FileHandle retVal = (FILE*)fopen( fileName , "rb" );
 
@@ -325,7 +300,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
   const char* tmpFileName = XMLString::transcode(fileName);
   ArrayJanitor<char> janText((char*)tmpFileName);
   FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
-    
+
   if (retVal == NULL)
     return 0;
   return retVal;
@@ -519,11 +494,37 @@ XMLCh* XMLPlatformUtils::weavePaths (
 
 
 
+#if !defined (APP_NO_THREADS)
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Platform init method
+// ---------------------------------------------------------------------------
+
+static pthread_mutex_t* gAtomicOpMutex =0 ;
+
+void XMLPlatformUtils::platformInit()
+{
+  //
+  // The gAtomicOpMutex mutex needs to be created
+  // because compareAndSwap and incrementlocation and decrementlocation
+  // does not have the atomic system calls for usage
+  // Normally, mutexes are created on first use, but there is a
+  // circular dependency between compareAndExchange() and
+  // mutex creation that must be broken.
+
+  gAtomicOpMutex = new pthread_mutex_t;	
+
+  if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
+	delete gAtomicOpMutex;
+	gAtomicOpMutex = 0;
+    panic( XMLPlatformUtils::Panic_SystemInit );
+  }
+}
+
+
 // -----------------------------------------------------------------------
-//  Mutex methods 
+//  Mutex methods
 // -----------------------------------------------------------------------
 
-#if !defined (APP_NO_THREADS)
 
 class  RecursiveMutex
 {
@@ -533,7 +534,7 @@ public:
   pthread_t         tid;
 
   RecursiveMutex()
-  { 
+  {
     if (pthread_mutex_init(&mutex, NULL))
       ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
     recursionCount = 0;
@@ -605,12 +606,12 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 // -----------------------------------------------------------------------
 //  Miscellaneous synchronization methods
 // -----------------------------------------------------------------------
-//atomic system calls in Solaris is only restricted to kernel libraries 
-//So, to make operations thread safe we implement static mutex and lock 
+//atomic system calls in Solaris is only restricted to kernel libraries
+//So, to make operations thread safe we implement static mutex and lock
 //the atomic operations. It makes the process slow but what's the alternative!
 
-void* XMLPlatformUtils::compareAndSwap (void** toFill, 
-					const void* const newValue, 
+void* XMLPlatformUtils::compareAndSwap (void** toFill,
+					const void* const newValue,
 					const void* const toCompare)
 {
   //return ((void*)cas32( (uint32_t*)toFill,  (uint32_t)toCompare, (uint32_t)newValue) );
@@ -661,6 +662,11 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 #else // #if !defined (APP_NO_THREADS)
 
+void XMLPlatformUtils::platformInit()
+{
+   // do nothing
+}
+
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
 }
@@ -709,7 +715,9 @@ FileHandle XMLPlatformUtils::openStdInHandle()
 
 void XMLPlatformUtils::platformTerm()
 {
+#if !defined (APP_NO_THREADS)
 	pthread_mutex_destroy(gAtomicOpMutex);
 	delete gAtomicOpMutex;
 	gAtomicOpMutex = 0;
+#endif
 }
