@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/10/02 18:59:59  peiyongz
+ * Invalid_Name to replace Invalid_NCName.
+ *
  * Revision 1.2  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -136,7 +139,7 @@ void NameDatatypeValidator::checkValueSpace(const XMLCh* const content)
     if ( !XMLString::isValidName(content))
     {
         ThrowXML1(InvalidDatatypeValueException
-                , XMLExcepts::VALUE_Invalid_NCName
+                , XMLExcepts::VALUE_Invalid_Name
                 , content);
     }
 
