@@ -875,7 +875,7 @@
      <table>
 
     <tr>
-        <td >2000-02-18</td>
+        <td >2000/02/18</td>
         <td >Dean Roddey</td>
         <td >XMLCh defaults to wchar_t on platforms where wchar_t uses Unicode.</td>
     </tr>
