@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:39  peiyongz
- * Initial revision
+ * Revision 1.2  2003/03/14 12:44:49  tng
+ * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:39  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/07/07 00:12:51  jpolast
  * bug fixes for non-null terminated strings
@@ -71,6 +74,7 @@
 #define ___ixmldomcharacterdataimpl_h___
 
 #include "IXMLDOMNodeImpl.h"
+XERCES_CPP_NAMESPACE_USE
 
 template <class T, const IID* piid, const GUID* plibid = &CComModule::m_libid, WORD wMajor = 1,
 WORD wMinor = 0, class tihclass = CComTypeInfoHolder>

@@ -61,7 +61,11 @@
 #ifndef ___wrapnode_h___
 #define ___wrapnode_h___
 
-class DOM_Node;
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/deprecated/DOM_Node.hpp>
+XERCES_CPP_NAMESPACE_USE
+
+class XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node;
 
 extern const OLECHAR* g_DomNodeName[];
 extern const int	g_DomNodeNameSize;

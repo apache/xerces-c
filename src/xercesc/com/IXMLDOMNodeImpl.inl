@@ -66,6 +66,8 @@
 #include "XMLDOMUtil.h"
 #include <xercesc/dom/deprecated/DOM_DOMException.hpp>
 
+XERCES_CPP_NAMESPACE_USE
+
 template <class T, const IID* piid, const GUID* plibid, WORD wMajor,WORD wMinor, class tihclass>
 HRESULT STDMETHODCALLTYPE IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::InterfaceSupportsErrorInfo(REFIID riid)
 {

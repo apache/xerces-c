@@ -60,6 +60,7 @@
 
 #include <xercesc/dom/deprecated/DOM_XMLDecl.hpp>
 #include "IXMLDOMNodeImpl.h"
+XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMXMLDecl : 
 	public CComObjectRootEx<CComSingleThreadModel>,

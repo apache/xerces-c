@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/14 12:44:49  tng
+ * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
+ *
  * Revision 1.2  2002/05/21 19:53:53  tng
  * DOM Reorganization: update include path for the old DOM interface in COM files
  *
@@ -95,7 +98,9 @@
 #include <xercesc/sax/ErrorHandler.hpp>
 #include "xml4comCP.h"
 
-class SAXParseException;
+XERCES_CPP_NAMESPACE_USE
+
+class XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException;
 
 class ATL_NO_VTABLE CXMLDOMDocument :
 	public CComObjectRootEx<CComSingleThreadModel>,

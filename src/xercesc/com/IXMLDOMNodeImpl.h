@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:39  peiyongz
- * Initial revision
+ * Revision 1.2  2003/03/14 12:44:49  tng
+ * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:39  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/05/11 13:25:00  tng
  * Copyright update.
@@ -82,6 +85,10 @@
 
 #ifndef ___ixmldomnodeimpl_h___
 #define ___ixmldomnodeimpl_h___
+
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/deprecated/DOM_DOMException.hpp>
+XERCES_CPP_NAMESPACE_USE
 
 
 //
@@ -190,7 +197,7 @@ protected:
 
 };
 
-class DOM_DOMException;
+class XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMException;
 HRESULT MakeHRESULT(DOM_DOMException& ex);
 
 #include "IXMLDOMNodeImpl.inl"

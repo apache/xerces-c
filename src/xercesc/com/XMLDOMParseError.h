@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:42  peiyongz
- * Initial revision
+ * Revision 1.2  2003/03/14 12:44:49  tng
+ * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:42  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/06/03 00:29:01  andyh
  * COM Wrapper changes from Curt Arnold
@@ -69,6 +72,9 @@
 
 #ifndef ___xmldomparseerror_h___
 #define ___xmldomparseerror_h___
+
+#include <xercesc/util/XercesDefs.hpp>
+XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMParseError : 
 	public CComObjectRootEx<CComSingleThreadModel>,
