@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/09/14 14:50:22  tng
+ * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
+ *
  * Revision 1.23  2001/08/24 12:48:48  tng
  * Schema: AllContentModel
  *
@@ -590,7 +593,8 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 }
             }
             else {
-                if ((inElem->getURI() == element->getURI()) &&
+                if ((fElemMapType[inIndex] == fLeafListType[outIndex]) &&
+                    (inElem->getURI() == element->getURI()) &&
                     (!XMLString::compareString(inElem->getLocalPart(), element->getLocalPart()))) {
                     break;
                 }
@@ -634,7 +638,8 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 }
             }
             else {
-                if ((leaf->getURI() == element->getURI()) &&
+                if ((fElemMapType[elemIndex] == fLeafListType[leafIndex]) &&
+                    (leaf->getURI() == element->getURI()) &&
                     (!XMLString::compareString(leaf->getLocalPart(), element->getLocalPart()))) {
                       fLeafSorter[fSortCount++] = leafIndex;
                 }

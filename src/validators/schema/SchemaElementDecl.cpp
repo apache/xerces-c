@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/09/14 14:50:22  tng
+ * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
+ *
  * Revision 1.14  2001/09/11 13:02:40  tng
  * [Bug 3523] SchemaElementDecl.cpp(242) : error C2202 : not all control paths return a value
  *
@@ -242,7 +245,7 @@ XMLAttDefList& SchemaElementDecl::getAttDefList() const
         return fComplexTypeInfo->getAttDefList();
     }
     else {
-        throw; // REVISIT: add proper error message
+        ThrowXML(RuntimeException, XMLExcepts::DV_InvalidOperation);
     }
 
     return *(XMLAttDefList*)0 ;
@@ -292,6 +295,12 @@ bool SchemaElementDecl::resetDefs()
     }
     else if (fComplexTypeInfo) {
         return fComplexTypeInfo->resetDefs();
+    }
+    else if (fAttDefs) {
+        //all the attdefs here are faulted-in, so just reset the fAttDefs
+        //but still return false to indicate there is no real att defs
+        // defined in this element
+        fAttDefs->removeAll();
     }
 
     return false;

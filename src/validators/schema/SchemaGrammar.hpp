@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/09/14 14:50:22  tng
+ * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
+ *
  * Revision 1.9  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -192,6 +195,15 @@ public:
         const   XMLCh* const    notName
     );
 
+    virtual XMLElementDecl* putElemDecl
+    (
+        const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+    );
+
     virtual unsigned int putElemDecl
     (
         XMLElementDecl* const elemDecl
@@ -283,8 +295,8 @@ private:
     //      Valid list of elements that can substitute a given element
     //
     //  fUPAChecked
-    //      Indicates if this Grammar has already been validated for  
-    //      schema unique particle attribute constraint checking. 
+    //      Indicates if this Grammar has already been validated for
+    //      schema unique particle attribute constraint checking.
     // -----------------------------------------------------------------------
     XMLCh*                                 fTargetNamespace;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
@@ -395,7 +407,7 @@ inline void SchemaGrammar::setNamespaceScope(NamespaceScope* const nsScope) {
     fNamespaceScope = nsScope;
 }
 
-inline void 
+inline void
 SchemaGrammar::setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const other) {
 
     fValidSubstitutionGroups = other;
@@ -431,7 +443,7 @@ inline unsigned int SchemaGrammar::getElemId (const   unsigned int  uriId
 
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
 
-        if (!decl) 
+        if (!decl)
             return XMLElementDecl::fgInvalidElemId;
     }
     return decl->getId();
@@ -444,7 +456,7 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  u
 {
     const SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
 
-    if (!decl) 
+    if (!decl)
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
 
     return decl;
@@ -457,7 +469,7 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
 {
     SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
 
-    if (!decl) 
+    if (!decl)
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
 
     return decl;
@@ -470,7 +482,7 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemI
 
     if (!decl)
         decl = fGroupElemDeclPool->getById(elemId);
-    
+
     return decl;
 }
 
@@ -481,7 +493,7 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
 
     if (!decl)
         decl = fGroupElemDeclPool->getById(elemId);
-    
+
     return decl;
 }
 

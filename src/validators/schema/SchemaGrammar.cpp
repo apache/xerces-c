@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/09/14 14:50:22  tng
+ * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
+ *
  * Revision 1.7  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -171,6 +174,18 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
     {
         wasAdded = false;
     }
+    return retVal;
+}
+
+XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope)
+{
+    SchemaElementDecl* retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
+    const unsigned int elemId = fElemDeclPool->put((void*)baseName, uriId, scope, retVal);
+    retVal->setId(elemId);
     return retVal;
 }
 

@@ -263,63 +263,70 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , wasAdded
             );
 
-            if (wasAdded && !attDefForWildCard)
+            if (wasAdded)
             {
-                //
-                //  Its not valid for this element, so issue an error if we are
-                //  validating.
-                //
-                if (fValidate && !skipThisOne && !laxThisOne)
+                // This is to tell the Validator that this attribute was
+                // faulted-in, was not an attribute in the attdef originally
+                attDef->setCreateReason(XMLAttDef::JustFaultIn);
+            }
+
+            if (!attDefForWildCard) {
+                if (wasAdded)
                 {
-                    // This is to tell the Validator that this attribute was
-                    // faulted-in, was not an attribute in the attdef originally
-                    attDef->setCreateReason(XMLAttDef::JustFaultIn);
-                    XMLBufBid bbURI(&fBufMgr);
-                    XMLBuffer& bufURI = bbURI.getBuffer();
+                    if (fValidate && !skipThisOne && !laxThisOne)
+                    {
+                        //
+                        //  Its not valid for this element, so issue an error if we are
+                        //  validating.
+                        //
+                        XMLBufBid bbURI(&fBufMgr);
+                        XMLBuffer& bufURI = bbURI.getBuffer();
 
-                    getURIText(uriId, bufURI);
+                        getURIText(uriId, bufURI);
 
-                    XMLBufBid bbMsg(&fBufMgr);
-                    XMLBuffer& bufMsg = bbMsg.getBuffer();
-                    bufMsg.append(chOpenCurly);
-                    bufMsg.append(bufURI.getRawBuffer());
-                    bufMsg.append(chCloseCurly);
-                    bufMsg.append(suffPtr);
-                    fValidator->emitError
-                    (
-                        XMLValid::AttNotDefinedForElement
-                        , bufMsg.getRawBuffer()
-                        , elemDecl->getFullName()
-                    );
+                        XMLBufBid bbMsg(&fBufMgr);
+                        XMLBuffer& bufMsg = bbMsg.getBuffer();
+                        bufMsg.append(chOpenCurly);
+                        bufMsg.append(bufURI.getRawBuffer());
+                        bufMsg.append(chCloseCurly);
+                        bufMsg.append(suffPtr);
+                        fValidator->emitError
+                        (
+                            XMLValid::AttNotDefinedForElement
+                            , bufMsg.getRawBuffer()
+                            , elemDecl->getFullName()
+                        );
+                    }
+                }
+                else
+                {
+                    // If this attribute was faulted-in and first occurence,
+                    // then emit an error
+                    if (fValidate
+                        && attDef->getCreateReason() == XMLAttDef::JustFaultIn
+                        && !attDef->getProvided()
+                        && !skipThisOne
+                        && !laxThisOne)
+                    {
+                        XMLBufBid bbURI(&fBufMgr);
+                        XMLBuffer& bufURI = bbURI.getBuffer();
+                        getURIText(uriId, bufURI);
+
+                        XMLBufBid bbMsg(&fBufMgr);
+                        XMLBuffer& bufMsg = bbMsg.getBuffer();
+                        bufMsg.append(chOpenCurly);
+                        bufMsg.append(bufURI.getRawBuffer());
+                        bufMsg.append(chCloseCurly);
+                        bufMsg.append(suffPtr);
+                        fValidator->emitError
+                        (
+                            XMLValid::AttNotDefinedForElement
+                            , bufMsg.getRawBuffer()
+                            , elemDecl->getFullName()
+                        );
+                    }
                 }
             }
-            else
-            {
-                // If this attribute was faulted-in and first occurence,
-                // then emit an error
-                if (fValidate
-                    && attDef->getCreateReason() == XMLAttDef::JustFaultIn
-                    && !attDef->getProvided()
-                    && !skipThisOne)
-                {
-                    XMLBufBid bbURI(&fBufMgr);
-                    XMLBuffer& bufURI = bbURI.getBuffer();
-                    getURIText(uriId, bufURI);
-
-                    XMLBufBid bbMsg(&fBufMgr);
-                    XMLBuffer& bufMsg = bbMsg.getBuffer();
-                    bufMsg.append(chOpenCurly);
-                    bufMsg.append(bufURI.getRawBuffer());
-                    bufMsg.append(chCloseCurly);
-                    bufMsg.append(suffPtr);
-                    fValidator->emitError
-                    (
-                        XMLValid::AttNotDefinedForElement
-                        , bufMsg.getRawBuffer()
-                        , elemDecl->getFullName()
-                    );
-                }
-             }
 
             //
             //  If its already provided, then there are more than one of

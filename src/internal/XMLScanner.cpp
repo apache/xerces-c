@@ -2857,8 +2857,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         );
 
         if (!elemDecl && fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId) {
-
-            // switch grammar first
+            // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
             if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
             {
@@ -2878,9 +2877,18 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             );
         }
 
-        if (!elemDecl) {
-            if (currentScope != Grammar::TOP_LEVEL_SCOPE) {
-                // Not found in specified uri
+        if (!elemDecl && currentScope != Grammar::TOP_LEVEL_SCOPE) {
+            // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
+            elemDecl = fGrammar->getElemDecl
+                       (
+                           uriId
+                           , nameRawBuf
+                           , qnameRawBuf
+                           , Grammar::TOP_LEVEL_SCOPE
+                       );
+
+            if(!elemDecl) {
+                // still not found in specified uri
                 // try emptyNamesapce see if element should be un-qualified.
                 elemDecl = fGrammar->getElemDecl
                            (
@@ -2889,27 +2897,25 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                                , qnameRawBuf
                                , currentScope
                            );
-            }
 
-            if (elemDecl && fValidate) {
-                fValidator->emitError
-                (
-                    XMLValid::ElementNotUnQualified
-                    , elemDecl->getFullName()
-                );
+                if (elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
+                    fValidator->emitError
+                    (
+                        XMLValid::ElementNotUnQualified
+                        , elemDecl->getFullName()
+                    );
+                }
             }
-            else {
-                // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
-                elemDecl = fGrammar->findOrAddElemDecl
-                (
-                    uriId
-                    , nameRawBuf
-                    , fPrefixBuf.getRawBuffer()
-                    , qnameRawBuf
-                    , Grammar::TOP_LEVEL_SCOPE
-                    , wasAdded
-                );
-            }
+        }
+
+        if (!elemDecl) {
+            // still not found, fault this in and issue error later
+            elemDecl = fGrammar->putElemDecl(uriId
+                        , nameRawBuf
+                        , fPrefixBuf.getRawBuffer()
+                        , qnameRawBuf
+                        , currentScope);
+            wasAdded = true;
         }
     }
     else
@@ -2927,58 +2933,77 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                     , currentScope
                     );
 
-        if (!elemDecl) {
-            // Not found in specified uri
-            // use target namespace URI id to see if element needs to be fully qualified.
-            elemDecl = fGrammar->getElemDecl
-                       (
-                           fURIStringPool->getId(fGrammar->getTargetNamespace())
-                           , nameRawBuf
-                           , qnameRawBuf
-                           , currentScope
-                       );
+        unsigned orgGrammarUri = fURIStringPool->getId(fGrammar->getTargetNamespace());
 
-            if (elemDecl && fValidate) {
+        if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
+            //not found, switch grammar and try globalNS
+            if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate && !laxThisOne)
+            {
                 fValidator->emitError
                 (
-                    XMLValid::ElementNotQualified
-                    , elemDecl->getFullName()
+                    XMLValid::GrammarNotFound
+                  , XMLUni::fgZeroLenString
                 );
             }
-            else {
-                //still not found, now try globalNS
-                if (fURIStringPool->getId(fGrammar->getTargetNamespace()) != fEmptyNamespaceId) {
-                    if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate && !laxThisOne)
-                    {
-                        fValidator->emitError
-                        (
-                            XMLValid::GrammarNotFound
-                            , XMLUni::fgZeroLenString
-                        );
-                    }
+
+            elemDecl = fGrammar->getElemDecl
+            (
+              uriId
+              , nameRawBuf
+              , qnameRawBuf
+              , currentScope
+            );
+        }
+
+        if (!elemDecl && currentScope != Grammar::TOP_LEVEL_SCOPE) {
+            // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
+            elemDecl = fGrammar->getElemDecl
+                       (
+                           uriId
+                           , nameRawBuf
+                           , qnameRawBuf
+                           , Grammar::TOP_LEVEL_SCOPE
+                       );
+
+            if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
+                // still Not found in specified uri
+                // go to original Grammar again to see if element needs to be fully qualified.
+                const XMLCh* uriStr = getURIText(orgGrammarUri);
+                if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
+                {
+                    fValidator->emitError
+                    (
+                        XMLValid::GrammarNotFound
+                        ,uriStr
+                    );
                 }
 
                 elemDecl = fGrammar->getElemDecl
                            (
-                              uriId
-                            , nameRawBuf
-                            , qnameRawBuf
-                            , currentScope
-                            );
+                               orgGrammarUri
+                               , nameRawBuf
+                               , qnameRawBuf
+                               , currentScope
+                           );
 
-                if (!elemDecl) {
-                    // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
-                    elemDecl = fGrammar->findOrAddElemDecl
+                if (elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
+                    fValidator->emitError
                     (
-                        uriId
-                        , nameRawBuf
-                        , fPrefixBuf.getRawBuffer()
-                        , qnameRawBuf
-                        , Grammar::TOP_LEVEL_SCOPE
-                        , wasAdded
+                        XMLValid::ElementNotQualified
+                        , elemDecl->getFullName()
                     );
                 }
             }
+        }
+
+        if (!elemDecl) {
+            // still not found, fault this in and issue error later
+            elemDecl = fGrammar->putElemDecl(uriId
+                        , nameRawBuf
+                        , fPrefixBuf.getRawBuffer()
+                        , qnameRawBuf
+                        , currentScope);
+            wasAdded = true;
         }
     }
 
@@ -3018,13 +3043,20 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
      else
     {
         // If its not marked declared and validating, then emit an error
-        if (!elemDecl->isDeclared() && fValidate)
-        {
-            fValidator->emitError
-            (
-                XMLValid::ElementNotDefined
-                , elemDecl->getFullName()
-            );
+        if (!elemDecl->isDeclared()) {
+            if (laxThisOne) {
+                fValidate = false;
+                fElemStack.setValidationFlag(fValidate);
+            }
+
+             if (fValidate)
+            {
+                fValidator->emitError
+                (
+                    XMLValid::ElementNotDefined
+                    , elemDecl->getFullName()
+                );
+            }
         }
     }
 

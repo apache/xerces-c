@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/09/14 14:50:22  tng
+ * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
+ *
  * Revision 1.5  2001/05/28 20:56:18  tng
  * Schema: Move getTargetNamespace as virtual function in base class Grammar
  *
@@ -184,6 +187,15 @@ public:
     // -----------------------------------------------------------------------
     //  Virtual Setter methods
     // -----------------------------------------------------------------------
+    virtual XMLElementDecl* putElemDecl
+    (
+        const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+    ) = 0;
+
     virtual unsigned int putElemDecl
     (
         XMLElementDecl* const elemDecl

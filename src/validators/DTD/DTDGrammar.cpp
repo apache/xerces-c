@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/09/14 14:50:22  tng
+ * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
+ *
  * Revision 1.3  2001/05/11 13:27:08  tng
  * Copyright update.
  *
@@ -130,6 +133,18 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
     {
         wasAdded = false;
     }
+    return retVal;
+}
+
+XMLElementDecl* DTDGrammar::putElemDecl (const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope)
+{
+    DTDElementDecl* retVal = new DTDElementDecl(qName, uriId, DTDElementDecl::Any);
+    const unsigned int elemId = fElemDeclPool->put(retVal);
+    retVal->setId(elemId);
     return retVal;
 }
 
