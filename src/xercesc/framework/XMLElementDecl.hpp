@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/29 19:45:35  gareth
+ * added api for DOMTypeInfo
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -447,6 +450,18 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return The element decl id of this element declaration.
       */
     unsigned int getId() const;
+
+
+    /**
+     * @return the uri part of DOM Level 3 TypeInfo
+     */
+    virtual const XMLCh* getDOMTypeInfoUri() const = 0;
+
+    /**
+     * @return the name part of DOM Level 3 TypeInfo
+     */
+    virtual const XMLCh* getDOMTypeInfoName() const = 0;
+
 
     /** Indicate whether this element type has been declared yet
       *

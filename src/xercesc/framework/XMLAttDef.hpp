@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/29 19:45:35  gareth
+ * added api for DOMTypeInfo
+ *
  * Revision 1.4  2002/12/10 02:15:55  knoaman
  * Schema Errata: E1-21.
  *
@@ -277,6 +280,12 @@ public:
       */
     virtual const XMLCh* getFullName() const = 0;
 
+    /**
+     * The derived class should implement any cleaning up required between
+     * each use of an instance of this class for validation
+     */
+    virtual void reset() = 0;
+
     //@}
 
 
@@ -373,6 +382,17 @@ public:
       * @return true if this attribute has been declared externally, else false.
       */
     bool isExternal() const;
+
+
+    /**
+     * @return the uri part of DOM Level 3 TypeInfo
+     */
+    virtual const XMLCh* getDOMTypeInfoUri() const = 0;
+
+    /**
+     * @return the name part of DOM Level 3 TypeInfo
+     */
+    virtual const XMLCh* getDOMTypeInfoName() const = 0;
 
     //@}
 
