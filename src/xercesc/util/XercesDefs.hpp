@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/21 19:35:08  tng
+ * Update from 1.7 to 2.0
+ *
  * Revision 1.4  2002/02/27 22:38:34  peiyongz
  * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
  *
@@ -186,11 +189,11 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_7_0"
-const char* const    gXercesVersionStr = "1_7";
-const char* const    gXercesFullVersionStr = "1_7_0";
-const unsigned int   gXercesMajVersion = 1;
-const unsigned int   gXercesMinVersion = 7;
+#define Xerces_DLLVersionStr "2_0_0"
+const char* const    gXercesVersionStr = "2_0";
+const char* const    gXercesFullVersionStr = "2_0_0";
+const unsigned int   gXercesMajVersion = 2;
+const unsigned int   gXercesMinVersion = 0;
 const unsigned int   gXercesRevision   = 0;
 
 
@@ -353,11 +356,11 @@ const unsigned int   gXercesRevision   = 0;
 //  fixed at 32 bits. The types we defined them in terms of are defined per
 //  compiler, using whatever types are the right ones for them to get these
 //  16/32 bit sizes.
+//
 // ---------------------------------------------------------------------------
 typedef unsigned char       XMLByte;
 typedef XMLUInt16           UTF16Ch;
 typedef XMLUInt32           UCS4Ch;
-
 
 
 // ---------------------------------------------------------------------------
