@@ -67,7 +67,7 @@
 	To use:
 	
 		- Add the code below to your Metrowerks Startup.c file (in runtime libraries)
-		- Rebuild the project MSL RuntimePPC.mcp
+		- Rebuild the various targets of project MSL All.mcp.
 		- In the PPC Linker section of your project, set the start code to be
 		  __start_ccommand instead of the typical __start. This will cause ccommand
 		  to be invoked before main() is started.
@@ -75,12 +75,25 @@
 	This code has been submitted as a suggestion to Metrowerks: hopefully they'll
 	add it to the startup code so this modification won't always be necessary.
 	
+	!!!NOTE!!!
+	
+	If the above seems too odious for your needs, you may also modify the "main" file
+	of each sample by adding a line such as the following near the start of the main()
+	function:
+	
+		argc = ccommand(&argv);
+
+	This will invoke the command line dialog manually.
+	
 	- 8/3/00 James Berry <jberry@criticalpath.com>
 */
 
 
-//	Forward declaration
+//	External declaration
 int ccommand(char ***arg);
+
+//	Forward declaration
+pascal void __start_ccommand(void);
 
 /*
  *	__start_ccommand	-	Optional special startup routine for Metrowerks C++ (PowerPC)
