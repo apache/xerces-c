@@ -9,7 +9,7 @@ $|=1;   # Force a flush after every print
 
 
 # Extract the source and target directories
-&Getopt('sopcxmntr');
+&Getopt('sopcxmntrj');
 $XERCESCROOT = $opt_s;
 $targetdir = $opt_o;
 
@@ -25,6 +25,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
     print ("    -r <thread option> can be 'pthread' \(default\)or 'dce' (only used on HP-11)\n");
+    print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
     print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_3_0");
@@ -75,7 +76,7 @@ chomp($platform);
 close (PLATFORM);
 
       
-print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n";
+print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n";   # " 
 
 #Construct the name of the zip file by extracting the last directory name
 $zipfiles = $targetdir;
@@ -84,13 +85,17 @@ $zipfiles = $zipfiles . "/*";
 
 $buildmode = "Release";         # Universally, why do you want to package Debug builds anyway?
 
+
+
+#
+#   WINDOWS builds happen here ...
+#
 if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     
     $platformname = 'Win32';    # Needed this way by nmake
-    if (-e $targetdir.".zip") {
-        print ("Error: The target file \'$targetdir.zip\' already exists.\n");
-        print ("       You must delete the file \'$targetdir.zip\' to package your product.\n");
-        exit(1);
+    if (-e "$targetdir.zip") {
+        print ("Deleting old target file \'$targetdir.zip\' \n");
+        unlink("$targetdir.zip");
     }
     
     # Make the target directory and its main subdirectories
@@ -124,6 +129,10 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
     }
     
+
+    #
+    #	ICU Build happens here, if one is required.
+    #
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         print ("Building ICU from $ICUROOT ...\n");
         
@@ -133,13 +142,16 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         
         # Make the icu dlls
         chdir ("$ICUROOT/source/allinone");
-        print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
-        #For nt we ship both debug and release dlls
-        system("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD");
-        system("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD");
+        if ($opt_j eq "") {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
+	    print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
+	    #For nt we ship both debug and release dlls
+	    system("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD");
+	    system("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD");
+        }
         
         change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
     }
+    
 
     # Clean up all the dependency files, causes problems for nmake
     # Also clean up all MSVC-generated project files that just cache the IDE state
@@ -244,10 +256,10 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         # Copy the ICU dlls
         system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
-        system("cp -fv $ICUROOT/data/icudata.dll $targetdir/bin");
+        system("cp -fv $ICUROOT/bin/$buildmode/icudata.dll $targetdir/bin");
         # Copy the ICU libs
         system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
-        system("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
+        # system("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
     }
     system("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
@@ -313,8 +325,14 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     print ("zip -r $zipname $zipfiles");
     system ("zip -r $zipname $zipfiles");
 }
-  
-
+#
+#     End of Windows Builds.
+ 
+ 
+ 
+#
+#  UNIX builds happen here ...
+#
 if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
      ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
 
@@ -653,10 +671,13 @@ sub change_windows_project_for_ICU() {
     open (FIZZLE, $thefiledotbak);
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
-        $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
+        #$line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
+        $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"$ICUROOT\\include" \/D "PROJ_XMLPARSER"/g;
+        #$line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\data"/g;
+         $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\bin\\Debug"/g;
+        #$line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
+         $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"$ICUROOT\\lib\\Release" \/libpath:"$ICUROOT\\bin\\Release"/g;
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
-        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Debug" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
-        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
         $line =~ s/user32\.lib/user32\.lib icuuc\.lib icudata\.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService\.hpp/Transcoders\\ICU\\ICUTransService\.hpp/g;
