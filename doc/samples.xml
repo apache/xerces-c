@@ -4,7 +4,7 @@
 <s1 title="&XercesCName; Samples">
 
     <s2 title="Introduction">
-    <p>&XercesCName; comes packaged with 15 sample applications that
+    <p>&XercesCName; comes packaged with 13 sample applications that
     demonstrate salient features of the parser using simple
     applications written on top of the SAX and DOM APIs provided by
     the parser.  Sample XML data files are provided in the samples/data directory.</p>
@@ -66,10 +66,6 @@
 					characters in an XML file.</li>
 				<li><link idref="sax2print">SAX2Print</link>
 					<br/>SAX2Print parses an XML file and prints it out.</li>
-				<li><link idref="idomcount">IDOMCount</link>
-					<br/>IDOMCount counts the elements in a XML file.</li>
-				<li><link idref="idomprint">IDOMPrint</link>
-					<br/>IDOMPrint parses an XML file and prints it out.</li>
 			</ul>
 		</s3>
     </s2>
