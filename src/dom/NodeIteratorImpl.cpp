@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/07/17 23:00:16  jpolast
+ * bug fix for SHOW_ELEMENT flag incorrectly being retreived.
+ * contributed by Grace Yan and Joe Kesselman.
+ *
  * Revision 1.9  2000/03/02 19:54:03  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -293,9 +297,9 @@ bool NodeIteratorImpl::acceptNode (DOM_Node node) {
 		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
     if (fNodeFilter == 0) {
-        return ((fWhatToShow & ((1 << node.getNodeType()) - 1)) != 0);
+        return ((fWhatToShow & (1 << (node.getNodeType() - 1))) != 0);
     } else {
-        return ((fWhatToShow & ((1 << node.getNodeType()) - 1)) != 0 )
+        return ((fWhatToShow & (1 << (node.getNodeType() - 1))) != 0)
             && fNodeFilter->acceptNode(node) == DOM_NodeFilter::FILTER_ACCEPT;
     }
 }
