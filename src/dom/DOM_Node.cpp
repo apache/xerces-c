@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:59  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:11:23  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:59  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:19  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -162,13 +169,13 @@ DOM_Node      DOM_Node::cloneNode(bool deep) const
 
 DOMString  DOM_Node::getNodeName()  const 
 {
-    return fImpl->getNodeName();
+    return fImpl->getNodeName().clone();
 };
 
   
 DOMString  DOM_Node::getNodeValue() const
 {
-    return fImpl->getNodeValue();
+    return fImpl->getNodeValue().clone();
 };
 
   
@@ -280,17 +287,17 @@ bool              DOM_Node::supports(const DOMString &feature,
 
 DOMString         DOM_Node::getNamespaceURI() const
 {
-    return fImpl->getNamespaceURI();
+    return fImpl->getNamespaceURI().clone();
 }
 
 DOMString         DOM_Node::getPrefix() const
 {
-    return fImpl->getPrefix();
+    return fImpl->getPrefix().clone();
 }
 
 DOMString         DOM_Node::getLocalName() const
 {
-    return fImpl->getLocalName();
+    return fImpl->getLocalName().clone();
 }
 
 void              DOM_Node::setPrefix(const DOMString &prefix)

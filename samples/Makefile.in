@@ -55,8 +55,14 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:09:25  twl
-# Initial revision
+# Revision 1.4  1999/11/30 21:35:21  abagchi
+# Included EnumVal in the list of samples
+#
+# Revision 1.3  1999/11/12 20:31:22  rahulj
+# Replaced XML4CROOT with XERCESCROOT.
+#
+# Revision 1.1.1.1  1999/11/09 01:09:25  twl
+# Initial checkin
 #
 # Revision 1.4  1999/11/08 20:43:33  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -71,7 +77,8 @@ Redirect_DIR=Redirect
 MemParse_DIR=MemParse
 PParse_DIR=PParse
 StdInParse_DIR=StdInParse
-LIB_DIR=${XML4CROOT}/lib
+EnumVal_DIR=EnumVal
+LIB_DIR=${XERCESCROOT}/lib
 
 PLATFORM = @platform@
 COMPILER = @compiler@
@@ -79,7 +86,7 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
-all:	saxprint saxcount domprint domcount redirect memparse pparse stdinparse
+all:	saxprint saxcount domprint domcount redirect memparse pparse stdinparse enumval
 
 saxprint:
 	@echo Building "SAXPrint"
@@ -113,6 +120,10 @@ stdinparse:
 	@echo Building "StdInParse"
 	cd $(StdInParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
+enumval:
+	@echo Building "EnumVal"
+	cd $(EnumVal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+
 clean:
 	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
@@ -122,6 +133,7 @@ clean:
 	cd $(Redirect_DIR) && $(MAKE) $@ && cd ..
 	cd $(PParse_DIR) && $(MAKE) $@ && cd ..
 	cd $(StdInParse_DIR) && $(MAKE) $@ && cd ..
+	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
 
 distclean:
 	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
@@ -132,6 +144,7 @@ distclean:
 	cd $(Redirect_DIR) && $(MAKE) $@ && cd ..
 	cd $(PParse_DIR) && $(MAKE) $@ && cd ..
 	cd $(StdInParse_DIR) && $(MAKE) $@ && cd ..
+	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 

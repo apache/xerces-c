@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:57  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:11:23  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:57  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:17  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -108,13 +115,13 @@ DOM_Element & DOM_Element::operator = (const DOM_NullPtr *other)
 
 DOMString DOM_Element::getTagName() const
 {
-        return ((ElementImpl *)fImpl)->getTagName();
+        return ((ElementImpl *)fImpl)->getTagName().clone();
 };
 
 
 DOMString DOM_Element::getAttribute(const DOMString &name) const
 {
-        return ((ElementImpl *)fImpl)->getAttribute(name);
+        return ((ElementImpl *)fImpl)->getAttribute(name).clone();
 };
 
 
@@ -170,7 +177,7 @@ void      DOM_Element::normalize()
 DOMString DOM_Element::getAttributeNS(const DOMString &namespaceURI,
 	const DOMString &localName) const
 {
-    return ((ElementImpl *)fImpl)->getAttributeNS(namespaceURI, localName);
+    return ((ElementImpl *)fImpl)->getAttributeNS(namespaceURI, localName).clone();
 }
 
 void DOM_Element::setAttributeNS(const DOMString &namespaceURI,

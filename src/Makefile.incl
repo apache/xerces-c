@@ -55,8 +55,33 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:02:55  twl
-# Initial revision
+# Revision 1.8  1999/12/14 23:53:18  rahulj
+# Removed the offending Ctrl-M's from the commit message
+# logs which was giving packaging problems.
+#
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
+# Revision 1.7  1999/12/09 00:48:19  aruna1
+# ICU library inclusion in ALLLIBS due to solaris failure
+#
+# Revision 1.6  1999/12/01 17:16:15  rahulj
+# Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+#
+# Revision 1.5  1999/11/23 01:59:28  rahulj
+# Code now works under HPUX 11. Tested inmemory message loader.
+# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+#
+# Revision 1.4  1999/11/17 22:36:31  rahulj
+# Code works with ICU transcoding service
+#
+# Revision 1.3  1999/11/12 20:38:49  rahulj
+# Replaced XML4CROOT with XERCESCROOT.
+#
+# Revision 1.1.1.1  1999/11/09 01:02:55  twl
+# Initial checkin
 #
 # Revision 1.4  1999/11/08 20:44:09  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -69,7 +94,7 @@
 # Before you try to run the Makefile, make sure you have set      #
 # the following environment variables properly.                   #
 #                                                                 #
-# export XML4CROOT=<the directory where you installed XML4C>      #
+# export XERCESCROOT=<the directory where you installed XRECES-C> #
 #                                                                 #
 # In case you intend to use either the ICU transcoder or the      #
 # ICU message loader, you must set ICUROOT correctly.             #
@@ -95,44 +120,55 @@
 
 ALL:    all
 
-ALL_OBJECTS_DIR = ${XML4CROOT}/obj
+ALL_OBJECTS_DIR   = ${XERCESCROOT}/obj
 
 XML_BUILD_OPTIONS = ${CXXFLAGS}
+
+XML_LIB_DIR = $(XERCESCROOT)/lib
+XML_INC_DIR = $(XERCESCROOT)/include
+XML_INCL    = -I$(XML_INC_DIR)
 
 ####################### PLATFORM DEPENDENCIES #####################
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)
-  ifeq (${COMPILER}, g++)
-	PLATFORM_CPP_COMPILER = g++
-	PLATFORM_C_COMPILER = gcc
-	PLATFORM_LIBRARIES=-L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
+  ifeq (${CXX}, g++)
 	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
-	MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -shared
-	MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -shared
-	EXTRA_LINK_OPTIONS = -lm -lw -lgen
+	MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
+	MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+	ifeq (${TRANSCODER}, ICU)
+		ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -lm -lw -lgen
+	else
+		ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lm -lw -lgen
+	endif
   else
-	PLATFORM_CPP_COMPILER = CC
-	PLATFORM_C_COMPILER = cc
-	PLATFORM_LIBRARIES=-L/usr/local/SUNWspro/lib -L/usr/ccs/lib
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static -features=rtti -D${PLATFORM} -D_REENTRANT
-	MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -G
-	MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -G
-	EXTRA_LINK_OPTIONS = -lm -lw -lC -lc -lgen
+	MAKE_SHARED = ${CXX} -D${PLATFORM} -G
+	MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
+	ifeq (${TRANSCODER}, ICU)
+		EXTRA_LINK_OPTIONS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib -licu-uc -lm -lw -lC -lc -lgen
+	else
+		EXTRA_LINK_OPTIONS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib -lm -lw -lC -lc -lgen
+	endif
   endif
   SHLIBSUFFIX=.so
 endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, AIX)
-PLATFORM_CPP_COMPILER = xlC_r
-PLATFORM_C_COMPILER = xlc_r
-ifdef ICUROOT
-  PLATFORM_LIBRARIES=-L/usr/lpp/xlC/lib -L${ICUROOT}/lib
-  EXTRA_LINK_OPTIONS = -licu-uc -lbsd
+
+#PLATFORM_CPP_COMPILER = xlC_r
+#PLATFORM_C_COMPILER = xlc_r
+#ifdef ICUROOT
+#  ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -L${ICUROOT}/lib -licu-uc -lbsd
+#else
+#  ALLLIBS = -L/usr/lpp/xlC/lib -lbsd
+#endif
+
+ifeq (${TRANSCODER}, ICU)
+	ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -lbsd
 else
-  PLATFORM_LIBRARIES=-L/usr/lpp/xlC/lib
-  EXTRA_LINK_OPTIONS = -lbsd
+	ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -lbsd
 endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 MAKE_SHARED = makeC++SharedLib_r -p 5000
@@ -142,20 +178,34 @@ endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
-PLATFORM_CPP_COMPILER = g++
-PLATFORM_C_COMPILER = gcc
-PLATFORM_LIBRARIES=-L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
 PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
-MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -shared -fpic
-MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -shared -fpic
-EXTRA_LINK_OPTIONS = -lc
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fpic
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fpic
+ifeq (${TRANSCODER}, ICU)
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -lc
+else
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
+endif
 SHLIBSUFFIX=.so
 endif
 
+#=============== IRIX SPECIFIC OPTIONS ============================
+ifeq (${PLATFORM}, IRIX)
+PLATFORM_COMPILE_OPTIONS = -mips4 -LANG:pch -LANG:std -O2 \
+                           -D${PLATFORM} -D_REENTRANT \
+                           -I/usr/local/include
+OBJ_OUT=${XML4CROOT}/obj/
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+ALLLIBS = -L/usr/lib32 -lC
+SHLIBSUFFIX=.so
+endif
+
+
 #=============== OS2 SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, OS/2)
-PLATFORM_CPP_COMPILER = icc
-PLATFORM_C_COMPILER = icc
+#PLATFORM_CPP_COMPILER = icc
+#PLATFORM_C_COMPILER = icc
 PLATFORM_LIBRARIES= CPPOM30.LIB os2386.lib mmpm2.lib
 PLATFORM_COMPILE_OPTIONS = /C+ /Gd- /Ge- /Gm+ /Gs- /Re /J+  /Ms /Sm /Sn /Ss+
 MAKE_SHARED = ilink /nofree
@@ -168,40 +218,6 @@ endif
 endif
 
 #================= HP SPECIFIC OPTIONS ===========================
-#ifeq (${PLATFORM}, HPUX)
-#  ifeq (${COMPILER}, aCC)
-#    PLATFORM_CPP_COMPILER = aCC
-#    PLATFORM_C_COMPILER = aCC
-#    PLATFORM_LIBRARIES=-L/opt/aCC/lib -L/usr/ccs/lib
-#    PLATFORM_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DHPaCC -D_PTHREADS_DRAFT4 \
-#        +DAportable -w +z +inst_compiletime
-#    MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -b
-#    MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -b
-#    EXTRA_LINK_OPTIONS = -lcma -lCsup -lstream
-#    SHLIBSUFFIX=.sl
-#  else
-#    ifneq (${DEBUG}, 1)
-#      XML_BUILD_OPTIONS = -w +O1
-#    endif
-#    PLATFORM_CPP_COMPILER = CC
-#    PLATFORM_C_COMPILER = cc
-#    PLATFORM_LIBRARIES= -L${ICUROOT}/lib -L/opt/CC/lib -L/usr/lib
-#    TEMPLATESREPOSITORY = ${ALL_OBJECTS_DIR}/ptrepository
-#    COMMON_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DXML4C_TMPLSINC \
-#        -D_PTHREADS_DRAFT4 +DAportable -w +eh +z -z +a1
-#    ifeq ($(MODULE), dom)
-#      PLATFORM_COMPILE_OPTIONS  = -DDOM_PROJ $(COMMON_COMPILE_OPTIONS)
-#    else
-#      PLATFORM_COMPILE_OPTIONS  = $(COMMON_COMPILE_OPTIONS) -ptr${TEMPLATESREPOSITORY}
-#    endif
-#    ALLINCLUDES= -I$(XML4CROOT)/src -I$(ICUROOT)/include
-#    MAKE_SHARED = $(PLATFORM_CPP_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
-#    MAKE_SHARED_C = $(PLATFORM_C_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
-#    ALLLIBS = -licu-uc -lcma -lm
-#    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
-#    SHLIBSUFFIX=.sl
-#  endif
-#endif
 
 ifeq (${PLATFORM}, HPUX)
 
@@ -210,41 +226,33 @@ ifeq (${PLATFORM}, HPUX)
     OSVERDEFINE=HPUX10
   endif
 
-  ifeq (${COMPILER}, aCC)
-    PLATFORM_CPP_COMPILER = aCC
-    PLATFORM_C_COMPILER = aCC
-    PLATFORM_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DHPaCC \
-        -D_PTHREADS_DRAFT4 -D${OSVERDEFINE} +DAportable -w +z \
-        +inst_compiletime
-    MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -b
-    MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -b
-    ALLLIBS = -lcma -lCsup -lstream
+  ifeq (${CXX}, aCC)
+    PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC \
+        -D${OSVERDEFINE} +DAportable +z +inst_compiletime
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -b
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -b
+	ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -licu-uc -lCsup -lstream
+	else
+        ALLLIBS = ${LIBS} -lCsup -lstream
+    endif
     SHLIBSUFFIX=.sl
   else
-    ifneq (${DEBUG}, 1)
-      XML_BUILD_OPTIONS = -w +O1
-    endif
-    PLATFORM_CPP_COMPILER = CC
-    PLATFORM_C_COMPILER = cc
-ifdef ICUROOT
-    PLATFORM_LIBRARIES= -L${ICUROOT}/lib
-endif
     TEMPLATESREPOSITORY = ${ALL_OBJECTS_DIR}/ptrepository
-    COMMON_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DXML4C2_TMPLSINC \
-        -D_PTHREADS_DRAFT4 -D${OSVERDEFINE} +DAportable -w +eh +z -z +a1
+    COMMON_COMPILE_OPTIONS = -D_HP_UX -DXML4C_TMPLSINC \
+        -D${OSVERDEFINE} +DAportable +eh +z -z +a1
     ifeq ($(MODULE), dom)
       PLATFORM_COMPILE_OPTIONS  = -DDOM_PROJ $(COMMON_COMPILE_OPTIONS)
     else
       PLATFORM_COMPILE_OPTIONS  = $(COMMON_COMPILE_OPTIONS) -ptr${TEMPLATESREPOSITORY}
     endif
-ifdef ICUROOT
-    ALLINCLUDES=-I$(XML4CROOT)/src/com/ibm/xml -I$(XML4CROOT)/src -I$(ICUROOT)/include
-else
-    ALLINCLUDES=-I$(XML4CROOT)/src/com/ibm/xml -I$(XML4CROOT)/src
-endif
-    MAKE_SHARED = $(PLATFORM_CPP_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
-    MAKE_SHARED_C = $(PLATFORM_C_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
-    ALLLIBS = -licu-uc -lcma -lm
+    MAKE_SHARED = $(CXX) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
+    MAKE_SHARED_C = $(CC) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
+	ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -licu-uc
+	else
+        ALLLIBS = ${LIBS}
+	endif
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
     SHLIBSUFFIX=.sl
   endif
@@ -286,32 +294,12 @@ RM = -rm -f
 CAT = cat
 AR = ar -cqv
 CD = cd
-CC1 = ${PLATFORM_CPP_COMPILER} ${PLATFORM_COMPILE_OPTIONS}
-JUST_CC = ${PLATFORM_C_COMPILER} -D${PLATFORM}
+CC1     = ${CXX} ${PLATFORM_COMPILE_OPTIONS}
+JUST_CC = ${CC} -D${PLATFORM}
 ECHO = echo
 CREATE_DEPENDS_FILE = echo "" > depends
 MAKE_DEPEND = ${CC1} -E -xM
 
-########################## DIRECTORIES ############################
-XML_LIB_DIR = $(XML4CROOT)/lib
-XML_INC_DIR = $(XML4CROOT)/include
-ifeq (${MESSAGELOADER}, ICU)
-    INTL_INC_DIR1 = $(ICUROOT)/include
-endif
-ifeq (${TRANSCODER}, ICU)
-    INTL_INC_DIR1 = $(ICUROOT)/include
-endif
-
-#################### COMPILE/LINK FLAGS ###########################
-ifeq (${MESSAGELOADER}, ICU)
-    XML_INCL = -I. -I$(XML_INC_DIR) -I$(INTL_INC_DIR1)
-else
-    ifeq (${TRANSCODER}, ICU)
-        XML_INCL = -I. -I$(XML_INC_DIR) -I$(INTL_INC_DIR1)
-    else
-        XML_INCL = -I. -I$(XML_INC_DIR)
-    endif
-endif
 
 ##################### HELPER MACROS ###############################
 DEPFILE = depends
@@ -323,6 +311,9 @@ LINKLIB = $(XML_LIB_DIR)
 
 .cpp.o:
 	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
+ifeq (${PLATFORM}, IRIX)
+	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(OBJ_OUT)$(@) $(<)
+endif
 
 .c.o:
 	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)

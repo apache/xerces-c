@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:28  twl
- * Initial revision
+ * Revision 1.2  1999/12/02 19:02:57  roddey
+ * Get rid of a few statically defined XMLMutex objects, and lazy eval them
+ * using atomic compare and swap. I somehow let it get by me that we don't
+ * want any static/global objects at all.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:28  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:22  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -95,3 +100,10 @@ typedef wchar_t  XMLCh;
 #ifdef _DEBUG
 #define XML4C_DEBUG
 #endif
+
+
+// ---------------------------------------------------------------------------
+//  The name of the DLL as built by the Borland projects. At this time, it
+//  does not use the versioning stuff.
+// ---------------------------------------------------------------------------
+const char* const XML4C_DLLName = "XercesLib;

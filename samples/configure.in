@@ -60,5 +60,6 @@ DOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
-StdInParse/Makefile])
+StdInParse/Makefile \
+EnumVal/Makefile])
 

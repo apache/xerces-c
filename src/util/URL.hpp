@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:22  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 01:49:56  rahulj
+ * Cannot use class qualifier in class defn. CC under HPUX is happy.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:22  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:16  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -138,7 +141,7 @@ public:
     const XMLCh* getHost() const;
     const XMLCh* getProtocol() const;
     const XMLCh* getPath() const;
-    URL::Protocols getType() const;
+    Protocols getType() const;
     const XMLCh* getURL() const;
 
 
@@ -160,7 +163,7 @@ private:
     //  Private helper methods
     // -----------------------------------------------------------------------
     void cleanup();
-    URL::Protocols findType(unsigned int& curPos) const;
+    Protocols findType(unsigned int& curPos) const;
     XMLCh getNextCh(unsigned int& pos, const bool endOk = false) const;
     XMLCh peekNextCh(unsigned int pos) const;
     void parse();

@@ -56,8 +56,18 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:39  twl
- * Initial revision
+ * Revision 1.4  1999/11/17 21:49:42  abagchi
+ * Added the definitions of XMLUInt16 and XMLUInt32
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
+ * Revision 1.3  1999/11/12 20:37:00  rahulj
+ * Changed library name to xerces-c.lib.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:39  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -83,6 +93,11 @@
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
 
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short  XMLUInt16;
+typedef unsigned int    XMLUInt32;
 
 // ---------------------------------------------------------------------------
 //  Force on the XML4C debug token if it was on in the build environment
@@ -116,4 +131,4 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the CC version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libIXXML4C";
+const char* const XML4C_DLLName = "libxerces-c";

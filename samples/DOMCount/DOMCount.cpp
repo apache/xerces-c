@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:52  twl
- * Initial revision
+ * Revision 1.2  1999/11/12 02:13:40  rahulj
+ * It now validates when the -v option is specified.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:52  twl
+ * Initial checkin
  *
  * Revision 1.8  1999/11/08 20:43:34  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -143,6 +146,7 @@ int main(int argc, char* args[])
 
     // Instantiate the DOM parser.
     DOMParser parser;
+    parser.setDoValidation(doValidation);
 
     // And create our error handler and install it
     DOMCount elementCounter;

@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:11  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:11  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:29  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -175,7 +180,7 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &name)
         while(first<=last)
         {
             i=(first+last)/2;
-            int test = name.strcmp(nodes->elementAt(i)->getNodeName());
+            int test = name.compareString(nodes->elementAt(i)->getNodeName());
             if(test==0)
                 return i; // Name found
             else if(test<0)
@@ -259,7 +264,7 @@ void NamedNodeMapImpl::reconcileDefaults()
         {
             nnode = (AttrImpl *) nodes->elementAt(n);
             dnode = (AttrImpl *) defaults->nodes->elementAt(d);
-            int test = nnode->getNodeName().strcmp( dnode->getNodeName());
+            int test = nnode->getNodeName().compareString( dnode->getNodeName());
             // nnode->getNodeName()->compareTo(dnode->getNodeName());
             
             // Same name and a default -- make sure same value
@@ -313,7 +318,7 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 {
     int i=findNamePoint(name);
     if(i<0)
-        throw new DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
     else
     {
         NodeImpl * n = (NodeImpl *) (nodes->elementAt(i));
@@ -354,7 +359,7 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
       return n;
       }
       }
-      throw new DOMExceptionImpl(DOMException.NOT_FOUND_ERR, null);
+      throw DOMExceptionImpl(DOMException.NOT_FOUND_ERR, null);
     **************/ 
 	return null;	// just to keep the compiler happy
 };
@@ -379,10 +384,10 @@ void NamedNodeMapImpl::removeRef(NamedNodeMapImpl *This)
 NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
 {
     if(arg->getOwnerDocument()!=ownerDoc)
-        throw new DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     
     if (arg->owned)
-        throw new DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
+        throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
     
     arg->owned = true;
     int i=findNamePoint(arg->getNodeName());
@@ -494,13 +499,13 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &name)
 {
     if (readOnly)
-	throw new DOM_DOMException(
+	throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     if (namespaceURI == null || namespaceURI.length() == 0)
 	return removeNamedItem(name);
     int i = findNamePoint(namespaceURI, name);
     if (i < 0)
-	throw new DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+	throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
     NodeImpl * n = nodes -> elementAt(i);   //node to be removed or replaced
     //find if n has a default value defined in DTD, if so replace n in nodes
     //by its corresponding default value node, otherwise remove n from nodes

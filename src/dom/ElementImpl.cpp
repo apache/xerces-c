@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:08  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:08  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:26  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -212,7 +217,7 @@ void ElementImpl::normalize()
 void ElementImpl::removeAttribute(const DOMString &nam)
 {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     AttrImpl *att = (AttrImpl *) attributes->getNamedItem(nam);
@@ -231,7 +236,7 @@ void ElementImpl::removeAttribute(const DOMString &nam)
 AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     AttrImpl *found = (AttrImpl *) attributes->getNamedItem(oldAttr->getName());
@@ -246,7 +251,7 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
         return found;
     }
     else
-        throw new DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
 	return null;	// just to keep the compiler happy
 };
 
@@ -255,7 +260,7 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 void ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     AttrImpl *newAttr = (AttrImpl *) ownerDocument->createAttribute(nam);
@@ -275,11 +280,11 @@ void ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
 {
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     if (!(newAttr->isAttrImpl()))
-        throw new DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItem(newAttr->getName());
     if (oldAttr)
 	oldAttr->setOwnerElement(null);	    //DOM Level 2
@@ -302,7 +307,7 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
 
 void ElementImpl::setNodeValue(const DOMString &x)
 {
-    throw new DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
 };
 
 
@@ -334,7 +339,7 @@ void ElementImpl::setAttributeNS(const DOMString &namespaceURI,
 	return;
     }
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     AttrImpl *newAttr = (AttrImpl *) ownerDocument->createAttributeNS(namespaceURI, qualifiedName);
@@ -358,7 +363,7 @@ void ElementImpl::removeAttributeNS(const DOMString &namespaceURI,
 	return;
     }
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     AttrImpl *att = (AttrImpl *) attributes->getNamedItemNS(namespaceURI, localName);
@@ -386,11 +391,11 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
     if (newAttr && newAttr ->getNamespaceURI() == null)
 	return setAttributeNode(newAttr);
     if (readOnly)
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
-        throw new DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(
 	newAttr->getNamespaceURI(), newAttr->getLocalName());
     if (oldAttr)

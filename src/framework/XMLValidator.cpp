@@ -56,8 +56,17 @@
 
 /**
   * $Log$
-  * Revision 1.1  1999/11/09 01:08:37  twl
-  * Initial revision
+  * Revision 1.3  1999/12/08 00:15:06  roddey
+  * Some small last minute fixes to get into the 3.0.1 build that is going to be
+  * going out anyway for platform fixes.
+  *
+  * Revision 1.2  1999/12/02 19:02:56  roddey
+  * Get rid of a few statically defined XMLMutex objects, and lazy eval them
+  * using atomic compare and swap. I somehow let it get by me that we don't
+  * want any static/global objects at all.
+  *
+  * Revision 1.1.1.1  1999/11/09 01:08:37  twl
+  * Initial checkin
   *
   * Revision 1.3  1999/11/08 20:44:40  rahul
   * Swat for adding in Product name and CVS comment log variable.
@@ -79,16 +88,35 @@
 
 
 // ---------------------------------------------------------------------------
-//  Local static data
+//  Local static functions
 // ---------------------------------------------------------------------------
-static XMLMutex         gValidatorMutex;
-static XMLMsgLoader&    getMsgLoader()
+
+//
+//  We need to fault in this mutex. But, since its used for synchronization
+//  itself, we have to do this the low level way using a compare and swap.
+//
+static XMLMutex& gValidatorMutex()
+{
+    static XMLMutex* validatorMutex = 0;
+    if (!validatorMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&validatorMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+    }
+    return *validatorMutex;
+}
+
+static XMLMsgLoader& getMsgLoader()
 {
     static XMLMsgLoader* gMsgLoader = 0;
 
     if (!gMsgLoader)
     {
-        XMLMutexLock lockInit(&gValidatorMutex);
+        XMLMutexLock lockInit(&gValidatorMutex());
         if (!gMsgLoader)
         {
             gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
@@ -120,7 +148,7 @@ void XMLValidator::emitError(const XML4CValid::Codes toEmit)
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gValidatorMutex);
+            XMLMutexLock lockInit(&gValidatorMutex());
             if (!getMsgLoader().loadMsg(toEmit, errText, msgSize))
             {
                 // <TBD> Probably should load a default msg here
@@ -150,15 +178,15 @@ void XMLValidator::emitError(const XML4CValid::Codes toEmit)
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CValid::isFatal(toEmit)
+    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
-    &&  fScanner->getInException())
+    &&  !fScanner->getInException())
     {
         throw toEmit;
     }
 }
 
-void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
+void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
                             , const XMLCh* const        text1
                             , const XMLCh* const        text2
                             , const XMLCh* const        text3
@@ -175,7 +203,7 @@ void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gValidatorMutex);
+            XMLMutexLock lockInit(&gValidatorMutex());
             if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
             {
                 // <TBD> Should probably load a default message here
@@ -205,15 +233,15 @@ void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CValid::isFatal(toEmit)
+    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
-    &&  fScanner->getInException())
+    &&  !fScanner->getInException())
     {
         throw toEmit;
     }
 }
 
-void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
+void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
                             , const char* const         text1
                             , const char* const         text2
                             , const char* const         text3
@@ -230,7 +258,7 @@ void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gValidatorMutex);
+            XMLMutexLock lockInit(&gValidatorMutex());
             if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
             {
                 // <TBD> Should probably load a default message here
@@ -260,9 +288,9 @@ void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CValid::isFatal(toEmit)
+    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
-    &&  fScanner->getInException())
+    &&  !fScanner->getInException())
     {
         throw toEmit;
     }

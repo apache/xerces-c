@@ -1,3 +1,21 @@
+Xerces-C version 1.0.1 15-Dec-99
+  - Port to Solaris.
+  - Improved error recovery and clarified error messages.
+  - Added DOMTest program.
+
+
+Xerces-C version 1.0.0  8-Dec-99
+  - Sources for: WinNT/98(Visual C++),  Linux(gcc), AIX (xlC), 
+    HP-UX 10.2 (aCC and CC) and HP-UX 11.0 (aCC and CC)
+  - Has defect fixes, better conformance, better speed and cleaner
+    internal internal architecture 
+  - Three new samples added: PParse, StdInParse and EnumVal 
+  - Loadable message text enabling future translations to be easily
+    plugged-in 
+  - Pluggable validators 
+  - Pluggable transcoders 
+
+
 Xerces-c status  8-Nov-99
 
 This drop of Xerces-c is based on a development version of the IBM XML4C

@@ -144,7 +144,7 @@ $set 3
  14  Attribute '{0}' refers to an unknown notation '{1}'
  15  Element '{0}' was used in the DOCTYPE but never declared
  16  Empty content not valid for content model: '{0}'
- 17  Attribute '{{0}}{1}' is not declared for element '{2}'
+ 17  Attribute '{0}' is not declared for element '{1}'
  18  Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity
  19  Attribute '{0}' refers to an unknown entity '{1}'
  20  Not enough elements to match content model : '{0}'

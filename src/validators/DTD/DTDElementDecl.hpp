@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:03:32  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 01:51:04  rahulj
+ * Cannot use class qualifier in class defn. CC under HPUX is happy.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:03:32  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:40  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -144,7 +147,7 @@ public :
     DTDAttDef* getAttDef(const XMLCh* const attName);
     ContentSpecNode* getContentSpec();
     const ContentSpecNode* getContentSpec() const;
-    DTDElementDecl::ModelTypes getModelType() const;
+    ModelTypes getModelType() const;
 
 
     // -----------------------------------------------------------------------

@@ -56,8 +56,21 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:22  twl
- * Initial revision
+ * Revision 1.4  1999/12/08 00:15:06  roddey
+ * Some small last minute fixes to get into the 3.0.1 build that is going to be
+ * going out anyway for platform fixes.
+ *
+ * Revision 1.3  1999/12/02 19:02:57  roddey
+ * Get rid of a few statically defined XMLMutex objects, and lazy eval them
+ * using atomic compare and swap. I somehow let it get by me that we don't
+ * want any static/global objects at all.
+ *
+ * Revision 1.2  1999/11/30 20:23:13  roddey
+ * Added changes to handle exceptions thrown from the user's handlers for
+ * emitError().
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:22  twl
+ * Initial checkin
  *
  * Revision 1.7  1999/11/08 20:56:54  droddey
  * If the main xml entity does not exist, we need to get the error handling for that
@@ -105,8 +118,31 @@
 //  Local static data
 // ---------------------------------------------------------------------------
 static XMLUInt32       gScannerId;
-static XMLMutex        gScannerMutex;
 static XMLMsgLoader*   gMsgLoader;
+
+
+// ---------------------------------------------------------------------------
+//  Local, static functions
+// ---------------------------------------------------------------------------
+
+//
+//  We need to fault in this mutex. But, since its used for synchronization
+//  itself, we have to do this the low level way using a compare and swap.
+//
+static XMLMutex& gScannerMutex()
+{
+    static XMLMutex* scannerMutex = 0;
+    if (!scannerMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&scannerMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+    }
+    return *scannerMutex;
+}
 
 
 // ---------------------------------------------------------------------------
@@ -243,23 +279,37 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         // If we have a document handler, then call the end document
         if (fDocHandler)
             fDocHandler->endDocument();
+
+        // Reset the reader manager to close all files, sockets, etc...
+        fReaderMgr.reset();
     }
 
+    //
+    //  NOTE:
+    //
+    //  In all of the error processing below, the emitError() call MUST come
+    //  before the flush of the reader mgr, or it will fail because it tries
+    //  to find out the position in the XML source of the error.
+    //
     catch(const XML4CErrs::Codes)
     {
-        // This is a 'first fatal error' type exit, so just fall through
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
     }
 
-    //
-    //  We have to propogate SAX exceptions. Since they are derived from our
-    //  XMLException class, we have to filter it out first here so that it
-    //  does not get caught and eaten below.
-    //
+    catch(const XML4CValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
+    }
+
     catch(const SAXException&)
     {
         //
-        //  Make sure we do anything that would normally be done on the way
-        //  out of this method.
+        //  We have to propogate SAX exceptions.
+        //
+        //  Make sure that the reader manager gets reset, then rethrow this
+        //  exception since it means nothing much to us.
         //
         fReaderMgr.reset();
         throw;
@@ -267,35 +317,38 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
 
     catch(const XMLException& excToCatch)
     {
+        //
+        //  Emit the error and catch any user exception thrown from here. Make
+        //  sure in all cases we flush the reader manager.
+        //
         fInException = true;
-        emitError
-        (
-            XML4CErrs::XMLException
-            , excToCatch.getType()
-            , excToCatch.getMessage()
-        );
+        try
+        {
+            emitError
+            (
+                XML4CErrs::XMLException
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        }
 
-        // And fall through
+        catch(...)
+        {
+            // Flush the reader manager and rethrow user's error
+            fReaderMgr.reset();
+            throw;
+        }
+
+        // If it returned, then reset the reader manager and fall through
+        fReaderMgr.reset();
     }
 
     catch(...)
     {
-        //
-        //  We don't know what happened. So issue an error, flush the reader
-        //  manager to close down files, sockets, etc... and rethrow.
-        //
-        //  NOTE: The error emit MUST come before the flush of the reader
-        //  or it will fail because it tries to find out the position in
-        //  the XML source of the error.
-        //
-        fInException = true;
-        emitError(XML4CErrs::SysException);
+        // Reset and rethrow
         fReaderMgr.reset();
         throw;
     }
-
-    // Reset the reader manager to close all files
-    fReaderMgr.reset();
 }
 
 
@@ -332,11 +385,24 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         scanProlog();
     }
 
-    // This is a 'first failure' exception so reset and return a failure
+    //
+    //  NOTE:
+    //
+    //  In all of the error processing below, the emitError() call MUST come
+    //  before the flush of the reader mgr, or it will fail because it tries
+    //  to find out the position in the XML source of the error.
+    //
     catch(const XML4CErrs::Codes)
     {
+        // This is a 'first failure' exception so reset and return a failure
         fReaderMgr.reset();
         return false;
+    }
+
+    catch(const XML4CValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
     }
 
     // We have to propogate SAX exceptions
@@ -346,24 +412,38 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         throw;
     }
 
-    // This one is just a failure
     catch(const XMLException& excToCatch)
     {
+        //
+        //  Emit the error and catch any user exception thrown from here. Make
+        //  sure in all cases we flush the reader manager.
+        //
         fInException = true;
-        emitError
-        (
-            XML4CErrs::XMLException
-            , excToCatch.getType()
-            , excToCatch.getMessage()
-        );
+        try
+        {
+            emitError
+            (
+                XML4CErrs::XMLException
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        }    
+
+        catch(...)
+        {
+            // Reset and rethrow the user error
+            fReaderMgr.reset();
+            throw;
+        }
+
+        // Reset and return a failure
         fReaderMgr.reset();
         return false;
     }
 
     catch(...)
     {
-        fInException = true;
-        emitError(XML4CErrs::SysException);
+        // Reset and rethrow original error
         fReaderMgr.reset();
         throw;
     }
@@ -451,43 +531,74 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
         }
     }
 
-    // This is a 'first failure' exception, so reset and return failure
+    //
+    //  NOTE:
+    //
+    //  In all of the error processing below, the emitError() call MUST come
+    //  before the flush of the reader mgr, or it will fail because it tries
+    //  to find out the position in the XML source of the error.
+    //
     catch(const XML4CErrs::Codes)
     {
+        // This is a 'first failure' exception, so reset and return failure
         fReaderMgr.reset();
         return false;
+    }
+
+    catch(const XML4CValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
     }
 
     // We have to propogate SAX exceptions
     catch(const SAXException&)
     {
+        // Just reset our reader manager and rethrow SAX exception
         fReaderMgr.reset();
         throw;
     }
 
-    // This one is just a failure
     catch(const XMLException& excToCatch)
     {
+        //
+        //  Emit the error and catch any user exception thrown from here. Make
+        //  sure in all cases we flush the reader manager.
+        //
         fInException = true;
-        emitError
-        (
-            XML4CErrs::XMLException
-            , excToCatch.getType()
-            , excToCatch.getMessage()
-        );
+        try
+        {
+            emitError
+            (
+                XML4CErrs::XMLException
+                , excToCatch.getType()
+                , excToCatch.getMessage()
+            );
+        }
 
+        catch(...)
+        {
+            // REset and rethrow user error
+            fReaderMgr.reset();
+            throw;
+        }
+
+        // Reset and return failure
         fReaderMgr.reset();
         return false;
     }
 
     catch(...)
     {
-        fInException = true;
-        emitError(XML4CErrs::SysException);
-
+        // Reset and rethrow original error
         fReaderMgr.reset();
         throw;
     }
+
+    // If we hit the end, then flush the reader manager
+    if (!retVal)
+        fReaderMgr.reset();
+
     return retVal;
 }
 
@@ -509,7 +620,7 @@ void XMLScanner::commonInit()
     //  use the mutex to protect it.
     //
     {
-        XMLMutexLock lockInit(&gScannerMutex);
+        XMLMutexLock lockInit(&gScannerMutex());
 
         // If we haven't loaded our message yet, then do that
         if (!gMsgLoader)
@@ -573,7 +684,7 @@ void XMLScanner::emitError(const XML4CErrs::Codes toEmit)
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gScannerMutex);
+            XMLMutexLock lockInit(&gScannerMutex());
             if (!gMsgLoader->loadMsg(toEmit, errText, msgSize))
             {
                 // <TBD> Probably should load a default msg here
@@ -624,7 +735,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gScannerMutex);
+            XMLMutexLock lockInit(&gScannerMutex());
             if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
             {
                 // <TBD> Should probably load a default message here
@@ -675,7 +786,7 @@ void XMLScanner::emitError( const   XML4CErrs::Codes    toEmit
 
         // Lock the mutex and load the text
         {
-            XMLMutexLock lockInit(&gScannerMutex);
+            XMLMutexLock lockInit(&gScannerMutex());
             if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
             {
                 // <TBD> Should probably load a default message here

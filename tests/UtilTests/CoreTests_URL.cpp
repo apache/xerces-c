@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:05  twl
- * Initial revision
+ * Revision 1.2  1999/12/07 23:11:01  roddey
+ * Add in some new tests for transcoders and update the URL tests
+ * a bit.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:05  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:28  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -93,8 +97,8 @@ static bool parseTests()
             , "file://myfile.txt"
             , 0
         };
-
         unsigned int index = 0;
+
         while (badURLS[index])
         {
             bool gotIt = false;
@@ -112,6 +116,7 @@ static bool parseTests()
             {
                 outStrm << "Failed to get bad URL exception for: "
                         << badURLS[index] << EndLn;
+                return false;
             }
             index++;
         }
@@ -122,11 +127,13 @@ static bool parseTests()
         outStrm << "Got an unexpected exception.\n  Type:"
                 << toCatch.getType() << ", Message:" << toCatch.getMessage()
                 << EndLn;
+        return false;
     }
 
     catch(...)
     {
         outStrm << "Got an unexpected system exception." << EndLn;
+        return false;
     }
 
 
@@ -155,7 +162,7 @@ static bool parseTests()
                 testURL.setURL(unsupportedURLS[index]);
             }
 
-            catch(const RuntimeException&)
+            catch(const MalformedURLException&)
             {
                 gotIt = true;
             }
@@ -164,6 +171,7 @@ static bool parseTests()
             {
                 outStrm << "Failed to get runtime exception for: "
                         << unsupportedURLS[index] << EndLn;
+                return false;
             }
             index++;
         }
@@ -174,13 +182,14 @@ static bool parseTests()
         outStrm << "Got an unexpected exception.\n  Type:"
                 << toCatch.getType() << ", Message:" << toCatch.getMessage()
                 << EndLn;
+        return false;
     }
 
     catch(...)
     {
         outStrm << "Got an unexpected system exception." << EndLn;
+        return false;
     }
-
 
     return true;
 }
