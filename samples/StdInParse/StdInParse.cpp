@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/16 15:32:12  knoaman
+ * Change scope of 'src' so that it's deallocated properly.
+ *
  * Revision 1.13  2002/02/01 22:41:37  peiyongz
  * sane_include
  *
@@ -253,38 +256,41 @@ int main(int argC, char* argV[])
     parser->setDocumentHandler(&handler);
     parser->setErrorHandler(&handler);
 
-    //
-    //  Kick off the parse and catch any exceptions. Create a standard
-    //  input input source and tell the parser to parse from that.
-    //
     unsigned long duration;
     int errorCount = 0;
-    StdInInputSource src;
-    try
+    // create a faux scope so that 'src' destructor is called before
+    // XMLPlatformUtils::Terminate
     {
-        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser->parse(src);
-        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
-        duration = endMillis - startMillis;
-        errorCount = parser->getErrorCount();
-    }
+        //
+        //  Kick off the parse and catch any exceptions. Create a standard
+        //  input input source and tell the parser to parse from that.
+        //
+        StdInInputSource src;
+        try
+        {
+            const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+            parser->parse(src);
+            const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+            duration = endMillis - startMillis;
+            errorCount = parser->getErrorCount();
+        }
+        catch (const XMLException& e)
+        {
+            cerr << "\nError during parsing: \n"
+                 << StrX(e.getMessage())
+                 << "\n" << endl;
+            errorCount = 1;
+            return 4;
+        }
 
-    catch (const XMLException& e)
-    {
-        cerr << "\nError during parsing: \n"
-             << StrX(e.getMessage())
-             << "\n" << endl;
-        XMLPlatformUtils::Terminate();
-        return 4;
-    }
-
-    // Print out the stats that we collected and time taken
-    if (!errorCount) {
-        cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
-             << handler.getElementCount() << " elems, "
-             << handler.getAttrCount() << " attrs, "
-             << handler.getSpaceCount() << " spaces, "
-             << handler.getCharacterCount() << " chars)" << endl;
+        // Print out the stats that we collected and time taken
+        if (!errorCount) {
+            cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
+                 << handler.getElementCount() << " elems, "
+                 << handler.getAttrCount() << " attrs, "
+                 << handler.getSpaceCount() << " spaces, "
+                 << handler.getCharacterCount() << " chars)" << endl;
+        }
     }
 
     //
