@@ -17,7 +17,7 @@
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: February 6, 2003">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: February 7, 2003">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=08%2F28%2F02&amp;chfieldto=Now&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &XercesCVersion;.
@@ -27,6 +27,154 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <th>Date</th>
         <th>Contributor</th>
         <th>Description</th>
+    </tr>
+
+    <tr>
+        <td>2003-02-06</td>
+        <td>Khaled Noaman</td>
+        <td>Schema Errata:
+            <br/>1. E1-2
+            <br/>2. E1-10
+            <br/>3. E1-15
+            <br/>4. E1-16
+            <br/>5. E1-20
+            <br/>6. E1-21
+            <br/>7. E1-22
+            <br/>8. E1-23
+            <br/>9. E1-27
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-06</td>
+        <td>PeiYong Zhang</td>
+        <td>Schema Errata:
+            <br/>1. E2-9  Base64.
+            <br/>2. E2-12 gMonth.
+            <br/>3. E2-16 maxExclusive.
+            <br/>4. E2-23 seconds part shall have at least one digit after the dot if it appears.
+            <br/>5. E2-24 Duration 'T': allow SchemaDateTimeException be propogated to client.
+            <br/>6. E2-25 language.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-06</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Scanner Reorganization.  Create
+            XMLScannerResolver, WFXMLScanner, IGXMLScanner, DGXMLScanner, and SGXMLScanner.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-06</td>
+        <td>Khaled Noaman</td>
+        <td>Performance:
+            <br/> 1. [Bug 13695] Performance problem with large text nodes and XMLFormatter.cpp.
+            <br/> 2. Make getNextChar/peekNextChar inline.
+            <br/> 3. Reduce instruction counts in XMLReader.
+            <br/> 4. Do not call XMLString::stringLen in XMLString::indexOf.
+            <br/> 5. Use existing QName in XMLElementDecl instead of creating a new one everytime.
+            <br/> 6. Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
+            <br/> 7. Enable/disable calculation of src offset.
+            <br/> 8. No need to use temporary buffer to hold namespace value in SAX2XMLReaderImpl.
+            <br/> 9. Eliminate unnecessary condition in compareNString.
+            <br/>10. Use global buffer to eliminate repetitive memory creation/deletion
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-06</td>
+        <td>Tinny Ng</td>
+        <td>Performance:
+            <br/>1. DOM: call fParent.fOwnerDocument directly instead of fNode.getOwnerDocument.
+            <br/>2. Check for null string directly isntead of calling XMLString::stringLen.
+            <br/>3. New inline function XMLString::equals that simply returns true or false,
+                    use it instead of XMLString::compareString wherever applicable.
+            <br/>4. XERCES_XMLCH should not be classified as XMLRecognizer::OtherEncodings.
+            <br/>5. Pre uppercase the encodingString before calling encodingForName to avoid calling compareIString.
+            <br/>6. Use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
+            <br/>7. Reduce some instruction counts in XMLUTF8Transcoder.
+            <br/>8. [Bug 13447] Using LocalFileFormatTarget with DOMWriter is very slow.
+            <br/>9. Define fGlobalDeclarations as an array of ValueVectorOf to avoid string comparison.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Gareth Reakes</td>
+        <td>Schema Fix: bug with multiple attributes being validated by the same union type.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7592] XMLURL::lookupByName() should be static.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 16322] DOMDocumentImpl::replaceChild should honor fDocElement.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 11915] Utility for freeing memory.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 13437] Incorrect memory management in XXXPlatformUtils.cpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Zeid Derhally</td>
+        <td>[Bug 14599] Metrowerks in support of CodeWarrior for Windows.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 16796] Possible out of bounds memory read in XMLRecognizer::basicEncodingProbe.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-05</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 16747] Parser loses ValidationScheme setting between parse attempts.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-04</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 16784] Obsolete documentation on XMLTranscoder
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-04</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 16652] data from CDATA section is not passed for validation.
+        </td>
     </tr>
 
     <tr>
@@ -273,76 +421,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>2002-12-16</td>
         <td>James Berry</td>
         <td>[Bug 14805] Mac OS transcoder should return pointer to zero length string (rather than NULL) on receipt of zero length input.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-12-13</td>
-        <td>Khaled Noaman</td>
-        <td>Schema Errata:
-            <br/>1. E1-2
-            <br/>2. E1-10
-            <br/>3. E1-15
-            <br/>4. E1-16
-            <br/>5. E1-20
-            <br/>6. E1-21
-            <br/>7. E1-22
-            <br/>8. E1-23
-            <br/>9. E1-27
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-12-13</td>
-        <td>PeiYong Zhang</td>
-        <td>Schema Errata:
-            <br/>1. E2-9  Base64.
-            <br/>2. E2-12 gMonth.
-            <br/>3. E2-16 maxExclusive.
-            <br/>4. E2-23 seconds part shall have at least one digit after the dot if it appears.
-            <br/>5. E2-24 Duration 'T': allow SchemaDateTimeException be propogated to client.
-            <br/>6. E2-25 language.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-12-13</td>
-        <td>Khaled Noaman</td>
-        <td>Performance: Scanner Reorganization.  Create
-            XMLScannerResolver, WFXMLScanner, IGXMLScanner, DGXMLScanner, and SGXMLScanner.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-12-13</td>
-        <td>Khaled Noaman</td>
-        <td>Performance:
-            <br/>1. [Bug 13695] Performance problem with large text nodes and XMLFormatter.cpp.
-            <br/>2. Make getNextChar/peekNextChar inline.
-            <br/>3. Reduce instruction counts in XMLReader.
-            <br/>4. Do not call XMLString::stringLen in XMLString::indexOf.
-            <br/>5. Use existing QName in XMLElementDecl instead of creating a new one everytime.
-            <br/>6. Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
-            <br/>7. Enable/disable calculation of src offset.
-            <br/>8. No need to use temporary buffer to hold namespace value in SAX2XMLReaderImpl.
-            <br/>9. Eliminate unnecessary condition in compareNString.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-12-13</td>
-        <td>Tinny Ng</td>
-        <td>Performance:
-            <br/>1. DOM: call fParent.fOwnerDocument directly instead of fNode.getOwnerDocument.
-            <br/>2. Check for null string directly isntead of calling XMLString::stringLen.
-            <br/>3. New inline function XMLString::equals that simply returns true or false,
-                    use it instead of XMLString::compareString wherever applicable.
-            <br/>4. XERCES_XMLCH should not be classified as XMLRecognizer::OtherEncodings.
-            <br/>5. Pre uppercase the encodingString before calling encodingForName to avoid calling compareIString.
-            <br/>6. Use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
-            <br/>7. Reduce some instruction counts in XMLUTF8Transcoder.
-            <br/>8. [Bug 13447] Using LocalFileFormatTarget with DOMWriter is very slow.
-            <br/>9. Define fGlobalDeclarations as an array of ValueVectorOf to avoid string comparison.
         </td>
     </tr>
 
