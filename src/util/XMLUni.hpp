@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.13  2000/02/24 20:05:26  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.12  2000/02/22 00:36:37  roddey
  * Added a new 'native XMLCh' transcoder to correctly handle
  * internal entities now that XMLCh isn't always UTF-16.

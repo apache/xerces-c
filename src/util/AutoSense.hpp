@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.9  2000/02/24 20:05:23  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.8  2000/02/22 01:00:10  aruna1
  * GNUGDefs references removed. Now only GCCDefs is used instead
  *

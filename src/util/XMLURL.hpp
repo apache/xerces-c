@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.3  2000/02/24 20:05:26  abagchi
+ * Swat for removing Log from API docs
+ *
  * Revision 1.2  2000/02/06 07:48:06  rahulj
  * Year 2K copyright swat.
  *
