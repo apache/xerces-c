@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2004/12/03 17:00:13  amassari
+ * Avoid throwing an exception when orphaning a cached grammar that has not been used yet
+ *
  * Revision 1.29  2004/09/29 19:27:07  cargilld
  * Fix for Jira-1217: fixing problems with getXSModel.
  *
@@ -439,7 +442,8 @@ Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
         Grammar* grammar = fGrammarPool->orphanGrammar(nameSpaceKey);
         if (grammar)
         {
-            fGrammarFromPool->removeKey(nameSpaceKey);
+            if (fGrammarFromPool->containsKey(nameSpaceKey))
+                fGrammarFromPool->removeKey(nameSpaceKey);
             return grammar;
         }       
         // It failed to remove it from the grammar pool either because it
