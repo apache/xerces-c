@@ -565,7 +565,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 XercesDOMParser parser;
 
 // Specify scanner name
-parser.useScanner(XMLUni::fgWFScanner);
+parser.useScanner(XMLUni::fgWFXMLScanner);
 
 // Specify other parser features, e.g.
 parser.setDoNamespaces(true);
@@ -588,7 +588,7 @@ parser.setDoNamespaces(true);
 SAXParser parser;
 
 // Specify scanner name
-parser.useScanner(XMLUni::fgDGScanner);
+parser.useScanner(XMLUni::fgDGXMLScanner);
 
 // Specify other parser features, e.g.
 parser.setLoadExternalDTD(true);
@@ -610,7 +610,7 @@ parser.setLoadExternalDTD(true);
 SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 
 // Specify scanner name
-parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgSGScanner);
+parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgSGXMLScanner);
 
 // Specify other parser features, e.g.
 parser->setFeature(XMLUni::fgXercesSchemaFullChecking, false);
@@ -631,7 +631,7 @@ parser->setFeature(XMLUni::fgXercesSchemaFullChecking, false);
 DOMBuilder *parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
 // Specify scanner name - This is optional as IGXMLScanner is the default
-parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgIGScanner);
+parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgIGXMLScanner);
 
 // Specify other parser features, e.g.
 parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
