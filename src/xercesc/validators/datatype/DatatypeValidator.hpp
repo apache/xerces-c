@@ -210,8 +210,8 @@ public:
     /**
      * sets this type to be anonymous
      **/
-    void setAnonymous();    
-    
+    void setAnonymous();
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -403,7 +403,7 @@ private:
     //
     //  fTypeName
     //      the uri,name of the type this validator will validate
-    //  
+    //
     //  fTypeLocalName
     //      the name of the type this validator will validate
     //
@@ -424,7 +424,7 @@ private:
     XMLCh*                        fTypeLocalName;
     XMLCh*                        fTypeName;
     XMLCh*                        fTypeUri;
-    bool                          fAnonymous; 
+    bool                          fAnonymous;
 };
 
 
@@ -597,12 +597,12 @@ inline void DatatypeValidator::setTypeName(const XMLCh* const typeName) {
 
     delete [] fTypeName;
     delete [] fTypeLocalName;
+    fTypeLocalName = 0;
     delete [] fTypeUri;
+    fTypeUri = 0;
 
     //REVISIT this is a lot of work, cant we set this earlier when we have the info?
     if( XMLString::indexOf( typeName, chComma ) < 0 ) {
-        fTypeLocalName = XMLString::replicate(typeName);
-        fTypeUri = XMLString::replicate(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         XMLBuffer buf;
         buf.set(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         buf.append(chComma);
@@ -610,14 +610,6 @@ inline void DatatypeValidator::setTypeName(const XMLCh* const typeName) {
         fTypeName = XMLString::replicate(buf.getRawBuffer());
     }
     else {
-        int index = XMLString::indexOf(typeName, chComma);
-        int length = XMLString::stringLen(typeName);
-        XMLCh *uri = new XMLCh[index + 1];
-        XMLCh *tName = new XMLCh[length - index + 1];
-        XMLString::subString(uri, typeName, 0, index);
-        XMLString::subString(tName, typeName, index + 1, length);
-        fTypeLocalName = tName;
-        fTypeUri = uri;
         fTypeName = XMLString::replicate(typeName);
     }
 }
