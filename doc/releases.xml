@@ -3,1649 +3,599 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.4.0: January 31, 2001">
+<s2 title="Xerces-C Version 1.5.0: June 15, 2001">
 
 <table>
     <tr>
-        <td >Date</td>
-        <td >Contributor</td>
-        <td >Description</td>
-    </tr>
-
-    <tr>
-        <td >2001-01-26</td>
-        <td >Walker Curtis</td>
-        <td >Undefined symbol error when building a single threaded version of the xerces lib on irix.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-25</td>
-        <td >Arnaud LeHors</td>
-        <td >Added a flag to turn off error checking in the DOM, this is primarily
-             used while building the DOM from the parser to get better performance.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-25</td>
-        <td >Khaled Noaman</td>
-        <td >Let users add their encoding to the intrinsic mapping table.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-25</td>
-        <td >Khaled Noaman</td>
-        <td >const should be used instead of static const.  And other clean up bug fixes.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-24</td>
-        <td >Arnaud LeHors</td>
-        <td >Fixed replaceChild to handle the case where a node is replaced
-             by itself. Cleaned up insertBefore.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-24</td>
-        <td >Tinny Ng</td>
-        <td >Guard the use of '-ptr${OUTDIR}' in EnumVal/Makefile.in
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-22</td>
-        <td >Curt Arnold.</td>
-        <td >Loads winsock dynamically.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-19</td>
-        <td >Curt Arnold.</td>
-        <td >COM various updates: updated the GUID's so both can coexist,
-             better error reporting and fixed a new minor bugs.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-18</td>
-        <td >Bill Schindler</td>
-        <td >FAQ spell check, fix typos, fix grammar, readability editing, clean up formatting,
-             re-organize so related topics appear together.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-18</td>
-        <td >Bill Schindler</td>
-        <td >Project file updated due to removal of ChildAndParentNode.cpp.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-17</td>
-        <td >Arnaud LeHors</td>
-        <td >DOM Implementation Optimization.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-17</td>
-        <td >Volker Krause</td>
-        <td >ElementImpl::getAttributeNS should check null pointer.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-17</td>
-        <td >Arnaud LeHors</td>
-        <td >Have a single counter global to the document.  Removed node basis change counter.
-        </td>
-    </tr>
-
-    <tr>
-        <td >2001-01-17</td>
-        <td >Arnaud LeHors</td>
-        <td >Removed unused field in NodeImpl that was left over.
+        <td>Date</td>
+        <td>Contributor</td>
+        <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2001-06-15</td>
+        <td>Tinny Ng</td>
+        <td>  Files created:<br/><br/>
+			  RefHash2KeysTableOf<br/>
+		      SchemaAttDef<br/>
+              SchemaAttDefList<br/>
+			  SchemaElementDecl<br/>
+			  RefHash3KeysIdPool<br/>
+              GrammarResolver<br/>
+			  SchemaGrammar<br/>
+			  SchemaValidator<br/>
+			  Grammar<br/>
+			  DTDGrammar<br/>
+			  DTDScanner<br/><br/>
+			  Components updated:<br/><br/>
+			  XMLValidator<br/>
+			  DTDValidator<br/>
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-15</td>
+        <td>Tinny Ng</td>
+        <td> IDOM:<br/><br/>
+             Complete the Range, 
+			 TreeWalker, NodeIterator, 
+			 and DeepNodeList.<br/>
+			 Add samples IDOMPrint, 
+			 and IDOMCount.<br/>
+			 Add test cases 
+			 IRangeTest and ITraversal.<br/>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-15</td>
+        <td>Khaled Noaman</td>
+        <td> Files created:<br/><br/>
+             ASCIIRangeFactory<br/>
+             BlockRangeFactory<br/>
+             BMPattern<br/>
+             CharToken<br/>
+             ClosureToken<br/>
+             ConcatToken<br/>
+             ConditionToken<br/>
+             Match<br/>
+             ModifierToken<br/>
+             Op<br/>
+             OpFactory<br/>
+             ParserForXMLSchema<br/>
+             ParenToken<br/>
+             RangeFactory<br/>
+             RangeToken<br/>
+             RangeTokenMap<br/>
+             RegularExpression<br/>
+             RegxDefs<br/>
+             RegxParser<br/>
+             RegxUtil<br/>
+             StringToken<br/>
+             Token<br/>
+             TokenFactory<br/>
+             TokenInc<br/>
+             UniCharTable<br/>
+             UnicodeRangeFactory<br/>
+             UnionToken<br/>
+             XMLRangeFactory<br/>
+             XMLUniCharacter<br/>
+             DatatypeValidator<br/>
+			 DatatypeValidatorFactory<br/>
+			 SchemaSymbols<br/>
+			 StringTokenizer<br/>
+			 ComplexTypeInfo<br/>
+			 NamespaceScope<br/>
+			 TraverseSchema<br/>
+			 SchemaInfo<br/>
+			 GeneralAttributeCheck<br/>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-15</td>
+        <td>PeiYong Zhang</td>
+        <td>  Files created:<br/><br/>
+		      NumberFormatException<br/>
+		      ParseException<br/>
+			  InvalidDatatypeFacetException<br/>
+			  InvalidDatatypeValueException<br/>
+		      CMAny<br/>
+			  QName<br/>
+		      ContentLeafNameTypeVector<br/>
+              XUtil<br/>
+		      Base64<br/>
+		      HexBin<br/>
+			  XMLBigInteger<br/>
+			  XMLBigDecimal<br/>
+			  Base64DatatypeValidator<br/>
+			  BooleanDatatypeValidator<br/>
+			  DecimalDatatypeValidator<br/>
+			  HexBinDatatypeValidator<br/>
+			  StringDatatypeValidator<br/>
+              SubsitutionGroupComparator<br/><br/>
+			  Components updated:<br/><br/>
+			  SimpleContentModel<br/>
+			  MixedContentModel<br/>
+			  DFAContentModel<br/>
         </td>
     </tr>
 
     <tr>
-        <td >2001-01-17</td>
-        <td >Tinny Ng</td>
-        <td >Access violations and stack overflows in insertBefore.
+        <td>2001-06-7</td>
+        <td>Tinny Ng</td>
+        <td>/src/idom/IDStringPool.cpp<br/>
+		    some compiler (solaris cc/hp acc)
+			requires memory to align, 
+			otherwise core dump.
         </td>
     </tr>
 
     <tr>
-        <td >2001-01-15</td>
-        <td >David Bertoni</td>
-        <td >Performance Patches.
+        <td>2001-06-6</td>
+        <td>Peter A. Volchek</td>
+        <td>/Platforms/Win32/Win32PlatformUtils.cpp<br/>
+		    Include stdlib.h
         </td>
     </tr>
 
     <tr>
-        <td >2001-01-12</td>
-        <td >Tinny Ng</td>
-        <td >Fix style-ibm.zip for documentation generation.
+        <td>2001-06-6</td>
+        <td>James Berry</td>
+        <td>Update Mac OS ProjectBuilder projects,<br/>
+		    Fix invalid file references in project,<br/>
+			Touch up Solaris build; a previous change 
+			to configure was lost since it hadn't been 
+			incorporated into configure.in.<br/>
+			/src/util XMLString.cpp<br/>
+			Clean up compiler warning.<br/>
+			/src/util/regx RegxParser.cpp<br/>
+			Fix two improper NULL tests.
         </td>
     </tr>
 
     <tr>
-        <td >2001-01-12</td>
-        <td >Tinny Ng</td>
-        <td >Remove the two obsolete file: stylesheets\Copy of book2project.xsl and
-             stylesheets\Copy of document2html.xsl in style-apachexml.jar
+        <td>2001-06-5</td>
+        <td>James Berry</td>
+        <td>DOMPrint:<br/>
+		    Add support for Mac OS X command 
+			line configuration and build.<br/>
+            Small tweak to DOMPrint to start 
+			to illustrate getErrorCount API.<br/>
+			Add support for Mac OS X command 
+			line configuration and build.
         </td>
     </tr>
 
     <tr>
-        <td >2001-01-12</td>
-        <td >Tinny Ng</td>
-        <td >Documentation Enhancement: explain values of Val_Scheme.
+        <td>2001-06-5</td>
+        <td>Peter A. Volchek</td>
+        <td>Add 'const' to getGrammar.
         </td>
     </tr>
 
     <tr>
-        <td >2001-01-12</td>
-        <td >Tinny Ng</td>
-        <td >Documentation Enhancement: Add list of SAX2 feature strings that are supported.
-        </td>
-    </tr>
+        <td>2001-06-4</td>
+        <td>James Berry</td>
+        <td>/src/framework/XMLValidator.cpp:<br/>
+		    Increment scanner error count from 
+			schema validator, not just in scanner itself.<br/>
+			/src/sax2/SAX2XMLReader.hpp:<br/>
+			Add pure virtual getErrorCount 
+			to SAX2XMLReader interface.<br/>
+			/src/parsers/SAX2XMLReaderImpl.hpp:<br/>
+			getErrorCount is virtual in this 
+			class reflecting derivation 
+			from SAX2XMLReader.<br/>
+			/src/internal/XMLScanner:<br/>
+			Add method incrementErrorCount
+			for use by validator. Make sure 
+			to reset error count in _both_ 
+			the scanReset methods.
 
-    <tr>
-        <td >2001-01-04</td>
-        <td >Khaled Noaman</td>
-        <td >Assertion `size > 0' failure when cloning a node if the last attributes
-             has been removed.
         </td>
     </tr>
 
     <tr>
-        <td >2000-12-28</td>
-        <td >James Berry</td>
-        <td >Omit include carbon.h in favor of specific include files.
+        <td>2001-06-4</td>
+        <td>PeiYong Zhang</td>
+        <td>/src/internal/XMLScanner.cpp<br/>
+		    /src/validators/DTD/DTDScanner.cpp<br/>
+			The start tag "&#60;?xml" could be 
+			followed by (#x20 | #x9 | #xD | #xA)+.
         </td>
     </tr>
 
     <tr>
-        <td >2000-12-28</td>
-        <td >James Berry</td>
-        <td >Add or modify cvs header in various files.
+        <td>2001-06-4</td>
+        <td>James Berry</td>
+        <td>Add support for tracking error 
+		    count during parse; enables 
+			simple parse without 
+			requiring error handler.
         </td>
     </tr>
 
     <tr>
-        <td >2000-12-28</td>
-        <td >James Berry</td>
-        <td >Eliminate compiler warning in RangeImpl.cpp.
+        <td>2001-06-1</td>
+        <td>Tinny Ng</td>
+        <td>/scripts/packageSources.pl<br/>
+		    Keep the BCB4 project files 
+			in the source package.
         </td>
     </tr>
 
     <tr>
-        <td >2000-12-28</td>
-        <td >James Berry</td>
-        <td >Replace include of Carbon.h with specific include files.
+        <td>2001-05-31</td>
+        <td>Tinny Ng</td>
+        <td>/scripts/packageBinaries.pl<br/>
+            Fix the name of ICU dll.
         </td>
     </tr>
 
     <tr>
-        <td >2000-12-28</td>
-        <td >James Berry</td>
-        <td >Move away from include of Carbon.h; include only needed files instead.
-             Fix bug in parsing of upwardly relative paths under classic (thanks to Lawrence You).
+        <td>2001-05-22</td>
+        <td>James Berry</td>
+        <td> Check for existance of MacOS 
+		     Unicode Converter routines 
+			 prior to instanciating our 
+			 transcoder object; 
+			 Xerces will thus panic, rather 
+			 than crash, if they don't 
+			 exist.
+			 Add support to check for 
+			 existance of MacOS Unicode 
+			 Converter to avoid 
+			 calling through NULL pointer
         </td>
     </tr>
 
     <tr>
-        <td >2000-12-22</td>
-        <td >Tinny Ng</td>
-        <td >XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as
-             an empty string; in fact XMLUni::fgZeroLenString should be used instead.
-        </td>
+        <td>2001-05-16</td>
+        <td>Henry Zongaro</td>
+        <td>IDOM: Add namespace support</td>
     </tr>
 
     <tr>
-        <td >2000-12-22</td>
-        <td >Tinny Ng</td>
-        <td >Add the new header LexicalHandler.hpp to Makefile.in.
-        </td>
+        <td>2001-05-11</td>
+        <td>Arnaud LeHors</td>
+        <td>ThreadTest.cpp: 
+		     tiny bug fixed</td>
     </tr>
 
     <tr>
-        <td >2000-12-22</td>
-        <td >Murray Cumming</td>
-        <td >removes '-instances=static' from the Linux link sections.
-        </td>
+        <td>2001-05-11</td>
+        <td>Tinny Ng</td>
+        <td>LinuxPlatformUtils.cpp: 
+		     Need to add header 
+			 "linux/limits"
+			 for definition of 
+			 PATH_MAX</td>
     </tr>
 
     <tr>
-        <td >2000-12-22</td>
-        <td >David Bertoni</td>
-        <td >SAX2-ext's LexicalHandler support.
-        </td>
+        <td>2001-05-10</td>
+        <td>Christian Schuhegger</td>
+        <td>built-in buffer limit could be 
+		    smaller than system limit,
+            use PATH_MAX instead</td>
     </tr>
 
     <tr>
-        <td >2000-12-14</td>
-        <td >Tinny Ng</td>
-        <td >Better instruction for using packageBinaries.pl.  Use symbol XercesCInstallDir
-             and XercesCSrcInstallDir instead of hardcoding the Xerces version number in the file.
-        </td>
+        <td>2001-05-10</td>
+        <td>Arnaud LeHors</td>
+        <td>AttrNSImpl.cpp: fixed typo in 
+		    constructor</td>
     </tr>
 
     <tr>
-        <td >2000-12-14</td>
-        <td >Tinny Ng</td>
-        <td >Fix API document generation warning: "Warning: end of member group without matching begin".
-        </td>
+        <td>2001-05-09</td>
+        <td>Curt Arnold</td>
+        <td>DOMParser.cpp: The public id was 
+		    set twice and the system id was 
+			not set on Notations</td>
     </tr>
 
     <tr>
-        <td >2000-12-14</td>
-        <td >Tinny Ng</td>
-        <td >Add RangeTest as part of the xerces-all MSVC++ workspace.
-        </td>
+        <td>2001-05-4</td>
+        <td>Tinny Ng</td>
+        <td>DOMPrint: Check error before 
+		    continuing</td>
     </tr>
 
     <tr>
-        <td >2000-12-12</td>
-        <td >Gareth Reakes</td>
-        <td >null pointer bug.
-        </td>
+        <td>2001-05-3</td>
+        <td>Tinny Ng</td>
+        <td>ICU 1.8 update</td>
     </tr>
 
     <tr>
-        <td >2000-12-08</td>
-        <td >Tinny Ng</td>
-        <td >Entity Reference cleanup dumping core if the last entity reference is deleted.
-        </td>
+        <td>2001-05-3</td>
+        <td>Khaled Noaman</td>
+        <td>Added new option to the parsers 
+		    so that the NEL (0x85) char can 
+			be treated as a newline character
+			</td>
     </tr>
 
     <tr>
-        <td >2000-12-06</td>
-        <td >Tinny Ng</td>
-        <td >fix the link to FAQ.
-        </td>
+        <td>2001-05-3</td>
+        <td>Tinny Ng</td>
+        <td>samples update with schema</td>
     </tr>
 
     <tr>
-        <td >2000-12-06</td>
-        <td >Tinny Ng</td>
-        <td >further fixes to Range, and update RangeTest.cpp with more test coverage.
-        </td>
+        <td>2001-04-23</td>
+        <td>Erik Rydgren</td>
+        <td>DTDScanner: Reuse grammar should 
+		    allow users to use any stored 
+			element decl as root</td>
     </tr>
 
     <tr>
-        <td >2000-11-30</td>
-        <td >Bill Schindler</td>
-        <td >Spell check, fix typos, fix grammar, readability editing, clean up formatting.
-        </td>
+        <td>2001-04-19</td>
+        <td>William L Hopper</td>
+        <td>Win32PlatformUtils: 
+		    InterlockedCompareExchange on 
+		    different Windows</td>
     </tr>
 
     <tr>
-        <td >2000-11-30</td>
-        <td >Bill Schindler</td>
-        <td >Remove dead code (old StdOut and StdErr functions); minor clean-up.
-        </td>
+        <td>2001-04-19</td>
+        <td>William L Hopper</td>
+        <td>BCB project changes</td>
     </tr>
 
     <tr>
-        <td >2000-11-30</td>
-        <td >Tinny Ng</td>
-        <td >patch to fix a number of Range problems.  See mail of 11/21/2000.
-        </td>
+        <td>2001-04-16</td>
+        <td>James Berry</td>
+        <td>MacOSUnicodeConverter: Fix include 
+		    path,
+		    Updates to reflect changes for 
+			Mac OS X final and
+			Update MacOS projects for Mac OS X 
+			final ProjectBuilder</td>
     </tr>
 
     <tr>
-        <td >2000-11-30</td>
-        <td >Tinny Ng</td>
-        <td >DOM_Text::splitText(), fix off by one error in the test for index too big error.
-        </td>
+        <td>2001-04-11</td>
+        <td>Arnaud LeHors</td>
+        <td>AttrImpl: allow value to be set to 
+		    null</td>
     </tr>
 
     <tr>
-        <td >2000-11-30</td>
-        <td >Tinny Ng</td>
-        <td >reuseValidator - fix bugs (spurious errors) that occured on reuse due to
-             pools already containing some items.
-        </td>
+        <td>2001-04-11</td>
+        <td>Tinny Ng</td>
+        <td>DOMParser: Attribute default values 
+		    not printed in document 
+		    type internal subset interface</td>
     </tr>
 
     <tr>
-        <td >2000-11-08</td>
-        <td >Andrei Smirnov</td>
-        <td >Build updates for Solaris 2.8 64 bit.
-        </td>
+        <td>2001-04-10</td>
+        <td>Tinny Ng</td>
+        <td>createdocs.bat: fix PDF generation</td>
     </tr>
 
     <tr>
-        <td >2000/11/07</td>
-        <td >Tinny Ng</td>
-        <td >Bug fix for DTD entity reference problem reported by Tony Wuebben on 10/25.
-        </td>
+        <td>2001-04-04</td>
+        <td>Alberto Massari</td>
+        <td>DTDElementDecl: Error checking for 
+		    null content spec</td>
     </tr>
 
     <tr>
-        <td >2000-11-07</td>
-        <td >Tinny Ng</td>
-        <td >config.guess and config.sub updated to newer versions.
-        </td>
+        <td>2001-04-02</td>
+        <td>Andy Heninger</td>
+        <td>IDOM: imported</td>
     </tr>
 
     <tr>
-        <td >2000-11-07</td>
-        <td >Pieter Van-Dyck</td>
-        <td >Change InterlockedCompareExchange for compatibility with Borland BCB5
-        </td>
+        <td>2001-04-02</td>
+        <td>Andy Heninger</td>
+        <td>IThreadTest: imported</td>
     </tr>
 
     <tr>
-        <td >2000-11-07</td>
-        <td >Pieter Van-Dyck</td>
-        <td >Fix incorrect version number in gXercesMinVersion.
-        </td>
+        <td>2001-03-27</td>
+        <td>Roman Sulzhyk</td>
+        <td>/src/Makefile.in: Explicit Makefile 
+		    dependency for 'lib' build</td>
     </tr>
 
     <tr>
-        <td >2000-11-01</td>
-        <td >Tinny Ng</td>
-        <td >SAX bug fix:  Attribute lists were throwing exceptions rather than returning
-             null when an attribute could not be found by name.
-        </td>
+        <td>2001-03-26</td>
+        <td>PeiYong Zhang</td>
+        <td>When Standalone="yes", it is NOT 
+		    supposed to accept element
+            which is defined in external DTD 
+			with #FIXED attribute</td>
     </tr>
 
-   <tr>
-        <td >2000-11-01</td>
-        <td >Tinny Ng</td>
-        <td >Scanner bug fix:  with progessive parsing, namesapce and validation
-             options were not being set correctly.  Symptoms included failure to detect
-             ignorable white space.
-        </td>
-    </tr>
-
     <tr>
-        <td >2000-10-31</td>
-        <td >Tinny Ng</td>
-        <td >DOM NodeIterator bug fix: iterators would sometimes continue beyond their
-             starting (root) node.
-        </td>
+        <td>2001-03-26</td>
+        <td>Andy Heninger</td>
+        <td>Update packageBinaries.pl for 
+		    ICU 1.8. ICU debug .lib file 
+			names and locations changed</td>
     </tr>
 
     <tr>
-        <td >2000-10-20</td>
-        <td >Andy Heninger</td>
-        <td >DOMParser bug fix - erroneous attempt to look up name space URIs
-             while scanning default attribute values in DTD removed.  Was a
-             crashing bug when namespaces were enabled.
-        </td>
+        <td>2001-03-23</td>
+        <td>Jeff Harrell</td>
+        <td>/src/util/AutoSense.hpp: AutoSense 
+		    looks for "IRIX" when it should 
+			look for "sgi" or "__sgi".</td>
     </tr>
 
     <tr>
-        <td >2000-10-20</td>
-        <td >Andy Heninger</td>
-        <td >DOM NodeFilter - define values for FilterAction enum to match those in the
-             DOM spec.
-        </td>
+        <td>2001-03-22</td>
+        <td>Roman Sulzhyk</td>
+        <td>/src/Makefile.incl: The Makefiles 
+		    fail to locate .cpp -> .o 
+		    dependency and rebuild .o all 
+			the time</td>
     </tr>
 
     <tr>
-        <td >2000-10-19</td>
-        <td >Andy Heninger</td>
-        <td >SAXCount sample, allow multiple files on command line.  DOMCount sample, rename
-             error handler class to say that it is an error handler.
-        </td>
+        <td>2001-03-22</td>
+        <td>John Rope</td>
+        <td>/src/util/XMLURL.cpp: Accessing an 
+		    XML file using the file 
+		    "protocol" and a UNC path fails 
+			to open the file</td>
     </tr>
 
     <tr>
-        <td >2000-10-18</td>
-        <td >James Berry</td>
-        <td >MacOS project file updates.  Small code optimization.  Add comments to clarify and
-             to reflect new fixed XMLCh size.
-        </td>
+        <td>2001-03-09</td>
+        <td>Tinny Ng</td>
+        <td>IconvTransService.cpp and 
+		    Iconv390TransService.cpp: Seg fault 
+		    when trying to parse empty filename</td>
     </tr>
 
     <tr>
-        <td >2000-10-17</td>
-        <td >Andy Heninger</td>
-        <td >Bug Fix - problems with multi-byte characters on input buffer boundaries.
-        </td>
-    </tr>
-
-   <tr>
-        <td >2000-10-17</td>
-        <td >Andy Heninger</td>
-        <td >DOMPRintFormatTarget, bad override of writeChars fixed (missing const).
-             XMLFormatTarget, removed version of writeChars with no length.  Can not be
-             safely used, and obscured other errors.
-        </td>
+        <td>2001-03-06</td>
+        <td>Tinny Ng</td>
+        <td>/src/internal/XMLScanner.cpp: 
+		    Infinite loop caused by malformed 
+			XML. Happen when namespace is on.</td>
     </tr>
 
     <tr>
-        <td >2000-10-16</td>
-        <td >Andy Heninger</td>
-        <td >Change XMLCh back to unsigned short on all platforms
-        </td>
+        <td>2001-03-02</td>
+        <td>Martin Kalen</td>
+        <td>Enabling libWWW NetAccessor support 
+		    under UNIX. Tested with latest 
+			tarball of libWWW (w3c-libwww-5.3.2) 
+			under RedHat Linux 6.1.</td>
     </tr>
 
     <tr>
-        <td >2000-10-13</td>
-        <td >Devin Barnhart</td>
-        <td >COM: interpret BSTR as UTF-16 in documents
-        </td>
+        <td>2001-02-27</td>
+        <td>Tinny Ng</td>
+        <td>/src/Makefile.incl: Linux for S/390 
+		    build requires -fPIC</td>
     </tr>
 
     <tr>
-        <td >2000-10-13</td>
-        <td >Edward Bortner</td>
-        <td >Solaris: change detection for native support for type bool to defined(_BOOL).
-        </td>
+        <td>2001-02-22</td>
+        <td>Tinny Ng</td>
+        <td>StdInParse doesn't output filename 
+		    or duration</td>
     </tr>
 
     <tr>
-        <td >2000-10-13</td>
-        <td >Nadav Aharoni</td>
-        <td >MXLString::trim() bug fix: failure to null terminate result.
-        </td>
-    </tr>
-
-     <tr>
-        <td >2000-10-10</td>
-        <td >Bill Schindler</td>
-        <td >XMLFormatter:  Fix problems with output to multi-byte encodings.
-        </td>
+        <td>2001-02-21</td>
+        <td>Matt Lovett</td>
+        <td>ICUTranscoder::transcodeFrom() 
+		    expects ICU function ucnv_toUnicode 
+		    to return an extra element in 
+			fSrcOffsets to allow us to figure 
+			out the last char size, which in fact 
+			it is not.  The fix is to compute 
+			the last char size ourselves using 
+			the total bytes used.</td>
     </tr>
 
-     <tr>
-        <td >2000-10-10</td>
-        <td >Andy Heninger</td>
-        <td >From Janitor, remove the addition that is having compile problems in MSVC.
-        </td>
-    </tr>
-
-      <tr>
-        <td >2000-10-10</td>
-        <td >James Berry</td>
-        <td >Fix a bug in returned length of transcoded string.
-             Add a few comments.
-        </td>
-    </tr>
-
     <tr>
-        <td >2000-10-09</td>
-        <td >James Berry</td>
-        <td >ProjectBuilder project to build Xerces.
-        </td>
-    </tr>
-
-   <tr>
-        <td >2000-10-09</td>
-        <td >James Berry</td>
-        <td >  Numerous Changes:
-              - Increase environmental sensitivity with hope of supporting pre OS 9
-                OS versions.
-              - Enhanced path creation/interpretation to support proper unix style
-                paths under Mac OS X instead of the volume rooted paths we previously
-                used. Paths under Classic remain the same.
-              - Better timer resolution.
-              - Detect functionality via unresolved symbols rather than Gestalt
-                where possible.
-              - Softly back away from URLAccess...if it's not installed, we just
-                don't support a net accessor.
-              - Additional support for XMLCh/UniChar size differences under
-                GCC on Mac OS X.
-                  - Fix Mac OS X support. GCC in this environment sets wchar_t to a 32 bit
-                    value which requires an additional transcoding stage (bleh...)
-                  - Improve sensitivity to environment in order to support a broader
-                    range of system versions.
-                  - Fix a few compiler sensitivities.
-              - Carbon.h header support
-        </td>
+        <td>2001-02-16</td>
+        <td>Andy Heninger</td>
+        <td>/src/util/XMLString.cpp: change 
+		    limit test to reduce spurious 
+			pointer assignment warnings from 
+			BoundsChecker.
+  </td>
     </tr>
 
     <tr>
-        <td >2000-10-09</td>
-        <td >James Berry</td>
-        <td >Add some auto_ptr functionality to allow modification of monitored
-             pointer value. This eases use of Janitor in some situations.
-        </td>
+        <td>2001-02-14</td>
+        <td>Bob Kline</td>
+        <td>Better FAQ for the checksum error.</td>
     </tr>
 
     <tr>
-        <td >2000-10-09</td>
-        <td >James Berry</td>
-        <td >Autosense.hpp: modify sensing of Mac OS X.
-        </td>
+        <td>2001-02-14</td>
+        <td>Mark Everline</td>
+        <td>/src/internal/XMLReader.cpp: Core 
+		    dump when UTF-16 encoding 
+			Contradicts actual encoding</td>
     </tr>
 
     <tr>
-        <td >2000-09-28</td>
-        <td >Andy Heninger</td>
-        <td >DOM_Document::putIdentifier() removed.  There never was an implementation
-             for this function.
-        </td>
+        <td>2001-02-13</td>
+        <td>Hiram Clawson</td>
+        <td>Update samples/tests files for on 
+		    UnixWare 7.1.1 with gcc 2.95. Add 
+			UNIXWARE platform defines to 
+			Makefile.incl, add recognition of 
+			sysv5uw7 to configure.in, and add 
+			unixware as recognized 
+			platform to runConfigure</td>
     </tr>
 
     <tr>
-        <td >2000-09-28</td>
-        <td >Curt Arnold</td>
-        <td >COM wrappers updated.
-        </td>
+        <td>2001-02-09</td>
+        <td>Martin Kalen</td>
+        <td>Update support for SCO UnixWare 7 
+		    (gcc). Tested under UnixWare 7.1.1 
+			with gcc version 2.95.2 19991024 
+           (release) with gmake 3.79.1.</td>
     </tr>
 
     <tr>
-        <td >2000-09-28</td>
-        <td >Linda Swan</td>
-        <td >AS400 related changes.
-        </td>
-    </tr>
-
-   <tr>
-        <td >2000-09-28</td>
-        <td >Andy Heninger</td>
-        <td >DOM_Document - remove the un-implemented function putIdentifier()
-             from the header.
-        </td>
+        <td>2001-02-08</td>
+        <td>Martin Kalen</td>
+        <td>enable COMPAQ Tru64 UNIX machines to 
+		    build xerces-c with gcc (tested using 
+			COMPAQ gcc version2.95.2 
+			19991024 (release) and Tru64 V5.0 
+			1094)</td>
     </tr>
 
     <tr>
-        <td >2000-09-28</td>
-        <td >Andy Heninger</td>
-        <td >DOMParser MemoryLeak fixed.  Occured when a document redefined the
-              a builtin entity, e.g. &lt;.
-        </td>
+        <td>2001-02-07</td>
+        <td>Bill Schindler</td>
+        <td>Rearranged statements in Initialize() 
+		    so that platformInit() is called 
+			before an XMLMutex is created.</td>
     </tr>
 
     <tr>
-        <td >2000-09-28</td>
-        <td >Andy Heninger</td>
-        <td >DOMPrint sample: add deletes before exit so boundschecker runs cleanly.
-        </td>
+        <td>2001-02-07</td>
+        <td>Richard Ko</td>
+        <td>/Transcoders/ICU/ICUTransService.cpp: 
+		    Storage overlay in 
+			ucnv_setFromUCallBack.</td>
     </tr>
 
-
     <tr>
-        <td >2000-09-22</td>
-        <td >James Berry</td>
-        <td >  Change file access permissions to fsRdPerm. Since we never write, there's
-              no reason to request write access. Thanks to John Mostrom @ Adobe.
-              Also nuke a few spaces and the entire defunct support for reading
-              directly from MacOS resources.
-        </td>
+        <td>2001-02-05</td>
+        <td>Tinny Ng</td>
+        <td>/src/util/Compilers/CSetDefs.hpp: 
+		    define NO_NATIVE_BOOL macro only 
+			if not pre-defined/reserved</td>
     </tr>
 
     <tr>
-        <td >2000-09-22</td>
-        <td >Arundhari Bhowmick</td>
-        <td >DOM Parser:  internal subset entity printing update.
-        </td>
+        <td>2001-02-05</td>
+        <td>Jordan Naftolin</td>
+        <td>createPDF.jar and apachPDFStyle.xsl 
+		    to convert documentation xml files 
+			to pdf format</td>
     </tr>
-
 
 </table>
 </s2>
 
-<s2 title="Xerces-C Version 1.3.0: Sept 21, 2000">
+<s2 title="Release Archive">
 
-<table >
-    <tr>
-        <td >Date</td>
-        <td >Contributor</td>
-        <td >Description</td>
-    </tr>
-    <tr>
-        <td >2000-09-21</td>
-        <td >Torbjörn Bäckström</td>
-        <td >HPUX - Incorrect use of Array Janitor in Platform Utils removed.</td>
-    </tr>
-    <tr>
-        <td >2000-09-21</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOMPrint - DTD internal subset, printing of attribute value enumerations was broken.</td>
-    </tr>
-    <tr>
-        <td >2000/09/19</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOMPrint - output entity reference nodes as XML entity references, instead of just printing their children.</td>
-    </tr>
-    <tr>
-        <td >2000-09-19</td>
-        <td >Bill Schindler</td>
-        <td >OS/2 - port update</td>
-    </tr>
-    <tr>
-        <td >2000-09-18</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOM EntityReferences, fixed bugs with length() and hasChildNodes() methods.</td>
-    </tr>
-    <tr>
-        <td >2000-09-12</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOM: changed name of expandEntityReferences option to createEntityReferenceNodes.  More accurately describes what
-            it does.  Fixed bugs that caused creation of Entity Reference nodes to fail.</td>
-    </tr>
-    <tr>
-        <td >2000-09-12</td>
-        <td >IBM</td>
-        <td >AS400 - transcoder updates.</td>
-    </tr>
-    <tr>
-        <td >2000-09-11</td>
-        <td >Shengkai Qu</td>
-        <td >OS390 - makefile updates</td>
-    </tr>
-    <tr>
-        <td >2000-09-11</td>
-        <td >Kirk Wylie</td>
-        <td >Alpha processor support update in config.sub.</td>
-    </tr>
-    <tr>
-        <td >2000-09-08</td>
-        <td >Kirk Wylie</td>
-        <td >Reordered member variables in ThrowEOEJanitor.  </td>
-    </tr>
-    <tr>
-        <td >2000-09-08</td>
-        <td >Arnaud LeHors</td>
-        <td >DOM NamedNodeMap - because in many cases we may have to deal with both nodes with a namespace and nodes without
-            any, NS methods through findNamePoint must handle both types of nodes.</td>
-    </tr>
-    <tr>
-        <td >2000-09-08</td>
-        <td >Kirk Wylie</td>
-        <td >Some destructors not virtual that should have been; some members of DOM_Entity virtual that should not have been.</td>
-    </tr>
-    <tr>
-        <td >2000-09-08</td>
-        <td >Andy Heninger</td>
-        <td >Removed incorrect detection of nested CDATA sections.  Problem reported by Johannes Lipp.</td>
-    </tr>
-    <tr>
-        <td >2000-09-08</td>
-        <td >Andy Heninger</td>
-        <td >DOMPrint incorrectly handled DOCTYPE declarations containing both a public and system id.  Problem reported by
-            Jesse Pelton.</td>
-    </tr>
-    <tr>
-        <td >2000-09-08</td>
-        <td >Radovan Chytracek</td>
-        <td >MSVC:  RangeTest project settings incorrect, build failed.</td>
-    </tr>
-    <tr>
-        <td >2000-09-07</td>
-        <td >Bob Kline</td>
-        <td >XMLReader::skippedString(),  failed under certain rare circumstances.</td>
-    </tr>
-    <tr>
-        <td >2000-09-07</td>
-        <td >Andy Heninger</td>
-        <td >Fix SAXException assignment operator.  Now non-virtual, and SAXParseException subclass invokes base class operator.</td>
-    </tr>
-    <tr>
-        <td >2000-09-06</td>
-        <td >William L. Hopper</td>
-        <td >Borland  updates.  It had fallen way behind.</td>
-    </tr>
-    <tr>
-        <td >2000-09-06</td>
-        <td >Andy Heninger</td>
-        <td >HPUX 11, packageBinaries build script, DCEThreads no longer default</td>
-    </tr>
-    <tr>
-        <td >2000-09-06</td>
-        <td >James Berry</td>
-        <td >Macintosh:  Add support for new compile time options defined in prefix file.  These control the selection of the
-            msgloader, transcoder, and netaccessor.  Add a tiny bit of robustness to the nasty panic method..</td>
-    </tr>
-    <tr>
-        <td >2000-09-06</td>
-        <td >Shengkai Qu</td>
-        <td >S390: socket related changes</td>
-    </tr>
-    <tr>
-        <td >2000-09-06</td>
-        <td >James Berry</td>
-        <td >Macintosh: Allow ShortenFiles to work even when destination directory already exists.</td>
-    </tr>
-    <tr>
-        <td >2000-09-06</td>
-        <td >Arundhati Bhowmick</td>
-        <td >HP compile options modified for ICU compatibility</td>
-    </tr>
-    <tr>
-        <td >2000-09-05</td>
-        <td >Michael Crawford</td>
-        <td >Macintosh: Fix atomic increment &amp; decrement to return value after operation rather than before.</td>
-    </tr>
-    <tr>
-        <td >2000-09-05</td>
-        <td >Andy Heninger</td>
-        <td >Cleaned up various compiler warnings.</td>
-    </tr>
-    <tr>
-        <td >2000-09-05</td>
-        <td >Andy Heninger</td>
-        <td >SAX parser: added advanced callback support for XMLDecl</td>
-    </tr>
-    <tr>
-        <td >2000-09-01</td>
-        <td >Andy Heninger</td>
-        <td >Fix ICU transcoding service, crashing bug on Linux, Solaris</td>
-    </tr>
-    <tr>
-        <td >2000-08-30</td>
-        <td >Andy Heninger</td>
-        <td >Builds - clean up a number of compiler warnings.</td>
-    </tr>
-    <tr>
-        <td >2000-08-24</td>
-        <td >Andy Heninger</td>
-        <td >DOMPrint - fixed crash when input xml file was not found.</td>
-    </tr>
-    <tr>
-        <td >2000-08-23</td>
-        <td >Andy Heninger</td>
-        <td >Build Script updates and cleanups</td>
-    </tr>
-    <tr>
-        <td >2000-08-18</td>
-        <td >Andy Heninger</td>
-        <td >Version number bumped to 1.3 in preparation for the upcoming xerces 1.3 / xml4c 3.3 release</td>
-    </tr>
-    <tr>
-        <td >2000-08-17</td>
-        <td >Arnaud Lehors</td>
-        <td >DOM: Rewrote code updating the linked list on node addition and  removal. I believe it is now easier to read and
-            it uses fewer tests so it is also a little faster.</td>
-    </tr>
-    <tr>
-        <td >2000-08-17</td>
-        <td >Arnaud Lehors</td>
-        <td >DOM: small cleanup: renamed a set of [] boolean flag methods.   yes, I know, I also wish I got them right
-            in the first place...</td>
-    </tr>
-    <tr>
-        <td >2000-08-17</td>
-        <td >Sumit Chawla</td>
-        <td >PTX port updates</td>
-    </tr>
-    <tr>
-        <td >2000-08-16</td>
-        <td >Andy Heninger</td>
-        <td >Fixed crash when XML text content has very long lines. Bug pointed out by Simon Fell.</td>
-    </tr>
-    <tr>
-        <td >2000-08-14</td>
-        <td >Joe Polastre</td>
-        <td >SAX2 DefaultHandler, inconsistency in const parameters fixed.</td>
-    </tr>
-    <tr>
-        <td >2000-08-11</td>
-        <td >Arundhati Bhowmick</td>
-        <td >ICU Transcoding - updates to support ICU 1.6</td>
-    </tr>
-    <tr>
-        <td >2000-08-09</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOM Range:  Add const to API where appropriate.</td>
-    </tr>
-    <tr>
-        <td >2000-08-09</td>
-        <td >Joe Polastre</td>
-        <td >Many conformance and stability changes:<br/>
-               - ContentHandler::resetDocument() removed<br/>
-                - attrs param of ContentHandler::startDocument() made const<br/>
-                - SAXExceptions thrown now have msgs<br/>
-                - removed duplicate function signatures that had 'const'<br/>
-                    [ eg: getContentHander() ]<br/>
-                - changed getFeature and getProperty to apply to const objs<br/>
-                - setProperty now takes a void* instead of const void*<br/>
-                - SAX2XMLReaderImpl does not inherit from SAXParser anymore<br/>
-                - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented<br/>
-                - Features &amp; Properties now read-only during parse</td>
-    </tr>
-    <tr>
-        <td >2000-08-09</td>
-        <td >Joe Polastre</td>
-        <td >Namespaces bug - bogus default namespace removed.</td>
-    </tr>
-    <tr>
-        <td >2000-08-09</td>
-        <td >Joe Polastre</td>
-        <td >SAXException enhanced, messages added.</td>
-    </tr>
-    <tr>
-        <td >2000-08-08</td>
-        <td >Joe Polastre</td>
-        <td >SAX2Count - new sample program for SAX2.</td>
-    </tr>
-    <tr>
-        <td >2000-08-07</td>
-        <td >Arundhati Bhowmick</td>
-        <td >Remove detach() method from TreeWalker. </td>
-    </tr>
-    <tr>
-        <td >2000-08-03</td>
-        <td >James Berry</td>
-        <td >Add Mac Codewarrior projects.</td>
-    </tr>
-    <tr>
-        <td >2000-08-01</td>
-        <td >Joe Polastre</td>
-        <td >SAX2 support added</td>
-    </tr>
-    <tr>
-        <td >2000-08-01</td>
-        <td >Gary Gale</td>
-        <td >Compaq Tru64 port added.</td>
-    </tr>
-    <tr>
-        <td >2000-07-31</td>
-        <td >Joe Polastre</td>
-        <td >bug fix in removeAll() to zero out all the pointers.</td>
-    </tr>
-    <tr>
-        <td >2000-07-31</td>
-        <td >Andy Heninger</td>
-        <td >utf-8 byte order mark recognition</td>
-    </tr>
-    <tr>
-        <td >2000-07-29</td>
-        <td >James Berry</td>
-        <td >Mac OS Port, general cleanups.</td>
-    </tr>
-    <tr>
-        <td >2000-07-28</td>
-        <td >James Berry</td>
-        <td >Addition of NetAccessor functionality for MacOS, built on URLAccess library.</td>
-    </tr>
-    <tr>
-        <td >2000-07-28</td>
-        <td >Arundhati Bhowmick</td>
-        <td >ICU Transcoding service: changes for move to ICU 1.6</td>
-    </tr>
-    <tr>
-        <td >2000-07-27</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOM Range added. (Major new feature)</td>
-    </tr>
-    <tr>
-        <td >2000-07-27</td>
-        <td >Murray Cumming</td>
-        <td >makefile fixes for SUNW_0.7</td>
-    </tr>
-    <tr>
-        <td >2000-07-25</td>
-        <td >Arundhati Bhowmick</td>
-        <td >XMLCh character constants definitions moved to XMLUniDefs.h. Removes name clashes with application defined symbols.</td>
-    </tr>
-    <tr>
-        <td >2000-07-25</td>
-        <td >Joe Polastre</td>
-        <td >allow nesting of PlatformUtils::Init() and Terminate()</td>
-    </tr>
-    <tr>
-        <td >2000-07-25</td>
-        <td >Gary Gale</td>
-        <td >ICU transcoding: fix off by one error.</td>
-    </tr>
-    <tr>
-        <td >2000-07-21</td>
-        <td >&lt;check&gt;</td>
-        <td >Change wcsupr to _wcsupr</td>
-    </tr>
-    <tr>
-        <td >2000-07-21</td>
-        <td >Eric Schroeder</td>
-        <td >Win32TransService - fix error in use of hashtables</td>
-    </tr>
-    <tr>
-        <td >2000-07-21</td>
-        <td >Joe Polastre</td>
-        <td >DOMPrint: fixed error in handling of null CDATA sections.</td>
-    </tr>
-    <tr>
-        <td >2000-07-20</td>
-        <td >Andy Heninger</td>
-        <td >Improved net access (parse of URLs). Still weak, though.</td>
-    </tr>
-    <tr>
-        <td >2000-07-20</td>
-        <td >Erik Schroeder</td>
-        <td >XMLScaner.cpp bugfix: call startDocument() at beginning of scan.</td>
-    </tr>
-    <tr>
-        <td >2000-07-20</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOMCount exception handling cleaned up.</td>
-    </tr>
-    <tr>
-        <td >2000-07-19</td>
-        <td >Todd Collins</td>
-        <td >runConfigure: modified to take &quot;configureoptions&quot;</td>
-    </tr>
-    <tr>
-        <td >2000-07-19</td>
-        <td >&lt;check&gt;</td>
-        <td >Add 'make install' target to src/util/Platforms/Makefile.in</td>
-    </tr>
-    <tr>
-        <td >2000-07-19</td>
-        <td >&lt;check&gt;</td>
-        <td >DOM: BugFix: DocumentType nodes can not have children.</td>
-    </tr>
-    <tr>
-        <td >2000-07-19</td>
-        <td >&lt;check&gt;</td>
-        <td >DOM: Bug in NodeIDMap constructor.</td>
-    </tr>
-    <tr>
-        <td >2000-07-18</td>
-        <td >Anupam Bagchi</td>
-        <td >Documentation generation tools updated.</td>
-    </tr>
-    <tr>
-        <td >2000-07-17</td>
-        <td >James Berry</td>
-        <td >Mac OS port brought up to date (was very old)</td>
-    </tr>
-    <tr>
-        <td >2000-07-17</td>
-        <td >Andy Heninger</td>
-        <td >Change windows project to link with ws2_32.lib instead of winsock32.lib</td>
-    </tr>
-    <tr>
-        <td >2000-07-17</td>
-        <td >Grace Yan, Joe Kesselman</td>
-        <td >DOM NodeIterator: bug fix for SHOW_ELEMENT flag incorrectly being retrieved.</td>
-    </tr>
-    <tr>
-        <td >2000-07-17</td>
-        <td >Joe Polastre</td>
-        <td >switched scanMisc() with endDoc() in scanNext. Pointed out by Dean Roddey.</td>
-    </tr>
-    <tr>
-        <td >2000-07-17</td>
-        <td >Jim Reitz</td>
-        <td >fix for uninitialized variable gotData bug in XMLScanner.cpp.</td>
-    </tr>
-    <tr>
-        <td >2000-07-12</td>
-        <td >Arundhati Bhowmick</td>
-        <td >DOM: fix bug in setting previous sibling pointer during insertNode</td>
-    </tr>
-    <tr>
-        <td >2000-07-07</td>
-        <td >Joe Polastre</td>
-        <td >Update to use of hashtables.</td>
-    </tr>
-    <tr>
-        <td >2000-07-07</td>
-        <td >Joe Polastre</td>
-        <td >DOM userdata: several bug fixes.</td>
-    </tr>
-    <tr>
-        <td >2000-07-06</td>
-        <td >Andy Heninger</td>
-        <td >Speedups in XMLScanner, XMLReader</td>
-    </tr>
-    <tr>
-        <td >2000-07-07</td>
-        <td >&lt;check&gt;</td>
-        <td >bug fixes in IXMLDOM*</td>
-    </tr>
-    <tr>
-        <td >2000-07-06</td>
-        <td >Joe Polastre</td>
-        <td >Performance tweaks, added more inlines.</td>
-    </tr>
-    <tr>
-        <td >2000-07-05</td>
-        <td >Anupam Bagchi</td>
-        <td >Documentation updates.</td>
-    </tr>
-    <tr>
-        <td >2000-07-05</td>
-        <td >Joe Polastre</td>
-        <td >DOM: Attribute node default value handling implemented.</td>
-    </tr>
-    <tr>
-        <td >2000-07-05</td>
-        <td >Joe Polastre</td>
-        <td >DOM Attr nodes - fixed setting of specified when cloning. (change may be in error)</td>
-    </tr>
-    <tr>
-        <td >2000-07-04</td>
-        <td >Dean Roddey</td>
-        <td >Fixed a memory leak when namespaces are enabled.</td>
-    </tr>
-    <tr>
-        <td >2000-06-28</td>
-        <td >Curt Arnold</td>
-        <td >COM object usage documentation update.</td>
-    </tr>
-    <tr>
-        <td >2000-06-28</td>
-        <td >Joe Polastre</td>
-        <td >DOM Userdata - put pointers in a hash table rather than having one pre-allocated per node. Memory footprint reduction.</td>
-    </tr>
-    <tr>
-        <td >2000-06-27</td>
-        <td >Joe Polastre</td>
-        <td >extended the (implementation) hash table classes.</td>
-    </tr>
-    <tr>
-        <td >2000-06-26</td>
-        <td >John Roper@iOra.com</td>
-        <td >Bug fix: check if initialized in Terminate() to stop access violations.</td>
-    </tr>
-    <tr>
-        <td >2000-06-26</td>
-        <td >&lt;check&gt;</td>
-        <td >Solaris build - template directory related changes.</td>
-    </tr>
-
-    </table>
-    </s2>
-
-    <s2 title="Xerces-C Version 1.2.0: June 22, 2000">
-
-    <table>
-    <tr>
-        <td >2000/06/22</td>
-        <td >&lt;check&gt;</td>
-        <td >OS/2 Port updated.</td>
-    </tr>
-    <tr>
-        <td >2000-06-22</td>
-        <td >Joe Polastre</td>
-        <td >DOM Attr nodes, specified flag not set correctly by parser. Fixed.</td>
-    </tr>
-    <tr>
-        <td >2000-06-20</td>
-        <td >Rahul, Joe, Arundhati</td>
-        <td >Many doc updates in preparation for release of version 1.2</td>
-    </tr>
-    <tr>
-        <td >2000-06-19</td>
-        <td >Rahul Jain</td>
-        <td >Update Package Binaries script to build Xerces with ICU.</td>
-    </tr>
-    <tr>
-        <td >2000-06-19</td>
-        <td >Joe Polastre</td>
-        <td >Added help messages to PParse and StdInParse samples.</td>
-    </tr>
-    <tr>
-        <td >2000-06-19</td>
-        <td >Joe Polastre</td>
-        <td >Changed &quot;XML4C&quot; to &quot;Xerces-C&quot; in DOMPrint. (Missed in earlier mass name change.)</td>
-    </tr>
-    <tr>
-        <td >2000-06-19</td>
-        <td >Arundhati Bhowmick</td>
-        <td >Moved version.incl up one directory level.</td>
-    </tr>
-    <tr>
-        <td >2000-06-19</td>
-        <td >Curt Arnold</td>
-        <td >Improved Windows project file.</td>
-    </tr>
-    <tr>
-        <td >2000-06-16</td>
-        <td >John Smirl</td>
-        <td >Bug Fix: Document Handler was not called for PIs occurring before the document element. Bug identified by John Smirl
-            and Rich Taylor</td>
-    </tr>
-    <tr>
-        <td >2000-06-16</td>
-        <td >Rahul Jain</td>
-        <td >DOMPrint, SAXPrint: remove extra space in printing PIs.</td>
-    </tr>
-    <tr>
-        <td >2000-06-16</td>
-        <td >Rahul Jain</td>
-        <td >Windows Debug Build: add 'D' suffix to DLL name in VCPPDefs.hpp</td>
-    </tr>
-    <tr>
-        <td >2000-06-16</td>
-        <td >Rahul Jain</td>
-        <td >Samples: added -v option (validate always). Needed for testing scripts.</td>
-    </tr>
-    <tr>
-        <td >2000-06-14</td>
-        <td >Joe Polastre</td>
-        <td >Fixed null ptr failures in DOM NamedNodeMap</td>
-    </tr>
-    <tr>
-        <td >2000-06-12</td>
-        <td >Andy Heninger</td>
-        <td >Fixed bug in XMLString::trim(), reported by Michele Laghi</td>
-    </tr>
-    <tr>
-        <td >2000-06-07</td>
-        <td >Joe Polastre</td>
-        <td >DOM: reduced memory usage for elements with no attributes.</td>
-    </tr>
-    <tr>
-        <td >2000-06-01</td>
-        <td >Andy Heninger</td>
-        <td >DOMString - add const to return type of const XMLCh *DOMString::rawBuffer()</td>
-    </tr>
-    <tr>
-        <td >2000-06-01</td>
-        <td >Arundhati Bhowmick</td>
-        <td >Fix crash with Solaris optimized build. Modified XMLURL.cpp to dodge compiler code generation error.</td>
-    </tr>
-    <tr>
-        <td >2000-06-01</td>
-        <td >Joe Polastre</td>
-        <td >Bug fix: DOM Attr Specified flag was incorrectly set when cloning or importing attributes.</td>
-    </tr>
-    <tr>
-        <td >2000-05-31</td>
-        <td >Andy Heninger</td>
-        <td >MSVC projects modified to produce separate debug and release versions of Xerces lib and dll.</td>
-    </tr>
-    <tr>
-        <td >2000-05-31</td>
-        <td >Rahul Jain</td>
-        <td >Bug fix: DOMPrint, SAXPrint produced garbage output on Solaris. Solaris library problem.</td>
-    </tr>
-    <tr>
-        <td >2000-05-31</td>
-        <td >Joe Polastre</td>
-        <td >Fixed incorrect error check for end of file in Win32 platform utils.</td>
-    </tr>
-    <tr>
-        <td >2000-05-31</td>
-        <td >Rahul Jain</td>
-        <td >DOMPrint enhancements. Add options for specifying character encoding of the output, better control over escaping
-            of characters, better handling of CDATA sections. Default validation is now &quot;auto&quot;</td>
-    </tr>
-    <tr>
-        <td >2000-05-22</td>
-        <td >Dean Roddey</td>
-        <td >XMLFormatter now escapes characters, as reqd., occurring midway in strings. Reported by Hugo Duncan.</td>
-    </tr>
-    <tr>
-        <td >2000-05-22</td>
-        <td >Andy Heninger</td>
-        <td >Bug fix in implementation of DOM_Document::GetElementById()</td>
-    </tr>
-    <tr>
-        <td >2000-05-18</td>
-        <td >Anupam Bagchi</td>
-        <td >Documentation, DTD for source xml files moved into xerces-c project, sbk: prefixes removed, xml can now be validated
-            locally.</td>
-    </tr>
-    <tr>
-        <td >2000-05-15</td>
-        <td >Dean</td>
-        <td >Fixed 'fatal error' when 'reusing the validator' problem reported<br/>
-            by Rocky Raccoon (rrockey@bigfoot.com). Fix submitted by<br/>
-            Dean Roddey (droddey@charmedquark.com).</td>
-    </tr>
-    <tr>
-        <td >2000-05-15</td>
-        <td >James Berry</td>
-        <td >Changed #include &lt;memory.h&gt; to &lt;string.h&gt; everywhere. &lt;jberry@criticalpath.com&gt;</td>
-    </tr>
-    <tr>
-        <td >2000-05-15</td>
-        <td >Andy H.</td>
-        <td >DOMTest: removed incorrectly failing entity tests</td>
-    </tr>
-    <tr>
-        <td >2000-05-12</td>
-        <td >Andy H.</td>
-        <td >Revised implementation of DOMDocument::getElementsById(), removed memory leaks, new test program for it.</td>
-    </tr>
-    <tr>
-        <td >2000-05-12</td>
-        <td >Dean</td>
-        <td >Bug fix - A PE ref appearing at the start of a skipped conditional section<br/>
-            was incorrectly being processed rather than ignored. Fix from Dean Roddey.</td>
-    </tr>
-    <tr>
-        <td >2000-05-11</td>
-        <td >Rahul Jain</td>
-        <td >Start using the socket based netaccessor by default on most Unix platforms.</td>
-    </tr>
-    <tr>
-        <td >2000-05-11</td>
-        <td >Rahul Jain</td>
-        <td >Update ICUTransService to work with latest revision of ICU which provides a hard linked data DLL. i.e. icudata.dll
-            will be loaded when xerces-c is loaded.</td>
-    </tr>
-    <tr>
-        <td >2000-05-05</td>
-        <td >Dean</td>
-        <td >Problem with progressive parsing. parseNext() would through an exception when the document contains entities, either
-            or external.</td>
-    </tr>
-    <tr>
-        <td >2000-05-11</td>
-        <td >Sean MacRoibeaird</td>
-        <td >Add missing validity checks for stand-alone documents, character range<br/>
-            and Well-formed parsed entities.</td>
-    </tr>
-    <tr>
-        <td >2000-05-10</td>
-        <td >Radovan Chytracek</td>
-        <td >Fix compilation problems on MSVC 5. &lt;Radovan.Chytracek@cern.ch&gt;</td>
-    </tr>
-    <tr>
-        <td >2000-05-10</td>
-        <td >Dean</td>
-        <td >Fix XMLReader defect reported by SHOGO SAWAKI</td>
-    </tr>
-    <tr>
-        <td >2000-05-09</td>
-        <td >Andy H</td>
-        <td >Fix problem with Windows filenames containing '\' in Japanese and Korean encodings.</td>
-    </tr>
-    <tr>
-        <td >2000-05-08</td>
-        <td >Andy H</td>
-        <td >Memory Cleanup. XMLPlatformUtils::Terminate() deletes all lazily allocated memory</td>
-    </tr>
-    <tr>
-        <td >2000-05-05</td>
-        <td >Dean</td>
-        <td >Fixed defect in progressive parsing 'parseNext()' reported by Tim Johnston</td>
-    </tr>
-    <tr>
-        <td >2000-05-03</td>
-        <td >Tom Jordahl</td>
-        <td >Fixed Solaris build problems with static character constants. Tom Jordahl &lt;tomj@allaire.com&gt;</td>
-    </tr>
-    <tr>
-        <td >2000-04-28</td>
-        <td >Arnaud LeHors</td>
-        <td >Reduced memory usage for DOM Attributes.</td>
-    </tr>
-    <tr>
-        <td >2000-04-28</td>
-        <td >boercher@kidata.de</td>
-        <td >New runConfigure options -P and -C</td>
-    </tr>
-    <tr>
-        <td >2000-04-27</td>
-        <td >Andy H</td>
-        <td >Memory leaks in TransService. Joseph Chen &lt;JosephC@plumtree.com&gt;</td>
-    </tr>
-    <tr>
-        <td >2000-04-27</td>
-        <td >Arnaud LeHors</td>
-        <td >DOM - storage requirements for nodes substantially reduced.</td>
-    </tr>
-    <tr>
-        <td >2000-04-27</td>
-        <td >Arundhati</td>
-        <td >Added DOM XMLDecl node type; provides access to XML declaration.</td>
-    </tr>
-    <tr>
-        <td >2000-04-20</td>
-        <td >Arundhati</td>
-        <td >Added DOM access to DTD subset (DOM Level 2 feature)</td>
-    </tr>
-    <tr>
-        <td >2000-04-19</td>
-        <td >Anupam Bagchi</td>
-        <td >API document generation changed to DOxygen from Doc++</td>
-    </tr>
-    <tr>
-        <td >2000-04-18</td>
-        <td >Arundhati</td>
-        <td >Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced</td>
-    </tr>
-    <tr>
-        <td >2000-04-18</td>
-        <td >Dean Roddey</td>
-        <td >Don't allow spaces before PI target. Bug #42</td>
-    </tr>
-    <tr>
-        <td >2000-04-17</td>
-        <td >Anupam Bagchi</td>
-        <td >Follow the SMP/E procedures for the OS/390 BATCH install</td>
-    </tr>
-    <tr>
-        <td >2000-04-12</td>
-        <td >Dean Roddey</td>
-        <td >Auto-validate mode. Validate only when a DTD is present.</td>
-    </tr>
-    <tr>
-        <td >2000-04-11</td>
-        <td >Dean Roddey</td>
-        <td >If a SAX error handler is installed, then the resetErrors() event handler<br/>
-            should call the one on the installed SAX error handler.</td>
-    </tr>
-    <tr>
-        <td >2000-04-10</td>
-        <td >Dean Roddey</td>
-        <td >Allow an empty DOCTYPE declaration, with just the root name.</td>
-    </tr>
-    <tr>
-        <td >2000-04-06</td>
-        <td >Dean Roddey</td>
-        <td >Add low level support for transcoding XML output to different character encodings.</td>
-    </tr>
-    <tr>
-        <td >2000-04-06</td>
-        <td >Arnaud Lehors</td>
-        <td >DOM node memory footprint reduction.</td>
-    </tr>
-    <tr>
-        <td >2000-04-06</td>
-        <td >Dean Roddey</td>
-        <td >Fixed hanging bug in character transcoding.</td>
-    </tr>
-    <tr>
-        <td >2000-04-05</td>
-        <td >Dean Roddey</td>
-        <td >Enable installation of DTDHandler on SAX parser.</td>
-    </tr>
-    <tr>
-        <td >2000-04-04</td>
-        <td >Anupam Bagchi</td>
-        <td >Support for PTX platform</td>
-    </tr>
-    <tr>
-        <td >2000-04-03</td>
-        <td >&nbsp;</td>
-        <td >IRIX 6.5 port</td>
-    </tr>
-    <tr>
-        <td >2000-03-30</td>
-        <td >&nbsp;</td>
-        <td >COM wrappers</td>
-    </tr>
-    <tr>
-        <td >2000-03-24</td>
-        <td >Jeff Lewis</td>
-        <td >DOM_Document::GetElementsByTagId() added.</td>
-    </tr>
-    <tr>
-        <td >2000-03-23</td>
-        <td >Chih Hsiang Chou</td>
-        <td >DOM: support for identifying &quot;ignorable white space&quot; text nodes.</td>
-    </tr>
-    <tr>
-        <td >2000-03-23</td>
-        <td >Rahul Jain</td>
-        <td >URL Net Accessor added.</td>
-    </tr>
-    <tr>
-        <td >2000-03-20</td>
-        <td >Dean Roddey</td>
-        <td >Fix null pointer exception with some bad documents.</td>
-    </tr>
-    <tr>
-        <td >2000-03-17</td>
-        <td >Dean Roddey</td>
-        <td >Initial support for two-way transcoding.</td>
-    </tr>
-    <tr>
-        <td >2000-03-17</td>
-        <td >Dean Roddey</td>
-        <td >Intrinsic transcoding table generation utility added.</td>
-    </tr>
-    <tr>
-        <td >2000-03-17</td>
-        <td >Anupam Bagchi</td>
-        <td >UNIX build: Now generates object files in platform-specific directories</td>
-    </tr>
-    <tr>
-        <td >2000-03-13</td>
-        <td >Anupam Bagchi</td>
-        <td >Fix GCC build problem: Changed XML_GNUG to XML_GCC</td>
-    </tr>
-    <tr>
-        <td >2000-03-13</td>
-        <td >Helmut Eiken</td>
-        <td >Fixed #54. Changed self-assignment to now use the parameter value.<br/>
-            Reported by Helmut Eiken &lt;H.Eiken@cli.de&gt;</td>
-    </tr>
-    <tr>
-        <td >2000-03-10</td>
-        <td >Chih Hsiang Chou</td>
-        <td >Fix bug # 19, add const keyword to API. As a result, update test case.</td>
-    </tr>
-    <tr>
-        <td >2000-03-10</td>
-        <td >Chih Hsiang Chou</td>
-        <td >DOM: &quot;specified&quot; flag of attributes now set correctly.</td>
-    </tr>
-    <tr>
-        <td >2000-03-08</td>
-        <td >Dean Roddey</td>
-        <td >Some fixes for content models that have multiple, trailing, empty<br/>
-            PE refs (for content model extension.)</td>
-    </tr>
-    <tr>
-        <td >2000-03-07</td>
-        <td >Dean Roddey</td>
-        <td >First cut for additions to Win32 xcode. Based very loosely on a<br/>
-            prototype from Eric Ulevik.</td>
-    </tr>
-    <tr>
-        <td >2000-03-03</td>
-        <td >Dean Roddey</td>
-        <td >Fixed a bug in SimpleContentModel that allowed an &lt;a/&gt; to be taken<br/>
-            as valid for a content model of (a,b).</td>
-    </tr>
-    <tr>
-        <td >2000-03-02</td>
-        <td >Dean Roddey</td>
-        <td >Added a scanReset()/parseReset() method to the scanner and<br/>
-            parsers, to allow for reset after early exit from a progressive parse.<br/>
-            Added calls to new Terminate() call to all of the samples. Improved<br/>
-            documentation in SAX and DOM parsers.</td>
-    </tr>
-    <tr>
-        <td >2000-03-02</td>
-        <td >Dean Roddey</td>
-        <td >Change &quot;XML4C&quot; to &quot;Xerces&quot; in many places<br/>
-            Add a cleanup method to XMLPlatformUtils.<br/>
-            Implement the Locator scheme for SAX.<br/>
-            Add a -n option to most of the samples, to enable namespaces<br/>
-            Fix an error where XMLScanner::parseNext() was falling through on an<br/>
-            exception instead of return a failure.<br/>
-            Implement the specialized string loading for Win98, since LoadStringW()<br/>
-            doesn't work on 98 and makes the loaded error text from the Win32<br/>
-            message loader come out junk<br/>
-            fix error when two trailing entity references in a content model, like so:<br/>
-            &lt;!ELEMENT foo (a|b|c|d|e %one;%two;)*&gt;</td>
-    </tr>
-
-     </table>
-     </s2>
-
-     <s2 title="Xerces-C Version 1.1.0: Feb 28, 2000">
-
-     <table>
-
-    <tr>
-        <td >2000/02/18</td>
-        <td >Dean Roddey</td>
-        <td >XMLCh defaults to wchar_t on platforms where wchar_t uses Unicode.</td>
-    </tr>
-    <tr>
-        <td >2000-02-18</td>
-        <td >Dean Roddey</td>
-        <td >Add Windows-1252 as a built in encoding</td>
-    </tr>
-    <tr>
-        <td >2000-02-17</td>
-        <td >Dean Roddey</td>
-        <td >Fixed an infinite loop caused while trying to trim leading white space from the raw URL during parsing.</td>
-    </tr>
-    <tr>
-        <td >2000-02-17</td>
-        <td >Rahul Jain</td>
-        <td >Add LibWWW based net accessor</td>
-    </tr>
-    <tr>
-        <td >2000-02-17</td>
-        <td >Chih Hsiang Chou</td>
-        <td >DOM: NodeIterator, TreeWalker added.</td>
-    </tr>
-    <tr>
-        <td >2000-02-16</td>
-        <td >Dean Roddey</td>
-        <td >Updates for EBCDIC code page issues.</td>
-    </tr>
-    <tr>
-        <td >2000-02-15</td>
-        <td >Chih Hsiang Chou</td>
-        <td >DOM: several namespace bugfixes</td>
-    </tr>
-    <tr>
-        <td >2000-02-14</td>
-        <td >Dean Roddey</td>
-        <td >Disallow EBCDIC documents without an encoding declaration</td>
-    </tr>
-    <tr>
-        <td >2000-02-10</td>
-        <td >Bill Schindler</td>
-        <td >Fixed defect in compare[N]IString function. Defect and fix reported<br/>
-            by Bill Schindler from developer@bitranch.com</td>
-    </tr>
-    <tr>
-        <td >2000-02-10</td>
-        <td >Anupam Bagchi</td>
-        <td >Sample source code cleaned up.</td>
-    </tr>
-    <tr>
-        <td >2000-02-08</td>
-        <td >Dean Roddey</td>
-        <td >Fixed bug: xmlns:xxx=&quot;&quot; should affect the mapping of the prefixes of sibling attributes</td>
-    </tr>
-    <tr>
-        <td >2000-02-07</td>
-        <td >Dean Roddey</td>
-        <td >Don't weave base and relative paths unless relative part is really relative.</td>
-    </tr>
-    <tr>
-        <td >2000-02-03</td>
-        <td >Dietrich Wolf</td>
-        <td >C++-Builder 4 support</td>
-    </tr>
-    <tr>
-        <td >2000-02-03</td>
-        <td >Robert Weir</td>
-        <td >DOMString enhancements</td>
-    </tr>
-    <tr>
-        <td >2000-01-31</td>
-        <td >Dean Roddey</td>
-        <td >Win32 mutex implementation was changed to use critical sections for speed.</td>
-    </tr>
-    <tr>
-        <td >2000-01-28</td>
-        <td >Dean Roddey</td>
-        <td >The API is not in place to allow client code to make sense of start/end entity<br/>
-            ref calls from attribute values. So suppress them for now.</td>
-    </tr>
-    <tr>
-        <td >2000-01-28</td>
-        <td >Andy Heninger</td>
-        <td >Fix multi-threading problem in DOM.</td>
-    </tr>
-    <tr>
-        <td >2000-01-27</td>
-        <td >Dean Roddey</td>
-        <td >Fixed bug: If an entity ends on the last &gt; of some markup, then the end of entity<br/>
-            won't be sent because the end of entity is not sensed.</td>
-    </tr>
-    <tr>
-        <td >2000-01-24</td>
-        <td >Dean Roddey</td>
-        <td >Fixes a bogus error about ]]&gt; in char data.</td>
-    </tr>
-    <tr>
-        <td >2000-01-24</td>
-        <td >Dean Roddey</td>
-        <td >Exposed the APIs to get to the byte offset in the source XML buffer.</td>
-    </tr>
-    <tr>
-        <td >2000-01-21</td>
-        <td >Dean Roddey</td>
-        <td >Added a check for a broken pipe error on file read.</td>
-    </tr>
-    <tr>
-        <td >2000-01-18</td>
-        <td >Dean Roddey</td>
-        <td >Update to support new ICU 1.4 release</td>
-    </tr>
-    <tr>
-        <td >2000-01-18</td>
-        <td >Dean Roddey</td>
-        <td >Remove dependence on old utils standard streams</td>
-    </tr>
-    <tr>
-        <td >2000-01-18</td>
-        <td >Rahul Jain</td>
-        <td >Added CreateDOMDocument sample.</td>
-    </tr>
-    <tr>
-        <td >2000-01-13</td>
-        <td >Dean Roddey</td>
-        <td >Added a NetAccessorException for use by implementations of the NetAccessor abstraction, if they need to report
-            errors during processing</td>
-    </tr>
-    <tr>
-        <td >2000-01-12</td>
-        <td >Dean Roddey</td>
-        <td >get the C++ and Java versions of error messages more into sync.</td>
-    </tr>
-    <tr>
-        <td >2000-01-11</td>
-        <td >Dean Roddey</td>
-        <td >Moved the input source classes from / to framework/.</td>
-    </tr>
-    <tr>
-        <td >2000-01-11</td>
-        <td >Dean Roddey</td>
-        <td >Changes to deal with multiply nested, relative paths, entities</td>
-    </tr>
-</table>
-
+    <p> For release information about &XercesCName; &XercesCVersion140;, 
+        please refer to <jump href="releases_archive.html">Release Archive</jump>.
+	</p>
 </s2>
 
-
-
-    <s2 title="Xerces-C Version 1.0.1: December 15, 1999">
-        <ul>
-            <li>Port to Solaris.</li>
-            <li>Improved error recovery and clarified error messages.</li>
-            <li>Added DOMTest program.</li>
-        </ul>
-    </s2>
-
-    <s2 title="&XercesCFullName; Version 1.0.0: December 7, 1999">
-        <ul>
-            <li>Released &XercesCName; after incorporating ICU as a value-added plug-in.</li>
-            <li>Has bug fixes, better conformance, better speed and cleaner internal architecture</li>
-            <li>Three additional samples added: PParse, StdInParse and EnumVal</li>
-            <li>Experimental DOM Level 2 support</li>
-            <li>Support for namespaces</li>
-            <li>Loadable message text enabling future translations to be easily plugged-in</li>
-            <li>Pluggable validators</li>
-            <li>Pluggable transcoders</li>
-            <li>Reorganized the util directory to better manage different platforms and compilers</li>
-        </ul>
-    </s2>
-
-    <s2 title="Xerces-C BETA November 5, 1999">
-        <ul>
-            <li>Created initial code base derived from IBM's XML4C Version 2.0</li>
-            <li>Modified documentation to reflect new name (Xerces-C)</li>
-        </ul>
-    </s2>
 </s1>
