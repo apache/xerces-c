@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,6 +100,7 @@ public :
     static const XMLCh fgIBM037EncodingString[];
     static const XMLCh fgIBM037EncodingString2[];
     static const XMLCh fgIBM1140EncodingString[];
+    static const XMLCh fgIBM1140EncodingString2[];
     static const XMLCh fgIESString[];
     static const XMLCh fgIDString[];
     static const XMLCh fgIDRefString[];
@@ -208,13 +209,24 @@ public :
 
     static const XMLCh fgNegINFString[];
     static const XMLCh fgNegZeroString[];
-    static const XMLCh fgNeuralZeroString[];
     static const XMLCh fgPosZeroString[];
     static const XMLCh fgPosINFString[];
     static const XMLCh fgNaNString[];
     static const XMLCh fgEString[];
     static const XMLCh fgZeroString[];
     static const XMLCh fgNullString[];
+
+    // SAX2 features/properties names
+    static const XMLCh fgSAX2CoreValidation[];
+    static const XMLCh fgSAX2CoreNameSpaces[];
+    static const XMLCh fgSAX2CoreNameSpacePrefixes[];
+    static const XMLCh fgSAX2XercesDynamic[];
+    static const XMLCh fgSAX2XercesReuseValidator[];
+    static const XMLCh fgSAX2XercesReuseGrammar[];
+    static const XMLCh fgSAX2XercesSchema[];
+    static const XMLCh fgSAX2XercesSchemaFullChecking[];
+    static const XMLCh fgSAX2XercesSchemaExternalSchemaLocation[];
+    static const XMLCh fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[];
 
 };
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:53  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:50:38  tng
+ * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:53  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/06/04 14:55:32  tng
  * IDOM: Add IRange and IDeepNodeList Support.
@@ -82,14 +85,9 @@
 #include <xercesc/util/HashXMLCh.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
-// This hash table is modified from IDDeepNodeListPoolTableOf with first key as object ptr (IDOM_Node),
+// This hash table is modified from RefHash3KeysIdPool with first key as object ptr (IDOM_Node),
 // second and third keys are both XMLCh* string
 
-//
-//  Forward declare the enumerator so he can be our friend. Can you say
-//  friend? Sure...
-//
-template <class TVal> class IDDeepNodeListPoolEnumerator;
 template <class TVal> struct IDDeepNodeListPoolTableBucketElem;
 
 
@@ -165,6 +163,7 @@ public:
     bool isEmpty() const;
     bool containsKey(const void* const key1, const XMLCh* const key2, const XMLCh* const key3) const;
     void removeAll();
+    void cleanup();
 
 
     // -----------------------------------------------------------------------
@@ -180,13 +179,6 @@ public:
     //  Putters
     // -----------------------------------------------------------------------
 	unsigned int put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const valueToAdopt);
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Declare our friends
-    // -----------------------------------------------------------------------
-    friend class IDDeepNodeListPoolEnumerator<TVal>;
 
 private:
 
@@ -239,51 +231,6 @@ private:
     unsigned int                    fIdPtrsCount;
     unsigned int                    fIdCounter;
 };
-
-
-
-//
-//  An enumerator for a value array. It derives from the basic enumerator
-//  class, so that value vectors can be generically enumerated.
-//
-template <class TVal> class IDDeepNodeListPoolEnumerator : public XMLEnumerator<TVal>
-{
-public :
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    IDDeepNodeListPoolEnumerator(IDDeepNodeListPool<TVal>* const toEnum, const bool adopt = false);
-    ~IDDeepNodeListPoolEnumerator();
-
-
-    // -----------------------------------------------------------------------
-    //  Enum interface
-    // -----------------------------------------------------------------------
-    bool hasMoreElements() const;
-    TVal& nextElement();
-    void Reset();
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Data Members
-    //  fAdoptedElems
-    //      Indicates whether the values added are adopted or just referenced.
-    //      If adopted, then they are deleted when they are removed from the
-    //      hash table
-    //
-    //  fCurIndex
-    //      This is the current index into the pool's id mapping array. This
-    //      is now we enumerate it.
-    //
-    //  fToEnum
-    //      The name id pool that is being enumerated.
-    // -----------------------------------------------------------------------
-    bool                       fAdoptedElems;
-    unsigned int               fCurIndex;
-    IDDeepNodeListPool<TVal>*  fToEnum;
-};
-
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/idom/IDDeepNodeListPool.c>
 #endif

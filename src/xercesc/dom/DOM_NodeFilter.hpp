@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 19:57:15  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
+ * sane_include
  *
  * Revision 1.10  2000/10/20 22:03:04  andyh
  * DOM NodeFileter - define values for FilterAction enum to match those in the DOM spec.
@@ -127,8 +130,6 @@ class NodeFilterImpl;
  *  filters, since the only thing they have to know how to do is evaluate a single node.
  *  One filter may be used with a number of different kinds of iterators, encouraging
  *  code reuse.
- *
- * <p><b>"Experimental - subject to change"</b></p>
  *
  */
 class CDOM_EXPORT DOM_NodeFilter
@@ -202,8 +203,6 @@ class CDOM_EXPORT DOM_NodeFilter
 	  * or DOM_NodeIterator. This function will be called by the implementation of
 	  * DOM_TreeWalker and DOM_NodeIterator; it is not intended to be called directly from user
 	  * code.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           * @param node The node to check to see if it passes the filter or not.
           * @return A constant to determine whether the node is accepted, rejected, or skipped.

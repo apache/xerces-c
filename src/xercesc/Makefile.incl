@@ -162,6 +162,31 @@ ifeq (${PLATFORM}, UNIXWARE)
   SHLIBSUFFIX=.so
 endif
 
+#=============== OPENSERVER SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OPENSERVER)
+  ifeq (${CXX}, g++)
+	COMMON_COMPILE_OPTIONS = -D${PLATFORM} -fPIC
+    ifeq (${THREADS}, none)
+      PLATFORM_COMPILE_OPTIONS = ${COMMON_COMPILE_OPTIONS}
+    else
+      PLATFORM_COMPILE_OPTIONS = ${COMMON_COMPILE_OPTIONS} -D_REENTRANT
+    endif
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
+	EXTRA_LINK_OPTIONS = -Wl,-h,${LIBNAME}${VER}${SHLIBSUFFIX}
+  else
+    PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -belf -KPIC
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -belf -G ${LDFLAGS} 
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -belf -G ${LDFLAGS}
+  endif
+  ifeq (${TRANSCODER}, ICU)
+    ALLLIBS = ${LIBS} -licu-uc -licudata
+  else
+    ALLLIBS = ${LIBS}
+  endif
+  SHLIBSUFFIX=.so
+endif
+
 #================= PTX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, PTX)
 
@@ -324,7 +349,7 @@ ifeq (${PLATFORM}, HPUX)
   else
     TEMPLATESREPOSITORY = ${XML_OBJ_DIR}/ptrepository
     COMMON_COMPILE_OPTIONS = -D_HP_UX -DXERCES_TMPLSINC \
-        -D${OSVERDEFINE} +DAportable +eh +z -z +a1 +d
+        -D${OSVERDEFINE} +DAportable +eh +Z -Z +a1 +d
     ifeq ($(MODULE), dom)
       PLATFORM_COMPILE_OPTIONS  = -DDOM_PROJ $(COMMON_COMPILE_OPTIONS)
     else
@@ -398,8 +423,6 @@ endif
 #=============== MacOS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MACOSX)
 	PLATFORM_LIBRARIES = \
-		-framework Carbon \
-		-framework CoreFoundation \
 		-framework CoreServices
 	PLATFORM_COMPILE_OPTIONS = \
 		-D${PLATFORM} \

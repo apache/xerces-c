@@ -1,0 +1,31 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="API Documentation">
+    <s2 title="API Docs for SAX and DOM">
+
+	    <p>&XercesCName; is packaged with the API documentation for SAX and DOM, the two
+		most common programming interfaces for XML. The most common
+		framework classes have also been documented.</p>
+
+	    <p>&XercesCName; DOM is an implementation of the
+		<jump href="http://www.w3.org/TR/REC-DOM-Level-1/">Document Object
+		Model (Core) Level 1</jump> as defined in the W3C Recommendation of 1 October, 1998; and
+		<jump href="http://www.w3.org/TR/DOM-Level-2-Core/">Document Object
+		Model (Core) Level 2</jump> as defined in the W3C Recommendation of 13 November, 2000.
+		For a complete understanding of how the &XercesCName; APIs work,
+		we recommend you to read these documents.</p>
+
+	    <p>&XercesCName; SAX is an implementation of the
+		<jump href="http://sax.sourceforge.net/">SAX 1.0/2.0</jump> specification.
+		You are encouraged to read this document for a better
+		understanding of the SAX API in &XercesCName;.</p>
+
+	    <p>See the <em><jump href="apiDocs/index.html">&XercesCName; API documentation.</jump></em> for more details.</p>
+
+	    <note>The API documentation is automatically generated using
+		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
+		<jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</note>
+
+    </s2>
+</s1>

@@ -1,0 +1,57 @@
+This file contains the PGP keys of various Xerces-C++ developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Xerces-C++ users:
+    If you use PGP:  pgp < KEYS
+    If you use gpg:  gpg --import < KEYS
+Xerces-C++ developers:
+    If you use pgp:  pgp -kxa <your name> and append it to this file.
+    If you use gpg:  gpg --export -a <your_name> >>KEYS should do the trick
+
+Name                User ID
+Tinny Ng            tng@apache.org
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.0.6 (MingW32)
+Comment: For info see http://www.gnupg.org
+
+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
+=8B+D
+-----END PGP PUBLIC KEY BLOCK-----

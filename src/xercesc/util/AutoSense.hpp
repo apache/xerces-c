@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,14 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:09  peiyongz
- * Initial revision
+ * Revision 1.3  2002/03/04 20:31:14  tng
+ * [Bug 2868] AIX 4.3.3 mutex/atomic-operation changes for build.
+ *
+ * Revision 1.2  2002/02/27 22:38:34  peiyongz
+ * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
+ * sane_include
  *
  * Revision 1.21  2001/11/29 18:25:18  tng
  * FreeBSD support by Michael Huedepohl.
@@ -149,6 +155,9 @@
 #if defined(_AIX)
     #define XML_AIX
     #define XML_UNIX
+    #if defined(_AIXVERSION_430)
+        #define XML_AIX43  // for use of POSIX compliant pthread functions
+    #endif
 #elif defined(_SEQUENT_)
     #define XML_PTX
     #define XML_UNIX
@@ -156,9 +165,12 @@
     #define XML_HPUX
     #define XML_UNIX
 #elif defined(SOLARIS) || defined(__SVR4)
-        #define XML_SOLARIS
-        #define XML_UNIX
-#elif defined(UNIXWARE)
+    #define XML_SOLARIS
+    #define XML_UNIX
+#elif defined(_SCO_DS)
+    #define XML_OPENSERVER
+    #define XML_UNIX
+#elif defined(__UNIXWARE__) || defined(__USLC__)
     #define XML_UNIXWARE
     #define XML_UNIX
 #elif defined(__linux__)
@@ -222,7 +234,7 @@
     #define XML_VISUALCPP
 #elif defined(__xlC__)
     #define XML_CSET
-#elif defined(XML_SOLARIS) || defined(XML_UNIXWARE)
+#elif defined(XML_SOLARIS)
     #if defined(__SUNPRO_CC) & __SUNPRO_CC >=0x500
         #define XML_SUNCC5
 	#elif defined(__SUNPRO_CC) & __SUNPRO_CC <0x500
@@ -231,6 +243,8 @@
         #define XML_SOLARIS_KAICC
     #elif defined(__GNUG__)
 		#define XML_GCC
+    #else
+        #error Code requires port to current development environment
     #endif
 #elif defined (__GNUG__) || defined(__linux__)
     #define XML_GCC

@@ -56,8 +56,11 @@
 
  /*
   * $Log$
-  * Revision 1.1  2002/02/01 22:21:52  peiyongz
-  * Initial revision
+  * Revision 1.2  2002/02/20 18:17:01  tng
+  * [Bug 5977] Warnings on generating apiDocs.
+  *
+  * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
+  * sane_include
   *
   * Revision 1.17  2001/11/30 22:18:18  peiyongz
   * cleanUp function made member function
@@ -193,8 +196,7 @@ public:
       * Note that whitespace and text content are not validated here. Those are
       * handled by the scanner. So only element ids are provided here.
       *
-      * @param  elemId      The pool id of the element whose content is to be
-      *                     checked.
+      * @param  elemDecl    The element whose content is to be checked.
       *
       * @param  children    An array of element QName which represent the elements
       *                     found within the parent element, i.e. the content
@@ -385,12 +387,13 @@ public:
      *  in the order passed. So text1 will replace {0}, text2 will replace {1},
      *  and so forth.
      *
+     *  textX   Up to four replacement parameters. They can be provided
+     *          as either XMLCh strings, or local code page strings which
+     *          will be transcoded internally.
+     *
      *  @param toEmit   The error code to emit. it must be one of the defined
      *                  validator error codes.
      *
-     *  @param  textX   Up to four replacement parameters. They can be provided
-     *                  as either XMLCh strings, or local code page strings which
-     *                  will be transcoded internally.
      */
     void emitError(const XMLValid::Codes toEmit);
     void emitError

@@ -73,8 +73,8 @@ public:
 	 * Constructs a newly allocated <code>XMLBigDecimal</code> object that
 	 * represents the value represented by the string.
 	 *
-	 * @param      the <code>String</code> to be converted to an
-	 *                 <code>XMLBigDecimal</code>.
+	 * @param      strValue the <code>String</code> to be converted to an
+	 *                      <code>XMLBigDecimal</code>.
 	 * @exception  NumberFormatException  if the <code>String</code> does not
 	 *               contain a parsable XMLBigDecimal.
 	 */
@@ -86,7 +86,7 @@ public:
     XMLBigDecimal(const XMLBigDecimal& toCopy);
 
 	/**
-	 * Constructs a newly allocated <code>XMLBigDecimal</code> object 
+	 * Constructs a newly allocated <code>XMLBigDecimal</code> object
 	 * from an existing XMLBigDecimal with an extra Exponent.
 	 */
     XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent);
@@ -120,7 +120,7 @@ public:
 	 * <code>null</code> and is an <code>XMLBigDecimal</code> object that contains
 	 * the same <code>int</code> value as this object.
 	 *
-	 * @param   obj   the object to compare with.
+	 * @param   toCompare   the object to compare with.
 	 * @return  <code>true</code> if the objects are the same;
 	 *          <code>false</code> otherwise.
 	 */

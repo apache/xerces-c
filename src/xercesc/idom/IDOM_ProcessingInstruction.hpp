@@ -60,8 +60,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:56  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:01  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:25:54  tng
  * Copyright update.
@@ -90,7 +93,6 @@ protected:
 public:
     virtual ~IDOM_ProcessingInstruction() {};
 
-    //@}
     /** @name Get functions. */
     //@{
     /**

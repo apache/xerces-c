@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/12/13 16:48:29  peiyongz
  * Avoid dangling pointer
@@ -651,6 +654,11 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
 
     checkAdditionalFacet(content);
 
+}
+
+const RefVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
+{
+	return getEnumeration();
 }
 
 /**

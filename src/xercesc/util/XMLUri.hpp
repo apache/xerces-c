@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:17  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:02  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:17  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/08/29 19:03:03  peiyongz
  * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
@@ -81,10 +84,10 @@
 #include <xercesc/util/XMLString.hpp>
 
 /*
- * This class is a direct port of Java's URI class, to distinguish 
- * itself from the XMLURL, we use the name XMLUri instead of 
+ * This class is a direct port of Java's URI class, to distinguish
+ * itself from the XMLURL, we use the name XMLUri instead of
  * XMLURI.
- * 
+ *
  * TODO: how to relate XMLUri and XMLURL since URL is part of URI.
  *
  */
@@ -98,23 +101,23 @@ public:
     // -----------------------------------------------------------------------
 
     /**
-     * Construct a new URI from a URI specification string. 
-     *  
+     * Construct a new URI from a URI specification string.
+     *
      * If the specification follows the "generic URI" syntax, (two slashes
      * following the first colon), the specification will be parsed
-     * accordingly - setting the 
-     *                           scheme, 
-     *                           userinfo, 
+     * accordingly - setting the
+     *                           scheme,
+     *                           userinfo,
      *                           host,
-     *                           port, 
-     *                           path, 
-     *                           querystring and 
-     *                           fragment 
-     * fields as necessary. 
-     * 
-     * If the specification does not follow the "generic URI" syntax, 
-     * the specification is parsed into a 
-     *                           scheme and 
+     *                           port,
+     *                           path,
+     *                           querystring and
+     *                           fragment
+     * fields as necessary.
+     *
+     * If the specification does not follow the "generic URI" syntax,
+     * the specification is parsed into a
+     *                           scheme and
      *                           scheme-specific part (stored as the path) only.
      *
      * @param uriSpec the URI specification string (cannot be null or empty)
@@ -128,10 +131,10 @@ public:
      * Construct a new URI from a base URI and a URI specification string.
      * The URI specification string may be a relative URI.
      *
-     * @param base the base URI (cannot be null if uriSpec is null or
-     *               empty)
+     * @param baseURI the base URI (cannot be null if uriSpec is null or
+     *                empty)
      * @param uriSpec the URI specification string (cannot be null or
-     *                  empty if base is null)
+     *                empty if base is null)
      *
      * ctor# 7 relative ctor
      *
@@ -156,7 +159,7 @@ public:
      * @return the scheme for this URI
      */
      const XMLCh* getScheme() const;
- 
+
     /**
      * Get the userinfo for this URI.
      *
@@ -208,7 +211,7 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
- 
+
     /**
      * Set the scheme for this URI. The scheme is converted to lowercase
      * before it is set.
@@ -222,7 +225,7 @@ public:
      * Set the userinfo for this URI. If a non-null value is passed in and
      * the host value is null, then an exception is thrown.
      *
-     * @param newUserinfo the userinfo for this URI
+     * @param newUserInfo the userinfo for this URI
      *
      */
      void setUserInfo(const XMLCh* const newUserInfo);
@@ -246,19 +249,19 @@ public:
      *
      */
      void setPort(int newPort);
-  
+
     /**
-     * Set the path for this URI. 
+     * Set the path for this URI.
      *
      * If the supplied path is null, then the
-     * query string and fragment are set to null as well. 
+     * query string and fragment are set to null as well.
      *
-     * If the supplied path includes a query string and/or fragment, 
-     * these fields will be parsed and set as well. 
+     * If the supplied path includes a query string and/or fragment,
+     * these fields will be parsed and set as well.
      *
      * Note:
      *
-     * For URIs following the "generic URI" syntax, the path 
+     * For URIs following the "generic URI" syntax, the path
      * specified should start with a slash.
      *
      * For URIs that do not follow the generic URI syntax, this method
@@ -284,7 +287,7 @@ public:
      * if this is a URI conforming to the generic URI syntax and
      * the path value is not null.
      *
-     * @param fragment the fragment for this URI
+     * @param newFragment the fragment for this URI
      *
      */
      void setFragment(const XMLCh* const newFragment);
@@ -303,7 +306,7 @@ private:
     /**
      * Unimplemented copy ctor
      */
-    XMLUri(const XMLUri& toCopy);    
+    XMLUri(const XMLUri& toCopy);
     XMLUri& operator=(const XMLUri& toAssign);
 
     // -----------------------------------------------------------------------
@@ -351,13 +354,13 @@ private:
 
     /**
      * Determine whether a string is syntactically capable of representing
-     * a valid IPv4 address or the domain name of a network host. 
+     * a valid IPv4 address or the domain name of a network host.
      *
-     * A valid IPv4 address consists of four decimal digit groups 
-     * separated by a '.'. 
+     * A valid IPv4 address consists of four decimal digit groups
+     * separated by a '.'.
      *
-     * A hostname consists of domain labels (each of which must begin and 
-     * end with an alphanumeric but may contain '-') separated by a '.'. 
+     * A hostname consists of domain labels (each of which must begin and
+     * end with an alphanumeric but may contain '-') separated by a '.'.
      * See RFC 2396 Section 3.2.2.
      *
      * @return true if the string is a syntactically valid IPv4 address
@@ -409,7 +412,7 @@ private:
      *
      */
      void initializeScheme(const XMLCh* const uriSpec);
-                 
+
     /**
      * Initialize the authority (userinfo, host and port) for this
      * URI from a URI string spec.
@@ -430,7 +433,7 @@ private:
     // -----------------------------------------------------------------------
     //  Data members
     //
-    //  for all the data member, we own it, 
+    //  for all the data member, we own it,
     //  responsible for the creation and/or deletion for
     //  the memory allocated.
     //
@@ -443,7 +446,7 @@ private:
     XMLCh*          fPath;
     XMLCh*          fQueryString;
     XMLCh*          fFragment;
-    
+
 };
 
 // ---------------------------------------------------------------------------
@@ -475,7 +478,7 @@ inline XMLUri::XMLUri(const XMLUri* const      baseURI
 ,fFragment(0)
 {
     initialize(baseURI, uriSpec);
-}  
+}
 
 // ---------------------------------------------------------------------------
 //  XMLUri: Getter methods
@@ -521,12 +524,12 @@ inline const XMLCh* XMLUri::getFragment() const
 inline bool XMLUri::isReservedCharacter(const XMLCh theChar)
 {
     return (XMLString::indexOf(RESERVED_CHARACTERS, theChar) != -1);
-}  
+}
 
 inline bool XMLUri::isUnreservedCharacter(const XMLCh theChar)
 {
     return (XMLString::isAlphaNum(theChar) ||
             XMLString::indexOf(MARK_CHARACTERS, theChar) != -1);
-}  
+}
 
 #endif

@@ -1,0 +1,2 @@
+group xerces_sax2 =
+    BASE_DIR "\\src\\xercesc\\sax2\\sax2Dummy.cpp"

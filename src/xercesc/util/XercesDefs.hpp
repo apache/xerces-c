@@ -56,8 +56,20 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:13  peiyongz
- * Initial revision
+ * Revision 1.4  2002/02/27 22:38:34  peiyongz
+ * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
+ *
+ * Revision 1.3  2002/02/20 21:41:54  tng
+ * project files changes for Xerces-C++ 1.7.
+ *
+ * Revision 1.2  2002/02/17 21:12:06  jberry
+ * Adjust "sane includes" include path for Mac OS.
+ *
+ * I've also changed this path for XML_AS400, XML_TRU64, XML_PTX_CC, and XML_DECCXX
+ * 'cause it looks like the right thing to do...hope that's not a mistake.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:13  peiyongz
+ * sane_include
  *
  * Revision 1.18  2001/11/29 18:25:18  tng
  * FreeBSD support by Michael Huedepohl.
@@ -174,11 +186,11 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_6_0"
-const char* const    gXercesVersionStr = "1_6";
-const char* const    gXercesFullVersionStr = "1_6_0";
+#define Xerces_DLLVersionStr "1_7_0"
+const char* const    gXercesVersionStr = "1_7";
+const char* const    gXercesFullVersionStr = "1_7_0";
 const unsigned int   gXercesMajVersion = 1;
-const unsigned int   gXercesMinVersion = 6;
+const unsigned int   gXercesMinVersion = 7;
 const unsigned int   gXercesRevision   = 0;
 
 
@@ -204,6 +216,10 @@ const unsigned int   gXercesRevision   = 0;
 
 #if defined(XML_SOLARIS)
 #include    <xercesc/util/Platforms/Solaris/SolarisDefs.hpp>
+#endif
+
+#if defined(XML_OPENSERVER)
+#include    <xercesc/util/Platforms/OpenServer/OpenServerDefs.hpp>
 #endif
 
 #if defined(XML_UNIXWARE)
@@ -243,15 +259,15 @@ const unsigned int   gXercesRevision   = 0;
 #endif
 
 #if defined(XML_MACOS) || defined(XML_MACOSX)
-#include	<util/Platforms/MacOS/MacOSDefs.hpp>
+#include	<xercesc/util/Platforms/MacOS/MacOSDefs.hpp>
 #endif
 
 #if defined(XML_AS400)
-#include	<util/Platforms/OS400/OS400Defs.hpp>
+#include	<xercesc/util/Platforms/OS400/OS400Defs.hpp>
 #endif
 
 #if defined(XML_TRU64)
-#include	<util/Platforms/Tru64/Tru64Defs.hpp>
+#include	<xercesc/util/Platforms/Tru64/Tru64Defs.hpp>
 #endif
 
 
@@ -313,19 +329,19 @@ const unsigned int   gXercesRevision   = 0;
 #endif
 
 #if defined(XML_METROWERKS)
-#include	<util/Compilers/CodeWarriorDefs.hpp>
+#include	<xercesc/util/Compilers/CodeWarriorDefs.hpp>
 #endif
 
 #if defined(XML_PTX_CC)
-#include	<util/Compilers/PTXCCDefs.hpp>
+#include	<xercesc/util/Compilers/PTXCCDefs.hpp>
 #endif
 
 #if defined(XML_AS400)
-#include	<util/Compilers/OS400SetDefs.hpp>
+#include	<xercesc/util/Compilers/OS400SetDefs.hpp>
 #endif
 
 #if defined(XML_DECCXX)
-#include	<util/Compilers/DECCXXDefs.hpp>
+#include	<xercesc/util/Compilers/DECCXXDefs.hpp>
 #endif
 
 

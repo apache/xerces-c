@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -150,10 +150,15 @@ IDDocumentImpl::IDDocumentImpl(const XMLCh *fNamespaceURI,
       fChanges(0),
       fNodeListPool(0)
 {
-
-   fNamePool    = new (this) IDStringPool(257, this);
-	setDocumentType(doctype);
-   appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
+    fNamePool    = new (this) IDStringPool(257, this);
+    try {
+        setDocumentType(doctype);
+        appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
+    }
+    catch (...) {
+        this->deleteHeap();
+        throw;
+    }
 }
 
 void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
@@ -181,6 +186,20 @@ void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
 
 IDDocumentImpl::~IDDocumentImpl()
 {
+    //  Clean up the fNodeListPool
+    if (fNodeListPool)
+        fNodeListPool->cleanup();
+
+    //  Clean up the RefVector
+    if (fIterators)
+        fIterators->cleanup();
+
+    if (fTreeWalkers)
+        fTreeWalkers->cleanup();
+
+    if (fRanges)
+        fRanges->cleanup();
+
     //  Delete the heap for this document.  This uncerimoniously yanks the storage
     //      out from under all of the nodes in the document.  Destructors are NOT called.
     this->deleteHeap();
@@ -665,23 +684,21 @@ IDOM_Element *IDDocumentImpl::getElementById(const XMLCh *elementId) const
 
 
 //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
-//Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
+//Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd" or "abcd:".
 int IDDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 {
-    //Check if s = prefix:localName, name or malformed
-    int firstOccurence = XMLString::indexOf(qName, chColon);
-    int lastOccurence  = XMLString::lastIndexOf(qName, chColon);
+    int qNameLen = XMLString::stringLen(qName);
+    int index = -1, count = 0;
+    for (int i = 0; i < qNameLen; ++i) {
+        if (qName[i] == chColon) {
+            index = i;
+            ++count;	//number of ':' found
+        }
+    }
 
-    if (firstOccurence != lastOccurence || firstOccurence == 0) {
-        // Error.  More than two ':'s, or ':' is first char.
+    if (qNameLen == 0 || count > 1 || index == 0 || index == qNameLen-1)
         return -1;
-    }
-
-    if (firstOccurence == -1) {
-        //  No colons in the name
-        firstOccurence = 0;
-    }
-    return firstOccurence;
+    return count == 0 ? 0 : index;
 }
 
 
@@ -831,9 +848,10 @@ int             IDDocumentImpl::changes() const{
            void                IDDocumentImpl::normalize()                             {fNode.normalize (); };
            IDOM_Node          *IDDocumentImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };
-           bool                IDDocumentImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.supports (feature, version); };
+           bool                IDDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                            {return fNode.isSupported (feature, version); };
            void                IDDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool                IDDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
 
 
 //-----------------------------------------------------------------------

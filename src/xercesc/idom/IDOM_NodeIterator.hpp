@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:56  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:20:59  tng
+ * Add DOM 2 Level missing functions:
+ *   1. NodeIterator::getRoot
+ *   2. TreeWalker::getRoot
+ *   3. Element::hasAttribute
+ *   4. Element::hasAttributeNS
+ *   5. Node::hasAttributes
+ *   6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/04 20:11:53  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
@@ -88,8 +97,6 @@ class IDNodeIteratorImpl;
  * subtree. Instances of these iterators are created by calling
  * <code>DocumentTraversal.createNodeIterator()</code>.
  *
- * <p><b>"Experimental - subject to change"</b></p>
- *
  */
 class CDOM_EXPORT IDOM_NodeIterator
 {
@@ -102,18 +109,19 @@ class CDOM_EXPORT IDOM_NodeIterator
         /** @name Get functions. */
         //@{
         /**
+         * The <code>root</code> node of the <code>NodeIterator</code>, as specified
+         * when it was created.
+         */
+        virtual IDOM_Node*          getRoot() = 0;
+        /**
           * Return which node types are presented via the iterator.
           * The available set of constants is defined in the IDOM_NodeFilter interface.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual unsigned long       getWhatToShow() = 0;
 
         /**
           * Return The filter used to screen nodes.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual IDOM_NodeFilter*     getFilter() = 0;
@@ -123,8 +131,6 @@ class CDOM_EXPORT IDOM_NodeIterator
           * The value of this flag determines whether the children of entity reference
           * nodes are visible to the IDOM_NodeFilter. If false, they will be skipped over.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual bool getExpandEntityReferences() = 0;
 
@@ -132,8 +138,6 @@ class CDOM_EXPORT IDOM_NodeIterator
           * Returns the next node in the set and advances the position of the iterator
           * in the set. After a IDOM_NodeIterator is created, the first call to nextNode()
           * returns the first node in the set.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           * @exception DOMException
           *   INVALID_STATE_ERR: Raised if this method is called after the
@@ -144,8 +148,6 @@ class CDOM_EXPORT IDOM_NodeIterator
         /**
           * Returns the previous node in the set and moves the position of the iterator
           * backwards in the set.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           * @exception DOMException
           *   INVALID_STATE_ERR: Raised if this method is called after the
@@ -161,8 +163,6 @@ class CDOM_EXPORT IDOM_NodeIterator
           * computational resources and placing the iterator in the INVALID state. After
           * <code>detach</code> has been invoked, calls to <code>nextNode</code> or
           * <code>previousNode</code> will raise the exception INVALID_STATE_ERR.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual void                 detach() = 0;

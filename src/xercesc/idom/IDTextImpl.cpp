@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -183,9 +183,10 @@ void IDTextImpl::setIgnorableWhitespace(bool ignorable)
            IDOM_Node          *IDTextImpl::removeChild(IDOM_Node *oldChild)        {return fNode.removeChild (oldChild); };
            IDOM_Node          *IDTextImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                                     {return fNode.replaceChild (newChild, oldChild); };
-           bool                IDTextImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                                    {return fNode.supports (feature, version); };
+           bool                IDTextImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                    {return fNode.isSupported (feature, version); };
            void                IDTextImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool                IDTextImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
 
 
 //

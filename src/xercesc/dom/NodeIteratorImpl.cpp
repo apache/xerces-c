@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:48  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:48  peiyongz
+ * sane_include
  *
  * Revision 1.12  2001/10/18 18:01:29  tng
  * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
@@ -177,7 +186,10 @@ NodeIteratorImpl& NodeIteratorImpl::operator= (const NodeIteratorImpl& other) {
     return *this;
 }
 
-
+/** Return the Root Node. */
+DOM_Node NodeIteratorImpl::getRoot () {
+    return fRoot;
+}
 
 // Implementation Note: Note that the iterator looks at whatToShow
 // and filter values at each call, and therefore one _could_ add

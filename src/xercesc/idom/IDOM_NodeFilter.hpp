@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:56  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:11:55  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/04 20:11:53  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
@@ -99,8 +102,6 @@ class IDNodeFilterImpl;
  *  filters, since the only thing they have to know how to do is evaluate a single node.
  *  One filter may be used with a number of different kinds of iterators, encouraging
  *  code reuse.
- *
- * <p><b>"Experimental - subject to change"</b></p>
  *
  */
 class CDOM_EXPORT IDOM_NodeFilter
@@ -163,8 +164,6 @@ class CDOM_EXPORT IDOM_NodeFilter
          * or IDOM_NodeIterator. This function will be called by the implementation of
          * IDOM_TreeWalker and IDOM_NodeIterator; it is not intended to be called directly from user
          * code.
-         *
-         * <p><b>"Experimental - subject to change"</b></p>
          *
          * @param node The node to check to see if it passes the filter or not.
          * @return A constant to determine whether the node is accepted, rejected, or skipped.

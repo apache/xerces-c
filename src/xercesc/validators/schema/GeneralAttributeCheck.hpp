@@ -73,13 +73,13 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
-#include <xercesc/dom/DOM_Element.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward declaration
 // ---------------------------------------------------------------------------
 class TraverseSchema;
+class IDOM_Element;
 
 
 class AttributeInfo {
@@ -145,7 +145,7 @@ public:
     // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
-    void checkAttributes(const DOM_Element& elem,
+    void checkAttributes(const IDOM_Element* const elem,
                          const unsigned short elemContext,
                          TraverseSchema* const schema);
 

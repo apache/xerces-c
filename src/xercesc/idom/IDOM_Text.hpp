@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:56  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:11:55  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:25:55  tng
  * Copyright update.
@@ -146,8 +149,6 @@ class CDOM_EXPORT IDOM_Text: public IDOM_CharacterData {
     //@{
 
     /**
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * Return true if this node contains ignorable whitespaces only.
      * @return True if this node contains ignorable whitespaces only.

@@ -1,0 +1,128 @@
+<?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="Future Releases Plan">
+
+<s2 title="&XercesCName; Future Releases Plan">
+<p>This document highlights the release plan for &XercesCName;.</p>
+<s3 title="Current Status"><p>&XercesCName; 1.7.0 - released on March 8, 2002.</p></s3>
+<s3 title="Next Target Release"><p>&XercesCName; 1.8.0 - plan to be released in June or July.</p></s3>
+<s3 title="&XercesCName; Features list">
+<p> The following table lists the TODO items for &XercesCName;.  It does not include fixing
+bugs that are opened in Bugzilla; unless such Bugzilla bug involves a major development
+effort and requires an architectural redesign, or is an enhancement suggestion.</p>
+<p> Only those features that have volunteer identified will have a 'Target Date'.
+Those features that have 'Complete' status will be included in the 'Next Target Release'.
+</p>
+<table>
+    <tr>
+        <td>Features</td>
+        <td>Development Volunteer</td>
+        <td>Target Date</td>
+        <td>Status</td>
+    </tr>
+
+    <tr>
+        <td>Report Schema Error with matching column number and line number.</td>
+        <td>Khaled Noaman</td>
+        <td>March</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Claim IDOM as non-experimental, and as Apache Recommended DOM C++ Binding</td>
+        <td>Tinny Ng</td>
+        <td>March</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Update 32 bit Solaris binary distribution from Solaris 2.6 to Solaris 2.7</td>
+        <td>Tinny Ng</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
+            optionally ignore external DTD</td>
+        <td>Tinny Ng</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Produce 64 bit binary distribution for AIX</td>
+        <td>PeiYong Zhang</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Produce 64 bit binary distribution for Solaris</td>
+        <td>PeiYong Zhang</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Produce 64 bit binary distribution for HP</td>
+        <td>PeiYong Zhang</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Produce 64 bit binary distribution for Linux</td>
+        <td>PeiYong Zhang</td>
+        <td>May</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Produce 64 bit binary distribution for Windows</td>
+        <td>PeiYong Zhang</td>
+        <td>May</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Level 3 Core</td>
+        <td>Tinny Ng</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Level 3 Load and Save</td>
+        <td>Tinny Ng</td>
+        <td>May</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Level 3 Abstract Schema Load and Save</td>
+        <td>Khaled Noaman</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>[Bug 5563] Add capacity to build Xerces as static library</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>XML 1.1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+</table>
+</s3>
+</s2>
+
+</s1>

@@ -56,8 +56,20 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:47  peiyongz
- * Initial revision
+ * Revision 1.5  2002/02/26 14:26:10  tng
+ * [Bug 6672] SAXValidator results in an access violation when validating against schema with empty element that has default value.
+ *
+ * Revision 1.4  2002/02/25 21:24:31  tng
+ * Schema Fix: Ensure no invalid uri index for UPA checking.
+ *
+ * Revision 1.3  2002/02/25 21:18:18  tng
+ * Schema Fix: Ensure no invalid uri index for UPA checking.
+ *
+ * Revision 1.2  2002/02/07 16:41:29  knoaman
+ * Fix for xsi:type.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:47  peiyongz
+ * sane_include
  *
  * Revision 1.26  2001/11/21 18:05:09  tng
  * Schema Fix: Check both XMLAttDef::Fixed and XMLAttDef::Required_And_Fixed for default values.
@@ -271,7 +283,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         if (!XMLString::compareString(value, XMLUni::fgZeroLenString)) {
                             // if this element didn't specified any value
                             // use default value
-                            getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
+                            if (getScanner()->getDocHandler())
+                                getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
                         }
                         else {
                             // this element has specified some value
@@ -479,13 +492,46 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         unsigned int uri = fXsiType->getURI();
         const XMLCh* localPart = fXsiType->getLocalPart();
 
-        if (uri != XMLElementDecl::fgInvalidElemId || uri != XMLElementDecl::fgPCDataElemId) {
+        if (uri != XMLElementDecl::fgInvalidElemId &&
+            uri != XMLElementDecl::fgPCDataElemId &&
+            uri != XMLContentModel::gEpsilonFakeId &&
+            uri != XMLContentModel::gEOCFakeId) {
             // retrieve Grammar for the uri
             const XMLCh* uriStr = getScanner()->getURIText(uri);
             SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uriStr);
 
-            if (!sGrammar || sGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
-                // Grammar not found
+            if (!sGrammar) {
+
+                // Check built-in simple types
+                if (!XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
+
+                    fXsiTypeValidator = fGrammarResolver->getDatatypeRegistry()->getDatatypeValidator(localPart);
+
+                    if (!fXsiTypeValidator)
+                        emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                    else {
+                        DatatypeValidator* ancestorValidator = ((SchemaElementDecl*)elemDef)->getDatatypeValidator();
+                        if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
+                            // the type is not derived from ancestor
+                            emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                        }
+                        else {
+                            // the type is derived from ancestor
+                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::RESTRICTION)
+                                emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                            if (elemDef->hasAttDefs()) {
+                                // if we have an attribute but xsi:type's type is simple, we have a problem...
+                                emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                            }
+                        }
+                    }
+                }
+                else {
+                    // Grammar not found
+                    emitError(XMLValid::GrammarNotFound, uriStr);
+                }
+            }
+            else if (sGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
                 emitError(XMLValid::GrammarNotFound, uriStr);
             }
             else {

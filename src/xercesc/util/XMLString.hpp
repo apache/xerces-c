@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:16  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:02  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:16  peiyongz
+ * sane_include
  *
  * Revision 1.26  2001/08/10 16:23:06  peiyongz
  * isHex(), isAlphaNum(), isAllWhiteSpace() and patternMatch() Added
@@ -588,22 +591,22 @@ public:
       * A substring of <code>str1</code> is compared to a substring of
 	  * <code>str2</code>. The result is true if these substrings represent
 	  * identical character sequences. The substring of <code>str1</code>
-      * to be compared begins at offset1 and has length charsCount. The
+      * to be compared begins at offset1 and has length charCount. The
 	  * substring of <code>str2</code> to be compared begins at offset2 and
-	  * has length charsCount. The result is false if and only if at least
+	  * has length charCount. The result is false if and only if at least
       * one of the following is true:
       *   offset1 is negative.
       *   offset2 is negative.
-      *   offset1+charsCount is greater than the length of str1.
-      *   offset2+charsCount is greater than the length of str2.
-      *   There is some nonnegative integer k less than charsCount such that:
+      *   offset1+charCount is greater than the length of str1.
+      *   offset2+charCount is greater than the length of str2.
+      *   There is some nonnegative integer k less than charCount such that:
       *   str1.charAt(offset1+k) != str2.charAt(offset2+k)
       *
       * @param str1 Null-terminated string to compare
 	  * @param offset1 Starting offset of str1
       * @param str2 Null-terminated string to compare
 	  * @param offset2 Starting offset of str2
-	  * @param charsCount The number of characters to compare
+	  * @param charCount The number of characters to compare
       * @return true if the specified subregion of <code>str1</code> exactly
 	  *  matches the specified subregion of <code>str2></code>; false
 	  *  otherwise.
@@ -624,22 +627,22 @@ public:
       * A substring of <code>str1</code> is compared to a substring of
 	  * <code>str2</code>. The result is true if these substrings represent
 	  * identical character sequences. The substring of <code>str1</code>
-      * to be compared begins at offset1 and has length charsCount. The
+      * to be compared begins at offset1 and has length charCount. The
 	  * substring of <code>str2</code> to be compared begins at offset2 and
-	  * has length charsCount. The result is false if and only if at least
+	  * has length charCount. The result is false if and only if at least
       * one of the following is true:
       *   offset1 is negative.
       *   offset2 is negative.
-      *   offset1+charsCount is greater than the length of str1.
-      *   offset2+charsCount is greater than the length of str2.
-      *   There is some nonnegative integer k less than charsCount such that:
+      *   offset1+charCount is greater than the length of str1.
+      *   offset2+charCount is greater than the length of str2.
+      *   There is some nonnegative integer k less than charCount such that:
       *   str1.charAt(offset1+k) != str2.charAt(offset2+k)
       *
       * @param str1 Null-terminated string to compare
 	  * @param offset1 Starting offset of str1
       * @param str2 Null-terminated string to compare
 	  * @param offset2 Starting offset of str2
-	  * @param charsCount The number of characters to compare
+	  * @param charCount The number of characters to compare
       * @return true if the specified subregion of <code>str1</code> exactly
 	  *  matches the specified subregion of <code>str2></code>; false
 	  *  otherwise.
@@ -718,7 +721,7 @@ public:
       */
     static unsigned int hash
     (
-        const   char* const     tohash
+        const   char* const     toHash
         , const unsigned int    hashModulus
     );
 
@@ -779,7 +782,7 @@ public:
       * starting from a given index
       *
       * @param toSearch The string to search
-      * @param chToFInd The character to search within the string
+      * @param chToFind The character to search within the string
       * @param fromIndex The index to start earch from
       * @return If found, returns the index of the character within the string,
       * else returns -1.
@@ -796,7 +799,7 @@ public:
       * starting from a given index
       *
       * @param toSearch The string to search
-      * @param chToFInd The character to search within the string
+      * @param chToFind The character to search within the string
       * @param fromIndex The index to start search from
       * @return If found, returns the index of the character within the string,
       * else returns -1.
@@ -833,7 +836,7 @@ public:
       * starting backward from a given index
       *
       * @param toSearch The string to search
-      * @param chToFInd The character to search within the string
+      * @param chToFind The character to search within the string
       * @param fromIndex The index to start backward search from
       * @return If found, returns the index of the character within the string,
       * else returns -1.
@@ -850,7 +853,7 @@ public:
       * starting backward from a given index
       *
       * @param toSearch The string to search
-      * @param chToFInd The character to search within the string
+      * @param ch       The character to search within the string
       * @param fromIndex The index to start backward search from
       * @return If found, returns the index of the character within the string,
       * else returns -1.
@@ -995,7 +998,7 @@ public:
     static bool endsWith
     (
         const   XMLCh* const    toTest
-        , const XMLCh* const    prefix
+        , const XMLCh* const    suffix
     );
 
 
@@ -1066,18 +1069,18 @@ public:
       * @param name The string to check its EncName validity
       * @return Returns true if name is EncName valid, otherwise false
       */
-    static bool isValidEncName(const XMLCh* const name);  
+    static bool isValidEncName(const XMLCh* const name);
 
     /**
       * Checks whether an name is a valid QName.
       * @param name The string to check its QName validity
       * @return Returns true if name is QName valid, otherwise false
       */
-    static bool isValidQName(const XMLCh* const name);  
+    static bool isValidQName(const XMLCh* const name);
 
     /**
       * Checks whether a character is within [a-zA-Z].
-      * @param theChar: the character to check 
+      * @param theChar the character to check
       * @return Returns true if within the range, otherwise false
       */
 
@@ -1085,28 +1088,28 @@ public:
 
     /**
       * Checks whether a character is within [0-9].
-      * @param theChar: the character to check 
+      * @param theChar the character to check
       * @return Returns true if within the range, otherwise false
       */
     static bool isDigit(XMLCh const theChar);
 
     /**
       * Checks whether a character is within [0-9a-zA-Z].
-      * @param theChar: the character to check 
+      * @param theChar the character to check
       * @return Returns true if within the range, otherwise false
       */
     static bool isAlphaNum(XMLCh const theChar);
 
     /**
       * Checks whether a character is within [0-9a-fA-F].
-      * @param theChar: the character to check 
+      * @param theChar the character to check
       * @return Returns true if within the range, otherwise false
       */
     static bool isHex(XMLCh const theChar);
 
     /**
       * Checks whether a string contains only whitespace.
-      * @param toCheck: the string to check 
+      * @param toCheck the string to check
       * @return Returns true if it is, otherwise false
       */
     static bool isAllWhiteSpace(const XMLCh* const toCheck);
@@ -1118,8 +1121,8 @@ public:
 
     /** Cut leading chars from a string
       *
-      * @param toCut The string to cut chars from
-      * @param count The count of leading chars to cut
+      * @param toCutFrom The string to cut chars from
+      * @param count     The count of leading chars to cut
       */
     static void cut
     (
@@ -1211,7 +1214,7 @@ public:
     /** Break a string into tokens with space as delimiter, and
       * stored in a string vector.  The caller owns the string vector
       * that is returned, and is responsible for deleting it.
-      * @param tokenizeStr String to be tokenized
+      * @param tokenizeSrc String to be tokenized
       * @return a vector of all the tokenized string
       */
     static RefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
@@ -1289,7 +1292,7 @@ public:
     static bool isWSCollapsed(const XMLCh* const toCheck);
 
 	/** Replace whitespace
-      * @param toCheck The string which needs to be whitespace replaced.
+      * @param toConvert The string which needs to be whitespace replaced.
       *        On return , this buffer also holds the converted string
       */
     static void replaceWS(XMLCh* const toConvert);
@@ -1297,7 +1300,7 @@ public:
 	/** Collapse whitespace
       * @param toConvert The string which needs to be whitespace collapsed.
       *        On return , this buffer also holds the converted string
-      */       
+      */
     static void collapseWS(XMLCh* const toConvert);
     //@}
 
@@ -1326,7 +1329,7 @@ private :
 	  */
 	static bool validateRegion(const XMLCh* const str1, const int offset1,
 						const XMLCh* const str2, const int offset2,
-						const unsigned int charsCount);
+						const unsigned int charCount);
 
     friend class XMLPlatformUtils;
 };
@@ -1405,12 +1408,12 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 									  const int offset1,
 									  const XMLCh* const str2,
 									  const int offset2,
-									  const unsigned int charsCount)
+									  const unsigned int charCount)
 {
 
 	if (offset1 < 0 || offset2 < 0 ||
-		(offset1 + charsCount) > XMLString::stringLen(str1) ||
-		(offset2 + charsCount) > XMLString::stringLen(str2) )
+		(offset1 + charCount) > XMLString::stringLen(str1) ||
+		(offset2 + charCount) > XMLString::stringLen(str2) )
 		return false;
 
 	return true;

@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,8 +59,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:55  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:11:55  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:25:48  tng
  * Copyright update.
@@ -161,8 +164,6 @@ public:
     /**
      * The <code>DOM_Element</code> node this attribute is attached to or
      * <code>null</code> if this attribute is not in use.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      */
     virtual IDOM_Element     *getOwnerElement() const = 0;

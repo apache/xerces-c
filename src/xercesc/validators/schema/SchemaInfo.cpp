@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/06 22:24:59  knoaman
+ * Use IDOM for schema processing.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/12/12 20:52:19  peiyongz
  * memory leak: fRedefineList
@@ -100,8 +103,9 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
                        XMLStringPool* const stringPool,
-                       const DOM_Element& root)
-    : fElemAttrDefaultQualified(elemAttrDefaultQualified)
+                       const IDOM_Element* const root)
+    : fAdoptInclude(false)
+    , fElemAttrDefaultQualified(elemAttrDefaultQualified)
     , fBlockDefault(blockDefault)
     , fFinalDefault(finalDefault)
     , fTargetNSURI(targetNSURI)
@@ -112,46 +116,56 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fTargetNSURIString(targetNSURIString)
     , fStringPool(stringPool)
     , fSchemaRootElement(root)
-    , fIncludeList(0)
-    , fImportList(0)
-    , fImportingList(0)
-    , fRedefineList(0)
+    , fIncludeInfoList(0)
+    , fImportedInfoList(0)
+    , fImportingInfoList(0)
+    , fFailedRedefineList(0)
+    , fImportedNSList(0)
 {
-    fImportingList = new RefVectorOf<SchemaInfo>(4, false);
+    fImportingInfoList = new RefVectorOf<SchemaInfo>(4, false);
 }
 
 
 SchemaInfo::~SchemaInfo()
 {
     delete [] fCurrentSchemaURL;
-    delete fImportList;
-    delete fIncludeList;
-    delete fImportingList;
+    delete fImportedInfoList;
 
-    fImportList = fIncludeList = fImportingList = 0;
+    if (fAdoptInclude)
+        delete fIncludeInfoList;
 
-    delete fRedefineList;
-    fRedefineList = 0;
+    delete fImportingInfoList;
+
+    fImportedInfoList = fIncludeInfoList = fImportingInfoList = 0;
+
+    delete fImportedNSList;
+    fImportedNSList = 0;
+
+    delete fFailedRedefineList;
+    fFailedRedefineList = 0;    
 }
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo:
 // ---------------------------------------------------------------------------
-DOM_Element
+IDOM_Element*
 SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
                                  const XMLCh* const name,
                                  SchemaInfo** enclosingSchema) {
 
     SchemaInfo* currentInfo = this;
-    DOM_Element child = getTopLevelComponent(compCategory, name);
+    IDOM_Element* child = getTopLevelComponent(compCategory, name);
 
     if (child == 0) {
 
-        unsigned int listSize = (fIncludeList) ? fIncludeList->size() : 0;
+        unsigned int listSize = (fIncludeInfoList) ? fIncludeInfoList->size() : 0;
 
         for (unsigned int i=0; i < listSize; i++) {
 
-            currentInfo = fIncludeList->elementAt(i);
+            currentInfo = fIncludeInfoList->elementAt(i);
+
+            if (currentInfo == this)
+                continue;
 
             child = currentInfo->getTopLevelComponent(compCategory, name);
 
@@ -161,50 +175,36 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
                 break;
             }
         }
-
-        if (child == 0 && fRedefineList) { // try redefine list
-
-			currentInfo = fRedefineList->get(compCategory, fStringPool->addOrFind(name));
-
-            if (currentInfo) {
-                child = currentInfo->getTopLevelComponent(compCategory, name);
-
-                if (child != 0) {
-                    *enclosingSchema = currentInfo;
-                }
-            }
-        }
     }
 
     return child;
 }
 
 
-DOM_Element
+IDOM_Element*
 SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
-                                 const XMLCh* const name) {
+                                  const XMLCh* const name) {
 
-    DOM_Element child = XUtil::getFirstChildElement(fSchemaRootElement);
+    IDOM_Element* child = XUtil::getFirstChildElement(fSchemaRootElement);
 
     while (child != 0) {
 
-        if (child.getLocalName().equals(compCategory)) {
+        if (!XMLString::compareString(child->getLocalName(), compCategory)) {
 
-            if (child.getAttribute(SchemaSymbols::fgATT_NAME).equals(name)) {
+            if (!XMLString::compareString(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
                 break;
-            }
         }
-        else if (child.getLocalName().equals(SchemaSymbols::fgELT_REDEFINE)) { // if redefine
+        else if (!XMLString::compareString(child->getLocalName(),SchemaSymbols::fgELT_REDEFINE)
+                 && (!fFailedRedefineList || !fFailedRedefineList->containsElement(child))) { // if redefine
 
-            DOM_Element redefineChild = XUtil::getFirstChildElement(child);
+            IDOM_Element* redefineChild = XUtil::getFirstChildElement(child);
 
             while (redefineChild != 0) {
 
-                if (redefineChild.getLocalName().equals(compCategory)) {
-
-                    if (redefineChild.getAttribute(SchemaSymbols::fgATT_NAME).equals(name)) {
+                if ((!fFailedRedefineList || !fFailedRedefineList->containsElement(redefineChild))
+                    && !XMLString::compareString(redefineChild->getLocalName(), compCategory)
+                    && !XMLString::compareString(redefineChild->getAttribute(SchemaSymbols::fgATT_NAME), name)) {
                         break;
-                    }
                 }
 
                 redefineChild = XUtil::getNextSiblingElement(redefineChild);
@@ -225,18 +225,18 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
 
 void SchemaInfo::updateImportingInfo(SchemaInfo* const importingInfo) {
 
-    if (!fImportingList->containsElement(importingInfo)) {
-        fImportingList->addElement(importingInfo);
+    if (!fImportingInfoList->containsElement(importingInfo)) {
+        fImportingInfoList->addElement(importingInfo);
     }
 
-    unsigned int listSize = importingInfo->fImportingList->size();
+    unsigned int listSize = importingInfo->fImportingInfoList->size();
 
     for (unsigned int i=0; i < listSize; i++) {
 
-        SchemaInfo* tmpInfo = importingInfo->fImportingList->elementAt(i);
+        SchemaInfo* tmpInfo = importingInfo->fImportingInfoList->elementAt(i);
 
-        if (tmpInfo != this && !fImportingList->containsElement(tmpInfo)) {
-            fImportingList->addElement(tmpInfo);
+        if (tmpInfo != this && !fImportingInfoList->containsElement(tmpInfo)) {
+            fImportingInfoList->addElement(tmpInfo);
         }
     }
 }

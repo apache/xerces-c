@@ -57,8 +57,17 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:14  peiyongz
- * Initial revision
+ * Revision 1.4  2002/03/06 19:13:12  peiyongz
+ * Patch: more valid lexcial representation for positive/negative zero
+ *
+ * Revision 1.3  2002/03/01 18:47:37  peiyongz
+ * fix: more valid lexcial representation forms for "neural zero"
+ *
+ * Revision 1.2  2002/02/20 18:17:02  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/11/28 15:39:26  peiyongz
  * return Type& for operator=
@@ -85,31 +94,31 @@
 /***
  * 3.2.5.1 Lexical representation
  *
- *   double values have a lexical representation consisting of a mantissa followed, 
- *   optionally, by the character "E" or "e", followed by an exponent. 
+ *   double values have a lexical representation consisting of a mantissa followed,
+ *   optionally, by the character "E" or "e", followed by an exponent.
  *
- *   The exponent ·must· be an integer. 
- *   The mantissa must be a decimal number. 
- *   The representations for exponent and mantissa must follow the lexical rules 
- *   for integer and decimal. 
+ *   The exponent ·must· be an integer.
+ *   The mantissa must be a decimal number.
+ *   The representations for exponent and mantissa must follow the lexical rules
+ *   for integer and decimal.
  *
- *   If the "E" or "e" and the following exponent are omitted, 
- *   an exponent value of 0 is assumed. 
+ *   If the "E" or "e" and the following exponent are omitted,
+ *   an exponent value of 0 is assumed.
 ***/
 
 /***
  * 3.2.4.1 Lexical representation
  *
- *   float values have a lexical representation consisting of a mantissa followed, 
- *   optionally, by the character "E" or "e", followed by an exponent. 
+ *   float values have a lexical representation consisting of a mantissa followed,
+ *   optionally, by the character "E" or "e", followed by an exponent.
  *
- *   The exponent ·must· be an integer. 
- *   The mantissa must be a decimal number. 
- *   The representations for exponent and mantissa must follow the lexical rules 
- *   for integer and decimal. 
+ *   The exponent ·must· be an integer.
+ *   The mantissa must be a decimal number.
+ *   The representations for exponent and mantissa must follow the lexical rules
+ *   for integer and decimal.
  *
- *   If the "E" or "e" and the following exponent are omitted, 
- *   an exponent value of 0 is assumed. 
+ *   If the "E" or "e" and the following exponent are omitted,
+ *   an exponent value of 0 is assumed.
 ***/
 
 class XMLUTIL_EXPORT XMLAbstractDoubleFloat : public XMLNumber
@@ -120,7 +129,6 @@ public:
     {
         NegINF,
         NegZero,
-        NeuralZero,
         PosZero,
         PosINF,
         NaN,
@@ -129,7 +137,7 @@ public:
     };
 
     virtual ~XMLAbstractDoubleFloat();
-  
+
     virtual XMLCh*        toString() const;
 
     virtual int           getSign() const;
@@ -140,7 +148,7 @@ protected:
     // To be used by derived class exclusively
     //
     XMLAbstractDoubleFloat();
-    
+
     void                  init(const XMLCh* const strValue);
 
     /**
@@ -149,7 +157,8 @@ protected:
 	 * <code>null</code> and is an <code>XMLAbstractDoubleFloat</code> object that contains
 	 * the same <code>int</code> value as this object.
 	 *
-	 * @param   obj   the object to compare with.
+	 * @param   lValue the object to compare with.
+	 * @param   rValue the object to compare against.
 	 * @return  <code>true</code> if the objects are the same;
 	 *          <code>false</code> otherwise.
 	 */
@@ -172,6 +181,8 @@ private:
     XMLAbstractDoubleFloat(const XMLAbstractDoubleFloat& toCopy);
     XMLAbstractDoubleFloat& operator=(const XMLAbstractDoubleFloat& toAssign);
 
+	void                  normalizeZero(XMLCh* const);
+
     inline bool           isSpecialValue() const;
 
     static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue
@@ -192,7 +203,7 @@ private:
     // -----------------------------------------------------------------------
 
     XMLBigDecimal*          fMantissa;
-	XMLBigInteger*          fExponent;   
+	XMLBigInteger*          fExponent;
     LiteralType             fType;
 };
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:34  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/05 13:20:06  tng
+ * [Bug 5716] Can't parse with Validation more than one file.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:34  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/10/15 20:18:32  knoaman
  * Fix for bug 4177.
@@ -97,12 +100,6 @@
 
 
 // ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-bool XMLRangeFactory::fRangesCreated = false;
-bool XMLRangeFactory::fKeywordsInitialized = false;
-
-// ---------------------------------------------------------------------------
 //  Local static functions
 // ---------------------------------------------------------------------------
 static void setupRange(RangeToken* const rangeTok,
@@ -132,7 +129,10 @@ static void setupRange(RangeToken* const rangeTok,
 // ---------------------------------------------------------------------------
 //  XMLRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLRangeFactory::XMLRangeFactory() {
+XMLRangeFactory::XMLRangeFactory() :
+   fRangesCreated(false)
+ , fKeywordsInitialized(false)
+{
 
 }
 

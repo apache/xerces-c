@@ -1,0 +1,173 @@
+#
+# The Apache Software License, Version 1.1
+#
+# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+#
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written
+#    permission, please contact apache\@apache.org.
+#
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+#
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+#
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+#
+#
+# $Id$
+#
+
+DOMIDTest_DIR=DOM/DOMIDTest
+DOMMemTest_DIR=DOM/DOMMemTest
+IDOMMemTest_DIR=IDom/IDOMMemTest
+DOMTest_DIR=DOM/DOMTest
+IDOMTest_DIR=IDom/IDOMTest
+Traversal_DIR=DOM/Traversal
+ITraversal_DIR=IDom/ITraversal
+ThreadTest_DIR=ThreadTest
+EncodingTest_DIR=EncodingTest
+DOMRange_DIR=DOM/RangeTest
+IDOMRange_DIR=IDom/IRangeTest
+InitTermTest_DIR=InitTermTest
+
+LIB_DIR=${XERCESCROOT}/lib
+
+PLATFORM = @platform@
+COMPILER = @compiler@
+CXXFLAGS = @cxxflags@
+CFLAGS = @cflags@
+PREFIX = @prefix@
+THREADS = @threads@
+EXTRA_LIBS = @extra_libs@
+
+ifeq (${PLATFORM},HPUX)
+  ifeq (${OSVER}, HPUX10)
+      all::	bindir threadtest encodingtest traversal itraversal
+  else
+      all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+  endif
+else
+    all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+endif
+
+bindir::
+	test -d ${XERCESCROOT}/bin || mkdir ${XERCESCROOT}/bin
+
+domidtest::
+	@echo Building "DOMIDTest"
+	${MAKE} -C $(DOMIDTest_DIR) $(MAKE_FLAGS)
+
+dommemtest::
+	@echo Building "DOMMemTest"
+	${MAKE} -C $(DOMMemTest_DIR) $(MAKE_FLAGS)
+
+idommemtest::
+	@echo Building "IDOMMemTest"
+	${MAKE} -C $(IDOMMemTest_DIR) $(MAKE_FLAGS)
+
+domtest::
+	@echo Building "DOMTest"
+	${MAKE} -C $(DOMTest_DIR) $(MAKE_FLAGS)
+
+idomtest::
+	@echo Building "IDOMTest"
+	${MAKE} -C $(IDOMTest_DIR) $(MAKE_FLAGS)
+
+threadtest::
+	@echo Building "ThreadTest"
+	${MAKE} -C $(ThreadTest_DIR) $(MAKE_FLAGS)
+
+encodingtest::
+	@echo Building "EncodingTest"
+	${MAKE} -C $(EncodingTest_DIR) $(MAKE_FLAGS)
+
+traversal::
+	@echo Building "Traversal"
+	${MAKE} -C $(Traversal_DIR) $(MAKE_FLAGS)
+
+itraversal::
+	@echo Building "ITraversal"
+	${MAKE} -C $(ITraversal_DIR) $(MAKE_FLAGS)
+
+rangetest::
+	@echo Building "Range"
+	${MAKE} -C $(DOMRange_DIR) $(MAKE_FLAGS)
+
+irangetest::
+	@echo Building "Range"
+	${MAKE} -C $(IDOMRange_DIR) $(MAKE_FLAGS)
+
+inittermtest::
+	@echo Building "InitTermTest"
+	${MAKE} -C $(InitTermTest_DIR) $(MAKE_FLAGS)
+
+clean::
+	${MAKE} -C $(DOMIDTest_DIR) $@
+	${MAKE} -C $(DOMMemTest_DIR) $@
+	${MAKE} -C $(IDOMMemTest_DIR) $@
+	${MAKE} -C $(DOMTest_DIR) $@
+	${MAKE} -C $(IDOMTest_DIR) $@
+	${MAKE} -C $(ThreadTest_DIR) $@
+	${MAKE} -C $(EncodingTest_DIR) $@
+	${MAKE} -C $(Traversal_DIR) $@
+	${MAKE} -C $(ITraversal_DIR) $@
+	${MAKE} -C $(DOMRange_DIR) $@
+	${MAKE} -C $(IDOMRange_DIR) $@
+	${MAKE} -C $(InitTermTest_DIR) $@
+
+distclean::
+	${MAKE} -C $(DOMIDTest_DIR) $@
+	${MAKE} -C $(DOMMemTest_DIR) $@
+	${MAKE} -C $(IDOMMemTest_DIR) $@
+	${MAKE} -C $(DOMTest_DIR) $@
+	${MAKE} -C $(IDOMTest_DIR) $@
+	${MAKE} -C $(ThreadTest_DIR) $@
+	${MAKE} -C $(EncodingTest_DIR) $@
+	${MAKE} -C $(Traversal_DIR) $@
+	${MAKE} -C $(ITraversal_DIR) $@
+	${MAKE} -C $(DOMRange_DIR) $@
+	${MAKE} -C $(IDOMRange_DIR) $@
+	${MAKE} -C $(InitTermTest_DIR) $@
+	rm -f Makefile config.cache config.log config.status
+	rm -f *~ core
+

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@ const XMLCh fgXMLCategory[] =
     chLatin_X, chLatin_M, chLatin_L, chNull
 };
 
-static const XMLCh fgASCIICategory[] =
+const XMLCh fgASCIICategory[] =
 {
     chLatin_A, chLatin_S, chLatin_C, chLatin_I, chLatin_I, chNull
 };

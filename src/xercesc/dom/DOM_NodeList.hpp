@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:00  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
+ * sane_include
  *
  * Revision 1.9  2000/04/19 02:26:16  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
@@ -102,12 +105,12 @@
 class NodeListImpl;
 
 /**
- * The <code>NodeList</code> interface provides the abstraction of an ordered 
- * collection of nodes.  NodeLists are created by DOM_Document::getElementsByTagName(), 
- * DOM_Node::getChildNodes(), 
+ * The <code>NodeList</code> interface provides the abstraction of an ordered
+ * collection of nodes.  NodeLists are created by DOM_Document::getElementsByTagName(),
+ * DOM_Node::getChildNodes(),
  *
- * <p>The items in the <code>NodeList</code> are accessible via an integral 
- * index, starting from 0. 
+ * <p>The items in the <code>NodeList</code> are accessible via an integral
+ * index, starting from 0.
  *
  * NodeLists are "live", in that any changes to the document tree are immediately
  * reflected in any NodeLists that may have been created for that tree.
@@ -154,7 +157,7 @@ public:
       *   for an extended time,  when the storage belonging to the underlying
       *   node needs to be reclaimed.
       *
-      * @param val.  Only a value of 0, or null, is allowed.
+      * @param val   Only a value of 0, or null, is allowed.
       */
     DOM_NodeList & operator = (const DOM_NullPtr *val);
 
@@ -215,29 +218,29 @@ public:
      *  @param nullPtr The value to be compared, which must be 0 or null.
      *  @return Returns true if node list reference is not null
      */
-    bool operator != (const DOM_NullPtr *nullPtr) const; 
+    bool operator != (const DOM_NullPtr *nullPtr) const;
     //@}
 
 
     /** @name Get functions. */
     //@{
     /**
-     * Returns the <code>index</code>th item in the collection. 
+     * Returns the <code>index</code>th item in the collection.
      *
-     * If <code>index</code> is greater than or equal to the number of nodes in 
+     * If <code>index</code> is greater than or equal to the number of nodes in
      * the list, this returns <code>null</code>.
      *
      * @param index Index into the collection.
-     * @return The node at the <code>index</code>th position in the 
-     *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
+     * @return The node at the <code>index</code>th position in the
+     *   <code>NodeList</code>, or <code>null</code> if that is not a valid
      *   index.
      */
     DOM_Node  item(unsigned int index) const;
 
     /**
-     * Returns the number of nodes in the list. 
+     * Returns the number of nodes in the list.
      *
-     * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
+     * The range of valid child node indices is 0 to <code>length-1</code> inclusive.
      */
     unsigned int getLength() const;
     //@}

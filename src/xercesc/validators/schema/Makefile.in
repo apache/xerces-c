@@ -55,8 +55,11 @@
 #
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:22:45  peiyongz
-# Initial revision
+# Revision 1.2  2002/02/11 18:19:19  tng
+# [Bug 2715] Build recursion suppresses make failures.
+#
+# Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
+# sane_include
 #
 # Revision 1.18  2001/11/02 14:13:45  knoaman
 # Add support for identity constraints.
@@ -179,10 +182,10 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS) identity
 
 includes::	pubheaders $(VALIDATORS_SCHEMA_C_FILES)
-	cd identity ; $(MAKE) $@ ; cd ..
+	${MAKE} -C identity $@
 
 identity::
-	cd identity ; $(MAKE) ; cd ..
+	${MAKE} -C identity
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
@@ -195,15 +198,15 @@ depend:: includes
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_SCHEMA_CPP_OBJECTS))
-	cd identity ; $(MAKE) $@ ; cd ..
+	${MAKE} -C identity $@
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(VALIDATORS_SCHEMA_CPP_PUBHEADERS))
-	cd identity ; $(MAKE) $@ ; cd ..
+	${MAKE} -C identity $@
 
 install::
 	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
 	$(CP) $(VALIDATORS_SCHEMA_CPP_PUBHEADERS) $(VALIDATORS_SCHEMA_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
-	cd identity ; $(MAKE) $@ ; cd ..
+	${MAKE} -C identity $@

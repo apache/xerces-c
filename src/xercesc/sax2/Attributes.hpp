@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:08  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:02  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/05/11 13:26:25  tng
  * Copyright update.
@@ -272,7 +275,7 @@ public:
      *
      * @param uri The Namespace URI, or the empty string if
      *        the name has no Namespace URI.
-     * @param localName The attribute's local name.
+     * @param localPart The attribute's local name.
      * @return The index of the attribute, or -1 if it does not
      *         appear in the list.
      */
@@ -294,7 +297,7 @@ public:
      *
      * @param uri The Namespace URI, or the empty String if the
      *        name has no Namespace URI.
-     * @param localName The local name of the attribute.
+     * @param localPart The local name of the attribute.
      * @return The attribute type as a string, or null if the
      *         attribute is not in the list or if Namespace
      *         processing is not being performed.

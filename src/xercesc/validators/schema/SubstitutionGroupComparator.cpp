@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:47  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/25 21:18:18  tng
+ * Schema Fix: Ensure no invalid uri index for UPA checking.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:47  peiyongz
+ * sane_include
  *
  * Revision 1.11  2001/11/28 16:46:03  tng
  * Schema fix: Initialize the temporary string as null terminated.
@@ -124,7 +127,8 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     unsigned int uriId = anElement->getURI();
     if (uriId == XMLContentModel::gEOCFakeId ||
         uriId == XMLContentModel::gEpsilonFakeId ||
-        uriId == XMLElementDecl::fgPCDataElemId)
+        uriId == XMLElementDecl::fgPCDataElemId ||
+        uriId == XMLElementDecl::fgInvalidElemId)
         return false;
 
     const XMLCh* uri = fStringPool->getValueForId(uriId);
@@ -241,7 +245,12 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
     unsigned int uriId = element->getURI();
 
     if ((!wother && uriId == wuri) ||
-        (wother && uriId != wuri && uriId != XMLContentModel::gEOCFakeId && uriId != XMLContentModel::gEpsilonFakeId))
+        (wother &&
+         uriId != wuri &&
+         uriId != XMLContentModel::gEOCFakeId &&
+         uriId != XMLContentModel::gEpsilonFakeId &&
+         uriId != XMLElementDecl::fgPCDataElemId &&
+         uriId != XMLElementDecl::fgInvalidElemId))
     {
         return true;
     }
@@ -265,7 +274,12 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
         unsigned int subUriId = subsElements->elementAt(i)->getElementName()->getURI();
 
         if ((!wother && subUriId == wuri) ||
-            (wother && subUriId != wuri && subUriId != XMLContentModel::gEOCFakeId && subUriId != XMLContentModel::gEpsilonFakeId))
+            (wother &&
+             subUriId != wuri &&
+             subUriId != XMLContentModel::gEOCFakeId &&
+             subUriId != XMLContentModel::gEpsilonFakeId &&
+             subUriId != XMLElementDecl::fgPCDataElemId &&
+             subUriId != XMLElementDecl::fgInvalidElemId))
         {
             return true;
         }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -232,8 +232,6 @@ class  CDOM_EXPORT IDOM_Node {
      * which is not used with any <code>IDOM_Document</code> yet, this is
      * <code>null</code>.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      */
     virtual IDOM_Document      *getOwnerDocument() const = 0;
 
@@ -419,8 +417,6 @@ class  CDOM_EXPORT IDOM_Node {
      * Tests whether the DOM implementation implements a specific
      * feature and that feature is supported by this node.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param feature The string of the feature to test. This is the same
      * name as what can be passed to the method <code>hasFeature</code> on
      * <code>IDOM_DOMImplementation</code>.
@@ -431,8 +427,8 @@ class  CDOM_EXPORT IDOM_Node {
      * @return Returns <code>true</code> if the specified feature is supported
      * on this node, <code>false</code> otherwise.
      */
-    virtual bool      supports(const XMLCh *feature,
-	                           const XMLCh *version) const = 0;
+    virtual bool              isSupported(const XMLCh *feature,
+	                                       const XMLCh *version) const = 0;
 
     /**
      * Get the <em>namespace URI</em> of
@@ -447,16 +443,12 @@ class  CDOM_EXPORT IDOM_Node {
      * such as <CODE>createElement</CODE> from the <CODE>IDOM_Document</CODE>
      * interface, this is always <CODE>null</CODE>.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      */
     virtual const XMLCh *         getNamespaceURI() const = 0;
 
     /**
      * Get the <em>namespace prefix</em>
      * of this node, or <code>null</code> if it is unspecified.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      */
     virtual const XMLCh *          getPrefix() const = 0;
@@ -505,6 +497,13 @@ class  CDOM_EXPORT IDOM_Node {
      *      the <CODE>qualifiedName</CODE> of this node is "xmlns".
      */
     virtual void              setPrefix(const XMLCh * prefix) = 0;
+
+    /**
+     *  Returns whether this node (if it is an element) has any attributes.
+     * @return <code>true</code> if this node has any attributes,
+     *   <code>false</code> otherwise.
+     */
+    virtual bool              hasAttributes() const = 0;
 
     //@}
 

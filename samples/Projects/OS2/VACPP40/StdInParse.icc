@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\StdInParse.exe"
+  {
+    source type("cpp") SAMPLES "\\StdInParse\\StdInParse.cpp"
+    source type("cpp") SAMPLES "\\StdInParse\\StdInParseHandlers.cpp"
+    source type("lib") xerces_lib
+  }
+}

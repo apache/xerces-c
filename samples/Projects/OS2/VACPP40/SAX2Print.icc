@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\SAX2Print.exe"
+  {
+    source type("cpp") SAMPLES "\\SAX2Print\\SAX2Print.cpp"
+    source type("cpp") SAMPLES "\\SAX2Print\\SAX2PrintHandlers.cpp"
+    source type("lib") xerces_lib
+  }
+}

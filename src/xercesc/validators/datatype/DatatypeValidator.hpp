@@ -193,6 +193,12 @@ public:
       */
     virtual bool isAtomic() const;
 
+    /**
+      * Returns the datatype enumeration if any is set.
+	  * Derived class shall provide their own copy.
+      */
+	virtual const RefVectorOf<XMLCh>* getEnumString() const = 0;
+
     //@}
 
     // -----------------------------------------------------------------------

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:01  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
+ * sane_include
  *
  * Revision 1.13  2001/11/15 16:36:36  knoaman
  * Re-organize constant values.
@@ -379,7 +382,7 @@ public:
       * This setting controls whether the attribute is required, fixed,
       * implied, etc...
       *
-      * @param  The new default attribute to set
+      * @param  newValue The new default attribute to set
       */
     void setDefaultType(const XMLAttDef::DefAttTypes newValue);
 
@@ -389,7 +392,7 @@ public:
       * called by the validator that creates the actual instance (which is of
       * a derived type known only by the validator.)
       *
-      * @param  The new pool id to set.
+      * @param  newId The new pool id to set.
       */
     void setId(const unsigned int newId);
 
@@ -399,7 +402,7 @@ public:
       * by the scanner as it is scanning a start tag and marking off the
       * attributes that have been explicitly provided.
       *
-      * @param  The new provided state to set
+      * @param  newValue The new provided state to set
       */
     void setProvided(const bool newValue);
 
@@ -408,7 +411,7 @@ public:
       * This method will set the type of the attribute. The type of an attribute
       * controls how it is normalized and what kinds of characters it can hold.
       *
-      * @param  The new attribute type to set
+      * @param  newValue The new attribute type to set
       */
     void setType(const XMLAttDef::AttTypes newValue);
 
@@ -420,7 +423,7 @@ public:
       * type is enumeration or notation, this must be one of the valid values
       * set in the setEnumeration() call.
       *
-      * @param  The new fixed/default value to set.
+      * @param  newValue The new fixed/default value to set.
       */
     void setValue(const XMLCh* const newValue);
 
@@ -432,7 +435,7 @@ public:
       * attribute. This should only be set if the setType() method is used to
       * set the type to the enumeration or notation types.
       *
-      * @param  The new enumerated/notation value list to set.
+      * @param  newValue The new enumerated/notation value list to set.
       */
     void setEnumeration(const XMLCh* const newValue);
 
@@ -440,11 +443,15 @@ public:
       *
       * This method will update the 'create reason' field for this attribute
       * decl object.
+      *
+      * @param  newReason The new create reason.
       */
     void setCreateReason(const CreateReasons newReason);
 
     /**
       * Set the attribute decl to indicate external declaration
+      *
+      * @param  aValue The new value to indicate external declaration.
       */
     void setExternalAttDeclaration(const bool aValue);
 

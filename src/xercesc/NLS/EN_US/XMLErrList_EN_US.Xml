@@ -163,6 +163,9 @@
             <Message Id="InvalidTargetNSValue" Text="'' is not a legal value for the targetNamespace attribute; the attribute must be absent or contain a nonempty value"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
             <Message Id="XMLException_Error" Text="An exception occurred! Type:{0}, Message:{1}"/>
+            <Message Id="InvalidRedefine" Text="Invalid Redefine: '{0}' has already been included or redefined"/>
+            <Message Id="InvalidNSReference" Text="Schema Representation Constraint: Namespace '{0}' is referenced without &lt;import&gt; declaration"/>
+            <Message Id="NotAllContent" Text="An 'all' model group that's part of a complex type definition must constitute the entire content type of the definition"/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
@@ -755,6 +758,7 @@
             <Message Id="PD_RecurseUnordered" Text="RecurseUnordered: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_MapAndSum" Text="MapAndSum: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_InvalidContentType" Text="Particle derivation: Invalid content spec node type"/>
+            <Message Id="NodeIDMap_GrowErr" Text="NodeIDMap overflows and exceeds the largest available size"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">

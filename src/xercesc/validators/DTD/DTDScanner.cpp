@@ -56,8 +56,14 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:44  peiyongz
- * Initial revision
+ * Revision 1.3  2002/02/28 22:34:36  peiyongz
+ * Bug#2717: patch to Unterminated INCLUDE section causes infinite loop with setExitOnFirstFatalError(false)
+ *
+ * Revision 1.2  2002/02/26 21:06:53  knoaman
+ * Create ZeroOrOne node only if needed.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:44  peiyongz
+ * sane_include
  *
  * Revision 1.25  2002/01/24 16:30:50  tng
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD() .
@@ -2806,6 +2812,10 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                 }
                 return;
             }
+             else if (!nextCh)
+			{
+				 return; // nothing left
+			}
              else
             {
                 fReaderMgr->getNextChar();
@@ -3413,19 +3423,27 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                     return false;
                 }
 
-                if (!fReaderMgr->skippedChar(chAsterisk) && starRequired)
-                    fScanner->emitError(XMLErrs::ExpectedAsterisk);
+                bool starSkipped = true;
+                if (!fReaderMgr->skippedChar(chAsterisk)) {
+
+                    starSkipped = false;
+
+                    if (starRequired)
+                        fScanner->emitError(XMLErrs::ExpectedAsterisk);
+                }
 
                 //
                 //  Create a zero or more node and make the original head
                 //  node its first child.
                 //
-                headNode = new ContentSpecNode
-                (
-                    ContentSpecNode::ZeroOrMore
-                    , headNode
-                    , 0
-                );
+                if (starRequired || starSkipped) {
+                    headNode = new ContentSpecNode
+                    (
+                        ContentSpecNode::ZeroOrMore
+                        , headNode
+                        , 0
+                    );
+                }
 
                 // Store the head node as the content spec of the element.
                 toFill.setContentSpec(headNode);

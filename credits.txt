@@ -1,0 +1,101 @@
+The following people (in alphabetical order) have contributed to the
+development and ports of the XML4C source code, which was submitted to
+the Apache Software Foundation.
+
+
+Nadav Aharoni
+Curt Arnold
+Edward Avis
+Anupam Bagchi
+Torbjörn Bäckström
+Frank Balluffi
+Matthew Baker
+Devin Barnhart
+James Berry
+David Bertoni
+John Bellardo
+Arundhati Bhowmick
+Edward Bortner
+Sean Bright
+Phil Brown
+Sumit Chawla
+Nick Chiang
+Chih Hsiang Chou
+Radovan Chytracek
+Hiram Clawson
+John Clayton
+Todd Collins
+Michael Crawford
+Murray Cumming
+Helmut Eiken
+Mark Everline
+Simon Fell
+Paul Ferguson
+Pierpaolo Fumagalli
+Gary Gale
+Max Gotlib
+Petr Gotthard
+Susan Hardenbrook
+Jeff Harrell
+Andy Heninger
+William L. Hopper
+Michael Huedepohl
+Rahul Jain
+Tom Jordahl
+Christopher Just
+Martin Kalen
+Joe Kesselman
+Artur Klauser
+Bob Kline
+Richard Ko
+Paul Kramer
+Volker Krause
+Arnaud LeHors
+Andy Levine
+Jeff Lewis
+Matt Lovett
+Sean MacRoibeaird
+Alberto Massari
+Don Mastrovito
+David McCreedy
+Jordan Naftolin
+Tinny Ng
+David Nickerson
+Khaled Noaman
+Michael Ottati
+Kevin Philips
+Mike Pogue
+Joe Polastre
+John Ponzo
+Shengkai Qu
+Gareth Reakes
+Jim Reitz
+Dean Roddey
+John Roper
+Steven Rosenthal
+Erik Rydgren
+Bill Schindler
+Erik Schroeder
+Christian Schuhegger
+John Smirl
+Andrei Smirnov
+Gereon Steffens
+Jason Stewart
+Rick J. Stevens
+Roman Sulzhyk
+Linda M. Swan
+Pieter Van-Dyck
+Curtis Walker
+Tom Watson
+John Warrier
+Mark Weaver
+Roger Webster
+Robert Weir
+Carolyn Weiss
+Kari Whitcomb
+Dietrich Wolf
+Kirk Wylie
+Peter A. Volchek
+Grace Yan
+PeiYong Zhang
+Henry Zongaro

@@ -5,7 +5,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,8 +60,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:56  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:11:55  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:25:53  tng
  * Copyright update.
@@ -194,8 +197,6 @@ public:
     /**
      * Retrieves a node specified by local name and namespace URI.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to retrieve.
      * @param localName The <em>local name</em> of the node to retrieve.
@@ -208,8 +209,6 @@ public:
 
     /**
      * Adds a node using its <CODE>namespaceURI</CODE> and <CODE>localName</CODE>.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param arg A node to store in a named node map. The node will later be
      *       accessible using the value of the <CODE>namespaceURI</CODE> and
@@ -234,8 +233,6 @@ public:
 
     /**
      * Removes a node specified by local name and namespace URI.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to remove.

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:15  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:02  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/11/28 15:39:26  peiyongz
  * return Type& for operator=
@@ -100,8 +103,8 @@ public:
 	 * Constructs a newly allocated <code>XMLFloat</code> object that
 	 * represents the value represented by the string.
 	 *
-	 * @param      the <code>String</code> to be converted to an
-	 *                 <code>XMLFloat</code>.
+	 * @param      strValue the <code>String</code> to be converted to an
+	 *                      <code>XMLFloat</code>.
 	 * @exception  NumberFormatException  if the <code>String</code> does not
 	 *               contain a parsable XMLFloat.
 	 */
@@ -109,14 +112,14 @@ public:
     XMLFloat(const XMLCh* const strValue);
 
     ~XMLFloat();
-  
+
 	/**
-	 * Compares this object to the specified object.
+	 * Compares the two specified XMLFloat objects.
 	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code> and is an <code>XMLFloat</code> object that contains
-	 * the same <code>int</code> value as this object.
+	 * <code>null</code> and that contains the same <code>int</code> value.
 	 *
-	 * @param   obj   the object to compare with.
+	 * @param   lValue the object to compare with.
+	 * @param   rValue the object to compare against.
 	 * @return  <code>true</code> if the objects are the same;
 	 *          <code>false</code> otherwise.
 	 */
@@ -127,7 +130,7 @@ public:
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitXMLFloat();   
+	static void reinitXMLFloat();
 
 protected:
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:55  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:20:59  tng
+ * Add DOM 2 Level missing functions:
+ *   1. NodeIterator::getRoot
+ *   2. TreeWalker::getRoot
+ *   3. Element::hasAttribute
+ *   4. Element::hasAttributeNS
+ *   5. Node::hasAttributes
+ *   6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/04 20:11:52  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
@@ -135,7 +144,8 @@ class CDOM_EXPORT IDNodeIteratorImpl : public IDOM_NodeIterator {
 
         IDNodeIteratorImpl ( const IDNodeIteratorImpl& toCopy);
         IDNodeIteratorImpl& operator= (const IDNodeIteratorImpl& other);
-        	
+
+        virtual IDOM_Node* getRoot ();                	
         virtual unsigned long getWhatToShow ();
         virtual IDOM_NodeFilter* getFilter ();
         // Get the expandEntity reference flag.

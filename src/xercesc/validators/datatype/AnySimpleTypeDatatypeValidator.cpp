@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:40  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:40  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
@@ -105,6 +108,12 @@ AnySimpleTypeDatatypeValidator::newInstance(RefHashTableOf<KVStringPair>* const 
     // to satisfy some compilers
     return 0;
 }
+
+const RefVectorOf<XMLCh>* AnySimpleTypeDatatypeValidator::getEnumString() const
+{
+	return 0;
+}
+
 /**
   * End of file AnySimpleTypeDatatypeValidator.cpp
   */

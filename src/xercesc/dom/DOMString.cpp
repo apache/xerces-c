@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:44  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/28 21:52:13  tng
+ * [Bug 1368] improper DOMStringHandle locking.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:44  peiyongz
+ * sane_include
  *
  * Revision 1.24  2001/12/14 15:16:51  tng
  * Performance: Do not transcode twice in DOMString constructor.
@@ -165,6 +168,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include "DOM_DOMException.hpp"
 #include "DOMString.hpp"
 
@@ -176,13 +180,69 @@
 #include <string.h>
 
 
+
 //----------------------------------------------
 //
 //  Forward decls
 //
 //----------------------------------------------
-static void DOMStringTerminate();
-XMLLCPTranscoder*  getDomConverter();
+static void reinitDomConverter();
+static void reinitDomMutex();
+
+// ---------------------------------------------------------------------------
+//  Local static functions
+// ---------------------------------------------------------------------------
+
+//  getDOMConverter - get the converter from the system default
+//          codepage to Unicode that is to be used when
+//          a DOMString is constructed from a char *.
+//
+static XMLLCPTranscoder* gDomConverter = 0;
+static XMLRegisterCleanup cleanupDomConverter;
+
+XMLLCPTranscoder*  getDomConverter()
+{
+    if (!gDomConverter)
+    {
+        XMLLCPTranscoder* transcoder = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
+        if (!transcoder)
+            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoDefTranscoder
+            );
+
+        if (XMLPlatformUtils::compareAndSwap((void **)&gDomConverter, transcoder, 0) != 0)
+            delete transcoder;
+        else
+            cleanupDomConverter.registerCleanup(reinitDomConverter);
+    }
+    return gDomConverter;
+};
+
+//
+//  There is one global mutex that is used to synchronize access to the
+//     allocator free list for DOMStringHandles.  This function gets that
+//     mutex, and will create it on the first attempt to get it.
+//
+static XMLMutex* DOMStringHandleMutex = 0;   // Mutex will be deleted by ~DOMStringHandle.
+static XMLRegisterCleanup cleanupDomMutex;
+
+XMLMutex& DOMStringHandle::getMutex()
+{
+    if (!DOMStringHandleMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&DOMStringHandleMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+        else
+            cleanupDomMutex.registerCleanup(reinitDomMutex);
+
+    }
+
+    return *DOMStringHandleMutex;
+}
+
 
 
 //----------------------------------------------
@@ -277,28 +337,6 @@ DOMStringHandle *DOMStringHandle::blockListPtr = 0;  // Point to the head of the
                                           //  are allocated.
 
 //
-//  There is one global mutex that is used to synchronize access to the
-//     allocator free list for DOMStringHandles.  This function gets that
-//     mutex, and will create it on the first attempt to get it.
-//
-static XMLMutex* DOMStringHandleMutex = 0;   // Mutex will be deleted by ~DOMStringHandle.
-XMLMutex& DOMStringHandle::getMutex()
-{
-    if (!DOMStringHandleMutex)
-    {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&DOMStringHandleMutex, tmpMutex, 0))
-        {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
-        }
-    }
-
-    return *DOMStringHandleMutex;
-}
-
-
-//
 //  Operator new for DOMStringHandles.  Called implicitly from the
 //          DOMStringHandle constructor.
 //
@@ -355,9 +393,7 @@ void DOMStringHandle::operator delete(void *pMem)
     }
 
     // If ALL of the string handles are gone, delete the storage blocks used for the
-    //   handles as well.  This will generally only happen on PlatFormUtils::Terminate(),
-    //   since any use of the DOM will cache some commonly used DOMStrings
-    //   forever (until Terminate).
+    //   handles as well.
     if (DOMString::gLiveStringHandleCount == 0)
     {
         DOMStringHandle *pThisBlock, *pNextBlock;
@@ -368,8 +404,6 @@ void DOMStringHandle::operator delete(void *pMem)
         }
         blockListPtr = 0;
         freeListPtr  = 0;
-
-        DOMStringTerminate();            //  Clean up everything else related to DOMString.
     }
 
 
@@ -490,30 +524,6 @@ DOMString::DOMString(const XMLCh *data, unsigned int dataLength)
     }
 }
 
-
-
-
-//  getDOMConverter - get the converter from the system default
-//          codepage to Unicode that is to be used when
-//          a DOMString is constructed from a char *.
-//
-static XMLLCPTranscoder* gDomConverter = 0;
-XMLLCPTranscoder*  getDomConverter()
-{
-    if (!gDomConverter)
-    {
-        XMLLCPTranscoder* transcoder =
-        XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
-        if (!transcoder)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoDefTranscoder
-            );
-
-        if (XMLPlatformUtils::compareAndSwap((void **)&gDomConverter,
-        transcoder, 0) != 0)
-            delete transcoder;
-    }
-    return gDomConverter;
-};
 
 
 
@@ -1216,6 +1226,7 @@ DOMString operator + (const DOMString &lhs, XMLCh rhs)
 }
 
 DOMString operator + (XMLCh lhs, const DOMString& rhs)
+
 {
     DOMString retString;
 	retString.appendData(lhs);
@@ -1224,17 +1235,20 @@ DOMString operator + (XMLCh lhs, const DOMString& rhs)
 }
 
 
-
-static void DOMStringTerminate()        // Termination function cleans up all lazily created
-{                                       //   resources used by the DOMString implementation.
-                                        //   Called when no DOMStrings remain in the app.  (We
-                                        //   know this from reference counting.)
-
-        delete DOMStringHandleMutex;    //  Delete the synchronization mutex,
-        DOMStringHandleMutex = 0;
-
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+static void reinitDomConverter()
+{
         delete gDomConverter;           //  Delete the local code page converter.
         gDomConverter = 0;
+};
+
+
+static void reinitDomMutex()
+{
+        delete DOMStringHandleMutex;    //  Delete the synchronization mutex,
+        DOMStringHandleMutex = 0;
 };
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -98,12 +98,19 @@ IDElementImpl::IDElementImpl(const IDElementImpl &other, bool deep)
       fAttributes(0)
 {
     fName = other.fName;
-    setupDefaultAttributes();
-    if (!fAttributes)
-        fAttributes = new (getOwnerDocument()) IDAttrMapImpl(this);
-
     if (deep)
         fParent.cloneChildren(&other);
+
+    if (other.getAttributes())
+    {
+        fAttributes = ((IDAttrMapImpl *)other.getAttributes())->cloneAttrMap(this);
+    }
+
+    if (!fAttributes) {
+        setupDefaultAttributes();
+        if (!fAttributes)
+            fAttributes = new (getOwnerDocument()) IDAttrMapImpl(this);
+    }
 };
 
 
@@ -334,6 +341,25 @@ IDOM_NodeList *IDElementImpl::getElementsByTagNameNS(const XMLCh *namespaceURI,
     return docImpl->getDeepNodeList(this, namespaceURI, localName);
 }
 
+bool IDElementImpl::hasAttributes() const
+{
+    return (fAttributes != 0 && fAttributes->getLength() != 0);
+};
+
+
+bool IDElementImpl::hasAttribute(const XMLCh *name) const
+{
+    return (getAttributeNode(name) != 0);
+};
+
+
+bool IDElementImpl::hasAttributeNS(const XMLCh *namespaceURI,
+	const XMLCh *localName) const
+{
+    return (getAttributeNodeNS(namespaceURI, localName) != 0);
+};
+
+
 // DOM_NamedNodeMap UTILITIES
 #ifdef idom_revisit
 NamedNodeMapImpl *IDElementImpl::NNM_cloneMap(IDOM_Node *nnm_ownerNode)
@@ -471,8 +497,8 @@ void IDElementImpl::setupDefaultAttributes()
            IDOM_Node          *IDElementImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDElementImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };
-           bool                IDElementImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.supports (feature, version); };
+           bool                IDElementImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                            {return fNode.isSupported (feature, version); };
            void                IDElementImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
 
 

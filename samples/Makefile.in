@@ -1,0 +1,182 @@
+#
+# The Apache Software License, Version 1.1
+#
+# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+#
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written
+#    permission, please contact apache\@apache.org.
+#
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+#
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+#
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+#
+#
+# $Id$
+#
+
+SAXPrint_DIR=SAXPrint
+SAX2Print_DIR=SAX2Print
+SAXCount_DIR=SAXCount
+SAX2Count_DIR=SAX2Count
+DOMPrint_DIR=DOMPrint
+DOMCount_DIR=DOMCount
+IDOMPrint_DIR=IDOMPrint
+IDOMCount_DIR=IDOMCount
+Redirect_DIR=Redirect
+MemParse_DIR=MemParse
+PParse_DIR=PParse
+StdInParse_DIR=StdInParse
+EnumVal_DIR=EnumVal
+SEnumVal_DIR=SEnumVal
+CreateDOMDocument_DIR=CreateDOMDocument
+
+LIB_DIR=${XERCESCROOT}/lib
+
+PLATFORM = @platform@
+COMPILER = @compiler@
+CXXFLAGS = @cxxflags@
+CFLAGS = @cflags@
+PREFIX = @prefix@
+
+all::	saxprint sax2print saxcount sax2count domprint domcount idomprint idomcount redirect memparse pparse stdinparse enumval senumval createdomdocument
+
+saxprint::
+	@echo Building "SAXPrint"
+	$(MAKE) -C $(SAXPrint_DIR) $(MAKE_FLAGS)
+
+sax2print::
+	@echo Building "SAX2Print"
+	$(MAKE) -C $(SAX2Print_DIR) $(MAKE_FLAGS)
+
+saxcount::
+	@echo Building "SAXCount"
+	$(MAKE) -C $(SAXCount_DIR) $(MAKE_FLAGS)
+
+sax2count::
+	@echo Building "SAX2Count"
+	$(MAKE) -C $(SAX2Count_DIR) $(MAKE_FLAGS)
+
+domprint::
+	@echo Building "DOMPrint"
+	$(MAKE) -C $(DOMPrint_DIR) $(MAKE_FLAGS)
+
+domcount::
+	@echo Building "DOMCount"
+	$(MAKE) -C $(DOMCount_DIR) $(MAKE_FLAGS)
+
+idomprint::
+	@echo Building "IDOMPrint"
+	$(MAKE) -C $(IDOMPrint_DIR) $(MAKE_FLAGS)
+
+idomcount::
+	@echo Building "IDOMCount"
+	$(MAKE) -C $(IDOMCount_DIR) $(MAKE_FLAGS)
+
+memparse::
+	@echo Building "MemParse"
+	$(MAKE) -C $(MemParse_DIR) $(MAKE_FLAGS)
+
+redirect::
+	@echo Building "Redirect"
+	$(MAKE) -C $(Redirect_DIR) $(MAKE_FLAGS)
+
+pparse::
+	@echo Building "PParse"
+	$(MAKE) -C $(PParse_DIR) $(MAKE_FLAGS)
+
+stdinparse::
+	@echo Building "StdInParse"
+	$(MAKE) -C $(StdInParse_DIR) $(MAKE_FLAGS)
+
+enumval::
+	@echo Building "EnumVal"
+	$(MAKE) -C $(EnumVal_DIR) $(MAKE_FLAGS)
+
+senumval::
+	@echo Building "SEnumVal"
+	$(MAKE) -C $(SEnumVal_DIR) $(MAKE_FLAGS)
+
+createdomdocument::
+	@echo Building "CreateDOMDocument"
+	$(MAKE) -C $(CreateDOMDocument_DIR) $(MAKE_FLAGS)
+
+
+clean::
+	$(MAKE) -C $(SAXPrint_DIR) $@
+	$(MAKE) -C $(SAX2Print_DIR) $@
+	$(MAKE) -C $(SAXCount_DIR) $@
+	$(MAKE) -C $(SAX2Count_DIR) $@
+	$(MAKE) -C $(DOMPrint_DIR) $@
+	$(MAKE) -C $(DOMCount_DIR) $@
+	$(MAKE) -C $(IDOMPrint_DIR) $@
+	$(MAKE) -C $(IDOMCount_DIR) $@
+	$(MAKE) -C $(MemParse_DIR) $@
+	$(MAKE) -C $(Redirect_DIR) $@
+	$(MAKE) -C $(PParse_DIR) $@
+	$(MAKE) -C $(StdInParse_DIR) $@
+	$(MAKE) -C $(EnumVal_DIR) $@
+	$(MAKE) -C $(SEnumVal_DIR) $@
+	$(MAKE) -C $(CreateDOMDocument_DIR) $@
+
+distclean::
+	$(MAKE) -C $(SAXPrint_DIR) $@
+	$(MAKE) -C $(SAX2Print_DIR) $@
+	$(MAKE) -C $(SAXCount_DIR) $@
+	$(MAKE) -C $(SAX2Count_DIR) $@
+	$(MAKE) -C $(DOMPrint_DIR) $@
+	$(MAKE) -C $(DOMCount_DIR) $@
+	$(MAKE) -C $(IDOMPrint_DIR) $@
+	$(MAKE) -C $(IDOMCount_DIR) $@
+	$(MAKE) -C $(MemParse_DIR) $@
+	$(MAKE) -C $(Redirect_DIR) $@
+	$(MAKE) -C $(PParse_DIR) $@
+	$(MAKE) -C $(StdInParse_DIR) $@
+	$(MAKE) -C $(EnumVal_DIR) $@
+	$(MAKE) -C $(SEnumVal_DIR) $@
+	$(MAKE) -C $(CreateDOMDocument_DIR) $@
+	rm -f Makefile config.cache config.log config.status
+	rm -f *~ core
+

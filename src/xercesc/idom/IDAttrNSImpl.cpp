@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -116,7 +116,7 @@ IDAttrImpl(ownerDoc, qualifiedName)
 
     const XMLCh * URI = xmlnsAlone ?
                 xmlnsURI : IDNodeImpl::mapPrefix(fPrefix, namespaceURI, IDOM_Node::ATTRIBUTE_NODE);
-    this -> fNamespaceURI = URI == 0 ? XMLUni::fgZeroLenString : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
+    this -> fNamespaceURI = (URI == 0) ? 0 : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
 };
 
 IDAttrNSImpl::IDAttrNSImpl(const IDAttrNSImpl &other, bool deep) :
@@ -157,7 +157,7 @@ void IDAttrNSImpl::setPrefix(const XMLCh *prefix)
     if (fNode.isReadOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
         0);
-    if (fNamespaceURI == 0 || XMLString::compareString(fLocalName, xmlns) == 0)
+    if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull || XMLString::compareString(fLocalName, xmlns) == 0)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
 
     if (prefix != 0 && !IDDocumentImpl::isXMLName(prefix))

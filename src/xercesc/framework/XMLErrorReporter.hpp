@@ -56,8 +56,11 @@
 
  /*
   * $Log$
-  * Revision 1.1  2002/02/01 22:21:51  peiyongz
-  * Initial revision
+  * Revision 1.2  2002/02/20 18:17:01  tng
+  * [Bug 5977] Warnings on generating apiDocs.
+  *
+  * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+  * sane_include
   *
   * Revision 1.11  2001/05/11 13:25:32  tng
   * Copyright update.
@@ -183,7 +186,7 @@ public:
       *                     so can possibly be in the local language if a
       *                     translation has been provided.
       *
-      * @param  sysetmId    The system id of the entity where the error occured,
+      * @param  systemId    The system id of the entity where the error occured,
       *                     fully qualified.
       *
       * @param  publicId    The optional public id of the entity were the error

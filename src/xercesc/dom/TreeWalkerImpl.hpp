@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:49  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:49  peiyongz
+ * sane_include
  *
  * Revision 1.6  2000/08/08 01:00:37  aruna1
  * detach functionality removed from TreeWalker
@@ -102,12 +111,15 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
 
     /** Public constructor */
     TreeWalkerImpl (
-        DOM_Node root, 
-        unsigned long whatToShow, 
+        DOM_Node root,
+        unsigned long whatToShow,
         DOM_NodeFilter* nodeFilter,
         bool expandEntityRef);
     TreeWalkerImpl (const TreeWalkerImpl& twi);
     TreeWalkerImpl& operator= (const TreeWalkerImpl& twi);
+
+    // Return the root DOM_Node.
+    DOM_Node getRoot ();
 
     // Return the whatToShow value.
     unsigned long  getWhatToShow ();
@@ -158,7 +170,7 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     DOM_Node nextNode ();
 
     void unreferenced ();
-    
+
     // Get the expandEntity reference flag.
     bool getExpandEntityReferences();
 

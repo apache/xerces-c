@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/12/13 16:48:29  peiyongz
  * Avoid dangling pointer
@@ -140,6 +143,9 @@ AbstractNumericFacetValidator::~AbstractNumericFacetValidator()
     //~RefVectorOf will delete all adopted elements
     if (!fEnumerationInherited &&  fEnumeration)
         delete fEnumeration;
+
+    if (!fEnumerationInherited &&  fStrEnumeration)
+        delete fStrEnumeration;
 }
 
 AbstractNumericFacetValidator::AbstractNumericFacetValidator(
@@ -170,7 +176,7 @@ void AbstractNumericFacetValidator::init(RefVectorOf<XMLCh>* const enums)
 {
 
     fStrEnumeration = enums; // save the literal value
-    Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);
+	                         // which is needed for getEnumString()
 
     if (enums)
     {
@@ -779,6 +785,11 @@ void AbstractNumericFacetValidator::inheritFacet()
     // inherit "fixed" option
     setFixed(getFixed() | numBase->getFixed());
 
+}
+
+const RefVectorOf<XMLCh>* AbstractNumericFacetValidator::getEnumString() const
+{
+	return (fEnumerationInherited? getBaseValidator()->getEnumString() : fStrEnumeration );
 }
 
 /**

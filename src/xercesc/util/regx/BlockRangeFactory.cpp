@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:28  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/05 13:20:06  tng
+ * [Bug 5716] Can't parse with Validation more than one file.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:28  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/11/09 21:27:21  tng
  * Schema Regx Fix: manually add the extra specials and private use block range.
@@ -101,12 +104,6 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-
-// ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-bool BlockRangeFactory::fRangesCreated = false;
-bool BlockRangeFactory::fKeywordsInitialized = false;
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -379,7 +376,10 @@ const XMLInt32 blockRanges[] =
 // ---------------------------------------------------------------------------
 //  BlockRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BlockRangeFactory::BlockRangeFactory() {
+BlockRangeFactory::BlockRangeFactory() :
+   fRangesCreated(false)
+ , fKeywordsInitialized(false)
+{
 
 }
 

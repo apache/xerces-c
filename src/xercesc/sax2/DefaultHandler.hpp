@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:09  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:02  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
+ * sane_include
  *
  * Revision 1.6  2002/01/28 17:08:33  knoaman
  * SAX2-ext's DeclHandler support.
@@ -279,7 +282,7 @@ public:
     * @param uri The URI of the asscioated namespace for this element
 	* @param localname the local part of the element name
 	* @param qname the QName of this element
-    * @param attributes The specified or defaulted attributes.
+    * @param attrs The specified or defaulted attributes.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see DocumentHandler#startElement
@@ -415,7 +418,7 @@ public:
     * method is invoked, since the document is no longer reliable, and
     * the parser may no longer report parsing events.</p>
     *
-    * @param e The error information encoded as an exception.
+    * @param exception The error information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#fatalError
@@ -431,7 +434,7 @@ public:
     * for each warning, such as inserting the message in a log file or
     * printing it to the console.</p>
     *
-    * @param e The warning information encoded as an exception.
+    * @param exception The warning information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#warning
@@ -640,7 +643,7 @@ public:
     * @param aName The name of the attribute.
     * @param type A string representing the attribute type.
     * @param mode A string representing the attribute defaulting mode ("#IMPLIED", "#REQUIRED", or "#FIXED") or null if none of these applies.
-    * @param value A string representing the attribute's default value, or null if there is none. 
+    * @param value A string representing the attribute's default value, or null if there is none.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     */
@@ -656,7 +659,7 @@ public:
    /**
     * Report an internal entity declaration.
     *
-    * <p>Only the effective (first) declaration for each entity will be 
+    * <p>Only the effective (first) declaration for each entity will be
     * reported. All parameter entities in the value will be expanded, but
     * general entities will not.</p>
     *

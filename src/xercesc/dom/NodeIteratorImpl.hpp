@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:48  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:48  peiyongz
+ * sane_include
  *
  * Revision 1.5  2000/02/24 20:11:30  abagchi
  * Swat for removing Log from API docs
@@ -101,8 +110,8 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 	public:
 		virtual ~NodeIteratorImpl ();
 		NodeIteratorImpl (
-            DOM_Node root, 
-            unsigned long whatToShow, 
+            DOM_Node root,
+            unsigned long whatToShow,
             DOM_NodeFilter* nodeFilter,
             bool expandEntityRef);
 
@@ -110,6 +119,7 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 		
         NodeIteratorImpl& operator= (const NodeIteratorImpl& other);
 		
+		DOM_Node getRoot ();
         unsigned long getWhatToShow ();
 		DOM_NodeFilter* getFilter ();
 

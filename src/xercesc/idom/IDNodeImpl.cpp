@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,8 @@
 #include "IDDOMImplementation.hpp"
 
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <stdio.h>
 #include <assert.h>
 
@@ -86,7 +88,19 @@ const unsigned short IDNodeImpl::USERDATA     = 0x1<<9;
 const unsigned short IDNodeImpl::LEAFNODETYPE = 0x1<<10;
 const unsigned short IDNodeImpl::CHILDNODE    = 0x1<<11;
 
+// -----------------------------------------------------------------------
+//  Reset the singleton gEmptyNodeList
+// -----------------------------------------------------------------------
+static IDNodeListImpl *gEmptyNodeList;  // make a singleton empty node list
+static void reinitEmptyNodeList()
+{
+	delete gEmptyNodeList;
+	gEmptyNodeList = 0;
+}
 
+// -----------------------------------------------------------------------
+//  IDNodeImpl Functions
+// -----------------------------------------------------------------------
 IDNodeImpl::IDNodeImpl(IDOM_Node *ownerNode)
 {
     this->flags = 0;
@@ -133,9 +147,23 @@ IDOM_NamedNodeMap * IDNodeImpl::getAttributes() const {
 };
 
 
-static IDOM_NodeList *gEmptyNodeList;  // idom_revisit - make a singleton empty node list somewhere, shomehow.
 IDOM_NodeList *IDNodeImpl::getChildNodes() const {
-    return gEmptyNodeList;       // overridden in ParentNode
+	static XMLRegisterCleanup emptyNodeListCleanup;
+
+    if (gEmptyNodeList == 0)
+    {
+        IDOM_NodeList *t = new IDNodeListImpl(0);
+        if (XMLPlatformUtils::compareAndSwap((void **)&gEmptyNodeList, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            emptyNodeListCleanup.registerCleanup(reinitEmptyNodeList);
+        }
+
+    }
+    return (IDOM_NodeList *)gEmptyNodeList;
 };
 
 
@@ -288,7 +316,7 @@ void IDNodeImpl::normalize()
 };
 
 
-bool IDNodeImpl::supports(const XMLCh *feature, const XMLCh *version) const
+bool IDNodeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
 {
     return IDOM_DOMImplementation::getImplementation()->hasFeature(feature, version);
 }
@@ -313,6 +341,11 @@ void IDNodeImpl::setPrefix(const XMLCh *fPrefix)
 {
     throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
 }
+
+
+bool IDNodeImpl::hasAttributes() const {
+    return 0;                   // overridden in ElementImpl
+};
 
 
 

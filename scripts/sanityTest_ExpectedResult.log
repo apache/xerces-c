@@ -1,0 +1,1011 @@
+
+Usage:
+    SAXCount [options] <XML file | List file>
+
+This program invokes the SAX Parser, and then prints the
+number of elements, attributes, spaces and characters found
+in each XML file, using SAX API.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
+
+Usage:
+    SAXPrint [options] <XML file>
+
+This program invokes the SAX Parser, and then prints the
+data returned by the various SAX handlers for the specified
+XML file.
+
+Options:
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing.
+    -s          Enable schema processing.
+    -f          Enable full schema constraint checking.
+    -x=XXX      Use a particular encoding for output (LATIN1*).
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+The parser has intrinsic support for the following encodings:
+    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
+    WINDOWS-1252, IBM1140, IBM037.
+
+<?xml version="1.0" encoding="LATIN1"?>
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel><?xml version="1.0" encoding="LATIN1"?>
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel><?xml version="1.0" encoding="LATIN1"?>
+<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+
+  <person id="Big.Boss" contr="false">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker" contr="false">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker" contr="false">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker" contr="false">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker" contr="false">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker" contr="false">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel>
+Usage:
+    SAX2Count [options] <XML file | List file>
+
+This program invokes the SAX2XMLReader, and then prints the
+number of elements, attributes, spaces and characters found
+in each XML file, using SAX2 API.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -f          Enable full schema constraint checking processing. Defaults to off.
+    -p          Enable namespace-prefixes feature. Defaults to off.
+    -n          Disable namespace processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -s          Disable schema processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
+
+Usage:
+    SAX2Print [options] <XML file>
+
+This program invokes the SAX2XMLReader, and then prints the
+data returned by the various SAX2 handlers for the specified
+XML file.
+
+Options:
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
+    -e          Expand Namespace Alias with URI's.
+    -x=XXX      Use a particular encoding for output (LATIN1*).
+    -f          Enable full schema constraint checking processing. Defaults to off.
+    -p          Enable namespace-prefixes feature. Defaults to off.
+    -s          Disable schema processing. Defaults to on.
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+The parser has intrinsic support for the following encodings:
+    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
+    WINDOWS-1252, IBM1140, IBM037.
+
+<?xml version="1.0" encoding="LATIN1"?>
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel><?xml version="1.0" encoding="LATIN1"?>
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel><?xml version="1.0" encoding="LATIN1"?>
+<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+
+  <person id="Big.Boss" contr="false">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
+  </person>
+
+  <person id="one.worker" contr="false">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="two.worker" contr="false">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="three.worker" contr="false">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="four.worker" contr="false">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+  <person id="five.worker" contr="false">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"></link>
+  </person>
+
+</personnel>
+Finished parsing the memory buffer containing the following XML statements:
+
+<?xml version='1.0' encoding='ascii'?>
+<!DOCTYPE company [
+<!ELEMENT company     (product,category,developedAt)>
+<!ELEMENT product     (#PCDATA)>
+<!ELEMENT category    (#PCDATA)>
+<!ATTLIST category idea CDATA #IMPLIED>
+<!ELEMENT developedAt (#PCDATA)>
+]>
+
+<company>
+    <product>XML4C</product>
+    <category idea='great'>XML Parsing Tools</category>
+    <developedAt>
+      IBM Center for Java Technology, Silicon Valley, Cupertino, CA
+    </developedAt>
+</company>
+
+
+Parsing took{timing removed}(4 elements, 1 attributes, 16 spaces, 95 characters).
+
+
+Finished parsing the memory buffer containing the following XML statements:
+
+<?xml version='1.0' encoding='ascii'?>
+<!DOCTYPE company [
+<!ELEMENT company     (product,category,developedAt)>
+<!ELEMENT product     (#PCDATA)>
+<!ELEMENT category    (#PCDATA)>
+<!ATTLIST category idea CDATA #IMPLIED>
+<!ELEMENT developedAt (#PCDATA)>
+]>
+
+<company>
+    <product>XML4C</product>
+    <category idea='great'>XML Parsing Tools</category>
+    <developedAt>
+      IBM Center for Java Technology, Silicon Valley, Cupertino, CA
+    </developedAt>
+</company>
+
+
+Parsing took{timing removed}(4 elements, 1 attributes, 0 spaces, 111 characters).
+
+
+Usage:
+    Redirect <XML file>
+
+This program installs an entity resolver, traps the call to
+the external DTD file and redirects it to another application
+specific file which contains the actual dtd.
+
+The program then counts and reports the number of elements and
+attributes in the given XML file.
+
+personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+
+Usage:
+    DOMCount [options] <XML file | List file>
+
+This program invokes the DOM parser, builds the DOM tree,
+and then prints the number of elements found in each XML file.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+personal.xml:{timing removed}(37 elems).
+personal.xml:{timing removed}(37 elems).
+personal-schema.xml:{timing removed}(37 elems).
+
+Usage:
+    DOMPrint [options] <XML file>
+
+This program invokes the DOM parser, and builds the DOM tree.
+It then traverses the DOM tree and prints the contents of the
+tree for the specified XML file.
+
+Options:
+    -e          create entity reference nodes. Default is no expansion.
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Default is off.
+    -s          Enable schema processing. Default is off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -x=XXX      Use a particular encoding for output. Default is
+                the same encoding as the input XML file. UTF-8 if
+                input XML file has not XML declaration.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+The parser has intrinsic support for the following encodings:
+    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
+    WINDOWS-1252, IBM1140, IBM037.
+
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE personnel SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE personnel SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+
+  <person id="Big.Boss" contr="false">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker" contr="false">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker" contr="false">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker" contr="false">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker" contr="false">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker" contr="false">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+
+Usage:
+    IDOMCount [options] <XML file | List file>
+
+This program invokes the IDOM parser, builds the DOM tree,
+and then prints the number of elements found in each XML file.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+personal.xml:{timing removed}(37 elems).
+personal.xml:{timing removed}(37 elems).
+personal-schema.xml:{timing removed}(37 elems).
+
+Usage:
+    IDOMPrint [options] <XML file>
+
+This program invokes the IDOM parser, and builds the DOM tree.
+It then traverses the DOM tree and prints the contents of the
+tree for the specified XML file.
+
+Options:
+    -e          create entity reference nodes. Default is no expansion.
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Default is off.
+    -s          Enable schema processing. Default is off.
+    -f          Enable full schema constraint checking. Defaults is off.
+    -x=XXX      Use a particular encoding for output. Default is
+                the same encoding as the input XML file. UTF-8 if
+                input XML file has not XML declaration.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+The parser has intrinsic support for the following encodings:
+    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
+    WINDOWS-1252, IBM1140, IBM037.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+
+  <person contr="false" id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person contr="false" id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+stdin:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
+stdin:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
+
+Usage:
+    PParse [options] <XML file>
+
+This program demonstrates the progressive parse capabilities of
+the parser system. It allows you to do a scanFirst() call followed by
+a loop which calls scanNext(). You can drop out when you've found what
+ever it is you want. In our little test, our event handler looks for
+16 new elements then sets a flag to indicate its found what it wants.
+At that point, our progressive parse loop exits.
+
+Options:
+      -v=xxx        - Validation scheme [always | never | auto*].
+      -n            - Enable namespace processing [default is off].
+      -s            - Enable schema processing [default is off].
+      -f            - Enable full schema constraint checking [default is off].
+      -?            - Show this help.
+
+  * = Default if not provided explicitly.
+
+personal.xml:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+personal-schema.xml:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
+
+Usage:
+    EnumVal <XML file>
+
+This program parses the specified XML file, then shows how to
+enumerate the contents of the DTD Grammar. Essentially,
+shows how one can access the DTD information stored in internal
+data structures.
+
+
+ELEMENTS:
+----------------------------
+  Name: personnel
+  Content Model: (person)+
+
+  Name: person
+  Content Model: (name,email*,url*,link?)
+  Attributes:
+    Name:id, Type: ID
+
+  Name: name
+  Content Model: (#PCDATA|family|given)*
+
+  Name: email
+  Content Model: (#PCDATA)
+
+  Name: url
+  Content Model: EMPTY
+  Attributes:
+    Name:href, Type: CDATA
+
+  Name: link
+  Content Model: EMPTY
+  Attributes:
+    Name:subordinates, Type: IDREF(S)
+    Name:manager, Type: IDREF(S)
+
+  Name: family
+  Content Model: (#PCDATA)
+
+  Name: given
+  Content Model: (#PCDATA)
+
+
+Usage:
+    SEnumVal <XML file>
+
+This program parses a file, then shows how to enumerate the
+contents of the Schema Grammar. Essentially, shows how one can
+access the Schema information stored in internal data structures.
+
+Name:			personnel
+Model Type:		Children
+Create Reason:	Declared
+ContentType:	OneOrMore
+Content Model:	(person)+
+ComplexType:
+	TypeName:	,C0
+	ContentType:	OneOrMore
+--------------------------------------------
+Name:			person
+Model Type:		Children
+Create Reason:	Declared
+ContentType:	Sequence
+Content Model:	(name,email*,url*,link?)
+ComplexType:
+	TypeName:	,C1
+	ContentType:	Sequence
+Attributes:
+	Name:			salary
+	Type:			CDATA
+	Default Type:	#IMPLIED
+	Base Datatype:		Decimal
+Facets:		
+	fractionDigits=0
+
+	Name:			id
+	Type:			ID
+	Default Type:	#REQUIRED
+	Base Datatype:		ID
+
+	Name:			contr
+	Type:			CDATA
+	Default Type:	#DEFAULT
+	Value:			false
+	Base Datatype:		string
+Enumeration:		
+	true
+	false
+
+	Name:			note
+	Type:			CDATA
+	Default Type:	#IMPLIED
+	Base Datatype:		string
+
+--------------------------------------------
+Name:			name
+Model Type:		Children
+Create Reason:	Declared
+ContentType:	All
+Content Model:	All(family,given)
+ComplexType:
+	TypeName:	,C3
+	ContentType:	All
+--------------------------------------------
+Name:			family
+Model Type:		Simple
+Create Reason:	Declared
+Base Datatype:		string
+--------------------------------------------
+Name:			given
+Model Type:		Simple
+Create Reason:	Declared
+Base Datatype:		string
+--------------------------------------------
+Name:			email
+Model Type:		Simple
+Create Reason:	Declared
+Base Datatype:		string
+--------------------------------------------
+Name:			url
+Model Type:		Empty
+Create Reason:	Declared
+Content Model:	EMPTY
+ComplexType:
+	TypeName:	,C4
+Attributes:
+	Name:			href
+	Type:			CDATA
+	Default Type:	#DEFAULT
+	Value:			http://
+	Base Datatype:		string
+
+--------------------------------------------
+Name:			link
+Model Type:		Empty
+Create Reason:	Declared
+Content Model:	EMPTY
+ComplexType:
+	TypeName:	,C5
+Attributes:
+	Name:			subordinates
+	Type:			IDREFS
+	Default Type:	#IMPLIED
+	Base Datatype:		List
+
+	Name:			manager
+	Type:			IDREF
+	Default Type:	#IMPLIED
+	Base Datatype:		IDREF
+
+--------------------------------------------
+The tree just created contains: 4 elements.
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   151
+    live  string buffers:   0
+    total string buffers:   331
+    live  nodeImpls:        0
+    total nodeImpls:        55
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    18
+DOM Memory Test.
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   545
+    live  string buffers:   0
+    total string buffers:   578
+    live  nodeImpls:        0
+    total nodeImpls:        183
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    37
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   240
+    live  string buffers:   0
+    total string buffers:   271
+    live  nodeImpls:        0
+    total nodeImpls:        220
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    34
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   145
+    live  string buffers:   0
+    total string buffers:   163
+    live  nodeImpls:        0
+    total nodeImpls:        77
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    0
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   17
+    live  string buffers:   0
+    total string buffers:   17
+    live  nodeImpls:        0
+    total nodeImpls:        17
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    2
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+
+Usage:
+    InitTermTest [options] <XML file>
+
+This program tests the XMLPlatformUtils::Initialize()/Terminate()
+pair by calling it a number of times.  All four parsers
+(DOMParser, IDOMParser, SAXParser and SAX2XMLReader) are invoked
+to parse the specified XML file.
+
+Options:
+    -n          Enable namespace processing. Default is off.
+    -s          Enable schema processing. Default is off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+No input XML file specified on command line.
+usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...
+     -v             Use validating parser.  Non-validating is default.
+     -n             Enable namespace processing. Defaults to off.
+     -s             Enable schema processing. Defaults to off.
+     -f             Enable full schema constraint checking. Defaults to off.
+     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.
+     -quiet         Suppress periodic status display.
+     -verbose       Display extra messages.
+     -reuse         Retain and reuse parser.  Default creates new for each parse.
+     -threads nnn   Number of threads.  Default is 2.
+     -time nnn      Total time to run, in seconds.  Default is forever.
+     -dump          Dump DOM tree on error.
+     -mem           Read files into memory once only, and parse them from there.
+
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully
+Test Run Successfully

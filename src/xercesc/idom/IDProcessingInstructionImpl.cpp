@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -182,6 +182,7 @@ void IDProcessingInstructionImpl::setData(const XMLCh *arg)
            IDOM_Node          *IDProcessingInstructionImpl::removeChild(IDOM_Node *oldChild)        {return fNode.removeChild (oldChild); };
            IDOM_Node          *IDProcessingInstructionImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                                                     {return fNode.replaceChild (newChild, oldChild); };
-           bool                IDProcessingInstructionImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                                                    {return fNode.supports (feature, version); };
+           bool                IDProcessingInstructionImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                                    {return fNode.isSupported (feature, version); };
            void                IDProcessingInstructionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool                IDProcessingInstructionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };

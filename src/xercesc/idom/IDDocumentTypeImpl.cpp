@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,6 +87,9 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(IDOM_Document *ownerDoc,
     }
     else {
         name = XMLString::replicate(dtName);
+        entities = new IDNamedNodeMapImpl(this);
+        notations= new IDNamedNodeMapImpl(this);
+        elements = new IDNamedNodeMapImpl(this);
     }
 };
 
@@ -123,6 +126,9 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(IDOM_Document *ownerDoc,
         publicId = XMLString::replicate(pubId);
         systemId = XMLString::replicate(sysId);
         name = XMLString::replicate(qualifiedName);
+        entities = new IDNamedNodeMapImpl(this);
+        notations= new IDNamedNodeMapImpl(this);
+        elements = new IDNamedNodeMapImpl(this);
     }
 };
 
@@ -144,10 +150,6 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(const IDDocumentTypeImpl &other, bool dee
         name = other.name;
         if (deep)
             fParent.cloneChildren(&other);
-        entities = ((IDNamedNodeMapImpl *)other.entities)->cloneMap(this);
-        notations= ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
-        elements = ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
-
         //DOM Level 2
         publicId		= other.publicId;
         systemId		= other.systemId;
@@ -159,6 +161,11 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(const IDDocumentTypeImpl &other, bool dee
         systemId = XMLString::replicate(other.systemId);
         internalSubset = XMLString::replicate(other.internalSubset);
     }
+
+    entities = ((IDNamedNodeMapImpl *)other.entities)->cloneMap(this);
+    notations= ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
+    elements = ((IDNamedNodeMapImpl *)other.elements)->cloneMap(this);
+
 }
 
 
@@ -176,6 +183,10 @@ IDDocumentTypeImpl::~IDDocumentTypeImpl()
 
         temp = (XMLCh*) internalSubset;
         delete [] temp;
+
+        delete entities;
+        delete notations;
+        delete elements;
     }
 }
 
@@ -217,12 +228,21 @@ void IDDocumentTypeImpl::setOwnerDocument(IDOM_Document *doc) {
             name = docImpl->cloneString(name);
             delete [] temp;
 
-            entities = new (docImpl) IDNamedNodeMapImpl(this);
-            notations= new (docImpl) IDNamedNodeMapImpl(this);
-            elements = new (docImpl) IDNamedNodeMapImpl(this);
-
             fNode.setOwnerDocument(doc);
             fParent.setOwnerDocument(doc);
+
+            IDOM_NamedNodeMap* entitiesTemp = ((IDNamedNodeMapImpl *)entities)->cloneMap(this);
+            IDOM_NamedNodeMap* notationsTemp = ((IDNamedNodeMapImpl *)notations)->cloneMap(this);
+            IDOM_NamedNodeMap* elementsTemp = ((IDNamedNodeMapImpl *)elements)->cloneMap(this);
+
+            delete entities;
+            delete notations;
+            delete elements;
+
+            entities = entitiesTemp;
+            notations = notationsTemp;
+            elements = elementsTemp;
+
         }
     }
 }
@@ -374,7 +394,8 @@ void        IDDocumentTypeImpl::setInternalSubset(const XMLCh *value)
            IDOM_Node          *IDDocumentTypeImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDDocumentTypeImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };
-           bool                IDDocumentTypeImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.supports (feature, version); };
+           bool                IDDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                            {return fNode.isSupported (feature, version); };
            void                IDDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool                IDDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
 

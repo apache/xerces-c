@@ -409,7 +409,7 @@ public :
       * correctly enforced on a per-thread basis or that incorrect nesting
       * of lock/unlock operations will be caught.
       *
-      * @param mtxGandle The mutex handle that you want to unlock
+      * @param mtxHandle The mutex handle that you want to unlock
       */
     static void unlockMutex(void* const mtxHandle);
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
+<!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
+<faqs title="Other &XercesCName; Questions">
+
+  <faq title="How do I determine the version of &XercesCName; I am using?">
+        <q>How do I determine the version of &XercesCName; I am using?</q>
+        <a>
+
+           <p>The version string for &XercesCName; is in one of the header files. Look
+           inside the file <code>src/xercesc/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/xercesc/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
+           something similar). This is the version of &XercesCName; you are using.</p>
+
+           <p>If you don't have the header files, you have to find the version
+           information from the shared library name. On Windows right click on
+           the DLL name &XercesCWindowsDLL;.dll in the bin directory and look up
+           properties. The version information may be found on the Version tab.</p>
+
+           <p>On AIX, just look for the library name &XercesCUnixLib;.a (or
+           &XercesCUnixLib;.so on Solaris/Linux and &XercesCUnixLib;.sl on HP-UX). The
+           version number is coded in the name of the library.</p>
+        </a>
+  </faq>
+
+  <faq title="I can't use C++. Do you have a Java version?">
+
+    <q>I can't use C++. Do you have a Java version?</q>
+
+    <a>
+
+      <p>Yes. The Xerces family of products also has a Java version. More
+        information is available at:
+        <jump href="http://xml.apache.org/xerces-j/index.html">
+        http://xml.apache.org/xerces-j/index.html</jump></p>
+
+    </a>
+  </faq>
+
+
+  <faq title="Where can I find additional information on XML?">
+
+    <q>Where can I find additional information on XML?</q>
+
+    <a>
+
+    <p>The Web. <jump href="http://www.oasis-open.org/cover/xml.html">
+      http://www.oasis-open.org/cover/xml.html</jump> is an excellent place to start,
+      with links to overviews, FAQs, specifications, industry news, applications and
+      other software, related standards, etc.</p>
+
+    </a>
+  </faq>
+
+  <faq title="Is there any kind of support available for &XercesCName;?">
+
+    <q>Is there any kind of support available for &XercesCName;?</q>
+
+    <a>
+
+    <p>&XercesCName; comes with <em>no</em> formal support.</p>
+
+      <p>Every volunteer project obtains its strength from the people involved in
+        it. Mailing lists provide a simple and effective communication mechanism. You
+        are welcome to join any of these mailing lists (or all of them if you wish).
+        You can choose to lurk, or to actively participate. It's up to you. Before you
+        join these lists, you should look over the resources in the Reference Library
+        section</p>
+
+      <p>Instructions for subscribing are at
+        <jump
+         href="http://xml.apache.org/mail.html">http://xml.apache.org/mail.html</jump>.
+        Archives of the lists are available from
+        <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
+        http://marc.theaimsgroup.com/?l=xerces-c-dev</jump>
+        </p>
+
+    </a>
+  </faq>
+
+  <faq title="I found a defect -- how do I report it?">
+
+    <q>I found a defect -- how do I report it?</q>
+
+    <a>
+
+      <p>See <jump href="bug-report.html">Bug Reporting</jump>.
+      </p>
+
+    </a>
+  </faq>
+
+  <faq title="I have a patch to the &XercesCName; source code. How do I submit it?">
+
+    <q>I have a patch to the &XercesCName; source code. How do I submit it?</q>
+
+    <a>
+
+      <p>Mail it to the <jump href="mailto:&XercesCEmailAddress;">&XercesCName;
+        mailing list</jump>. There are no set rules about
+        how or what must be included -- if you've fixed a problem or enhanced the code
+        in some way, we really would like to get your changes, and will take them in
+        any reasonable form.</p>
+
+      <p>Generally a diff of the changed files against the current sources from
+        CVS is good, along with some kind of description of what the change is.
+        (Working with the current sources is important!)</p>
+
+    </a>
+  </faq>
+
+  <faq title="Where can I get predefined character entity definitions?">
+
+    <q>Where can I get predefined character entity definitions??</q>
+
+    <a>
+
+    <p> Download <jump href="http://www.w3.org/TR/xhtml1/xhtml1.zip">
+      http://www.w3.org/TR/xhtml1/xhtml1.zip. </jump></p>
+
+    </a>
+  </faq>
+
+</faqs>

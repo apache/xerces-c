@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -134,9 +134,10 @@ short IDCommentImpl::getNodeType() const {
            IDOM_Node          *IDCommentImpl::removeChild(IDOM_Node *oldChild)        {return fNode.removeChild (oldChild); };
            IDOM_Node          *IDCommentImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fNode.replaceChild (newChild, oldChild); };
-           bool                IDCommentImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.supports (feature, version); };
+           bool                IDCommentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                            {return fNode.isSupported (feature, version); };
            void                IDCommentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool                IDCommentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
 
 
 //

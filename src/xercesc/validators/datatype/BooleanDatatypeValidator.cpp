@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:40  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:40  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
@@ -220,6 +223,11 @@ int BooleanDatatypeValidator::compare(const XMLCh* const lValue
     }
 
     return 1;
+}
+
+const RefVectorOf<XMLCh>* BooleanDatatypeValidator::getEnumString() const
+{
+	return 0;
 }
 
 /**

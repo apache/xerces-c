@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/25 21:18:53  tng
+ * Schema Fix: Ensure no invalid uri index for UPA checking.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.29  2001/12/10 21:42:55  peiyongz
  * Memory Leak: fLeafNameTypeVector
@@ -1192,7 +1195,10 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
 
         unsigned int orgURIIndex = fElemMap[i]->getURI();
 
-        if (orgURIIndex != XMLContentModel::gEOCFakeId) {
+        if ((orgURIIndex != XMLContentModel::gEOCFakeId) &&
+            (orgURIIndex != XMLContentModel::gEpsilonFakeId) &&
+            (orgURIIndex != XMLElementDecl::fgInvalidElemId) &&
+            (orgURIIndex != XMLElementDecl::fgPCDataElemId)) {
             fElemMap[i]->setURI(pContentSpecOrgURI[orgURIIndex]);
         }
     }

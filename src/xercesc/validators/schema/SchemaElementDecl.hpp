@@ -56,8 +56,14 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.3  2002/03/04 15:09:50  knoaman
+ * Fix for bug 6834.
+ *
+ * Revision 1.2  2002/02/06 22:30:50  knoaman
+ * Added a new attribute to store the wild card information for elements of type 'anyType'.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.16  2001/11/23 18:25:45  tng
  * Eliminate Warning from AIX xlC 3.6: 1540-399: (W) "IdentityConstraint" is undefined.  The delete operator will not call a destructor.
@@ -232,6 +238,7 @@ public :
     void setTypeFromAnotherSchemaURI(const XMLCh* const uriStr);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
+    void setAttWildCard(SchemaAttDef* const attWildCard);
 
     // -----------------------------------------------------------------------
     //  IC methods
@@ -291,6 +298,10 @@ private :
     //
     //  fIdentityConstraints
     //      Store information about an element identity constraints.
+    //
+    //  fAttWildCard
+    //      Store wildcard attribute in the case of an element with a type of
+    //      'anyType'.
     // -----------------------------------------------------------------------
     ModelTypes                         fModelType;
     DatatypeValidator*                 fDatatypeValidator;
@@ -306,6 +317,7 @@ private :
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     ComplexTypeInfo*                   fXsiComplexTypeInfo;
     RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
+    SchemaAttDef*                      fAttWildCard;
 };
 
 // ---------------------------------------------------------------------------
@@ -376,6 +388,10 @@ inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
 
 inline DatatypeValidator* SchemaElementDecl::getDatatypeValidator() const
 {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getDatatypeValidator();
+    }
+
     return fDatatypeValidator;
 }
 
@@ -438,7 +454,7 @@ inline const SchemaAttDef* SchemaElementDecl::getAttWildCard() const {
         return fComplexTypeInfo->getAttWildCard();
     }
 
-    return 0;
+    return fAttWildCard;
 }
 
 inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
@@ -450,7 +466,7 @@ inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
         return fComplexTypeInfo->getAttWildCard();
     }
 
-    return 0;
+    return fAttWildCard;
 }
 
 // ---------------------------------------------------------------------------
@@ -530,6 +546,15 @@ inline void
 SchemaElementDecl::setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo)
 {
     fXsiComplexTypeInfo = typeInfo;
+}
+
+inline void
+SchemaElementDecl::setAttWildCard(SchemaAttDef* const attWildCard) {
+
+    if (fAttWildCard)
+        delete fAttWildCard;
+
+    fAttWildCard = attWildCard;
 }
 
 // ---------------------------------------------------------------------------

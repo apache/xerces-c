@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:07  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/20 18:17:01  tng
+ * [Bug 5977] Warnings on generating apiDocs.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:07  peiyongz
+ * sane_include
  *
  * Revision 1.22  2001/12/05 22:09:02  tng
  * Update documentation for setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation.
@@ -523,7 +526,7 @@ public :
       * documents: e.g, "http://www.example.com file_name.xsd". The user can
       * specify more than one XML Schema in the list.
       *
-      * @param the list of schemas to use
+      * @param schemaLocation the list of schemas to use
       *
       * @see #getExternalSchemaLocation
       */
@@ -534,7 +537,7 @@ public :
       * This method is same as setExternalSchemaLocation(const XMLCh* const).
       * It takes native char string as parameter
       *
-      * @param the list of schemas to use
+      * @param schemaLocation the list of schemas to use
       *
       * @see #setExternalSchemaLocation(const XMLCh* const)
       */
@@ -550,7 +553,7 @@ public :
       * The syntax is the same as for the noNamespaceSchemaLocation attribute
       * that may occur in an instance document: e.g."file_name.xsd".
       *
-      * @param the XML Schema Location with no target namespace
+      * @param noNamespaceSchemaLocation the XML Schema Location with no target namespace
       *
       * @see #getExternalNoNamespaceSchemaLocation
       */
@@ -560,7 +563,7 @@ public :
       * This method is same as setExternalNoNamespaceSchemaLocation(const XMLCh* const).
       * It takes native char string as parameter
       *
-      * @param the XML Schema Location with no target namespace
+      * @param noNamespaceSchemaLocation the XML Schema Location with no target namespace
       *
       * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
       */
@@ -689,9 +692,9 @@ public :
       * parser. It allows applications to trap and redirect calls to
       * external entities.
       *
-      * @param handler A pointer to the entity resolver to be called
-      *                when the parser comes across references to
-      *                entities in the XML file.
+      * @param resolver A pointer to the entity resolver to be called
+      *                 when the parser comes across references to
+      *                 entities in the XML file.
       *
       * @see Parser#setEntityResolver
       */
@@ -894,7 +897,7 @@ public :
     (
         const   DTDElementDecl& elemDecl
         , const DTDAttDef&      attDef
-        , const bool            ignoring
+        , const bool            ignore
     );
 
     /**

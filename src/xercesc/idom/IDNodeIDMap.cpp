@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,7 @@
 #include "IDDocumentImpl.hpp"
 #include "IDNodeIDMap.hpp"
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/RuntimeException.hpp>
 #include <stdio.h>
 
 static const int gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a few more.
@@ -80,7 +81,7 @@ IDNodeIDMap::IDNodeIDMap(int initialSize, IDOM_Document *doc)
             // We need a bigger size than the largest available one.
             //   Big trouble.
             fSizeIndex--;
-            throw "IDNodeIDMap::IDNodeIDMap - big trouble.";
+            ThrowXML(RuntimeException, XMLExcepts::NodeIDMap_GrowErr);
         }
     }
 
@@ -238,7 +239,9 @@ void IDNodeIDMap::growTable()
     //
     //  Figure the new table size.
     //
+#if defined(XERCES_DEBUG)
     fprintf(stderr, "growing...\n");
+#endif
     fSizeIndex++;
     fSize = gPrimes[fSizeIndex];
     if (fSize == 0)
@@ -246,7 +249,7 @@ void IDNodeIDMap::growTable()
         // We need to grow bigger than the largest available size.
         //   Big trouble.
         fSizeIndex--;
-        throw "IDNodeIDMap::growTable - big trouble.";
+        ThrowXML(RuntimeException, XMLExcepts::NodeIDMap_GrowErr);
     }
 
     //

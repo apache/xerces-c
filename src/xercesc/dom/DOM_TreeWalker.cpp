@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
+ * sane_include
  *
  * Revision 1.5  2000/08/08 01:00:36  aruna1
  * detach functionality removed from TreeWalker
@@ -162,6 +171,11 @@ bool       DOM_TreeWalker::operator == (const DOM_NullPtr * other) const
     return this->fImpl == 0;
 };
 
+
+
+DOM_Node     		DOM_TreeWalker::getRoot() {
+    return fImpl->getRoot();
+}
 
 
 unsigned long		DOM_TreeWalker::getWhatToShow() {

@@ -1,0 +1,10 @@
+option sample_options =
+    link(linkwithmultithreadlib, "yes"),
+    link(map, "Yes"),
+    link(pmtype, "vio"),
+    link(stub, "Yes"),
+    opt(inline, "yes"),
+    opt(level, "2"),
+    opt(tune, "pentium"),
+    incl(searchpath, BASE_DIR "\\include\\xercesc"),
+    incl(searchpath, BASE_DIR "\\include\\xercesc\\dom")

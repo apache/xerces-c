@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:07  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/13 16:09:24  knoaman
+ * Move SAX2 features/properties names constants to XMLUni.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:07  peiyongz
+ * sane_include
  *
  * Revision 1.21  2002/01/28 18:45:40  knoaman
  * Update documentation for SAX2 feature 'namespace-prefixes'.
@@ -179,17 +182,6 @@ class PARSERS_EXPORT SAX2XMLReaderImpl :
     , public DocTypeHandler
 {
 public :
-
-	static const XMLCh SAX_CORE_VALIDATION[];
-	static const XMLCh SAX_CORE_NAMESPACES[];
-	static const XMLCh SAX_CORE_NAMESPACE_PREFIXES[];
-	static const XMLCh SAX_XERCES_DYNAMIC[];
-	static const XMLCh SAX_XERCES_REUSEVALIDATOR[];
-	static const XMLCh SAX_XERCES_REUSEGRAMMAR[];
-	static const XMLCh SAX_XERCES_SCHEMA[];
-	static const XMLCh SAX_XERCES_SCHEMA_FULL_CHECKING[];
-	static const XMLCh SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION[];
-	static const XMLCh SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION[];
 	
 	SAX2XMLReaderImpl() ;
 	~SAX2XMLReaderImpl() ;

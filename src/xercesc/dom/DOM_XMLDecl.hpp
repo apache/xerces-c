@@ -77,7 +77,7 @@ public:
     //@{
     /**
      * The default constructor for DOM_XMLDecl creates a null
-     * DOM_XMLDecl object that refers to a declaration node with 
+     * DOM_XMLDecl object that refers to a declaration node with
      * version= 1.0, encoding=utf-8 and standalone=no
      *
      */
@@ -108,7 +108,7 @@ public:
       *   for an extended time,  when the storage belonging to the underlying
       *   node needs to be reclaimed.
       *
-      * @param val.  Only a value of 0, or null, is allowed.
+      * @param val  Only a value of 0, or null, is allowed.
       */
     DOM_XMLDecl & operator = (const DOM_NullPtr *val);
 
@@ -135,24 +135,24 @@ public:
   //@}
 
     //@{
-  
+
   /**
     * To get the version string of the xmlDeclaration statement
     */
     DOMString getVersion() const;
-  
+
   /**
     * To get the encoding string of the xmlDeclaration statement
     */
     DOMString getEncoding() const;
-  
+
   /**
     * To get the standalone string of the xmlDeclaration statement
     */
     DOMString getStandalone() const;
 
    //@}
-    
+
 protected:
     DOM_XMLDecl( XMLDeclImpl *impl);
 
