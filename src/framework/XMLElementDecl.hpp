@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/16 19:48:56  roddey
+ * More documentation updates
+ *
  * Revision 1.3  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -175,6 +178,35 @@ class XMLPARSER_EXPORT XMLElementDecl
     // -----------------------------------------------------------------------
     //  The virtual element decl interface
     // -----------------------------------------------------------------------
+
+    /** @name Virual ElementDecl interface */
+    //@{
+
+    /** Find an attribute by name or optionally fault it in.
+      *
+      * The derived class should look up the passed attribute in the list of
+      * of attributes for this element. If namespaces are enabled, then it
+      * should use the uriId/baseName pair, else it should use the qName. The
+      * options allow the caller to indicate whether the attribute should be
+      * defaulted in if not found. If it is defaulted in, then wasAdded should
+      * be set, else it should be cleared. If its not found and the caller does
+      * not want defaulting, then return a null pointer.
+      *
+      * @param  qName       This is the qName of the attribute, i.e. the actual
+      *                     lexical name found.
+      *
+      * @param  uriId       This is the id of the URI of the namespace to which
+      *                     this attribute mapped. Only valid if namespaces are
+      *                     enabled.
+      *
+      * @param  baseName    This is the base part of the name, i.e. after any
+      *                     prefix.
+      *
+      * @param  options     Indicates the lookup options.
+      *
+      * @param  wasAdded    Should be set if the attribute is faulted in, else
+      *                     cleared.
+      */
     virtual XMLAttDef* findAttr
     (
         const   XMLCh* const    qName
@@ -183,40 +215,218 @@ class XMLPARSER_EXPORT XMLElementDecl
         , const LookupOpts      options
         ,       bool&           wasAdded
     )   const = 0;
+
+    /** Get a list of attributes defined for this element.
+      *
+      * The derived class should return a reference to some member object which
+      * implements the XMLAttDefList interface. This object gives the scanner the
+      * ability to look through the attributes defined for this element.
+      *
+      * It is done this way for efficiency, though of course this is not thread
+      * safe. The scanner guarantees that it won't ever call this method in any
+      * nested way, but the outside world must be careful about when it calls
+      * this method, and optimally never would.
+      */
     virtual XMLAttDefList& getAttDefList() const = 0;
+
+    /** Get the base name of this element type.
+      *
+      * The derived class should return the base name part of the element's
+      * name. This is the same regardless of whether namespaces are enabled or
+      * not.
+      *
+      * @return A const pointer to the base name of the element decl.
+      */
     virtual const XMLCh* getBaseName() const = 0;
+
+    /** The character data options for this element type
+      *
+      * The derived class should return an appropriate character data opts value
+      * which correctly represents its tolerance towards whitespace or character
+      * data inside of its instances. This allows the scanner to do all of the
+      * validation of character data.
+      */
     virtual CharDataOpts getCharDataOpts() const = 0;
+
+    /** Get the full name of this element type.
+      *
+      * The derived class should reutrn the full name of the element. If namespaces
+      * are not enabled, then this is the qName. Else it is the {uri}baseName
+      * form. For those validators that always require namespace processing, it
+      * will always be in the latter form because namespace processing will always
+      * be on.
+      */
     virtual const XMLCh* getFullName() const = 0;
+
+    /** Indicate whether this element type defined any attributes
+      *
+      * The derived class should return a boolean that indicates whether this
+      * element has any attributes defined for it or not. This is an optimization
+      * that allows the scanner to skip some work if no attributes exist.
+      */
     virtual bool hasAttDefs() const = 0;
+
+    /** Reset the flags on the attribute definitions.
+      *
+      * This method is called by the scanner at the beginning of each scan
+      * of a start tag, asking this element decl to reset the 'declared' flag
+      * of each of its attribute defs. This allows the scanner to mark each
+      * one as declared yet or not.
+      */
     virtual bool resetDefs() = 0;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XMLContentModel* getContentModel();
+
+    /** @name Getter methods */
+    //{@
+
+    /** Get a pointer to the abstract content model
+      *
+      * This method will return a const pointer to the content model object
+      * of this element. This class is a simple abstraction that allows an
+      * element to define and use multiple, specialized content model types
+      * internally but still allow the outside world to do simple stuff with
+      * them.
+      *
+      * @return A const pointer to the element's content model, via the basic
+      * abstract content model type.
+      */
     const XMLContentModel* getContentModel() const;
+
+    /** Get a pointer to the abstract content model
+      *
+      * This method is identical to the previous one, except that it is non
+      * const.
+      */
+    XMLContentModel* getContentModel();
+
+    /** Get the create reason for this element type
+      *
+      * This method returns an enumeration which indicates why this element
+      * declaration exists. Elements can be used before they are actually
+      * declared, so they will often be faulted into the pool and marked as
+      * to why they are there.
+      *
+      * @return An enumerated value that indicates the reason why this element
+      * was added to the element decl pool.
+      */
     CreateReasons getCreateReason() const;
+
+    /** Get the element decl pool id for this element type
+      *
+      * This method will return the element decl pool id of this element
+      * declaration. This uniquely identifies this element type within the
+      * parse event that it is declared within. This value is assigned by the
+      * validator whose decl pool this object belongs to.
+      *
+      * @return The element decl id of this element declaration.
+      */
     unsigned int getId() const;
+
+    /** Indicate whether this element type has been declared yet
+      *
+      * This method returns a boolean that indicates whether this element
+      * has been declared yet. There are a number of reasons why an element
+      * declaration can be faulted in, but eventually it must be declared or
+      * its an error. See the CreateReasons enumeration.
+      *
+      * @return true if this element has been declared, else false.
+      */
     bool isDeclared() const;
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+
+    /** @name Setter methods */
+    //{@
+
+    /** Set the content model object for this element type
+      *
+      * This method will adopt the based content model object. This is called
+      * by the actual validator which is parsing its DTD or Schema or whatever
+      * a creating an element decl. It will build what it feels is the correct
+      * content model type object and store it on the element decl object via
+      * this method.
+      *
+      * @param  newModelToAdopt This method will adop the passed content model
+      *         object. Any previous object is destroyed.
+      */
     void setContentModel(XMLContentModel* const newModelToAdopt);
+
+    /** Update the create reason for this element type.
+      *
+      * This method will update the 'create reason' field for this element
+      * decl object. As the validator parses its DTD, Schema, etc... it will
+      * encounter various references to an element declaration, which will
+      * cause the element declaration to either be declared or to be faulted
+      * into the pool in preperation for some future declaration. As it does
+      * so,it will update this field to indicate the current satus of the
+      * decl object.
+      */
     void setCreateReason(const CreateReasons newReason);
+
+    /** Set the element decl pool id for this element type
+      *
+      * This method will set the pool id of this element decl. This is called
+      * by the validator which created this object, and will provide this
+      * decl object with a unique id within the parse event that created it.
+      */
     void setId(const unsigned int newId);
+
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Miscellaneous methods
     // -----------------------------------------------------------------------
+
+    /** @name Miscellenous methods */
+    //{@
+
+    /** Geta formatted string of the content model
+      *
+      * This method is a convenience method which will create a formatted
+      * representation of the content model of the element. It will not always
+      * exactly recreate the original model, since some normalization or
+      * or reformatting may occur. But, it will be a technically accurate
+      * representation of the original content model.
+      *
+      * The format depends upon the validator, since content models are
+      * expressed differently in different structural description languages.
+      *
+      * @param  validator   The validator which owns this object, and which
+      *                     therefore has the information required to format
+      *                     the content model.
+      *
+      * @return A pointer to an internal buffer which contains the formatted
+      *         content model. The caller does not own this buffer and should
+      *         copy it if it needs to be kept around.
+      */
     const XMLCh* getFormattedContentModel
     (
         const   XMLValidator&   validator
     )   const;
+
+    /** Support keyed collections
+      *
+      * This method allows objects of this type be placed into one of the
+      * standard keyed collections. This method will return the full name of
+      * the element, which will vary depending upon the type of the validator.
+      *
+      * @return A const pointer to teh full name of this element type.
+      */
     const XMLCh* getKey() const;
+
+    //@}
 
 
 protected :

@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.5  2000/02/16 19:48:56  roddey
+  * More documentation updates
+  *
   * Revision 1.4  2000/02/15 01:21:30  roddey
   * Some initial documentation improvements. More to come...
   *
@@ -89,11 +92,6 @@ class XMLEntityDecl;
   * XML document information up to the parser as it scans through the
   * document. The interface is very similar to org.sax.DocumentHandler, but
   * has some extra methods required to get all the data out.
-  * 
-  * Some of the methods are designated as 'advanced' callbacks. They are
-  * enabled only if the 'setAdvancedCallbacks' flag has been set on the
-  * scanner. This scheme is used to avoid overhead when these more advanced
-  * events are not needed, such as in a SAX parser.</p>
   */
 class XMLPARSER_EXPORT XMLDocumentHandler
 {
@@ -110,8 +108,7 @@ public:
 
     /** @name The document handler interface */
     //@{
-    /**
-      * Receive notification of character data.
+    /** Receive notification of character data.
       *
       * <p>The scanner will call this method to report each chunk of
       * character data. The scanner may return all contiguous character
@@ -123,11 +120,11 @@ public:
       * <p>The parser must not attempt to read from the array
       * outside of the specified range.</p>
       *
-      * @param chars The content (characters) between markup from the XML
-      *              document.
-      * @param length The number of characters to read from the array.
-      * @param cdataSection Indicates that this data is inside a CDATA
-      *                     section.
+      * @param  chars           The content (characters) between markup from the XML
+      *                         document.
+      * @param  length          The number of characters to read from the array.
+      * @param  cdataSection    Indicates that this data is inside a CDATA
+      *                         section.
       * @see #ignorableWhitespace 
       * @see Locator
       */
@@ -138,8 +135,10 @@ public:
         , const bool            cdataSection
     ) = 0;
 
-    /**
-      * Receive notification of comments in the XML content being parsed.
+    /** Receive notification of comments in the XML content being parsed.
+      *
+      * This scanner will call this method for any comments found in the
+      * content of the document.
       *
       * @param comment The text of the comment.
       */
@@ -148,11 +147,14 @@ public:
         const   XMLCh* const    comment
     ) = 0;
 
-    /**
-      * Receive notification of PI's parsed in the XML content.
+    /** Receive notification of PI's parsed in the XML content.
       *
-      * @param target The name of the PI.
-      * @param data   The body of the PI.
+      * The scanner will call this method for any PIs it finds within the
+      * content of the document.
+      *
+      * @param  target  The name of the PI.
+      * @param  data    The body of the PI. This may be an empty string since
+      *                 the body is optional.
       */
     virtual void docPI
     (
@@ -160,23 +162,27 @@ public:
         , const XMLCh* const    data
     ) = 0;
 
-    /**
-      * Receive notification after the scanner has parsed the end of the
+    /** Receive notification after the scanner has parsed the end of the
       * document.
+      *
+      * The scanner will call this method when the current document has been
+      * fully parsed. The handler may use this opportunity to do something with
+      * the data, clean up temporary data, etc...
       */
     virtual void endDocument() = 0;
 
-    /**
+    /** Receive notification of the end of an element.
+      *
       * This method is called when scanner encounters the end of element tag.
       * There will be a corresponding startElement() event for every
       * endElement() event, but not necessarily the other way around. For
       * empty tags, there is only a startElement() call.
       *
-      * @param elementDecl The name of the element whose end tag was just
-      *                    parsed.
-      * @param uriId   The ID of the URI in the URI pool (only valid if 
-      *                name spaces is enabled)
-      * @param isRoot  Indicates if this is the root element.
+      * @param  elementDecl The name of the element whose end tag was just
+      *                     parsed.
+      * @param  uriId       The ID of the URI in the URI pool (only valid if 
+      *                     name spaces is enabled)
+      * @param  isRoot      Indicates if this is the root element.
       */
     virtual void endElement
     (
@@ -185,19 +191,19 @@ public:
         , const bool            isRoot
     ) = 0;
 
-    /**
+    /** Receive notification when a referenced entity's content ends
+      *
       * This method is called when scanner encounters the end of an entity
       * reference.
       *
-      * @param entityName The name of the entity reference just scanned.
+      * @param  entityName  The name of the entity reference just scanned.
       */
     virtual void endEntityReference
     (
         const   XMLEntityDecl&  entDecl
     ) = 0;
 
-    /**
-      * Receive notification of ignorable whitespace in element content.
+    /** Receive notification of ignorable whitespace in element content.
       *
       * <p>Validating Parsers must use this method to report each chunk
       * of ignorable whitespace (see the W3C XML 1.0 recommendation,
@@ -213,9 +219,9 @@ public:
       * <p>The parser must not attempt to read from the array
       * outside of the specified range.</p>
       *
-      * @param chars The whitespace characters from the XML document.
-      * @param length The number of characters to read from the array.
-      * @param cdataSection Indicates that this data is inside a CDATA
+      * @param  chars       The whitespace characters from the XML document.
+      * @param  length      The number of characters to read from the array.
+      * @param  cdataSection Indicates that this data is inside a CDATA
       *                     section.
       * @see #characters
       */
@@ -226,34 +232,37 @@ public:
         , const bool            cdataSection
     ) = 0;
 
-    /**
+    /** Reset the document handler's state, if required
+      *
       * This method is used to give the registered document handler a
       * chance to reset itself. Its called by the scanner at the start of
       * every parse.
       */
     virtual void resetDocument() = 0;
 
-    /**
+    /** Receive notification of the start of a new document
+      *
       * This method is the first callback called the scanner at the
-      * start of every parse.
+      * start of every parse. This is before any content is parsed.
       */
     virtual void startDocument() = 0;
 
-    /**
+    /** Receive notification of a new start tag
+      *
       * This method is called when scanner encounters the start of an element tag.
       * All elements must always have a startElement() tag. Empty tags will
       * only have the startElement() tag and no endElement() tag.
       *
-      * @param elementDecl The name of the element whose start tag was just
-      *                    parsed.
-      * @param uriId   The ID of the URI in the URI pool (only valid if 
-      *                name spaces is enabled)
-      * @param prefixName  The string representing the prefix name
-      * @param attrList List of attributes in the element
-      * @param attrCount Count of the attributes in the element
-      * @param isEmpty Indicates if the element is empty
-      * @param isRoot  Indicates if this is the root element.
-      *
+      * @param  elementDecl The name of the element whose start tag was just
+      *                     parsed.
+      * @param  uriId       The ID of the URI in the URI pool (only valid if 
+      *                     name spaces is enabled)
+      * @param  prefixName  The string representing the prefix name
+      * @param  attrList    List of attributes in the element
+      * @param  attrCount   Count of the attributes in the element
+      * @param  isEmpty     Indicates if the element is empty, in which case
+      *                     you should not expect an endElement() event.
+      * @param  isRoot      Indicates if this is the root element.
       */
     virtual void startElement
     (
@@ -266,32 +275,31 @@ public:
         , const bool                    isRoot
     ) = 0;
 
-    /**
-      * Receive notification when the scanner hits an entity reference.
+    /** Receive notification when the scanner hits an entity reference.
+      *
       * This is currently useful only to DOM parser configurations as SAX
       * does not provide any api to return this information.
       *
-      * @param entityName  The name of the entity that was referenced.
+      * @param  entityName  The name of the entity that was referenced.
       */
     virtual void startEntityReference(const XMLEntityDecl& entDecl) = 0;
 
-    /**
-      * Receive notification when the scanner hits the XML declaration
-      * clause in the XML file. Currently neither DOM nor SAX provide
-      * API's to return back this information. This is an advanced
-      * callback.
+    /** Receive notification of an XML declaration
       *
-      * @param versionStr  The value of the <code>version</code> attribute
-      *                    of the XML decl.
-      * @param encodingStr  The value of the <code>encoding</code> attribute
-      *                     of the XML decl.
-      * @param standaloneStr  The value of the <code>standalone</code>
-      *                       attribute of the XML decl.
-      * @param autoEncodingStr  The encoding string auto-detected by the
-      *             scanner. In absence of any 'encoding' attribute in the
-      *             XML decl, the XML standard specifies how a parser can
-      *             auto-detect. If there is no <code>encodingStr</code>
-      *             this is what will be used to try to decode the file.
+      * Currently neither DOM nor SAX provide API's to return back this
+      * information.
+      *
+      * @param  versionStr      The value of the <code>version</code> attribute
+      *                         of the XML decl.
+      * @param  encodingStr     The value of the <code>encoding</code> attribute
+      *                         of the XML decl.
+      * @param  standaloneStr   The value of the <code>standalone</code>
+      *                         attribute of the XML decl.
+      * @param  autoEncodingStr The encoding string auto-detected by the
+      *                         scanner. In absence of any 'encoding' attribute in the
+      *                         XML decl, the XML standard specifies how a parser can
+      *                         auto-detect. If there is no <code>encodingStr</code>
+      *                         this is what will be used to try to decode the file.
       */
     virtual void XMLDecl
     (
