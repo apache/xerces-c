@@ -30,6 +30,7 @@ group xerces_util =
     BASE_DIR "\\src\\util\\XMLUCSTranscoder.cpp",
     BASE_DIR "\\src\\util\\XMLUni.cpp",
     BASE_DIR "\\src\\util\\XMLURL.cpp",
+    BASE_DIR "\\src\\util\\XMLUri.cpp",
     BASE_DIR "\\src\\util\\XMLUTF16Transcoder.cpp",
     BASE_DIR "\\src\\util\\XMLUTF8Transcoder.cpp",
     BASE_DIR "\\src\\util\\XMLWin1252Transcoder.cpp",

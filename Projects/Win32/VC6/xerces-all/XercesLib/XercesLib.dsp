@@ -772,6 +772,14 @@ SOURCE=..\..\..\..\..\src\util\XMLUniDefs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLUri.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLUri.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLURL.cpp
 # End Source File
 # Begin Source File

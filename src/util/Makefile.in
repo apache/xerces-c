@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.43  2001/08/10 16:42:33  peiyongz
+# XMLUri Added
+#
 # Revision 1.42  2001/07/26 20:40:01  peiyongz
 # XMLFloat
 #
@@ -355,6 +358,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLNetAccessor.hpp \
     XMLString.hpp \
     XMLUCS4Transcoder.hpp \
+    XMLUri.hpp \
     XMLURL.hpp \
     XMLUTF16Transcoder.hpp \
     XMLUTF8Transcoder.hpp \
@@ -398,6 +402,7 @@ UTIL_CPP_OBJECTS = \
     QName.$(TO) \
     StringPool.$(TO) \
     XMLStringTokenizer.$(TO) \
+    XMLUri.$(TO) \
     XMLURL.$(TO) \
     TransService.$(TO) \
     XML256TableTranscoder.$(TO) \
