@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/02/25 17:24:18  peiyongz
+ * Schema Errata: E2-44 totalDigits/fractDigits
+ *
  * Revision 1.5  2003/02/02 23:54:43  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -138,6 +141,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
     ArrayJanitor<XMLCh> janName(ret_value);
 
     parseBigDecimal(strValue, ret_value, fScale);
+
     fIntVal = new XMLBigInteger(ret_value);
 	fRawData = XMLString::replicate(strValue);
 }
@@ -283,6 +287,22 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         *retPtr = *startPtr;
         retPtr++;
         startPtr++;
+    }
+
+    /***
+    E2-44 totalDigits
+
+     ... by restricting it to numbers that are expressible as i × 10^-n
+     where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits. 
+
+        normalization: remove all trailing zero after the '.'
+                       and adjust the scaleValue as well.
+    ***/
+    while (( scaleValue > 0 )           && 
+           ( *(retPtr-1) == chDigit_0 )  )          
+    {
+        retPtr--;
+        scaleValue--;
     }
 
     *retPtr = 0;   //terminated

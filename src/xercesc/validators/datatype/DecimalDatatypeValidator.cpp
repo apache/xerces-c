@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/02/25 17:24:37  peiyongz
+ * Schema Errata: E2-44 totalDigits/fractDigits
+ *
  * Revision 1.6  2003/01/30 21:56:22  tng
  * Performance: call getRawData instead of toString
  *
@@ -547,6 +550,25 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
                                  , value1
                                  , value2);
             }
+
+            /***
+             E2-44 totalDigits
+
+             ... by restricting it to numbers that are expressible as i × 10^-n
+             where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
+            ***/
+
+            if ( theData->getScale() > fTotalDigits )  
+            {                
+                XMLString::binToText(theData->getScale(), value1, BUF_LEN, 10);
+                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10);
+                ThrowXML3(InvalidDatatypeFacetException
+                                 , XMLExcepts::VALUE_exceed_totalDigit
+                                 , theData->getRawData()
+                                 , value1
+                                 , value2);
+            }
+        
         }
 
     }
