@@ -630,7 +630,7 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
     <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
     <a>
-      <p>Yes.  The code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
+      <p>Yes.  Since &XercesCName; Version 1.5.2., the code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
          multiple times in one process is now allowed.
       </p>
 
@@ -833,6 +833,9 @@ catch (const XMLException&amp; toCatch) {
     <q>Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair more than once</q>
 
     <a>
+
+      <p>Please make sure you are using &XercesCName; Version 1.5.2 or up.
+      </p>
 
       <p>Please make sure the XMLPlatformUtils::Terminate() is the last &XercesCName; function to be called
          in your program.  NO explicit nor implicit &XercesCName; destructor (those local data that are
