@@ -397,7 +397,7 @@ inline bool ComplexTypeInfo::getAnonymous() const {
     return fAnonymous;
 }
 
-inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const 
+inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const
 {
     if(!fTypeLocalName) {
         int index = XMLString::indexOf(fTypeName, chComma);
@@ -412,7 +412,7 @@ inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const
 
 inline const XMLCh* ComplexTypeInfo::getTypeUri() const
 {
-    
+
     if(!fTypeUri) {
         int index = XMLString::indexOf(fTypeName, chComma);
         int length = XMLString::stringLen(fTypeName);
@@ -482,7 +482,9 @@ inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
 
     delete [] fTypeName;
     delete [] fTypeLocalName;
-    delete [] fTypeLocalName;
+    fTypeLocalName = 0;
+    delete [] fTypeUri;
+    fTypeUri = 0;
 
     fTypeName = XMLString::replicate(typeName);
 }
