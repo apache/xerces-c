@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.24  2002/12/10 13:34:51  tng
+* Samples minor update in usage information.
+*
 * Revision 1.23  2002/11/08 16:18:50  peiyongz
 * no message
 *
@@ -159,7 +162,7 @@ void usage()
             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
             "    -s          Disable schema processing. Defaults to on.\n"
             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
-            "    -locale=ll_CC specify the locale, default: en_US \n"
+            "    -locale=ll_CC specify the locale, default: en_US.\n"
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << endl;
