@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/10/09 12:18:26  tng
+ * Leak fix: should use delete [] to delete fTargetNamespace.
+ *
  * Revision 1.12  2001/10/04 15:11:51  knoaman
  * Add support for circular import.
  *
@@ -372,6 +375,7 @@ inline bool SchemaGrammar::getUPAChecked() const {
 //  Setter methods
 // -----------------------------------------------------------------------
 inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace) {
+    delete [] fTargetNamespace;
     fTargetNamespace = XMLString::replicate(targetNamespace);
 }
 

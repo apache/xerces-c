@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/10/09 12:18:26  tng
+ * Leak fix: should use delete [] to delete fTargetNamespace.
+ *
  * Revision 1.8  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
  *
@@ -135,7 +138,7 @@ SchemaGrammar::~SchemaGrammar()
     delete fElemDeclPool;
     delete fGroupElemDeclPool;
     delete fNotationDeclPool;
-    delete fTargetNamespace;
+    delete [] fTargetNamespace;
     delete fAttributeDeclRegistry;
     delete fComplexTypeRegistry;
     delete fGroupInfoRegistry;
