@@ -186,6 +186,13 @@ public :
     static const XMLCh fgYesString[];
     static const XMLCh fgZeroLenString[];
     static const XMLCh fgDTDEntityString[];
+    static const XMLCh fgAmp[];
+    static const XMLCh fgLT[];
+    static const XMLCh fgGT[];
+    static const XMLCh fgQuot[];
+    static const XMLCh fgApos[];
+    static const XMLCh fgWFScanner[];
+    static const XMLCh fgIGScanner[];
 
 
     // Exception Name
@@ -233,6 +240,8 @@ public :
     static const XMLCh fgXercesUserAdoptsDOMDocument[];
     static const XMLCh fgXercesCacheGrammarFromParse[];
     static const XMLCh fgXercesUseCachedGrammarInParse[];
+    static const XMLCh fgXercesScannerName[];
+    static const XMLCh fgXercesCalculateSrcOfs[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];

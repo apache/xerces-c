@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/04 02:23:50  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.2  2002/11/04 14:58:18  tng
  * C++ Namespace Support.
  *
@@ -528,5 +531,354 @@ void ElemStack::expandStack()
     fStack = newStack;
     fStackCapacity = newCapacity;
 }
+
+
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Constructors and Destructor
+// ---------------------------------------------------------------------------
+WFElemStack::WFElemStack() :
+
+    fEmptyNamespaceId(0)
+    , fGlobalPoolId(0)
+    , fStackCapacity(32)
+    , fStackTop(0)
+    , fUnknownNamespaceId(0)
+    , fXMLNamespaceId(0)
+    , fXMLPoolId(0)
+    , fXMLNSNamespaceId(0)
+    , fXMLNSPoolId(0)
+    , fMapCapacity(0)
+    , fMap(0)
+    , fStack(0)
+{
+    // Do an initial allocation of the stack and zero it out
+    fStack = new StackElem*[fStackCapacity];
+    memset(fStack, 0, fStackCapacity * sizeof(StackElem*));
+}
+
+WFElemStack::~WFElemStack()
+{
+    //
+    //  Start working from the bottom of the stack and clear it out as we
+    //  go up. Once we hit an uninitialized one, we can break out.
+    //
+    for (unsigned int stackInd = 0; stackInd < fStackCapacity; stackInd++)
+    {
+        // If this entry has been set, then lets clean it up
+        if (!fStack[stackInd])
+            break;
+
+        delete [] fStack[stackInd]->fThisElement;
+        delete fStack[stackInd];
+    }
+
+    if (fMap)
+        delete [] fMap;
+
+    // Delete the stack array itself now
+    delete [] fStack;
+}
+
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Stack access
+// ---------------------------------------------------------------------------
+unsigned int WFElemStack::addLevel()
+{
+    // See if we need to expand the stack
+    if (fStackTop == fStackCapacity)
+        expandStack();
+
+    
+    // If this element has not been initialized yet, then initialize it
+    if (!fStack[fStackTop])
+    {
+        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop]->fThisElement = 0;
+        fStack[fStackTop]->fElemMaxLength = 0;
+    }
+
+    // Set up the new top row
+    fStack[fStackTop]->fReaderNum = 0xFFFFFFFF;
+    fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
+    fStack[fStackTop]->fTopPrefix = -1;
+
+    if (fStackTop != 0)
+        fStack[fStackTop]->fTopPrefix = fStack[fStackTop - 1]->fTopPrefix;
+
+    // Bump the top of stack
+    fStackTop++;
+
+    return fStackTop-1;
+}
+
+
+unsigned int
+WFElemStack::addLevel(const XMLCh* const toSet,
+                      const unsigned int toSetLen,
+                      const unsigned int readerNum)
+{
+    // See if we need to expand the stack
+    if (fStackTop == fStackCapacity)
+        expandStack();
+
+    // If this element has not been initialized yet, then initialize it
+    if (!fStack[fStackTop])
+    {
+        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop]->fThisElement = 0;
+        fStack[fStackTop]->fElemMaxLength = 0;
+    }
+
+    // Set up the new top row
+    fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
+    fStack[fStackTop]->fTopPrefix = -1;
+
+    // And store the new stuff
+    if (toSetLen > fStack[fStackTop]->fElemMaxLength) {
+
+        delete [] fStack[fStackTop]->fThisElement;
+        fStack[fStackTop]->fElemMaxLength = toSetLen;
+        fStack[fStackTop]->fThisElement = new XMLCh[toSetLen + 1];
+    }
+
+    XMLString::moveChars(fStack[fStackTop]->fThisElement, toSet, toSetLen + 1);
+    fStack[fStackTop]->fReaderNum = readerNum;
+
+    if (fStackTop != 0)
+        fStack[fStackTop]->fTopPrefix = fStack[fStackTop - 1]->fTopPrefix;
+
+    // Bump the top of stack
+    fStackTop++;
+
+    return fStackTop-1;
+}
+
+
+
+const WFElemStack::StackElem* WFElemStack::popTop()
+{
+    // Watch for an underflow error
+    if (!fStackTop)
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow);
+
+    fStackTop--;
+    return fStack[fStackTop];
+}
+
+
+void
+WFElemStack::setElement(const XMLCh* const toSet,
+                      const unsigned int toSetLen,
+                      const unsigned int readerNum)
+{
+    if (!fStackTop)
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+
+    if (toSetLen > fStack[fStackTop - 1]->fElemMaxLength) {
+
+        delete [] fStack[fStackTop - 1]->fThisElement;
+        fStack[fStackTop - 1]->fElemMaxLength = toSetLen;
+        fStack[fStackTop - 1]->fThisElement = new XMLCh[toSetLen + 1];
+    }
+
+    XMLString::moveChars(fStack[fStackTop - 1]->fThisElement, toSet, toSetLen + 1);
+    fStack[fStackTop - 1]->fReaderNum = readerNum;
+}
+
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Stack top access
+// ---------------------------------------------------------------------------
+const WFElemStack::StackElem* WFElemStack::topElement() const
+{
+    if (!fStackTop)
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+
+    return fStack[fStackTop - 1];
+}
+
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Prefix map methods
+// ---------------------------------------------------------------------------
+void WFElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
+                              , const unsigned int    uriId)
+{
+    if (!fStackTop)
+        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+
+    // Get a convenience pointer to the stack top row
+    StackElem* curRow = fStack[fStackTop - 1];
+
+    // Map the prefix to its unique id
+    const unsigned int prefId = fPrefixPool.addOrFind(prefixToAdd);
+
+    //
+    //  Add a new element to the prefix map for this element. If its full,
+    //  then expand it out.
+    //
+    if ((unsigned int)curRow->fTopPrefix + 1 == fMapCapacity)
+        expandMap();
+
+    //
+    //  And now add a new element for this prefix. Watch for the special case
+    //  of xmlns=="", and force it to ""=[globalid]
+    //
+    fMap[curRow->fTopPrefix + 1].fPrefId = prefId;
+    if ((prefId == fGlobalPoolId) && (uriId == fEmptyNamespaceId))
+        fMap[curRow->fTopPrefix + 1].fURIId = fEmptyNamespaceId;
+    else
+        fMap[curRow->fTopPrefix + 1].fURIId = uriId;
+
+    // Bump the map count now
+    curRow->fTopPrefix++;
+}
+
+
+unsigned int WFElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
+                                          , const MapModes        mode
+                                          ,       bool&           unknown) const
+{
+    // Assume we find it
+    unknown = false;
+
+    //
+    //  Map the prefix to its unique id, from the prefix string pool. If its
+    //  not a valid prefix, then its a failure.
+    //
+    unsigned int prefixId = fPrefixPool.getId(prefixToMap);
+    if (!prefixId)
+    {
+        unknown = true;
+        return fUnknownNamespaceId;
+    }
+
+    //
+    //  If the prefix is empty, and we are in attribute mode, then we assign
+    //  it to the empty namespace because the default namespace does not
+    //  apply to attributes.
+    //
+    if (!*prefixToMap && (mode == Mode_Attribute))
+        return fEmptyNamespaceId;
+
+    //
+    //  Check for the special prefixes 'xml' and 'xmlns' since they cannot
+    //  be overridden.
+    //
+    if (prefixId == fXMLPoolId)
+        return fXMLNamespaceId;
+    else if (prefixId == fXMLNSPoolId)
+        return fXMLNSNamespaceId;
+
+    //
+    //  Start at the stack top and work backwards until we come to some
+    //  element that mapped this prefix.
+    //
+    //  Get a convenience pointer to the stack top row
+    StackElem* curRow = fStack[fStackTop - 1];
+    for (int mapIndex = curRow->fTopPrefix; mapIndex >=0; mapIndex--)
+    {
+        if (fMap[mapIndex].fPrefId == prefixId)
+            return fMap[mapIndex].fURIId;
+    }
+
+    //
+    //  If the prefix is an empty string, then we will return the special
+    //  global namespace id. This can be overridden, but no one has or we
+    //  would have not gotten here.
+    //
+    if (!*prefixToMap)
+        return fEmptyNamespaceId;
+
+    // Oh well, don't have a clue so return the unknown id
+    unknown = true;
+    return fUnknownNamespaceId;
+}
+
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Miscellaneous methods
+// ---------------------------------------------------------------------------
+void WFElemStack::reset(  const   unsigned int    emptyId
+                          , const unsigned int    unknownId
+                          , const unsigned int    xmlId
+                          , const unsigned int    xmlNSId)
+{
+    // Reset the stack top to clear the stack
+    fStackTop = 0;
+
+    // if first time, put in the standard prefixes
+    if (fXMLPoolId == 0) {
+
+        fGlobalPoolId = fPrefixPool.addOrFind(XMLUni::fgZeroLenString);
+        fXMLPoolId = fPrefixPool.addOrFind(XMLUni::fgXMLString);
+        fXMLNSPoolId = fPrefixPool.addOrFind(XMLUni::fgXMLNSString);
+    }
+
+    // And store the new special URI ids
+    fEmptyNamespaceId = emptyId;
+    fUnknownNamespaceId = unknownId;
+    fXMLNamespaceId = xmlId;
+    fXMLNSNamespaceId = xmlNSId;
+}
+
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Private helpers
+// ---------------------------------------------------------------------------
+void WFElemStack::expandMap()
+{
+    //
+    //  Expand the capacity by 25%, or initialize it to 16 if its currently
+    //  empty. Then allocate a new temp buffer.
+    //
+    const unsigned int newCapacity = fMapCapacity ?
+                                     (unsigned int)(fMapCapacity * 1.25) : 16;
+    PrefMapElem* newMap = new PrefMapElem[newCapacity];
+
+    //
+    //  Copy over the old stuff. We DON'T have to zero out the new stuff
+    //  since this is a by value map and the current map index controls what
+    //  is relevant.
+    //
+    if (fMapCapacity) {
+
+        memcpy(newMap, fMap, fMapCapacity * sizeof(PrefMapElem));
+        delete [] fMap;
+    }
+
+    fMap = newMap;
+    fMapCapacity = newCapacity;
+}
+
+void WFElemStack::expandStack()
+{
+    // Expand the capacity by 25% and allocate a new buffer
+    const unsigned int newCapacity = (unsigned int)(fStackCapacity * 1.25);
+    StackElem** newStack = new StackElem*[newCapacity];
+
+    // Copy over the old stuff
+    memcpy(newStack, fStack, fStackCapacity * sizeof(StackElem*));
+
+    //
+    //  And zero out the new stuff. Though we use a stack top, we reuse old
+    //  stack contents so we need to know if elements have been initially
+    //  allocated or not as we push new stuff onto the stack.
+    //
+    memset
+    (
+        &newStack[fStackCapacity]
+        , 0
+        , (newCapacity - fStackCapacity) * sizeof(StackElem*)
+    );
+
+    // Delete the old array and update our members
+    delete [] fStack;
+    fStack = newStack;
+    fStackCapacity = newCapacity;
+}
+
 
 XERCES_CPP_NAMESPACE_END

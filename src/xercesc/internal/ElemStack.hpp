@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/04 02:23:50  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.2  2002/11/04 14:58:18  tng
  * C++ Namespace Support.
  *
@@ -336,6 +339,185 @@ private :
 };
 
 
+class XMLPARSER_EXPORT WFElemStack
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Class specific data types
+    //
+    //  These really should be private, but some of the compilers we have to
+    //  support are too dumb to deal with that.
+    //
+    //  PrefMapElem
+    //      fURIId is the id of the URI from the validator's URI map. The
+    //      fPrefId is the id of the prefix from our own prefix pool. The
+    //      namespace stack consists of these elements.
+    //
+    //  StackElem
+    //      fThisElement is the basic element decl for the current element.
+    //      The fRowCapacity is how large fChildIds has grown so far.
+    //      fChildCount is how many of them are valid right now.
+    //
+    //      The fMapCapacity is how large fMap has grown so far. fMapCount
+    //      is how many of them are valid right now.
+    //
+    //      Note that we store the reader number we were in when we found the
+    //      start tag. We'll use this at the end tag to test for unbalanced
+    //      markup in entities.
+    //
+    //  MapModes
+    //      When a prefix is mapped to a namespace id, it matters whether the
+    //      QName being mapped is an attribute or name. Attributes are not
+    //      affected by an sibling xmlns attributes, whereas elements are
+    //      affected by its own xmlns attributes.
+    // -----------------------------------------------------------------------
+    struct PrefMapElem
+    {
+        unsigned int        fPrefId;
+        unsigned int        fURIId;
+    };
+
+    struct StackElem
+    {
+        int                 fTopPrefix;        
+        unsigned int        fCurrentURI;
+        unsigned int        fReaderNum;
+        unsigned int        fElemMaxLength;
+        XMLCh*              fThisElement;
+    };
+
+    enum MapModes
+    {
+        Mode_Attribute
+        , Mode_Element
+    };
+
+
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    WFElemStack();
+    ~WFElemStack();
+
+
+    // -----------------------------------------------------------------------
+    //  Stack access
+    // -----------------------------------------------------------------------
+    unsigned int addLevel();
+    unsigned int addLevel(const XMLCh* const toSet, const unsigned int toSetLen,
+                          const unsigned int readerNum);
+    const StackElem* popTop();
+
+
+    // -----------------------------------------------------------------------
+    //  Stack top access
+    // -----------------------------------------------------------------------
+    const StackElem* topElement() const;
+    void setElement(const XMLCh* const toSet, const unsigned int toSetLen,
+                    const unsigned int readerNum);
+
+    void setCurrentURI(unsigned int uri);
+    unsigned int getCurrentURI();
+
+    // -----------------------------------------------------------------------
+    //  Prefix map methods
+    // -----------------------------------------------------------------------
+    void addPrefix
+    (
+        const   XMLCh* const    prefixToAdd
+        , const unsigned int    uriId
+    );
+    unsigned int mapPrefixToURI
+    (
+        const   XMLCh* const    prefixToMap
+        , const MapModes        mode
+        ,       bool&           unknown
+    )   const;
+
+
+    // -----------------------------------------------------------------------
+    //  Miscellaneous methods
+    // -----------------------------------------------------------------------
+    bool isEmpty() const;
+    void reset
+    (
+        const   unsigned int    emptyId
+        , const unsigned int    unknownId
+        , const unsigned int    xmlId
+        , const unsigned int    xmlNSId
+    );
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    WFElemStack(const WFElemStack&);
+    void operator=(const WFElemStack&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void expandMap();
+    void expandStack();
+
+
+    // -----------------------------------------------------------------------
+    //  Data members
+    //
+    //  fEmptyNamespaceId
+    //      This is the special URI id for the "" namespace, which is magic
+    //      because of the xmlns="" operation.
+    //
+    //  fGlobalPoolId
+    //      This is a special URI id that is returned when the namespace
+    //      prefix is "" and no one has explicitly mapped that prefix to an
+    //      explicit URI (or when they explicitly clear any such mapping,
+    //      which they can also do.) And also its prefix pool id, which is
+    //      stored here for fast access.
+    //
+    //  fPrefixPool
+    //      This is the prefix pool where prefixes are hashed and given unique
+    //      ids. These ids are used to track prefixes in the element stack.
+    //
+    //  fStack
+    //  fStackCapacity
+    //  fStackTop
+    //      This the stack array. Its an array of pointers to StackElem
+    //      structures. The capacity is the current high water mark of the
+    //      stack. The top is the current top of stack (i.e. the part of it
+    //      being used.)
+    //
+    //  fUnknownNamespaceId
+    //      This is the URI id for the special URI that is assigned to any
+    //      prefix which has not been mapped. This lets us keep going after
+    //      issuing the error.
+    //
+    //  fXMLNamespaceId
+    //  fXMLPoolId
+    //  fXMLNSNamespaceId
+    //  fXMLNSPoolId
+    //      These are the URI ids for the special URIs that are assigned to
+    //      the 'xml' and 'xmlns' namespaces. And also its prefix pool id,
+    //      which is stored here for fast access.
+    // -----------------------------------------------------------------------
+    unsigned int    fEmptyNamespaceId;
+    unsigned int    fGlobalPoolId;
+    unsigned int    fStackCapacity;
+    unsigned int    fStackTop;
+    unsigned int    fUnknownNamespaceId;
+    unsigned int    fXMLNamespaceId;
+    unsigned int    fXMLPoolId;
+    unsigned int    fXMLNSNamespaceId;
+    unsigned int    fXMLNSPoolId;
+    unsigned int    fMapCapacity;
+    PrefMapElem*    fMap;
+    StackElem**     fStack;
+    XMLStringPool   fPrefixPool;
+};
+
+
 // ---------------------------------------------------------------------------
 //  ElemStack: Miscellaneous methods
 // ---------------------------------------------------------------------------
@@ -387,6 +569,26 @@ inline void ElemStack::setCurrentURI(unsigned int uri)
     fStack[fStackTop-1]->fCurrentURI = uri;
     return;
 }
+
+// ---------------------------------------------------------------------------
+//  WFElemStack: Miscellaneous methods
+// ---------------------------------------------------------------------------
+inline bool WFElemStack::isEmpty() const
+{
+    return (fStackTop == 0);
+}
+
+inline unsigned int WFElemStack::getCurrentURI()
+{
+    return fStack[fStackTop-1]->fCurrentURI;
+}
+
+inline void WFElemStack::setCurrentURI(unsigned int uri)
+{
+    fStack[fStackTop-1]->fCurrentURI = uri;
+    return;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 
