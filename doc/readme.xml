@@ -106,6 +106,10 @@
           <td>aCC A.03.13 with pthreads</td>
         </tr>
         <tr>
+          <td>SuSE Linux 7.2 (S390)</td>
+          <td>g++ 2.95</td>
+        </tr>
+        <tr>
           <th><em>64-bit binary</em></th>
           <td></td>
         </tr>
