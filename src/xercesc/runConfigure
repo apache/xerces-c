@@ -516,7 +516,8 @@ case $netaccessor in
            hp-11)
                netaccessorLibs="-lnsl";;
            aix)
-               netaccessorLibs="-lbsd";;
+               #netaccessorLibs="-lbsd";;
+               netaccessorLibs="";;
            solaris)
                netaccessorLibs="-lnsl -lsocket"
              if test $thread = "dce"; then
