@@ -4,12 +4,16 @@
 
 #include "stdafx.h"
 
-#ifdef _ATL_STATIC_REGISTRY
+#if defined(_ATL_STATIC_REGISTRY)
 #include <statreg.h>
+#if defined(_MSC_VER) && _MSC_VER < 1300
 #include <statreg.cpp>
 #endif
+#endif
 
+#if defined(_MSC_VER) && _MSC_VER < 1300
 #include <atlimpl.cpp>
+#endif
 
 //
 //   This macro is defined in MSXML.H's compatible with IE5
