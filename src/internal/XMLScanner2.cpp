@@ -566,8 +566,12 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
     // Get attribute def - to check to see if it's declared externally or not
     //
     bool  added = false;
-    const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+    bool  isAttExternal = false;
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
+    if (topElem && topElem->fThisElement) {
+        const XMLAttDef* attDef = topElem->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+        isAttExternal = (attDef) ? attDef->isExternal() : false;
+    }
 
     //
     //  Loop through the chars of the source value and normalize it according
@@ -610,7 +614,7 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                     // Check Validity Constraint for Standalone document declaration
                     // XML 1.0, Section 2.9
                     //
-                    if (fValidate && fStandalone && isAttExternal)
+                    if (fStandalone && fValidate && isAttExternal)
                     {
                          //
                          // Can't have a standalone document declaration of "yes" if  attribute
@@ -639,7 +643,7 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                     // Check Validity Constraint for Standalone document declaration
                     // XML 1.0, Section 2.9
                     //
-                    if (fValidate && fStandalone && isAttExternal)
+                    if (fStandalone && fValidate && isAttExternal)
                     {
                          //
                          // Can't have a standalone document declaration of "yes" if  attribute
@@ -663,7 +667,7 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
                         //
-                        if (fValidate && fStandalone && isAttExternal)
+                        if (fStandalone && fValidate && isAttExternal)
                         {
                              //
                              // Can't have a standalone document declaration of "yes" if  attribute
@@ -1591,8 +1595,12 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
     // Get attribute def - to check to see if it's declared externally or not
     //
     bool  added = false;
-    const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+    bool  isAttExternal = false;
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
+    if (topElem && topElem->fThisElement) {
+        const XMLAttDef* attDef = topElem->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+        isAttExternal = (attDef) ? attDef->isExternal() : false;
+    }
 
     //
     //  Loop until we get the attribute value. Note that we use a double
@@ -1732,7 +1740,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
                         //
-                        if (fValidate && fStandalone && isAttExternal)
+                        if (fStandalone && fValidate && isAttExternal)
                         {
                              //
                              // Can't have a standalone document declaration of "yes" if  attribute
@@ -1761,7 +1769,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
                         //
-                        if (fValidate && fStandalone && isAttExternal)
+                        if (fStandalone && fValidate && isAttExternal)
                         {
                              //
                              // Can't have a standalone document declaration of "yes" if  attribute
@@ -1783,7 +1791,7 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                             // Check Validity Constraint for Standalone document declaration
                             // XML 1.0, Section 2.9
                             //
-                            if (fValidate && fStandalone && isAttExternal)
+                            if (fStandalone && fValidate && isAttExternal)
                             {
                                  //
                                  // Can't have a standalone document declaration of "yes" if  attribute
