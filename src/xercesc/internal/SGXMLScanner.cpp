@@ -1065,13 +1065,10 @@ void SGXMLScanner::scanDocTypeDecl()
 }
 
 //  This method is called to scan a start tag when we are processing
-//  namespaces. There are two different versions of this method, one for
-//  namespace aware processing an done for non-namespace aware processing.
-//
-//  This method is called after we've scanned the < of a start tag. So we
-//  have to get the element name, then scan the attributes, after which
-//  we are either going to see >, />, or attributes followed by one of those
-//  sequences.
+//  namespaces. This method is called after we've scanned the < of a
+//  start tag. So we have to get the element name, then scan the attributes, 
+//  after which we are either going to see >, />, or attributes followed 
+//  by one of those sequences.
 bool SGXMLScanner::scanStartTag(bool& gotData)
 {
     //  Assume we will still have data until proven otherwise. It will only
