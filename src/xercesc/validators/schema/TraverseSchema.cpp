@@ -5856,6 +5856,10 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         }
     }
 
+    if (minOccurs == 0 && maxOccurs == 0){
+        return;
+    }
+
     // Constraint checking for min/max value
     if (!isMaxUnbounded) {
 
@@ -5878,10 +5882,6 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             if (specNode)
                 specNode->setMaxOccurs(minOccurs);
         }
-    }
-
-    if (minOccurs == 0 && maxOccurs == 0){
-        return;
     }
 
     // Constraint checking for 'all' content
