@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2004/01/16 14:29:21  amassari
+ * Removed usage of undeclared macro MIN
+ *
  * Revision 1.5  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -320,7 +323,7 @@ unsigned int BinURLInputStream::readBytes(XMLByte* const  toFill
         // range of bytes that you would like.
 
         sprintf(ranges, "%ld-%ld", fBytesProcessed,
-                MIN(fBytesProcessed + URLISBUFMAXSIZE - 1,  fRemoteFileSize - 1));
+                fRemoteFileSize<(fBytesProcessed + URLISBUFMAXSIZE)? fRemoteFileSize - 1:  fBytesProcessed + URLISBUFMAXSIZE - 1);
         HTRequest_addRange(request, "bytes", ranges);
         HTRequest_setOutputFormat(request, WWW_SOURCE);
         result = HTLoadAnchorToChunk(fAnchor, request);
