@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/09/25 15:21:12  peiyongz
+ * Loose the assert condition so that Serializable class need NOT to check the
+ * actual string length before read/write.
+ *
  * Revision 1.3  2003/09/23 18:11:29  peiyongz
  * Using HashPtr
  *
@@ -249,6 +253,9 @@ void XSerializeEngine::write(const XMLByte* const toWrite
     ensureBufferLen(writeLen);
     ensureStoreBuffer();
 
+    if (writeLen == 0)
+        return;
+
     /***
      *  If the available space is sufficient, write it up
      ***/
@@ -383,6 +390,9 @@ void XSerializeEngine::read(XMLByte* const toRead
     ensureBufferLen(readLen);
     ensurePointer(toRead);
     ensureLoadBuffer();
+
+    if (readLen == 0)
+        return;
 
     /***
      *  If unread is sufficient, read it up
@@ -824,7 +834,7 @@ inline void XSerializeEngine::ensurePointer(void* const ptr) const
 inline void XSerializeEngine::ensureBufferLen(int bufferLen) const
 {
 
-    TEST_THROW_ARG1( (bufferLen <= 0)
+    TEST_THROW_ARG1( (bufferLen < 0)
                    , bufferLen
                    , XMLExcepts::XSer_Inv_Buffer_Len
                    )
