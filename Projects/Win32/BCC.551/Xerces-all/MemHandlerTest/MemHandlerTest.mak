@@ -4,7 +4,7 @@ BCB = $(MAKEDIR)\..
 !endif
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
-PROJECT = $(TARGETPATH)\MemoryMonitor.exe
+PROJECT = $(TARGETPATH)\MemHandlerTest.exe
 OBJFILES = $(TARGETPATH)\obj\MemoryMonitor.obj  $(TARGETPATH)\obj\SimpleHashPtr.obj
 RESFILES = 
 MAINSOURCE = MemHandlerTest.cpp
