@@ -520,14 +520,15 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
 	  XML data because it is not widely recoginized by other XML processing
 	  tools.  If you are using a Windows based editing tool to generate
 	  XML, check which character set it generates, and make sure that the
-	  resulting XML specifies the correct name in the encoding="..." declaration.<p>
+	  resulting XML specifies the correct name in the encoding="..." declaration.</p>
 	  
 	    </a>
 	  </faq>
 
   <faq title="Is EBCDIC supported?">
-    <q>Is EBCDIC supported??</q>
+    <q>Is EBCDIC supported?</q>
     
+    <a>
     <p>Yes, &XercesCName; supports EBCDIC.  When creating EBCDIC encoded XML data,
     the preferred encoding is ibm1140.  Also supported is ibm037 (and its alternate name,
     ebcdic-cp-us); this encoding is almost the same as ibm1140, but it lacks the Euro
