@@ -15,7 +15,7 @@
             <li><link anchor="ModifiedAPI">Modified Public API</link></li>
             <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
-        <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="DirChange">Directory change in &XercesCName; latest code base</link></li>
       </ul>
     </s2>
 
@@ -57,7 +57,7 @@
     </s2>
 
     <anchor name="DirChange"/>
-    <s2 title="Directory change in &XercesCName; &XercesCVersion;">
+    <s2 title="Directory change in &XercesCName; latest code base">
       <ul>
         <li>
             A new directory, <em>src/xercesc</em> is created to be the new parent directory to
