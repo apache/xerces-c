@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2002/01/24 16:30:50  tng
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD() .
+ *
  * Revision 1.24  2001/12/17 15:39:14  knoaman
  * Fix for surrogate pair support.
  *
@@ -1617,6 +1620,9 @@ void DTDScanner::scanDefaultDecl(DTDAttDef& toFill)
 
 void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
 {
+    if (fDocTypeHandler)
+        fDocTypeHandler->resetDocType();
+
     // There must be some space after DOCTYPE
     if (!fReaderMgr->skipPastSpaces())
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2002/01/24 16:30:34  tng
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD() .
+ *
  * Revision 1.21  2001/12/21 18:03:25  tng
  * [Bug 1833] LexicalHandler::startDTD not called correctly.
  *
@@ -366,6 +369,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     , fAdvDHListSize(32)
     , fParseInProgress(false)
     , fScanner(0)
+    , fHasExternalSubset(false)
 {
     //
     //  Create a scanner and tell it what validator to use. Then set us
@@ -1156,6 +1160,10 @@ void SAX2XMLReaderImpl::endAttList(const DTDElementDecl&)
 
 void SAX2XMLReaderImpl::endIntSubset()
 {
+   // Call the installed LexicalHandler.
+   if (!fHasExternalSubset && fLexicalHandler)
+        fLexicalHandler->endDTD();
+
     // Unused by SAX DTDHandler interface at this time
 }
 
@@ -1196,6 +1204,7 @@ void SAX2XMLReaderImpl::entityDecl( const   DTDEntityDecl&  entityDecl
 
 void SAX2XMLReaderImpl::resetDocType()
 {
+    fHasExternalSubset = false;
     // Just map to the DTD handler
     if (fDTDHandler)
         fDTDHandler->resetDocType();
@@ -1231,6 +1240,7 @@ void SAX2XMLReaderImpl::startIntSubset()
 
 void SAX2XMLReaderImpl::startExtSubset()
 {
+    fHasExternalSubset = true;
     // Unused by SAX DTDHandler interface at this time
 }
 

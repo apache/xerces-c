@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2002/01/24 16:30:34  tng
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD() .
+ *
  * Revision 1.18  2002/01/18 16:31:38  tng
  * Break program.xml which takes too long to load, into program-sax.xml, program-sax2.xml, program-dom.xml, program-idom.xml.
  *
@@ -1411,6 +1414,9 @@ private :
     //      The scanner being used by this parser. It is created internally
     //      during construction.
     //
+    //  fHasExternalSubset
+    //      Indicate if the document has external DTD subset.
+    //
     // -----------------------------------------------------------------------
 	VecAttributesImpl		   fAttrList ;
 	ContentHandler*			   fDocHandler ;
@@ -1435,9 +1441,12 @@ private :
     unsigned int               fAdvDHListSize;
     bool                       fParseInProgress;
     XMLScanner*                fScanner;
+    bool                       fHasExternalSubset;
 	
-	// internal function used to set the state of validation: always, never, or auto
-	void setValidationScheme(const ValSchemes newScheme);
+    // -----------------------------------------------------------------------
+    // internal function used to set the state of validation: always, never, or auto
+    // -----------------------------------------------------------------------
+    void setValidationScheme(const ValSchemes newScheme);
     void setDoNamespaces(const bool newState);
     bool getDoNamespaces() const;
     void setDoSchema(const bool newState);
