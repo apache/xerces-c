@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -217,6 +217,7 @@ void IDEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
            IDOM_Node          *IDEntityReferenceImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDEntityReferenceImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };
-           bool                IDEntityReferenceImpl::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.supports (feature, version); };
+           bool                IDEntityReferenceImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                            {return fNode.isSupported (feature, version); };
            void                IDEntityReferenceImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool                IDEntityReferenceImpl::hasAttributes() const                   {return fNode.hasAttributes(); };

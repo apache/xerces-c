@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:56  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:20:59  tng
+ * Add DOM 2 Level missing functions:
+ *   1. NodeIterator::getRoot
+ *   2. TreeWalker::getRoot
+ *   3. Element::hasAttribute
+ *   4. Element::hasAttributeNS
+ *   5. Node::hasAttributes
+ *   6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/04 20:11:53  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
@@ -92,8 +101,6 @@
  * nodes will be siblings and appear as direct children of the root node, no matter how
  * deeply nested the structure of the original document.
  *
- * <p><b>"Experimental - subject to change"</b></p>
- *
  */
 class CDOM_EXPORT IDOM_TreeWalker {
     protected:
@@ -105,18 +112,19 @@ class CDOM_EXPORT IDOM_TreeWalker {
         /** @name Get functions. */
         //@{
         /**
+         * The <code>root</code> node of the <code>TreeWalker</code>, as specified
+         * when it was created.
+         */
+        virtual IDOM_Node*          getRoot() = 0;
+        /**
           * Return which node types are presented via the IDOM_TreeWalker.
           * These constants are defined in the IDOM_NodeFilter interface.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual unsigned long   	getWhatToShow()= 0;
 
         /**
           * Return The filter used to screen nodes.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual IDOM_NodeFilter*		getFilter()= 0;
@@ -126,15 +134,11 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * The value of this flag determines whether the children of entity reference
           * nodes are visible to the IDOM_TreeWalker. If false, they will be skipped over.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual bool getExpandEntityReferences()= 0;
 
         /**
           * Return the node at which the IDOM_TreeWalker is currently positioned.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual IDOM_Node*		getCurrentNode()= 0;
@@ -145,8 +149,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * node, or if it fails to find a visible ancestor node, this method retains the
           * current position and returns null.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual IDOM_Node*		parentNode()= 0;
 
@@ -154,8 +156,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * Moves the <code>IDOM_TreeWalker</code> to the first child of the current node,
           * and returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual IDOM_Node*		firstChild()= 0;
@@ -165,8 +165,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual IDOM_Node*		lastChild()= 0;
 
@@ -175,8 +173,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * node, and returns the new node. If the current node has no previous sibling,
           * returns <code>null</code>, and retains the current node.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual IDOM_Node*		previousSibling()= 0;
 
@@ -184,8 +180,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * Moves the <code>IDOM_TreeWalker</code> to the next sibling of the current node,
           * and returns the new node. If the current node has no next sibling, returns
           * <code>null</code>, and retains the current node.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual IDOM_Node*		nextSibling()= 0;
@@ -197,8 +191,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * or if the search for previousNode attempts to step upward from the IDOM_TreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual IDOM_Node*		previousNode()= 0;
 
@@ -209,8 +201,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * or if the search for nextNode attempts to step upward from the IDOM_TreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         virtual IDOM_Node*		nextNode()= 0;
         //@}
@@ -219,8 +209,6 @@ class CDOM_EXPORT IDOM_TreeWalker {
         //@{
         /**
           * Set the node at which the IDOM_TreeWalker is currently positioned.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         virtual void			setCurrentNode(IDOM_Node* currentNode)= 0;

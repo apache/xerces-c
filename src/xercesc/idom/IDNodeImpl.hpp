@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,7 +144,8 @@ public:
      void                setPrefix(const XMLCh *fPrefix);
      void                setReadOnly(bool readOnly, bool deep);
      void                setUserData(void *value);
-     bool                supports(const XMLCh *feature, const XMLCh *version) const;
+     bool                isSupported(const XMLCh *feature, const XMLCh *version) const;
+     bool                hasAttributes() const;
 
     static  bool         isKidOK(IDOM_Node *parent, IDOM_Node *child);
 
@@ -304,7 +305,8 @@ public: // should really be protected - ALH
     virtual       IDOM_Node          *removeChild(IDOM_Node *oldChild) ;\
     virtual       IDOM_Node          *replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild) ;\
     virtual       void                setNodeValue(const XMLCh  *nodeValue) ;\
-    virtual       bool                supports(const XMLCh *feature, const XMLCh *version) const ;\
+    virtual       bool                isSupported(const XMLCh *feature, const XMLCh *version) const ;\
+    virtual       bool                hasAttributes() const ;\
     virtual       void                setPrefix(const XMLCh * prefix)
 
 
