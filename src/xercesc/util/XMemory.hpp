@@ -73,12 +73,21 @@ public :
 #endif
 
     /**
-      * This method overrides placement operator new
+      * This method defines a custom operator new, that will use the provided
+      * memory manager to perform the allocation
       *
       * @param size   The requested memory size
       * @param memMgr An application's memory manager
       */
     void* operator new(size_t size, MemoryManager* memMgr);
+
+    /**
+      * This method overrides placement operator new
+      *
+      * @param size   The requested memory size
+      * @param ptr    The memory location where the object should be allocated
+      */
+    void* operator new(size_t size, void* ptr);
 
     /**
       * This method overrides operator delete
@@ -90,12 +99,20 @@ public :
      //The Borland compiler is complaining about duplicate overloading of delete
 #if !defined(XML_BORLAND)
     /**
-      * This method provides a matching delete for the placement new
+      * This method provides a matching delete for the custom operator new
       *
       * @param p      The pointer to the allocated memory
       * @param memMgr An application's memory manager 
       */
     void operator delete(void* p, MemoryManager* memMgr);
+
+    /**
+      * This method provides a matching delete for the placement new
+      *
+      * @param p      The pointer to the allocated memory
+      * @param ptr    The memory location where the object had to be allocated
+      */
+    void operator delete(void* p, void* ptr);
 #endif
 
     //@}
@@ -108,13 +125,9 @@ protected :
     //@{
 
     /**
-      * Protected default constructor and copy constructor
+      * Protected default constructor
       */
     XMemory()
-    {
-    }
-
-    XMemory(const XMemory&)
     {
     }
     //@}
@@ -125,11 +138,6 @@ protected :
     }
 #endif
 
-private:
-    // -----------------------------------------------------------------------
-    //  Unimplemented operators
-    // -----------------------------------------------------------------------
-    XMemory& operator=(const XMemory&);
 };
 
 XERCES_CPP_NAMESPACE_END

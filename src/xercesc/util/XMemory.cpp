@@ -69,6 +69,11 @@ void* XMemory::operator new(size_t size, MemoryManager* manager)
     return (char*)block + headerSize;
 }
 
+void* XMemory::operator new(size_t /*size*/, void* ptr)
+{
+    return ptr;
+}
+
 void XMemory::operator delete(void* p)
 {
     if (p != 0)
@@ -105,6 +110,10 @@ void XMemory::operator delete(void* p, MemoryManager* manager)
         MemoryManager* pM = *(MemoryManager**)block;
         pM->deallocate(block);
     }
+}
+
+void XMemory::operator delete(void* /*p*/, void* /*ptr*/)
+{
 }
 
 #endif
