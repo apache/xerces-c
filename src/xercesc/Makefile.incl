@@ -515,9 +515,12 @@ ifeq (${PLATFORM}, CYGWIN)
       endif
       EXTRA_LINK_OPTIONS = \
               -Xlinker --warn-once \
-              -Xlinker -Map -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.map \
-              -Xlinker --output-def -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.def \
-              -Xlinker --out-implib -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.dll.a
+              -Xlinker -Map \
+                  -Xlinker $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}.map \
+              -Xlinker --output-def \
+                  -Xlinker $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}.def \
+              -Xlinker --out-implib \
+                  -Xlinker $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}.dll.a
         SHLIBSUFFIX=.dll
 endif
 
@@ -551,12 +554,12 @@ else
         ifeq (${PLATFORM}, CYGWIN)
             #
             # LINK_NAME=libxerces-c.dll
-            # SO_NAME  =libxerces-c20.dll
+            # SO_NAME  =cygxerces-c20.dll
             # REAL_NAME=libxerces-c2_0_0.dll
             #
             LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
-            SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
-            REAL_NAME=${CYGNAME}${VER}${SHLIBSUFFIX}
+            SO_NAME  =${CYGNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+            REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
         else
             #
             # LINK_NAME=libxerces-c.so
