@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/04/30 16:54:38  knoaman
+ * Initialize xerces with a default memory manager if none is provided.
+ *
  * Revision 1.8  2003/03/09 16:40:47  peiyongz
  * PanicHandler
  *
@@ -162,6 +165,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/DefaultPanicHandler.hpp>
+#include <xercesc/internal/MemoryManagerImpl.hpp>
 
 #include <limits.h>
 
@@ -190,7 +194,7 @@ static long                     gInitFlag = 0;
 //		static data cleanup list
 // ---------------------------------------------------------------------------
 XMLRegisterCleanup*	gXMLCleanupList = 0;
-XMLMutex*               gXMLCleanupListMutex = 0;
+XMLMutex*           gXMLCleanupListMutex = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -200,13 +204,16 @@ XMLNetAccessor*     XMLPlatformUtils::fgNetAccessor = 0;
 XMLTransService*    XMLPlatformUtils::fgTransService = 0;
 PanicHandler*       XMLPlatformUtils::fgUserPanicHandler = 0;
 PanicHandler*       XMLPlatformUtils::fgDefaultPanicHandler = 0;
+MemoryManager*      XMLPlatformUtils::fgMemoryManager = 0;
+bool                XMLPlatformUtils::fgMemMgrAdopted = true;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::Initialize(const char*         const locale 
-                                , const char*         const nlsHome
-                                ,       PanicHandler* const panicHandler)
+void XMLPlatformUtils::Initialize(const char*          const locale 
+                                , const char*          const nlsHome
+                                ,       PanicHandler*  const panicHandler
+                                ,       MemoryManager* const memoryManager)
 {
     //
     //  Effects of overflow:
@@ -219,6 +226,20 @@ void XMLPlatformUtils::Initialize(const char*         const locale
     //
     if (gInitFlag == LONG_MAX)
         return;
+
+    // Set pluggable memory manager
+    if (!fgMemoryManager)
+    {
+        if (memoryManager)
+        {
+            fgMemoryManager = memoryManager;
+            fgMemMgrAdopted = false;
+        }
+        else
+        {
+            fgMemoryManager = new MemoryManagerImpl();
+        }
+    }
 
     //
     //  Make sure we haven't already been initialized. Note that this is not
@@ -372,9 +393,19 @@ void XMLPlatformUtils::Terminate()
         delete fgDefaultPanicHandler;
     }
 
+    // de-allocate default memory manager
+    if (fgMemMgrAdopted)
+    {
+        delete fgMemoryManager;
+        fgMemoryManager = 0;
+    }
+    else
+    {
+        fgMemMgrAdopted = true;
+    }
+
     // And say we are no longer initialized
     gInitFlag = 0;
-
 }
 
 

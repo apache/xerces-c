@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,6 @@
 #if !defined(PLATFORMUTILS_HPP)
 #define PLATFORMUTILS_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/PanicHandler.hpp>
 
@@ -71,6 +70,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XMLMsgLoader;
 class XMLNetAccessor;
 class XMLTransService;
+class MemoryManager;
 
 //
 //  For internal use only
@@ -144,6 +144,13 @@ public :
       *   This is the default panic handler. 
       */    
     static PanicHandler*        fgDefaultPanicHandler;
+
+    /** The configurable memory manager
+      *
+      *   This is the pluggable memory manager. If it is not provided by an
+      *   application, a default implementation is used.
+      */
+    static MemoryManager*       fgMemoryManager;
     
     //@}
 
@@ -176,10 +183,15 @@ public :
       *               Application shall make sure that the plugged panic handler persists 
       *               through the call to XMLPlatformUtils::terminate().       
       *
+      * memoryManager: plugged-in memory manager which is owned by user
+      *                applications. Applications must make sure that the
+      *                plugged-in memory manager persisit through the call to
+      *                XMLPlatformUtils::terminate()
       */
-    static void Initialize(const char*         const locale = XMLUni::fgXercescDefaultLocale
-                         , const char*         const nlsHome = 0
-                         ,       PanicHandler* const panicHandler = 0);
+    static void Initialize(const char*          const locale = XMLUni::fgXercescDefaultLocale
+                         , const char*          const nlsHome = 0
+                         ,       PanicHandler*  const panicHandler = 0
+                         ,       MemoryManager* const memoryManager = 0);
 
     /** Perform per-process parser termination
       *
@@ -732,6 +744,19 @@ private :
       *            -1 if no such sequence is found
       */
     static int  searchSlashDotDotSlash(XMLCh* const srcPath);
+
+    //@}
+
+    /** @name Private static methods */
+    //@{
+
+    /**
+      * Indicates whether the memory manager was supplied by the user
+      * or not. Users own the memory manager, and if none is supplied,
+      * Xerces uses a default one that it owns and is responsible for
+      * deleting in Terminate().
+      */
+    static bool fgMemMgrAdopted;
 
     //@}
 };
