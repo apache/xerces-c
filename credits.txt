@@ -14,6 +14,7 @@ David Bertoni
 John Bellardo
 Arundhati Bhowmick
 Edward Bortner
+Sean Bright
 Sumit Chawla
 Nick Chiang
 Chih Hsiang Chou
@@ -80,6 +81,7 @@ Linda M. Swan
 Pieter Van-Dyck
 Curtis Walker
 Tom Watson
+Mark Weaver
 Roger Webster
 Robert Weir
 Kari Whitcomb
