@@ -166,6 +166,7 @@ void AbstractDOMParser::reset()
     fWithinElement   = false;
     fDocumentAdoptedByUser = false;
     fNodeStack->removeAllElements();
+    fInternalSubset.reset();
 };
 
 
