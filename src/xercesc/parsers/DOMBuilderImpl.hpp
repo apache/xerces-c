@@ -564,6 +564,8 @@ public :
       *                 or <code>null</code> if there is no base URI.
       * @return The value returned by the user installed resolveEntity
       *         method or NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the DOMBuilder which is
+      *         responsible to clean up the memory.
       * @see DOMEntityResolver
       * @see XMLEntityHandler
       */

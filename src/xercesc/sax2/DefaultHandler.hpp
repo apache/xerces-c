@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/06/06 20:38:45  tng
+ * Document Fix: document that the returned object from resolveEntity is owned by the parser
+ *
  * Revision 1.2  2002/02/20 18:17:02  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -377,6 +380,8 @@ public:
     *                 document.
     * @return The new input source, or null to require the
     *         default behaviour.
+    *         The returned InputSource is owned by the parser which is
+    *         responsible to clean up the memory.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see EntityResolver#resolveEntity

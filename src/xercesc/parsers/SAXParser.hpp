@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/06/06 20:38:18  tng
+ * Document Fix: document that the returned object from resolveEntity is owned by the parser
+ *
  * Revision 1.8  2002/05/31 15:13:53  tng
  * Fix doxygen documentation.
  *
@@ -1530,6 +1533,8 @@ public :
       *                 or <code>null</code> if there is no base URI.
       * @return The value returned by the SAX resolveEntity method or
       *         NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the parser which is
+      *         responsible to clean up the memory.
       * @see EntityResolver
       * @see XMLEntityHandler
       */
