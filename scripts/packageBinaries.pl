@@ -265,15 +265,15 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         # Copy the ICU dlls and libs
-        psystem("cp -fv $ICUROOT/bin/icuuc18.dll $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icuuc18d.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc20.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc20d.dll $targetdir/bin");
 
-        # it seems icudt18*.DLL is generated (upper case dll)
+        # it seems icudt20*.DLL is generated (upper case dll)
         # but just case, try lower case .dll as well
-        psystem("cp -fv $ICUROOT/source/data/icudt18*.DLL $targetdir/bin");
-        psystem("cp -fv $ICUROOT/source/data/icudt18*.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt20*.DLL $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt20*.dll $targetdir/bin");
 
-        psystem("cp -fv $ICUROOT/source/data/icudata.lib $targetdir/lib");
+        psystem("cp -fv $ICUROOT/lib/icudata.lib $targetdir/lib");
 
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
         psystem("cp -fv $ICUROOT/lib/icuucd.lib $targetdir/lib");
@@ -573,17 +573,17 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     if (length($ICUROOT) > 0) {
         # Only one of the following is generated, but don't know which is generated
         # so trial and error
-        psystem("cp -f $ICUROOT/source/data/libicudt18e.a $ICUROOT/lib/libicudata.a");
-        psystem("cp -f $ICUROOT/source/data/libicudt18l.a $ICUROOT/lib/libicudata.a");
-        psystem("cp -f $ICUROOT/source/data/libicudt18b.a $ICUROOT/lib/libicudata.a");
+        psystem("cp -f $ICUROOT/source/data/libicudt20e.a $ICUROOT/lib/libicudata.a");
+        psystem("cp -f $ICUROOT/source/data/libicudt20l.a $ICUROOT/lib/libicudata.a");
+        psystem("cp -f $ICUROOT/source/data/libicudt20b.a $ICUROOT/lib/libicudata.a");
 
-        psystem("cp -f $ICUROOT/source/data/libicudt18e.so $ICUROOT/lib/libicudata.so");
-        psystem("cp -f $ICUROOT/source/data/libicudt18l.so $ICUROOT/lib/libicudata.so");
-        psystem("cp -f $ICUROOT/source/data/libicudt18b.so $ICUROOT/lib/libicudata.so");
+        psystem("cp -f $ICUROOT/source/data/libicudt20e.so $ICUROOT/lib/libicudata.so");
+        psystem("cp -f $ICUROOT/source/data/libicudt20l.so $ICUROOT/lib/libicudata.so");
+        psystem("cp -f $ICUROOT/source/data/libicudt20b.so $ICUROOT/lib/libicudata.so");
 
-        psystem("cp -f $ICUROOT/source/data/libicudt18e.sl $ICUROOT/lib/libicudata.sl");
-        psystem("cp -f $ICUROOT/source/data/libicudt18l.sl $ICUROOT/lib/libicudata.sl");
-        psystem("cp -f $ICUROOT/source/data/libicudt18b.sl $ICUROOT/lib/libicudata.sl");
+        psystem("cp -f $ICUROOT/source/data/libicudt20e.sl $ICUROOT/lib/libicudata.sl");
+        psystem("cp -f $ICUROOT/source/data/libicudt20l.sl $ICUROOT/lib/libicudata.sl");
+        psystem("cp -f $ICUROOT/source/data/libicudt20b.sl $ICUROOT/lib/libicudata.sl");
     }
 
     # make the source files
@@ -608,7 +608,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     if (length($ICUROOT) > 0) {
         psystem("cp -f $ICUROOT/lib/libicuuc.* $XERCESCROOT/lib");
         psystem("cp -f $ICUROOT/lib/libicudata.* $XERCESCROOT/lib");
-        psystem("cp -f $ICUROOT/source/data/libicudt18*.* $XERCESCROOT/lib");
+        psystem("cp -f $ICUROOT/source/data/libicudt20*.* $XERCESCROOT/lib");
     }
 
     # Now build the samples
