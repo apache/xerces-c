@@ -98,6 +98,10 @@ SOURCE=..\..\..\..\..\src\dom\AttrImpl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\AttrNSImpl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\CDATASectionImpl.cpp
 # End Source File
 # Begin Source File
@@ -230,6 +234,10 @@ SOURCE=..\..\..\..\..\src\dom\ElementImpl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\ElementNSImpl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\EntityImpl.cpp
 # End Source File
 # Begin Source File
@@ -239,6 +247,10 @@ SOURCE=..\..\..\..\..\src\dom\EntityReferenceImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\NamedNodeMapImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\NodeContainer.cpp
 # End Source File
 # Begin Source File
 
@@ -283,6 +295,10 @@ SOURCE=..\..\..\..\..\src\dom\TreeWalkerImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\AttrImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\AttrNSImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -410,6 +426,10 @@ SOURCE=..\..\..\..\..\src\dom\DOMString.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\DOMStringImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\DStringPool.hpp
 # End Source File
 # Begin Source File
@@ -419,6 +439,10 @@ SOURCE=..\..\..\..\..\src\dom\ElementDefinitionImpl.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\ElementImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ElementNSImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -442,7 +466,7 @@ SOURCE=..\..\..\..\..\src\dom\NameNodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeFilterImpl.hpp
+SOURCE=..\..\..\..\..\src\dom\NodeContainer.hpp
 # End Source File
 # Begin Source File
 
