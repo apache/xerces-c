@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/21 17:44:59  tng
  * [Bug 7087] compiler warnings when using gcc.
  *
@@ -90,6 +93,7 @@
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 template <class TElem> class RefArrayOf
 {
@@ -188,6 +192,7 @@ private :
     RefArrayOf<TElem>*  fToEnum;
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/RefArrayOf.c>

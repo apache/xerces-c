@@ -73,6 +73,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 
 
 // ---------------------------------------------------------------------------
@@ -1208,3 +1210,6 @@ void XMLURL::weavePaths(const XMLCh* const basePart)
     janBuf.orphan();
     fPath = tmpBuf;
 }
+
+XERCES_CPP_NAMESPACE_END
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.6  2002/10/01 19:45:22  tng
  * Performance in XMLString::equals, only need to check one string for null as they are equal already.
  *
@@ -204,6 +207,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLLCPTranscoder;
 
@@ -1481,5 +1486,6 @@ inline bool XMLString::equals(   const   XMLCh* const    str1
     return false;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 #endif

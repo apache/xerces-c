@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/10/30 21:52:00  tng
  * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
  *
@@ -102,6 +105,8 @@
 
 #include <xercesc/util/QName.hpp>
 #include <xercesc/util/Janitor.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  QName: Constructors and Destructor
@@ -443,3 +448,4 @@ void QName::cleanUp()
     delete [] fRawName;
 }
 
+XERCES_CPP_NAMESPACE_END

@@ -72,6 +72,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT XMLUni
 {
@@ -265,5 +266,7 @@ public :
 	static const XMLCh fgDOMWRTWhitespaceInElementContent[];
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

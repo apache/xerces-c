@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/07/11 18:49:53  knoaman
  * Add setAdoptElements method.
  * Rename removeBucketElemSafe to orphanKey.
@@ -120,6 +123,8 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Constructors and Destructor
@@ -607,3 +612,5 @@ template <class TVal> void RefHashTableOfEnumerator<TVal>::findNext()
         fCurElem = fToEnum->fBucketList[fCurHash];
     }
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -64,6 +64,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 template <class TKey, class TValue> class KeyRefPair
 {
@@ -107,6 +108,7 @@ template <class TKey, class TValue> class KeyRefPair
         TValue*  fValue;
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/KeyRefPair.c>

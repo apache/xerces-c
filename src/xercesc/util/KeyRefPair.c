@@ -66,7 +66,7 @@
 #include <xercesc/util/KeyRefPair.hpp>
 #endif
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  KeyRefPair: Constructors and Destructor
@@ -139,3 +139,5 @@ KeyRefPair<TKey,TValue>::setValue(TValue* newValue)
     fValue = newValue;
     return fValue;
 }
+
+XERCES_CPP_NAMESPACE_END

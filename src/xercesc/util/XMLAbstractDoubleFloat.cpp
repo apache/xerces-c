@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/09/24 19:51:24  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -89,6 +92,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/Janitor.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  local data member
@@ -410,3 +415,5 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 
 	return;
 }
+
+XERCES_CPP_NAMESPACE_END

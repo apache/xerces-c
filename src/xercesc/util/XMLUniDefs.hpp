@@ -62,6 +62,8 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  Constants for the Unicode characters of interest to us in an XML parser
 //  We don't put these inside the class because then they could not be const
@@ -184,5 +186,7 @@ const XMLCh chWonSign               = 0x20A9;
 
 const XMLCh chLineSeparator         = 0x2028;
 const XMLCh chParagraphSeparator    = 0x2029;
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

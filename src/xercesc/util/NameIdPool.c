@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/09/24 19:51:24  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -93,7 +96,7 @@
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  NameIdPoolBucketElem: Constructors and Destructor
@@ -420,3 +423,5 @@ template <class TElem> void NameIdPoolEnumerator<TElem>::Reset()
 {
     fCurIndex = 0;
 }
+
+XERCES_CPP_NAMESPACE_END

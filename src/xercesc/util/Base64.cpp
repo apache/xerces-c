@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 2001, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 15:22:03  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/03/19 17:01:20  peiyongz
  * Fix to Bug#7243 Base64 encoding is not working.
  *
@@ -97,10 +100,12 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/TransService.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  constants
 // ---------------------------------------------------------------------------
-static const int BASELENGTH = 255;       
+static const int BASELENGTH = 255;
 static const int FOURBYTE   = 4;
 
 // ---------------------------------------------------------------------------
@@ -113,14 +118,14 @@ const XMLByte Base64::base64Alphabet[] = {
     chLatin_F, chLatin_G, chLatin_H, chLatin_I, chLatin_J,
     chLatin_K, chLatin_L, chLatin_M, chLatin_N, chLatin_O,
     chLatin_P, chLatin_Q, chLatin_R, chLatin_S, chLatin_T,
-    chLatin_U, chLatin_V, chLatin_W, chLatin_X, chLatin_Y, chLatin_Z, 
-	chLatin_a, chLatin_b, chLatin_c, chLatin_d, chLatin_e, 
-	chLatin_f, chLatin_g, chLatin_h, chLatin_i, chLatin_j, 
-	chLatin_k, chLatin_l, chLatin_m, chLatin_n, chLatin_o, 
-	chLatin_p, chLatin_q, chLatin_r, chLatin_s, chLatin_t, 
-	chLatin_u, chLatin_v, chLatin_w, chLatin_x, chLatin_y, chLatin_z, 
-	chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, 
-	chDigit_5, chDigit_6, chDigit_7, chDigit_8, chDigit_9, 
+    chLatin_U, chLatin_V, chLatin_W, chLatin_X, chLatin_Y, chLatin_Z,
+	chLatin_a, chLatin_b, chLatin_c, chLatin_d, chLatin_e,
+	chLatin_f, chLatin_g, chLatin_h, chLatin_i, chLatin_j,
+	chLatin_k, chLatin_l, chLatin_m, chLatin_n, chLatin_o,
+	chLatin_p, chLatin_q, chLatin_r, chLatin_s, chLatin_t,
+	chLatin_u, chLatin_v, chLatin_w, chLatin_x, chLatin_y, chLatin_z,
+	chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4,
+	chDigit_5, chDigit_6, chDigit_7, chDigit_8, chDigit_9,
 	chPlus, chForwardSlash, chNull
 };
 
@@ -235,7 +240,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData,
 //
 // In previous version, we use XMLString::strLen(decodedData)
 // to get the length, this will fail for test case containing
-// consequtive "A", such "AAFF", or "ab56AA56". Instead of 
+// consequtive "A", such "AAFF", or "ab56AA56". Instead of
 // returning 3/6, we have 0 and 3, indicating that "AA", after
 // decoded, is interpreted as <null> by the strLen().
 //
@@ -260,7 +265,7 @@ int Base64::getDataLength( const XMLCh* const inputData )
 // return 0(null) if invalid data found.
 // return the buffer containning decoded data otherwise
 // the caller is responsible for the de-allocation of the
-// buffer returned. 
+// buffer returned.
 //
 // temporary data, rawInputData, is ALWAYS released by this function.
 //
@@ -294,8 +299,8 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
     rawInputData[ rawInputLength ] = 0;
 
     // the length of raw data should be divisible by four
-    if (( rawInputLength % FOURBYTE ) != 0 ) 
-        return 0;  
+    if (( rawInputLength % FOURBYTE ) != 0 )
+        return 0;
 
     int quadrupletCount = rawInputLength / FOURBYTE;
     if ( quadrupletCount == 0 )
@@ -351,17 +356,17 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
         return 0;
     }
 
-    b1 = base64Inverse[ d1 ]; 
+    b1 = base64Inverse[ d1 ];
     b2 = base64Inverse[ d2 ];
 
     // try to process last two octets
     d3 = rawInputData[ rawInputIndex++ ];
     d4 = rawInputData[ rawInputIndex++ ];
 
-    if (!isData( d3 ) || !isData( d4 )) 
+    if (!isData( d3 ) || !isData( d4 ))
     {
         // check if last two are PAD characters
-        if (isPad( d3 ) && isPad( d4 )) 
+        if (isPad( d3 ) && isPad( d4 ))
         {
             // two PAD e.g. 3c==
             if ((b2 & 0xf) != 0) // last 4 bits should be zero
@@ -372,8 +377,8 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
 
             decodedData[ outputIndex++ ] = set1stOctet(b1, b2);
         }
-        else if (!isPad( d3 ) && isPad( d4 )) 
-        {               
+        else if (!isPad( d3 ) && isPad( d4 ))
+        {
             // one PAD e.g. 3cQ=
             b3 = base64Inverse[ d3 ];
             if (( b3 & 0x3 ) != 0 ) // last 2 bits should be zero
@@ -384,16 +389,16 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
 
             decodedData[ outputIndex++ ] = set1stOctet( b1, b2 );
             decodedData[ outputIndex++ ] = set2ndOctet( b2, b3 );
-        } 
-        else 
+        }
+        else
         {
-            // an error like "3c[Pad]r", "3cdX", "3cXd", "3cXX" where X is non data 
+            // an error like "3c[Pad]r", "3cdX", "3cXd", "3cXX" where X is non data
             delete[] decodedData;
             return 0;
-        }       
-    } 
-    else 
-    { 
+        }
+    }
+    else
+    {
         // no PAD e.g 3cQl
         b3 = base64Inverse[ d3 ];
         b4 = base64Inverse[ d4 ];
@@ -403,7 +408,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
     }
 
     // write out the end of string
-    decodedData[ outputIndex ] = 0; 
+    decodedData[ outputIndex ] = 0;
     *outputLength = outputIndex;
 
     return decodedData;
@@ -460,15 +465,17 @@ void Base64::init()
 
     int i;
     // set all fields to -1
-    for ( i = 0; i < BASELENGTH; i++ ) 
-        base64Inverse[i] = (XMLByte)-1; 
+    for ( i = 0; i < BASELENGTH; i++ )
+        base64Inverse[i] = (XMLByte)-1;
 
     // compute inverse table
-    for ( i = 0; i < 64; i++ ) 
+    for ( i = 0; i < 64; i++ )
         base64Inverse[ base64Alphabet[i] ] = (XMLByte)i;
 }
 
-bool Base64::isData(const XMLByte& octet) 
+bool Base64::isData(const XMLByte& octet)
 {
     return (base64Inverse[octet]!=(XMLByte)-1);
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:11  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/05/11 13:26:27  tng
  * Copyright update.
@@ -115,6 +118,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This class provides a commonly used data structure, which is that of
@@ -178,5 +182,7 @@ private :
     XMLCh*  fValue;
     unsigned long  fValueAllocSize;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

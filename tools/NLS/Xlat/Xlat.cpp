@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2002/11/04 15:24:50  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.13  2002/09/30 22:09:58  peiyongz
  * To generate icu resource file (in text) for error message.
  *
@@ -405,7 +408,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
 
     {
         //  Nest entire code in an inner block.
-        
+
         DOMDocument* srcDoc;
         const unsigned int bufSize = 4095;
         XMLCh tmpFileBuf[bufSize + 1];
@@ -459,7 +462,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 case OutFormat_MsgCatalog :
                     formatter = new MsgCatFormatter;
                     break;
-                
+
                 case OutFormat_ResBundle:
                     formatter = new ICUResBundFormatter;
                     break;
@@ -579,8 +582,13 @@ extern "C" int wmain(int argC, XMLCh** argV)
 
                 // If its not the exception domain, then we need a header included
                 if (XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
-                    fwprintf(outHeader, L"#include <xercesc/framework/XMLErrorReporter.hpp>\n\n");
+                    fwprintf(outHeader, L"#include <xercesc/framework/XMLErrorReporter.hpp>\n");
 
+                //  Write out the namespace declaration
+                fwprintf(outHeader, L"#include <xercesc/util/XercesDefs.hpp>\n\n");
+                fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_BEGIN\n\n");
+
+                //  Now the message codes
                 fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", errNameSpace);
 
                 // Tell the formatter that a new domain is starting
@@ -747,8 +755,11 @@ extern "C" int wmain(int argC, XMLCh** argV)
                     );
                 }
 
-                // And close out the class declaration and the header file
-                fwprintf(outHeader, L"};\n#endif\n\n");
+
+                // And close out the class declaration, the namespace declaration and the header file
+                fwprintf(outHeader, L"};\n\n");
+                fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_END\n\n");
+                fwprintf(outHeader, L"#endif\n\n");
                 fclose(outHeader);
             }
 

@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT XMLBigInteger
 {
 public:
@@ -146,7 +148,7 @@ private:
     //     the buffer holding the number.
     //
 	//  fRawData
-	//     to preserve the original string used to construct this object, 
+	//     to preserve the original string used to construct this object,
 	//     needed for pattern matching.
 	//
     // -----------------------------------------------------------------------
@@ -184,5 +186,7 @@ inline XMLCh*  XMLBigInteger::toString() const
 {
     return XMLString::replicate(fRawData);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

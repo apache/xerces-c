@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/08/21 17:45:00  tng
  * [Bug 7087] compiler warnings when using gcc.
  *
@@ -128,6 +131,7 @@
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  Forward declare the enumerator so he can be our friend. Can you say
@@ -301,6 +305,8 @@ private :
     unsigned int                          fCurHash;
     RefHashTableOf<TVal>*                 fToEnum;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/RefHashTableOf.c>

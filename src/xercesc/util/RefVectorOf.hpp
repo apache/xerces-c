@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/08/21 17:45:00  tng
  * [Bug 7087] compiler warnings when using gcc.
  *
@@ -95,6 +98,7 @@
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 template <class TElem> class RefVectorOf
 {
@@ -191,6 +195,8 @@ private :
     unsigned int        fCurIndex;
     RefVectorOf<TElem>* fToEnum;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/RefVectorOf.c>

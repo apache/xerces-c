@@ -57,6 +57,8 @@
 #include "HashXMLCh.hpp"
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 HashXMLCh::HashXMLCh()
 {
 }
@@ -74,3 +76,5 @@ bool HashXMLCh::equals(const void *const key1, const void *const key2)
 {
 	return (XMLString::equals((XMLCh*)key1, (XMLCh*)key2)) ? true : false;
 }
+
+XERCES_CPP_NAMESPACE_END

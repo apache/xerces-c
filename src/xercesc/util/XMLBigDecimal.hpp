@@ -65,6 +65,8 @@
 #include <xercesc/util/XMLNumber.hpp>
 #include <xercesc/util/XMLBigInteger.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT XMLBigDecimal : public XMLNumber
 {
 public:
@@ -140,7 +142,7 @@ private:
     //     the number of digits to the right of the decimal point
     //
 	//  fRawData
-	//     to preserve the original string used to construct this object, 
+	//     to preserve the original string used to construct this object,
 	//     needed for pattern matching.
 	//
     // -----------------------------------------------------------------------
@@ -181,5 +183,7 @@ inline bool XMLBigDecimal::operator==(const XMLBigDecimal& toCompare) const
 {
     return ( XMLBigInteger::compareValues(this->fIntVal, toCompare.fIntVal) == 0 ? true : false);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:14  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/11/14 22:04:03  peiyongz
  * Patch to apply check on Year and more rigorous on other fields as well.
@@ -84,12 +87,14 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/Janitor.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 //
 // constants used to process raw data (fBuffer)
 //
 // [-]{CCYY-MM-DD}'T'{HH:MM:SS.MS}['Z']
 //                                [{+|-}hh:mm']
-//                                  
+//
 
 static const XMLCh DURATION_STARTER     = chLatin_P;              // 'P'
 static const XMLCh DURATION_Y           = chLatin_Y;              // 'Y'
@@ -120,23 +125,23 @@ static const int TIMEZONE_SIZE   = 5;    // hh:mm
 static const int DAY_SIZE        = 5;    // ---DD
 static const int MONTH_SIZE      = 6;    // --MM--
 static const int MONTHDAY_SIZE   = 7;    // --MM-DD
-static const int NOT_FOUND       = -1;   
+static const int NOT_FOUND       = -1;
 
-//define constants to be used in assigning default values for 
+//define constants to be used in assigning default values for
 //all date/time excluding duration
 static const int YEAR_DEFAULT  = 2000;
 static const int MONTH_DEFAULT = 01;
 static const int DAY_DEFAULT   = 15;
 
-// order-relation on duration is a partial order. The dates below are used to 
+// order-relation on duration is a partial order. The dates below are used to
 // for comparison of 2 durations, based on the fact that
 // duration x and y is x<=y iff s+x<=s+y
 // see 3.2.6 duration W3C schema datatype specs
 //
-// the dates are in format: {CCYY,MM,DD, H, S, M, MS, timezone}  
-static const int DATETIMES[][XMLDateTime::TOTAL_SIZE] = 
+// the dates are in format: {CCYY,MM,DD, H, S, M, MS, timezone}
+static const int DATETIMES[][XMLDateTime::TOTAL_SIZE] =
 {
-    {1696, 9, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},     
+    {1696, 9, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},
 	{1697, 2, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},
 	{1903, 3, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},
 	{1903, 7, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD}
@@ -151,19 +156,19 @@ static inline int fQuotient(int a, int b)
     return div_result.quot;
 }
 
-static inline int fQuotient(int temp, int low, int high) 
+static inline int fQuotient(int temp, int low, int high)
 {
     return fQuotient(temp - low, high - low);
 }
 
-static inline int mod(int a, int b, int quotient) 
+static inline int mod(int a, int b, int quotient)
 {
 	return (a - quotient*b) ;
 }
 
-static inline int modulo (int temp, int low, int high) 
+static inline int modulo (int temp, int low, int high)
 {
-    //modulo(a - low, high - low) + low 
+    //modulo(a - low, high - low) + low
     int a = temp - low;
     int b = high - low;
     return (mod (a, b, fQuotient(a, b)) + low) ;
@@ -171,21 +176,21 @@ static inline int modulo (int temp, int low, int high)
 
 static inline bool isLeapYear(int year)
 {
-    return((year%4 == 0) && ((year%100 != 0) || (year%400 == 0))); 
+    return((year%4 == 0) && ((year%100 != 0) || (year%400 == 0)));
 }
 
-static int maxDayInMonthFor(int year, int month) 
+static int maxDayInMonthFor(int year, int month)
 {
 
-    if ( month == 4 || month == 6 || month == 9 || month == 11 ) 
+    if ( month == 4 || month == 6 || month == 9 || month == 11 )
     {
         return 30;
     }
-    else if ( month==2 ) 
+    else if ( month==2 )
     {
-        if ( isLeapYear(year) ) 
+        if ( isLeapYear(year) )
             return 29;
-        else 
+        else
             return 28;
     }
     else
@@ -203,13 +208,13 @@ static int maxDayInMonthFor(int year, int month)
  *
  * 3.2.6.2 Order relation on duration
  *
- *     In general, the order-relation on duration is a partial order since there is no 
- *  determinate relationship between certain durations such as one month (P1M) and 30 days (P30D). 
- *  The order-relation of two duration values x and y is x < y iff s+x < s+y for each qualified 
- *  dateTime s in the list below. 
+ *     In general, the order-relation on duration is a partial order since there is no
+ *  determinate relationship between certain durations such as one month (P1M) and 30 days (P30D).
+ *  The order-relation of two duration values x and y is x < y iff s+x < s+y for each qualified
+ *  dateTime s in the list below.
  *
  *     These values for s cause the greatest deviations in the addition of dateTimes and durations
- * 
+ *
  **/
 int XMLDateTime::compare(const XMLDateTime* const pDate1
                        , const XMLDateTime* const pDate2
@@ -232,14 +237,14 @@ int XMLDateTime::compare(const XMLDateTime* const pDate1
     addDuration(pTempA, pDate1, 0);
     addDuration(pTempB, pDate2, 0);
     resultA = compareOrder(pTempA, pTempB);
-    if ( resultA == INDETERMINATE )  
+    if ( resultA == INDETERMINATE )
         return INDETERMINATE;
 
     addDuration(pTempA, pDate1, 1);
     addDuration(pTempB, pDate2, 1);
     resultB = compareOrder(pTempA, pTempB);
     resultA = compareResult(resultA, resultB, strict);
-    if ( resultA == INDETERMINATE ) 
+    if ( resultA == INDETERMINATE )
         return INDETERMINATE;
 
     addDuration(pTempA, pDate1, 2);
@@ -265,7 +270,7 @@ int XMLDateTime::compare(const XMLDateTime* const pDate1
 //       fDuration  date
 //
 
-void XMLDateTime::addDuration(XMLDateTime*             fNewDate 
+void XMLDateTime::addDuration(XMLDateTime*             fNewDate
                             , const XMLDateTime* const fDuration
                             , int index)
 
@@ -289,10 +294,10 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
     carry = fQuotient (temp, 60);
     fNewDate->fValue[Second] =  mod(temp, 60, carry);
 		
-    //add minutes 
-    temp = DATETIMES[index][Minute] + fDuration->fValue[Minute] + carry; 
-    carry = fQuotient(temp, 60); 
-    fNewDate->fValue[Minute] = mod(temp, 60, carry);         
+    //add minutes
+    temp = DATETIMES[index][Minute] + fDuration->fValue[Minute] + carry;
+    carry = fQuotient(temp, 60);
+    fNewDate->fValue[Minute] = mod(temp, 60, carry);
 
     //add hours
     temp = DATETIMES[index][Hour] + fDuration->fValue[Hour] + carry;
@@ -301,20 +306,20 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
 		
     fNewDate->fValue[Day] = DATETIMES[index][Day] + fDuration->fValue[Day] + carry;
 
-    while ( true ) 
+    while ( true )
     {
         temp = maxDayInMonthFor(fNewDate->fValue[CentYear], fNewDate->fValue[Month]);
-        if ( fNewDate->fValue[Day] < 1 ) 
+        if ( fNewDate->fValue[Day] < 1 )
         { //original fNewDate was negative
             fNewDate->fValue[Day] += maxDayInMonthFor(fNewDate->fValue[CentYear], fNewDate->fValue[Month]-1);
             carry = -1;
         }
-        else if ( fNewDate->fValue[Day] > temp ) 
+        else if ( fNewDate->fValue[Day] > temp )
         {
             fNewDate->fValue[Day] -= temp;
             carry = 1;
         }
-        else 
+        else
         {
             break;
         }
@@ -333,24 +338,24 @@ int XMLDateTime::compareResult(short resultA
                              , bool strict)
 {
 
-    if ( resultB == INDETERMINATE ) 
+    if ( resultB == INDETERMINATE )
     {
         return INDETERMINATE;
     }
-    else if ( (resultA != resultB) && 
-              strict                ) 
+    else if ( (resultA != resultB) &&
+              strict                )
     {
         return INDETERMINATE;
     }
-    else if ( (resultA != resultB) && 
-              !strict               ) 
+    else if ( (resultA != resultB) &&
+              !strict               )
     {
-        if ( (resultA != EQUAL) && 
-             (resultB != EQUAL)  ) 
+        if ( (resultA != EQUAL) &&
+             (resultB != EQUAL)  )
         {
             return INDETERMINATE;
         }
-        else 
+        else
         {
             return (resultA != EQUAL)? resultA : resultB;
         }
@@ -369,18 +374,18 @@ int XMLDateTime::compare(const XMLDateTime* const pDate1
 
     if (pDate1->fValue[utc] == pDate2->fValue[utc])
     {
-        return XMLDateTime::compareOrder(pDate1, pDate2);    
+        return XMLDateTime::compareOrder(pDate1, pDate2);
     }
 
     short c1, c2;
 
-    if ( pDate1->isNormalized()) 
+    if ( pDate1->isNormalized())
     {
         c1 = compareResult(pDate1, pDate2, false, UTC_POS);
         c2 = compareResult(pDate1, pDate2, false, UTC_NEG);
         return getRetVal(c1, c2);
     }
-    else if ( pDate2->isNormalized()) 
+    else if ( pDate2->isNormalized())
     {
         c1 = compareResult(pDate1, pDate2, true, UTC_POS);
         c2 = compareResult(pDate1, pDate2, true, UTC_NEG);
@@ -408,9 +413,9 @@ int XMLDateTime::compareResult(const XMLDateTime* const pDate1
 
 int XMLDateTime::compareOrder(const XMLDateTime* const lValue
                             , const XMLDateTime* const rValue)
-{  
+{
     //
-    // If any of the them is not normalized() yet, 
+    // If any of the them is not normalized() yet,
     // we need to do something here.
     //
     XMLDateTime lTemp = *lValue;
@@ -419,13 +424,13 @@ int XMLDateTime::compareOrder(const XMLDateTime* const lValue
     lTemp.normalize();
     rTemp.normalize();
 
-    for ( int i = 0 ; i < TOTAL_SIZE; i++ ) 
+    for ( int i = 0 ; i < TOTAL_SIZE; i++ )
     {
-        if ( lTemp.fValue[i] < rTemp.fValue[i] ) 
+        if ( lTemp.fValue[i] < rTemp.fValue[i] )
         {
             return LESS_THAN;
         }
-        else if ( lTemp.fValue[i] > rTemp.fValue[i] ) 
+        else if ( lTemp.fValue[i] > rTemp.fValue[i] )
         {
             return GREATER_THAN;
         }
@@ -480,7 +485,7 @@ XMLDateTime& XMLDateTime::operator=(const XMLDateTime& rhs)
 
 //
 // We may simply return the handle to fBuffer, but
-// for the sake of consistency, we return a duplicated copy 
+// for the sake of consistency, we return a duplicated copy
 // and the caller is responsible for the release of the buffer
 // just like any other things in the XMLNumber family.
 //
@@ -555,30 +560,30 @@ void XMLDateTime::parseDay()
 {
     initParser();
 
-    if (fBuffer[0] != DATE_SEPARATOR || 
-        fBuffer[1] != DATE_SEPARATOR || 
-        fBuffer[2] != DATE_SEPARATOR  ) 
+    if (fBuffer[0] != DATE_SEPARATOR ||
+        fBuffer[1] != DATE_SEPARATOR ||
+        fBuffer[2] != DATE_SEPARATOR  )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_gDay_invalid
                 , fBuffer);
     }
 
-    //initialize values 
+    //initialize values
     fValue[CentYear] = YEAR_DEFAULT;
-    fValue[Month]    = MONTH_DEFAULT;  
+    fValue[Month]    = MONTH_DEFAULT;
     fValue[Day]      = parseInt(fStart+3, fStart+5);
 
-    if ( DAY_SIZE < fEnd ) 
+    if ( DAY_SIZE < fEnd )
     {
         int sign = findUTCSign(DAY_SIZE);
-        if ( sign < 0 ) 
+        if ( sign < 0 )
         {
             ThrowXML1(SchemaDateTimeException
                     , XMLExcepts::DateTime_gDay_invalid
                     , fBuffer);
         }
-        else 
+        else
         {
             getTimeZone(sign);
         }
@@ -596,8 +601,8 @@ void XMLDateTime::parseMonth()
 {
     initParser();
 
-    if (fBuffer[0] != DATE_SEPARATOR || 
-        fBuffer[1] != DATE_SEPARATOR || 
+    if (fBuffer[0] != DATE_SEPARATOR ||
+        fBuffer[1] != DATE_SEPARATOR ||
         fBuffer[4] != DATE_SEPARATOR ||
         fBuffer[5] != DATE_SEPARATOR  )
     {
@@ -611,16 +616,16 @@ void XMLDateTime::parseMonth()
     fValue[Day]      = DAY_DEFAULT;
     fValue[Month]    = parseInt(2, 4);
 
-    if ( MONTH_SIZE < fEnd ) 
+    if ( MONTH_SIZE < fEnd )
     {
         int sign = findUTCSign(MONTH_SIZE);
-        if ( sign < 0 ) 
+        if ( sign < 0 )
         {
             ThrowXML1(SchemaDateTimeException
                     , XMLExcepts::DateTime_gMth_invalid
                     , fBuffer);
         }
-        else 
+        else
         {
             getTimeZone(sign);
         }
@@ -642,17 +647,17 @@ void XMLDateTime::parseYear()
     //
     int sign = findUTCSign((fBuffer[0] == chDash) ? 1 : 0);
 
-    if (sign == NOT_FOUND) 
+    if (sign == NOT_FOUND)
     {
         fValue[CentYear] = parseIntYear(fEnd);
     }
-    else 
+    else
     {
         fValue[CentYear] = parseIntYear(sign);
         getTimeZone(sign);
     }
 
-    //initialize values 
+    //initialize values
     fValue[Month] = MONTH_DEFAULT;
     fValue[Day]   = DAY_DEFAULT;   //java is 1
 
@@ -668,8 +673,8 @@ void XMLDateTime::parseMonthDay()
 {
     initParser();
 
-    if (fBuffer[0] != DATE_SEPARATOR || 
-        fBuffer[1] != DATE_SEPARATOR || 
+    if (fBuffer[0] != DATE_SEPARATOR ||
+        fBuffer[1] != DATE_SEPARATOR ||
         fBuffer[4] != DATE_SEPARATOR )
     {
         ThrowXML1(SchemaDateTimeException
@@ -678,21 +683,21 @@ void XMLDateTime::parseMonthDay()
     }
 
 
-    //initialize 
+    //initialize
     fValue[CentYear] = YEAR_DEFAULT;
     fValue[Month]    = parseInt(2, 4);	
     fValue[Day]      = parseInt(5, 7);
 
-    if ( MONTHDAY_SIZE < fEnd ) 
+    if ( MONTHDAY_SIZE < fEnd )
     {
         int sign = findUTCSign(MONTHDAY_SIZE);
-        if ( sign<0 ) 
+        if ( sign<0 )
         {
             ThrowXML1(SchemaDateTimeException
                     , XMLExcepts::DateTime_gMthDay_invalid
                     , fBuffer);
         }
-        else 
+        else
         {
             getTimeZone(sign);
         }
@@ -716,7 +721,7 @@ void XMLDateTime::parseYearMonth()
 }
 
 //
-//PnYn MnDTnH nMnS: -P1Y2M3DT10H30M        
+//PnYn MnDTnH nMnS: -P1Y2M3DT10H30M
 //
 // [-]{'P'{[n'Y'][n'M'][n'D']['T'][n'H'][n'M'][n'S']}}
 //
@@ -730,8 +735,8 @@ void XMLDateTime::parseDuration()
     // must start with '-' or 'P'
     //
     XMLCh c = fBuffer[fStart++];
-    if ( (c != DURATION_STARTER) && 
-         (c != chDash)            ) 
+    if ( (c != DURATION_STARTER) &&
+         (c != chDash)            )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_dur_Start_dashP
@@ -739,7 +744,7 @@ void XMLDateTime::parseDuration()
     }
 
     // 'P' must ALWAYS be present in either case
-    if ( (c == chDash) && 
+    if ( (c == chDash) &&
          (fBuffer[fStart++]!= DURATION_STARTER ))
     {
         ThrowXML1(SchemaDateTimeException
@@ -749,12 +754,12 @@ void XMLDateTime::parseDuration()
 
     // java code
     //date[utc]=(c=='-')?'-':0;
-    //fValue[utc] = UTC_STD; 
+    //fValue[utc] = UTC_STD;
     fValue[utc] = (fBuffer[0] == chDash? UTC_NEG : UTC_STD);
 
     int negate = ( fBuffer[0] == chDash ? -1 : 1);
 
-    // 
+    //
     // No negative value is allowed after 'P'
     //
     // eg P-1234, invalid
@@ -769,15 +774,15 @@ void XMLDateTime::parseDuration()
     //at least one number and designator must be seen after P
     bool designator = false;
 
-    int endDate = indexOf(fStart, fEnd, DATETIME_SEPARATOR); 
-    if ( endDate == NOT_FOUND ) 
+    int endDate = indexOf(fStart, fEnd, DATETIME_SEPARATOR);
+    if ( endDate == NOT_FOUND )
     {
         endDate = fEnd;  // 'T' absent
     }
 
-    //find 'Y'        
+    //find 'Y'
     int end = indexOf(fStart, endDate, DURATION_Y);
-    if ( end != NOT_FOUND ) 
+    if ( end != NOT_FOUND )
     {
         //scan year
         fValue[CentYear] = negate * parseInt(fStart, end);
@@ -786,7 +791,7 @@ void XMLDateTime::parseDuration()
     }
 
     end = indexOf(fStart, endDate, DURATION_M);
-    if ( end != NOT_FOUND ) 
+    if ( end != NOT_FOUND )
     {
         //scan month
         fValue[Month] = negate * parseInt(fStart, end);
@@ -795,7 +800,7 @@ void XMLDateTime::parseDuration()
     }
 
     end = indexOf(fStart, endDate, DURATION_D);
-    if ( end != NOT_FOUND ) 
+    if ( end != NOT_FOUND )
     {
         //scan day
         fValue[Day] = negate * parseInt(fStart,end);
@@ -814,11 +819,11 @@ void XMLDateTime::parseDuration()
     if ( fEnd != endDate ) // 'T' present
     {
         //scan hours, minutes, seconds
-        //         
+        //
 
         // skip 'T' first
         end = indexOf(++fStart, fEnd, DURATION_H);
-        if ( end != NOT_FOUND ) 
+        if ( end != NOT_FOUND )
         {
             //scan hours
             fValue[Hour] = negate * parseInt(fStart, end);
@@ -827,7 +832,7 @@ void XMLDateTime::parseDuration()
         }
 
         end = indexOf(fStart, fEnd, DURATION_M);
-        if ( end != NOT_FOUND ) 
+        if ( end != NOT_FOUND )
         {
             //scan min
             fValue[Minute] = negate * parseInt(fStart, end);
@@ -836,28 +841,28 @@ void XMLDateTime::parseDuration()
         }
 
         end = indexOf(fStart, fEnd, DURATION_S);
-        if ( end != NOT_FOUND ) 
+        if ( end != NOT_FOUND )
         {
             //scan seconds
             int mlsec = indexOf (fStart, end, MILISECOND_SEPARATOR);
-            if ( mlsec != NOT_FOUND ) 
+            if ( mlsec != NOT_FOUND )
             {
                 fValue[Second]     = negate * parseInt(fStart, mlsec);
                 fValue[MiliSecond] = negate * parseInt(mlsec+1, end);
             }
-            else 
+            else
             {
                 fValue[Second] = negate * parseInt(fStart,end);
             }
-   
+
             fStart = end+1;
             designator = true;
         }
 
         // no additional data should appear after last item
         // P1Y1M1DT is illigal value as well
-        if ( (fStart != fEnd) || 
-              fBuffer[--fStart] == DATETIME_SEPARATOR ) 
+        if ( (fStart != fEnd) ||
+              fBuffer[--fStart] == DATETIME_SEPARATOR )
         {
             ThrowXML1(SchemaDateTimeException
                     , XMLExcepts::DateTime_dur_NoTimeAfterT
@@ -865,7 +870,7 @@ void XMLDateTime::parseDuration()
         }
     }
 
-    if ( !designator ) 
+    if ( !designator )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_dur_NoElementAtAll
@@ -895,10 +900,10 @@ void XMLDateTime::getDate()
                 , XMLExcepts::DateTime_date_incomplete
                 , fBuffer);
 
-    getYearMonth();    // Scan YearMonth and 
-                       // fStart point to the next '-' 
+    getYearMonth();    // Scan YearMonth and
+                       // fStart point to the next '-'
 
-    if (fBuffer[fStart++] != DATE_SEPARATOR) 
+    if (fBuffer[fStart++] != DATE_SEPARATOR)
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_date_invalid
@@ -945,7 +950,7 @@ void XMLDateTime::getTime()
     // get hours, minute and second
     //
     fValue[Hour]   = parseInt(fStart + 0, fStart + 2);
-    fValue[Minute] = parseInt(fStart + 3, fStart + 5);            
+    fValue[Minute] = parseInt(fStart + 3, fStart + 5);
     fValue[Second] = parseInt(fStart + 6, fStart + 8);
     fStart += 8;
 
@@ -956,7 +961,7 @@ void XMLDateTime::getTime()
     //find UTC sign if any
     int sign = findUTCSign(fStart);
 
-    //parse miliseconds 
+    //parse miliseconds
     int milisec = (fBuffer[fStart] == MILISECOND_SEPARATOR)? fStart : NOT_FOUND;
     if ( milisec != NOT_FOUND )
     {
@@ -970,18 +975,18 @@ void XMLDateTime::getTime()
             //("ms shall be present once '.' is present" );
         }
 
-        if ( sign == NOT_FOUND ) 
+        if ( sign == NOT_FOUND )
         {
             fValue[MiliSecond] = parseInt(fStart, fEnd);  //get ms between '.' and fEnd
             fStart = fEnd;
         }
-        else 
+        else
         {
             fValue[MiliSecond] = parseInt(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
 
-    //parse UTC time zone (hh:mm)        
+    //parse UTC time zone (hh:mm)
     if ( sign > 0 ) {
         getTimeZone(sign);
     }
@@ -1011,7 +1016,7 @@ void XMLDateTime::getYearMonth()
     // search for year separator '-'
     //
     int yearSeparator = indexOf(start, fEnd, DATE_SEPARATOR);
-    if ( yearSeparator == NOT_FOUND) 
+    if ( yearSeparator == NOT_FOUND)
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_ym_invalid
                 , fBuffer);
@@ -1037,17 +1042,17 @@ void XMLDateTime::getYearMonth()
 
 void XMLDateTime::parseTimeZone()
 {
-    if ( fStart < fEnd ) 
+    if ( fStart < fEnd )
     {
         int sign = findUTCSign(fStart);
-        if ( sign < 0 ) 
+        if ( sign < 0 )
         {
             ThrowXML1(SchemaDateTimeException
                     , XMLExcepts::DateTime_tz_noUTCsign
                     , fBuffer);
             //("Error in month parsing");
         }
-        else 
+        else
         {
             getTimeZone(sign);
         }
@@ -1106,12 +1111,12 @@ void XMLDateTime::getTimeZone(const int sign)
 
 /**
  * If timezone present - normalize dateTime  [E Adding durations to dateTimes]
- * 
+ *
  * @param date   CCYY-MM-DDThh:mm:ss+03
  * @return CCYY-MM-DDThh:mm:ssZ
  */
 void XMLDateTime::normalize()
-{  
+{
 
     if ((fValue[utc] == UTC_UNKNOWN) ||
         (fValue[utc] == UTC_STD)      )
@@ -1123,7 +1128,7 @@ void XMLDateTime::normalize()
     int temp = fValue[Minute] + negate * fTimeZone[mm];
     int carry = fQuotient(temp, 60);
     fValue[Minute] = mod(temp, 60, carry);
-       
+
     //add hours
     temp = fValue[Hour] + negate * fTimeZone[hh] + carry;
     carry = fQuotient(temp, 24);
@@ -1134,17 +1139,17 @@ void XMLDateTime::normalize()
     while (1)
     {
         temp = maxDayInMonthFor(fValue[CentYear], fValue[Month]);
-        if (fValue[Day] < 1) 
+        if (fValue[Day] < 1)
         {
             fValue[Day] += maxDayInMonthFor(fValue[CentYear], fValue[Month] - 1);
             carry = -1;
         }
-        else if ( fValue[Day] > temp ) 
+        else if ( fValue[Day] > temp )
         {
             fValue[Day] -= temp;
             carry = 1;
         }
-        else 
+        else
         {
             break;
         }
@@ -1164,8 +1169,8 @@ void XMLDateTime::validateDateTime() const
 {
 
     //REVISIT: should we throw an exception for not valid dates
-    //          or reporting an error message should be sufficient?  
-    if ( fValue[CentYear] == 0 ) 
+    //          or reporting an error message should be sufficient?
+    if ( fValue[CentYear] == 0 )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_year_zero
@@ -1173,8 +1178,8 @@ void XMLDateTime::validateDateTime() const
         //"The year \"0000\" is an illegal year value");
     }
 
-    if ( fValue[Month] < 1  || 
-         fValue[Month] > 12  ) 
+    if ( fValue[Month] < 1  ||
+         fValue[Month] > 12  )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_mth_invalid
@@ -1184,7 +1189,7 @@ void XMLDateTime::validateDateTime() const
 
     //validate days
     if ( fValue[Day] > maxDayInMonthFor( fValue[CentYear], fValue[Month]) ||
-         fValue[Day] == 0 ) 
+         fValue[Day] == 0 )
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_day_invalid
@@ -1193,11 +1198,11 @@ void XMLDateTime::validateDateTime() const
     }
 
     //validate hours
-    if ((fValue[Hour] < 0)  || 
-        (fValue[Hour] > 23) || 
-        ((fValue[Hour] == 24) && ((fValue[Minute] !=0) || 
+    if ((fValue[Hour] < 0)  ||
+        (fValue[Hour] > 23) ||
+        ((fValue[Hour] == 24) && ((fValue[Minute] !=0) ||
                                   (fValue[Second] !=0) ||
-                                  (fValue[MiliSecond] !=0)))) 
+                                  (fValue[MiliSecond] !=0))))
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_hour_invalid
@@ -1252,8 +1257,8 @@ void XMLDateTime::validateDateTime() const
 // -----------------------------------------------------------------------
 int XMLDateTime::indexOf(const int start, const int end, const XMLCh ch) const
 {
-    for ( int i = start; i < end; i++ ) 
-        if ( fBuffer[i] == ch ) 
+    for ( int i = start; i < end; i++ )
+        if ( fBuffer[i] == ch )
             return i;
 
     return NOT_FOUND;
@@ -1262,7 +1267,7 @@ int XMLDateTime::indexOf(const int start, const int end, const XMLCh ch) const
 int XMLDateTime::findUTCSign (const int start)
 {
     int  pos;
-    for ( int index = start; index < fEnd; index++ ) 
+    for ( int index = start; index < fEnd; index++ )
     {
         pos = XMLString::indexOf(UTC_SET, fBuffer[index]);
         if ( pos != NOT_FOUND)
@@ -1296,7 +1301,7 @@ int XMLDateTime::parseInt(const int start, const int end) const
 
 //
 // [-]CCYY
-// 
+//
 // Note: start from fStart
 //       end (exclusive)
 //       fStart NOT updated
@@ -1307,20 +1312,20 @@ int XMLDateTime::parseIntYear(const int end) const
     int start = ( fBuffer[0] == chDash ) ? fStart + 1 : fStart;
 
     int length = end - start;
-    if (length < 4) 
+    if (length < 4)
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_year_tooShort
                 , fBuffer);
         //"Year must have 'CCYY' format");
     }
-    else if (length > 4 && 
+    else if (length > 4 &&
              fBuffer[start] == chDigit_0)
     {
         ThrowXML1(SchemaDateTimeException
                 , XMLExcepts::DateTime_year_leadingZero
                 , fBuffer);
-        //"Leading zeros are required if the year value would otherwise have fewer than four digits; 
+        //"Leading zeros are required if the year value would otherwise have fewer than four digits;
         // otherwise they are forbidden");
     }
 
@@ -1329,4 +1334,4 @@ int XMLDateTime::parseIntYear(const int end) const
     return ( negative ? (-1) * yearVal : yearVal );
 }
 
-
+XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/06/12 17:15:12  tng
  * Remove redundant include header file.
  *
@@ -96,6 +99,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // This hash table is similar to RefHashTableOf with an additional integer as key2
 
@@ -260,6 +265,8 @@ private :
     unsigned int                          fCurHash;
     RefHash2KeysTableOf<TVal>*                 fToEnum;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/RefHash2KeysTableOf.c>

@@ -65,6 +65,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 class BinInputStream;
 
@@ -124,5 +125,6 @@ private :
 
 MakeXMLException(NetAccessorException, XMLUTIL_EXPORT)
 
+XERCES_CPP_NAMESPACE_END
 
 #endif

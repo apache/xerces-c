@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/03/06 19:13:12  peiyongz
  * Patch: more valid lexcial representation for positive/negative zero
  *
@@ -90,6 +93,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLNumber.hpp>
 #include <xercesc/util/XMLBigDecimal.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /***
  * 3.2.5.1 Lexical representation
@@ -211,5 +216,7 @@ inline bool XMLAbstractDoubleFloat::isSpecialValue() const
 {
     return (fType < SpecialTypeNum);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

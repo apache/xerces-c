@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/11/04 15:23:43  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.9  2002/09/23 20:09:23  tng
  * DOM L3: Test baseURI with different parser's setting.
  *
@@ -92,7 +95,9 @@
 //  define null for compatibility with original Java source code.
 #define null 0
 
+XERCES_CPP_NAMESPACE_BEGIN
 class XercesDOMParser;
+XERCES_CPP_NAMESPACE_END
 
 class DOMTest {
 public:

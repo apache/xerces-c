@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/13 22:11:23  peiyongz
  * Fix to Bug#9442
  *
@@ -95,6 +98,8 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /***
    *
@@ -221,7 +226,7 @@ XMLBigInteger::XMLBigInteger(const XMLCh* const strValue)
         fMagnitude = XMLString::replicate(XMLUni::fgZeroLenString);
     else
         fMagnitude = XMLString::replicate(ret_value);
-   
+
 	fRawData = XMLString::replicate(strValue);
 
 }
@@ -350,3 +355,4 @@ int XMLBigInteger::intValue() const
     return retVal * getSign();
 }
 
+XERCES_CPP_NAMESPACE_END

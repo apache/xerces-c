@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:10  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:10  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/05/11 13:26:27  tng
  * Copyright update.
@@ -114,6 +117,7 @@
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  KVStringPair: Constructors and Destructor
@@ -215,3 +219,5 @@ void KVStringPair::set(  const   XMLCh* const    newKey
     setKey(newKey);
     setValue(newValue);
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 15:23:03  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.5  2002/02/01 22:41:07  peiyongz
  * sane_include
  *
@@ -84,7 +87,9 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/HandlerBase.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 class AttributeList;
+XERCES_CPP_NAMESPACE_END
 
 class SAXCountHandlers : public HandlerBase
 {

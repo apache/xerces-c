@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/10/22 15:43:35  tng
  * [Bug 3361] "String pool id was not legal" error in Attributes::getURI().
@@ -94,6 +97,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <string.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  StringPool::PoolElem: Constructors and Destructor
@@ -242,3 +246,5 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     fCurId++;
     return newElem->fId;
 }
+
+XERCES_CPP_NAMESPACE_END

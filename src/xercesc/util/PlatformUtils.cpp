@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/07/18 20:05:31  knoaman
  * Add a new feature to control strict IANA encoding name.
  *
@@ -145,6 +148,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <limits.h>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local data members
@@ -160,7 +164,7 @@ static long                     gInitFlag = 0;
 //  Global data
 //
 //	gXMLCleanupList
-//		This is a list of cleanup functions to be called on 
+//		This is a list of cleanup functions to be called on
 //		XMLPlatformUtils::Terminate.  Their function is to reset static
 //		data in classes that use it.
 //
@@ -193,7 +197,7 @@ void XMLPlatformUtils::Initialize()
     //
     //  We got to prevent overflow from happening.
     //  no error or exception
-    //  
+    //
     if (gInitFlag == LONG_MAX)
         return;
 
@@ -267,7 +271,7 @@ void XMLPlatformUtils::Terminate()
     // otherwise we come to delete non-existing resources.
     //
     //  no error or exception
-    //  
+    //
     if (gInitFlag == 0)
         return;
 
@@ -383,3 +387,4 @@ bool XMLPlatformUtils::isStrictIANAEncoding() {
     return false;
 }
 
+XERCES_CPP_NAMESPACE_END

@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class BinInputStream;
 
 //
@@ -303,6 +305,8 @@ inline const XMLCh* XMLURL::getURLText() const
 }
 
 MakeXMLException(MalformedURLException, XMLUTIL_EXPORT)
+
+XERCES_CPP_NAMESPACE_END
 
 
 #endif

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:16  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:16  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/06/11 15:15:46  knoaman
  * StringTokenizer renamed to XMLStringTokenizer.
@@ -70,6 +73,7 @@
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLStringTokenizer: Local const data
@@ -179,6 +183,7 @@ bool XMLStringTokenizer::hasMoreTokens() {
 	return false;
 }
 
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file XMLStringTokenizer.cpp

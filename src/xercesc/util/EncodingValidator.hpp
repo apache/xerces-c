@@ -66,6 +66,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/ValueHashTableOf.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 /**
   * A singleton class that checks whether an encoding name is a valid IANA
@@ -122,6 +123,7 @@ private:
     static EncodingValidator* fInstance;
 };
 
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

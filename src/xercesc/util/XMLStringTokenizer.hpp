@@ -64,6 +64,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
   * The string tokenizer class breaks a string into tokens.
   *
@@ -241,6 +243,8 @@ inline int XMLStringTokenizer::countTokens() {
 
     return tokCount;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

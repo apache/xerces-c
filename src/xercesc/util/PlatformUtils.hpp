@@ -65,6 +65,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLMsgLoader;
 class XMLNetAccessor;
 class XMLTransService;
@@ -670,5 +672,7 @@ inline XMLDeleter::~XMLDeleter()
 inline XMLDeleter::XMLDeleter()
 {
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -66,6 +66,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLUni: Static data
@@ -1197,3 +1198,6 @@ const XMLCh XMLUni::fgDOMWRTWhitespaceInElementContent[] =
 	chLatin_e, chLatin_n, chLatin_t, chDash,    chLatin_c, chLatin_o,
 	chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t, chNull
 };
+
+XERCES_CPP_NAMESPACE_END
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/08/13 22:11:23  peiyongz
  * Fix to Bug#9442
  *
@@ -99,6 +102,8 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/Janitor.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
  * Constructs a BigDecimal from a string containing an optional (plus | minus)
  * sign followed by a sequence of zero or more decimal digits, optionally
@@ -110,7 +115,7 @@
  * Any extraneous characters (including whitespace) will result in
  * a NumberFormatException.
 
- * since parseBigDecimal and XMLBigInteger() may throw exception, 
+ * since parseBigDecimal and XMLBigInteger() may throw exception,
  * caller of XMLBigDecimal need to catch it.
 //
 **/
@@ -148,7 +153,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
 {
     //invoke XMLBigInteger' copy ctor
     fIntVal = new XMLBigInteger(*(toCopy.getValue()));
- 
+
     if ( addExponent > 0 )
     {
         if (fScale >= (unsigned int)addExponent)
@@ -239,7 +244,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
     // '+' or '-' is allowed only at the first position
     //
     if (*startPtr == chDash)
-    {       
+    {
         *retPtr = chDash;  // copy the '-'
         startPtr++;
         retPtr++;
@@ -358,4 +363,6 @@ XMLCh*  XMLBigDecimal::toString() const
 {
     return XMLString::replicate(fRawData);
 }
+
+XERCES_CPP_NAMESPACE_END
 

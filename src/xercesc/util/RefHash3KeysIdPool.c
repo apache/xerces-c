@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/07/19 18:43:18  peiyongz
  * fix: detect null poiniter in enumerator's ctor.
@@ -82,6 +85,8 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Constructors and Destructor
@@ -395,8 +400,8 @@ template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
 RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool adopt)
 	: fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum)
 {
-    if (!toEnum)  
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);        
+    if (!toEnum)
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
 
     //
     //  Find the next available bucket element in the pool. We use the id
@@ -441,3 +446,4 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::Reset()
     fCurIndex = 0;
 }
 
+XERCES_CPP_NAMESPACE_END

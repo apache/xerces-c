@@ -63,7 +63,7 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <string.h>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XMLUCS4Transcoder: Constructors and Destructor
@@ -283,3 +283,5 @@ bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int toCheck) const
     // We can handle anything
     return true;
 }
+
+XERCES_CPP_NAMESPACE_END

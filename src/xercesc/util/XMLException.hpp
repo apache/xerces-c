@@ -66,6 +66,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  This is the base class from which all the XML parser exceptions are
@@ -297,5 +298,7 @@ private : \
 #define ThrowXML3(type,code,p1,p2,p3) throw type(__FILE__, __LINE__, code, p1, p2, p3)
 
 #define ThrowXML4(type,code,p1,p2,p3,p4) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4)
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

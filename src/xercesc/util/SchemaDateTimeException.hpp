@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/11/12 20:36:54  peiyongz
  * SchemaDateTimeException defined
@@ -73,7 +76,10 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 MakeXMLException(SchemaDateTimeException, XMLUTIL_EXPORT)
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

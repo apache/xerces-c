@@ -80,6 +80,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -1819,3 +1820,5 @@ void XMLString::termString()
     delete gTranscoder;
     gTranscoder = 0;
 }
+
+XERCES_CPP_NAMESPACE_END

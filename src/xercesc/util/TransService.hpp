@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/07/18 20:05:31  knoaman
  * Add a new feature to control strict IANA encoding name.
  *
@@ -128,6 +131,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // Forward references
 class XMLPlatformUtils;
@@ -280,7 +284,7 @@ private :
   * strings, it is not meant to be a comphrehensive string class.
   */
 
-/** 
+/**
   *   <code>XMLTranscoder</code> is for transcoding non-local code
   *   page encodings, i.e.  named encodings. These are used internally
   *   by the scanner to internalize raw XML into the internal Unicode
@@ -292,7 +296,7 @@ class XMLUTIL_EXPORT XMLTranscoder
 {
 public :
 
-	/** 
+	/**
 	 * This enum is used by the <code>transcodeTo()</code> method
 	 * to indicate how to react to unrepresentable characters. The
 	 * <code>transcodeFrom()</code> method always works the
@@ -358,7 +362,7 @@ public :
       * @param maxBytes   the max number of bytes in the destination buffer
       * @param charsEaten after transcoding, this will hold the number of chars
       *    that were processed from the source buffer
-      * @param options    options to pass to the transcoder that explain how to 
+      * @param options    options to pass to the transcoder that explain how to
       *    respond to an unrepresentable character
       * @return Returns the number of chars put into the target buffer
       */
@@ -525,5 +529,7 @@ inline const XMLCh* XMLTranscoder::getEncodingName() const
 {
     return fEncodingName;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

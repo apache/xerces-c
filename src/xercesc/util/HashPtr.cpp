@@ -57,6 +57,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "HashPtr.hpp"
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 HashPtr::HashPtr()
 {
 }
@@ -74,3 +76,5 @@ bool HashPtr::equals(const void *const key1, const void *const key2)
 {
 	return (key1 == key2);
 }
+
+XERCES_CPP_NAMESPACE_END

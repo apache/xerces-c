@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/07/19 18:43:18  peiyongz
  * fix: detect null poiniter in enumerator's ctor.
@@ -85,6 +88,8 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOf: Constructors and Destructor
@@ -352,8 +357,8 @@ template <class TVal> RefHash2KeysTableOfEnumerator<TVal>::
 RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum, const bool adopt)
 	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
 {
-    if (!toEnum)  
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);        
+    if (!toEnum)
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
 
     //
     //  Find the next available bucket element in the hash table. If it
@@ -449,3 +454,5 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::findNext()
         fCurElem = fToEnum->fBucketList[fCurHash];
     }
 }
+
+XERCES_CPP_NAMESPACE_END

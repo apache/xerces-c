@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.3  2002/02/05 15:38:14  tng
  * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
  *
@@ -96,6 +99,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  RefVectorOf: Constructors and Destructor
@@ -397,3 +401,5 @@ template <class TElem> void RefVectorEnumerator<TElem>::Reset()
 {
     fCurIndex = 0;
 }
+
+XERCES_CPP_NAMESPACE_END

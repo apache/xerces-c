@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.2  2002/02/20 18:17:02  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -94,6 +97,8 @@
 #define XML_FLOAT_HPP
 
 #include <xercesc/util/XMLAbstractDoubleFloat.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT XMLFloat : public XMLAbstractDoubleFloat
 {
@@ -154,6 +159,8 @@ inline int XMLFloat::compareValues(const XMLFloat* const lValue
     return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
                                                  (const XMLAbstractDoubleFloat* const) rValue );
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif
 

@@ -76,7 +76,7 @@
 #include <xercesc/util/TransENameMap.hpp>
 #include <xercesc/util/EncodingValidator.hpp>
 
-
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local, static data
@@ -154,7 +154,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     {
         if (!EncodingValidator::instance()->isValidEncoding(encodingName))
         {
-            resValue = XMLTransService::UnsupportedEncoding;               
+            resValue = XMLTransService::UnsupportedEncoding;
             return 0;
         }
     }
@@ -190,9 +190,9 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 
     XMLTranscoder* temp =  makeNewXMLTranscoder(encodingName, resValue, blockSize);
 
-    // if successful, set resValue to OK  
+    // if successful, set resValue to OK
     // if failed, the makeNewXMLTranscoder has already set the proper failing resValue
-    if (temp) resValue =  XMLTransService::Ok;    
+    if (temp) resValue =  XMLTransService::Ok;
 
     return temp;
 
@@ -490,3 +490,5 @@ bool XMLTransService::isStrictIANAEncoding()
 {
     return gStrictIANAEncoding;
 }
+
+XERCES_CPP_NAMESPACE_END

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:14  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/11/22 20:23:00  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -83,12 +86,14 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/SchemaDateTimeException.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT XMLDateTime : public XMLNumber
 {
 public:
 
     // to be moved to XMLNumber
-    enum 
+    enum
     {
         LESS_THAN     = -1,
         EQUAL         = 0,
@@ -106,10 +111,10 @@ public:
         Second     ,
         MiliSecond ,
         utc        ,
-        TOTAL_SIZE   
+        TOTAL_SIZE
     };
 
-    enum utcType 
+    enum utcType
     {
         UTC_UNKNOWN = 0,
         UTC_STD        ,          // set in parse() or normalize()
@@ -135,7 +140,7 @@ public:
 
     XMLDateTime(const XMLDateTime&);
 
-    XMLDateTime&          operator=(const XMLDateTime&);   
+    XMLDateTime&          operator=(const XMLDateTime&);
 
     // -----------------------------------------------------------------------
     // Implementation of Abstract Interface
@@ -168,12 +173,12 @@ public:
     void                  parseDuration();       //duration
 
     // -----------------------------------------------------------------------
-    // Comparison 
+    // Comparison
     // -----------------------------------------------------------------------
-    static int            compare(const XMLDateTime* const 
+    static int            compare(const XMLDateTime* const
                                 , const XMLDateTime* const);
 
-    static int            compare(const XMLDateTime* const 
+    static int            compare(const XMLDateTime* const
                                 , const XMLDateTime* const
                                 , bool                    );
 
@@ -186,7 +191,7 @@ private:
     // Constant data
     // -----------------------------------------------------------------------
 	//
-    enum timezoneIndex 
+    enum timezoneIndex
     {
         hh = 0,
         mm ,
@@ -194,10 +199,10 @@ private:
     };
 
     // -----------------------------------------------------------------------
-    // Comparison 
+    // Comparison
     // -----------------------------------------------------------------------
-    static int            compareResult(short 
-                                      , short 
+    static int            compareResult(short
+                                      , short
                                       , bool);
 
     static void           addDuration(XMLDateTime*             pDuration
@@ -219,7 +224,7 @@ private:
     inline  void          reset();
 
     inline  void          assertBuffer()               const;
-   
+
     inline  void          copy(const XMLDateTime&);
 
     // allow multiple parsing
@@ -228,7 +233,7 @@ private:
     inline  bool          isNormalized()               const;
 
     // -----------------------------------------------------------------------
-    // scaners 
+    // scaners
     // -----------------------------------------------------------------------
 
     void                  getDate();
@@ -287,7 +292,7 @@ private:
     //
     // -----------------------------------------------------------------------
 
-    int          fValue[TOTAL_SIZE];    
+    int          fValue[TOTAL_SIZE];
     int          fTimeZone[TIMEZONE_ARRAYSIZE];
     int          fStart;
     int          fEnd;
@@ -306,7 +311,7 @@ inline void XMLDateTime::setBuffer(const XMLCh* const aString)
 
 inline void XMLDateTime::reset()
 {
-    for ( int i=0; i < TOTAL_SIZE; i++ ) 
+    for ( int i=0; i < TOTAL_SIZE; i++ )
         fValue[i] = 0;
 
     fTimeZone[hh] = fTimeZone[mm] = 0;
@@ -322,7 +327,7 @@ inline void XMLDateTime::reset()
 
 inline void XMLDateTime::copy(const XMLDateTime& rhs)
 {
-    for ( int i = 0; i < TOTAL_SIZE; i++ ) 
+    for ( int i = 0; i < TOTAL_SIZE; i++ )
         fValue[i] = rhs.fValue[i];
 
     fTimeZone[hh] = rhs.fTimeZone[hh];
@@ -343,7 +348,7 @@ inline void XMLDateTime::copy(const XMLDateTime& rhs)
 
 inline void XMLDateTime::assertBuffer() const
 {
-    if ( ( !fBuffer )            || 
+    if ( ( !fBuffer )            ||
          ( fBuffer[0] == chNull ) )
     {
         ThrowXML(SchemaDateTimeException
@@ -367,12 +372,14 @@ inline bool XMLDateTime::isNormalized() const
 inline int XMLDateTime::getRetVal(int c1, int c2)
 {
     if ((c1 == LESS_THAN    && c2 == GREATER_THAN) ||
-        (c1 == GREATER_THAN && c2 == LESS_THAN)      ) 
+        (c1 == GREATER_THAN && c2 == LESS_THAN)      )
     {
-        return INDETERMINATE; 
+        return INDETERMINATE;
     }
 
     return ( c1 != INDETERMINATE ) ? c1 : c2;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

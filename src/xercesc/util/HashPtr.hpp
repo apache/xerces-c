@@ -60,6 +60,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 /**
  * The <code>HashPtr</code> class inherits from <code>HashBase</code>.
  * This is a generic hasher class designed to hash the pointers of the
@@ -77,5 +79,7 @@ public:
 	virtual bool equals(const void *const key1, const void *const key2);
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

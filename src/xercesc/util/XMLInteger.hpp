@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:15  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/08/16 21:53:52  peiyongz
  * new class creation
@@ -68,14 +71,18 @@
 #ifndef XML_INTEGER_HPP
 #define XML_INTEGER_HPP
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLUTIL_EXPORT XMLInteger
 {
 public:
 
 	/**
-	 * Constructs a newly allocated <code>XMLInteger</code> object 
+	 * Constructs a newly allocated <code>XMLInteger</code> object
      *
-	 * @param      intVal   the <code>integer</code> 
+	 * @param      intVal   the <code>integer</code>
 	 */
 
 	XMLInteger(const int intVal);
@@ -113,5 +120,7 @@ inline int XMLInteger::intValue() const
 {
     return fData;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

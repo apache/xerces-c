@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/10/22 15:43:35  tng
  * [Bug 3361] "String pool id was not legal" error in Attributes::getURI().
@@ -83,6 +86,8 @@
 #define STRINGPOOL_HPP
 
 #include <xercesc/util/RefHashTableOf.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This class implements a string pool, in which strings can be added and
@@ -178,5 +183,7 @@ private :
     unsigned int                fMapCapacity;
     unsigned int                fCurId;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

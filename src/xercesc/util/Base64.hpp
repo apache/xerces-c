@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 2001, International
@@ -64,6 +64,8 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 //
 // This class provides encode/decode for RFC 2045 Base64 as
 // defined by RFC 2045, N. Freed and N. Borenstein.
@@ -71,7 +73,7 @@
 // Part One: Format of Internet Message Bodies. Reference
 // 1996 Available at: http://www.ietf.org/rfc/rfc2045.txt
 // This class is used by XML Schema binary format validation
-//  
+//
 //
 class XMLUTIL_EXPORT Base64
 {
@@ -81,7 +83,7 @@ public :
 
     /**
      * Encodes octets into Base64 data
-     * 
+     *
      * @param inputData Binary data in XMLByte stream.
      * @param inputLength Length of the XMLByte stream.
      * @param outputLength Length of the encoded Base64 byte stream.
@@ -94,10 +96,10 @@ public :
 
     /**
      * Decodes Base64 data into octets
-     * 
+     *
      * @param inputData Base64 data in XMLByte stream.
-     * @param outputLength Length of decoded XMLByte stream. 
-     * @return Decoded binary data in XMLByte stream, 
+     * @param outputLength Length of decoded XMLByte stream.
+     * @return Decoded binary data in XMLByte stream,
 	 *      or NULL if input data can not be decoded.
      */
     static XMLByte* decode(const XMLByte* const inputData,
@@ -105,10 +107,10 @@ public :
 
     /**
      * Decodes Base64 data into XMLCh
-     * 
+     *
      * @param inputData Base64 data in XMLCh stream.
      * @param outputLength Length of decoded XMLCh stream
-     * @return Decoded binary data in XMLCh stream,  
+     * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      */
     static XMLCh* decode(const XMLCh* const inputData,
@@ -117,11 +119,11 @@ public :
     /**
      * Get data length
 	 *
-     * Returns length of decoded data given an array 
+     * Returns length of decoded data given an array
      * containing encoded data.
      *
      * @param inputData Base64 data in XMLCh stream.
-     * @return Length of decoded data, 
+     * @return Length of decoded data,
 	 *      or -1 if input data can not be decoded.
      */
     static int getDataLength(const XMLCh* const inputData );
@@ -170,7 +172,7 @@ private :
     //
     //  quadsPerLine
     //     Number of quadruplets per one line. The encoded output
-    //     stream must be represented in lines of no more 
+    //     stream must be represented in lines of no more
     //     than 19 quadruplets each.
     //
     // -----------------------------------------------------------------------
@@ -187,7 +189,7 @@ private :
 // -----------------------------------------------------------------------
 //  Helper methods
 // -----------------------------------------------------------------------
-inline bool Base64::isPad(const XMLByte& octet) 
+inline bool Base64::isPad(const XMLByte& octet)
 {
     return ( octet == base64Padding );
 }
@@ -213,13 +215,15 @@ inline void Base64::split1stOctet(const XMLByte& ch, XMLByte& b1, XMLByte& b2) {
 }
 
 inline void Base64::split2ndOctet(const XMLByte& ch, XMLByte& b2, XMLByte& b3) {
-    b2 |= ch >> 4;  // combine with previous value  
+    b2 |= ch >> 4;  // combine with previous value
     b3 = ( ch & 0xf ) << 2;
 }
 
 inline void Base64::split3rdOctet(const XMLByte& ch, XMLByte& b3, XMLByte& b4) {
-    b3 |= ch >> 6;  // combine with previous value 
+    b3 |= ch >> 6;  // combine with previous value
     b4 = ( ch & 0x3f );
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/11/04 15:22:05  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/09/23 18:41:00  tng
  * DOM L3: Support baseURI.   Add fURIText to XMLUri.   Added by Gareth Reakes and Thomas Ford.
  *
@@ -88,6 +91,8 @@
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 /*
  * This class is a direct port of Java's URI class, to distinguish
@@ -530,5 +535,7 @@ inline bool XMLUri::isUnreservedCharacter(const XMLCh theChar)
     return (XMLString::isAlphaNum(theChar) ||
             XMLString::indexOf(MARK_CHARACTERS, theChar) != -1);
 }
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

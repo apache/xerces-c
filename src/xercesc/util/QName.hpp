@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/04 15:22:04  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.4  2002/10/30 21:52:00  tng
  * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
  *
@@ -103,6 +106,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT QName
 {
@@ -254,4 +259,7 @@ inline void QName::setURI(const unsigned int uriId)
 {
     fURIId = uriId;
 }
+
+XERCES_CPP_NAMESPACE_END
+
 #endif

@@ -74,6 +74,7 @@
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  Forward declare the enumerator so he can be our friend. Can you say
@@ -227,6 +228,8 @@ private :
     unsigned int                    fCurHash;
     ValueHashTableOf<TVal>*         fToEnum;
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/ValueHashTableOf.c>

@@ -3,6 +3,10 @@
 #if !defined(ERRHEADER_XMLExcepts)
 #define ERRHEADER_XMLExcepts
 
+#include <xercesc/util/XercesDefs.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
+
 class XMLExcepts
 {
 public :
@@ -371,5 +375,8 @@ public :
     };
 
 };
+
+XERCES_CPP_NAMESPACE_END
+
 #endif
 

@@ -288,7 +288,7 @@ private:
     int           fCheckSum;
     SAXParser*    fSAXParser;
     XercesDOMParser*    fXercesDOMParser;
-    DOMDocument * fDoc;
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * fDoc;
 
 
 public:                               //  This is the API used by the rest of the test program

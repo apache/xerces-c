@@ -69,6 +69,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
+XERCES_CPP_NAMESPACE_BEGIN
+
 // ---------------------------------------------------------------------------
 //  XMLUri: static data
 // ---------------------------------------------------------------------------
@@ -1440,4 +1442,6 @@ void XMLUri::buildFullText()
     // Cap it off in case the last op was not a string copy
     *outPtr = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 

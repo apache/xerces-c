@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/11/04 15:22:03  tng
+ * C++ Namespace Support.
+ *
  * Revision 1.1  2002/07/18 20:08:16  knoaman
  * Initial checkin: feature to control strict IANA encoding name.
  *
@@ -68,6 +71,8 @@
 #include <xercesc/internal/IANAEncodings.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -146,6 +151,8 @@ void EncodingValidator::reinitInstance() {
 	delete fInstance;
 	fInstance = 0;
 }
+
+XERCES_CPP_NAMESPACE_END
 
 /**
   * End of file EncodingValidator.cpp
