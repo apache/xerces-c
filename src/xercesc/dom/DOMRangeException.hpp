@@ -71,6 +71,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113'>Document Object Model (DOM) Level 2 Traversal and Range Specification</a>.
  * @since DOM Level 2
  */
+
 class CDOM_EXPORT DOMRangeException  : public DOMException {
 public:
     // -----------------------------------------------------------------------
@@ -114,8 +115,13 @@ public:
       *
       * @param code The error code which indicates the exception
       * @param message The string containing the error message
+      * @param memoryManager  The memory manager used to (de)allocate memory
       */
-    DOMRangeException(RangeExceptionCode code, const XMLCh* message);
+    DOMRangeException(
+                            RangeExceptionCode       code
+                    , const XMLCh*                   message
+                    ,       MemoryManager*     const memoryManager
+                     );
 
     /**
       * Copy constructor.

@@ -62,6 +62,7 @@
  */
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -85,6 +86,8 @@ XERCES_CPP_NAMESPACE_BEGIN
  * @since DOM Level 1
  */
 
+class MemoryManager;
+
 class CDOM_EXPORT DOMException  {
 public:
     // -----------------------------------------------------------------------
@@ -101,10 +104,15 @@ public:
     /**
       * Constructor which takes an error code and a message.
       *
-      * @param code The error code which indicates the exception
-      * @param message The string containing the error message
+      * @param code           The error code which indicates the exception
+      * @param message        The string containing the error message
+      * @param memoryManager  The memory manager used to (de)allocate memory
       */
-    DOMException(short code, const XMLCh *message);
+    DOMException(      
+                       short                 code
+               , const XMLCh*                message
+               ,       MemoryManager* const  memoryManager = XMLPlatformUtils::fgMemoryManager
+                );
 
     /**
       * Copy constructor.
@@ -228,6 +236,11 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
+    //  Getter
+    // -----------------------------------------------------------------------
+    inline const XMLCh* getMessage()    const;
+
+    // -----------------------------------------------------------------------
     //  Class Types
     // -----------------------------------------------------------------------
     /** @name Public variables */
@@ -247,12 +260,32 @@ public:
     const XMLCh *msg;
     //@}
 
+protected:
+
+    MemoryManager*  fMemoryManager;
+
+private:
+
+	 /**
+	  * A boolean value.  
+      *   If the message is provided by the applications, it is not 
+      *   adopted.
+      *   If the message is resolved by the DOM implementation, it is
+      *   owned.
+	  */
+    bool            fMsgOwned;
+
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------    
     DOMException & operator = (const DOMException &);
 };
+
+inline const XMLCh* DOMException::getMessage() const
+{
+    return msg;
+}
 
 XERCES_CPP_NAMESPACE_END
 

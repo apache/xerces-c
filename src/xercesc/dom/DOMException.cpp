@@ -58,33 +58,62 @@
  * $Id$
  */
 
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include "DOMException.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// ---------------------------------------------------------------------------
+//  Destructor and Constructor
+// ---------------------------------------------------------------------------
+DOMException::~DOMException()
+{
+    if (msg && fMsgOwned)
+        fMemoryManager->deallocate((void*)msg);
+}
 
 DOMException::DOMException()
-:  code((ExceptionCode) 0)
-,  msg(0)
+:code((ExceptionCode) 0)
+,msg(0)
+,fMemoryManager(0)
+,fMsgOwned(false)
 {      
 }
 
-
-DOMException::DOMException(short exCode, const XMLCh *message)
-:  code ((ExceptionCode) exCode)
-,  msg(message)
+DOMException::DOMException(      short                 exCode
+                         , const XMLCh*                message
+                         ,       MemoryManager* const  memoryManager)
+:code((ExceptionCode) exCode)
+,msg(message)
+,fMemoryManager(memoryManager)
+,fMsgOwned(false)
 {  
-}
+    if (!message)
+    {
+        const unsigned int msgSize = 2047;
+        XMLCh errText[msgSize + 1];
+        fMsgOwned = true;
 
+        // load the text
+        msg = XMLString::replicate
+             ( 
+              DOMImplementation::loadDOMExceptionMsg(code, errText, msgSize) ? errText : XMLUni::fgDefErrMsg
+            , fMemoryManager
+             );
+
+    }
+}
 
 DOMException::DOMException(const DOMException &other)
-:  code(other.code)
-,  msg(other.msg)
+:code(other.code)
+,msg(0)
+,fMemoryManager(other.fMemoryManager)
+,fMsgOwned(other.fMsgOwned)
 {
-}
-
-DOMException::~DOMException()
-{
+    msg = other.fMsgOwned? XMLString::replicate(other.msg, other.fMemoryManager) : other.msg;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -70,8 +70,10 @@ DOMRangeException::DOMRangeException()
 }
 
 
-DOMRangeException::DOMRangeException(RangeExceptionCode exCode, const XMLCh* message)
-: DOMException(exCode, message)
+DOMRangeException::DOMRangeException(      RangeExceptionCode         exCode
+                                   , const XMLCh*                     message
+                                   ,       MemoryManager*      const  memoryManager)
+: DOMException(exCode, message, memoryManager)
 , code(exCode)
 {
 }
