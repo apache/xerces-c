@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/10 18:36:03  neilg
+ * update XMLGrammarPool interface to make expected behaviour of locked pools better specified, and to add the capability to generate XSModels
+ *
  * Revision 1.4  2003/09/16 18:30:54  neilg
  * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
  *
@@ -78,6 +81,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/XMemory.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -159,6 +163,8 @@ public :
       *
 	  * When this method is called by the application, the 
       * grammar pool should stop adding new grammars to the cache.
+      * This should result in the grammar pool being sharable
+      * among parsers operating in different threads.
       *
       */
     virtual void           lockPool() = 0;
@@ -202,7 +208,28 @@ public :
     virtual XMLSchemaDescription*  createSchemaDescription(const XMLCh* const targetNamespace) = 0;
 
     //@}
+
+    // -----------------------------------------------------------------------
+    /** @name  schema component model support
+    // -----------------------------------------------------------------------                                                        
+    //@{
+
+    /***
+      * If the grammar pool has been locked, this method returns 
+      * an XSModel corresponding to the schema components represented
+      * by the objects stored in the pool.  If the pool has not been 
+      * locked, this must return null.  If the pool is unlocked at
+      * any point, the underlying XSModel will be destroyed;
+      * applications must take care that, if they wish to unlock
+      * a pool, no further access is made to the XSModel
+      * it produced.  The pool's XSModel will not be serialized,
+      * but, if a locked pool is deserialized, its XSModel
+      * will be recreated.
+      */
+    virtual XSModel *getXSModel() const = 0;
 	
+    // @}
+
     // -----------------------------------------------------------------------
     /** @name  Getter */
     // -----------------------------------------------------------------------                                                        
