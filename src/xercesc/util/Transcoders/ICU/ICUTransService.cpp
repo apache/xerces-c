@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -123,6 +124,12 @@ static XMLCh* convertToXMLCh( const UChar* const toConvert,
 // ---------------------------------------------------------------------------
 ICUTransService::ICUTransService()
 {
+    UErrorCode errorCode=U_ZERO_ERROR;
+    u_init(&errorCode);
+    if(U_FAILURE(errorCode)) {
+        XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
+    }    
+
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
 #if (U_ICU_VERSION_MAJOR_NUM < 2)
     // Starting with ICU 2.0, ICU itself includes a static reference to the data
