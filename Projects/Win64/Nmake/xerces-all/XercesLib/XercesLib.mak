@@ -161,6 +161,7 @@ CLEAN :
 	-@erase "$(INTDIR)\ElementImpl.obj"
 	-@erase "$(INTDIR)\ElementNSImpl.obj"
 	-@erase "$(INTDIR)\ElemStack.obj"
+	-@erase "$(INTDIR)\EncodingValidator.obj"
 	-@erase "$(INTDIR)\ENTITYDatatypeValidator.obj"
 	-@erase "$(INTDIR)\EntityImpl.obj"
 	-@erase "$(INTDIR)\EntityReferenceImpl.obj"
@@ -412,6 +413,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\BinInputStream.obj" \
 	"$(INTDIR)\BinMemInputStream.obj" \
 	"$(INTDIR)\BitSet.obj" \
+	"$(INTDIR)\EncodingValidator.obj" \
 	"$(INTDIR)\HashPtr.obj" \
 	"$(INTDIR)\HashXMLCh.obj" \
 	"$(INTDIR)\HeaderDummy.obj" \
@@ -801,6 +803,7 @@ CLEAN :
 	-@erase "$(INTDIR)\ElementImpl.obj"
 	-@erase "$(INTDIR)\ElementNSImpl.obj"
 	-@erase "$(INTDIR)\ElemStack.obj"
+	-@erase "$(INTDIR)\EncodingValidator.obj"	
 	-@erase "$(INTDIR)\ENTITYDatatypeValidator.obj"
 	-@erase "$(INTDIR)\EntityImpl.obj"
 	-@erase "$(INTDIR)\EntityReferenceImpl.obj"
@@ -1054,6 +1057,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\BinInputStream.obj" \
 	"$(INTDIR)\BinMemInputStream.obj" \
 	"$(INTDIR)\BitSet.obj" \
+	"$(INTDIR)\EncodingValidator.obj" \
 	"$(INTDIR)\HashPtr.obj" \
 	"$(INTDIR)\HashXMLCh.obj" \
 	"$(INTDIR)\HeaderDummy.obj" \
@@ -1625,6 +1629,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\BitSet.cpp
 "$(INTDIR)\BitSet.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp
+
+"$(INTDIR)\EncodingValidator.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.cpp
 
