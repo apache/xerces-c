@@ -194,8 +194,8 @@ private:
     // the schema location
     const XMLCh* fSchemaLocation;
 
-    const bool* fFalse;
-    const bool* fTrue;
+    static const bool fFalse;
+    static const bool fTrue;
 };
 
 XERCES_CPP_NAMESPACE_END

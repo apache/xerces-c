@@ -63,6 +63,9 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+const bool DOMConfigurationImpl::fFalse = false;
+const bool DOMConfigurationImpl::fTrue = true;
+
 /* canonical-form */
 const XMLCh DOMConfigurationImpl::fgCANONICAL_FORM[] = { chLatin_c, chLatin_a, chLatin_n, chLatin_o, chLatin_n, chLatin_i, chLatin_c, chLatin_a, chLatin_l, chDash, chLatin_f, chLatin_o, chLatin_r, chLatin_m, chNull };
 
@@ -116,14 +119,11 @@ const XMLCh DOMConfigurationImpl::fgSCHEMA_LOCATION[] = { chLatin_s, chLatin_c, 
 
 const unsigned short DOMConfigurationImpl::fDEFAULT_VALUES = 0x2596;
 
-DOMConfigurationImpl::DOMConfigurationImpl(): featureValues(fDEFAULT_VALUES), fTrue(new bool(true)), 
-                                              fFalse(new bool(false)),
+DOMConfigurationImpl::DOMConfigurationImpl(): featureValues(fDEFAULT_VALUES),
                                               fErrorHandler(0), fSchemaType(0), fSchemaLocation(0) {
 }
 
 DOMConfigurationImpl::~DOMConfigurationImpl() {
-    delete (bool*)fTrue;
-    delete (bool*)fFalse;
 }
                                         
 void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
@@ -183,9 +183,9 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
 
     if(isBooleanParameter){
         if(featureValues & whichFlag) {
-            return fTrue;
+            return &fTrue;
         } else {
-            return fFalse;
+            return &fFalse;
         }
     } else {
         if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
