@@ -187,7 +187,6 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     if (newChild->getOwnerDocument() != fOwnerDocument)
         throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
 
-
     // Prevent cycles in the tree
     //only need to do this if the node has children
     if(newChild->hasChildNodes()) {
@@ -203,6 +202,11 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     // refChild must in fact be a child of this node (or 0)
     if (refChild!=0 && refChild->getParentNode() != castToNode(this))
         throw DOMException(DOMException::NOT_FOUND_ERR,0);
+
+    // if the new node has to be placed before itself, we don't have to do anything 
+    // (even worse, we would crash if we continue, as we assume they are two distinct nodes)
+    if (refChild!=0 && newChild->isSameNode(refChild))
+        return newChild;
 
     if (newChild->getNodeType() == DOMNode::DOCUMENT_FRAGMENT_NODE)
     {
