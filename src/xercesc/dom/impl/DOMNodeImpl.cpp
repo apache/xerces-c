@@ -548,10 +548,10 @@ DOMNode* DOMNodeImpl::getElementAncestor (const DOMNode* currentNode) const {
 const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI, bool useDefault, DOMElement *el) const {
     DOMNode *thisNode = castToNode(this);
 
-    const XMLCh* ns = getNamespaceURI();
+    const XMLCh* ns = thisNode->getNamespaceURI();
     // REVISIT: if no prefix is available is it null or empty string, or
     //          could be both?
-    const XMLCh* prefix = getPrefix();
+    const XMLCh* prefix = thisNode->getPrefix();
 
     if (ns != 0 && XMLString::equals(ns,namespaceURI)) {
         if (useDefault || prefix != 0) {
@@ -602,8 +602,8 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
     short type = thisNode->getNodeType();
     switch (type) {
     case DOMNode::ELEMENT_NODE : {
-        const XMLCh* ns = getNamespaceURI();
-        const XMLCh* prefix = getPrefix();
+        const XMLCh* ns = thisNode->getNamespaceURI();
+        const XMLCh* prefix = thisNode->getPrefix();
         if (ns != 0) {
             // REVISIT: is it possible that prefix is empty string?
             if (specifiedPrefix == 0 && prefix == specifiedPrefix) {
@@ -914,21 +914,11 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
     short type = thisNode->getNodeType();
     switch (type) {
     case DOMNode::ELEMENT_NODE: {
-        //if we dont find a xmlns and we are looking for "" then its true
-        if(thisNode->isSameNode(thisNode->getOwnerDocument()->getDocumentElement())) {
-            if(namespaceURI == 0) {
-                return true;
-            }
-        }
-
         const XMLCh *prefix = thisNode->getPrefix();
+
         // REVISIT: is it possible that prefix is empty string?
         if (prefix == 0 || !*prefix) {
-            const XMLCh* ns = thisNode->getNamespaceURI();
-            if (namespaceURI == 0) {
-                return (ns == namespaceURI);
-            }
-             return XMLString::equals(namespaceURI, ns);
+            return XMLString::equals(namespaceURI, thisNode->getNamespaceURI());
         }
 
         if (thisNode->hasAttributes()) {
