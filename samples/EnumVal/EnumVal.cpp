@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2005/03/07 20:11:21  knoaman
+ * Use index to access attributes instead of enumerator.
+ *
  * Revision 1.24  2005/01/12 20:43:22  cargilld
  * Remove warning messages.
  *
@@ -283,9 +286,9 @@ int main(int argC, char* argV[])
                 {
                     XERCES_STD_QUALIFIER cout << "  Attributes:\n";
                     XMLAttDefList& attList = curElem.getAttDefList();
-                    while (attList.hasMoreElements())
+                    for (unsigned int i=0; i<attList.getAttDefCount(); i++)
                     {
-                        const XMLAttDef& curAttDef = attList.nextElement();
+                        const XMLAttDef& curAttDef = attList.getAttDef(i);
                         XERCES_STD_QUALIFIER cout << "    Name:" << StrX(curAttDef.getFullName())
                              << ", Type: ";
 

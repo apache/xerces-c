@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2005/03/07 20:11:21  knoaman
+ * Use index to access attributes instead of enumerator.
+ *
  * Revision 1.19  2004/09/08 13:55:34  peiyongz
  * Apache License Version 2.0
  *
@@ -395,10 +398,10 @@ void processAttributes( XMLAttDefList& attList, bool margin )
     }
 
     XERCES_STD_QUALIFIER cout << "Attributes:\n";
-    while( attList.hasMoreElements() )
+    for (unsigned int i=0; i<attList.getAttDefCount(); i++)
     {
         // Name
-        SchemaAttDef& curAttDef = (SchemaAttDef&)attList.nextElement();
+        SchemaAttDef& curAttDef = (SchemaAttDef&)attList.getAttDef(i);
         XERCES_STD_QUALIFIER cout << "\tName:\t\t\t" << StrX(curAttDef.getFullName()) << "\n";
 
         // Type

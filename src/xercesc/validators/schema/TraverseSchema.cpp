@@ -6549,9 +6549,9 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
         SchemaAttDefList& baseAttList = (SchemaAttDefList&)
                                         baseTypeInfo->getAttDefList();
 
-        while (baseAttList.hasMoreElements()) {
+        for (unsigned int i=0; i<baseAttList.getAttDefCount(); i++) {
 
-            SchemaAttDef& attDef = (SchemaAttDef&) baseAttList.nextElement();
+            SchemaAttDef& attDef = (SchemaAttDef&) baseAttList.getAttDef(i);
             QName* attName = attDef.getAttName();
             const XMLCh* localPart = attName->getLocalPart();
 
@@ -7602,9 +7602,9 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
     SchemaAttDefList& childAttList = (SchemaAttDefList&) childTypeInfo->getAttDefList();
     const SchemaAttDef* baseAttWildCard = baseTypeInfo->getAttWildCard();
 
-    while (childAttList.hasMoreElements()) {
+    for (unsigned int i=0; i<childAttList.getAttDefCount(); i++) {
 
-        SchemaAttDef& childAttDef = (SchemaAttDef&) childAttList.nextElement();
+        SchemaAttDef& childAttDef = (SchemaAttDef&) childAttList.getAttDef(i);
         QName* childAttName = childAttDef.getAttName();
         const XMLCh* childLocalPart = childAttName->getLocalPart();
         const SchemaAttDef* baseAttDef = baseTypeInfo->getAttDef(childLocalPart, childAttName->getURI());

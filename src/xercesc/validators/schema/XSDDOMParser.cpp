@@ -314,9 +314,9 @@ void XSDDOMParser::startElement( const XMLElementDecl&       elemDecl
         XMLAttDef* attr = 0;
         DOMAttrImpl * insertAttr = 0;
 
-        while (defAttrs->hasMoreElements())
+        for (unsigned int i=0; i<defAttrs->getAttDefCount(); i++)
         {
-            attr = &defAttrs->nextElement();
+            attr = &defAttrs->getAttDef(i);
 
             const XMLAttDef::DefAttTypes defType = attr->getDefaultType();
             if ((defType == XMLAttDef::Default)
