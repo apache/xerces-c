@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.4  2001/06/25 12:51:56  knoaman
  * Add constraint checking on elements in complex types to prevent same
  * element names from having different definitions - use substitueGroups.
@@ -78,12 +81,17 @@
 #include <validators/schema/SchemaGrammar.hpp>
 #include <validators/schema/NamespaceScope.hpp>
 #include <validators/schema/ComplexTypeInfo.hpp>
+#include <validators/schema/SchemaSymbols.hpp>
+
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
 SchemaGrammar::SchemaGrammar() :
-    fElemDeclPool(0)
+    fElementDefaultQualified(false)
+    , fAttributeDefaultQualified(false)
+    , fElemDeclPool(0)
+    , fGroupElemDeclPool(0)
     , fNotationDeclPool(0)
     , fTargetNamespace(0)
     , fAttributeDeclRegistry(0)
@@ -91,6 +99,7 @@ SchemaGrammar::SchemaGrammar() :
     , fDatatypeRegistry(0)
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
+    , fGlobalGroups(0)
 {
     //
     //  Init all the pool members.
@@ -99,6 +108,7 @@ SchemaGrammar::SchemaGrammar() :
     //  pools.
     //
     fElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109);
+    fGroupElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109, false);
     fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
 
     //
@@ -112,10 +122,12 @@ SchemaGrammar::SchemaGrammar() :
 SchemaGrammar::~SchemaGrammar()
 {
     delete fElemDeclPool;
+    delete fGroupElemDeclPool;
     delete fNotationDeclPool;
     delete fTargetNamespace;
     delete fAttributeDeclRegistry;
     delete fComplexTypeRegistry;
+    delete fGlobalGroups;
     delete fNamespaceScope;
     delete fValidSubstitutionGroups;
 }
@@ -135,6 +147,10 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
 {
     // See it it exists
     SchemaElementDecl* retVal = fElemDeclPool->getByKey(baseName, uriId, scope);
+
+    if (!retVal) {
+        retVal = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
+    }
 
     // if not, then add this in
     if (!retVal)
@@ -157,5 +173,25 @@ void SchemaGrammar::reset()
     //  We need to reset all of the pools.
     //
     fElemDeclPool->removeAll();
+    fGroupElemDeclPool->removeAll();
     fNotationDeclPool->removeAll();
+}
+
+DOM_Element SchemaGrammar::getGroupElement(const XMLCh* const name) {
+
+    if (fGlobalGroups) {
+
+        unsigned int groupSize = fGlobalGroups->size();
+
+        for (unsigned int i=0; i< groupSize; i++) {
+
+            DOM_Element elem = fGlobalGroups->elementAt(i);
+
+            if (elem.getAttribute(SchemaSymbols::fgATT_NAME).equals(name)) {
+                return elem;
+            }
+        }
+    }
+
+    return DOM_Element();
 }

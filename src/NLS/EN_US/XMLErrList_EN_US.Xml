@@ -21,6 +21,7 @@
             <Message Id="NoNameRefAttribute" Text="Attribute must have a name or a ref - attribute declaration ignored"/>
             <Message Id="GlobalNoNameElement" Text="Globally-declared element must have a name - element declaration ignored"/>
             <Message Id="NoNameRefElement" Text="Element must have a name or a ref attribute - element ignored"/>
+            <Message Id="NoNameRefGroup" Text="&lt;group&gt; must have a name or a ref attribute - element ignored"/>
             <Message Id="AnonComplexTypeWithName" Text="Anonymous complexType in element {0} has a name attribute"/>
             <Message Id="AnonSimpleTypeWithName" Text="Anonymous simpleType in element {0} has a name attribute"/>
             <Message Id="InvalidElementContent" Text="The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)"/>
@@ -63,11 +64,12 @@
             <Message Id="AttributeSimpleTypeNotFound" Text="SimpleType ({0}:{1}) for attribute: {2} not found"/>
             <Message Id="ElementWithFixedAndDefault" Text="An element cannot have both 'fixed' and 'default' present at the same time"/>
             <Message Id="ElementWithNameRef" Text="Element name:{0} has also a ref defined - name ignored"/>
+            <Message Id="GroupWithNameRef" Text="group:'{0}' has also a ref defined - name ignored"/>
             <Message Id="BadAttWithRef" Text="ref cannot appear with any of type, abstract, block, final, nullable, default or fixed"/>
             <Message Id="InvalidElementName" Text="Invalid element name: {0} - declaration ignored"/>
+            <Message Id="InvalidGroupName" Text="Invalid group name:'{0}' - declaration ignored"/>
             <Message Id="GlobalElementWithRef" Text="Globally-declared element {0} cannot have a ref attribute - ref ignored"/>
             <Message Id="ElementWithTypeAndAnonType" Text="Element '{0}' cannot have both a type attribute and a simpleType/complexType type child"/>
-            <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
             <Message Id="NotSimpleOrMixedElement" Text="Element {0} has a fixed or default value and must have a mixed simple or simple content model"/>
             <Message Id="DisallowedSimpleTypeExtension" Text="The simpleType {0} that {1} uses has a value of 'final' which does not permit extension"/>
             <Message Id="InvalidSimpleContentBase" Text="The type '{0}' specified as the base in the simpleContent element must not have complexContent"/>
@@ -105,9 +107,10 @@
             <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in {1} {2} declarations"/>
             <Message Id="InvalidMin2MaxOccurs" Text="Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'"/>
             <Message Id="AnyAttributeContentError" Text="'anyAttribute' elements can contain at most one 'annotation' element in their children"/>
-            <Message Id="NoNameGlobalElement" Text="Global {0} must have a name - declaration ignored"/>
+            <Message Id="NoNameGlobalElement" Text="Global &lt;{0}&gt; must have a name - declaration ignored"/>
             <Message Id="NoCircularDefinition" Text="No circular definitions are allowed: '{0}'"/>
-            <Message Id="DuplicateGlobalType" Text="Global {0}: '{1}' declared more than once or also declared as {2}"/>
+            <Message Id="DuplicateGlobalType" Text="Global {0}:'{1}' declared more than once or also declared as {2}"/>
+            <Message Id="DuplicateGlobalGroup" Text="Global group:'{1}' declared more than once"/>
             <Message Id="WS_CollapseExpected" Text="Invalid value '{0}' for facet 'whiteSpace'. Value should be 'collapse'."/>
             <Message Id="Import_1_1" Text="The namespace of an &lt;import&gt; element must be different from the targetNamespace of the &lt;import&gt;ing schema"/>
             <Message Id="Import_1_2" Text="If the namespace on an &lt;import&gt; element is not present, the &lt;import&gt;ing schema must have a targetNamespace"/>
@@ -120,6 +123,12 @@
             <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/> 
             <Message Id="AtomicItemType" Text="The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)"/>
             <Message Id="MemberTypeNoUnion" Text="The {member type definitions} must all have {variety} of atomic or list"/>
+            <Message Id="GroupContentError" Text="The group:'0' must contain (all | choice | sequence)"/>
+            <Message Id="MinMaxOnGroupChild" Text="The child of a model group definition must not specify either the minOccurs or maxOccurs attribute."/>
+            <Message Id="GroupNotFound" Text="The group:'{0}' not found in the schema"/>
+            <Message Id="AllContentLimited" Text="A group whose content is 'all' must only appear as the content type of a complex type definition."/>
+            <Message Id="BadMinMaxAllCT" Text="When a model group has {compositor} 'all' which constitutes the {content type} of a complex type, minOccurs=maxOccurs=1"/>
+            <Message Id="BadMinMaxAllElem" Text="In an 'all' schema component, the value of minCoccurs/maxOccurs of an element must be '0' or '1'."/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
@@ -290,7 +299,7 @@
             <Message Id="GroupContentRestricted" Text="Error: {0} content must be one of element, group, modelGroupRef. Saw {1}"/>
             <Message Id="UnknownBaseDatatype" Text="Unknown base type {0} for type {1}."/>
             <Message Id="OneOfTypeRefArchRef" Text="Can only have one of type and ref attributes."/>
-            <Message Id="NoContentForRef" Text="Cannot have child content for an element declaration that has a ref attribute"/>
+            <Message Id="NoContentForRef" Text="Cannot have child content for an element/group declaration that has a ref attribute"/>
             <Message Id="IncorrectDefaultType" Text="Incorrect type for {0}'s default value: {1}"/>
             <Message Id="IllegalAttContent" Text="Illegal content {0} in attribute group"/>
             <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/>
@@ -337,6 +346,7 @@
             <Message Id="NoWSForStandalone" Text="White space must not occur between externally declared elements with element content in a standalone document."/>
             <Message Id="VC_EntityNotFound" Text="Entity '{0}' was not found"/>
             <Message Id="PartialMarkupInPE" Text="Partial markup in parameter entity replacement text."/>
+            <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/07/24 18:33:13  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.8  2001/07/09 15:22:36  knoaman
  * complete <any> declaration.
  *
@@ -128,6 +131,7 @@ public :
         , Any
         , Any_Other
         , Any_NS = 8
+        , All = 9
         , Any_Lax = 22
         , Any_Other_Lax = 23
         , Any_NS_Lax = 24

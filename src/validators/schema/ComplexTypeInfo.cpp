@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.6  2001/06/05 13:59:53  knoaman
  * Fixes to include and import.
  *
@@ -101,6 +104,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fContentSpec(0)
     , fAttDefs(0)
     , fAttList(0)
+    , fElements(0)
 {
 
 }
@@ -116,6 +120,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
 
     delete fAttDefs;
     delete fAttList;
+    delete fElements;
 }
 
 // ---------------------------------------------------------------------------

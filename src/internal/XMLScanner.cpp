@@ -2814,28 +2814,41 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //
     bool wasAdded = false;
     XMLElementDecl* elemDecl;
+    const XMLCh* nameRawBuf = fNameBuf.getRawBuffer();
+    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer(); 
 
     if (uriId != fEmptyNamespaceId) {
-        if (fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId) {
+
+        // Check in current grammar before switching if necessary
+        elemDecl = fGrammar->getElemDecl
+        (
+          uriId
+          , nameRawBuf
+          , qnameRawBuf
+          , currentScope
+        );
+
+        if (!elemDecl && fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId) {
+
             // switch grammar first
-            XMLBuffer bufURI;
-            getURIText(uriId, bufURI);
-            if (!switchGrammar(bufURI.getRawBuffer()) && fValidate && !laxThisOne)
+            const XMLCh* uriStr = getURIText(uriId);
+            if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
             {
                 fValidator->emitError
                 (
                     XMLValid::GrammarNotFound
-                    , bufURI.getRawBuffer()
+                    ,uriStr
                 );
             }
+
+            elemDecl = fGrammar->getElemDecl
+            (
+              uriId
+              , nameRawBuf
+              , qnameRawBuf
+              , currentScope
+            );
         }
-        elemDecl = fGrammar->getElemDecl
-                   (
-                      uriId
-                    , fNameBuf.getRawBuffer()
-                    , fQNameBuf.getRawBuffer()
-                    , currentScope
-                    );
 
         if (!elemDecl) {
             if (currentScope != Grammar::TOP_LEVEL_SCOPE) {
@@ -2844,8 +2857,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 elemDecl = fGrammar->getElemDecl
                            (
                                fEmptyNamespaceId
-                               , fNameBuf.getRawBuffer()
-                               , fQNameBuf.getRawBuffer()
+                               , nameRawBuf
+                               , qnameRawBuf
                                , currentScope
                            );
             }
@@ -2862,9 +2875,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 elemDecl = fGrammar->findOrAddElemDecl
                 (
                     uriId
-                    , fNameBuf.getRawBuffer()
+                    , nameRawBuf
                     , fPrefixBuf.getRawBuffer()
-                    , fQNameBuf.getRawBuffer()
+                    , qnameRawBuf
                     , Grammar::TOP_LEVEL_SCOPE
                     , wasAdded
                 );
@@ -2881,8 +2894,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         elemDecl = fGrammar->getElemDecl
                    (
                       uriId
-                    , fNameBuf.getRawBuffer()
-                    , fQNameBuf.getRawBuffer()
+                    , nameRawBuf
+                    , qnameRawBuf
                     , currentScope
                     );
 
@@ -2892,8 +2905,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             elemDecl = fGrammar->getElemDecl
                        (
                            fURIStringPool->getId(fGrammar->getTargetNamespace())
-                           , fNameBuf.getRawBuffer()
-                           , fQNameBuf.getRawBuffer()
+                           , nameRawBuf
+                           , qnameRawBuf
                            , currentScope
                        );
 
@@ -2920,8 +2933,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 elemDecl = fGrammar->getElemDecl
                            (
                               uriId
-                            , fNameBuf.getRawBuffer()
-                            , fQNameBuf.getRawBuffer()
+                            , nameRawBuf
+                            , qnameRawBuf
                             , currentScope
                             );
 
@@ -2930,9 +2943,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                     elemDecl = fGrammar->findOrAddElemDecl
                     (
                         uriId
-                        , fNameBuf.getRawBuffer()
+                        , nameRawBuf
                         , fPrefixBuf.getRawBuffer()
-                        , fQNameBuf.getRawBuffer()
+                        , qnameRawBuf
                         , Grammar::TOP_LEVEL_SCOPE
                         , wasAdded
                     );
@@ -3478,4 +3491,5 @@ bool XMLScanner::checkXMLDecl(bool startWithAngle) {
 
     return false;
 }
+
 

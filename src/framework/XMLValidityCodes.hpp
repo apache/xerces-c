@@ -98,11 +98,12 @@ public :
       , NoWSForStandalone                  = 85
       , VC_EntityNotFound                  = 86
       , PartialMarkupInPE                  = 87
-      , E_HighBounds                       = 88
-      , W_LowBounds                        = 89
-      , W_HighBounds                       = 90
-      , F_LowBounds                        = 91
-      , F_HighBounds                       = 92
+      , DatatypeValidationFailure          = 88
+      , E_HighBounds                       = 89
+      , W_LowBounds                        = 90
+      , W_HighBounds                       = 91
+      , F_LowBounds                        = 92
+      , F_HighBounds                       = 93
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,98 +54,37 @@
  * <http://www.apache.org/>.
  */
 
-/**
- * $Id$
+/*
+ * $Log$
+ * Revision 1.1  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  */
-
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <util/XMLUni.hpp>
-#include <framework/XMLElementDecl.hpp>
+#include <validators/schema/XercesGroupInfo.hpp>
 
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Public, static data
+//  XercesGroupInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId    = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId     = 0xFFFFFFFF;
-const XMLCh         XMLElementDecl::fgPCDataElemName[] =
+XercesGroupInfo::XercesGroupInfo()
+    : fScope(-1)
+    , fContentSpec(0)
+    , fElements(0)
 {
-        chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
-    ,   chLatin_T, chLatin_A, chNull
-};
-
-
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Destructor
-// ---------------------------------------------------------------------------
-XMLElementDecl::~XMLElementDecl()
-{
-    delete fElementName;
-    delete fContentModel;
-    delete [] fFormattedModel;
+    fElements = new RefVectorOf<SchemaElementDecl>(4, false);
 }
 
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous
-// ---------------------------------------------------------------------------
-const XMLCh*
-XMLElementDecl::getFormattedContentModel() const
-{
-    //
-    //  If its not already built, then call the protected virtual method
-    //  to allow the derived class to build it (since only it knows.)
-    //  Otherwise, just return the previously formatted methods.
-    //
-    //  Since we are faulting this in, within a const getter, we have to
-    //  cast off the const-ness.
-    //
-    if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel();
 
-    return fFormattedModel;
+XercesGroupInfo::~XercesGroupInfo()
+{
+    delete fElements;
 }
 
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Setter Methods
-// ---------------------------------------------------------------------------
-void
-XMLElementDecl::setElementName(const XMLCh* const       prefix
-                            , const XMLCh* const        localPart
-                            , const int                 uriId )
-{
-   delete fElementName;
-   fElementName = new QName(prefix, localPart, uriId);
-}
+/**
+  * End of file XercesGroupInfo.cpp
+  */
 
-void
-XMLElementDecl::setElementName(const XMLCh* const       rawName
-                            , const int                 uriId )
-{
-   delete fElementName;
-   fElementName = new QName(rawName, uriId);
-}
 
-void
-XMLElementDecl::setElementName(const QName* const    elementName)
-{
-   delete fElementName;
-   fElementName = new QName(elementName);
-}
-
-// ---------------------------------------------------------------------------
-//  ElementDecl: Hidden constructors
-// ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl() :
-
-    fElementName(0)
-    , fContentModel(0)
-    , fCreateReason(XMLElementDecl::NoReason)
-    , fFormattedModel(0)
-    , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement (false)
-{
-}

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.8  2001/06/13 20:51:15  peiyongz
  * fIsMixed: to handle mixed Content Model
  *
@@ -136,7 +139,7 @@ public :
 
     SchemaElementDecl
     (
-        QName* const       elementName
+        const QName* const       elementName
       , const ModelTypes         modelType = Any
       , const int                enclosingScope = Grammar::TOP_LEVEL_SCOPE
     );

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/07/24 18:31:47  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.6  2001/05/11 13:26:28  tng
  * Copyright update.
  *
@@ -106,7 +109,7 @@ public :
     );
 
     /** Copy constructor. */
-    QName(QName* const qname);
+    QName(const QName* const qname);
 
     ~QName();
 

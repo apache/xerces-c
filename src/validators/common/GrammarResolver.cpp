@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/07/24 18:33:13  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.3  2001/06/07 20:58:39  tng
  * Fix no newline at the end warning.  By Pei Yong Zhang.
  *
@@ -102,7 +105,11 @@ DatatypeValidatorFactory* GrammarResolver::getDatatypeRegistry()
 
 Grammar* GrammarResolver::getGrammar( const XMLCh* const nameSpaceKey )
 {
-   return fGrammarRegistry->get( nameSpaceKey );
+    if (!nameSpaceKey) {
+        return 0;
+    }
+
+    return fGrammarRegistry->get( nameSpaceKey );
 }
 
 RefHashTableOfEnumerator<Grammar>

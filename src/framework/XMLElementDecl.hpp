@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/07/24 18:30:47  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.16  2001/06/21 14:25:28  knoaman
  * Fix for bug 1946
  *
@@ -469,7 +472,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       *
       * @param  elementName  QName of the element
       */
-      void setElementName(QName* const    elementName);
+      void setElementName(const QName* const    elementName);
 
     /** Set the content model object for this element type
       *

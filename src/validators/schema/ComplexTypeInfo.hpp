@@ -73,6 +73,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLString.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
+#include <util/RefVectorOf.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <validators/schema/SchemaAttDef.hpp>
 
@@ -83,6 +84,7 @@
 class DatatypeValidator;
 class ContentSpecNode;
 class SchemaAttDefList;
+class SchemaElementDecl;
 
 
 class VALIDATORS_EXPORT ComplexTypeInfo
@@ -105,6 +107,7 @@ public:
     int                 getScopeDefined() const;
     unsigned int        getElementId() const;
 	int                 getContentType() const;
+    unsigned int        elementCount() const;
     XMLCh*              getTypeName() const;
     DatatypeValidator*  getBaseDatatypeValidator() const;
     DatatypeValidator*  getDatatypeValidator() const;
@@ -115,6 +118,9 @@ public:
     SchemaAttDef*       getAttDef(const XMLCh* const baseName,
                                   const int uriId);
     XMLAttDefList&      getAttDefList() const;
+    const SchemaElementDecl* elementAt(const unsigned int index) const;
+    SchemaElementDecl*       elementAt(const unsigned int index);
+    
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -133,6 +139,7 @@ public:
     void setBaseComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setContentSpec(ContentSpecNode* const toAdopt);
     void addAttDef(SchemaAttDef* const toAdd);
+    void addElement(SchemaElementDecl* const toAdd);
 
 	// -----------------------------------------------------------------------
     //  Helper methods
@@ -182,6 +189,7 @@ private:
     ContentSpecNode*                   fContentSpec;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     SchemaAttDefList*                  fAttList;
+    RefVectorOf<SchemaElementDecl>*    fElements;
 };
 
 // ---------------------------------------------------------------------------
@@ -227,6 +235,15 @@ inline int ComplexTypeInfo::getContentType() const {
     return fContentType;
 }
 
+inline unsigned int ComplexTypeInfo::elementCount() const {
+
+    if (fElements) {
+        return fElements->size();
+    }
+
+    return 0;
+}
+
 inline XMLCh* ComplexTypeInfo::getTypeName() const {
 
     return fTypeName;
@@ -270,6 +287,26 @@ inline SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
         return 0;
 
     return fAttDefs->get(baseName, uriId);
+}
+
+inline SchemaElementDecl* 
+ComplexTypeInfo::elementAt(const unsigned int index) {
+
+    if (!fElements) {
+        return 0; // REVISIT - need to throw an exception
+    }
+
+    return fElements->elementAt(index);
+}
+
+inline const SchemaElementDecl* 
+ComplexTypeInfo::elementAt(const unsigned int index) const {
+
+    if (!fElements) {
+        return 0; // REVISIT - need to throw an exception
+    }
+
+    return fElements->elementAt(index);
 }
 
 // ---------------------------------------------------------------------------
@@ -341,6 +378,15 @@ inline void
 ComplexTypeInfo::setBaseComplexTypeInfo(ComplexTypeInfo* const typeInfo) {
 
     fBaseComplexTypeInfo = typeInfo;
+}
+
+inline void ComplexTypeInfo::addElement(SchemaElementDecl* const elem) {
+
+    if (!fElements) {
+        fElements = new RefVectorOf<SchemaElementDecl>(8, false);
+    }
+
+    fElements->addElement(elem);
 }
 
 // ---------------------------------------------------------------------------

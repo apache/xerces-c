@@ -97,6 +97,7 @@ class SchemaInfo;
 class InputSource;
 class ErrorHandler;
 class GeneralAttributeCheck;
+class XercesGroupInfo;
 
 
 class VALIDATORS_EXPORT TraverseSchema
@@ -178,10 +179,15 @@ private:
     QName*           traverseElementDecl(const DOM_Element& childElem);
     XMLCh*           traverseNotationDecl(const DOM_Element& childElem);
     ContentSpecNode* traverseChoiceSequence(const DOM_Element& elemDecl,
-                                            const int modelGroupType);
+                                            const int modelGroupType,
+                                            bool& toAdoptSpecNode);
     ContentSpecNode* traverseAny(const DOM_Element& anyDecl);
-    ContentSpecNode* traverseGroupDecl(const DOM_Element& childElem);
     ContentSpecNode* traverseAll(const DOM_Element& allElem);
+    XercesGroupInfo* traverseGroupDecl(const DOM_Element& childElem,
+                                       bool& toAdoptSpecNode);
+    XercesGroupInfo* traverseGroupDeclNS(const XMLCh* const uriStr,
+                                         const XMLCh* const groupName,
+                                         bool& toAdoptSpecNode);
     SchemaAttDef*    traverseAnyAttribute(const DOM_Element& elem);
 
     // -----------------------------------------------------------------------
@@ -321,6 +327,13 @@ private:
                                  const XMLCh* const useVal);
 
     /**
+      * Process a 'ref' on a group
+      */
+    XercesGroupInfo* processGroupRef(const DOM_Element& elem,
+                                     const XMLCh* const refName,
+                                     bool& toAdoptScpecNode);
+
+    /**
       * Parse block & final items
       */
     int parseBlockSet(const XMLCh* const blockStr, const int blockType);
@@ -396,10 +409,13 @@ private:
       * Return the value of a given attribute name from an element node
       */
     const XMLCh* getElementAttValue(const DOM_Element& elem,
-                                    const XMLCh* const attName);
+                                    const XMLCh* const attName,
+                                    const bool toTrim = false);
 
     ContentSpecNode* expandContentModel(ContentSpecNode* const specNode, 
-                                        const DOM_Element& elem);
+                                        const DOM_Element& elem,
+                                        const int allContext = Not_All_Context,
+                                        const bool toAdoptSpecNode = true);
 
     /**
       * Process complex content for a complexType
@@ -497,6 +513,17 @@ private:
     void checkEnumerationRequiredNotation(const XMLCh* const name,
                                           const XMLCh* const typeStr);
 
+    void createGroupElements(XercesGroupInfo* const groupInfo,
+                             const SchemaGrammar* const schemaGrammar);
+
+    bool hasAllContent(const ContentSpecNode* const specNode);
+
+    void processElements(ComplexTypeInfo* const baseTypeInfo,
+                         ComplexTypeInfo* const newTypeInfo);
+
+    void copyGroupElements(XercesGroupInfo* const toGroup,
+                           XercesGroupInfo* const fromGroup);
+
     // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
@@ -506,6 +533,20 @@ private:
         , C_Block
         , S_Final
         , ECS_Final
+    };
+
+    // Flags indicate any special restrictions on minOccurs and maxOccurs
+    // relating to "all".
+    //    Not_All_Context    - not processing an <all>
+    //    All_Element        - processing an <element> in an <all>
+    //    Group_Ref_With_All - processing <group> reference that contained <all>
+    //    All_Group          - processing an <all> group itself
+    enum
+	{
+        Not_All_Context = 0
+        , All_Element = 1
+        , Group_Ref_With_All = 2
+        , All_Group = 4
     };
 
     // -----------------------------------------------------------------------
@@ -527,6 +568,7 @@ private:
     DatatypeValidatorFactory*        fDatatypeRegistry;
     GrammarResolver*                 fGrammarResolver;
     SchemaGrammar*                   fSchemaGrammar;
+    SchemaGrammar*                   fRefSchemaGrammar;
     EntityResolver*                  fEntityResolver;
     ErrorHandler*                    fErrorHandler;
     XMLStringPool*                   fURIStringPool;
@@ -536,13 +578,18 @@ private:
     NamespaceScope*                  fNamespaceScope;
     RefHashTableOf<XMLAttDef>*       fAttributeDeclRegistry;
     RefHashTableOf<ComplexTypeInfo>* fComplexTypeRegistry;
+    RefHashTableOf<XercesGroupInfo>* fGroupRegistry;
     SchemaInfo*                      fSchemaInfoRoot;
     SchemaInfo*                      fCurrentSchemaInfo;
+    XercesGroupInfo*                 fCurrentGroupInfo;
+    ComplexTypeInfo*                 fCurrentComplexType;
     ValueVectorOf<unsigned int>*     fImportLocations;
     ValueVectorOf<unsigned int>*     fIncludeLocations;
     ValueVectorOf<unsigned int>*     fCurrentTypeNameStack;
+    ValueVectorOf<unsigned int>*     fCurrentGroupStack;
     GeneralAttributeCheck*           fAttributeCheck;
     RefHash2KeysTableOf<XMLCh>*      fGlobalTypes;
+    RefHash2KeysTableOf<XMLCh>*      fGlobalGroups;
     RefHash2KeysTableOf<SchemaElementDecl>* fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>* fValidSubstitutionGroups;
     RefVectorOf<SchemaElementDecl>*  fRefElements;
@@ -620,15 +667,26 @@ TraverseSchema::isValidRefDeclaration(const DOM_Element& elem) {
 
 inline
 const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
-                                                const XMLCh* const attName) {
+                                                const XMLCh* const attName,
+                                                const bool toTrim) {
 
     DOMString attValue = elem.getAttribute(attName);
 
     if (attValue.length() > 0) {
 
         fBuffer.set(attValue.rawBuffer(), attValue.length());
-        unsigned int elemId = fStringPool.addOrFind(fBuffer.getRawBuffer());
+        XMLCh* bufValue = fBuffer.getRawBuffer();
 
+        if (toTrim) {
+
+			XMLString::trim(bufValue);
+
+            if (!XMLString::stringLen(bufValue)) {
+                return 0;
+            }
+        }
+
+        unsigned int elemId = fStringPool.addOrFind(bufValue);
         return fStringPool.getValueForId(elemId);  
     }
 

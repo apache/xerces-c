@@ -11,230 +11,239 @@ $set 1
  12  Attribute must have a name or a ref - attribute declaration ignored
  13  Globally-declared element must have a name - element declaration ignored
  14  Element must have a name or a ref attribute - element ignored
- 15  Anonymous complexType in element {0} has a name attribute
- 16  Anonymous simpleType in element {0} has a name attribute
- 17  The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)
- 18  Invalid attribute name: {0} - declaration ignored
- 19  Untyped element: {0}
- 20  Error in content of simpleType
- 21  Expected simpleType in 'list' declaration for {0}
- 22  List | Union | Restriction content is invalid for type {0}
- 23  Error in content of derivation by list for {0}
- 24  Expected simpleType in 'restriction' declaration for {0}
- 25  Facet {0} already defined - ignoring
- 26  Expected simpleType in 'union' declaration for {0}
- 27  SimpleType content is empty
- 28  The content of the simpleContent element is invalid. The content must be RESTRICTION or EXTENSION
- 29  The BASE attribute must be specified for the RESTRICTION or EXTENSION element
- 30  The content of the complexContent element is invalid. The content must be RESTRICTION or EXTENSION
- 31  Error in content of <schema> element information item
- 32  Content (annotation?,..) is incorrect for type {0}
- 33  Unknown simpleType: {0}
- 34  Unknown complexType: {0}
- 35  Prefix: '{0}' can not be resolved to a URI
- 36  Ref element {0} not found in the Schema
- 37  Type not found in {0}:{1}
- 38  Could not find top level attribute: {0}
- 39  Invalid child '{0}' in the complex type
- 40  Base type could not be found: {0}
- 41  No attribute '{0}' was defined in schema: {1}
- 42  Error creating datatype validator: {0}
- 43  Error: Invalid complexType name - '{0}' is not a valid NCName
- 44  Invalid child following the simpleContent child in the complexType
- 45  Invalid child following the complexContent child in the complexType
- 46  The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
- 47  The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
- 48  An attribute cannot have both 'fixed' and 'default' present at the same time - default used
- 49  If default and use are both present, use must have the value 'optional'.
- 50  Local attribute:{0} has also a ref defined - name ignored
- 51  Global attribute:'{0}' cannot have a ref defined
- 52  Error: Attribute '{0}' declared more than once in the same scope- ignoring
- 53  Attribute declarations may not contain both a type and a simpleType declaration
- 54  SimpleType ({0}:{1}) for attribute: {2} not found
- 55  An element cannot have both 'fixed' and 'default' present at the same time
- 56  Element name:{0} has also a ref defined - name ignored
- 57  ref cannot appear with any of type, abstract, block, final, nullable, default or fixed
- 58  Invalid element name: {0} - declaration ignored
- 59  Globally-declared element {0} cannot have a ref attribute - ref ignored
- 60  Element '{0}' cannot have both a type attribute and a simpleType/complexType type child
- 61  Failed to validate '{0}'
- 62  Element {0} has a fixed or default value and must have a mixed simple or simple content model
- 63  The simpleType {0} that {1} uses has a value of 'final' which does not permit extension
- 64  The type '{0}' specified as the base in the simpleContent element must not have complexContent
- 65  The type '{0}' is a simple type. It cannot be used in a derivation by RESTRICTION for a complexType
- 66  Invalid child following the RESTRICTION or EXTENSION element in the simpleContent definition
- 67  Invalid child following the RESTRICTION or EXTENSION element in the complexContent definition
- 68  Annotation can only appear once: type {0}
- 69  The base type {0} does not allow itself to be used as the base for a restriction and/or as a type in a list and/or union
- 70  The value 'substitution' already in the list
- 71  The value 'union' is already in the list
- 72  The value 'extension' is already in the list
- 73  The value 'list' is already in the list
- 74  The value 'restriction' is already in the list
- 75  Invalid block value: {0}
- 76  Invalid final value: {0}
- 77  Element {0} cannot be part of the substitution group headed by {1}
- 78  Element {0} has a type which does not derive from the type of the element at the head of the substitution group
- 79  Duplicate element decl in the same scope: {0}
- 80  The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found
- 81  The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found
- 82  Invalid value '{0}' for attribute: '{1}'.
- 83  Ref is present, and simpleType/form/type found
- 84  Duplicate reference attribute {0}:{1} in complexType
- 85  Derivation by restriction is forbidden by either the base type '{0}' or the schema
- 86  Derivation by extension is forbidden by either the base type '{0}' or the schema
- 87  The base type specified in the complexContent element must be a complexType
- 88  A schemaLocation attribute must be specified on an 'import' element.
- 89  Imported schema '{0}' has a different targetNameSpace '{1}' from what's declared '{2}'
- 90  Could not get the doc root for imported Schema: {0}
- 91  A schemaLocation attribute must be specified on an 'include' element.
- 92  Included schema '{0}' has a different targetNameSpace '{1}'
- 93  At most one <annotation> element is expected in the content.
- 94  The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered
- 95  Attribute '{0}' must appear in {1} {2} declarations
- 96  Attribute '{0}' cannot appear in {1} {2} declarations
- 97  Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'
- 98  'anyAttribute' elements can contain at most one 'annotation' element in their children
- 99  Global {0} must have a name - declaration ignored
-100  No circular definitions are allowed: '{0}'
-101  Global {0}: '{1}' declared more than once or also declared as {2}
-102  Invalid value '{0}' for facet 'whiteSpace'. Value should be 'collapse'.
-103  The namespace of an <import> element must be different from the targetNamespace of the <import>ing schema
-104  If the namespace on an <import> element is not present, the <import>ing schema must have a targetNamespace
-105  Element '{0}' must not have a value constraint:'{1}' as its type is derived from ID
-106  It is an error for NOTATION to be used directly in a schema in element/attribute '{0}'
-107  For element '{0}', the {content type} is mixed, then the {content type}'s particle must be emptiable
-108  The content of complexType is EMPTY, but base is not empty or does not have emptiable particle.
-109  The content type of the base type:'{0}' and derived type:'{1}' must both be mixed or element-only.
-110  The content type is not a valid restriction of the content type of the base.
-111  Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema
-112  The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)
-113  The {member type definitions} must all have {variety} of atomic or list
-114  {0}
-117  Expected comment or CDATA
-118  Expected an attribute name
-119  Expected a notation name
-120  Repetition of individual elements is not legal for mixed content models
-121  Bad default attribute declaration
-122  Expected default attribute declaration, assuming #IMPLIED 
-123  Attribute list syntax error
-124  Expected equal sign
-125  Duplication attribute name
-126  Bad ID, '{0}', for xml:lang attribute
-127  Expected an element name
-128  Must start with an XMLDecl
-129  Comments must start with <!--
-130  Invalid document structure
-131  Expected a 'version=', 'encoding=', or 'standalone='
-132  Bad XML version string
-133  Unsupported XML version, '{0}'
-134  Unterminated XML decl
-135  Bad XML encoding declaration, '{0}'
-136  Bad standalone declaration
-137  Unterminated comment
-138  Processing instruction name expected
-139  Unterminated processing instruction
-140  Invalid character (Unicode: 0x{0})
-141  Unexpected text before root element
-142  Unterminated start tag, '{0}'
-143  Expected an attribute value
-144  Unterminated end tag
-145  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
-146  Expected end of tag '{0}'
-147  Expected tag name, comment, PI, or other markup
-148  Not valid after content
-149  Expected comment
-150  Expected comment or processing instruction
-151  Expected whitespace
-152  No root element in DOCTYPE
-153  Expected quoted string
-154  Expected public id
-155  Invalid character in public id (Unicode: 0x{0})
-156  Unterminated DOCTYPE declaration
-157  Invalid character in internal subset (Unicode: 0x{0})
-158  Expected CDATA section
-159  Invalid initial name character
-160  Invalid name character
-161  Unexpected whitespace
-162  Invalid character in attribute value (Unicode: 0x{0})
-163  Expected a markup declaration
-164  Text declaration not legal here
-165  Conditional section in internal subset
-166  Expected parameter entity name
-167  Unterminated entity declaration, '{0}'
-168  Invalid character reference
-169  Unterminated character reference
-170  Expected entity name for reference
-171  Entity '{0}' was not found
-172  Unparsed entitty references, '{0}', not valid here
-173  Unterminated entity reference
-174  Recursive entity expansion
-175  Partial markup in entity value
-176  Unterminated element declaration, '{0}'
-177  Expected content specification expression for element '{0}'
-178  Expected asterisk
-179  Unterminated Content model
-180  Expected system id
-181  Expected system or public id
-182  Unterminated notation declaration
-183  Expected ',', '|', or ')' characters
-184  Expected '|' or ')' characters
-185  Expected ',' or ')' characters or close parenthesis in content model of element '{0}'
-186  Expected enumeration value for attribute '{0}'
-187  Expected | enumeration separator, or closing paren
-188  Unterminated entity literal
-189  There are more end tags than start tags
-190  Expected an open parenthesis
-191  The attribute '{0}' is already used in element '{1}'
-192  A '<' character cannot be used in attribute '{0}', except through &lt;
-193  A leading surrogate character was not followed by a legal second character
-194  Expected ']]>' to end a conditional section
-195  Expected INCLUDE or IGNORE here
-196  Expected [ to follow INCLUDE or IGNORE
-197  Expected a TextDecl here: <?xml ....
-198  Expected a XMLDecl here: <?xml ....
-199  Unexpected end of entity {0}
-200  A PE propogated out of the int/ext subset, discarding extra text
-201  An extra ] character was found an ignored
-202  PE refs are not allowed inside markup in the internal subset
-203  An entity propogated out of the content section into Miscellaneous
-204  Expected &# to be followed by a numeric character value
-205  Expected an open bracket ('[') here
-206  The sequence ']]>' is not allowed in character data
-207  Illegal sequence '--' in comment
-208  Unterminated CDATA section
-209  Expected NDATA
-210  NDATA is not legal for parameter entities
-211  Hex radix character refs must use 'x', not 'X'
-212  '{0}' has already been set. Ignoring redundant setting
-213  The XMLDecl strings must be in the order: version, encoding, standalone
-214  External entities cannot be referred to from attribute values
-215  The XML or Text decl must start with '<?xml ', not '<?XML '
-216  Expected a literal entity value or PUBLIC/SYSTEM id
-217  '{0}' is not a valid digit for the indicated radix
-218  The input ended before all started tags were ended. Last tag started was '{0}'
-219  The content model for element '{0}' is ambiguous
-220  Nested CDATA sections are not allowed
-221  The prefix '{0}' has not been mapped to any URI
-222  The start and the end tag were in the different entities
-223  The main XML document cannot be empty
-224  CDATA is not allowed outside the root element
-225  Only numeric character entities or special character entities are legal here
-226  Got an unexpected trailing surrogate character
-227  No processing instruction starts with 'xml'
-228  The XML or Text declaration must start at line/column 1/1
-229  The 'version=' string is required in an XMLDecl
-230  The 'standalone=' string is only allowed in the main XML entity
-231  The 'encoding=' string is required in an Text Decl
-232  When namespaces are enabled, a name can have only one colon character
-233  When namespaces are enabled, the colon cannot be the first or last character
-234  Colons are not allowed in this name when namespaces are enabled
-235  A system exception occured during processing
-236  An exception occured! Type:{0}, Message:{1}
-237  Unexpected end of file exception. Message: {0}
-238  UnexpectedError
-239  The schemaLocation attribute does not contain pairs of values.
-240  Internal error: don't have a GrammarResolver for TraverseSchema
+ 15  <group> must have a name or a ref attribute - element ignored
+ 16  Anonymous complexType in element {0} has a name attribute
+ 17  Anonymous simpleType in element {0} has a name attribute
+ 18  The content of an element information item does not match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)
+ 19  Invalid attribute name: {0} - declaration ignored
+ 20  Untyped element: {0}
+ 21  Error in content of simpleType
+ 22  Expected simpleType in 'list' declaration for {0}
+ 23  List | Union | Restriction content is invalid for type {0}
+ 24  Error in content of derivation by list for {0}
+ 25  Expected simpleType in 'restriction' declaration for {0}
+ 26  Facet {0} already defined - ignoring
+ 27  Expected simpleType in 'union' declaration for {0}
+ 28  SimpleType content is empty
+ 29  The content of the simpleContent element is invalid. The content must be RESTRICTION or EXTENSION
+ 30  The BASE attribute must be specified for the RESTRICTION or EXTENSION element
+ 31  The content of the complexContent element is invalid. The content must be RESTRICTION or EXTENSION
+ 32  Error in content of <schema> element information item
+ 33  Content (annotation?,..) is incorrect for type {0}
+ 34  Unknown simpleType: {0}
+ 35  Unknown complexType: {0}
+ 36  Prefix: '{0}' can not be resolved to a URI
+ 37  Ref element {0} not found in the Schema
+ 38  Type not found in {0}:{1}
+ 39  Could not find top level attribute: {0}
+ 40  Invalid child '{0}' in the complex type
+ 41  Base type could not be found: {0}
+ 42  No attribute '{0}' was defined in schema: {1}
+ 43  Error creating datatype validator: {0}
+ 44  Error: Invalid complexType name - '{0}' is not a valid NCName
+ 45  Invalid child following the simpleContent child in the complexType
+ 46  Invalid child following the complexContent child in the complexType
+ 47  The 'block' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
+ 48  The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found
+ 49  An attribute cannot have both 'fixed' and 'default' present at the same time - default used
+ 50  If default and use are both present, use must have the value 'optional'.
+ 51  Local attribute:{0} has also a ref defined - name ignored
+ 52  Global attribute:'{0}' cannot have a ref defined
+ 53  Error: Attribute '{0}' declared more than once in the same scope- ignoring
+ 54  Attribute declarations may not contain both a type and a simpleType declaration
+ 55  SimpleType ({0}:{1}) for attribute: {2} not found
+ 56  An element cannot have both 'fixed' and 'default' present at the same time
+ 57  Element name:{0} has also a ref defined - name ignored
+ 58  group:'{0}' has also a ref defined - name ignored
+ 59  ref cannot appear with any of type, abstract, block, final, nullable, default or fixed
+ 60  Invalid element name: {0} - declaration ignored
+ 61  Invalid group name:'{0}' - declaration ignored
+ 62  Globally-declared element {0} cannot have a ref attribute - ref ignored
+ 63  Element '{0}' cannot have both a type attribute and a simpleType/complexType type child
+ 64  Element {0} has a fixed or default value and must have a mixed simple or simple content model
+ 65  The simpleType {0} that {1} uses has a value of 'final' which does not permit extension
+ 66  The type '{0}' specified as the base in the simpleContent element must not have complexContent
+ 67  The type '{0}' is a simple type. It cannot be used in a derivation by RESTRICTION for a complexType
+ 68  Invalid child following the RESTRICTION or EXTENSION element in the simpleContent definition
+ 69  Invalid child following the RESTRICTION or EXTENSION element in the complexContent definition
+ 70  Annotation can only appear once: type {0}
+ 71  The base type {0} does not allow itself to be used as the base for a restriction and/or as a type in a list and/or union
+ 72  The value 'substitution' already in the list
+ 73  The value 'union' is already in the list
+ 74  The value 'extension' is already in the list
+ 75  The value 'list' is already in the list
+ 76  The value 'restriction' is already in the list
+ 77  Invalid block value: {0}
+ 78  Invalid final value: {0}
+ 79  Element {0} cannot be part of the substitution group headed by {1}
+ 80  Element {0} has a type which does not derive from the type of the element at the head of the substitution group
+ 81  Duplicate element decl in the same scope: {0}
+ 82  The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found
+ 83  The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found
+ 84  Invalid value '{0}' for attribute: '{1}'.
+ 85  Ref is present, and simpleType/form/type found
+ 86  Duplicate reference attribute {0}:{1} in complexType
+ 87  Derivation by restriction is forbidden by either the base type '{0}' or the schema
+ 88  Derivation by extension is forbidden by either the base type '{0}' or the schema
+ 89  The base type specified in the complexContent element must be a complexType
+ 90  A schemaLocation attribute must be specified on an 'import' element.
+ 91  Imported schema '{0}' has a different targetNameSpace '{1}' from what's declared '{2}'
+ 92  Could not get the doc root for imported Schema: {0}
+ 93  A schemaLocation attribute must be specified on an 'include' element.
+ 94  Included schema '{0}' has a different targetNameSpace '{1}'
+ 95  At most one <annotation> element is expected in the content.
+ 96  The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered
+ 97  Attribute '{0}' must appear in {1} {2} declarations
+ 98  Attribute '{0}' cannot appear in {1} {2} declarations
+ 99  Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'
+100  'anyAttribute' elements can contain at most one 'annotation' element in their children
+101  Global <{0}> must have a name - declaration ignored
+102  No circular definitions are allowed: '{0}'
+103  Global {0}:'{1}' declared more than once or also declared as {2}
+104  Global group:'{1}' declared more than once
+105  Invalid value '{0}' for facet 'whiteSpace'. Value should be 'collapse'.
+106  The namespace of an <import> element must be different from the targetNamespace of the <import>ing schema
+107  If the namespace on an <import> element is not present, the <import>ing schema must have a targetNamespace
+108  Element '{0}' must not have a value constraint:'{1}' as its type is derived from ID
+109  It is an error for NOTATION to be used directly in a schema in element/attribute '{0}'
+110  For element '{0}', the {content type} is mixed, then the {content type}'s particle must be emptiable
+111  The content of complexType is EMPTY, but base is not empty or does not have emptiable particle.
+112  The content type of the base type:'{0}' and derived type:'{1}' must both be mixed or element-only.
+113  The content type is not a valid restriction of the content type of the base.
+114  Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema
+115  The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)
+116  The {member type definitions} must all have {variety} of atomic or list
+117  The group:'0' must contain (all | choice | sequence)
+118  The child of a model group definition must not specify either the minOccurs or maxOccurs attribute.
+119  The group:'{0}' not found in the schema
+120  A group whose content is 'all' must only appear as the content type of a complex type definition.
+121  When a model group has {compositor} 'all' which constitutes the {content type} of a complex type, minOccurs=maxOccurs=1
+122  In an 'all' schema component, the value of minCoccurs/maxOccurs of an element must be '0' or '1'.
+123  {0}
+126  Expected comment or CDATA
+127  Expected an attribute name
+128  Expected a notation name
+129  Repetition of individual elements is not legal for mixed content models
+130  Bad default attribute declaration
+131  Expected default attribute declaration, assuming #IMPLIED 
+132  Attribute list syntax error
+133  Expected equal sign
+134  Duplication attribute name
+135  Bad ID, '{0}', for xml:lang attribute
+136  Expected an element name
+137  Must start with an XMLDecl
+138  Comments must start with <!--
+139  Invalid document structure
+140  Expected a 'version=', 'encoding=', or 'standalone='
+141  Bad XML version string
+142  Unsupported XML version, '{0}'
+143  Unterminated XML decl
+144  Bad XML encoding declaration, '{0}'
+145  Bad standalone declaration
+146  Unterminated comment
+147  Processing instruction name expected
+148  Unterminated processing instruction
+149  Invalid character (Unicode: 0x{0})
+150  Unexpected text before root element
+151  Unterminated start tag, '{0}'
+152  Expected an attribute value
+153  Unterminated end tag
+154  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
+155  Expected end of tag '{0}'
+156  Expected tag name, comment, PI, or other markup
+157  Not valid after content
+158  Expected comment
+159  Expected comment or processing instruction
+160  Expected whitespace
+161  No root element in DOCTYPE
+162  Expected quoted string
+163  Expected public id
+164  Invalid character in public id (Unicode: 0x{0})
+165  Unterminated DOCTYPE declaration
+166  Invalid character in internal subset (Unicode: 0x{0})
+167  Expected CDATA section
+168  Invalid initial name character
+169  Invalid name character
+170  Unexpected whitespace
+171  Invalid character in attribute value (Unicode: 0x{0})
+172  Expected a markup declaration
+173  Text declaration not legal here
+174  Conditional section in internal subset
+175  Expected parameter entity name
+176  Unterminated entity declaration, '{0}'
+177  Invalid character reference
+178  Unterminated character reference
+179  Expected entity name for reference
+180  Entity '{0}' was not found
+181  Unparsed entitty references, '{0}', not valid here
+182  Unterminated entity reference
+183  Recursive entity expansion
+184  Partial markup in entity value
+185  Unterminated element declaration, '{0}'
+186  Expected content specification expression for element '{0}'
+187  Expected asterisk
+188  Unterminated Content model
+189  Expected system id
+190  Expected system or public id
+191  Unterminated notation declaration
+192  Expected ',', '|', or ')' characters
+193  Expected '|' or ')' characters
+194  Expected ',' or ')' characters or close parenthesis in content model of element '{0}'
+195  Expected enumeration value for attribute '{0}'
+196  Expected | enumeration separator, or closing paren
+197  Unterminated entity literal
+198  There are more end tags than start tags
+199  Expected an open parenthesis
+200  The attribute '{0}' is already used in element '{1}'
+201  A '<' character cannot be used in attribute '{0}', except through &lt;
+202  A leading surrogate character was not followed by a legal second character
+203  Expected ']]>' to end a conditional section
+204  Expected INCLUDE or IGNORE here
+205  Expected [ to follow INCLUDE or IGNORE
+206  Expected a TextDecl here: <?xml ....
+207  Expected a XMLDecl here: <?xml ....
+208  Unexpected end of entity {0}
+209  A PE propogated out of the int/ext subset, discarding extra text
+210  An extra ] character was found an ignored
+211  PE refs are not allowed inside markup in the internal subset
+212  An entity propogated out of the content section into Miscellaneous
+213  Expected &# to be followed by a numeric character value
+214  Expected an open bracket ('[') here
+215  The sequence ']]>' is not allowed in character data
+216  Illegal sequence '--' in comment
+217  Unterminated CDATA section
+218  Expected NDATA
+219  NDATA is not legal for parameter entities
+220  Hex radix character refs must use 'x', not 'X'
+221  '{0}' has already been set. Ignoring redundant setting
+222  The XMLDecl strings must be in the order: version, encoding, standalone
+223  External entities cannot be referred to from attribute values
+224  The XML or Text decl must start with '<?xml ', not '<?XML '
+225  Expected a literal entity value or PUBLIC/SYSTEM id
+226  '{0}' is not a valid digit for the indicated radix
+227  The input ended before all started tags were ended. Last tag started was '{0}'
+228  The content model for element '{0}' is ambiguous
+229  Nested CDATA sections are not allowed
+230  The prefix '{0}' has not been mapped to any URI
+231  The start and the end tag were in the different entities
+232  The main XML document cannot be empty
+233  CDATA is not allowed outside the root element
+234  Only numeric character entities or special character entities are legal here
+235  Got an unexpected trailing surrogate character
+236  No processing instruction starts with 'xml'
+237  The XML or Text declaration must start at line/column 1/1
+238  The 'version=' string is required in an XMLDecl
+239  The 'standalone=' string is only allowed in the main XML entity
+240  The 'encoding=' string is required in an Text Decl
+241  When namespaces are enabled, a name can have only one colon character
+242  When namespaces are enabled, the colon cannot be the first or last character
+243  Colons are not allowed in this name when namespaces are enabled
+244  A system exception occured during processing
+245  An exception occured! Type:{0}, Message:{1}
+246  Unexpected end of file exception. Message: {0}
+247  UnexpectedError
+248  The schemaLocation attribute does not contain pairs of values.
+249  Internal error: don't have a GrammarResolver for TraverseSchema
 
 
 $set 2
@@ -277,7 +286,7 @@ $set 2
  38  Error: {0} content must be one of element, group, modelGroupRef. Saw {1}
  39  Unknown base type {0} for type {1}.
  40  Can only have one of type and ref attributes.
- 41  Cannot have child content for an element declaration that has a ref attribute
+ 41  Cannot have child content for an element/group declaration that has a ref attribute
  42  Incorrect type for {0}'s default value: {1}
  43  Illegal content {0} in attribute group
  44  Value of {0} is not an integer.
@@ -324,6 +333,7 @@ $set 2
  85  White space must not occur between externally declared elements with element content in a standalone document.
  86  Entity '{0}' was not found
  87  Partial markup in parameter entity replacement text.
+ 88  Failed to validate '{0}'
 
 
 $set 3

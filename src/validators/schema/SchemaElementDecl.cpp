@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.10  2001/07/09 15:22:43  knoaman
  * complete <any> declaration.
  *
@@ -142,7 +145,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     setElementName(prefix, localPart, uriId);
 }
 
-SchemaElementDecl::SchemaElementDecl(QName* const                  elementName
+SchemaElementDecl::SchemaElementDecl(const QName* const                  elementName
                                    , const SchemaElementDecl::ModelTypes type
                                    , const int                           enclosingScope
                                    ) :
@@ -165,6 +168,7 @@ SchemaElementDecl::~SchemaElementDecl()
 {
     delete [] fDefaultValue;
     delete [] fSubstitutionGroupName;
+    delete [] fTypeFromAnotherSchemaURI;
     delete fAttDefs;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/07/24 18:31:47  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.6  2001/05/11 13:26:28  tng
  * Copyright update.
  *
@@ -154,7 +157,7 @@ QName::~QName()
 // ---------------------------------------------------------------------------
 //  QName: Copy Constructors
 // ---------------------------------------------------------------------------
-QName::QName(QName* const qname) :
+QName::QName(const QName* const qname) :
       fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)

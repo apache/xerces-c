@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/07/24 18:33:46  knoaman
+ * Added support for <group> + extra constraint checking for complexType
+ *
  * Revision 1.6  2001/06/25 12:51:57  knoaman
  * Add constraint checking on elements in complex types to prevent same
  * element names from having different definitions - use substitueGroups.
@@ -82,14 +85,14 @@
 #if !defined(SCHEMAGRAMMAR_HPP)
 #define SCHEMAGRAMMAR_HPP
 
-#include <dom/DOM_Document.hpp>
+#include <dom/DOM_Element.hpp>
 #include <framework/XMLNotationDecl.hpp>
 #include <util/RefHash3KeysIdPool.hpp>
 #include <util/NameIdPool.hpp>
 #include <util/StringPool.hpp>
 #include <validators/common/Grammar.hpp>
 #include <validators/schema/SchemaElementDecl.hpp>
-
+#include <util/ValueVectorOf.hpp>
 
 //
 // This class stores the Schema information
@@ -197,22 +200,38 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    bool getElementDefaultQualified() const;
+    bool getAttributeDefaultQualified() const;
     RefHash3KeysIdPoolEnumerator<SchemaElementDecl> getElemEnumerator() const;
     RefHashTableOf<XMLAttDef>* getAttributeDeclRegistry() const;
     RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
     DatatypeValidatorFactory* getDatatypeRegistry() const;
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
+    DOM_Element getGroupElement(const XMLCh* const name);
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    void setElementDefaultQualified(const bool toSet);
+    void setAttributeDefaultQualified(const bool toSet);
     void setTargetNamespace(const XMLCh* const targetNamespace);
     void setAttributeDeclRegistry(RefHashTableOf<XMLAttDef>* const attReg);
     void setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other);
     void setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry);
     void setNamespaceScope(NamespaceScope* const nsScope);
     void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
+    void addGlobalGroup(const DOM_Element& groupElem);
+
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    unsigned int putGroupElemDecl
+    (
+        XMLElementDecl* const elemDecl
+    )   const;
+
+    void releaseGroupElement(unsigned int index);
 
 private:
 
@@ -224,6 +243,11 @@ private:
     //      declared in the Schema (and their associated attributes.) When in
     //      non-validating mode, its just populated as new elements are seen
     //      and they are given default characteristics.
+    //
+    //  fGroupElemDeclPool
+    //      This is the element decl pool for elements in a group that are
+    //      referenced in different scope. It contains all of the elements
+    //      declared in the Schema (and their associated attributes.)
     //
     //  fNotationDeclPool
     //      This is a pool of NotationDecl objects, which contains all of the
@@ -247,7 +271,10 @@ private:
     //  fValidSubstitutionGroups
     //      Valid list of elements that can substitute a given element
     // -----------------------------------------------------------------------
+    bool                                   fElementDefaultQualified;
+    bool                                   fAttributeDefaultQualified;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
     NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
     XMLCh*                                 fTargetNamespace;
     RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
@@ -255,12 +282,23 @@ private:
     DatatypeValidatorFactory*              fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
+    ValueVectorOf<DOM_Element>*            fGlobalGroups;
 };
 
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Getter methods
 // ---------------------------------------------------------------------------
+inline bool SchemaGrammar::getElementDefaultQualified() const {
+
+    return fElementDefaultQualified;
+}
+
+inline bool SchemaGrammar::getAttributeDefaultQualified() const {
+
+    return fAttributeDefaultQualified;
+}
+
 inline RefHash3KeysIdPoolEnumerator<SchemaElementDecl>
 SchemaGrammar::getElemEnumerator() const
 {
@@ -297,6 +335,16 @@ SchemaGrammar::getValidSubstitutionGroups() const {
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
+inline void SchemaGrammar::setElementDefaultQualified(const bool toSet) {
+
+    fElementDefaultQualified = toSet;
+}
+
+inline void SchemaGrammar::setAttributeDefaultQualified(const bool toSet) {
+
+    fAttributeDefaultQualified = toSet;
+}
+
 inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace) {
     fTargetNamespace = XMLString::replicate(targetNamespace);
 }
@@ -330,6 +378,29 @@ SchemaGrammar::setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const
     fValidSubstitutionGroups = other;
 }
 
+inline void
+SchemaGrammar::addGlobalGroup(const DOM_Element& groupElem) {
+
+    if (!fGlobalGroups) {
+        fGlobalGroups = new ValueVectorOf<DOM_Element>(8);
+    }
+
+    fGlobalGroups->addElement(groupElem);
+}
+
+
+// ---------------------------------------------------------------------------
+//  SchemaGrammar: Helper methods
+// ---------------------------------------------------------------------------
+inline void SchemaGrammar::releaseGroupElement(unsigned int index) {
+
+    if (!fGlobalGroups || index < 0 || fGlobalGroups->size() <= index) {
+        return;
+    }
+
+    fGlobalGroups->setElementAt(DOM_Element(), index);
+}
+
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Virtual methods
 // ---------------------------------------------------------------------------
@@ -352,8 +423,13 @@ inline unsigned int SchemaGrammar::getElemId (const   unsigned int  uriId
     //  map it to the official not found value if we don't find it.
     //
     const SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
-    if (!decl)
-        return XMLElementDecl::fgInvalidElemId;
+    if (!decl) {
+
+        decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
+
+        if (!decl) 
+            return XMLElementDecl::fgInvalidElemId;
+    }
     return decl->getId();
 }
 
@@ -362,7 +438,12 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  u
                                               , const XMLCh* const    qName
                                               , unsigned int          scope )   const
 {
-    return fElemDeclPool->getByKey(baseName, uriId, scope);
+    const SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
+
+    if (!decl) 
+        decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
+
+    return decl;
 }
 
 inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
@@ -370,24 +451,44 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
                                               , const XMLCh* const    qName
                                               , unsigned int          scope )
 {
-    return fElemDeclPool->getByKey(baseName, uriId, scope);
+    SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
+
+    if (!decl) 
+        decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
+
+    return decl;
 }
 
 inline const XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId) const
 {
     // Look up this element decl by id
-    return fElemDeclPool->getById(elemId);
+    const SchemaElementDecl* decl = fElemDeclPool->getById(elemId);
+
+    if (!decl)
+        decl = fGroupElemDeclPool->getById(elemId);
+    
+    return decl;
 }
 
 inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
 {
     // Look up this element decl by id
-    return fElemDeclPool->getById(elemId);
+    SchemaElementDecl* decl = fElemDeclPool->getById(elemId);
+
+    if (!decl)
+        decl = fGroupElemDeclPool->getById(elemId);
+    
+    return decl;
 }
 
 inline unsigned int SchemaGrammar::putElemDecl (XMLElementDecl* const elemDecl)   const
 {
     return fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
+}
+
+inline unsigned int SchemaGrammar::putGroupElemDecl (XMLElementDecl* const elemDecl)   const
+{
+    return fGroupElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
 }
 
 // Notation Decl
