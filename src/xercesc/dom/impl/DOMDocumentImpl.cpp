@@ -714,10 +714,12 @@ static const int kMaxSubAllocationSize = 4096;   // Any request for more bytes
 void *         DOMDocumentImpl::allocate(size_t amount)
 {
 
-//     size_t sizeOfPointer = sizeof(void *);
+    size_t sizeOfPointer = sizeof(void *);
 // some MIPS or IA64 machines may misallign if the class has a long data type member
 // see Bug 10648 for details
-     size_t sizeOfPointer = sizeof(long);
+//     size_t sizeOfPointer = sizeof(long);
+// REVISIT: sizeof(long) crashes on IA64 machine, we will look into it later.
+
      if (amount%sizeOfPointer!=0)
        amount = amount + (sizeOfPointer - (amount % sizeOfPointer));
 
