@@ -1339,6 +1339,11 @@ private :
     //      The DOMDocument ownership has been transferred to application
     //      If set to true, the parser does not own the document anymore
     //      and thus will not release its memory.
+    //
+    //  fInternalSubset
+    //      Buffer for storing the internal subset information.
+    //      Once complete (after DOCTYPE is finished scanning), send
+    //      it to DocumentType Node
     // -----------------------------------------------------------------------
     bool                          fCreateEntityReferenceNodes;
     bool                          fIncludeIgnorableWhitespace;
@@ -1355,6 +1360,7 @@ private :
     RefVectorOf<DOMDocumentImpl>* fDocumentVector;
     bool                          fCreateCommentNodes;
     bool                          fDocumentAdoptedByUser;
+    XMLBuffer&                    fInternalSubset;
 };
 
 

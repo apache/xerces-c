@@ -95,7 +95,7 @@ private:
     DOMNamedNodeMap*    elements;
     const XMLCh *       publicId;
     const XMLCh *       systemId;
-    XMLBuffer           internalSubset;
+    const XMLCh *       internalSubset;
 
     bool			         intSubsetReading;
     bool                fIsCreatedFromHeap;
@@ -103,8 +103,6 @@ private:
     virtual void        setPublicId(const XMLCh * value);
     virtual void        setSystemId(const XMLCh * value);
     virtual void        setInternalSubset(const XMLCh *value);
-    void                appendInternalSubset(const XMLCh *value);
-    void                appendInternalSubset(const XMLCh toAppend);
     bool                isIntSubsetReading() const;
 
     friend class AbstractDOMParser;
