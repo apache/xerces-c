@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/18 20:18:02  tng
+ * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.5  2001/05/18 13:36:45  tng
  * Schema: Catch RegularExpression exception and NumberFormatException
  *
@@ -619,14 +622,40 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                             XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10);
                             XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
                             ThrowXML2(InvalidDatatypeFacetException
-                                 , XMLExcepts::FACET_TotDigit_FractDigit
-                                 , value2
-                                 , value1);
+                                 , XMLExcepts::FACET_totalDigit_base_totalDigit
+                                 , value1
+                                 , value2);
                         }
                     }
 
-                    // check question error: fractionDigits > base.fractionDigits ???
-                    // check question error: fractionDigits > base.totalDigits ???
+                   if (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0)
+                   {
+                        // check question error: fractionDigits > base.fractionDigits ???
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&
+                             ( fFractionDigits > numBase->fFractionDigits ))
+                        {
+                            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
+                            XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                 , XMLExcepts::FACET_fractDigit_base_fractDigit
+                                 , value1
+                                 , value2);
+                        }
+
+                        // check question error: fractionDigits > base.totalDigits ???
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&
+                             ( fFractionDigits > numBase->fTotalDigits ))
+                        {
+                            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
+                            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
+                            ThrowXML2(InvalidDatatypeFacetException
+                                 , XMLExcepts::FACET_fractDigit_base_totalDigit
+                                 , value1
+                                 , value2);
+                        }
+                   }
+
+
                     // check question error: totalDigits conflicts with bounds ???
 
                     // check 4.3.5.c0 must: enumeration values from the value space of base

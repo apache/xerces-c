@@ -99,8 +99,6 @@ public:
 
     int         getTotalDigit() const;
 
-    void        dumpData() const;
-
 	/**
 	 *  Return a copy of the fMagnitue.
      *  A leading sign is ALWAYS in place and the caller of this method

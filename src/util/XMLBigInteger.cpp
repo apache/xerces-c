@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/18 20:17:57  tng
+ * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.3  2001/05/18 13:23:01  tng
  * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
  *
@@ -70,16 +73,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
-#include <iostream.h>
 #include <util/XMLBigInteger.hpp>
 #include <util/XMLString.hpp>
 #include <util/NumberFormatException.hpp>
-#include <util/RuntimeException.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/TransService.hpp>
 #include <util/XMLUniDefs.hpp>
-#include <util/XMLUni.hpp>
 #include <util/Janitor.hpp>
 
 /***
@@ -112,10 +111,8 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
                                   , int&   signValue)
 {
     // If no string, then its a failure
-    if ((!toConvert) ||
-        (!*toConvert))
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+    if ((!toConvert) || (!*toConvert))
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
 
     //
     // Note: in Java's BigInteger, it seems any leading and/or trailing
@@ -129,8 +126,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
         startPtr++;
 
     if (!*startPtr)
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_WSString);
 
     // Start at the end and work back through any whitespace
     const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
@@ -174,8 +170,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
     {
         // If not valid decimal digit, then an error
         if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-            //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
         // copy over
         *retPtr = *startPtr;
@@ -195,29 +190,18 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
  */
 XMLBigInteger::XMLBigInteger(const XMLCh* const strValue)
 {
+    if (!strValue)
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+
     XMLCh* ret_value = new XMLCh[XMLString::stringLen(strValue)+1];
     ArrayJanitor<XMLCh> janName(ret_value);
 
-    try
-    {
-        parseBigInteger(strValue, ret_value, fSign);
-    }
-    catch (NumberFormatException)
-    {
-        throw;
-        //ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLBIGDECIMAL_Inv_format);
-    }
+    parseBigInteger(strValue, ret_value, fSign);
 
     if (fSign == 0)
         fMagnitude = XMLString::replicate(XMLUni::fgZeroLenString);
     else
-    {
-        unsigned int strLen = XMLString::stringLen(ret_value);
-        fMagnitude = new XMLCh[strLen+1];
-        XMLString::moveChars(fMagnitude, ret_value, strLen);
-        fMagnitude[strLen]=0;
-    }
+        fMagnitude = XMLString::replicate(ret_value);
 
 }
 
@@ -229,11 +213,7 @@ XMLBigInteger::~XMLBigInteger()
 XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
 {
     setSign(toCopy.getSign());
-
-    int strLen = XMLString::stringLen(toCopy.fMagnitude);
-	fMagnitude = new XMLCh[strLen+1];
-    XMLString::moveChars(fMagnitude, toCopy.fMagnitude, strLen);
-    fMagnitude[strLen]=0;
+    fMagnitude = XMLString::replicate(toCopy.fMagnitude);
 }
 
 /**
@@ -243,6 +223,9 @@ XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
 int  XMLBigInteger::compareValues(const XMLBigInteger* const lValue
                                 , const XMLBigInteger* const rValue)
 {
+    if ((!lValue) || (!rValue) )
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
+
     int lSign = lValue->getSign();
     int rSign = rValue->getSign();
 
@@ -329,17 +312,6 @@ void XMLBigInteger::divide(const unsigned int byteToShift)
 
     delete[] fMagnitude;
     fMagnitude = tmp;
-}
-
-void XMLBigInteger::dumpData() const
-{
-    char *p;
-    p = XMLString::transcode(fMagnitude);
-    cout<<"sign="<<"<"<<fSign<<">"<<endl;
-    cout<<"fMagnitude="<<"<"<<p<<">"<<endl;
-    cout<<endl;
-    delete[] p;
-
 }
 
 //

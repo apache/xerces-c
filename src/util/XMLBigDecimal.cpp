@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/18 20:17:55  tng
+ * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.3  2001/05/18 13:22:54  tng
  * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
  *
@@ -70,55 +73,51 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
-#include <iostream.h>
 #include <util/XMLBigDecimal.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/NumberFormatException.hpp>
-#include <util/RuntimeException.hpp>
 #include <util/TransService.hpp>
 #include <util/Janitor.hpp>
 
 /**
-	 * Constructs a BigDecimal from a string containing an optional minus
-	 * sign followed by a sequence of zero or more decimal digits, optionally
-	 * followed by a fraction, which consists of a decimal point followed by
-	 * zero or more decimal digits.  The string must contain at least one
-	 * digit in the integer or fractional part.  The scale of the resulting
-	 * BigDecimal will be the number of digits to the right of the decimal
-	 * point in the string, or 0 if the string contains no decimal point.
-	 * Any extraneous characters (including whitespace) will result in
-	 * a NumberFormatException.
-*/
+ * Constructs a BigDecimal from a string containing an optional (plus | minus)
+ * sign followed by a sequence of zero or more decimal digits, optionally
+ * followed by a fraction, which consists of a decimal point followed by
+ * zero or more decimal digits.  The string must contain at least one
+ * digit in the integer or fractional part.  The scale of the resulting
+ * BigDecimal will be the number of digits to the right of the decimal
+ * point in the string, or 0 if the string contains no decimal point.
+ * Any extraneous characters (including whitespace) will result in
+ * a NumberFormatException.
+
+ * since parseBigDecimal and XMLBigInteger() may throw exception, 
+ * caller of XMLBigDecimal need to catch it.
 //
-// since parseBigDecimal and XMLBigInteger() may
-// throw exception, caller of XMLBigDecimal better
-// be ready to catch it.
-//
+**/
 
 XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
 :fIntVal(0)
 ,fScale(0)
 {
+    if (!strValue)
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+
     XMLCh* ret_value = new XMLCh[XMLString::stringLen(strValue)+1];
     ArrayJanitor<XMLCh> janName(ret_value);
 
     parseBigDecimal(strValue, ret_value, fScale);
     fIntVal = new XMLBigInteger(ret_value);
-
 }
 
 XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy)
 :fIntVal(0)
 ,fScale(toCopy.getScale())
 {
-
     //invoke XMLBigInteger' copy ctor
     fIntVal = new XMLBigInteger(*(toCopy.getValue()));
 }
-
 
 /***
    *
@@ -154,10 +153,8 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
     scaleValue = 0;
 
     // If no string, then its a failure
-    if ((!toConvert) ||
-        (!*toConvert))
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+    if ((!toConvert) || (!*toConvert))
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
 
     // Scan past any whitespace. If we hit the end, then return failure
     const XMLCh* startPtr = toConvert;
@@ -165,8 +162,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         startPtr++;
 
     if (!*startPtr)
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_WSString);
 
     // Start at the end and work back through any whitespace
     const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
@@ -181,27 +177,18 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
     // '+' or '-' is allowed only at the first position
     //
     if (*startPtr == chDash)
-    {
-        // copy the '-'
-        *retPtr = chDash;
+    {       
+        *retPtr = chDash;  // copy the '-'
         startPtr++;
         retPtr++;
     }
     else if (*startPtr == chPlus)
-    {
-        // skip the '+'
-        startPtr++;
-    }
+        startPtr++;        // skip the '+'
 
     // Leading zero will be taken care by BigInteger
-
     bool   dotSignFound = false;
-
     while (startPtr < endPtr)
     {
-        //
-        // '.' is allowed only once
-        //
         if (*startPtr == chPeriod)
         {
             if (dotSignFound == false)
@@ -211,15 +198,13 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
                 startPtr++;
                 continue;
             }
-            else
-                ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-                //ThrowXML(NumberFormatException, XMLExcepts::XMLBIGDECIMAL_MANY_DOT);
+            else  // '.' is allowed only once
+                ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_2ManyDecPoint);
         }
 
         // If not valid decimal digit, then an error
         if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-            //ThrowXML(NumberFormatException, XMLExcepts::XMLBIGDECIMAL_Invalid);
+            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
         // copy over
         *retPtr = *startPtr;
@@ -235,16 +220,12 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
  * Returns -1, 0 or 1 as lValue is less than, equal to, or greater
  * than rValue.  Two BigDecimals that are equal in value but have a
  * different scale (e.g., 2.0, 2.00) are considered equal by this method.
-*/
-
+**/
 int XMLBigDecimal::compareValues(const XMLBigDecimal* const lValue
                                , const XMLBigDecimal* const rValue)
 {
-    //
-    if ((!lValue) ||
-        (!rValue) )
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLBIGDECIMAL_Null_value);
+    if ((!lValue) || (!rValue) )
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
 
     /* Optimization: would run fine without the next three lines */
 	int sigDiff = lValue->getSign() - rValue->getSign();
@@ -306,13 +287,6 @@ void XMLBigDecimal::reScale(unsigned int newScale)
 	}
 
     return;
-}
-
-void XMLBigDecimal::dumpData() const
-{
-    cout<<"scale="<<"<"<<fScale<<">"<<endl;
-    fIntVal->dumpData();
-    cout<<endl;
 }
 
 //
