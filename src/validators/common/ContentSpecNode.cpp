@@ -70,7 +70,40 @@
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 
+// ---------------------------------------------------------------------------
+//  ContentSpecNode: Copy Constructor
+//
+//  Note: this copy constructor has dependency on various get*() methods
+//        and shall be placed after those method's declaration.
+//        aka inline function compilation error on AIX 4.2, xlC 3 r ev.1
+// ---------------------------------------------------------------------------
 
+ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
+{
+    const QName* tempElement = toCopy.getElement();
+    if (tempElement)
+        fElement = new QName(tempElement);
+    else
+        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+
+    const ContentSpecNode *tmp = toCopy.getFirst();
+    if (tmp)
+        fFirst = new ContentSpecNode(*tmp);
+    else
+        fFirst = 0;
+
+    tmp = toCopy.getSecond();
+    if (tmp)
+        fSecond = new ContentSpecNode(*tmp);
+    else
+        fSecond = 0;
+
+    fType = toCopy.getType();
+    fAdoptFirst = true;
+    fAdoptSecond = true;
+    fMinOccurs = toCopy.getMinOccurs();
+    fMaxOccurs = toCopy.getMaxOccurs();
+}
 
 // ---------------------------------------------------------------------------
 //  Local methods

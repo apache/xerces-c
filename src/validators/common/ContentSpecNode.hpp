@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/08/28 20:21:08  peiyongz
+ * * AIX 4.2, xlC 3 rev.1 compilation error: get*() declared with external linkage
+ * and called or defined before being declared as inline
+ *
  * Revision 1.15  2001/08/24 12:48:48  tng
  * Schema: AllContentModel
  *
@@ -322,33 +326,6 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
     fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
-inline
-ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
-{
-    const QName* tempElement = toCopy.getElement();
-    if (tempElement)
-        fElement = new QName(tempElement);
-    else
-        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-
-    const ContentSpecNode *tmp = toCopy.getFirst();
-    if (tmp)
-        fFirst = new ContentSpecNode(*tmp);
-    else
-        fFirst = 0;
-
-    tmp = toCopy.getSecond();
-    if (tmp)
-        fSecond = new ContentSpecNode(*tmp);
-    else
-        fSecond = 0;
-
-    fType = toCopy.getType();
-    fAdoptFirst = true;
-    fAdoptSecond = true;
-    fMinOccurs = toCopy.getMinOccurs();
-    fMaxOccurs = toCopy.getMaxOccurs();
-}
 
 inline ContentSpecNode::~ContentSpecNode()
 {
