@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2002/06/27 18:42:16  tng
+ * DOM L3: Test DOMNode::isSameNode and DOMNode::isEqualNode
+ *
  * Revision 1.22  2002/06/25 16:22:52  tng
  * DOM L3: use release()
  *
@@ -924,6 +927,31 @@ bool DOMTest::testAttr(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(userFirst)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (! OK)
         printf("\n*****The DOMAttr* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -949,6 +977,7 @@ bool DOMTest::testCDATASection(DOMDocument* document)
     node = document->getDocumentElement()->getElementsByTagName(tempStr)->item(0)->getFirstChild(); // node gets DOMCDATASection* node
 
     node2 = node->cloneNode(T);//*****?
+
     // Check nodes for equality, both their name and value or lack thereof
     if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
           (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
@@ -1056,6 +1085,31 @@ bool DOMTest::testCDATASection(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
 
     if (! OK)
         printf("\n*****The DOMCDATASection* method calls listed above failed, all others worked correctly.*****\n");
@@ -1289,6 +1343,31 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(userFirst)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMCharacterData method calls listed above failed, all others worked correctly.*****\n");
     charData->setData(resetData); // reset node to original data
@@ -1447,6 +1526,31 @@ bool DOMTest::testComment(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
 
     if (!OK)
         printf("\n*****The DOMComment* method calls listed above failed, all others worked correctly.*****\n");
@@ -1751,6 +1855,31 @@ bool DOMTest::testDocument(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMDocument* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -1774,10 +1903,37 @@ bool DOMTest::testDocumentFragment(DOMDocument* document)
 
     //  testDocFragment->setNodeValue("This is a document fragment!");//!! Throws a NO_MODIFICATION_ALLOWED_ERR ********
 
-// For debugging*****       printf("All DOMDocumentFragment* method calls worked correctly.\n");
+    // Test isSameNode
+    DOMDocumentFragment* userTest = testDocFragment;
+    DOMNode* mycloned = testDocFragment->cloneNode(true);
+    DOMDocument* userFirst = document;
+
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(userFirst)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMDocumentFragment* method calls listed above failed, all others worked correctly.*****\n");
-//  printf("\n");
     return OK;
 };
 
@@ -1925,6 +2081,31 @@ bool DOMTest::testDocumentType(DOMDocument* document)
     // document type cannot be imported, so no test import, rather test the exception
     document->setUserData(tempStr2, (void*) document, &userhandler);
     EXCEPTIONSTEST(document->importNode(userTest,true), DOMException::NOT_SUPPORTED_ERR, OK, 203 );
+
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(document)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
 
     if (!OK)
         printf("\n*****The DOMDocumentType* method calls listed above failed, all others worked correctly.*****\n");
@@ -2281,6 +2462,31 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(userFirst)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMElement* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2411,6 +2617,31 @@ bool DOMTest::testEntity(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(userFirst)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMEntity* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2448,7 +2679,7 @@ bool DOMTest::testEntityReference(DOMDocument* document)
     // Test the user data
     // Test simple set and get
     DOMEntityReference* userTest = entityReference;
-    DOMNode*  userFirst = node;
+    DOMNode*  userFirst = node2;
     XMLCh* userSecond = tempStr2;
     XMLString::transcode("first", tempStr, 3999);
 
@@ -2540,6 +2771,31 @@ bool DOMTest::testEntityReference(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
 
     if (!OK)
         printf("\n*****The DOMEntityReference* method calls listed above failed, all others worked correctly.*****\n");
@@ -2686,6 +2942,31 @@ bool DOMTest::testNode(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMNode*  method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2818,6 +3099,31 @@ bool DOMTest::testNotation(DOMDocument* document)
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
 
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     if (!OK)
         printf("\n*****The DOMNotation* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2880,7 +3186,7 @@ bool DOMTest::testPI(DOMDocument* document)
     // Test the user data
     // Test simple set and get
     DOMProcessingInstruction* userTest = pI;
-    DOMNode*  userFirst = abc50;
+    DOMNode*  userFirst = abc51;
     XMLCh* userSecond = tempStr2;
     XMLString::transcode("first", tempStr, 3999);
 
@@ -2972,6 +3278,31 @@ bool DOMTest::testPI(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(document)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
 
     if (!OK)
         printf("\n*****The PI method calls listed above failed, all others worked correctly.*****\n");
@@ -3130,6 +3461,31 @@ bool DOMTest::testText(DOMDocument* document)
     document->setUserData(tempStr2, (void*) document, &userhandler);
     DOMNode* myimport = document->importNode(userTest,true);
     USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_IMPORTED, tempStr2, document, userTest, myimport, __LINE__);
+
+    // Test isSameNode
+    if (!userTest->isSameNode(userTest)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isSameNode(userFirst)) {
+        fprintf(stderr, "isSameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // Test isEqualNode
+    if (!userTest->isEqualNode(mycloned)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if (!userTest->isEqualNode(userTest)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (userTest->isEqualNode(abc70)) {
+        fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
 
     if (!OK)
         printf("\n*****The DOMText* method calls listed above failed, all others worked correctly.*****\n");
