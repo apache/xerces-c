@@ -470,8 +470,13 @@ gmake </source>
 			converter [MacOSUnicodeConverter].
 			</li>
 			
-			<li>Has a Mac OS native netaccessor that utilizes the built-in Mac OS URLAccess
-			routines [MacOSURLAccess].
+			<li>Has two Mac OS native netaccessor classes. The first is based on Carbon and
+			and classic supported URLAccess and may be used in the broadest variety of
+			configurations [MacOSURLAccess]. The second [MacOSURLAccessCF] is based on
+			CFURLAccess, which requires either Carbon or Mac OS X CoreServices.framework.
+			This second NetAccessor is useful in Mac OS X configurations where reliance on
+			the full Carbon.framework would prohibit execution of the Xerces code in a
+			remote context that has no access to the GUI.
 			</li>
 			
 			<li>Supports builds from Metroworks CodeWarrior, Apple Project Builder,
@@ -529,7 +534,7 @@ perl ShortenFiles.pl</source>
 			</ul>
 			
 <source>find . \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" -or \
--name "*.xml" \) -print0 | xargs -0 /Developer/Tools/SetFile -c CWIE -t TEXT</source>
+-name "*.xml" -or -name "*.r" \) -print0 | xargs -0 /Developer/Tools/SetFile -c CWIE -t TEXT</source>
 
 			<ul>
 				<li>Move the entire directory structure to your Mac OS machine.
@@ -612,8 +617,8 @@ perl ShortenFiles.pl</source>
 				</li>
 			</ul>
 		
-<source>setenv XERCESCROOT "&lt;directory&gt;"
-cd src
+<source>setenv XERCESCROOT "&lt;xerces-c-directory&gt;"
+cd src/xercesc
 ./runConfigure -p macosx -n native
 make</source>
 			
@@ -669,7 +674,9 @@ make</source>
 				<li>URLAccess. Provides NetAccessor support to &XercesCName; for use in
 				fetching network referenced entities. If URLAccess is not installed, any
 				such references will fail; the absence of URLAccess, however, will not
-				in itself prevent &XercesCName; from running.
+				in itself prevent &XercesCName; from running. If &XercesCName; is
+				configured to use MacOSURLAccessCF, then URLAccess (and thus Carbon)
+				is not required, but CoreServices.framework is required for Mac OS X.
 				</li>
 				
 				<li>Multiprocessing library. Provides mutual exclusion support. Once again,
