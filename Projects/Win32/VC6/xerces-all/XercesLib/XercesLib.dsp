@@ -322,14 +322,6 @@ SOURCE=..\..\..\..\..\src\util\UnsupportedEncodingException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\URL.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\URL.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\UTFDataFormatException.hpp
 # End Source File
 # Begin Source File
@@ -415,6 +407,14 @@ SOURCE=..\..\..\..\..\src\util\XMLUni.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLUni.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLURL.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLURL.hpp
 # End Source File
 # Begin Source File
 
