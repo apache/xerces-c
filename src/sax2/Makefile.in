@@ -70,6 +70,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 include ../Makefile.incl
 
@@ -79,7 +80,7 @@ SAX2_CPP_PUBHEADERS = \
 	Attributes.hpp \
 	ContentHandler.hpp \
 	DefaultHandler.hpp \
-       LexicalHandler.hpp \
+	LexicalHandler.hpp \
 	SAX2XMLReader.hpp \
 	XMLReaderFactory.hpp
 

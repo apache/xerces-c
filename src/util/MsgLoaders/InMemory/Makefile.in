@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2001/07/06 17:11:59  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.6  2001/06/27 17:08:41  tng
 # [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
 #
@@ -98,6 +101,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 MODULE = util
 SUBMODULE = MsgLoaders/InMemory
@@ -111,4 +115,3 @@ CPP_PUBHEADERS = \
 CPP_OBJECTS = InMemMsgLoader.$(TO)
 
 include ../../Makefile.util.submodule
-

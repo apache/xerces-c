@@ -58,6 +58,7 @@
 PLATFORM = @platform@
 COMPILER = @compiler@
 PREFIX = @prefix@
+THREADS = @threads@
 PREFIX_INCLUDE = @prefix_include@
 include ../../../Makefile.incl
 

@@ -70,6 +70,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 include ../Makefile.incl
 

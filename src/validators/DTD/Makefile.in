@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2001/07/06 17:12:10  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.10  2001/06/27 17:09:47  tng
 # [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
 #
@@ -111,6 +114,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 include ../../Makefile.incl
 
@@ -122,8 +126,8 @@ VALIDATORS_DTD_CPP_PUBHEADERS = \
 	DTDAttDefList.hpp \
 	DTDElementDecl.hpp \
 	DTDEntityDecl.hpp \
-       DTDGrammar.hpp \
-       DTDScanner.hpp \
+	DTDGrammar.hpp \
+	DTDScanner.hpp \
 	DTDValidator.hpp \
 	DocTypeHandler.hpp
 

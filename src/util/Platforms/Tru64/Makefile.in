@@ -69,6 +69,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 MODULE = util
 
@@ -79,4 +80,3 @@ CPP_PUBHEADERS = Tru64Defs.hpp
 CPP_OBJECTS = Tru64PlatformUtils.$(TO)
 
 include ../../Makefile.util.submodule
-

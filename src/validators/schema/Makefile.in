@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2001/07/06 17:12:13  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.12  2001/06/27 17:09:56  tng
 # [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
 #
@@ -107,6 +110,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 include ../../Makefile.incl
 

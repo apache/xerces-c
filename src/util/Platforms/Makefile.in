@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2001/07/06 17:12:02  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.14  2001/06/05 19:35:53  jberry
 # Add support for Mac OS X command line configuration and build.
 #
@@ -116,6 +119,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 CD=cd
 
@@ -149,10 +153,10 @@ ifeq (${PLATFORM}, PTX)
     SUBMODULE = PTX
 endif
 ifeq (${PLATFORM}, TRU64)
-	SUBMODULE = Tru64
+    SUBMODULE = Tru64
 endif
 ifeq (${PLATFORM}, MACOSX)
-	SUBMODULE = MacOS
+    SUBMODULE = MacOS
 endif
 
 includes::
@@ -169,4 +173,3 @@ distclean::
 
 install::
 	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..
-

@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.6  2001/07/06 17:12:10  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.5  2001/06/27 17:09:50  tng
 # [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
 #
@@ -85,6 +88,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 include ../../Makefile.incl
 
@@ -101,8 +105,8 @@ VALIDATORS_COMMON_CPP_PUBHEADERS = \
 	ContentLeafNameTypeVector.hpp \
 	ContentSpecNode.hpp \
 	DFAContentModel.hpp \
-       Grammar.hpp \
-       GrammarResolver.hpp \
+	Grammar.hpp \
+	GrammarResolver.hpp \
 	MixedContentModel.hpp \
 	SimpleContentModel.hpp
 
@@ -117,7 +121,7 @@ VALIDATORS_COMMON_CPP_OBJECTS = \
 	ContentLeafNameTypeVector.$(TO) \
 	ContentSpecNode.$(TO) \
 	DFAContentModel.$(TO) \
-       GrammarResolver.$(TO) \
+	GrammarResolver.$(TO) \
 	MixedContentModel.$(TO) \
 	SimpleContentModel.$(TO)
 

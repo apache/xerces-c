@@ -86,7 +86,7 @@ usage()
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
     echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris)"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'none'"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
@@ -131,8 +131,9 @@ fi
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
-msgloader=inmem          # by default use native transcoder
+msgloader=inmem          # by default use inmem message loader
 netaccessor=socket       # by default use socket (can do HTTP URL's)
+thread=pthread           # by default use POSIX threads
 configureoptions=""
 
 for i in $*
@@ -196,16 +197,6 @@ echo "Thread option: $thread"
 echo "Extra configure options: $configureoptions"
 
 
-if test -z "$ccompiler" -a -n "$cppcompiler"; then
-      echo "either both c/c++ compiler must be given or nothing at all"
-      exit ${ERROR_EXIT_CODE};
-fi
-if test -n "$ccompiler" -a -z "$cppcompiler"; then
-      echo "either both c/c++ compiler must be given or nothing at all"
-      exit ${ERROR_EXIT_CODE};
-fi
-
-
 #
 # Now check if the options are correct or not, bail out if incorrect
 #
@@ -219,7 +210,6 @@ case $platform in
       exit ${ERROR_EXIT_CODE};;
 esac
 
-
 #
 # Enable debugging or not...
 #
@@ -228,107 +218,107 @@ if test $debug = "off"; then
     echo "Debug is OFF"
     if test ${SYSOVR}o = "o"; then
       if test $platform = "os400"; then
-        echo "NATIVE OS400 BUILD"
+         echo "NATIVE OS400 BUILD"
          debugflag="";
+      elif test $platform = "irix"; then
+         debugflag="-O2";
       else
-        if test $platform = "irix"; then
-           debugflag="-O2";
-        else
          debugflag="-O";
-        fi
+      fi
+    else
+      echo "OVERRIDE FOR OS400 ON AIX"
+      debugflag="";
     fi
- else
-       echo "OVERRIDE FOR OS400 ON AIX"
-       debugflag="";
-     fi
 else
     echo "Debug is ON"
     debugflag="-g";
 fi
 
 
-
 #
-# Check for the threading option only for hp-11
+# Check for the threading option
 #
-
-threadingLibs="-lpthread"
-if test $platform = "hp-11"; then
-    if test $thread; then
-    case $thread in
-       pthread)
-           ;;
-
-       dce)
-           threadingLibs="-lcma";
-           threadingDefines="-D_PTHREADS_DRAFT4 -DXML_USE_DCE" ;;
-
-       *)
-           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-           exit ${ERROR_EXIT_CODE};;
-    esac
+if test $thread = "none"; then
+    THREADS=none
+    threadingLibs=""
+    threadingDefines="-DAPP_NO_THREADS -DXML_USE_NO_THREADS"
+else
+    THREADS=pthread
+    threadingDefines="-DXML_USE_PTHREADS"
+    threadingLibs="-lpthread"
+    if test $platform = "hp-11"; then
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingLibs="-lcma" ;
+               threadingDefines="-D_PTHREADS_DRAFT4 -D_THREAD_SAFE -DXML_USE_DCE" ;;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "aix"; then
+        aix_version=`./config.guess`;
+        echo Found host system to be $aix_version
+        case $aix_version in
+           *4.3*)
+              ## Linkflags control the use of libpthreads on AIX
+              threadingLibs="-lpthreads_compat";;
+           *)
+              threadingLibs="-lpthreads";;
+        esac
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingDefines="-DXML_USE_DCE"
+               case $aix_version in
+                  *4.3*)
+                     ## Linkflags control the use of libpthreads on AIX
+                     threadingLibs="-ldcelibc_r -ldcepthreads -lpthreads_compat";;
+                  *)
+                     threadingLibs="-lC_r -lC -ldcelibc_r -ldcepthreads";;
+               esac
+               ;;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "ptx"; then
+        threadingLibs=" "
+        if test -z $XMLINSTALL; then
+            XMLINSTALL=$ICUROOT         ## use either the -C or the -P option now.
+        fi
+    elif test $platform = "hp-10"; then
+        THREADS=dce
+        threadingLibs="-lcma"
+        threadingDefines="-DXML_USE_DCE"
+    elif test $platform = "unixware"; then
+        threadingLibs="" ## Linkflags control the use of threads on UnixWare
+    elif test $platform = "solaris"; then
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingLibs="-ldce";
+               threadingDefines="-DXML_USE_DCE";;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
     fi
-elif test $platform = "aix"; then
-    aix_version=`sh ./config.guess`;
-    echo Found host system to be $aix_version
-    if test -n "$ccompiler"; then
-        if test -n "$thread"; then
-            echo "user given compiler no threadig available"
-      fi;
-      case $aix_version in
-         *4.3*)
-            threadingLibs="-lpthreads_compat -lpthreads";;
-         *)
-            threadingLibs="-lpthreads";;
-      esac
-    elif test -z "$thread"; then
-          ccompiler=xlc
-          cppcompiler=xlC
-          threadingLibs=
-          threadingDefines=
-    else
-    case $thread in
-      pthread)
-          ccompiler=xlc_r
-          cppcompiler=xlC_r
-          threadingLibs=
-          threadingDefines=
-          ;;
-      dce)
-          ccompiler=xlc_r4
-          cppcompiler=xlC_r4
-          threadingLibs=
-          threadingDefines="-DXML_USE_DCE"
-          ;;
-      *)
-           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-           exit ${ERROR_EXIT_CODE};;
-    esac
-    fi
-elif test $platform = "ptx"; then
-    threadingLibs=" "
-    if test -z $XMLINSTALL; then
-        XMLINSTALL=$ICUROOT         ## use either the -C or the -P option now.
-    fi
-elif test $platform = "hp-10"; then
-    threadingLibs="-lcma"
-    threadingDefines="-DXML_USE_DCE"
-elif test $platform = "unixware"; then
-	threadingLibs="-lthread"
-elif test $platform = "solaris"; then
-     if test $thread; then
-     case $thread in
-        pthread)
-            ;;
-        dce)
-            threadingLibs="-ldce";
-            threadingDefines="-DXML_USE_DCE";;
-        *)
-            echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-            exit ${ERROR_EXIT_CODE};;
-     esac
-     fi
 fi
+
+export THREADS
 
 
 #
@@ -420,6 +410,12 @@ case $netaccessor in
        NETACCESSOR=Socket
        netaccessorDefines="-DXML_USE_NETACCESSOR_SOCKET"
        case $platform in
+           unixware)
+               netaccessorLibs="-lnsl -lsocket";;
+           hp-11)
+               netaccessorLibs="-lnsl";;
+           aix)
+               netaccessorLibs="-lbsd";;
            solaris)
                netaccessorLibs="-lnsl -lsocket"
              if test $thread = "dce"; then
@@ -516,6 +512,7 @@ echo
 echo export TRANSCODER=\"$TRANSCODER\"
 echo export MESSAGELOADER=\"$MESSAGELOADER\"
 echo export NETACCESSOR=\"$NETACCESSOR\"
+echo export THREADS=\"$THREADS\"
 echo export CC=\"$CC\"
 echo export CXX=\"$CXX\"
 echo export CXXFLAGS=\"$CXXFLAGS\"

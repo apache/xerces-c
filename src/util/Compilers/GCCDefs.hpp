@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/07/06 17:11:58  tng
+ * Automatic build of single-threaded library.  By Martin Kalen.
+ *
  * Revision 1.13  2001/03/02 20:52:58  knoaman
  * Schema: Regular expression - misc. updates for error messages,
  * and additions of new functions to XMLString class.
@@ -111,9 +114,9 @@
 
 
 // ---------------------------------------------------------------------------
-// Indicate that we do not support native bools
+// Indicate that we support native bools
 // ---------------------------------------------------------------------------
-//#define NO_NATIVE_BOOL
+// #define NO_NATIVE_BOOL
 
 // ---------------------------------------------------------------------------
 //  GCC does not support "L" for long strings. So we do nothing.

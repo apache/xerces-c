@@ -70,6 +70,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 MODULE = util
 SUBMODULE = Compilers
@@ -91,7 +92,7 @@ CPP_PUBHEADERS = \
 	SunCCDefs.hpp \
 	SunKaiDefs.hpp \
 	OS400SetDefs.hpp \
-        MIPSproDefs.hpp \
+	MIPSproDefs.hpp \
 	TandemCCDefs.hpp \
 	VCPPDefs.hpp
 
@@ -116,7 +117,7 @@ ifeq (${CXX},g++)
     CPP_OBJECTS = GCCDefs.$(TO)
 endif
 ifeq (${CXX},aCC)
-	CPP_OBJECTS = HPCCDefs.$(TO)
+    CPP_OBJECTS = HPCCDefs.$(TO)
 endif
 ifeq (${CXX},c++)
     ifeq (${PLATFORM},OS390)
@@ -133,11 +134,9 @@ ifeq (${CXX},c++)
     endif
 endif
 ifeq (${CXX}, cxx)
-	ifeq (${PLATFORM},TRU64)
-		CPP_OBJECTS = DECCXXDefs.$(TO)
-	endif
+    ifeq (${PLATFORM},TRU64)
+        CPP_OBJECTS = DECCXXDefs.$(TO)
+    endif
 endif
 
-
 include ../Makefile.util.submodule
-

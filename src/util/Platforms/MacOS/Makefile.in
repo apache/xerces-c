@@ -69,6 +69,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 MODULE = util
 SUBMODULE = Platforms/MacOS
@@ -79,9 +80,8 @@ include ../../../Makefile.incl
 CPP_PUBHEADERS = \
 	MacOSDefs.hpp \
 	MacOSPlatformUtils.hpp
-	
+
 CPP_OBJECTS = \
 	MacOSPlatformUtils.$(TO)
 
 include ../../Makefile.util.submodule
-

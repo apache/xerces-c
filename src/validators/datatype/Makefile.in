@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2001/07/06 17:12:11  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.10  2001/07/05 20:15:26  peiyongz
 # NOTATIONDatatypeValidator
 #
@@ -102,6 +105,7 @@ OSVER = @osver@
 USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
+THREADS = @threads@
 
 include ../../Makefile.incl
 

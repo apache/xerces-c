@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.40  2001/07/06 17:11:58  tng
+# Automatic build of single-threaded library.  By Martin Kalen.
+#
 # Revision 1.39  2001/06/27 17:08:30  tng
 # [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
 #
@@ -220,6 +223,7 @@ USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 NETACCESSOR = @netaccessor@
+THREADS = @threads@
 
 MODULE = util
 
