@@ -9,7 +9,13 @@
 
     <a>
 
-      <p>See <jump href="schema.html">the Schema page. </jump></p>
+      <p>The &XercesCName; &XercesCVersion; contains an implementation
+         of a subset of the W3C XML Schema Language as specified
+         in the 2 May 2001 Recommendation for <jump
+         href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
+         and <jump href="http://www.w3.org/TR/xmlschema-2/">
+         Datatypes</jump>.  See <jump href="schema.html">the Schema
+         page</jump> for details.</p>
 
     </a>
   </faq>
@@ -20,8 +26,14 @@
 
     <a>
 
-      <p> See <jump href="schema.html#supportedFeature">
-         supported schema features in &XercesCName; &XercesCVersion;</jump></p>
+      <p>The &XercesCName; &XercesCVersion; contains an implementation
+         of a subset of the W3C XML Schema Language as specified
+         in the 2 May 2001 Recommendation for <jump
+         href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
+         and <jump href="http://www.w3.org/TR/xmlschema-2/">
+         Datatypes</jump>.  You should not consider this implementation
+         complete or correct. Please refer to <jump href="schema.html#limitation">
+         the Schema Limitations </jump>for further details.</p>
 
     </a>
   </faq>

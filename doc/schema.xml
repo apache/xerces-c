@@ -2,13 +2,13 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 <s1 title="Schema">
        <s2 title="Disclaimer">
-		<p>Schema is not fully supported in &XercesCName; yet.  But an
+               <p>Schema is not fully supported in &XercesCName; yet.  But an
                experimental implementation of a subset of the W3C XML
                Schema language is now available for review in &XercesCName; &XercesCVersion;.
                You should not consider this implementation complete or
-			   correct. The limitations of this implementation are
-			   detailed below.  Please read this document before using
-			   &XercesCName; &XercesCVersion;.
+		correct. The limitations of this implementation are
+		detailed below.  Please read this document before using
+		&XercesCName; &XercesCVersion;.
                </p>
        </s2>
        <s2 title="Introduction">
@@ -29,99 +29,72 @@
                Xerces-C mailing list &XercesCEmailAddress; </jump> .
                </p>
        </s2>
+       <anchor name="limitation"/>
        <s2 title="Limitations">
                <p>The XML Schema implementation in the &XercesCName; &XercesCVersion; is a
                subset of the features defined in the 2 May 2001 XML Schema Recommendation.
                </p>
        </s2>
 
-       <anchor name="supportedFeature"/>
-       <s2 title='Features/Datatypes Supported'>
+       <s2 title='Features/Datatypes Not Supported'>
                <ul>
-                       <li>Partial Simple type support </li>
-                       <ul>
-                               <li> Yes: atomic simple type </li>
-                               <li> No: union and list </li>
-                       </ul>
-                       <li>Partial Complex type suppport </li>
-                       <ul>
-                                <li> Yes: choice, sequence </li>
-                                <li> No: group, all </li>
-                       </ul>
-                       <li>Element and Attribute Declaration </li>
-                       <ul>
-                                <li> No: any/anyAttribute </li>
-                       </ul>
-                       <li>SubsitutionGroup</li>
-                       <li>Subset of Built-in Datatypes</li>
+                       <li>Identity Constraints</li>
+                       <li>Particle Derivation Constraint Checking </li>
+                       <li>Built-in Datatypes Not Supported</li>
                        <ul>
                                 <li>Primitive Datatypes</li>
                                 <ul>
-                                      <li>string</li>
-                                      <li>boolean</li>
-                                      <li>decimal</li>
-                                      <li>hexbinary</li>
-                                      <li>base64binary</li>
-                                </ul>
-                                <li>Derived Datatypes</li>
-                                <ul>
-                                      <li>integer</li>
-                                </ul>
-                       </ul>
-                       <li>xsi Markup</li>
-                       <ul>
-                                <li>Yes: xsi:nil</li>
-                                <li>Yes: xsi:schemaLocation and xsi:noNamespaceSchemaLocation</li>
-                                <li>No: xsi:type</li>
-                       </ul>
-               </ul>
-
-
-               <p> Additional Experimental Features (not tested and subject to change, use as is)</p>
-               <ul>
-                       <li>Complex type derivation support (simpleContent and complexContent).</li>
-                       <li>Element and attribute re-use using "ref".</li>
-                       <li>Include support</li>
-                       <li>Import Support</li>
-                       <li>Element declaration &lt;any&gt;</li>
-                       <li>Subset of Built-in Datatypes</li>
-                       <ul>
-                                <li>Derived Datatypes</li>
-                                <ul>
-                                      <li>normalizedString</li>
-                                      <li>token</li>
-                                      <li>language</li>
-                                      <li>Name</li>
-                                      <li>NCName</li>
-                                      <li>NMTOKEN</li>
-                                      <li>NMTOKENS</li>
-                                      <li>ID</li>
-                                      <li>IDREF</li>
-                                      <li>IDREFS</li>
-                                      <li>ENTITY</li>
-                                      <li>ENTITIES</li>
-                                      <li>nonNegativeInteger</li>
+                                      <li>duration</li>
+                                      <li>dateTime</li>
+                                      <li>time</li>
+                                      <li>date</li>
+                                      <li>gYearMonth</li>
+                                      <li>gYear</li>
+                                      <li>gMonthDay</li>
+                                      <li>gDay</li>
+                                      <li>gMonth</li>
                                 </ul>
                        </ul>
                </ul>
 
 
-               <p>Other features in the Schema recommendation such as "redefine",
-               "identity constraints" and others which are not mentioned above, are not supported
-               yet. Also, particle and model group constraint checking is not yet fully implemented. But development is
-               continuing and we target to implement all the features of the current XML Schema
-               Recommendation before end of this year. Please note that the date is tentative and
-               subject to change.
+               <p>Development is ongoing and we target to implement all the features of the
+               current XML Schema Recommendation before end of this year. Please note that
+               the date is tentative and subject to change.
                </p>
        </s2>
 
        <s2 title="Other Limitations">
-               <p>The schema must be specified by the xsi:schemaLocation or
-               xsi:noNamespaceSchemaLocation attribute on the root
-               element of the document. The xsi prefix must be bound to the
-               Schema document instance namespace, as specified by the
-               Recommendation. See the sample provided in the Usage section.
-               </p>
+         <ul>
+            <li>No interface is provided for exposing the post-schema
+            validation infoset , beyond
+            that provided by DOM or SAX;</li>
+            <li> The parser permits situations in which there is
+            circular or multiple importing.  However, the parser only permits forward
+            references--that is, references directed from the
+            direction of the schema cited in the instance
+            document to other schemas.  For instance, if schema A
+            imports both schema B and schema C, then
+            any reference in schema B to an information item from
+            schema C will produce an error. Circular or multiple
+            &lt;include&gt;s have similar limitations.</li>
+            <li>Due to the way in which the parser constructs content
+            models for elements with complex content, specifying large
+            values for the <code>minOccurs</code> or <code>maxOccurs</code>
+            attributes may cause a stack overflow or very poor performance
+            in the parser.  Large values for <code>minOccurs</code> should be
+            avoided, and <code>unbounded</code> should be used instead of
+            a large value for <code>maxOccurs</code>.</li>
+            <li>The parsers contained in this package are able to read and
+            validate XML documents with the grammar specified in either
+            DTD or XML Schema format, but not both.</li>
+            <li>The schema is specified by the xsi:schemaLocation or
+            xsi:noNamespaceSchemaLocation attribute on the root
+            element of the document. The xsi prefix must be bound to the
+            Schema document instance namespace, as specified by the
+            Recommendation. See the sample provided in the
+            Usage section.</li>
+         </ul>
        </s2>
 
        <anchor name="usage"/>

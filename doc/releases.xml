@@ -20,8 +20,9 @@
              all, <br/>
              any, <br/>
              anyAttribute, <br/>
-             redefine, <br/>
              annotation, <br/>
+             notation, <br/>
+             redefine, <br/>
              circular import. <br/>
              Add AnySimpleTypeDatatypeValidator. <br/>
              Add XercesGroupInfo. <br/>
@@ -45,7 +46,7 @@
              XMLFloat, <br/>
              XMLInteger, <br/>
              XMLNumber, <br/>
-             XMLUri. <br/>
+             XMLUri.
         </td>
     </tr>
 
@@ -53,13 +54,33 @@
         <td>2001-10-19</td>
         <td>Tinny Ng</td>
         <td> Schema:<br/>
-             Support Unique Particle Attribution Constraint Checking, <br/>
-             xsi:type, <br/>
+             Support xsi:type, <br/>
+             Unique Particle Attribution Constraint Checking, <br/>
              anyAttribute in Scanner and Validator. <br/>
              Add XercesElementWildCard, <br/>
              AllContentModel, <br/>
-             XMLInternalErrorHandler. <br/>
-             Enable those derived dataype like nonPositiveinteger, negativeInteger ... etc.
+             XMLInternalErrorHandler.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-18</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 4015] IDDOMImplementation::createDocumentType hopelessly broken.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-16</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 3750] GeneralAttributeCheck threading bug.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-15</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 4177] setupRange uses non-portable code.
         </td>
     </tr>
 
@@ -102,7 +123,7 @@
     <tr>
         <td>2001-10-05</td>
         <td>PeiYong Zhang</td>
-        <td>[Bug 3831]: -1 returned from getIndex() needs to be checked.
+        <td>[Bug 3831] -1 returned from getIndex() needs to be checked.
         </td>
     </tr>
 
@@ -289,7 +310,7 @@
     </tr>
 
     <tr>
-        <td>2001-07-27</td>
+        <td>2001/07/27</td>
         <td>Tinny Ng</td>
         <td>Fix bug in 'transcode' functions reported by Evgeniy Gabrilovich.
         </td>

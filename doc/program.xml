@@ -38,7 +38,12 @@
       <ul>
         <li><link anchor="Motivation">Motivation behind new design</link></li>
         <li><link anchor="IDOMClassNames">Class Names</link></li>
-        <li><link anchor="IDOMObjMemMgmt">Objects and Memory Management</link></li>
+        <li><link anchor="IDOMObjMgmt">Objects Management</link></li>
+        <li><link anchor="IDOMMemMgmt">Memory Management</link></li>
+          <ul>
+            <li><link anchor="IDOMMemImplicit">Implicit Object Deletion</link></li>
+            <li><link anchor="IDOMMemExplicit">Explicit Object Deletion</link></li>
+          </ul>
         <li><link anchor="DOMStringXMCh">DOMString vs. XMLCh</link></li>
       </ul>
     </ul>
@@ -722,14 +727,11 @@ DOM_Text         someText;
       </source>
     </s3>
 
-    <anchor name="IDOMObjMemMgmt"/>
-    <s3 title="Objects and Memory Management">
-      <p>The C++ IDOM implementation no longer uses reference counting for
-         automatic memory management.  The storage for a DOM document is
-         associated with the document node object. Applications would use
-         normal C++ pointers to directly access the implementation objects
-         for Nodes in IDOM C++, while they would use object references in
-         DOM C++.
+    <anchor name="IDOMObjMgmt"/>
+    <s3 title="Objects Management">
+      <p>Applications would use normal C++ pointers to directly access the
+         implementation objects for Nodes in IDOM C++, while they would use
+         object references in DOM C++.
       </p>
 
       <p>Consider the following code snippets</p>
@@ -752,9 +754,15 @@ aNode = someDocument.createElement("ElementName");
 docRootNode = someDocument.getDocumentElement();
 docRootNode.appendChild(aNode);
       </source>
+   </s3>
 
 
-      <p>The IDOM C++ uses an independent storage allocator per document.
+    <anchor name="IDOMMemMgmt"/>
+    <s3 title="Memory Management">
+      <p>The C++ IDOM implementation no longer uses reference counting for
+         automatic memory management.  The C++ IDOM uses an independent storage
+         allocator per document.  The storage for a DOM document is
+         associated with the document node object.
          The advantage here is that allocation would require no synchronization
          in most cases (based on the the same threading model that we
          have now - one thread active per document, but any number of
@@ -776,34 +784,191 @@ docRootNode.appendChild(aNode);
          memory is automatically taken care of by the reference counting.
       </p>
 
-      <p>In C++ IDOM, there is an implict and explict object deletion. When parsing
-         a document using an IDOMParser, the storage allocated will be automatically
-         deleted when the parser instance is deleted (implicit). If a user is
-         manually building a DOM tree in memory using the document factory methods,
-         then the user needs to explicilty delete the document object to free all
-         allocated memory.
+      <p>In C++ IDOM, there is an implict and explict object deletion.
       </p>
+    </s3>
+
+    <anchor name="IDOMMemImplicit"/>
+      <s3 title="Implicit Object Deletion">
+         <p>When parsing a document using an IDOMParser, all memory allocated
+            for a DOM tree is associated to the DOM document.  And this storage
+            will be automatically deleted when the parser instance is deleted (implicit).
+         </p>
+         <p>If you do multiple parse using the same IDOMParser instance, then
+            multiple DOM documents will be generated and saved in a vector pool.
+            All these documents (and thus all the allocated memory) won't be deleted
+            until the parser instance is destroyed.  If you want to release the memory
+            back to the system but don't want to destroy the IDOMParser instance at this moment,
+            then you can call the method IDOMParser::resetDocumentPool to reset the document
+            vector pool, provided that you do not need access to these documents anymore.
+         </p>
+
+         <p>Consider the following code snippets: </p>
+
+         <source>
+   // C++ IDOM - implicit deletion
+   IDOMParser* parser = new IDOMParser();
+   parser->parse(xmlFile)
+   IDOM_Document *doc = parser->getDocument();
+
+   unsigned int i = 1000;
+   while (i > 0) {
+      parser->parse(xmlFile)
+      IDOM_Document* myDoc = parser->getDocument();
+      i--;
+   }
+
+   // all allocated memory associated with these 1001 DOM documents
+   // will be deleted implicitly when the parser instance is destroyed
+   delete parser;
+         </source>
+
+         <source>
+   // C++ IDOM - implicit deletion
+   // optionally release the memory
+   IDOMParser* parser = new IDOMParser();
+   unsigned int i = 1000;
+   while (i > 0) {
+      parser->parse(xmlFile)
+      IDOM_Document *doc = parser->getDocument();
+      i--;
+   }
+
+   // instead of waiting until the parser instance is destroyed,
+   // user can optionally choose to release the memory back to the system
+   // if does not need access to these 1000 parsed documents anymore.
+   parser->resetDocumentPool();
+
+   // now the parser has some fresh memory to work on for the following
+   // big loop
+   i = 1000;
+   while (i > 0) {
+      parser->parse(xmlFile)
+      IDOM_Document *doc = parser->getDocument();
+      i--;
+   }
+   delete parser;
+
+         </source>
+      </s3>
+
+    <anchor name="IDOMMemExplicit"/>
+      <s3 title="Explicit Object Deletion">
+      <p>If user is manually building a DOM tree in memory using the document factory methods,
+         then the user needs to explicilty delete the document object to free all the allocated memory.
+         It normally falls under the following 3 scenarios:
+      </p>
+        <ul>
+           <li>If a user is manually creating a DOM document using the document implementation
+               factory methods, IDOM_DOMImplementation::getImplementation()->createDocument,
+               then the user needs to explicilty delete the document object to free all
+               allocated memory. </li>
+           <li>If a user is creating a DocumentType object using the document implementation factory
+               method, IDOM_DOMImplementation::getImplementation()->createDocumentType, then
+               the user also needs to explicilty delete the document type object to free the
+               allocated memory.</li>
+           <li>Special case:  If a user is creating a DocumentType using the document
+               implementation factory method, and clone the node WITHOUT assigning a document
+               owner to that documentType object, then the cloned node also needs to be explicitly
+               deleted.</li>
+        </ul>
 
       <p>Consider the following code snippets: </p>
 
       <source>
 // C++ IDOM - explicit deletion
+// use the document implementation factory method to create a document type and a document
+IDOM_DocumentType* myDocType;
 IDOM_Document*   myDocument;
+IDOM_Node*       root;
 IDOM_Node*       aNode;
-myDocument = IDOM_DOMImplementation::getImplementation()->createDocument();
-aNode = myDocument->createElement("ElementName");
-myDocument->appendChild(aNode);
+
+myDocType  = IDOM_DOMImplementation::getImplementation()->createDocumentType(name, 0, 0);
+myDocument = IDOM_DOMImplementation::getImplementation()->createDocument(0, name, myDocType);
+root       = myDocument->getDocumentElement();
+aNode      = myDocument->createElement(anElementname);
+
+root->appendChild(aNode);
+
+// need to delete both myDocType and myDocument which are created through DOM Implementation
+delete myDocType;
 delete myDocument;
       </source>
 
       <source>
-// C++ DOM - implicit deletion
-IDOM_Document   myDocument;
-DOM_Node        aNode;
-myDocument = DOM_DOMImplementation::getImplementation().createDocument();
-aNode = myDocument.createElement("ElementName");
-myDocument.appendChild(aNode);
+// C++ IDOM - explicit deletion
+// use the document implementation factory method to create a document
+IDOM_DocumentType* myDocType;
+IDOM_Document*   myDocument;
+IDOM_Node*       root;
+IDOM_Node*       aNode;
+
+myDocument = IDOM_DOMImplementation::getImplementation()->createDocument();
+myDocType  = myDocument->createDocumentType(name);
+root       = myDocument->createElement(name);
+aNode      = myDocument->createElement(anElementname);
+
+myDocument->appendChild(myDocType);
+myDocument->appendChild(root);
+root->appendChild(aNode);
+
+// the myDocType is created through myDocument, not through Document Implementation
+// thus no need to delete myDocType
+delete myDocument;
       </source>
+
+      <source>
+// C++ IDOM - explicit deletion
+// manually build a DOM document
+// clone the document type object which does not have an owner yet
+IDOM_DocumentType* myDocType1;
+IDOM_DocumentType* myDocType;
+IDOM_Document*   myDocument;
+IDOM_Node*       root;
+IDOM_Node*       aNode;
+
+myDocType  = IDOM_DOMImplementation::getImplementation()->createDocumentType(name, 0, 0);
+myDocType1 = (IDOM_DocumentType*) myDocType->cloneNode(false);
+myDocument = IDOM_DOMImplementation::getImplementation()->createDocument(0, name, myDocType);
+
+root       = myDocument->getDocumentElement();
+aNode      = myDocument->createElement(anElementname);
+
+root->appendChild(aNode);
+
+// myDocType does not have an owner yet when myDocType1 was cloned.
+// thus need to explicitly delete myDocType1
+delete myDocType1;
+delete myDocType;
+delete myDocument;
+      </source>
+
+      <source>
+// C++ IDOM - explicit deletion
+// manually build a DOM document
+// clone the document type object that has an owner already
+//   thus no need to delete the cloned object
+IDOM_DocumentType* myDocType1;
+IDOM_DocumentType* myDocType;
+IDOM_Document*   myDocument;
+IDOM_Node*       root;
+IDOM_Node*       aNode;
+
+myDocType  = IDOM_DOMImplementation::getImplementation()->createDocumentType(name, 0, 0);
+myDocument = IDOM_DOMImplementation::getImplementation()->createDocument(0, name, myDocType);
+myDocType1 = (IDOM_DocumentType*) myDocType->cloneNode(false);
+
+root       = myDocument->getDocumentElement();
+aNode      = myDocument->createElement(anElementname);
+
+root->appendChild(aNode);
+
+// myDocType already has myDocument as the owner when myDocType1 was cloned
+// thus NO need to explicitly delete myDocType1
+delete myDocType;
+delete myDocument;
+      </source>
+      </s3>
 
       <p>Key points to remember when using the C++ IDOM classes:</p>
 
@@ -820,7 +985,6 @@ myDocument.appendChild(aNode);
         the IDOM parser when parsing an instance document.</li>
 
       </ul>
-    </s3>
 
     <anchor name="DOMStringXMCh"/>
     <s3 title="DOMString vs. XMLCh">

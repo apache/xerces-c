@@ -38,8 +38,8 @@
         <s3 title="Compliance">
             <p>Except for a couple of the very obscure (mostly related to
             the 'standalone' mode), this version should be quite compliant
-			to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also
-			tracks the latest changes to DOM, SAX and Namespace Specification.
+            to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also
+            tracks the latest changes to DOM, SAX and Namespace Specification.
             We have more than a thousand tests, some collected from various
             public sources and some IBM generated, which are used to do
             regression testing. The C++ parser is now passing all but a
@@ -68,60 +68,53 @@
     <s2 title="Changes required to migrate to &XercesCName; &XercesCVersion;">
 
         <p>There are some architectural changes between the &XercesCName;
-		&XercesPreCVersion; and the &XercesCName; &XercesCVersion; releases
-        of the parser, and as a result, some code has undergone restructuring
-		as shown below. </p>
+           &XercesPreCVersion; and the &XercesCName; &XercesCVersion; releases
+           of the parser, and as a result, some code has undergone restructuring
+           as shown below. </p>
 
         <anchor name="Reorganization"/>
         <s3 title="Validator directory Reorganization">
             <ul>
               <li>common content model files such as DFAContentModel ...
-			      are moved to a new directory called src/validators/common</li>
+                  are moved to a new directory called src/validators/common</li>
               <li>DTD related files are moved to a new directory called src/validators/DTD</li>
               <li>new directory src/validators/Datatype is created to store all datatype validators</li>
               <li>new directory src/validators/schema is created to store Schema related files</li>
-			</ul>
+            </ul>
         </s3>
 
         <anchor name="DTDValidator"/>
         <s3 title="DTDValidator">
-		    <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesPreCVersion;
-			    or earlier. In &XercesCName; &XercesCVersion;, this process is broken down into three components:
+            <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesPreCVersion;
+                or earlier. In &XercesCName; &XercesCVersion;, this process is broken down into three components:
             </p>
             <ul>
               <li>new class DTDScanner - to scan the DTD</li>
               <li>new class DTDGrammar - to store the DTD Grammar</li>
               <li>DTDValidator - to validate the DTD only</li>
-			</ul>
+            </ul>
         </s3>
 
     </s2>
 
     <anchor name="NewFeatures"/>
     <s2 title="New features in &XercesCName; &XercesCVersion;">
-        <p> Schema subset support is provided in this release. See
-		   <jump href="schema.html#supportedFeature">
-            supported schema features in &XercesCName; &XercesCVersion;.</jump>. An
-			experiemental IDOM is also available as well.
-		</p>
-
+        <p>Schema subset support and an experimental IDOM are available
+           in this release.
+        </p>
         <anchor name="Schema"/>
         <s3 title="Schema Subset Support">
             <ul>
-			  <li>Schema Subset support is added</li>
-			  <ul>
-                  <li>New function "setDoSchema" is added to DOM/SAX parser.</li>
-				  <li>New feature "http://apache.org/xml/features/validation/schema" is recognized by SAX2XMLReader.</li>
-                  <li>New classes such as SchemaValidator, TraverseSchema ... are added.</li>
-			      <li>The Scanner is enhanced to process schema.</li>
-			  </ul>
+              <li>New function "setDoSchema" is added to DOM/SAX parser.</li>
+              <li>New feature "http://apache.org/xml/features/validation/schema" is recognized by SAX2XMLReader.</li>
+              <li>New classes such as SchemaValidator, TraverseSchema ... are added.</li>
+              <li>The Scanner is enhanced to process schema.</li>
               <li>New sample data files personal-schema.xml and personal.xsd.</li>
               <li>New command line option "-s" for samples.</li>
-			</ul>
-			<p>
-			See <jump href="schema.html#usage">
-			Schema Usage</jump>
-			</p>
+            </ul>
+            <p>
+               See <jump href="schema.html">the Schema page</jump> for details.
+            </p>
         </s3>
 
         <anchor name="IDOM"/>
@@ -138,8 +131,8 @@
 
     <s2 title="Migration Archive">
 
-       <p> For migration information from XML4C 2.x to &XercesCName; &XercesPreCVersion;,
-	   please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
+       <p>For migration information from XML4C 2.x to &XercesCName; &XercesPreCVersion;,
+          please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
 
