@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/06/17 02:00:55  rahulj
+ * Also pass any PI's, comment's, character's occuring before root
+ * element to the registered document Handler. Defect identified
+ * by John Smirl and Rich Taylor.
+ *
  * Revision 1.11  2000/05/15 22:31:18  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -507,10 +512,6 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
                                 , const unsigned int    length
                                 , const bool            cdataSection)
 {
-    // SAX don't want to know about chars before content
-    if (!fElemDepth)
-        return;
-
     // Just map to the SAX document handler
     if (fDocHandler)
         fDocHandler->characters(chars, length);
@@ -526,10 +527,6 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
 
 void SAXParser::docComment(const XMLCh* const commentText)
 {
-    // SAX don't want to know about comments before content
-    if (!fElemDepth)
-        return;
-
     //
     //  SAX has no way to report this. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
@@ -551,10 +548,6 @@ void SAXParser::XMLDecl(const   XMLCh* const
 void SAXParser::docPI(  const   XMLCh* const    target
                         , const XMLCh* const    data)
 {
-    // SAX don't want to know about PIs before content
-    if (!fElemDepth)
-        return;
-
     // Just map to the SAX document handler
     if (fDocHandler)
         fDocHandler->processingInstruction(target, data);
@@ -621,10 +614,6 @@ void SAXParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const unsigned int    length
                                     , const bool            cdataSection)
 {
-    // SAX don't want to know about space before content
-    if (!fElemDepth)
-        return;
-
     // Just map to the SAX document handler
     if (fDocHandler)
         fDocHandler->ignorableWhitespace(chars, length);
