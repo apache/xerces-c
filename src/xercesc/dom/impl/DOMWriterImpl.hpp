@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2002/12/09 11:46:08  gareth
+ * More pretty pretty print feature. Patch by Kevin King. Closes bug #13840.
+ *
  * Revision 1.8  2002/11/04 15:07:35  tng
  * C++ Namespace Support.
  *
@@ -390,8 +393,13 @@ private:
                                            , bool      val);
     bool                          getFeature(const int featureId) const;
 
-    void                          printNewLine() const;
+    void                          printNewLine();
     void                          setURCharRef();
+
+
+    void printIndent(int level) const;
+    //does the actual work for processNode while keeping track of the level
+    void processNode(const DOMNode* const nodeToWrite, int level);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -427,6 +435,10 @@ private:
     //      treat as fatal. And the serializer will return true/false
     //      based on this value.
     //
+    //  fCurrentLine
+    //      the current line. Used to track the line number the current 
+    //      node begins on      
+    //
     // -----------------------------------------------------------------------
 
     int                           fFeatures;
@@ -440,6 +452,7 @@ private:
     const XMLCh                  *fNewLineUsed;
     XMLFormatter                 *fFormatter;
     int                           fErrorCount;
+    int                           fCurrentLine;
 };
 
 inline void DOMWriterImpl::setFeature(const int featureId

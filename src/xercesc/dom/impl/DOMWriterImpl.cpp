@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2002/12/09 11:46:08  gareth
+ * More pretty pretty print feature. Patch by Kevin King. Closes bug #13840.
+ *
  * Revision 1.21  2002/12/02 23:08:09  peiyongz
  * fix to bug#14528: output n+1 cdatasection
  *
@@ -416,6 +419,7 @@ DOMWriterImpl::DOMWriterImpl()
 ,fNewLineUsed(0)
 ,fFormatter(0)
 ,fErrorCount(0)
+,fCurrentLine(0)
 {
     //
     // set features to default setting
@@ -712,22 +716,15 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 //    "split_cdata_section"  true                      --- char ref
 //                           false                     ---      ERROR
 //
-
-//
-// REVISIT
-//    FormatPrettyPrint requires proper indentation, newline, and etc.
-//    currently we partially support this feature by adding new line to
-//    xmldecl, doctype and root element, later on we need to work on
-//    other nodes, such as element, attribute and so on.
-//
-
 // ---------------------------------------------------------------------------
 //  Stream out a DOM node, and, recursively, all of its children. This
 //  function is the heart of writing a DOM tree out as XML source. Give it
 //  a document node and it will do the whole thing.
 // ---------------------------------------------------------------------------
-void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
+
+void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 {
+
     // Get the name and value out for convenience
     const XMLCh*    nodeName = nodeToWrite->getNodeName();
     const XMLCh*    nodeValue = nodeToWrite->getNodeValue();
@@ -740,6 +737,13 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
 				break;
 
+            //skip ws if pretty print
+            if (getFeature(FORMAT_PRETTY_PRINT_ID))
+            {
+                if(XMLString::isAllWhiteSpace(nodeValue))
+                    break;
+            }
+             
 			setURCharRef();      // character data
             fFormatter->formatBuf(nodeValue, lent, XMLFormatter::CharEscapes);
             break;
@@ -791,7 +795,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
             DOMNode *child = nodeToWrite->getFirstChild();
             while( child != 0)
             {
-                processNode(child);
+                processNode(child, level);
                 printNewLine();
                 child = child->getNextSibling();
             }
@@ -800,13 +804,29 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
 	case DOMNode::ELEMENT_NODE:
         {
+            level++;
+
+            //Add an extra blank line for level 0 nodes 
+            if(level == 0)   
+                printNewLine();
+
+            printNewLine();  
+
+            //track the line number the current node begins on
+            int nodeLine = fCurrentLine;
+
 			DOMNodeFilter::FilterAction filterAction = checkFilter(nodeToWrite);
 			
 			if ( filterAction == DOMNodeFilter::FILTER_REJECT)
+            {
+               level--;
 				break;
+            }
 
 			if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)
 			{
+                printIndent(level); 
+
 				//           this element    attributes   child elements
                 // accept        yes             yes           yes
 				// skip          no              no            yes
@@ -883,18 +903,30 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
                 while( child != 0)
                 {
-                    processNode(child);
+                    processNode(child, level);
                     child = child->getNextSibling();
                 }
 
 				if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
 				{
+                    //if we are not on the same line as when we started
+                    //this node then print a new line and indent
+                    if(nodeLine != fCurrentLine)
+                    {
+                        printNewLine();
+                        printIndent(level);
+                    }
 					TRY_CATCH_THROW
 					(
                          *fFormatter << XMLFormatter::NoEscapes << gEndElement
                                      << nodeName << chCloseAngle;
                         ,true
 	                )
+
+                    //for level 1 nodes that span multiple lines, add an extra blank line
+                    if(nodeLine != fCurrentLine && level == 1)
+                        printNewLine();
+                    
 				}
             }
             else
@@ -912,6 +944,9 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 				    )
 				}
             }
+
+            level--;
+ 
             break;
         }
 
@@ -951,7 +986,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
                     child != 0;
                     child = child->getNextSibling())
                     {
-                        processNode(child);
+                        processNode(child, level);
                     }
                 }
                 else
@@ -1354,6 +1389,13 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
             }
         }
     }
+
+
+}
+
+void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
+{
+    processNode(nodeToWrite, -1);
 }
 
 bool DOMWriterImpl::canSetFeature(const int featureId
@@ -1362,10 +1404,22 @@ bool DOMWriterImpl::canSetFeature(const int featureId
     return featuresSupported[2*featureId + (val? 0: 1)];
 }
 
-void DOMWriterImpl::printNewLine() const
+void DOMWriterImpl::printNewLine() 
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
+    {
+        fCurrentLine++;
         *fFormatter << fNewLineUsed;
+}
+}
+
+void DOMWriterImpl::printIndent(int level) const
+{
+    if (getFeature(FORMAT_PRETTY_PRINT_ID))
+    {
+        for(int i = 0; i < level; i++)
+            *fFormatter << chSpace << chSpace;
+    }
 }
 
 void DOMWriterImpl::release()
