@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/02 15:04:52  amassari
+ * openFile was opening the file for read and write, while only read was required (bug#20169)
+ *
  * Revision 1.14  2003/10/01 16:32:39  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -305,7 +308,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 		 XMLExcepts::CPtr_PointerIsZero);
     const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
     ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
-    FileHandle retVal = (FileHandle)fopen( tmpFileName , "r+" );
+    FileHandle retVal = (FileHandle)fopen( tmpFileName , "r" );
     return retVal;
 }
 
@@ -314,7 +317,7 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     if (fileName == NULL)
 	ThrowXML(XMLPlatformUtilsException,
 		 XMLExcepts::CPtr_PointerIsZero);
-    FileHandle retVal = (FileHandle)fopen( fileName , "r+" );
+    FileHandle retVal = (FileHandle)fopen( fileName , "r" );
     return retVal;
 }
 
