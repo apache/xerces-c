@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/18 00:47:01  rahulj
+ * Merged in some changes for OS390.
+ *
  * Revision 1.3  1999/12/17 01:28:53  rahulj
  * Merged in changes submitted for UnixWare 7 port. Platform
  * specific files are still missing.
@@ -102,6 +105,9 @@
     #define XML_UNIX
 #elif defined(__MVS__)
     #define XML_OE390
+    #define XML_UNIX
+#elif defined(EXM_OS390)
+    #define XML_OS390
     #define XML_UNIX
 #elif defined(AS400)
     #define XML_AS400
@@ -170,6 +176,8 @@
 #elif defined(__linux__)
     #define XML_GCC
 #elif defined(__MVS__) && defined(__cplusplus)
+    #define XML_MVSCPP
+#elif define(XML_OS390) && defined(__cplusplus)
     #define XML_MVSCPP
 #elif defined(__IBMCPP__)
     #if defined(XML_WIN32)

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:38  twl
- * Initial revision
+ * Revision 1.2  1999/12/18 00:47:01  rahulj
+ * Merged in some changes for OS390.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:38  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:31  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -79,7 +82,7 @@
 #include    <stdlib.h>
 #include    <errno.h>
 #include    <libgen.h>
-#include    <sys/timeb.h>
+#include    <timeb.h>
 #include    <string.h>
 #include    <unistd.h>
 #include    <util/XMLString.hpp>
