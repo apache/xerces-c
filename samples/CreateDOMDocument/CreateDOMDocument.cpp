@@ -144,6 +144,7 @@ int main(int argC, char* argV[])
     }
 
     // Watch for special case help request
+    int errorCode = 0;
     if (argC > 1)
     {
         XERCES_STD_QUALIFIER cout << "\nUsage:\n"
@@ -151,8 +152,11 @@ int main(int argC, char* argV[])
                 "This program creates a new DOM document from scratch in memory.\n"
                 "It then prints the count of elements in the tree.\n"
              <<  XERCES_STD_QUALIFIER endl;
+        errorCode = 1;
+    }
+    if(errorCode) {
         XMLPlatformUtils::Terminate();
-        return 1;
+        return errorCode;
     }
 
     {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/08/07 21:21:38  neilg
+ * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
+ *
  * Revision 1.16  2003/05/30 09:36:36  gareth
  * Use new macros for iostream.h and std:: issues.
  *
@@ -200,6 +203,9 @@ static void usage()
 // ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
+    // cannot return out of catch-blocks lest exception-destruction
+    // result in calls to destroyed memory handler!
+    int errorCode = 0;
     // Initialize the XML4C system
     try
     {
@@ -210,9 +216,12 @@ int main(int argC, char* argV[])
     {
          XERCES_STD_QUALIFIER cerr   << "Error during initialization! Message:\n"
                 << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
-         XMLPlatformUtils::Terminate();
-         return 1;
+         errorCode = 1;
     }
+    if(errorCode) {
+        XMLPlatformUtils::Terminate();
+        return errorCode;
+    } 
 
     // Check command line and extract arguments.
     // We only have one required parameter, which is the file to process
@@ -233,13 +242,12 @@ int main(int argC, char* argV[])
         XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << argV[1] << "'\n"
              << "Exception message is:  \n"
              << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
-        XMLPlatformUtils::Terminate();
-        return 3;
+        errorCode = 3;
     }
 
     XMLPlatformUtils::Terminate();
 
-	return 0;
+	return errorCode;
 }
 
 void process(char* const xmlFile)

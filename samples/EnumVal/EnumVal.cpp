@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/08/07 21:21:38  neilg
+ * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
+ *
  * Revision 1.20  2003/05/30 09:36:35  gareth
  * Use new macros for iostream.h and std:: issues.
  *
@@ -225,7 +228,6 @@ int main(int argC, char* argV[])
     {
          XERCES_STD_QUALIFIER cerr   << "Error during initialization! Message:\n"
                 << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
-         XMLPlatformUtils::Terminate();
          return 1;
     }
 
@@ -263,6 +265,7 @@ int main(int argC, char* argV[])
     //  Get the starting time and kick off the parse of the indicated
     //  file. Catch any exceptions that might propogate out of it.
     //
+    int errorCode = 0;
     try
     {
         parser->parse(xmlFile);
@@ -274,8 +277,11 @@ int main(int argC, char* argV[])
         XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
              << "Exception message is:  \n"
              << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+        errorCode = 4;
+    }
+    if(errorCode) {
         XMLPlatformUtils::Terminate();
-        return 4;
+        return errorCode;
     }
 
     if (!errorCount) {

@@ -75,6 +75,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.9  2003/08/07 21:21:38  neilg
+ * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
+ *
  * Revision 1.8  2003/05/30 09:36:35  gareth
  * Use new macros for iostream.h and std:: issues.
  *
@@ -178,6 +181,7 @@ int main(int argc, char* args[])
     //
     unsigned long duration;
     int errorCount = 0;
+    int errorCode = 0;
     try
     {
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
@@ -192,8 +196,12 @@ int main(int argc, char* args[])
         XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
                 << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+        errorCode = 4;
+    }
+
+    if(errorCode) {
         XMLPlatformUtils::Terminate();
-        return 4;
+        return errorCode;
     }
 
     // Print out the stats that we collected and time taken.
