@@ -80,7 +80,6 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
-#include <xercesc/util/StringPool.hpp>
 
 class SchemaInfo
 {
@@ -115,7 +114,6 @@ public:
                const unsigned int namespaceScopeLevel,
                XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
-               XMLStringPool* const stringPool,
                const DOMElement* const root);
     ~SchemaInfo();
 
@@ -186,7 +184,6 @@ private:
     unsigned int                      fNamespaceScopeLevel;
     XMLCh*                            fCurrentSchemaURL;
     const XMLCh*                      fTargetNSURIString;
-    XMLStringPool*                    fStringPool;
     const DOMElement*                 fSchemaRootElement;
     RefVectorOf<SchemaInfo>*          fIncludeInfoList;
     RefVectorOf<SchemaInfo>*          fImportedInfoList;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/06/21 11:52:24  knoaman
+ * cleanup
+ *
  * Revision 1.6  2002/05/27 20:23:48  knoaman
  * Performance: lazily store top-level components to eliminate unnecessary traversal
  * of DOM tree when looking up for a top level component.
@@ -114,7 +117,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const unsigned int namespaceScopeLevel,
                        XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
-                       XMLStringPool* const stringPool,
                        const DOMElement* const root)
     : fAdoptInclude(false)
     , fProcessed(false)
@@ -126,7 +128,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fNamespaceScopeLevel(namespaceScopeLevel)
     , fCurrentSchemaURL(schemaURL)
     , fTargetNSURIString(targetNSURIString)
-    , fStringPool(stringPool)
     , fSchemaRootElement(root)
     , fIncludeInfoList(0)
     , fImportedInfoList(0)

@@ -375,7 +375,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     SchemaInfo* currInfo = new SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                           fNamespaceScope->increaseDepth(),
                                           XMLString::replicate(schemaURL),
-                                          fTargetNSURIString, fStringPool, schemaRoot);
+                                          fTargetNSURIString, schemaRoot);
 
     if (fSchemaInfo) {
         fSchemaInfo->addSchemaInfo(currInfo, SchemaInfo::IMPORT);
@@ -558,7 +558,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
             fSchemaInfo = new SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                          fNamespaceScope->increaseDepth(),
                                          XMLString::replicate(includeURL),
-                                         fTargetNSURIString, fStringPool, root);
+                                         fTargetNSURIString, root);
 
             fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(),
                                  fSchemaInfo->getTargetNSURI(), fSchemaInfo);
@@ -7262,7 +7262,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         fSchemaInfo = new SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                      fNamespaceScope->increaseDepth(),
                                      XMLString::replicate(includeURL),
-                                     fTargetNSURIString, fStringPool, root);
+                                     fTargetNSURIString, root);
 
         traverseSchemaHeader(root);
         fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
