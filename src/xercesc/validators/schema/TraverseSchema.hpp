@@ -435,6 +435,9 @@ private:
                                   const XMLCh* const elemName,
                                   const bool toEmit = true);
 
+    bool isSubstitutionGroupCircular(SchemaElementDecl* const elemDecl,
+                                     SchemaElementDecl* const subsElemDecl);
+
     /**
       * Create a 'SchemaElementDecl' object and add it to SchemaGrammar
       */
@@ -761,7 +764,6 @@ private:
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*                    fRedefineComponents;
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
-    RefHash2KeysTableOf<SchemaElementDecl>*        fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
     RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
     RefHashTableOf<ElemVector>*                    fIC_ElementsNS;

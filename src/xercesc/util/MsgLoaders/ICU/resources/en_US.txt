@@ -164,6 +164,8 @@ en_US {
 		"An <annotation> can only contain <appinfo> and <documentation> elements " ,
 		"Invalid facet name: {0} " ,
 		"The root element name of an XML Schema should be 'schema'. " ,
+		"Circular substitution groups are disallowed for element '{0}'. " ,
+		"For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false. " ,
 		"E End " ,
 		"F Start " , 
 		"Expected comment or CDATA " ,

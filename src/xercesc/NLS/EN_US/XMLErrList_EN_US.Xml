@@ -169,6 +169,8 @@
             <Message Id="InvalidAnnotationContent" Text="An &lt;annotation&gt; can only contain &lt;appinfo&gt; and &lt;documentation&gt; elements"/>
             <Message Id="InvalidFacetName" Text="Invalid facet name: {0}"/>
             <Message Id="InvalidXMLSchemaRoot" Text="The root element name of an XML Schema should be 'schema'."/>
+            <Message Id="CircularSubsGroup" Text="Circular substitution groups are disallowed for element '{0}'."/>
+            <Message Id="SubsGroupMemberAbstract" Text="For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false."/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
