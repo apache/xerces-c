@@ -90,21 +90,21 @@ public:
     // -----------------------------------------------------------------------
 	//facets
 	enum {
-        FACET_LENGTH       = 1,
-        FACET_MINLENGTH    = 1<<1,
-        FACET_MAXLENGTH    = 1<<2,
-        FACET_PATTERN      = 1<<3,
-        FACET_ENUMERATION  = 1<<4,
-        FACET_MAXINCLUSIVE = 1<<5,
-        FACET_MAXEXCLUSIVE = 1<<6,
-        FACET_MININCLUSIVE = 1<<7,
-        FACET_MINEXCLUSIVE = 1<<8,
-        FACET_PRECISSION   = 1<<9,
-        FACET_SCALE        = 1<<10,
-        FACET_ENCODING     = 1<<11,
-        FACET_DURATION     = 1<<12,
-        FACET_PERIOD       = 1<<13,
-        FACET_WHITESPACE   = 1<<14
+        FACET_LENGTH         = 1,
+        FACET_MINLENGTH      = 1<<1,
+        FACET_MAXLENGTH      = 1<<2,
+        FACET_PATTERN        = 1<<3,
+        FACET_ENUMERATION    = 1<<4,
+        FACET_MAXINCLUSIVE   = 1<<5,
+        FACET_MAXEXCLUSIVE   = 1<<6,
+        FACET_MININCLUSIVE   = 1<<7,
+        FACET_MINEXCLUSIVE   = 1<<8,
+        FACET_TOTALDIGITS    = 1<<9,
+        FACET_FRACTIONDIGITS = 1<<10,
+        FACET_ENCODING       = 1<<11,
+        FACET_DURATION       = 1<<12,
+        FACET_PERIOD         = 1<<13,
+        FACET_WHITESPACE     = 1<<14
     };
 
     //2.4.2.6 whiteSpace - Datatypes
