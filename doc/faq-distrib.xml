@@ -144,8 +144,8 @@ options are:  -s &lt;source_directory&gt;
               -t &lt;transcoder&gt; can be 'icu' or 'native'
               -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
               -h to get help on these commands
-Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
-                                 -o$HOME/xerces-c_1_0_0
+Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
+                                 -o$HOME/&XercesCInstallDir;
                                  -cgcc -xg++ -minmem
                                  -nfileonly -tnative</source>
 

@@ -103,7 +103,7 @@
 		   </p>
 
            <ul>
-		       <li> xerces-c-src1_5_1\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg </li>
+		       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg </li>
     	   </ul>
 
 		   <p> Each project in the group refers a directory belog \Xerces-all.
@@ -111,7 +111,7 @@
            </p>
 
            <ul>
-    	       <li> xerces-c-src1_5_1\Projects\Win32\BCB5\Xerces-all\XercesLib </li>
+    	       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB5\Xerces-all\XercesLib </li>
 		   </ul>
 
            <p> To build any project, open the project manager.  Double click on the project
@@ -356,7 +356,7 @@ export LIBS=" -lpthread "
 configure
 
 If the result of the above commands look OK to you, go to the directory
-/home/build/linux_xml4c/xerces-c-src1_5_2/src and type "gmake" to make the XERCES-C system.</source>
+$HOME/&XercesCSrcInstallDir;/src and type "gmake" to make the XERCES-C system.</source>
 
 <note>The error message concerning <code>conf.h</code>
 is NOT an indication of a problem. This code has been inserted to make it
