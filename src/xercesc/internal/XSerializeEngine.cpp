@@ -57,8 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.2  2003/09/19 16:04:01  peiyongz
- * Resolve compilation error on 64bit platform (can convert (void* const) to int).
+ * Revision 1.3  2003/09/23 18:11:29  peiyongz
+ * Using HashPtr
  *
  * Revision 1.1  2003/09/18 18:31:24  peiyongz
  * OSU: Object Serialization Utilities
@@ -73,6 +73,8 @@
 #include <xercesc/internal/XSerializeEngine.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/internal/XProtoType.hpp>
+
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -142,7 +144,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fBufCur(fBufStart)
 ,fBufEnd(fBufStart+bufSize)
 ,fBufLoadMax(0)
-,fStorePool( new (fMemoryManager) RefHashTableOf<XSerializedObjectId>(29, true,  fMemoryManager) )
+,fStorePool( new (fMemoryManager) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), fMemoryManager) )
 ,fLoadPool(0)
 ,fObjectCount(0)
 {
@@ -182,7 +184,7 @@ void XSerializeEngine::write(XSerializable* const objectToWrite)
     ensureStoring();
     //don't ensurePointer here !!!
 
-    XSerializedObjectId_t   objIndex;
+    XSerializedObjectId_t   objIndex = 0;
 
 	if (!objectToWrite)  // null pointer
 	{
@@ -625,12 +627,9 @@ XSerializeEngine& XSerializeEngine::operator>>(double& d)
 XSerializeEngine::XSerializedObjectId_t 
 XSerializeEngine::lookupStorePool(void* const objToLookup) const
 {
-    XSerializedObjectId* data = fStorePool->get(objToLookup);
-
-    if (!data)
-        return 0;   //indicating object is not in the StorePool
-    else
-        return data->getValue();
+    //0 indicating object is not in the StorePool
+    XSerializedObjectId* data = fStorePool->get(objToLookup);   
+    return (XSerializeEngine::XSerializedObjectId_t) (data ? data->getValue() : 0);
 
 }
 
