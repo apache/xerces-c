@@ -28,6 +28,9 @@
     <anchor name="NewFeatures220"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
+        <li>C++ Namespace Support</li>
+        <li>Schema 1.0 Errata Implementation</li>
+        <li>Experimental Implementation of XML 1.1</li>
         <li>More DOM L3 Core Support:</li>
         <ul>
             <li>DOMNode: baseURI</li>
@@ -36,17 +39,14 @@
         </ul>
         <li>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
         to load the default error text message for the correspond Exception Code.</li>
-        <li>XML 1.1</li>
-        <li>Schema Errata</li>
-        <li>C++ Namespace Support</li>
-        <li>ICU Message Loader, and Message Catalog Message Loader</li>
         <li>New feature XMLPlatformUtils::Initialize(const char* const locale) to set
         the locale for message loader.   See <jump href="program-others.html#SpecifylocaleforMessageLoader">
         Specify locale for Message Loader</jump> for details</li>
+        <li>Support Build with ICU Message Loader, or Message Catalog Message Loader</li>
+        <li>RPM for Linux</li>
         <li>390: Uniconv390 support</li>
         <li>390: support record-oriented MVS datasets with the DOM Level 3 serialization APIs</li>
         <li>Support for Linux/390</li>
-        <li>RPM for Linux</li>
         <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
       </ul>
     </s3>
@@ -90,6 +90,13 @@
               <li>Added XMLUri::getUriText to return the URI as a string specification.</li>
               <li>Add XMLString::fixURI to transform an absolute path filename to standard URI form.</li>
               <li>Added XMLString::equals for faster string comparison.</li>
+              <li>To allow users to tell the parser to force standard uri conformance,
+                  the following are added:</li>
+                <ul>
+                  <li>XercesDOMParser/DOMParser/SAXParser: get/setStandardUriConformant</li>
+                  <li>and DOMBuilder/SAX2XMLReader will recognize the feature
+                      http://apache.org/xml/features/standard-uri-conformant</li>
+                </ul>
             </ul>
         </s4>
 
