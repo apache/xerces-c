@@ -261,7 +261,7 @@ DOMDocument * DOMDocumentImpl::getOwnerDocument() const {
 
 DOMAttr *DOMDocumentImpl::createAttribute(const XMLCh *nam)
 {
-    if(!isXMLName(nam))
+    if(!nam || !isXMLName(nam))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     return new (this, DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(this,nam);
 };
@@ -290,7 +290,7 @@ DOMDocumentFragment *DOMDocumentImpl::createDocumentFragment()
 
 DOMDocumentType *DOMDocumentImpl::createDocumentType(const XMLCh *nam)
 {
-    if (!isXMLName(nam))
+    if (!nam || !isXMLName(nam))
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
@@ -304,7 +304,7 @@ DOMDocumentType *
                                      const XMLCh *publicId,
                                      const XMLCh *systemId)
 {
-    if (!isXMLName(qualifiedName))
+    if (!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
@@ -315,7 +315,7 @@ DOMDocumentType *
 
 DOMElement *DOMDocumentImpl::createElement(const XMLCh *tagName)
 {
-    if(!isXMLName(tagName))
+    if(!tagName || !isXMLName(tagName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
 
     return new (this, DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(this,tagName);
@@ -332,7 +332,7 @@ DOMElement *DOMDocumentImpl::createElementNoCheck(const XMLCh *tagName)
 
 DOMEntity *DOMDocumentImpl::createEntity(const XMLCh *nam)
 {
-    if (!isXMLName(nam))
+    if (!nam || !isXMLName(nam))
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
@@ -343,7 +343,7 @@ DOMEntity *DOMDocumentImpl::createEntity(const XMLCh *nam)
 
 DOMEntityReference *DOMDocumentImpl::createEntityReference(const XMLCh *nam)
 {
-    if (!isXMLName(nam))
+    if (!nam || !isXMLName(nam))
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
@@ -354,7 +354,7 @@ DOMEntityReference *DOMDocumentImpl::createEntityReference(const XMLCh *nam)
 
 DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
 {
-    if (!isXMLName(nam))
+    if (!nam || !isXMLName(nam))
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
@@ -366,7 +366,7 @@ DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
 DOMProcessingInstruction *DOMDocumentImpl::createProcessingInstruction(
                                           const XMLCh *target, const XMLCh *data)
 {
-    if(!isXMLName(target))
+    if(!target || !isXMLName(target))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     return new (this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(this,target,data);
 };
@@ -431,6 +431,10 @@ DOMNode *DOMDocumentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
         )
         throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
 
+    // if the newChild is a documenttype node created from domimplementation, set the ownerDoc first
+    if ((newChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) && !newChild->getOwnerDocument())
+        ((DOMDocumentTypeImpl*)newChild)->setOwnerDocument(this);
+
     fParent.insertBefore(newChild,refChild);
 
     // If insert succeeded, cache the kid appropriately
@@ -443,6 +447,18 @@ DOMNode *DOMDocumentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
 };
 
 
+DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
+    if(oldChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
+        fDocType=0;
+
+    insertBefore(newChild, oldChild);
+    // changed() already done.
+
+    if(oldChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
+        return fParent.removeChild(oldChild);
+    else
+        return removeChild(oldChild);
+}
 
 bool DOMDocumentImpl::isXMLName(const XMLCh *s)
 {
@@ -493,7 +509,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep)
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
     const XMLCh *qualifiedName)
 {
-    if(!isXMLName(qualifiedName))
+    if(!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     //XMLCh * pooledTagName = this->fNamePool->getPooledString(qualifiedName);
     return new (this, DOMDocumentImpl::ELEMENT_NS_OBJECT) DOMElementNSImpl(this, fNamespaceURI, qualifiedName);
@@ -504,7 +520,7 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
                                               const XMLSSize_t lineNo,
                                               const XMLSSize_t columnNo)
 {
-    if(!isXMLName(qualifiedName))
+    if(!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
 
     return new (this) XSDElementNSImpl(this, fNamespaceURI, qualifiedName, lineNo, columnNo);
@@ -514,7 +530,7 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
 DOMAttr *DOMDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
     const XMLCh *qualifiedName)
 {
-    if(!isXMLName(qualifiedName))
+    if(!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     return new (this, DOMDocumentImpl::ATTR_NS_OBJECT) DOMAttrNSImpl(this, fNamespaceURI, qualifiedName);
 }
@@ -667,8 +683,6 @@ int             DOMDocumentImpl::changes() const{
            DOMNode*         DOMDocumentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
            bool             DOMDocumentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
            void             DOMDocumentImpl::normalize()                             {fParent.normalize (); };
-           DOMNode*         DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                                     {return fParent.replaceChild (newChild, oldChild); };
            bool             DOMDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
                                                                                      {return fNode.isSupported (feature, version); };
            void             DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
