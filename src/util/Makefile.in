@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.44  2001/08/16 21:54:16  peiyongz
+# new class creation
+#
 # Revision 1.43  2001/08/10 16:42:33  peiyongz
 # XMLUri Added
 #
@@ -347,6 +350,8 @@ UTIL_CPP_PUBHEADERS = \
     XMLBigInteger.hpp \
     XMLDouble.hpp \
     XMLChTranscoder.hpp \
+    XMLInteger.hpp \
+    XMLHashCMStateSet.hpp \
     XMLIBM1140Transcoder.hpp \
     XMLDeleterFor.hpp \
     XMLEBCDICTranscoder.hpp \
