@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/13 21:24:20  peiyongz
+ * 1. returned data to contain datatype in addition to value
+ * 2. registry to map type name (in string) to type name enum
+ *
  * Revision 1.10  2004/09/09 20:08:31  peiyongz
  * Using new error code
  *
@@ -156,6 +160,9 @@ static XMLRegisterCleanup XSValueMutexCleanup;
 static RegularExpression* sXSValueRegEx = 0;
 static XMLRegisterCleanup XSValueRegExCleanup;
 
+RefHashTableOf<XSValue>*  XSValue::fDataTypeRegistry = 0;
+static XMLRegisterCleanup XSValueRegistryCleanup;
+
 static XMLMutex& gXSValueMutex()
 {
     if (!sXSValueMutext)
@@ -201,6 +208,80 @@ static RegularExpression* getRegEx()
     return sXSValueRegEx;
 }
 
+XSValue::DataType  XSValue::getDataType(const XMLCh* const dtString)
+{
+
+    if (!fDataTypeRegistry)
+    {
+	    // Lock the mutex
+	    XMLMutexLock lockInit(&gXSValueMutex());
+
+        if (!fDataTypeRegistry)
+		{
+            try {
+                //using the XMLPlatformUtils::fgMemoryManager
+                fDataTypeRegistry  = new RefHashTableOf<XSValue>(43, true, new HashXMLCh() );
+
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_STRING,             new  XSValue(dt_string));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN,            new  XSValue(dt_boolean));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,            new  XSValue(dt_decimal));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,              new  XSValue(dt_float));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,             new  XSValue(dt_double));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DURATION,           new  XSValue(dt_duration));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DATETIME,           new  XSValue(dt_dateTime));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_TIME,               new  XSValue(dt_time));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DATE,               new  XSValue(dt_date));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_YEARMONTH,          new  XSValue(dt_gYearMonth));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_YEAR,               new  XSValue(dt_gYear));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_MONTHDAY,           new  XSValue(dt_gMonthDay));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_DAY,                new  XSValue(dt_gDay));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_MONTH,              new  XSValue(dt_gMonth));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY,          new  XSValue(dt_hexBinary));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,       new  XSValue(dt_base64Binary));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,             new  XSValue(dt_anyURI));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_QNAME,              new  XSValue(dt_QName));
+                fDataTypeRegistry->put((void*) XMLUni::fgNotationString,               new  XSValue(dt_NOTATION));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NORMALIZEDSTRING,   new  XSValue(dt_normalizedString));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_TOKEN,              new  XSValue(dt_token));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_LANGUAGE,           new  XSValue(dt_language));
+                fDataTypeRegistry->put((void*) XMLUni::fgNmTokenString,                new  XSValue(dt_NMTOKEN));
+                fDataTypeRegistry->put((void*) XMLUni::fgNmTokensString,               new  XSValue(dt_NMTOKENS));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NAME,               new  XSValue(dt_Name));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,             new  XSValue(dt_NCName));
+                fDataTypeRegistry->put((void*) XMLUni::fgIDString,                     new  XSValue(dt_ID));
+                fDataTypeRegistry->put((void*) XMLUni::fgIDRefString,                  new  XSValue(dt_IDREF));
+                fDataTypeRegistry->put((void*) XMLUni::fgIDRefsString,                 new  XSValue(dt_IDREFS));
+                fDataTypeRegistry->put((void*) XMLUni::fgEntityString,                 new  XSValue(dt_ENTITY));
+                fDataTypeRegistry->put((void*) XMLUni::fgEntitiesString,               new  XSValue(dt_ENTITIES));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_INTEGER,            new  XSValue(dt_integer));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NONPOSITIVEINTEGER, new  XSValue(dt_nonPositiveInteger));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NEGATIVEINTEGER,    new  XSValue(dt_negativeInteger));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_LONG,               new  XSValue(dt_long));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_INT,                new  XSValue(dt_int));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_SHORT,              new  XSValue(dt_short));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_BYTE,               new  XSValue(dt_byte));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_NONNEGATIVEINTEGER, new  XSValue(dt_nonNegativeInteger));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_ULONG,              new  XSValue(dt_unsignedLong));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_UINT,               new  XSValue(dt_unsignedInt));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_USHORT,             new  XSValue(dt_unsignedShort));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_UBYTE,              new  XSValue(dt_unsignedByte));
+                fDataTypeRegistry->put((void*) SchemaSymbols::fgDT_POSITIVEINTEGER,    new  XSValue(dt_positiveInteger));
+
+            }
+            catch (...)
+            {
+                return dt_MAXCOUNT;
+            }
+
+            XSValueRegistryCleanup.registerCleanup(XSValue::reinitRegistry);
+        }
+    }
+
+    XSValue* data = fDataTypeRegistry->get(dtString);
+    return data? data->fData.f_datatype : dt_MAXCOUNT;
+
+}
+
 inline
 static bool checkTimeZoneError(XSValue::DataType       const &datatype
                              , SchemaDateTimeException const &e       )
@@ -226,16 +307,18 @@ static const int base_decimal    = 10;
 // ---------------------------------------------------------------------------
 //  XSValue: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XSValue::XSValue(MemoryManager*  const manager)
+XSValue::XSValue(DataType        const dt
+               , MemoryManager*  const manager)
 :fMemAllocated(false)
 ,fMemoryManager(manager)
 {
+    fData.f_datatype = dt;
 }
 
 XSValue::~XSValue()
 {
     if (fMemAllocated)
-        fMemoryManager->deallocate(fData.f_strVal);
+        fMemoryManager->deallocate(fData.fValue.f_strVal);
 }
   
 // ---------------------------------------------------------------------------
@@ -1255,14 +1338,14 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 return 0;
             }
 
-            XSValue* retVal = new (manager) XSValue(manager);
+            XSValue* retVal = new (manager) XSValue(dt_decimal, manager);
 
-            retVal->fData.f_decimal.f_sign     = data.getSign();
-            retVal->fData.f_decimal.f_scale    = data.getScale();
-            retVal->fData.f_decimal.f_fraction = actValFract.f_ulong;
-            retVal->fData.f_decimal.f_integral = actValInt.f_ulong;
+            retVal->fData.fValue.f_decimal.f_sign     = data.getSign();
+            retVal->fData.fValue.f_decimal.f_scale    = data.getScale();
+            retVal->fData.fValue.f_decimal.f_fraction = actValFract.f_ulong;
+            retVal->fData.fValue.f_decimal.f_integral = actValInt.f_ulong;
 
-            retVal->fData.f_decimal.f_dvalue   = data2.getValue();
+            retVal->fData.fValue.f_decimal.f_dvalue   = data2.getValue();
 
             return retVal;
         }
@@ -1278,8 +1361,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
             }
             else
             {
-                XSValue* retVal = new (manager) XSValue(manager);
-                retVal->fData.f_float = (float) data.getValue();
+                XSValue* retVal = new (manager) XSValue(dt_float, manager);
+                retVal->fData.fValue.f_float = (float) data.getValue();
                 return retVal;
             }
         }
@@ -1295,8 +1378,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
             }
             else
             {
-                XSValue* retVal = new (manager) XSValue(manager);
-                retVal->fData.f_double = data.getValue();
+                XSValue* retVal = new (manager) XSValue(dt_double, manager);
+                retVal->fData.fValue.f_double = data.getValue();
                 return retVal;
             }
         }
@@ -1330,8 +1413,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
             case XSValue::dt_integer:
                 // error: no
                 {
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_long = actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_integer, manager);
+                    retVal->fData.fValue.f_long = actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1341,8 +1424,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     if (actVal.f_long > -1)
                         return 0;
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_long = actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_negativeInteger, manager);
+                    retVal->fData.fValue.f_long = actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1352,8 +1435,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     if (actVal.f_long > 0)
                         return 0;
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_long = actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_nonPositiveInteger, manager);
+                    retVal->fData.fValue.f_long = actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1363,8 +1446,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     if (actVal.f_long < 0)
                         return 0;
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_long = actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_nonNegativeInteger, manager);
+                    retVal->fData.fValue.f_long = actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1374,8 +1457,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     if (actVal.f_long < 1)
                         return 0;
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_long = actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_positiveInteger, manager);
+                    retVal->fData.fValue.f_long = actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1408,8 +1491,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
             case XSValue::dt_long:
                 // error : no
                 {
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_long = actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_long, manager);
+                    retVal->fData.fValue.f_long = actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1424,8 +1507,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                         return 0;
                     }
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_int = (int) actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_int, manager);
+                    retVal->fData.fValue.f_int = (int) actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1438,8 +1521,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                         return 0;
                     }
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_short = (short) actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_short, manager);
+                    retVal->fData.fValue.f_short = (short) actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1452,8 +1535,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                         return 0;
                     }
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_char = (char) actVal.f_long;
+                    XSValue* retVal = new (manager) XSValue(dt_byte, manager);
+                    retVal->fData.fValue.f_char = (char) actVal.f_long;
                     return retVal;
                 }
                 break;
@@ -1484,8 +1567,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
             case XSValue::dt_unsignedLong:
                 // error: no
                 {
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_ulong = actVal.f_ulong;
+                    XSValue* retVal = new (manager) XSValue(dt_unsignedLong, manager);
+                    retVal->fData.fValue.f_ulong = actVal.f_ulong;
                     return retVal;
                 }
                 break;
@@ -1500,8 +1583,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                         return 0;
                     }
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_uint = (unsigned int) actVal.f_ulong;
+                    XSValue* retVal = new (manager) XSValue(dt_unsignedInt, manager);
+                    retVal->fData.fValue.f_uint = (unsigned int) actVal.f_ulong;
                     return retVal;
                 }
                 break;
@@ -1514,8 +1597,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                         return 0;
                     }
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_ushort = (unsigned short) actVal.f_ulong;
+                    XSValue* retVal = new (manager) XSValue(dt_unsignedShort, manager);
+                    retVal->fData.fValue.f_ushort = (unsigned short) actVal.f_ulong;
                     return retVal;
                 }
                 break;
@@ -1528,8 +1611,8 @@ XSValue::getActValNumerics(const XMLCh*         const content
                         return 0;
                     }
 
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_uchar = (unsigned char) actVal.f_ulong;
+                    XSValue* retVal = new (manager) XSValue(dt_unsignedByte, manager);
+                    retVal->fData.fValue.f_uchar = (unsigned char) actVal.f_ulong;
                     return retVal;
                 }
                 break;
@@ -1595,15 +1678,15 @@ XSValue::getActValDateTimes(const XMLCh*         const content
             break;
         }
 
-        XSValue* retVal = new (manager) XSValue(manager);
+        XSValue* retVal = new (manager) XSValue(datatype, manager);
 
-        retVal->fData.f_datetime.f_year    = coreDate.fValue[XMLDateTime::CentYear];
-        retVal->fData.f_datetime.f_month   = coreDate.fValue[XMLDateTime::Month];
-        retVal->fData.f_datetime.f_day     = coreDate.fValue[XMLDateTime::Day];
-        retVal->fData.f_datetime.f_hour    = coreDate.fValue[XMLDateTime::Hour];
-        retVal->fData.f_datetime.f_min     = coreDate.fValue[XMLDateTime::Minute];
-        retVal->fData.f_datetime.f_second  = coreDate.fValue[XMLDateTime::Second];
-        retVal->fData.f_datetime.f_milisec = coreDate.fMiliSecond;
+        retVal->fData.fValue.f_datetime.f_year    = coreDate.fValue[XMLDateTime::CentYear];
+        retVal->fData.fValue.f_datetime.f_month   = coreDate.fValue[XMLDateTime::Month];
+        retVal->fData.fValue.f_datetime.f_day     = coreDate.fValue[XMLDateTime::Day];
+        retVal->fData.fValue.f_datetime.f_hour    = coreDate.fValue[XMLDateTime::Hour];
+        retVal->fData.fValue.f_datetime.f_min     = coreDate.fValue[XMLDateTime::Minute];
+        retVal->fData.fValue.f_datetime.f_second  = coreDate.fValue[XMLDateTime::Second];
+        retVal->fData.fValue.f_datetime.f_milisec = coreDate.fMiliSecond;
 
         return retVal;
     }
@@ -1640,15 +1723,15 @@ XSValue::getActValStrings(const XMLCh*         const content
                 if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
                     XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  )
                 {
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_bool = true;
+                    XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
+                    retVal->fData.fValue.f_bool = true;
                     return retVal;
                 }
                 else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
                          XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  )
                 {
-                    XSValue* retVal = new (manager) XSValue(manager);
-                    retVal->fData.f_bool = false;
+                    XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
+                    retVal->fData.fValue.f_bool = false;
                     return retVal;
                 }
                 else
@@ -1668,8 +1751,8 @@ XSValue::getActValStrings(const XMLCh*         const content
                     return 0;
                 }
 
-                XSValue* retVal = new (manager) XSValue(manager);
-                retVal->fData.f_strVal = decodedData;
+                XSValue* retVal = new (manager) XSValue(dt_hexBinary, manager);
+                retVal->fData.fValue.f_strVal = decodedData;
                 retVal->fMemAllocated = true;
                 return retVal;                
             }       
@@ -1685,8 +1768,8 @@ XSValue::getActValStrings(const XMLCh*         const content
                     return 0;
                 }
 
-                XSValue* retVal = new (manager) XSValue(manager);
-                retVal->fData.f_strVal = decodedData;
+                XSValue* retVal = new (manager) XSValue(dt_base64Binary, manager);
+                retVal->fData.fValue.f_strVal = decodedData;
                 retVal->fMemAllocated = true;
                 return retVal;
             }
@@ -1793,6 +1876,12 @@ void XSValue::reinitRegEx()
 {
 	delete sXSValueRegEx;
 	sXSValueRegEx = 0;
+}
+
+void XSValue::reinitRegistry()
+{
+	delete fDataTypeRegistry;
+	fDataTypeRegistry = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

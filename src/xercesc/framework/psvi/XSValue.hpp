@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/13 21:24:20  peiyongz
+ * 1. returned data to contain datatype in addition to value
+ * 2. registry to map type name (in string) to type name enum
+ *
  * Revision 1.10  2004/09/09 20:08:31  peiyongz
  * Using new error code
  *
@@ -51,6 +55,7 @@
 #define XSVALUE_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -176,43 +181,52 @@ public:
               ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
+    static
+    DataType  getDataType  (const XMLCh* const dtString);
+
     //@}
 
     //----------------------------------
     /** public data */
 
-    union {
-                     bool      f_bool;
-                     char      f_char;                    
-            unsigned char      f_uchar;
-                     short     f_short;
-            unsigned short     f_ushort;
-                     int       f_int;
-            unsigned int       f_uint;
-                     long      f_long;
-            unsigned long      f_ulong;
-                     float     f_float;
-                     double    f_double;
-                     XMLCh*    f_strVal;
+    struct {
 
-            struct decimal {
-                            int              f_sign;
-                            unsigned int     f_scale;  
-                            unsigned long    f_integral;
-                            unsigned long    f_fraction;
-                            double           f_dvalue;
-            } f_decimal;
+        DataType f_datatype;
+        
+        union {
+                         bool      f_bool;
+                         char      f_char;                    
+                unsigned char      f_uchar;
+                         short     f_short;
+                unsigned short     f_ushort;
+                         int       f_int;
+                unsigned int       f_uint;
+                         long      f_long;
+                unsigned long      f_ulong;
+                         float     f_float;
+                         double    f_double;
+                         XMLCh*    f_strVal;
 
-            struct datetime {
-                            int       f_year;
-                            int       f_month;
-                            int       f_day;
-                            int       f_hour;
-                            int       f_min;
-                            int       f_second;
-                            double    f_milisec;
+                struct decimal {
+                                int              f_sign;
+                                unsigned int     f_scale;  
+                                unsigned long    f_integral;
+                                unsigned long    f_fraction;
+                                double           f_dvalue;
+                } f_decimal;
 
-            } f_datetime;
+                struct datetime {
+                                int       f_year;
+                                int       f_month;
+                                int       f_day;
+                                int       f_hour;
+                                int       f_min;
+                                int       f_second;
+                                double    f_milisec;
+
+                } f_datetime;
+
+        } fValue;
 
     } fData;
 
@@ -221,6 +235,9 @@ public:
 
     static
     void reinitRegEx();
+
+    static
+    void reinitRegistry();
 
 private:
 
@@ -236,7 +253,10 @@ private:
       * The default constructor 
       *
       */
-    XSValue(MemoryManager*  const manager);
+    XSValue(
+             DataType        const dt
+           , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
+           );
 
     //@};
 
@@ -363,6 +383,8 @@ private:
                ,       MemoryManager* const  manager
                );
 
+    static RefHashTableOf<XSValue>*    fDataTypeRegistry;
+
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
@@ -370,7 +392,6 @@ private:
     MemoryManager*      fMemoryManager;
 
 };
-
 
 XERCES_CPP_NAMESPACE_END
 
