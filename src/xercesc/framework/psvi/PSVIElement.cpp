@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 21:50:33  neilg
+ * fix compilation errors under gcc 3.3.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -71,31 +74,6 @@ PSVIElement::PSVIElement( MemoryManager* const manager ):
         fNotationDecl(0),
         fSchemaInfo(0)
 {
-}
-
-inline XSElementDeclaration *PSVIElement::getElementDeclaration() 
-{
-    return fElementDecl;
-}
-
-inline XSNotationDeclaration* PSVIElement::getNotationDeclaration() 
-{
-    return fNotationDecl;
-}
-
-inline XSModel* PSVIElement::getSchemaInformation() 
-{
-    return fSchemaInfo;
-}
-
-inline XSTypeDefinition* PSVIElement::getTypeDefinition()
-{
-    return fType;
-}
-
-inline XSSimpleTypeDefinition* PSVIElement::getMemberTypeDefinition() 
-{
-    return fMemberType;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 21:50:33  neilg
+ * fix compilation errors under gcc 3.3.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -69,21 +72,6 @@ PSVIAttribute::PSVIAttribute( MemoryManager* const manager ):
         PSVIItem(manager),
         fAttributeDecl(0)
 {
-}
-
-inline XSAttributeDeclaration *PSVIAttribute::getAttributeDeclaration() 
-{
-    return fAttributeDecl;
-}
-
-inline XSTypeDefinition* PSVIAttribute::getTypeDefinition()
-{
-    return fType;
-}
-
-inline XSSimpleTypeDefinition* PSVIAttribute::getMemberTypeDefinition() 
-{
-    return fMemberType;
 }
 
 XERCES_CPP_NAMESPACE_END
