@@ -306,6 +306,8 @@ public :
         , const XMLCh* const    baseURI = 0
     );
 
+    virtual InputSource* resolveEntity(XMLResourceIdentifier* resourceIdentifier);
+
 protected :
     // -----------------------------------------------------------------------
     //  Protected Helper methods

@@ -557,4 +557,13 @@ InputSource* XSDDOMParser::resolveEntity(const XMLCh* const publicId,
     return 0;
 }
 
+InputSource*
+XSDDOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
+{
+    if (fUserEntityHandler)
+        return fUserEntityHandler->resolveEntity(resourceIdentifier);
+
+    return 0;
+}
+
 XERCES_CPP_NAMESPACE_END
