@@ -331,24 +331,54 @@ export CC
 CXX="$cppcompiler"
 export CXX
 
+# Special test for libiconv necessity under FreeBSD
+#
+transcodingLibs=""       # by default don't suppose the libiconv is necessary
+transcodingDefines=""
+if test $platform = "freebsd"; then
+    if test -n "${XERCESCROOT}"; then
+       # try lookup the configuration results
+       . "${XERCESCROOT}/version.incl"
+       if test -f "${XERCESCROOT}/src/config.log" ; then
+           if grep XML_USE_LIBICONV "${XERCESCROOT}/src/config.log" \
+              > /dev/null 2>&1 ; then
+               transcodingLibs=" -L/usr/local/lib -liconv "
+               transcodingDefines=" -DXML_USE_LIBICONV -I/usr/local/include "
+           fi
+       elif test -f "${XERCESCROOT}/obj/IconvFBSDTransService.o" ; then
+           if nm "${XERCESCROOT}/obj/IconvFBSDTransService.o" | \
+              grep XML_USE_LIBICONV > /dev/null 2>&1 ; then
+               transcodingLibs=" -L/usr/local/lib -liconv "
+               transcodingDefines=" -DXML_USE_LIBICONV -I/usr/local/include "
+           fi
+       elif test -f "${XERCESCROOT}/lib/libxerces-c${VER}.so" ; then
+           if nm "${XERCESCROOT}/lib/libxerces-c${VER}.so" | \
+              grep XML_USE_LIBICONV > /dev/null 2>&1 ; then
+               transcodingLibs=" -L/usr/local/lib -liconv "
+               transcodingDefines=" -DXML_USE_LIBICONV -I/usr/local/include "
+           fi
+       fi
+    fi
+fi
+
 #
 # Set the extra C and C++ compiler flags
 #
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
-CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $threadingDefines"; export CXXFLAGS
-CFLAGS="$CFLAGS $compileroptions $debugflag $threadingDefines"; export CFLAGS
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $threadingDefines $transcodingDefines"; export CXXFLAGS
+CFLAGS="$CFLAGS $compileroptions $debugflag $threadingDefines $transcodingDefines"; export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment
 if [ $platform = "tru64" -a $CXX = "g++" ]; then
     CXXFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
-    CFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    CFLAGS=`echo $CFLAGS | sed -e 's/-O[0-9]*//g'`
     export CXXFLAGS CFLAGS
 fi
 
-LDFLAGS="$linkeroptions"; export LDFLAGS
-LIBS="$threadingLibs"; export LIBS
+LDFLAGS="$LDFLAGS $linkeroptions"; export LDFLAGS
+EXTRA_LIBS="$threadingLibs $transcodingLibs"; export EXTRA_LIBS
 
 echo
 rm -f config.cache
@@ -374,7 +404,7 @@ echo export CC=$CC
 echo export CXX=$CXX
 echo export CXXFLAGS=$CXXFLAGS
 echo export CFLAGS=$CFLAGS
-echo export LIBS=$LIBS
+echo export EXTRA_LIBS=$EXTRA_LIBS
 echo export LDFLAGS=$LDFLAGS
 echo configure
 

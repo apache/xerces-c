@@ -69,6 +69,12 @@ AC_SUBST(cflags)
 ldflags=${LDFLAGS}
 AC_SUBST(ldflags)
 
+threads=${THREADS}
+AC_SUBST(threads)
+
+extra_libs=${EXTRA_LIBS}
+AC_SUBST(extra_libs)
+
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
 DOM/DOMTest/Makefile \

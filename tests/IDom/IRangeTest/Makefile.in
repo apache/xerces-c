@@ -74,6 +74,8 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 LDFLAGS = @ldflags@
+THREADS = @threads@
+EXTRA_LIBS = @extra_libs@
 
 include ../../../version.incl
 include ../../Makefile.incl
