@@ -863,7 +863,7 @@ Create Reason:	Declared
 ContentType:	All
 Content Model:	All(family,given)
 ComplexType:
-	TypeName:	,C3
+	TypeName:	,C2
 	ContentType:	All
 --------------------------------------------
 Name:			family
@@ -886,7 +886,7 @@ Model Type:		Empty
 Create Reason:	Declared
 Content Model:	EMPTY
 ComplexType:
-	TypeName:	,C4
+	TypeName:	,C3
 Attributes:
 	Name:			href
 	Type:			CDATA
@@ -900,7 +900,7 @@ Model Type:		Empty
 Create Reason:	Declared
 Content Model:	EMPTY
 ComplexType:
-	TypeName:	,C5
+	TypeName:	,C4
 Attributes:
 	Name:			subordinates
 	Type:			IDREFS
