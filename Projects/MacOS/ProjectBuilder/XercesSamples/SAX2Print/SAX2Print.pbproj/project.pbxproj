@@ -1,0 +1,259 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 32;
+	objects = {
+		014CEA460018CE2711CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA470018CE2711CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//010
+//011
+//012
+//013
+//014
+//020
+//021
+//022
+//023
+//024
+		0249A660FF388D4511CA2CEA = {
+			isa = PBXExecutableFileReference;
+			path = SAX2Print;
+			refType = 3;
+		};
+		0249A662FF388D9811CA2CEA = {
+			children = (
+				0249A663FF388D9811CA2CEA,
+				F55DDD9E00BDA99C01000001,
+			);
+			isa = PBXGroup;
+			name = "External Frameworks and Libraries";
+			refType = 4;
+		};
+		0249A663FF388D9811CA2CEA = {
+			isa = PBXFileReference;
+			name = "libstdc++.a";
+			path = "/usr/lib/libstdc++.a";
+			refType = 0;
+		};
+		0249A664FF388D9811CA2CEA = {
+			fileRef = 0249A663FF388D9811CA2CEA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//020
+//021
+//022
+//023
+//024
+//080
+//081
+//082
+//083
+//084
+		08FB7793FE84155DC02AAC07 = {
+			buildStyles = (
+				014CEA460018CE2711CA2923,
+				014CEA470018CE2711CA2923,
+			);
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = "";
+			targets = (
+				08FB779FFE84155DC02AAC07,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				08FB7795FE84155DC02AAC07,
+				0249A662FF388D9811CA2CEA,
+				1AB674ADFE9D54B511CA2CBB,
+			);
+			isa = PBXGroup;
+			name = IDOMPrint;
+			refType = 4;
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				F54F8B8B00F8F37F01000001,
+				F54F8B8C00F8F37F01000001,
+				F54F8B8D00F8F37F01000001,
+				F54F8B8E00F8F37F01000001,
+			);
+			isa = PBXGroup;
+			name = Source;
+			refType = 4;
+		};
+		08FB779FFE84155DC02AAC07 = {
+			buildPhases = (
+				08FB77A0FE84155DC02AAC07,
+				08FB77A1FE84155DC02AAC07,
+				08FB77A3FE84155DC02AAC07,
+				08FB77A5FE84155DC02AAC07,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/obj";
+				HEADER_SEARCH_PATHS = ../../../../../src/;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SAX2Print;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = SAX2Print;
+			productInstallPath = "$(HOME)/bin";
+			productName = IDOMPrint;
+			productReference = 0249A660FF388D4511CA2CEA;
+			shouldUseHeadermap = 1;
+		};
+		08FB77A0FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				F54F8B8F00F8F37F01000001,
+				F54F8B9000F8F37F01000001,
+			);
+			isa = PBXHeadersBuildPhase;
+			name = Headers;
+		};
+		08FB77A1FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				F54F8B9100F8F37F01000001,
+				F54F8B9200F8F37F01000001,
+			);
+			isa = PBXSourcesBuildPhase;
+			name = Sources;
+		};
+		08FB77A3FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				0249A664FF388D9811CA2CEA,
+				F55DDD9F00BDA99C01000001,
+			);
+			isa = PBXFrameworksBuildPhase;
+			name = "Frameworks & Libraries";
+		};
+		08FB77A5FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			name = "ResourceManager Resources";
+		};
+//080
+//081
+//082
+//083
+//084
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				0249A660FF388D4511CA2CEA,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+//F50
+//F51
+//F52
+//F53
+//F54
+		F54F8B8B00F8F37F01000001 = {
+			isa = PBXFileReference;
+			name = SAX2Print.cpp;
+			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2Print.cpp";
+			refType = 0;
+		};
+		F54F8B8C00F8F37F01000001 = {
+			isa = PBXFileReference;
+			name = SAX2Print.hpp;
+			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2Print.hpp";
+			refType = 0;
+		};
+		F54F8B8D00F8F37F01000001 = {
+			isa = PBXFileReference;
+			name = SAX2PrintHandlers.cpp;
+			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2PrintHandlers.cpp";
+			refType = 0;
+		};
+		F54F8B8E00F8F37F01000001 = {
+			isa = PBXFileReference;
+			name = SAX2PrintHandlers.hpp;
+			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2PrintHandlers.hpp";
+			refType = 0;
+		};
+		F54F8B8F00F8F37F01000001 = {
+			fileRef = F54F8B8C00F8F37F01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F54F8B9000F8F37F01000001 = {
+			fileRef = F54F8B8E00F8F37F01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F54F8B9100F8F37F01000001 = {
+			fileRef = F54F8B8B00F8F37F01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F54F8B9200F8F37F01000001 = {
+			fileRef = F54F8B8D00F8F37F01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55DDD9E00BDA99C01000001 = {
+			isa = PBXFrameworkReference;
+			name = Xerces.framework;
+			path = ../../../../../obj/Xerces.framework;
+			refType = 2;
+		};
+		F55DDD9F00BDA99C01000001 = {
+			fileRef = F55DDD9E00BDA99C01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}

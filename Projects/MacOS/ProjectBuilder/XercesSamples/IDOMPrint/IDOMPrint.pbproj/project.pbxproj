@@ -1,0 +1,245 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 32;
+	objects = {
+		014CEA460018CE2711CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA470018CE2711CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//010
+//011
+//012
+//013
+//014
+//020
+//021
+//022
+//023
+//024
+		0249A660FF388D4511CA2CEA = {
+			isa = PBXExecutableFileReference;
+			path = IDOMPrint;
+			refType = 3;
+		};
+		0249A662FF388D9811CA2CEA = {
+			children = (
+				0249A663FF388D9811CA2CEA,
+				F55DDD9E00BDA99C01000001,
+			);
+			isa = PBXGroup;
+			name = "External Frameworks and Libraries";
+			refType = 4;
+		};
+		0249A663FF388D9811CA2CEA = {
+			isa = PBXFileReference;
+			name = "libstdc++.a";
+			path = "/usr/lib/libstdc++.a";
+			refType = 0;
+		};
+		0249A664FF388D9811CA2CEA = {
+			fileRef = 0249A663FF388D9811CA2CEA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//020
+//021
+//022
+//023
+//024
+//080
+//081
+//082
+//083
+//084
+		08FB7793FE84155DC02AAC07 = {
+			buildStyles = (
+				014CEA460018CE2711CA2923,
+				014CEA470018CE2711CA2923,
+			);
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = "";
+			targets = (
+				08FB779FFE84155DC02AAC07,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				08FB7795FE84155DC02AAC07,
+				0249A662FF388D9811CA2CEA,
+				1AB674ADFE9D54B511CA2CBB,
+			);
+			isa = PBXGroup;
+			name = IDOMPrint;
+			refType = 4;
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				F55DDD9700BDA8D301000001,
+				F55DDD9800BDA8D301000001,
+				F55DDD9900BDA8D301000001,
+			);
+			isa = PBXGroup;
+			name = Source;
+			refType = 4;
+		};
+		08FB779FFE84155DC02AAC07 = {
+			buildPhases = (
+				08FB77A0FE84155DC02AAC07,
+				08FB77A1FE84155DC02AAC07,
+				08FB77A3FE84155DC02AAC07,
+				08FB77A5FE84155DC02AAC07,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/obj";
+				HEADER_SEARCH_PATHS = ../../../../../src/;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = IDOMPrint;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = IDOMPrint;
+			productInstallPath = "$(HOME)/bin";
+			productName = IDOMPrint;
+			productReference = 0249A660FF388D4511CA2CEA;
+			shouldUseHeadermap = 1;
+		};
+		08FB77A0FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				F55DDD9A00BDA8D301000001,
+			);
+			isa = PBXHeadersBuildPhase;
+			name = Headers;
+		};
+		08FB77A1FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				F55DDD9B00BDA8D301000001,
+				F55DDD9C00BDA8D301000001,
+			);
+			isa = PBXSourcesBuildPhase;
+			name = Sources;
+		};
+		08FB77A3FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				0249A664FF388D9811CA2CEA,
+				F55DDD9F00BDA99C01000001,
+			);
+			isa = PBXFrameworksBuildPhase;
+			name = "Frameworks & Libraries";
+		};
+		08FB77A5FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			name = "ResourceManager Resources";
+		};
+//080
+//081
+//082
+//083
+//084
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				0249A660FF388D4511CA2CEA,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+//F50
+//F51
+//F52
+//F53
+//F54
+		F55DDD9700BDA8D301000001 = {
+			isa = PBXFileReference;
+			name = IDOMPrint.cpp;
+			path = ../../../../../samples/IDOMPrint/IDOMPrint.cpp;
+			refType = 4;
+		};
+		F55DDD9800BDA8D301000001 = {
+			isa = PBXFileReference;
+			name = IDOMTreeErrorReporter.cpp;
+			path = ../../../../../samples/IDOMPrint/IDOMTreeErrorReporter.cpp;
+			refType = 4;
+		};
+		F55DDD9900BDA8D301000001 = {
+			isa = PBXFileReference;
+			name = IDOMTreeErrorReporter.hpp;
+			path = ../../../../../samples/IDOMPrint/IDOMTreeErrorReporter.hpp;
+			refType = 4;
+		};
+		F55DDD9A00BDA8D301000001 = {
+			fileRef = F55DDD9900BDA8D301000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55DDD9B00BDA8D301000001 = {
+			fileRef = F55DDD9700BDA8D301000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55DDD9C00BDA8D301000001 = {
+			fileRef = F55DDD9800BDA8D301000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55DDD9E00BDA99C01000001 = {
+			isa = PBXFrameworkReference;
+			name = Xerces.framework;
+			path = ../../../../../obj/Xerces.framework;
+			refType = 2;
+		};
+		F55DDD9F00BDA99C01000001 = {
+			fileRef = F55DDD9E00BDA99C01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
