@@ -3,6 +3,279 @@
 
 <s1 title="Releases">
 
+<s2 title="&XercesCName; Latest Changes since March 8, 2002">
+<table>
+    <tr>
+        <td>Date</td>
+        <td>Contributor</td>
+        <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2002-04-08</td>
+        <td>Tinny Ng</td>
+        <td>ICU 2.0.2 Update.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-04</td>
+        <td>Khaled Noaman</td>
+        <td>Change min/maxOccurs from unsigned int to int.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-03</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 7565] Attributes in different namespaces produce a Fatal Exception.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-03</td>
+        <td>Tinny Ng</td>
+        <td>check null string first in isWSCollapsed and fix [Bug 6902] Typo in XMLString.cpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-02</td>
+        <td>Martin Kalen</td>
+        <td>[Bug 7555] Enable AIX build with newer xlC versions.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-02</td>
+        <td>Khaled Noaman</td>
+        <td>Modiy QName comparison (operator=).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>Tinny Ng</td>
+        <td>According to DOM spec, setNodeValue by default is no-op.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>Tinny Ng</td>
+        <td>Do not issue DOM_DOMException::INUSE_ATTRIBUTE_ERR if the owner is the same.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>Tinny Ng</td>
+        <td>DOMString problem with Asian codepages.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 7551] Exceptions are caught by value, rather than by reference.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7585] xml4com.dsp - Cannot open source file.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 7297] Validation of schema included in document fails with improper error.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-01</td>
+        <td>Khaled Noaman</td>
+        <td>Move Element Consistency checking (ref to global declarations) to SchemaValidator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-27</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1173] DOMParser entity resolution property is messed about.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-27</td>
+        <td>Tinny Ng</td>
+        <td>Fix: not all the children of EntityReference Node is set to readOnly.s
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-27</td>
+        <td>Tinny Ng</td>
+        <td>Should call setReadOnly instead of isReadOnly to populate the flag.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-27</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3010] DocumentImpl::importNode - Missed Readonly Flag Restore.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-27</td>
+        <td>Tinny Ng</td>
+        <td>Correct count element routine in IDOMCount.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-26</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 7471] Failed to validate correctly when schema has &lt;xsd:extension&gt; and the base has an attribute.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-25</td>
+        <td>Khaled Noaman</td>
+        <td>Move particle derivation checking from TraverseSchema to SchemaValidator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-22</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 7358] About TraverseSchema::traverseSimpleTypeDecl member function.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-21</td>
+        <td>Khaled Noaman</td>
+        <td>Add support for reporting line/column numbers of schema errors.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-19</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 7164] DOMParser with a DTD leak!
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-19</td>
+        <td>Khaled Noaman</td>
+        <td>Fix for declarations referenced from a different NS in the case of a circular import.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-19</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 7243] Base64 encoding is not working.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-19</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 7074] Unwarranted error regarding "no circular definitions allowed".
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-18</td>
+        <td>Khaled Noaman</td>
+        <td>[Regx Fix] Change constant names to eliminate possible conflict with user defined ones.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-18</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7162] IconvFreeBSDTransService.cpp needs an #include statement fixed to use xercesc.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-15</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 6888] NodeIterator.  Retrofit this typo that was applied to Xerces-J, although this
+            function "matchNodeOrParent" is not used in Xerces-C++.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-15</td>
+        <td>Tinny Ng</td>
+        <td>DOMString Thread safe Fix: should lock the entire deleter function where freeListPtr and
+            blockListPtr are modified.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-15</td>
+        <td>Tinny Ng</td>
+        <td>Issue DOMException::INDEX_SIZE_ERR if count is greater than length, equal to length is ok.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-14</td>
+        <td>Tinny Ng</td>
+        <td>IDOM Fix: Issue IDOM_DOMException::INDEX_SIZE_ERR if count or offset is negative.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-14</td>
+        <td>Tinny Ng</td>
+        <td>IDOM Fix: Initialize fPublic/fSystemId to zero in IDNotationImpl.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-14</td>
+        <td>Tinny Ng</td>
+        <td>Certain IDOM Node should call fParent.normalize().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-14</td>
+        <td>Tinny Ng</td>
+        <td>Run methods test[NodeType] in the IDOMTest and other fixes.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-12</td>
+        <td>Mark Russell</td>
+        <td>[Bug 1687] resValue not always updated when making a transcoder.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002/03/11</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 7000] The URL is corrupted in UnixHTTPURLInputStream.cpp.
+        </td>
+    </tr>
+
+</table>
+</s2>
+
+
 <s2 title="&XercesCName; Version 1.7.0: March 8, 2002">
 <table>
     <tr>
@@ -44,6 +317,14 @@
         <td>2002-03-04</td>
         <td>Khaled Noaman</td>
         <td>[Bug 6834] apparently correct schema/instance not validating.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-01</td>
+        <td>Tinny Ng</td>
+        <td>NodeIDMap informational message about growing only be printed if debug is on.
+            Besides the throw message should be encap in the XMLErrList_EN_US.Xml, not hardcoded in the code.
         </td>
     </tr>
 
@@ -108,6 +389,13 @@
         <td>2002-02-25</td>
         <td>Tinny Ng</td>
         <td>Schema Fix: Thread-safe the built-in datatype validator registry.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-25</td>
+        <td>Tinny Ng</td>
+        <td>Schema Fix: Ensure no invalid uri index for UPA checking.
         </td>
     </tr>
 
@@ -187,6 +475,13 @@
         <td>2002-02-14</td>
         <td>PeiYong Zhang</td>
         <td>Add getEnumString to DatatypeValidator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-14</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 6461] Unexpected recursion errors reported against schema.
         </td>
     </tr>
 
