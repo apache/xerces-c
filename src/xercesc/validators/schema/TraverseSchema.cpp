@@ -365,13 +365,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     //Retrieve the targetnamespace URI information
     const XMLCh* targetNSURIStr = schemaRoot->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
-
-    if (targetNSURIStr == 0 || !*targetNSURIStr) {
-        fSchemaGrammar->setTargetNamespace(XMLUni::fgZeroLenString);
-    }
-    else {
-        fSchemaGrammar->setTargetNamespace(targetNSURIStr);
-    }
+    fSchemaGrammar->setTargetNamespace(targetNSURIStr);
 
     fScopeCount = 0;
     fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
@@ -406,6 +400,9 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
     if (!XMLString::equals(schemaRoot->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
         reportSchemaError(schemaRoot, XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
     }
+
+    // Make sure that the targetNamespace value is not empty string
+    checkForEmptyTargetNamespace(schemaRoot);
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -546,11 +543,10 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
         if (root) {
 
-            const XMLCh* targetNSURIString = getTargetNamespaceString(root);
-            bool targetNSLength = !targetNSURIString || !*targetNSURIString;
+            const XMLCh* targetNSURIString = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
 
             // check to see if targetNameSpace is right
-            if (!targetNSLength
+            if (*targetNSURIString
                 && !XMLString::equals(targetNSURIString,fTargetNSURIString)){
                 reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::IncludeNamespaceDifference,
                                   schemaLocation, targetNSURIString);
@@ -559,7 +555,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
             // if targetNamespace is empty, change it to includ'g schema
             // targetNamespace
-            if (targetNSLength && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
+            if (!*targetNSURIString && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
                 && fTargetNSURI != fEmptyNamespaceURI) {
                 root->setAttribute(XMLUni::fgXMLNSString, fTargetNSURIString);
             }
@@ -727,7 +723,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             return;
         }
 
-        const XMLCh* targetNSURIString = getTargetNamespaceString(root);
+        const XMLCh* targetNSURIString = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
 
         if (!XMLString::equals(targetNSURIString, nameSpace)) {
             reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::ImportNamespaceDifference,
@@ -7358,11 +7354,10 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
             return false;
         }
 
-        const XMLCh* targetNSURIString = getTargetNamespaceString(root); //getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
-		  bool targetNSLength = !targetNSURIString || !*targetNSURIString;
+        const XMLCh* targetNSURIString = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
 
         // check to see if targetNameSpace is right
-        if (!targetNSLength
+        if (*targetNSURIString
             && !XMLString::equals(targetNSURIString,fTargetNSURIString)){
             reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::RedefineNamespaceDifference,
                               schemaLocation, targetNSURIString);
@@ -7371,7 +7366,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
 
         // if targetNamespace is empty, change it to redefin'g schema
         // targetNamespace
-        if (targetNSLength && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
+        if (!*targetNSURIString && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
             && fTargetNSURI != fEmptyNamespaceURI) {
             root->setAttribute(XMLUni::fgXMLNSString, fTargetNSURIString);
         }

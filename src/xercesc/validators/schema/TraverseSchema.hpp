@@ -559,7 +559,7 @@ private:
                                 XercesAttGroupInfo* const toAttGroup,
                                 ComplexTypeInfo* const typeInfo);
 
-    const XMLCh* getTargetNamespaceString(const DOMElement* const elem);
+    void checkForEmptyTargetNamespace(const DOMElement* const elem);
 
     /**
       * Attribute wild card intersection.
@@ -855,16 +855,14 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOMElement* const elem,
     return attValue;
 }
 
-inline const XMLCh*
-TraverseSchema::getTargetNamespaceString(const DOMElement* const elem) {
+inline void
+TraverseSchema::checkForEmptyTargetNamespace(const DOMElement* const elem) {
 
     const XMLCh* targetNS = getElementAttValue(elem, SchemaSymbols::fgATT_TARGETNAMESPACE);
 
-    if (targetNS && (!targetNS || !*targetNS)) {
+    if (targetNS && !*targetNS) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidTargetNSValue);
     }
-
-    return targetNS;
 }
 
 inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
