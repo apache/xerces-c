@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2005/04/05 20:26:48  cargilld
+ * Update XSValue to handle leading and trailing whitespace.
+ *
  * Revision 1.21  2004/12/23 16:11:21  cargilld
  * Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
  *
@@ -108,6 +111,7 @@
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/TransService.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -704,11 +708,14 @@ XSValue::validateNumerics(const XMLCh*         const content
     }
 }
 
-bool XSValue::validateDateTimes(const XMLCh*         const content    
+bool XSValue::validateDateTimes(const XMLCh*         const input_content    
                               ,       DataType             datatype
                               ,       Status&              status
                               ,       MemoryManager* const manager)
 {
+    XMLCh* content = XMLString::replicate(input_content, manager);
+    ArrayJanitor<XMLCh> janTmpName(content, manager);
+    XMLString::trim(content);   
     try
     {
         XMLDateTime coreDate = XMLDateTime(content, manager);
@@ -781,8 +788,11 @@ bool XSValue::validateStrings(const XMLCh*         const content
         case XSValue::dt_boolean:
             {
                 unsigned int i = 0;
+                XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+                ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+                XMLString::trim(tmpStrValue);    
                 for (; i < XMLUni::fgBooleanValueSpaceArraySize; i++) {
-                    if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[i]))
+                    if (XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[i]))
                         break;
                 }
 
@@ -791,10 +801,15 @@ bool XSValue::validateStrings(const XMLCh*         const content
                 }
                 break;
             }
-        case XSValue::dt_hexBinary:            
-            if (HexBin::getDataLength(content) == -1) {
+        case XSValue::dt_hexBinary:
+            {
+            XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+            ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+            XMLString::trim(tmpStrValue);
+            if (HexBin::getDataLength(tmpStrValue) == -1) {
                isValid = false;                	
-            }            
+            }
+            }
             break;
         case XSValue::dt_base64Binary:            
             if (Base64::getDataLength(content, manager) == -1) {
@@ -807,13 +822,23 @@ bool XSValue::validateStrings(const XMLCh*         const content
             }        
             break;
         case XSValue::dt_QName:
+            {
+            XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+            ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+            XMLString::trim(tmpStrValue);
             isValid = (version == ver_10) ? 
-                XMLChar1_0::isValidQName(content, XMLString::stringLen(content)) :
-                XMLChar1_1::isValidQName(content, XMLString::stringLen(content));
+                XMLChar1_0::isValidQName(tmpStrValue, XMLString::stringLen(tmpStrValue)) :
+                XMLChar1_1::isValidQName(tmpStrValue, XMLString::stringLen(tmpStrValue));
+            }
             break;
         case XSValue::dt_NOTATION:
-            if ( XMLString::isValidNOTATION(content, manager) == false) {
+            {
+            XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+            ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+            XMLString::trim(tmpStrValue);
+            if ( XMLString::isValidNOTATION(tmpStrValue, manager) == false) {
             	isValid = false;
+            }
             }
             break;
         case XSValue::dt_string:
@@ -1114,13 +1139,15 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
 
 }
 
-XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content    
+XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content    
                                  ,       DataType             datatype
                                  ,       Status&              status                                 
                                  ,       bool                 toValidate
                                  ,       MemoryManager* const manager)
 {
-
+    XMLCh* content = XMLString::replicate(input_content, manager);
+    ArrayJanitor<XMLCh> janTmpName(content, manager);
+    XMLString::trim(content);   
     try
     {
 
@@ -1184,15 +1211,19 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
     try
     {
         switch (datatype) {        
-        case XSValue::dt_boolean:            
+        case XSValue::dt_boolean:
+            {
+            XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+            ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+            XMLString::trim(tmpStrValue);
             //always validate before getting canRep
-            if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
-                XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  ) 
+            if (XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[0]) ||
+                XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[2])  ) 
             {
                 return XMLString::replicate(XMLUni::fgBooleanValueSpace[0], manager);
             }
-            else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
-                     XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  ) 
+            else if (XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[1]) ||
+                     XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[3])  ) 
             {
                 return XMLString::replicate(XMLUni::fgBooleanValueSpace[1], manager);
             }
@@ -1200,12 +1231,17 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
             {
                 status = st_FOCA0002;
                 return 0;
-            }            
+            }     
+            }
             break;
         case XSValue::dt_hexBinary: 
             {
                 //HexBin::getCanonicalRepresentation does validation automatically
-                XMLCh* canRep = HexBin::getCanonicalRepresentation(content, manager);
+                XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+                ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+                XMLString::trim(tmpStrValue); 
+
+                XMLCh* canRep = HexBin::getCanonicalRepresentation(tmpStrValue, manager);
                 if (!canRep)
                     status = st_FOCA0002;
 
@@ -1420,11 +1456,14 @@ XSValue::getActValNumerics(const XMLCh*         const content
 }
 
 XSValue*  
-XSValue::getActValDateTimes(const XMLCh*         const content    
+XSValue::getActValDateTimes(const XMLCh*         const input_content    
                           ,       DataType             datatype
                           ,       Status&              status                         
                           ,       MemoryManager* const manager)
 {
+    XMLCh* content = XMLString::replicate(input_content, manager);
+    ArrayJanitor<XMLCh> janTmpName(content, manager);
+    XMLString::trim(content);   
     try
     {
         //Need not check if validation is requested since
@@ -1516,17 +1555,21 @@ XSValue::getActValStrings(const XMLCh*         const content
     try
     {
         switch (datatype) { 
-        case XSValue::dt_boolean:            
+        case XSValue::dt_boolean: 
+            {
+            XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+            ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+            XMLString::trim(tmpStrValue);            
             //do validation here more efficiently
-            if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
-                XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  )
+            if (XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[0]) ||
+                XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[2])  )
             {
                 XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
                 retVal->fData.fValue.f_bool = false;
                 return retVal;
             }
-            else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
-                     XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  )
+            else if (XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[1]) ||
+                     XMLString::equals(tmpStrValue, XMLUni::fgBooleanValueSpace[3])  )
             {
                 XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
                 retVal->fData.fValue.f_bool = true;
@@ -1536,11 +1579,16 @@ XSValue::getActValStrings(const XMLCh*         const content
             {
                 status = st_FOCA0002;
                 return 0;
-            }            
+            }
+            }
             break;
         case XSValue::dt_hexBinary:
             {
-                XMLByte* decodedData = HexBin::decodeToXMLByte(content, manager);
+                XMLCh* tmpStrValue = XMLString::replicate(content, manager);
+                ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
+                XMLString::trim(tmpStrValue); 
+
+                XMLByte* decodedData = HexBin::decodeToXMLByte(tmpStrValue, manager);
 
                 if (!decodedData)
                 {
@@ -1725,8 +1773,12 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
     // check if all chars are valid char
     if ( (endptr - nptr) != strLen)
     {
-        status = st_FOCA0002;
-        return false;
+        for (unsigned int i=endptr - nptr; i <strLen; i++) {
+            if (!XMLPlatformUtils::fgTransService->isSpace(nptr[i])) {
+                status = st_FOCA0002;
+                return false;
+            }
+        }
     }
     return true;
 }

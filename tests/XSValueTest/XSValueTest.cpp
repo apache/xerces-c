@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.16  2005/04/05 20:26:48  cargilld
+* Update XSValue to handle leading and trailing whitespace.
+*
 * Revision 1.15  2005/02/25 18:30:46  cargilld
 * Attempt to fix compiler errors.
 *
@@ -672,9 +675,9 @@ void CANREP_TEST(const char*                  const  data
         else {                                                                        \
         if (expStatus != myStatus) {                                                  \
                 printf("CANREP_TEST Context Diff,                                     \
-                        at line <%d> data=<%s>, datatype=<%d>\n                       \
+                        at line <%d> data=<%s>, datatype=<%s>\n                       \
                         expStatus=<%s>, actStatus=<%s>\n"                             \
-                      , __LINE__, data, datatype                                      \
+                      , __LINE__, data, StrX(getDataTypeString(datatype)).localForm() \
                       , getStatusString(expStatus), getStatusString(myStatus));       \
                 errSeen = true;                                                       \
             }                                                                         \
@@ -773,7 +776,7 @@ void test_dt_decimal()
     const XSValue::DataType dt = XSValue::dt_decimal; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="1234.567";
+    const char lex_v_ran_v_1[]="  1234.567  \n";
     const char lex_v_ran64_v_1[]="18446744073709551615.999";
     const char lex_v_ran64_v_2[]="999.18446744073709551615";
     const char lex_v_ran64_iv_1[]="18446744073709551616.999";
@@ -812,7 +815,7 @@ void test_dt_decimal()
  *       to the left of the decimal point which may be a zero.
  ***/
 
-    const char data_rawstr_1[]="-123.45";
+    const char data_rawstr_1[]="  -123.45  \n";
     const char data_canrep_1[]="-123.45";
     const char data_rawstr_2[]="+123.45";
     const char data_canrep_2[]="123.45";
@@ -954,7 +957,7 @@ void test_dt_float()
     const XSValue::DataType dt = XSValue::dt_float; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="1234.e+10";
+    const char lex_v_ran_v_0[]="  1234.e+10  \n";
     const char lex_v_ran_v_1[]="+3.402823466e+38";
     const char lex_v_ran_v_2[]="-3.402823466e+38";
     const char lex_v_ran_v_3[]="+1.175494351e-38";
@@ -994,7 +997,7 @@ void test_dt_float()
  *
  ***/
 
-    const char data_rawstr_1[]="-123.45";
+    const char data_rawstr_1[]="   -123.45    \n";
     const char data_canrep_1[]="-1.2345E2";
     const char data_rawstr_2[]="+123.45";
     const char data_canrep_2[]="1.2345E2";
@@ -1146,7 +1149,7 @@ void test_dt_double()
     const XSValue::DataType dt = XSValue::dt_double; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="1234.e+10";
+    const char lex_v_ran_v_0[]="   1234.e+10   \n";
     const char lex_v_ran_v_1[]="+1.7976931348623158e+308";
     const char lex_v_ran_v_2[]="-1.7976931348623158e+308";
     const char lex_v_ran_v_3[]="+2.2250738585072014e-308";
@@ -1189,7 +1192,7 @@ void test_dt_double()
  *
  ***/
 
-    const char data_rawstr_1[]="-123.45";
+    const char data_rawstr_1[]="    -123.45    \n";
     const char data_canrep_1[]="-1.2345E2";
     const char data_rawstr_2[]="+123.45";
     const char data_canrep_2[]="1.2345E2";
@@ -1343,7 +1346,7 @@ void test_dt_integer()
     const XSValue::DataType dt = XSValue::dt_integer; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="1234";
+    const char lex_v_ran_v_1[]="   1234    \n";
     const char lex_v_ran64_v_1[]="+9223372036854775807";
     const char lex_v_ran64_v_2[]="-9223372036854775808";
     const char lex_v_ran64_iv_1[]="+9223372036854775808";
@@ -1380,7 +1383,7 @@ void test_dt_integer()
  *
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="   +12345   \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -1500,7 +1503,7 @@ void test_dt_nonPositiveInteger()
     const XSValue::DataType dt = XSValue::dt_nonPositiveInteger; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="-1234";
+    const char lex_v_ran_v_1[]="    -1234   \n";
     const char lex_v_ran_iv_1[]="+1";
 
     const char lex_v_ran64_v_2[]="-9223372036854775808";
@@ -1532,7 +1535,7 @@ void test_dt_nonPositiveInteger()
  *
  ***/
 
-    const char data_rawstr_1[]="0";
+    const char data_rawstr_1[]="   0    \n";
     const char data_canrep_1[]="-0";
     const char data_rawstr_2[]="-00012345";
     const char data_canrep_2[]="-12345";
@@ -1646,7 +1649,7 @@ void test_dt_negativeInteger()
     const XSValue::DataType dt = XSValue::dt_negativeInteger; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="-1234";
+    const char lex_v_ran_v_1[]="    -1234    \n";
     const char lex_v_ran_iv_1[]="0";
 
     const char lex_v_ran64_v_2[]="-9223372036854775808";
@@ -1677,7 +1680,7 @@ void test_dt_negativeInteger()
  *
  ***/
 
-    const char data_rawstr_1[]="-00012345";
+    const char data_rawstr_1[]="    -00012345    \n";
     const char data_canrep_1[]="-12345";
    
     /***    
@@ -1788,7 +1791,7 @@ void test_dt_long()
     const XSValue::DataType dt = XSValue::dt_long; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="1234";
+    const char lex_v_ran_v_1[]="    1234    \n";
     const char lex_v_ran64_v_1[]="+9223372036854775807";
     const char lex_v_ran64_v_2[]="-9223372036854775808";
     const char lex_v_ran64_iv_1[]="+9223372036854775808";
@@ -1825,7 +1828,7 @@ void test_dt_long()
 
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="    +12345   \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -1953,7 +1956,7 @@ void test_dt_int()
     const XSValue::DataType dt = XSValue::dt_int; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="1234";
+    const char lex_v_ran_v_0[]="    1234     \n";
 
     const char lex_v_ran_v_1[]="+2147483647";
     const char lex_v_ran_v_2[]="-2147483648";
@@ -1982,7 +1985,7 @@ void test_dt_int()
  *
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="    +12345  \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -2106,7 +2109,7 @@ void test_dt_short()
     const XSValue::DataType dt = XSValue::dt_short; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="1234";
+    const char lex_v_ran_v_0[]="    1234    \n";
 
     const char lex_v_ran_v_1[]="+32767";
     const char lex_v_ran_v_2[]="-32768";
@@ -2136,7 +2139,7 @@ void test_dt_short()
  *
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="   +12345   \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -2260,7 +2263,7 @@ void test_dt_byte()
     const XSValue::DataType dt = XSValue::dt_byte; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="12";
+    const char lex_v_ran_v_0[]="   12   \n";
 
     const char lex_v_ran_v_1[]="+127";
     const char lex_v_ran_v_2[]="-128";
@@ -2290,7 +2293,7 @@ void test_dt_byte()
  *
  ***/
   
-    const char data_rawstr_1[]="+123";
+    const char data_rawstr_1[]="   +123   \n";
     const char data_canrep_1[]="123";
     const char data_rawstr_2[]="000123";
     const char data_canrep_2[]="123";
@@ -2411,7 +2414,7 @@ void test_dt_nonNegativeInteger()
     const XSValue::DataType dt = XSValue::dt_nonNegativeInteger; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="1234";
+    const char lex_v_ran_v_1[]="   1234   \n";
     const char lex_v_ran_iv_1[]="-1";
 
     const char lex_v_ran64_v_2[]="+18446744073709551615";
@@ -2443,7 +2446,7 @@ void test_dt_nonNegativeInteger()
  *
  ***/
 
-    const char data_rawstr_1[]="0";
+    const char data_rawstr_1[]="   0    \n";
     const char data_canrep_1[]="0";
     const char data_rawstr_2[]="+00012345";
     const char data_canrep_2[]="12345";
@@ -2559,7 +2562,7 @@ void test_dt_unsignedLong()
     const XSValue::DataType dt = XSValue::dt_unsignedLong; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="1234";
+    const char lex_v_ran_v_1[]="    1234   \n";
     const char lex_v_ran64_v_1[]="+18446744073709551615";
     const char lex_v_ran64_v_2[]="0";
     const char lex_v_ran64_iv_1[]="+18446744073709551616";
@@ -2596,7 +2599,7 @@ void test_dt_unsignedLong()
 
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="    +12345   \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -2725,7 +2728,7 @@ void test_dt_unsignedInt()
     const XSValue::DataType dt = XSValue::dt_unsignedInt; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="1234";
+    const char lex_v_ran_v_0[]="   1234   \n";
 
     const char lex_v_ran_v_1[]="+4294967295";
     const char lex_v_ran_v_2[]="0";
@@ -2753,7 +2756,7 @@ void test_dt_unsignedInt()
  *
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="   +12345   \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -2875,7 +2878,7 @@ void test_dt_unsignedShort()
     const XSValue::DataType dt = XSValue::dt_unsignedShort; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="1234";
+    const char lex_v_ran_v_0[]="    1234  \n";
 
     const char lex_v_ran_v_1[]="+65535";
     const char lex_v_ran_v_2[]="0";
@@ -2903,7 +2906,7 @@ void test_dt_unsignedShort()
  *
  ***/
 
-    const char data_rawstr_1[]="+12345";
+    const char data_rawstr_1[]="    +12345   \n";
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
@@ -3025,7 +3028,7 @@ void test_dt_unsignedByte()
     const XSValue::DataType dt = XSValue::dt_unsignedByte; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_0[]="123";
+    const char lex_v_ran_v_0[]="   123   \n";
 
     const char lex_v_ran_v_1[]="+255";
     const char lex_v_ran_v_2[]="0";
@@ -3053,7 +3056,7 @@ void test_dt_unsignedByte()
  *
  ***/
 
-    const char data_rawstr_1[]="+123";
+    const char data_rawstr_1[]="   +123  \n";
     const char data_canrep_1[]="123";
     const char data_rawstr_2[]="000123";
     const char data_canrep_2[]="123";
@@ -3174,7 +3177,7 @@ void test_dt_positiveInteger()
     const XSValue::DataType dt = XSValue::dt_positiveInteger; 
     bool  toValidate = true;
 
-    const char lex_v_ran_v_1[]="1234";
+    const char lex_v_ran_v_1[]="   1234   \n";
     const char lex_v_ran_iv_1[]="0";
 
     const char lex_v_ran64_v_2[]="+18446744073709551615";
@@ -3205,7 +3208,7 @@ void test_dt_positiveInteger()
  *
  ***/
 
-    const char data_rawstr_1[]="+1";
+    const char data_rawstr_1[]="  +1  \n";
     const char data_canrep_1[]="1";
     const char data_rawstr_2[]="+00012345";
     const char data_canrep_2[]="12345";
@@ -3319,7 +3322,7 @@ void test_dt_boolean()
     const XSValue::DataType dt = XSValue::dt_boolean; 
     bool  toValidate = true;
 
-    const char lex_v_1[]="1";
+    const char lex_v_1[]="  1  \n";
     const char lex_v_2[]="0";
     const char lex_v_3[]="true";
     const char lex_v_4[]="false";
@@ -3437,7 +3440,7 @@ void test_dt_hexBinary()
     const XSValue::DataType dt = XSValue::dt_hexBinary; 
     bool  toValidate = true;
 
-    const char lex_v_1[]="0fb7";
+    const char lex_v_1[]="   0fb7  \n";
     const char lex_v_2[]="1234";
 
     const char lex_iv_1[]="0gb7";
@@ -3555,7 +3558,7 @@ void test_dt_base64Binary()
     const XSValue::DataType dt = XSValue::dt_base64Binary; 
     bool  toValidate = true;
 
-    const char lex_v_1[]="134x cv56 gui0";
+    const char lex_v_1[]="  134x cv56 gui0   \n";
     const char lex_v_2[]="wxtz 8e4k";
 
     const char lex_iv_2[]="134xcv56gui";
@@ -3681,7 +3684,7 @@ void test_dt_duration()
     const XSValue::DataType dt = XSValue::dt_duration; 
     bool  toValidate = true;
 
-    const char v_1[]="P1Y1M1DT1H1M1S";
+    const char v_1[]="   P1Y1M1DT1H1M1S   \n";
     const char v_2[]="P1Y1M1DT23H59M59S";
     const char v_3[]="P1Y1M1DT23H";
 
@@ -3816,7 +3819,7 @@ void test_dt_date()
     const XSValue::DataType dt = XSValue::dt_date; 
     bool  toValidate = true;
 
-    const char v_1[]="1991-05-31";
+    const char v_1[]="   1991-05-31   \n";
     const char v_2[]="9999-06-30";
     const char v_3[]="99991-07-31";
 
@@ -3953,7 +3956,7 @@ void test_dt_gYearMonth()
     const XSValue::DataType dt = XSValue::dt_gYearMonth; 
     bool  toValidate = true;
 
-    const char v_1[]="20000-02";
+    const char v_1[]="   20000-02   \n";
     const char v_2[]="0200-11";
     const char v_3[]="2000-02";
 
@@ -4089,7 +4092,7 @@ void test_dt_gYear()
     const XSValue::DataType dt = XSValue::dt_gYear; 
     bool  toValidate = true;
 
-    const char v_1[]="0001";
+    const char v_1[]="   0001  \n";
     const char v_2[]="9999";
     const char v_3[]="-1999";
 
@@ -4226,7 +4229,7 @@ void test_dt_gMonthDay()
     const XSValue::DataType dt = XSValue::dt_gMonthDay; 
     bool  toValidate = true;
 
-    const char v_1[]="--01-31";
+    const char v_1[]="   --01-31   \n";
     const char v_2[]="--03-31";
     const char v_3[]="--04-01";
 
@@ -4362,7 +4365,7 @@ void test_dt_gDay()
     const XSValue::DataType dt = XSValue::dt_gDay; 
     bool  toValidate = true;
 
-    const char v_1[]="---31";
+    const char v_1[]="   ---31   \n";
     const char v_2[]="---01";
     const char v_3[]="---28";
 
@@ -4499,7 +4502,7 @@ void test_dt_gMonth()
     const XSValue::DataType dt = XSValue::dt_gMonth; 
     bool  toValidate = true;
 
-    const char v_1[]="--02";
+    const char v_1[]="   --02   \n";
     const char v_2[]="--10";
     const char v_3[]="--12";
 
@@ -4636,7 +4639,7 @@ void test_dt_dateTime()
     const XSValue::DataType dt = XSValue::dt_dateTime; 
     bool  toValidate = true;
 
-    const char v_1[]="2000-12-31T23:59:59.00389";
+    const char v_1[]="   2000-12-31T23:59:59.00389  \n";
     const char v_2[]="2000-10-01T11:10:20+06:00";
     const char v_3[]="2000-10-01T11:10:20-06:00";
 
@@ -4802,7 +4805,7 @@ void test_dt_time()
     const XSValue::DataType dt = XSValue::dt_time; 
     bool  toValidate = true;
 
-    const char v_1[]="23:59:59.38900";
+    const char v_1[]="   23:59:59.38900   \n";
     const char v_2[]="24:00:00";
     const char v_3[]="23:59:59";
 
@@ -5045,7 +5048,7 @@ void test_dt_anyURI()
     const XSValue::DataType dt = XSValue::dt_anyURI; 
     bool  toValidate = true;
 
-    const char v_1[]="http://www.schemaTest.org/IBMd3_2_17v01";
+    const char v_1[]="  http://www.schemaTest.org/IBMd3_2_17v01  \n";
     const char v_2[]="gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles";
     const char v_3[]="ftp://www.noNamespace.edu";
 
@@ -5161,7 +5164,7 @@ void test_dt_QName()
     const XSValue::DataType dt = XSValue::dt_QName; 
     bool  toValidate = true;
 
-    const char v_1[]="Ant:Eater";
+    const char v_1[]="   Ant:Eater  \n";
     const char v_2[]="Minimum_Length";
     const char v_3[]="abcde:a2345";
 
@@ -5277,7 +5280,7 @@ void test_dt_NOTATION()
     const XSValue::DataType dt = XSValue::dt_NOTATION; 
     bool  toValidate = true;
 
-    const char v_1[]="http://www.ibm.com/test:notation1";
+    const char v_1[]="   http://www.ibm.com/test:notation1  \n";
     const char iv_1[]="invaliduri:notation2";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
