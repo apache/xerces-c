@@ -114,10 +114,10 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lm -lw -lgen
+                  -licu-uc -licudata -lm -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -lm -lw -lgen
+                  -lm  -lgen
     endif
   else
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XML_OBJ_DIR) \
