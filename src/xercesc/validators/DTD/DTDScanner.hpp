@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/02/05 22:07:09  tng
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+ *
  * Revision 1.5  2002/12/04 02:47:25  knoaman
  * scanner re-organization.
  *
@@ -161,7 +164,7 @@ public:
             DocTypeHandler* const handlerToSet
     );
 
-    void scanExtSubsetDecl(const bool inIncludeSect);
+    void scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD);
     bool scanInternalSubset();
     bool scanId
     (

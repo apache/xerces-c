@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/02/05 22:07:09  tng
+ * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
+ *
  * Revision 1.22  2003/01/20 22:01:38  tng
  * Need to check text decl when expanding PE
  *
@@ -483,7 +486,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             const unsigned int readerNum = fReaderMgr->getCurrentReaderNum();
             try
             {
-                scanExtSubsetDecl(false);
+                scanExtSubsetDecl(false, false);
             }
 
             catch(...)
@@ -2496,7 +2499,7 @@ bool DTDScanner::scanEq()
 //  DTD or an external DTD subset is encountered, and their contents pushed
 //  onto the reader stack. This method will scan that contents.
 //
-void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
+void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
 {
     // Indicate we are in the external subset now
     FlagJanitor<bool> janContentFlag(&fInternalSubset, false);
@@ -2715,7 +2718,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
     }
 
     // If we have a doc type handler, tell it the ext subset ends
-    if (fDocTypeHandler)
+    if (fDocTypeHandler && isDTD)
         fDocTypeHandler->endExtSubset();
 }
 
@@ -3146,7 +3149,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 //  Recurse back to the ext subset call again, telling it its
                 //  in an include section.
                 //
-                scanExtSubsetDecl(true);
+                scanExtSubsetDecl(true, false);
 
                 //
                 //  And see if we got back to the same level. If not, then its

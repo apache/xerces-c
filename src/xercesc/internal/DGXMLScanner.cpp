@@ -974,7 +974,7 @@ void DGXMLScanner::scanDocTypeDecl()
             fReaderMgr.pushReader(reader, declDTD);
 
             // Tell it its not in an include section
-            dtdScanner.scanExtSubsetDecl(false);
+            dtdScanner.scanExtSubsetDecl(false, true);
         }
     }
 }
@@ -1729,7 +1729,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     // Tell it its not in an include section
-    dtdScanner.scanExtSubsetDecl(false);
+    dtdScanner.scanExtSubsetDecl(false, true);
 
     if (fValidate) {
         //  validate the DTD scan so far

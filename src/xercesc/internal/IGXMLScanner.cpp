@@ -1061,7 +1061,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     }
     if(!isRoot && fGrammarType == Grammar::SchemaGrammarType)
         ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(topElem->fThisElement, fGrammarType);
-    
+
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
     {
@@ -1371,7 +1371,7 @@ void IGXMLScanner::scanDocTypeDecl()
             fReaderMgr.pushReader(reader, declDTD);
 
             // Tell it its not in an include section
-            dtdScanner.scanExtSubsetDecl(false);
+            dtdScanner.scanExtSubsetDecl(false, true);
         }
     }
 }
@@ -2135,7 +2135,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     );
                     errorBeforeElementFound = true;
                 }
-                else if(errorCondition) 
+                else if(errorCondition)
                     laxBeforeElementFound = true;
             }
         }
@@ -2279,7 +2279,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 , elemDecl->getFullName()
             );
 
-            if(fGrammarType == Grammar::SchemaGrammarType) 
+            if(fGrammarType == Grammar::SchemaGrammarType)
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
         }
     }
@@ -2362,7 +2362,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                             , prefixBuf.getRawBuffer()
                         );
 
-                        if(fGrammarType == Grammar::SchemaGrammarType) 
+                        if(fGrammarType == Grammar::SchemaGrammarType)
                             ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
 
                     }
@@ -2403,7 +2403,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
 
-            if(fGrammarType == Grammar::SchemaGrammarType) 
+            if(fGrammarType == Grammar::SchemaGrammarType)
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
 
         }
@@ -2487,7 +2487,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     , elemDecl->getFullName()
                     , elemDecl->getFormattedContentModel()
                 );
-                if(fGrammarType == Grammar::SchemaGrammarType) 
+                if(fGrammarType == Grammar::SchemaGrammarType)
                     ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
 
             }
@@ -2888,7 +2888,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     // Tell it its not in an include section
-    dtdScanner.scanExtSubsetDecl(false);
+    dtdScanner.scanExtSubsetDecl(false, true);
 
     if (fValidate) {
         //  validate the DTD scan so far
