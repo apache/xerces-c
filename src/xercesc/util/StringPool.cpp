@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/03/02 23:21:37  peiyongz
+ * eliminate leakage
+ *
  * Revision 1.9  2004/01/29 11:48:46  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -316,7 +319,11 @@ void XMLStringPool::serialize(XSerializeEngine& serEng)
         {
             XMLCh* stringData;
             serEng.readString(stringData);
-            addNewEntry(stringData);            
+            addNewEntry(stringData);
+
+            //we got to deallocate this string 
+            //since stringpool will duplicate this string in the PoolElem and own that copy
+            fMemoryManager->deallocate(stringData);
         }
     }
 }
