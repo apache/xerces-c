@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/10/15 18:30:40  knoaman
+ * Add support for 'Pi' and 'Pf'.
+ *
  * Revision 1.3  2001/05/11 13:26:51  tng
  * Copyright update.
  *
@@ -99,14 +102,14 @@ bool UnicodeRangeFactory::fKeywordsInitialized = false;
 // ---------------------------------------------------------------------------
 //  Local data
 // ---------------------------------------------------------------------------
-const int            UNICATEGSIZE     = 35;
-const unsigned short CHAR_LETTER      = 28;
-const unsigned short CHAR_MARK        = 29;
-const unsigned short CHAR_NUMBER      = 30;
-const unsigned short CHAR_SEPARATOR   = 31;
-const unsigned short CHAR_OTHER       = 32;
-const unsigned short CHAR_PUNCTUATION = 33;
-const unsigned short CHAR_SYMBOL      = 34;
+const int            UNICATEGSIZE     = 37;
+const unsigned short CHAR_LETTER      = 30;
+const unsigned short CHAR_MARK        = 31;
+const unsigned short CHAR_NUMBER      = 32;
+const unsigned short CHAR_SEPARATOR   = 33;
+const unsigned short CHAR_OTHER       = 34;
+const unsigned short CHAR_PUNCTUATION = 35;
+const unsigned short CHAR_SYMBOL      = 36;
 
 const XMLCh uniCategNames[][UNICATEGSIZE] =
 {
@@ -138,6 +141,8 @@ const XMLCh uniCategNames[][UNICATEGSIZE] =
     {chLatin_S, chLatin_c, chNull},
     {chLatin_S, chLatin_k, chNull},
     {chLatin_S, chLatin_o, chNull},
+    {chLatin_P, chLatin_i, chNull},
+    {chLatin_P, chLatin_f, chNull},
     {chLatin_L, chNull},
     {chLatin_M, chNull},
     {chLatin_N, chNull},
@@ -181,15 +186,6 @@ void UnicodeRangeFactory::buildRanges() {
     for (int j=0; j < 0x10000; j++) {
 
         unsigned short charType = XMLUniCharacter::getType(j);
-
-		// Assumption - treat initial punctuation as start punct.
-		//            - treat final punctuation as end punct.
-		if (charType == XMLUniCharacter::INITIAL_PUNCTUATION) {
-            charType = XMLUniCharacter::START_PUNCTUATION;
-        }
-		else if (charType == XMLUniCharacter::FINAL_PUNCTUATION) {
-            charType = XMLUniCharacter::END_PUNCTUATION;
-        }
 
 		ranges[charType]->addRange(j, j);
 		charType = getUniCategory(charType);
