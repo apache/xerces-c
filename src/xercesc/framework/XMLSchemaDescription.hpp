@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/07/31 17:03:19  peiyongz
+ * locationHint incrementally added
+ *
  * Revision 1.1  2003/06/20 18:37:39  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -129,7 +132,7 @@ public :
       * getTargetNamespace
       *
       */	
-    virtual const XMLCh*                getTargetNamespace() const = 0;
+    virtual const XMLCh*               getTargetNamespace() const = 0;
 
     /**
       * getLocationHints
@@ -171,7 +174,7 @@ public :
       * setLocationHints
       *
       */	
-    virtual void                       setLocationHints(RefArrayVectorOf<XMLCh>* const) = 0;
+    virtual void                       setLocationHints(const XMLCh* const) = 0;
 
     /**
       * setTriggeringComponent
