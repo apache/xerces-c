@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/02/16 04:02:34  neilg
+ * fix for bug 26936
+ *
  * Revision 1.2  2003/12/16 17:17:25  peiyongz
  * typo fixed
  *
@@ -88,7 +91,7 @@ public :
 
     virtual void writeBytes
     (
-                XMLByte* const      toGo
+          const XMLByte* const      toGo
         , const unsigned int        maxToWrite
     ) = 0;
 

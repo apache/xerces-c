@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/02/16 04:02:34  neilg
+ * fix for bug 26936
+ *
  * Revision 1.3  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -113,7 +116,7 @@ public :
 
     virtual void writeBytes
     (
-                XMLByte* const      toGo
+          const XMLByte* const      toGo
         , const unsigned int        maxToWrite
     );
 

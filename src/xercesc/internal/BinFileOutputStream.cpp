@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/02/16 04:02:34  neilg
+ * fix for bug 26936
+ *
  * Revision 1.2  2003/12/17 13:58:02  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -137,7 +140,7 @@ unsigned int BinFileOutputStream::curPos() const
 }
 
 
-void BinFileOutputStream::writeBytes(       XMLByte* const  toGo
+void BinFileOutputStream::writeBytes( const XMLByte* const  toGo
                                     , const unsigned int    maxToWrite)
 {
     //

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2004/02/16 04:02:34  neilg
+ * fix for bug 26936
+ *
  * Revision 1.2  2003/12/17 00:01:44  peiyongz
  * getSize()
  *
@@ -94,7 +97,7 @@ BinMemOutputStream::~BinMemOutputStream()
     fMemoryManager->deallocate(fDataBuf);
 }
 
-void BinMemOutputStream::writeBytes(       XMLByte*     const      toGo
+void BinMemOutputStream::writeBytes( const XMLByte*     const      toGo
                                    , const unsigned int            maxToWrite)
 {
 
