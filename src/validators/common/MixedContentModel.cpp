@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
+ *
  * Revision 1.5  2000/05/15 22:31:32  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
+ *
  * Revision 1.5  2000/03/28 19:43:25  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.

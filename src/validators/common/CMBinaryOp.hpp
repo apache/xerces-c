@@ -56,106 +56,86 @@
 
 /*
  * $Log$
- * Revision 1.3  2000/02/24 20:16:49  abagchi
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
+ *
+ * Revision 1.4  2000/03/02 19:55:37  roddey
+ * This checkin includes many changes done while waiting for the
+ * 1.1.0 code to be finished. I can't list them all here, but a list is
+ * available elsewhere.
+ *
+ * Revision 1.3  2000/02/24 20:16:47  abagchi
  * Swat for removing Log from API docs
  *
- * Revision 1.2  2000/02/09 21:42:39  abagchi
+ * Revision 1.2  2000/02/09 21:42:36  abagchi
  * Copyright swat
  *
- * Revision 1.1.1.1  1999/11/09 01:03:45  twl
+ * Revision 1.1.1.1  1999/11/09 01:03:02  twl
  * Initial checkin
  *
- * Revision 1.3  1999/11/08 20:45:43  rahul
+ * Revision 1.2  1999/11/08 20:45:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
+#if !defined(CMBINARYOP_HPP)
+#define CMBINARYOP_HPP
 
-#if !defined(MIXEDCONTENTMODEL_HPP)
-#define MIXEDCONTENTMODEL_HPP
+#include <util/XercesDefs.hpp>
+#include <validators/DTD/CMNode.hpp>
 
-#include <util/ValueVectorOf.hpp>
-#include <framework/XMLContentModel.hpp>
+class CMStateSet;
 
-class ContentSpecNode;
-class DTDElementDecl;
-
-
-//
-//  MixedContentModel is a derivative of the abstract content model base
-//  class that handles the special case of mixed model elements. If an element
-//  is mixed model, it has PCDATA as its first possible content, followed
-//  by an alternation of the possible children. The children cannot have any
-//  numeration or order, so it must look like this:
-//
-//  <!ELEMENT Foo ((#PCDATA|a|b|c|)*)>
-//
-//  So, all we have to do is to keep an array of the possible children and
-//  validate by just looking up each child being validated by looking it up
-//  in the list.
-//
-class MixedContentModel : public XMLContentModel
+class CMBinaryOp : public CMNode
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors and Destructor
+    //  Constructors
     // -----------------------------------------------------------------------
-    MixedContentModel
+    CMBinaryOp
     (
-        const   DTDElementDecl& parentElem
+        const   ContentSpecNode::NodeTypes  type
+        ,       CMNode* const               leftToAdopt
+        ,       CMNode* const               rightToAdopt
     );
-
-    ~MixedContentModel();
+    ~CMBinaryOp();
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool hasDups() const;
+    const CMNode* getLeft() const;
+    CMNode* getLeft();
+    const CMNode* getRight() const;
+    CMNode* getRight();
 
 
     // -----------------------------------------------------------------------
-    //  Implementation of the ContentModel virtual interface
+    //  Implementation of the public CMNode virtual interface
     // -----------------------------------------------------------------------
-    virtual bool getIsAmbiguous() const;
-	virtual int validateContent
-    (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-    )   const;
+    bool isNullable() const;
+
+
+protected :
+    // -----------------------------------------------------------------------
+    //  Implementation of the protected CMNode virtual interface
+    // -----------------------------------------------------------------------
+    void calcFirstPos(CMStateSet& toSet) const;
+    void calcLastPos(CMStateSet& toSet) const;
 
 
 private :
     // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-    void buildChildList
-    (
-        const   ContentSpecNode&                curNode
-        ,       ValueVectorOf<unsigned int>&    toFill
-    );
-
-
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    MixedContentModel();
-    MixedContentModel(const MixedContentModel&);
-    void operator=(const MixedContentModel&);
-
-
-    // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fCount
-    //      The count of possible children in the fChildIds member.
-    //
-    //  fChildIds
-    //      The list of possible children that we have to accept. This array
-    //      is allocated as large as needed in the constructor.
+    //  fLeftChild
+    //  fRightChild
+    //      These are the references to the two nodes that are on either side
+    //      of this binary operation. We own them both.
     // -----------------------------------------------------------------------
-    unsigned int    fCount;
-    unsigned int*   fChildIds;
+    CMNode* fLeftChild;
+    CMNode* fRightChild;
 };
 
 #endif

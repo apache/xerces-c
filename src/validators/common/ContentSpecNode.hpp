@@ -56,11 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.5  2000/03/28 19:43:25  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
  *
- * Revision 1.4  2000/03/02 19:55:37  roddey
+ * Revision 1.4  2000/03/02 19:55:38  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
  * available elsewhere.
@@ -68,167 +68,247 @@
  * Revision 1.3  2000/02/24 20:16:48  abagchi
  * Swat for removing Log from API docs
  *
- * Revision 1.2  2000/02/09 21:42:36  abagchi
+ * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swat
  *
- * Revision 1.1.1.1  1999/11/09 01:03:05  twl
+ * Revision 1.1.1.1  1999/11/09 01:03:14  twl
  * Initial checkin
  *
- * Revision 1.2  1999/11/08 20:45:36  rahul
+ * Revision 1.2  1999/11/08 20:45:38  rahul
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
-#if !defined(CMNODE_HPP)
-#define CMNODE_HPP
 
+#if !defined(CONTENTSPECNODE_HPP)
+#define CONTENTSPECNODE_HPP
+
+#include <framework/XMLElementDecl.hpp>
 #include <util/XercesDefs.hpp>
-#include <validators/DTD/ContentSpecNode.hpp>
-#include <validators/DTD/CMStateSet.hpp>
+
+class XMLBuffer;
+class XMLValidator;
 
 
-class CMNode
+class ContentSpecNode
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors and Destructors
+    //  Class specific types
     // -----------------------------------------------------------------------
-    CMNode(const ContentSpecNode::NodeTypes type);
-    virtual ~CMNode();
+    enum NodeTypes
+    {
+        Leaf
+        , ZeroOrOne
+        , ZeroOrMore
+        , OneOrMore
+        , Choice
+        , Sequence
+
+        , UnknownType = -1
+    };
 
 
     // -----------------------------------------------------------------------
-    //  Virtual methods to be provided derived node classes
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    virtual bool isNullable() const = 0;
+    ContentSpecNode();
+    ContentSpecNode(const unsigned int elemId);
+    ContentSpecNode
+    (
+        const   NodeTypes               type
+        ,       ContentSpecNode* const  firstToAdopt
+        ,       ContentSpecNode* const  secondToAdopt
+    );
+    ~ContentSpecNode();
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    ContentSpecNode::NodeTypes getType() const;
-    const CMStateSet& getFirstPos() const;
-    const CMStateSet& getLastPos() const;
+    unsigned int getElemId() const;
+    ContentSpecNode* getFirst();
+    const ContentSpecNode* getFirst() const;
+    ContentSpecNode* getSecond();
+    const ContentSpecNode* getSecond() const;
+    NodeTypes getType() const;
+    bool isPCData() const;
+    ContentSpecNode* orphanFirst();
+    ContentSpecNode* orphanSecond();
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setMaxStates(const unsigned int maxStates);
+    void setElemId(const unsigned int elemId);
+    void setFirst(ContentSpecNode* const toAdopt);
+    void setSecond(ContentSpecNode* const toAdopt);
+    void setType(const NodeTypes type);
 
 
-protected :
     // -----------------------------------------------------------------------
-    //  Protected, abstract methods
+    //  Miscellaneous
     // -----------------------------------------------------------------------
-    virtual void calcFirstPos(CMStateSet& toUpdate) const = 0;
-    virtual void calcLastPos(CMStateSet& toUpdate) const = 0;
+    void formatSpec
+    (
+        const   XMLValidator&   validator
+        ,       XMLBuffer&      bufToFill
+    )   const;
 
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    CMNode();
-    CMNode(const CMNode&);
-    void operator=(const CMNode&);
+    ContentSpecNode(const ContentSpecNode&);
+    void operator=(const ContentSpecNode&);
 
 
     // -----------------------------------------------------------------------
-    //  Private data members
+    //  Private Data Members
+    //
+    //  fElemId
+    //      If the type is Leaf, then this is the id of the element. If its
+    //      fgPCDataElemId, then its a PCData node.
+    //
+    //  fFirst
+    //  fSecond
+    //      The optional first and second nodes. The fType field indicates
+    //      which of these are valid. The validaty constraints are:
+    //
+    //          Leaf = Neither valid
+    //          ZeroOrOne, ZeroOrMore = First
+    //          Choice, Sequence = First and Second
     //
     //  fType
-    //      The type of node. This indicates whether its a leaf or an
-    //      operation.
-    //
-    //  fFirstPos
-    //      The set of NFA states that represent the entry states of this
-    //      node in the DFA.
-    //
-    //  fLastPos
-    //      The set of NFA states that represent the final states of this
-    //      node in the DFA.
-    //
-    //  fMaxStates
-    //      The maximum number of states that the NFA has, which means the
-    //      max number of NFA states that have to be traced in the state
-    //      sets during the building of the DFA. Its unfortunate that it
-    //      has to be stored redundantly, but we need to fault in the
-    //      state set members and they have to be sized to this size.
+    //      The type of node. This controls how many of the child node fields
+    //      are used.
     // -----------------------------------------------------------------------
-    ContentSpecNode::NodeTypes  fType;
-    CMStateSet*                 fFirstPos;
-    CMStateSet*                 fLastPos;
-    unsigned int                fMaxStates;
-}; 
-
+    unsigned int        fElemId;
+    ContentSpecNode*    fFirst;
+    ContentSpecNode*    fSecond;
+    NodeTypes           fType;
+};
 
 
 // ---------------------------------------------------------------------------
-//  CMNode: Constructors and Destructors
+//  ContentSpecNode: Constructors and Destructor
 // ---------------------------------------------------------------------------
-inline CMNode::CMNode(const ContentSpecNode::NodeTypes type) :
+inline ContentSpecNode::ContentSpecNode() :
 
-    fType(type)
-    , fFirstPos(0)
-    , fLastPos(0)
-    , fMaxStates(~0)
+    fElemId(XMLElementDecl::fgInvalidElemId)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
 {
 }
 
-inline CMNode::~CMNode()
+inline
+ContentSpecNode::ContentSpecNode(const unsigned int elemId) :
+
+    fElemId(elemId)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
 {
-    // Clean up any position sets that got created
-    delete fFirstPos;
-    delete fLastPos;
+}
+
+inline
+ContentSpecNode::ContentSpecNode(const  NodeTypes               type
+                                ,       ContentSpecNode* const  firstToAdopt
+                                ,       ContentSpecNode* const  secondToAdopt) :
+
+    fElemId(XMLElementDecl::fgInvalidElemId)
+    , fFirst(firstToAdopt)
+    , fSecond(secondToAdopt)
+    , fType(type)
+{
+}
+
+inline ContentSpecNode::~ContentSpecNode()
+{
+    // Delete our children, which cause recursive cleanup
+    delete fFirst;
+    delete fSecond;
 }
 
 
 // ---------------------------------------------------------------------------
-//  CMNode: Getter methods
+//  ContentSpecNode: Getter methods
 // ---------------------------------------------------------------------------
-inline ContentSpecNode::NodeTypes CMNode::getType() const
+inline unsigned int ContentSpecNode::getElemId() const
+{
+    return fElemId;
+}
+
+inline ContentSpecNode* ContentSpecNode::getFirst()
+{
+    return fFirst;
+}
+
+inline const ContentSpecNode* ContentSpecNode::getFirst() const
+{
+    return fFirst;
+}
+
+inline ContentSpecNode* ContentSpecNode::getSecond()
+{
+    return fSecond;
+}
+
+inline const ContentSpecNode* ContentSpecNode::getSecond() const
+{
+    return fSecond;
+}
+
+inline ContentSpecNode::NodeTypes ContentSpecNode::getType() const
 {
     return fType;
 }
 
-inline const CMStateSet& CMNode::getFirstPos() const
+inline bool ContentSpecNode::isPCData() const
 {
-    //
-    //  Fault in the state set if needed. Since we can't use mutable members
-    //  cast off the const'ness.
-    //
-    if (!fFirstPos)
-    {
-        CMNode* unconstThis = (CMNode*)this;
-        unconstThis->fFirstPos = new CMStateSet(fMaxStates);
-        unconstThis->calcFirstPos(*fFirstPos);
-    }
-    return *fFirstPos;
+    return ((fType == Leaf) && (fElemId == XMLElementDecl::fgPCDataElemId));
 }
 
-inline const CMStateSet& CMNode::getLastPos() const
+inline ContentSpecNode* ContentSpecNode::orphanFirst()
 {
-    //
-    //  Fault in the state set if needed. Since we can't use mutable members
-    //  cast off the const'ness.
-    //
-    if (!fLastPos)
-    {
-        CMNode* unconstThis = (CMNode*)this;
-        unconstThis->fLastPos = new CMStateSet(fMaxStates);
-        unconstThis->calcLastPos(*fLastPos);
-    }
-    return *fLastPos;
+    ContentSpecNode* retNode = fFirst;
+    fFirst = 0;
+    return retNode;
+}
+
+inline ContentSpecNode* ContentSpecNode::orphanSecond()
+{
+    ContentSpecNode* retNode = fSecond;
+    fSecond = 0;
+    return retNode;
 }
 
 
 // ---------------------------------------------------------------------------
-//  CMNode: Setter methods
+//  ContentSpecType: Setter methods
 // ---------------------------------------------------------------------------
-inline void CMNode::setMaxStates(const unsigned int maxStates)
+inline void ContentSpecNode::setElemId(const unsigned int newId)
 {
-    fMaxStates = maxStates;
+    fElemId = newId;
+}
+
+inline void ContentSpecNode::setFirst(ContentSpecNode* const toAdopt)
+{
+    delete fFirst;
+    fFirst = toAdopt;
+}
+
+inline void ContentSpecNode::setSecond(ContentSpecNode* const toAdopt)
+{
+    delete fSecond;
+    fSecond = toAdopt;
+}
+
+inline void ContentSpecNode::setType(const NodeTypes type)
+{
+    fType = type;
 }
 
 #endif

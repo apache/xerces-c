@@ -56,18 +56,22 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
+ *
  * Revision 1.3  2000/03/02 19:55:37  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
  * available elsewhere.
  *
- * Revision 1.2  2000/02/09 21:42:36  abagchi
+ * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swatswat
  *
- * Revision 1.1.1.1  1999/11/09 01:03:00  twl
+ * Revision 1.1.1.1  1999/11/09 01:03:08  twl
  * Initial checkin
  *
- * Revision 1.2  1999/11/08 20:45:35  rahul
+ * Revision 1.2  1999/11/08 20:45:37  rahul
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
@@ -78,118 +82,68 @@
 // ---------------------------------------------------------------------------
 #include <util/XercesDefs.hpp>
 #include <util/RuntimeException.hpp>
-#include <validators/DTD/ContentSpecNode.hpp>
-#include <validators/DTD/CMBinaryOp.hpp>
 #include <validators/DTD/CMStateSet.hpp>
+#include <validators/DTD/CMUnaryOp.hpp>
 
 
 // ---------------------------------------------------------------------------
-//  CMBinaryOp: Constructors
+//  CMUnaryOp: Constructors and Destructor
 // ---------------------------------------------------------------------------
-CMBinaryOp::CMBinaryOp( const   ContentSpecNode::NodeTypes  type
-                        ,       CMNode* const               leftToAdopt
-                        ,       CMNode* const               rightToAdopt) :
+CMUnaryOp::CMUnaryOp(   const   ContentSpecNode::NodeTypes  type
+                        ,       CMNode* const               nodeToAdopt) :
     CMNode(type)
-    , fLeftChild(leftToAdopt)
-    , fRightChild(rightToAdopt)
+    , fChild(nodeToAdopt)
 {
     // Insure that its one of the types we require
-    if ((type != ContentSpecNode::Choice)
-    &&  (type != ContentSpecNode::Sequence))
+    if ((type != ContentSpecNode::ZeroOrOne)
+    &&  (type != ContentSpecNode::ZeroOrMore)
+    &&  (type != ContentSpecNode::OneOrMore))
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType);
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnaryOpHadBinType);
     }
 }
 
-CMBinaryOp::~CMBinaryOp()
+CMUnaryOp::~CMUnaryOp()
 {
-    delete fLeftChild;
-    delete fRightChild;
+    delete fChild;
 }
 
 
 // ---------------------------------------------------------------------------
-//  CMBinaryOp: Getter methods
+//  CMUnaryOp: Getter methods
 // ---------------------------------------------------------------------------
-const CMNode* CMBinaryOp::getLeft() const
+const CMNode* CMUnaryOp::getChild() const
 {
-    return fLeftChild;
+    return fChild;
 }
 
-CMNode* CMBinaryOp::getLeft()
+CMNode* CMUnaryOp::getChild()
 {
-    return fLeftChild;
-}
-
-const CMNode* CMBinaryOp::getRight() const
-{
-    return fRightChild;
-}
-
-CMNode* CMBinaryOp::getRight()
-{
-    return fRightChild;
+    return fChild;
 }
 
 
 // ---------------------------------------------------------------------------
-//  CMBinaryOp: Implementation of the public CMNode virtual interface
+//  CMUnaryOp: Implementation of the public CMNode virtual interface
 // ---------------------------------------------------------------------------
-bool CMBinaryOp::isNullable() const
+bool CMUnaryOp::isNullable() const
 {
-    //
-    //  If its an alternation, then if either child is nullable then
-    //  this node is nullable. If its a concatenation, then both of
-    //  them have to be nullable.
-    //
-    if (getType() == ContentSpecNode::Choice)
-        return (fLeftChild->isNullable() || fRightChild->isNullable());
-
-    return (fLeftChild->isNullable() && fRightChild->isNullable());
+    // Repetition operations are always nullable
+    return true;
 }
 
 
 // ---------------------------------------------------------------------------
-//  CMBinaryOp: Implementation of the protected CMNode virtual interface
+//  CMUnaryOp: Implementation of the protected CMNode virtual interface
 // ---------------------------------------------------------------------------
-void CMBinaryOp::calcFirstPos(CMStateSet& toSet) const
+void CMUnaryOp::calcFirstPos(CMStateSet& toSet) const
 {
-    if (getType() == ContentSpecNode::Choice)
-    {
-        // Its the the union of the first positions of our children.
-        toSet = fLeftChild->getFirstPos();
-        toSet |= fRightChild->getFirstPos();
-    }
-     else if (getType() == ContentSpecNode::Sequence)
-    {
-        //
-        //  If our left child is nullable, then its the union of our
-        //  children's first positions. Else is our left child's first
-        //  positions.
-        //
-        toSet = fLeftChild->getFirstPos();
-        if (fLeftChild->isNullable())
-            toSet |= fRightChild->getFirstPos();
-    }
+    // Its just based on our child node's first pos
+    toSet = fChild->getFirstPos();
 }
 
-void CMBinaryOp::calcLastPos(CMStateSet& toSet) const
+void CMUnaryOp::calcLastPos(CMStateSet& toSet) const
 {
-    if (getType() == ContentSpecNode::Choice)
-    {
-        // Its the the union of the first positions of our children.
-        toSet = fLeftChild->getLastPos();
-        toSet |= fRightChild->getLastPos();
-    }
-     else if (getType() == ContentSpecNode::Sequence)
-    {
-        //
-        //  If our right child is nullable, then its the union of our
-        //  children's last positions. Else is our right child's last
-        //  positions.
-        //
-        toSet = fRightChild->getLastPos();
-        if (fRightChild->isNullable())
-            toSet |= fLeftChild->getLastPos();
-    }
+    // Its just based on our child node's last pos
+    toSet = fChild->getLastPos();
 }

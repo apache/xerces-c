@@ -56,66 +56,66 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
+ *
  * Revision 1.3  2000/02/24 20:16:49  abagchi
  * Swat for removing Log from API docs
  *
  * Revision 1.2  2000/02/09 21:42:39  abagchi
  * Copyright swat
  *
- * Revision 1.1.1.1  1999/11/09 01:03:48  twl
+ * Revision 1.1.1.1  1999/11/09 01:03:45  twl
  * Initial checkin
  *
- * Revision 1.2  1999/11/08 20:45:44  rahul
+ * Revision 1.3  1999/11/08 20:45:43  rahul
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
 
-#if !defined(SIMPLECONTENTMODEL_HPP)
-#define SIMPLECONTENTMODEL_HPP
+#if !defined(MIXEDCONTENTMODEL_HPP)
+#define MIXEDCONTENTMODEL_HPP
 
+#include <util/ValueVectorOf.hpp>
 #include <framework/XMLContentModel.hpp>
-#include <validators/DTD/ContentSpecNode.hpp>
+
+class ContentSpecNode;
+class DTDElementDecl;
 
 
 //
-//  SimpleContentModel is a derivative of the abstract content model base
-//  class that handles a small set of simple content models that are just
-//  way overkill to give the DFA treatment.
+//  MixedContentModel is a derivative of the abstract content model base
+//  class that handles the special case of mixed model elements. If an element
+//  is mixed model, it has PCDATA as its first possible content, followed
+//  by an alternation of the possible children. The children cannot have any
+//  numeration or order, so it must look like this:
 //
-//  DESCRIPTION:
+//  <!ELEMENT Foo ((#PCDATA|a|b|c|)*)>
 //
-//  This guy handles the following scenarios:
+//  So, all we have to do is to keep an array of the possible children and
+//  validate by just looking up each child being validated by looking it up
+//  in the list.
 //
-//      a
-//      a?
-//      a*
-//      a+
-//      a,b
-//      a|b
-//
-//  These all involve a unary operation with one element type, or a binary
-//  operation with two elements. These are very simple and can be checked
-//  in a simple way without a DFA and without the overhead of setting up a
-//  DFA for such a simple check.
-//
-//  NOTE:   Pass the XMLElementDecl::fgPCDataElemId value to represent a
-//          PCData node. Pass XMLElementDecl::fgInvalidElemId for unused ids.
-//
-class SimpleContentModel : public XMLContentModel
+class MixedContentModel : public XMLContentModel
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    SimpleContentModel
+    MixedContentModel
     (
-        const   unsigned int                firstChildId
-        , const unsigned int                secondChildId
-        , const ContentSpecNode::NodeTypes  cmOp
+        const   DTDElementDecl& parentElem
     );
 
-    ~SimpleContentModel();
+    ~MixedContentModel();
+
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    bool hasDups() const;
 
 
     // -----------------------------------------------------------------------
@@ -131,48 +131,35 @@ public :
 
 private :
     // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void buildChildList
+    (
+        const   ContentSpecNode&                curNode
+        ,       ValueVectorOf<unsigned int>&    toFill
+    );
+
+
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    SimpleContentModel();
-    SimpleContentModel(const SimpleContentModel&);
-    void operator=(const SimpleContentModel&);
+    MixedContentModel();
+    MixedContentModel(const MixedContentModel&);
+    void operator=(const MixedContentModel&);
 
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fFirstChild
-    //  fSecondChild
-    //      The element idsof the first (and optional second) child node. The
-    //      operation code tells us whether the second child is used or not.
+    //  fCount
+    //      The count of possible children in the fChildIds member.
     //
-    //  fOp
-    //      The operation that this object represents. Since this class only
-    //      does simple contents, there is only ever a single operation
-    //      involved (i.e. the children of the operation are always one or
-    //      two leafs.)
+    //  fChildIds
+    //      The list of possible children that we have to accept. This array
+    //      is allocated as large as needed in the constructor.
     // -----------------------------------------------------------------------
-    unsigned int                fFirstChild;
-    unsigned int                fSecondChild;
-    ContentSpecNode::NodeTypes  fOp;
+    unsigned int    fCount;
+    unsigned int*   fChildIds;
 };
-
-
-// ---------------------------------------------------------------------------
-//  SimpleContentModel: Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline
-SimpleContentModel::SimpleContentModel( const   unsigned int                firstChildId
-                                        , const unsigned int                secondChildId
-                                        , const ContentSpecNode::NodeTypes  cmOp) :
-    fOp(cmOp)
-    , fFirstChild(firstChildId)
-    , fSecondChild(secondChildId)
-{
-}
-
-inline SimpleContentModel::~SimpleContentModel()
-{
-}
 
 #endif

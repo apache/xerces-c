@@ -56,79 +56,69 @@
 
 /*
  * $Log$
- * Revision 1.5  2000/03/28 19:43:25  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
+ * Revision 1.1  2001/02/16 14:17:29  tng
+ * Schema: Move the common Content Model files that are shared by DTD
+ * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
  *
  * Revision 1.4  2000/03/02 19:55:37  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
  * available elsewhere.
  *
- * Revision 1.3  2000/02/24 20:16:47  abagchi
+ * Revision 1.3  2000/02/24 20:16:48  abagchi
  * Swat for removing Log from API docs
  *
- * Revision 1.2  2000/02/09 21:42:36  abagchi
+ * Revision 1.2  2000/02/09 21:42:37  abagchi
  * Copyright swat
  *
- * Revision 1.1.1.1  1999/11/09 01:03:04  twl
+ * Revision 1.1.1.1  1999/11/09 01:03:11  twl
  * Initial checkin
  *
- * Revision 1.2  1999/11/08 20:45:36  rahul
+ * Revision 1.2  1999/11/08 20:45:37  rahul
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
-#if !defined(CMLEAF_HPP)
-#define CMLEAF_HPP
+
+#if !defined(CMUNARYOP_HPP)
+#define CMUNARYOP_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/RuntimeException.hpp>
-#include <validators/DTD/ContentSpecNode.hpp>
 #include <validators/DTD/CMNode.hpp>
-#include <validators/DTD/CMStateSet.hpp>
+#include <validators/DTD/ContentSpecNode.hpp>
 
-//
-//  This class represents a leaf in the content spec node tree of an
-//  element's content model. It just has an element id and a position value,
-//  the latter of which is used during the building of a DFA.
-//
-class CMLeaf : public CMNode
+class CMStateSet;
+
+class CMUnaryOp : public CMNode
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    CMLeaf
+    CMUnaryOp
     (
-        const   unsigned int    elemId
-        , const unsigned int    position = ~0
+        const   ContentSpecNode::NodeTypes  type
+        ,       CMNode* const               nodeToAdopt
     );
-    ~CMLeaf();
+    ~CMUnaryOp();
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getId() const;
-    unsigned int getPosition() const;
+    const CMNode* getChild() const;
+    CMNode* getChild();
 
 
     // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setPosition(const unsigned int newPosition);
-
-
-    // -----------------------------------------------------------------------
-    //  Implementation of public CMNode virtual interface
+    //  Implementation of the public CMNode virtual interface
     // -----------------------------------------------------------------------
     bool isNullable() const;
 
 
 protected :
     // -----------------------------------------------------------------------
-    //  Implementation of protected CMNode virtual interface
+    //  Implementation of the protected CMNode virtual interface
     // -----------------------------------------------------------------------
     void calcFirstPos(CMStateSet& toSet) const;
     void calcLastPos(CMStateSet& toSet) const;
@@ -138,95 +128,11 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fElemId
-    //      This is the element id of the element that this leaf represents.
-    //
-    //  fPosition
-    //      Part of the algorithm to convert a regex directly to a DFA
-    //      numbers each leaf sequentially. If its -1, that means its an
-    //      epsilon node. All others are non-epsilon positions.
+    //  fChild
+    //      This is the reference to the one child that we have for this
+    //      unary operation. We own it.
     // -----------------------------------------------------------------------
-    unsigned int    fElemId;
-    unsigned int    fPosition;
+    CMNode*     fChild;
 };
-
-
-// -----------------------------------------------------------------------
-//  Constructors
-// -----------------------------------------------------------------------
-inline CMLeaf::CMLeaf(  const   unsigned int    elemId
-                        , const unsigned int    position) :
-    CMNode(ContentSpecNode::Leaf)
-    , fElemId(elemId)
-    , fPosition(position)
-{
-}
-
-inline CMLeaf::~CMLeaf()
-{
-}
-
-
-// ---------------------------------------------------------------------------
-//  Getter methods
-// ---------------------------------------------------------------------------
-inline unsigned int CMLeaf::getId() const
-{
-    return fElemId;
-}
-
-inline unsigned int CMLeaf::getPosition() const
-{
-    return fPosition;
-}
-
-
-// ---------------------------------------------------------------------------
-//  Setter methods
-// ---------------------------------------------------------------------------
-inline void CMLeaf::setPosition(const unsigned int newPosition)
-{
-    fPosition = newPosition;
-}
-
-
-// ---------------------------------------------------------------------------
-//  Implementation of public CMNode virtual interface
-// ---------------------------------------------------------------------------
-inline bool CMLeaf::isNullable() const
-{
-    // Leaf nodes are never nullable unless its an epsilon node
-    return (fPosition == -1);
-}
-
-
-// ---------------------------------------------------------------------------
-//  Implementation of protected CMNode virtual interface
-// ---------------------------------------------------------------------------
-inline void CMLeaf::calcFirstPos(CMStateSet& toSet) const
-{
-    // If we are an epsilon node, then the first pos is an empty set
-    if (fPosition == -1)
-    {
-        toSet.zeroBits();
-        return;
-    }
-
-    // Otherwise, its just the one bit of our position
-    toSet.setBit(fPosition);
-}
-
-inline void CMLeaf::calcLastPos(CMStateSet& toSet) const
-{
-    // If we are an epsilon node, then the last pos is an empty set
-    if (fPosition == -1)
-    {
-        toSet.zeroBits();
-        return;
-    }
-
-    // Otherwise, its just the one bit of our position
-    toSet.setBit(fPosition);
-}
 
 #endif
