@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:43:19  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2003/05/15 18:54:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -93,30 +96,33 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DTDAttDef: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDAttDef::DTDAttDef() :
+DTDAttDef::DTDAttDef(MemoryManager* const manager) :
 
-    fElemId(XMLElementDecl::fgInvalidElemId)
+    XMLAttDef(XMLAttDef::CData, XMLAttDef::Implied, manager)
+   , fElemId(XMLElementDecl::fgInvalidElemId)
     , fName(0)
 {
 }
 
-DTDAttDef::DTDAttDef(const  XMLCh* const            attName
-                    , const XMLAttDef::AttTypes     type
-                    , const XMLAttDef::DefAttTypes  defType) :
-    XMLAttDef(type, defType)
+DTDAttDef::DTDAttDef(const  XMLCh* const           attName
+                    , const XMLAttDef::AttTypes    type
+                    , const XMLAttDef::DefAttTypes defType
+                    , MemoryManager* const         manager) :
+    XMLAttDef(type, defType, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fName(0)
 {
     fName = XMLString::replicate(attName, getMemoryManager());
 }
 
-DTDAttDef::DTDAttDef(   const   XMLCh* const            attName
-                        , const XMLCh* const            attValue
-                        , const XMLAttDef::AttTypes     type
-                        , const XMLAttDef::DefAttTypes  defType
-                        , const XMLCh* const            enumValues) :
+DTDAttDef::DTDAttDef( const   XMLCh* const         attName
+                    , const XMLCh* const           attValue
+                    , const XMLAttDef::AttTypes    type
+                    , const XMLAttDef::DefAttTypes defType
+                    , const XMLCh* const           enumValues
+                    , MemoryManager* const         manager) :
 
-    XMLAttDef(attValue, type, defType, enumValues)
+    XMLAttDef(attValue, type, defType, enumValues, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fName(0)
 {

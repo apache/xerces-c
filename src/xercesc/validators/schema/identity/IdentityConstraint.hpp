@@ -129,7 +129,7 @@ protected:
     // -----------------------------------------------------------------------
     IdentityConstraint(const XMLCh* const identityConstraintName,
                        const XMLCh* const elementName,
-					   MemoryManager* const manager);
+					   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------

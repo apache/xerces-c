@@ -382,7 +382,13 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                 }
                  else
                 {
-                    find = new (getScanner()->getMemoryManager()) XMLRefInfo(pszTmpVal);
+                    find = new (getScanner()->getMemoryManager()) XMLRefInfo
+                    (
+                        pszTmpVal
+                        , false
+                        , false
+                        , getScanner()->getMemoryManager()
+                    );
                     getScanner()->getIDRefList()->put((void*)find->getRefName(), find);
                 }
 

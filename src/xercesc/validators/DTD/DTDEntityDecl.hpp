@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:43:19  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2003/03/07 18:17:12  tng
  * Return a reference instead of void for operator=
  *
@@ -102,17 +105,19 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDEntityDecl();
+    DTDEntityDecl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DTDEntityDecl
     (
-        const   XMLCh* const    entName
-        , const bool            fromIntSubset = false
+        const   XMLCh* const   entName
+        , const bool           fromIntSubset = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     DTDEntityDecl
     (
-        const   XMLCh* const    entName
-        , const XMLCh* const    value
-        , const bool            fromIntSubset = false
+        const   XMLCh* const   entName
+        , const XMLCh* const   value
+        , const bool           fromIntSubset = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     DTDEntityDecl
     (
@@ -174,28 +179,31 @@ private :
 // ---------------------------------------------------------------------------
 //  DTDEntityDecl: Constructors and Destructor
 // ---------------------------------------------------------------------------
-inline DTDEntityDecl::DTDEntityDecl() :
+inline DTDEntityDecl::DTDEntityDecl(MemoryManager* const manager) :
 
-    fDeclaredInIntSubset(false)
+    XMLEntityDecl(manager)
+    , fDeclaredInIntSubset(false)
     , fIsParameter(false)
     , fIsSpecialChar(false)
 {
 }
 
-inline DTDEntityDecl::DTDEntityDecl(const   XMLCh* const    entName
-                                    , const bool            fromIntSubset) :
+inline DTDEntityDecl::DTDEntityDecl( const XMLCh* const   entName
+                                   , const bool           fromIntSubset
+                                   , MemoryManager* const manager) :
 
-    XMLEntityDecl(entName)
+    XMLEntityDecl(entName, manager)
     , fDeclaredInIntSubset(fromIntSubset)
     , fIsParameter(false)
     , fIsSpecialChar(false)
 {
 }
 
-inline DTDEntityDecl::DTDEntityDecl(const   XMLCh* const    entName
-                                    , const XMLCh* const    value
-                                    , const bool            fromIntSubset) :
-    XMLEntityDecl(entName, value)
+inline DTDEntityDecl::DTDEntityDecl( const XMLCh* const   entName
+                                   , const XMLCh* const   value
+                                   , const bool           fromIntSubset
+                                   , MemoryManager* const manager) :
+    XMLEntityDecl(entName, value, manager)
     , fDeclaredInIntSubset(fromIntSubset)
     , fIsParameter(false)
     , fIsSpecialChar(false)
@@ -206,7 +214,7 @@ inline DTDEntityDecl::DTDEntityDecl(const   XMLCh* const    entName
                                     , const XMLCh           value
                                     , const bool            fromIntSubset
                                     , const bool            specialChar) :
-    XMLEntityDecl(entName, value)
+    XMLEntityDecl(entName, value, XMLPlatformUtils::fgMemoryManager)
     , fDeclaredInIntSubset(fromIntSubset)
     , fIsParameter(false)
     , fIsSpecialChar(specialChar)

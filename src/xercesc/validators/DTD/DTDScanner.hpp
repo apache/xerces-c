@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 21:43:19  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.7  2003/05/15 18:54:51  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -144,7 +147,7 @@ public:
     (
           DTDGrammar*           dtdGrammar
         , DocTypeHandler* const docTypeHandler
-        , MemoryManager* const  manager
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~DTDScanner();
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/02/06 13:51:55  gareth
  * fixed bug with multiple attributes being validated by the same union type.
  *
@@ -102,8 +105,9 @@ const XMLCh* SchemaAttDef::getFullName() const
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaAttDef::SchemaAttDef() :
-    fElemId(XMLElementDecl::fgInvalidElemId)
+SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
+    XMLAttDef(XMLAttDef::CData, XMLAttDef::Implied, manager)
+    , fElemId(XMLElementDecl::fgInvalidElemId)
     , fAttName(0)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
@@ -114,12 +118,13 @@ SchemaAttDef::SchemaAttDef() :
 {
 }
 
-SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
-                          , const XMLCh* const                     localPart
-                          , const int                              uriId
-                          , const XMLAttDef::AttTypes              type
-                          , const XMLAttDef::DefAttTypes           defType) :
-    XMLAttDef(type, defType)
+SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
+                          , const XMLCh* const           localPart
+                          , const int                    uriId
+                          , const XMLAttDef::AttTypes    type
+                          , const XMLAttDef::DefAttTypes defType
+                          , MemoryManager* const         manager) :
+    XMLAttDef(type, defType, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
     , fMemberTypeValidator(0)
@@ -131,15 +136,16 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     fAttName = new QName(prefix, localPart, uriId);
 }
 
-SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
-                          , const XMLCh* const                     localPart
-                          , const int                              uriId
-                          , const XMLCh* const                     attValue
-                          , const XMLAttDef::AttTypes              type
-                          , const XMLAttDef::DefAttTypes           defType
-                          , const XMLCh* const                     enumValues) :
+SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
+                          , const XMLCh* const           localPart
+                          , const int                    uriId
+                          , const XMLCh* const           attValue
+                          , const XMLAttDef::AttTypes    type
+                          , const XMLAttDef::DefAttTypes defType
+                          , const XMLCh* const           enumValues
+                          , MemoryManager* const         manager) :
 
-    XMLAttDef(attValue, type, defType, enumValues)
+    XMLAttDef(attValue, type, defType, enumValues, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
@@ -154,7 +160,8 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
 SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
 
     XMLAttDef(other->getValue(), other->getType(),
-              other->getDefaultType(), other->getEnumeration())
+              other->getDefaultType(), other->getEnumeration(),
+              other->getMemoryManager())
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fAttName(0)
     , fDatatypeValidator(other->fDatatypeValidator)

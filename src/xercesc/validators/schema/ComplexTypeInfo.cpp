@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.7  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -330,7 +333,15 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const qName
             faultInAttDefList();
 
         // And add a default attribute for this name
-        retVal = new (fMemoryManager) SchemaAttDef(prefix, baseName, uriId);
+        retVal = new (fMemoryManager) SchemaAttDef
+        (
+            prefix
+            , baseName
+            , uriId
+            , XMLAttDef::CData
+            , XMLAttDef::Implied
+            , fMemoryManager
+        );
         retVal->setElemId(getElementId());
         fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 
@@ -411,7 +422,7 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
         const ContentSpecNode* specNode = fContentSpec;
 
         if (specNode) {
-            XMLBuffer bufFmt;
+            XMLBuffer bufFmt(1023, fMemoryManager);
 
             specNode->formatSpec(bufFmt);
             newValue = XMLString::replicate
@@ -464,7 +475,7 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new (fMemoryManager) MixedContentModel(false, aSpecNode);
+        cmRet = new (fMemoryManager) MixedContentModel(false, aSpecNode, false, fMemoryManager);
     }
     else if (fContentType == SchemaElementDecl::Mixed_Complex) {
 

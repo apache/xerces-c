@@ -106,7 +106,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    NamespaceScope();
+    NamespaceScope(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~NamespaceScope();
 
 

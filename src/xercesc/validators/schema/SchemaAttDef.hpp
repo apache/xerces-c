@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/02/06 13:51:55  gareth
  * fixed bug with multiple attributes being validated by the same union type.
  *
@@ -112,24 +115,26 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructors
     // -----------------------------------------------------------------------
-    SchemaAttDef();
+    SchemaAttDef(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     SchemaAttDef
     (
-          const XMLCh* const                     prefix
-        , const XMLCh* const                     localPart
-        , const int                              uriId
-        , const XMLAttDef::AttTypes              type = CData
-        , const XMLAttDef::DefAttTypes           defType = Implied
+          const XMLCh* const           prefix
+        , const XMLCh* const           localPart
+        , const int                    uriId
+        , const XMLAttDef::AttTypes    type = CData
+        , const XMLAttDef::DefAttTypes defType = Implied
+        , MemoryManager* const         manager = XMLPlatformUtils::fgMemoryManager
     );
     SchemaAttDef
     (
-          const XMLCh* const                     prefix
-        , const XMLCh* const                     localPart
-        , const int                              uriId
-        , const XMLCh* const                     attValue
-        , const XMLAttDef::AttTypes              type
-        , const XMLAttDef::DefAttTypes           defType
-        , const XMLCh* const                     enumValues = 0
+          const XMLCh* const           prefix
+        , const XMLCh* const           localPart
+        , const int                    uriId
+        , const XMLCh* const           attValue
+        , const XMLAttDef::AttTypes    type
+        , const XMLAttDef::DefAttTypes defType
+        , const XMLCh* const           enumValues = 0
+        , MemoryManager* const         manager = XMLPlatformUtils::fgMemoryManager
     );
     SchemaAttDef
     (

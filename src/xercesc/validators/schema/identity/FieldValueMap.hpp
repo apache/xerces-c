@@ -88,7 +88,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    FieldValueMap(MemoryManager* const manager);
+    FieldValueMap(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     FieldValueMap(const FieldValueMap& other);
 	~FieldValueMap();
 

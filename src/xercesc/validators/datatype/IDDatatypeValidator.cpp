@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -172,7 +175,7 @@ void IDDatatypeValidator::addId(const XMLCh * const content)
     }
      else
     {
-        find = new (fMemoryManager) XMLRefInfo(content);
+        find = new (fMemoryManager) XMLRefInfo(content, false, false, fMemoryManager);
         fIDRefList->put((void*)find->getRefName(), find);
     }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -162,7 +165,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    SchemaGrammar(MemoryManager* const manager);
+    SchemaGrammar(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~SchemaGrammar();
 
     // -----------------------------------------------------------------------

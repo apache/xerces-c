@@ -105,7 +105,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    ValueStoreCache(MemoryManager* const manager);
+    ValueStoreCache(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ValueStoreCache();
 
 	// -----------------------------------------------------------------------

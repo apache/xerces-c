@@ -81,7 +81,7 @@ public:
     // -----------------------------------------------------------------------
     IC_Unique(const XMLCh* const identityConstraintName,
               const XMLCh* const elemName,
-              MemoryManager* const manager);
+              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~IC_Unique();
 
 	// -----------------------------------------------------------------------

@@ -123,7 +123,7 @@ public:
         , const XMLCh* const      schemaURL
         , XMLEntityHandler* const entityHandler
         , XMLErrorReporter* const errorReporter
-        , MemoryManager* const    manager
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~TraverseSchema();

@@ -91,7 +91,7 @@ public:
     // -----------------------------------------------------------------------
     ValueStore(IdentityConstraint* const ic,
                XMLScanner* const scanner,
-               MemoryManager* const manager);
+               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ValueStore();
 
 	// -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -117,6 +120,7 @@
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
 
@@ -129,7 +133,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     CMStateSet( const unsigned int bitCount
-              , MemoryManager* const manager) :
+              , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
         fBitCount(bitCount)
         , fByteArray(0)

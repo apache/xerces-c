@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.30  2003/05/16 03:15:51  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -268,6 +271,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fSeenId(false)
     , fXsiType(0)
     , fXsiTypeValidator(0)
+    , fDatatypeBuffer(1023, manager)
     , fNil(false)
     , fTypeStack(0)
 {
@@ -388,7 +392,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     DatatypeValidator::ValidatorType eleDefDVType = fCurrentDV->getType();
 
                     // if notation, need to bind URI to notation first
-                    XMLBuffer notationBuf;
+                    XMLBuffer notationBuf(1023, fMemoryManager);
 
                     // set up the entitydeclpool in ENTITYDatatypeValidator
                     // and the idreflist in ID/IDREFDatatypeValidator
@@ -710,7 +714,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 //  the notation pool (after the Grammar is parsed), then obviously
                 //  this value will be legal since it matches one of them.
                 //
-                XMLBuffer notationBuf;
+                XMLBuffer notationBuf(1023, fMemoryManager);
                 int colonPos = -1;
                 unsigned int uriId = getScanner()->resolveQName(attrValue, notationBuf, ElemStack::Mode_Element, colonPos);
                 notationBuf.set(getScanner()->getURIText(uriId));
@@ -834,7 +838,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                 else {
 
                     // retrieve the typeInfo specified in xsi:type
-                    XMLBuffer aBuffer;
+                    XMLBuffer aBuffer(1023, fMemoryManager);
                     aBuffer.set(uriStr);
                     aBuffer.append(chComma);
                     aBuffer.append(localPart);

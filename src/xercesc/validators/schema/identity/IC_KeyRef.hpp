@@ -78,7 +78,7 @@ public:
     IC_KeyRef(const XMLCh* const identityConstraintName,
               const XMLCh* const elemName,
               IdentityConstraint* const icKey,
-              MemoryManager* const manager);
+              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~IC_KeyRef();
 
 	// -----------------------------------------------------------------------

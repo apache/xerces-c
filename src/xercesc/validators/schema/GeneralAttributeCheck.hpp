@@ -217,7 +217,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructor/Destructor
     // -----------------------------------------------------------------------
-    GeneralAttributeCheck(MemoryManager* const manager);
+    GeneralAttributeCheck(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~GeneralAttributeCheck();
 
     // -----------------------------------------------------------------------

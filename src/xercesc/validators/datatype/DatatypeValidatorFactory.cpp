@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.14  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -726,15 +729,15 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
     if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
 
-        DatatypeValidator *dv = new (fMemoryManager) IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        DatatypeValidator *dv = new (fMemoryManager) IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
         dv->setTypeName(XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         fUserDefinedRegistry->put((void*) XMLUni::fgIDString, dv);
 
-        dv = new (fMemoryManager) IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv = new (fMemoryManager) IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
         dv->setTypeName(XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString, dv);
 
-        dv = new (fMemoryManager) ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv = new (fMemoryManager) ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
         dv->setTypeName(XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         fUserDefinedRegistry->put((void*) XMLUni::fgEntityString, dv);
 
@@ -795,7 +798,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         ? fMemoryManager : XMLPlatformUtils::fgMemoryManager;
 
     if (isDerivedByList) {
-        datatypeValidator = new (manager) ListDatatypeValidator(baseValidator, facets, enums, finalSet);
+        datatypeValidator = new (manager) ListDatatypeValidator(baseValidator, facets, enums, finalSet, manager);
     }
     else {
 
@@ -853,7 +856,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
     MemoryManager* const manager = (userDefined)
         ? fMemoryManager : XMLPlatformUtils::fgMemoryManager;
 
-    datatypeValidator = new (manager) UnionDatatypeValidator(validators, finalSet);
+    datatypeValidator = new (manager) UnionDatatypeValidator(validators, finalSet, manager);
 
     if (datatypeValidator != 0) {
 

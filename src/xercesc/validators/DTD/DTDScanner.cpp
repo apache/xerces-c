@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2003/05/16 21:43:19  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.25  2003/05/15 18:54:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -612,7 +615,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         // Use the dummy decl to parse into and set its name to the name we got
         if (!fDumAttDef)
         {
-            fDumAttDef = new (fMemoryManager) DTDAttDef;
+            fDumAttDef = new (fMemoryManager) DTDAttDef(fMemoryManager);
             fDumAttDef->setId(fNextAttrId++);
         }
         fDumAttDef->setName(bufToUse.getRawBuffer());
@@ -624,7 +627,13 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         //  It does not already exist so create a new one, give it the next
         //  available unique id, and add it
         //
-        decl = new (fMemoryManager) DTDAttDef(bufToUse.getRawBuffer());
+        decl = new (fMemoryManager) DTDAttDef
+        (
+            bufToUse.getRawBuffer()
+            , XMLAttDef::CData
+            , XMLAttDef::Implied
+            , fMemoryManager
+        );
         decl->setId(fNextAttrId++);
         decl->setExternalAttDeclaration(isReadingExternalEntity());
         parentElem.addAttDef(decl);
@@ -1924,14 +1933,14 @@ void DTDScanner::scanEntityDecl()
     if (entityDecl)
     {
         if (!fDumEntityDecl)
-            fDumEntityDecl = new (fMemoryManager) DTDEntityDecl;
+            fDumEntityDecl = new (fMemoryManager) DTDEntityDecl(fMemoryManager);
         fDumEntityDecl->setName(bbName.getRawBuffer());
         entityDecl = fDumEntityDecl;
     }
      else
     {
         // Its not in existence already, then create an entity decl for it
-        entityDecl = new (fMemoryManager) DTDEntityDecl(bbName.getRawBuffer());
+        entityDecl = new (fMemoryManager) DTDEntityDecl(bbName.getRawBuffer(), false, fMemoryManager);
 
         //
         //  Set the declaration location. The parameter indicates whether its
@@ -3549,6 +3558,7 @@ void DTDScanner::scanNotationDecl()
             , (publicId && *publicId) ? publicId : 0
             , (systemId && *systemId) ? systemId : 0
             , (lastInfo.systemId && *lastInfo.systemId) ? lastInfo.systemId : 0
+            , fMemoryManager
         );
         fDTDGrammar->putNotationDecl(decl);
     }

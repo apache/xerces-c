@@ -89,8 +89,7 @@ public:
      *
      * Default Constructor
      */
-    GrammarResolver(MemoryManager* const manager);
-
+    GrammarResolver(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     /**
       * Destructor
       */

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -155,9 +158,10 @@ public :
     // -----------------------------------------------------------------------
     MixedContentModel
     (
-        const bool              dtd
-      , ContentSpecNode* const  parentContentSpec
+        const bool                dtd
+        , ContentSpecNode* const  parentContentSpec
 		, const bool              ordered = false
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~MixedContentModel();

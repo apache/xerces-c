@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.9  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -182,23 +185,23 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    SchemaElementDecl(MemoryManager* const manager);
+    SchemaElementDecl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     SchemaElementDecl
     (
           const XMLCh* const   prefix
         , const XMLCh* const   localPart
         , const int            uriId
-        , const ModelTypes     modelType// = Any
-        , const int            enclosingScope// = Grammar::TOP_LEVEL_SCOPE
-        , MemoryManager* const manager
+        , const ModelTypes     modelType = Any
+        , const int            enclosingScope = Grammar::TOP_LEVEL_SCOPE
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     SchemaElementDecl
     (
           const QName* const   elementName
-        , const ModelTypes     modelType// = Any
-        , const int            enclosingScope// = Grammar::TOP_LEVEL_SCOPE
-        , MemoryManager* const manager
+        , const ModelTypes     modelType = Any
+        , const int            enclosingScope = Grammar::TOP_LEVEL_SCOPE
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~SchemaElementDecl();

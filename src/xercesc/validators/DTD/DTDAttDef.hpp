@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:19  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:54:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -104,20 +107,22 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructors
     // -----------------------------------------------------------------------
-    DTDAttDef();
+    DTDAttDef(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DTDAttDef
     (
-        const   XMLCh* const            attName
-        , const XMLAttDef::AttTypes     type = CData
-        , const XMLAttDef::DefAttTypes  defType = Implied
+        const   XMLCh* const           attName
+        , const XMLAttDef::AttTypes    type = CData
+        , const XMLAttDef::DefAttTypes defType = Implied
+        , MemoryManager* const         manager = XMLPlatformUtils::fgMemoryManager
     );
     DTDAttDef
     (
-        const   XMLCh* const            attName
-        , const XMLCh* const            attValue
-        , const XMLAttDef::AttTypes     type
-        , const XMLAttDef::DefAttTypes  defType
-        , const XMLCh* const            enumValues = 0
+        const   XMLCh* const           attName
+        , const XMLCh* const           attValue
+        , const XMLAttDef::AttTypes    type
+        , const XMLAttDef::DefAttTypes defType
+        , const XMLCh* const           enumValues = 0
+        , MemoryManager* const         manager = XMLPlatformUtils::fgMemoryManager
     );
     ~DTDAttDef();
 

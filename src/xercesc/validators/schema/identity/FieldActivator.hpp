@@ -69,7 +69,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -91,7 +91,7 @@ public:
     // -----------------------------------------------------------------------
     FieldActivator(ValueStoreCache* const valueStoreCache,
                    XPathMatcherStack* const matcherStack,
-                   MemoryManager* const manager);
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	FieldActivator(const FieldActivator& other);
 	~FieldActivator();
 

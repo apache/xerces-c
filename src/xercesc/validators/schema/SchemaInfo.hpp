@@ -116,7 +116,8 @@ public:
                const unsigned int namespaceScopeLevel,
                XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
-               const DOMElement* const root);
+               const DOMElement* const root,
+               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~SchemaInfo();
 
 
@@ -195,6 +196,7 @@ private:
     ValueVectorOf<const DOMElement*>* fRecursingAnonTypes;
     ValueVectorOf<const XMLCh*>*      fRecursingTypeNames;
     ValueVectorOf<DOMElement*>*       fTopLevelComponents[C_Count];
+    MemoryManager*                    fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------
@@ -310,7 +312,7 @@ inline void SchemaInfo::setProcessed(const bool aValue) {
 inline void SchemaInfo::addImportedNS(const int namespaceURI) {
 
     if (!fImportedNSList) {
-        fImportedNSList = new ValueVectorOf<int>(4);
+        fImportedNSList = new (fMemoryManager) ValueVectorOf<int>(4, fMemoryManager);
     }
 
     if (!fImportedNSList->containsElement(namespaceURI))
@@ -323,7 +325,7 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
     if (aListType == IMPORT) {
 
         if (!fImportedInfoList)
-            fImportedInfoList = new RefVectorOf<SchemaInfo>(4, false);
+            fImportedInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(4, false, fMemoryManager);
 
         if (!fImportedInfoList->containsElement(toAdd)) {
 
@@ -336,7 +338,7 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
 
         if (!fIncludeInfoList) {
 
-            fIncludeInfoList = new RefVectorOf<SchemaInfo>(8, false);
+            fIncludeInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(8, false, fMemoryManager);
             fAdoptInclude = true;
         }
 
@@ -401,7 +403,7 @@ inline bool SchemaInfo::isFailedRedefine(const DOMElement* const anElem) {
 inline void SchemaInfo::addFailedRedefine(const DOMElement* const anElem) {
 
     if (!fFailedRedefineList) {
-        fFailedRedefineList = new ValueVectorOf<const DOMElement*>(4);
+        fFailedRedefineList = new (fMemoryManager) ValueVectorOf<const DOMElement*>(4, fMemoryManager);
     }
 
     fFailedRedefineList->addElement(anElem);
@@ -419,8 +421,8 @@ inline void SchemaInfo::addRecursingType(const DOMElement* const elem,
                                          const XMLCh* const name) {
 
     if (!fRecursingAnonTypes) {
-        fRecursingAnonTypes = new ValueVectorOf<const DOMElement*>(8);
-        fRecursingTypeNames = new ValueVectorOf<const XMLCh*>(8);
+        fRecursingAnonTypes = new (fMemoryManager) ValueVectorOf<const DOMElement*>(8, fMemoryManager);
+        fRecursingTypeNames = new (fMemoryManager) ValueVectorOf<const XMLCh*>(8, fMemoryManager);
     }
 
     fRecursingAnonTypes->addElement(elem);

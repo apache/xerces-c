@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.9  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -125,7 +128,8 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const unsigned int namespaceScopeLevel,
                        XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
-                       const DOMElement* const root)
+                       const DOMElement* const root,
+                       MemoryManager* const manager)
     : fAdoptInclude(false)
     , fProcessed(false)
     , fElemAttrDefaultQualified(elemAttrDefaultQualified)
@@ -144,8 +148,9 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fImportedNSList(0)
     , fRecursingAnonTypes(0)
     , fRecursingTypeNames(0)
+    , fMemoryManager(manager)
 {
-    fImportingInfoList = new RefVectorOf<SchemaInfo>(4, false);
+    fImportingInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(4, false, fMemoryManager);
     for (unsigned int i = 0; i < C_Count; i++)
         fTopLevelComponents[i] = 0;
 }
@@ -153,7 +158,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
 
 SchemaInfo::~SchemaInfo()
 {
-    delete [] fCurrentSchemaURL;
+    fMemoryManager->deallocate(fCurrentSchemaURL);//delete [] fCurrentSchemaURL;
     delete fImportedInfoList;
 
     if (fAdoptInclude)
@@ -236,7 +241,7 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
 
     if (fTopLevelComponents[compCategory] == 0) {
 
-        compList= new ValueVectorOf<DOMElement*>(16);
+        compList= new (fMemoryManager) ValueVectorOf<DOMElement*>(16, fMemoryManager);
         fTopLevelComponents[compCategory] = compList;
     }
     else {

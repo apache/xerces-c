@@ -77,7 +77,7 @@ public:
     // -----------------------------------------------------------------------
     IC_Key(const XMLCh* const identityConstraintName,
            const XMLCh* const elemName,
-           MemoryManager* const manager);
+           MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~IC_Key();
 
 	// -----------------------------------------------------------------------

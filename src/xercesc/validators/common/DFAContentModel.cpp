@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -1352,7 +1355,7 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                                         &comparator)) {
                        fConflictTable[j][k] = 1;
 
-                       XMLBuffer buf1;
+                       XMLBuffer buf1(1023, fMemoryManager);
                        if (((fElemMapType[j] & 0x0f) == ContentSpecNode::Any) ||
                            ((fElemMapType[j] & 0x0f) == ContentSpecNode::Any_NS))
                            buf1.set(SchemaSymbols::fgATTVAL_TWOPOUNDANY);
@@ -1361,7 +1364,7 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                        else
                            buf1.set(fElemMap[j]->getRawName());
 
-                       XMLBuffer buf2;
+                       XMLBuffer buf2(1023, fMemoryManager);
                        if (((fElemMapType[k] & 0x0f) == ContentSpecNode::Any) ||
                            ((fElemMapType[k] & 0x0f) == ContentSpecNode::Any_NS))
                            buf2.set(SchemaSymbols::fgATTVAL_TWOPOUNDANY);

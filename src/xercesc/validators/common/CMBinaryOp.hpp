@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -115,7 +118,7 @@ public :
         const ContentSpecNode::NodeTypes type
         ,     CMNode* const              leftToAdopt
         ,     CMNode* const              rightToAdopt
-        ,     MemoryManager* const       manager
+        ,     MemoryManager* const       manager = XMLPlatformUtils::fgMemoryManager
     );
     ~CMBinaryOp();
 

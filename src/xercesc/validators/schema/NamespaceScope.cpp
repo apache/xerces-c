@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -88,13 +91,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  NamespaceScope: Constructors and Destructor
 // ---------------------------------------------------------------------------
-NamespaceScope::NamespaceScope() :
+NamespaceScope::NamespaceScope(MemoryManager* const manager) :
 
     fEmptyNamespaceId(0)
     , fStackCapacity(8)
     , fStackTop(0)
     , fStack(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     // Do an initial allocation of the stack and zero it out
     fStack = (StackElem**) fMemoryManager->allocate

@@ -94,9 +94,11 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesNodeTest(const short type);
+    XercesNodeTest(const short type,
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     XercesNodeTest(const QName* const qName);
-    XercesNodeTest(const XMLCh* const prefix, const unsigned int uriId);
+    XercesNodeTest(const XMLCh* const prefix, const unsigned int uriId,
+                   MemoryManager* const manager/* = XMLPlatformUtils::fgMemoryManager*/);
     XercesNodeTest(const XercesNodeTest& other);
     ~XercesNodeTest() { delete fName; }
 
@@ -277,7 +279,8 @@ public:
                 XMLStringPool* const stringPool,
                 NamespaceScope* const scopeContext,
                 const unsigned int emptyNamespaceId,
-                const bool isSelector = false);
+                const bool isSelector = false,
+                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~XercesXPath();
 
     // -----------------------------------------------------------------------

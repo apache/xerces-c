@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:43:22  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -120,22 +123,24 @@ const XMLByte XPathScanner::fASCIICharMap[128] =
 // ---------------------------------------------------------------------------
 //  XercesNodeTest: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XercesNodeTest::XercesNodeTest(const short aType)
+XercesNodeTest::XercesNodeTest(const short aType,
+                               MemoryManager* const manager)
     : fType(aType)
-    , fName(new QName())
+    , fName(new (manager) QName(manager))
 {
 }
 
 XercesNodeTest::XercesNodeTest(const QName* const qName)
     : fType(QNAME)
-    , fName(new QName(*qName))
+    , fName(new (qName->getMemoryManager()) QName(*qName))
 {
 }
 
 XercesNodeTest::XercesNodeTest(const XMLCh* const prefix,
-                               const unsigned int uriId)
+                               const unsigned int uriId,
+                               MemoryManager* const manager)
     : fType(NAMESPACE)
-    , fName(new QName())
+    , fName(new (manager) QName(manager))
 {
     fName->setURI(uriId);
     fName->setPrefix(prefix);
@@ -143,7 +148,7 @@ XercesNodeTest::XercesNodeTest(const XMLCh* const prefix,
 
 XercesNodeTest::XercesNodeTest(const XercesNodeTest& other)
     : fType(other.fType)
-    , fName(new QName(*other.fName))
+    , fName(new ((other.fName)->getMemoryManager())QName(*other.fName))
 {
 }
 
@@ -190,7 +195,7 @@ XercesStep::XercesStep(const XercesStep& other)
     : fAxisType(other.fAxisType)
     , fNodeTest(0)
 {
-    fNodeTest = new XercesNodeTest(*(other.fNodeTest));
+    fNodeTest = new (other.fNodeTest->getName()->getMemoryManager()) XercesNodeTest(*(other.fNodeTest));
 }
 
 
@@ -271,11 +276,12 @@ XercesXPath::XercesXPath(const XMLCh* const xpathExpr,
                          XMLStringPool* const stringPool,
                          NamespaceScope* const scopeContext,
                          const unsigned int emptyNamespaceId,
-                         const bool isSelector)
+                         const bool isSelector,
+                         MemoryManager* const manager)
     : fEmptyNamespaceId(emptyNamespaceId)
     , fExpression(0)
     , fLocationPaths(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     try
     {
@@ -420,7 +426,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
                     {
-                        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD);
+                        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD, fMemoryManager);
                         XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
@@ -449,7 +455,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         if (isNamespaceAtt) {
 
                             // build step
-                            XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri);
+                            XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri, fMemoryManager);
                             XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                             stepsVector->addElement(step);
                             break;
@@ -490,7 +496,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             }
         case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
             {
-                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD, fMemoryManager);
                 XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
@@ -521,7 +527,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 if (isNamespace) {
 
                     // build step
-                    XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri);
+                    XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri, fMemoryManager);
                     XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
                     stepsVector->addElement(step);
                     break;
@@ -541,7 +547,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         case XercesXPath::EXPRTOKEN_PERIOD:
             {
                 // build step
-                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE, fMemoryManager);
                 XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::SELF, nodeTest);
                 stepsVector->addElement(step);
 
@@ -564,7 +570,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                             }
                         }
                         // build step
-                        nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE);
+                        nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE, fMemoryManager);
                         step = new (fMemoryManager) XercesStep(XercesStep::DESCENDANT, nodeTest);
                         stepsVector->addElement(step);
                     }
@@ -686,7 +692,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
     int       nameHandle = -1;
     int       prefixHandle = -1;
     XMLCh     ch;
-    XMLBuffer dataBuffer(128);
+    XMLBuffer dataBuffer(128, tokens->getMemoryManager());
 
     while (true) {
 

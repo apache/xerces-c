@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/16 21:43:21  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.8  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -277,7 +280,15 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
             if (!retVal)
             {
                 // And add a default attribute for this name
-                retVal = new (getMemoryManager()) SchemaAttDef(prefix, baseName, uriId);
+                retVal = new (getMemoryManager()) SchemaAttDef
+                (
+                    prefix
+                    , baseName
+                    , uriId
+                    , XMLAttDef::CData
+                    , XMLAttDef::Implied
+                    , getMemoryManager()
+                );
                 retVal->setElemId(getId());
                 fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 

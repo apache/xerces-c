@@ -212,6 +212,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fErrorReporter(errorReporter)
     , fURIStringPool(uriStringPool)
     , fStringPool(0)
+    , fBuffer(1023, manager)
     , fScanner(xmlScanner)
     , fNamespaceScope(0)
     , fAttributeDeclRegistry(0)
@@ -353,7 +354,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (fNamespaceScope == 0) {
 
-        fNamespaceScope = new (fMemoryManager) NamespaceScope();
+        fNamespaceScope = new (fMemoryManager) NamespaceScope(fMemoryManager);
         fNamespaceScope->reset(fEmptyNamespaceURI);
         fSchemaGrammar->setNamespaceScope(fNamespaceScope);
     }
@@ -381,7 +382,8 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                           fNamespaceScope->increaseDepth(),
                                           XMLString::replicate(schemaURL),
-                                          fTargetNSURIString, schemaRoot);
+                                          fTargetNSURIString, schemaRoot,
+                                          fMemoryManager);
 
     if (fSchemaInfo) {
         fSchemaInfo->addSchemaInfo(currInfo, SchemaInfo::IMPORT);
@@ -571,7 +573,8 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
             fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                          fNamespaceScope->increaseDepth(),
                                          XMLString::replicate(includeURL),
-                                         fTargetNSURIString, root);
+                                         fTargetNSURIString, root,
+                                         fMemoryManager);
 
             fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(),
                                  fSchemaInfo->getTargetNSURI(), fSchemaInfo);
@@ -2117,7 +2120,15 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     }
 
     // create SchemaAttDef
-    SchemaAttDef* attDef = new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString, name, uriIndex, attType);
+    SchemaAttDef* attDef = new (fMemoryManager) SchemaAttDef
+    (
+        XMLUni::fgZeroLenString
+        , name
+        , uriIndex
+        , attType
+        , XMLAttDef::Implied
+        , fMemoryManager
+    );
 
     attDef->setDatatypeValidator(dv);
 
@@ -2591,7 +2602,8 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             elemDecl->setAttWildCard(new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
                                                       XMLUni::fgZeroLenString,
                                                       fEmptyNamespaceURI, XMLAttDef::Any_Any,
-                                                      XMLAttDef::ProcessContents_Lax));
+                                                      XMLAttDef::ProcessContents_Lax,
+                                                      fMemoryManager));
         }
 
         // key/keyref/unique processing
@@ -2881,7 +2893,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         // Get facets if any existing
         RefHashTableOf<KVStringPair>* facets = 0;
         RefArrayVectorOf<XMLCh>*      enums = 0;
-        XMLBuffer                     pattern(128);
+        XMLBuffer                     pattern(128, fMemoryManager);
         XMLCh                         fixedFlagStr[16];
         unsigned int                  fixedFlag = 0;
         unsigned short                scope = 0;
@@ -3321,7 +3333,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // ---------------------------------------------------------------
             RefHashTableOf<KVStringPair>*  facets = 0;
             RefArrayVectorOf<XMLCh>*       enums = 0;
-            XMLBuffer                      pattern(128);
+            XMLBuffer                      pattern(128, fMemoryManager);
             XMLCh                          fixedFlagStr[16];
             unsigned int                   fixedFlag = 0;
             unsigned short                 scope = 0;
@@ -3712,7 +3724,8 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     // ------------------------------------------------------------------
     SchemaAttDef* attDef = new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
                                             XMLUni::fgZeroLenString,
-                                            uriIndex, attType, attDefType);
+                                            uriIndex, attType, attDefType,
+                                            fMemoryManager);
 
 
     if (namespaceList.size()) {
@@ -3995,7 +4008,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     // ------------------------------------------------------------------
     try {
 
-        XercesXPath* sXPath = new (fMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI, true);
+        XercesXPath* sXPath = new (fMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI, true, fMemoryManager);
         IC_Selector* icSelector = new (fMemoryManager) IC_Selector(sXPath, ic);
         ic->setSelector(icSelector);
     }
@@ -4047,7 +4060,15 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
 
             try {
 
-                XercesXPath* fieldXPath = new (fMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI);
+                XercesXPath* fieldXPath = new (fMemoryManager) XercesXPath
+                (
+                    fBuffer.getRawBuffer()
+                    , fStringPool
+                    , fNamespaceScope
+                    , fEmptyNamespaceURI
+                    , false
+                    , fMemoryManager
+                );
                 IC_Field* icField = new (fMemoryManager) IC_Field(fieldXPath, ic);
                 ic->addField(icField);
             }
@@ -5365,7 +5386,8 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                                             attQName->getURI(),
                                             refAttValue,
                                             refAttDef->getType(),
-                                            refAttDefType);
+                                            refAttDefType,
+                                            0, fMemoryManager);
 
     if (refAttDefType == XMLAttDef::Fixed) {
         if (required && !invalidAttUse) {
@@ -6073,7 +6095,8 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
             baseAttWildCard = new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
                                                XMLUni::fgZeroLenString,
                                                fEmptyNamespaceURI, XMLAttDef::Any_Any,
-                                               XMLAttDef::ProcessContents_Lax);
+                                               XMLAttDef::ProcessContents_Lax,
+                                               fMemoryManager);
             janBaseAttWildCard.reset(baseAttWildCard);
         }
 		
@@ -6159,7 +6182,8 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
                                                            attDef.getValue(),
                                                            attDef.getType(),
                                                            attDef.getDefaultType(),
-                                                           attDef.getEnumeration());
+                                                           attDef.getEnumeration(),
+                                                           fMemoryManager);
 
                 newAttDef->setDatatypeValidator(attDef.getDatatypeValidator());
                 typeInfo->addAttDef(newAttDef);
@@ -6211,13 +6235,13 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
             else {
                 if (fScanner->getStandardUriConformant() && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
         catch(const MalformedURLException& e) {
             // Its not a URL, so lets assume its a local file name if non-standard URI is allowed
             if (!fScanner->getStandardUriConformant())
-                srcToFill = new (fMemoryManager) LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),normalizedURI);
+                srcToFill = new (fMemoryManager) LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),normalizedURI, fMemoryManager);
             else
                 throw e;
         }
@@ -7457,7 +7481,8 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                      fNamespaceScope->increaseDepth(),
                                      XMLString::replicate(includeURL),
-                                     fTargetNSURIString, root);
+                                     fTargetNSURIString, root,
+                                     fMemoryManager);
 
         traverseSchemaHeader(root);
         fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);

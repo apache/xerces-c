@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -146,7 +149,7 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
 
         if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
 
-            XMLBuffer nameBuf(128);
+            XMLBuffer nameBuf(128, fMemoryManager);
 
             nameBuf.set(uriStr);
             nameBuf.append(chComma);

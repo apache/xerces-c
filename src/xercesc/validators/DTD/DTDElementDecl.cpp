@@ -154,7 +154,13 @@ XMLAttDef* DTDElementDecl::findAttr(const   XMLCh* const    qName
             faultInAttDefList();
 
         // And add a default attribute for this name
-        retVal = new (getMemoryManager()) DTDAttDef(qName);
+        retVal = new (getMemoryManager()) DTDAttDef
+        (
+            qName
+            , XMLAttDef::CData
+            , XMLAttDef::Implied
+            , getMemoryManager()
+        );
         retVal->setElemId(getId());
         fAttDefs->put((void*)retVal->getFullName(), retVal);
 
@@ -318,7 +324,7 @@ XMLCh* DTDElementDecl::formatContentModel() const
         //  pretty long, but very few will be longer than one K. The buffer
         //  will expand to handle the more pathological ones.
         //
-        XMLBuffer bufFmt;
+        XMLBuffer bufFmt(1023, getMemoryManager());
         getContentSpec()->formatSpec(bufFmt);
         newValue = XMLString::replicate(bufFmt.getRawBuffer(), getMemoryManager());
     }
@@ -334,7 +340,7 @@ XMLContentModel* DTDElementDecl::makeContentModel()
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new (getMemoryManager()) MixedContentModel(true, this->getContentSpec());
+        cmRet = new (getMemoryManager()) MixedContentModel(true, this->getContentSpec(), false, getMemoryManager());
     }
      else if (fModelType == Children)
     {

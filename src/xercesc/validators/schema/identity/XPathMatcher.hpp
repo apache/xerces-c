@@ -89,10 +89,10 @@ public:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     XPathMatcher(XercesXPath* const xpath,
-                 MemoryManager* const manager);
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     XPathMatcher(XercesXPath* const xpath,
                  IdentityConstraint* const ic,
-                 MemoryManager* const manager);
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~XPathMatcher();
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:19  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:54:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -157,19 +160,19 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDElementDecl(MemoryManager* const manager);
+    DTDElementDecl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DTDElementDecl
     (
           const XMLCh* const   elemRawName
         , const unsigned int   uriId
-        , const ModelTypes     modelType// = Any
-        , MemoryManager* const manager
+        , const ModelTypes     modelType
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     DTDElementDecl
     (
           QName* const         elementName
-        , const ModelTypes     modelType// = Any
-        , MemoryManager* const manager
+        , const ModelTypes     modelType = Any
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~DTDElementDecl();

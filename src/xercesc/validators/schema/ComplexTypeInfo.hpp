@@ -97,7 +97,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    ComplexTypeInfo(MemoryManager* const manager);
+    ComplexTypeInfo(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ComplexTypeInfo();
 
     // -----------------------------------------------------------------------

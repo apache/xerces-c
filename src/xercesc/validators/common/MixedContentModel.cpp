@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:43:20  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -151,13 +154,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 MixedContentModel::MixedContentModel(const bool             dtd
                                    , ContentSpecNode* const parentContentSpec
-                                   , const bool             ordered) :
+                                   , const bool             ordered
+                                   , MemoryManager* const   manager) :
    fCount(0)
  , fChildren(0)
  , fChildTypes(0)
  , fOrdered(ordered)
  , fDTD(dtd)
- , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+ , fMemoryManager(manager)
 {
     //
     //  Create a vector of unsigned ints that will be filled in with the

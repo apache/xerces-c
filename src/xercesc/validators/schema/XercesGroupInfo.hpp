@@ -89,7 +89,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesGroupInfo(MemoryManager* const manager);
+    XercesGroupInfo(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~XercesGroupInfo();
 
 	// -----------------------------------------------------------------------
