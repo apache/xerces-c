@@ -76,6 +76,8 @@
    #include <xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp>
 #elif defined(USE_URLACCESS)
    #include <xercesc/util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
+#elif defined(XML_USE_NETACCESSOR_SOCKET)
+   #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -575,6 +577,7 @@ XMLPlatformUtils::makeNetAccessor()
     //	XML_USE_NETACCESSOR_URLACCESSCF		-- Use netaccessor based on CFURLAccess (CoreFoundation based)
     //	XML_USE_NETACCESSOR_NATIVE			-- In absence of above selections, chooses URLACCESSCF
     //										   if targetting Carbon, and URLAccess otherwise
+    //	XML_USE_NETACCESSOR_SOCKET			-- Use the sockets based netaccessor
     //
     //	These choices are resolved at the ^^^top^^^ of this file.
 
@@ -585,6 +588,8 @@ XMLPlatformUtils::makeNetAccessor()
 	//	Only try to use URLAccess if it's actually available
 	if (URLAccessAvailable())
 		return new MacOSURLAccess;
+#elif (defined(XML_USE_NETACCESSOR_SOCKET))
+	return new SocketNetAccessor;
 #endif
 
 	//	No netaccessor available--we can live with it, but you won't
