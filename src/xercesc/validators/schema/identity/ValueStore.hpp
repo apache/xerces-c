@@ -38,6 +38,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
+class FieldActivator;
 class IdentityConstraint;
 class XMLScanner;
 class ValueStoreCache;

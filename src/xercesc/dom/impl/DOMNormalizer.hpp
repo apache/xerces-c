@@ -36,6 +36,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMConfigurationImpl;
+class DOMErrorHandler;
 class DOMDocumentImpl;
 class DOMNode;
 class DOMElementImpl;

@@ -142,7 +142,7 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMNode() {};
+    DOMNode() {}
     DOMNode(const DOMNode &) {}
     //@}
 

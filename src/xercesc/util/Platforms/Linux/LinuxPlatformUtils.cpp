@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2005/01/12 20:06:55  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.24  2004/09/08 13:56:40  peiyongz
  * Apache License Version 2.0
  *
@@ -378,7 +381,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
 }
 
 FileHandle XMLPlatformUtils::openFile(const char* const fileName
-                                      , MemoryManager* const manager)
+                                      , MemoryManager* const /* manager */)
 {
     FileHandle retVal = (FILE*)fopen( fileName , "rb" );
 
@@ -396,12 +399,12 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
-                                             , MemoryManager* const manager)
+                                             , MemoryManager* const /* manager */)
 {
     return fopen( fileName , "wb" );
 }
 
-FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
+FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const /* manager */)
 {
     return (FileHandle)fdopen(dup(0), "rb");
 }
@@ -496,7 +499,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
-                                  , MemoryManager* const manager)
+                                  , MemoryManager* const /* manager */)
 {
     // Check for pathological case of empty path
     if (!toCheck[0])

@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.17  2005/01/12 20:06:55  cargilld
+ * Remove warning messages.
+ *
  * Revision 1.16  2005/01/07 15:12:10  amassari
  * Removed warnings
  *
@@ -173,8 +176,11 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
     initialize(modulus);
 
     // create default hasher
-
+#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
+		 fHash = new HashXMLCh();
+#else
     fHash = new (fMemoryManager) HashXMLCh();
+#endif    
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them

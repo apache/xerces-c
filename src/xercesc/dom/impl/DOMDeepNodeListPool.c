@@ -114,7 +114,11 @@ DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
     initialize(modulus);
 
     // create default hasher
+#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
+    fHash = new HashPtr();
+#else
     fHash = new (fMemoryManager) HashPtr();
+#endif    
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
