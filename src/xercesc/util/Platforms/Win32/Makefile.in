@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.3  2004/03/15 17:06:06  amassari
+# - Added support for MinGW (bug#23176)
+#
 # Revision 1.2  2002/08/21 19:44:17  tng
 # [Bug 6467] Installing Xerces C++ on cygwin environment.
 #
@@ -87,6 +90,9 @@ SUBMODULE = Platforms/Win32
 CXXFLAGS += -D_GNU_SOURCE -D__USE_GNU
 ifeq (${PLATFORM}, CYGWIN)
     CXXFLAGS += -D__CYGWIN__
+endif
+ifeq (${PLATFORM}, MINGW)
+    CXXFLAGS += -D__MINGW__
 endif
 CPP_PUBHEADERS = Win32Defs.hpp
 CPP_OBJECTS = Win32PlatformUtils.$(TO)

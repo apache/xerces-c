@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/03/15 17:06:06  amassari
+ * - Added support for MinGW (bug#23176)
+ *
  * Revision 1.2  2002/11/18 20:38:11  tng
  * [Bug 14612] GCCDefs clashes with cygwin's string.h for stricmp and strnicmp.
  *
@@ -90,7 +93,7 @@
 #include <string.h>
 
 
-#ifndef __CYGWIN__
+#if !defined(__CYGWIN__) && !defined(__MINGW32__)
 
 int stricmp(const char* const str1, const char* const  str2) 
 {

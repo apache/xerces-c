@@ -166,11 +166,11 @@ Validators::
 ifeq (${PLATFORM},CYGWIN)
 ${FQ_SO_NAME}:: compile
 	@echo Building ${FQ_SO_NAME}
-	${MAKE} -C $(XML_OBJ_DIR)/.. -k $(MAKE_FLAGS)
+	${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
 else
 ${FQ_REAL_NAME}:: compile
 	@echo Building ${FQ_REAL_NAME}
-	${MAKE} -C $(XML_OBJ_DIR)/.. -k $(MAKE_FLAGS)
+	${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
 endif
 
 install::

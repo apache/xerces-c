@@ -332,6 +332,15 @@ ifeq (${PLATFORM}, INTERIX)
     SHLIBSUFFIX=.so
 endif
 
+#=============== MINGW SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, MINGW)
+    PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -fexceptions -DWIN32 -D_WINDOWS -DNDEBUG -DPLATFORM_WIN32 -D_CRTDBG_MAP_ALLOC 
+    MAKE_SHARED = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} ${LDFLAGS}
+    ALLLIBS = ${LIBS}
+    SHLIBSUFFIX=.dll
+endif
+
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
@@ -662,6 +671,16 @@ ifeq (${PLATFORM}, CYGWIN)
 	#
 	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
 	SO_NAME  =${CYGNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+	REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
+endif
+ifeq (${PLATFORM}, MINGW)
+	#
+	# LINK_NAME=libxerces-c.dll
+	# SO_NAME  =libxerces-c20.dll
+	# REAL_NAME=libxerces-c2_0_0.dll
+	#
+	LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+	SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
 	REAL_NAME=${LIBNAME}${VER}${SHLIBSUFFIX}
 endif
 ifeq (${PLATFORM}, MACOSX)

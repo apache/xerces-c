@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2004/03/15 17:06:06  amassari
+# - Added support for MinGW (bug#23176)
+#
 # Revision 1.10  2004/02/17 15:56:50  neilg
 # fix for bug 25035; much thanks to Abe Backus
 #
@@ -213,6 +216,9 @@ ifeq (${PLATFORM}, CYGWIN)
 endif
 ifeq (${PLATFORM}, INTERIX)
     SUBMODULE = Interix
+endif
+ifeq (${PLATFORM}, MINGW)
+    SUBMODULE = Win32
 endif
 
 includes::

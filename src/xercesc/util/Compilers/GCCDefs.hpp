@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/03/15 17:06:06  amassari
+ * - Added support for MinGW (bug#23176)
+ *
  * Revision 1.7  2003/05/29 11:18:37  gareth
  * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
  *
@@ -139,8 +142,13 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#define PLATFORM_EXPORT
-#define PLATFORM_IMPORT
+#if defined(__MINGW32__)
+#define PLATFORM_EXPORT __declspec(dllexport)
+#define PLATFORM_IMPORT __declspec(dllimport)
+#else
+#define PLATFORM_EXPORT 
+#define PLATFORM_IMPORT 
+#endif
 
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
@@ -224,7 +232,7 @@ inline char tolower(const char toLower)
 }
 #endif
 
-#ifndef __CYGWIN__
+#if !defined(__CYGWIN__) && !defined(__MINGW32__)
 
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
