@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/01/30 19:14:43  tng
+ * On some platforms like Solaris strtod will return -0.0.   So need to consider this scenario as well.
+ *
  * Revision 1.6  2002/12/11 19:55:16  peiyongz
  * set negZero/posZero for float.
  *
@@ -146,17 +149,17 @@ XMLFloat::~XMLFloat()
 
 void XMLFloat::checkBoundary(const XMLCh* const strValue)
 {
-   	char *nptr = XMLString::transcode(strValue);
+    char *nptr = XMLString::transcode(strValue);
     ArrayJanitor<char> jan1(nptr);
     int   strLen = strlen(nptr);
     char *endptr = 0;
-	errno = 0;
+    errno = 0;
     fValue = strtod(nptr, &endptr);
 
-	// check if all chars are valid char
-	if ( (endptr - nptr) != strLen)
+    // check if all chars are valid char
+    if ( (endptr - nptr) != strLen)
     {
-		ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
     }
 
     // check if overflow/underflow occurs
@@ -164,13 +167,29 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
     {
         if ( fValue < 0 )
         {
-            fType = NegINF;
+            if (fValue > (-1)*DBL_MIN)
+            {
+                fType = NegZero;
+                fValue = 0;
+            }
+            else
+            {
+                fType = NegINF;
+            }
         }
         else if ( fValue > 0)
         {
-            fType = PosINF;
-        }         
-        else 
+            if (fValue < DBL_MIN )
+            {
+                fType = PosZero;
+                fValue = 0;
+            }
+            else
+            {
+                fType = PosINF;
+            }
+        }
+        else
         {
             fType = (getSign() == 1) ? PosZero : NegZero;
         }
@@ -188,7 +207,7 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
         {
             fType = NegZero;
             fValue = 0;
-        } 
+        }
         else if (fValue > 0 && fValue < FLT_MIN )
         {
             fType = PosZero;
