@@ -108,6 +108,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "DOMNormalizerTest"=".\DOMNormalizerTest\DOMNormalizerTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "DeprecatedDOMCount"=".\DeprecatedDOMCount\DeprecatedDOMCount.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -421,6 +436,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name DOMTypeInfoTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMNormalizerTest
     End Project Dependency
 }}}
 

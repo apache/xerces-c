@@ -1527,6 +1527,7 @@ DOM/DOMTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 DOM/TypeInfo/Makefile \
+DOM/Normalizer/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
@@ -1632,6 +1633,7 @@ DOM/DOMTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 DOM/TypeInfo/Makefile \
+DOM/Normalizer/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \

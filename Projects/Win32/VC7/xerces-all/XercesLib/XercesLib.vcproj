@@ -1986,6 +1986,12 @@
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMNodeVector.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMNotationImpl.cpp">
 				</File>
 				<File
