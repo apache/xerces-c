@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/22 16:58:27  tng
+ * typo: the type should be t1/t2, not w1/w2.
+ *
  * Revision 1.1  2001/08/21 15:58:42  tng
  * Schema: New files XercesElementWildCard.
  *
@@ -126,26 +129,26 @@ bool XercesElementWildcard::wildcardIntersect(ContentSpecNode::NodeTypes t1,
                                               ContentSpecNode::NodeTypes t2,
                                               unsigned int               w2)
 {
-    if (((w1 & 0x0f) == ContentSpecNode::Any) ||
-        ((w2 & 0x0f) == ContentSpecNode::Any)) {
+    if (((t1 & 0x0f) == ContentSpecNode::Any) ||
+        ((t2 & 0x0f) == ContentSpecNode::Any)) {
         // if either one is "##any", then intersects
         return true;
     }
-    else if (((w1 & 0x0f) == ContentSpecNode::Any_NS) &&
-             ((w2 & 0x0f) == ContentSpecNode::Any_NS) &&
+    else if (((t1 & 0x0f) == ContentSpecNode::Any_NS) &&
+             ((t2 & 0x0f) == ContentSpecNode::Any_NS) &&
              (w1 == w2)) {
         // if both are "some_namespace" and equal, then intersects
         return true;
     }
-    else if (((w1 & 0x0f) == ContentSpecNode::Any_Other) &&
-             ((w2 & 0x0f) == ContentSpecNode::Any_Other)) {
+    else if (((t1 & 0x0f) == ContentSpecNode::Any_Other) &&
+             ((t2 & 0x0f) == ContentSpecNode::Any_Other)) {
         // if both are "##other", and equal, then intersects
         return true;
     }
-    else if (((((w1 & 0x0f) == ContentSpecNode::Any_NS) &&
-               ((w2 & 0x0f) == ContentSpecNode::Any_Other)) ||
-              (((w1 & 0x0f) == ContentSpecNode::Any_Other) &&
-               ((w2 & 0x0f) == ContentSpecNode::Any_NS))) &&
+    else if (((((t1 & 0x0f) == ContentSpecNode::Any_NS) &&
+               ((t2 & 0x0f) == ContentSpecNode::Any_Other)) ||
+              (((t1 & 0x0f) == ContentSpecNode::Any_Other) &&
+               ((t2 & 0x0f) == ContentSpecNode::Any_NS))) &&
              (w1 != w2)) {
         return true;
     }
