@@ -60,43 +60,38 @@ class DOMUserDataHandler;
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMAttr</td>
- * <td valign='top' rowspan='1' colspan='1'>name of
- * attribute</td>
+ * <td valign='top' rowspan='1' colspan='1'>name of attribute</td>
  * <td valign='top' rowspan='1' colspan='1'>value of attribute</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMCDATASection</td>
- * <td valign='top' rowspan='1' colspan='1'><code>"#cdata-section"</code></td>
- * <td valign='top' rowspan='1' colspan='1'>
- * content of the CDATA Section</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;#cdata-section&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>content of the CDATA Section</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMComment</td>
- * <td valign='top' rowspan='1' colspan='1'><code>"#comment"</code></td>
- * <td valign='top' rowspan='1' colspan='1'>content of
- * the comment</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;#comment&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>content of the comment</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMDocument</td>
- * <td valign='top' rowspan='1' colspan='1'><code>"#document"</code></td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;#document&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMDocumentFragment</td>
- * <td valign='top' rowspan='1' colspan='1'>
- * <code>"#document-fragment"</code></td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;#document-fragment&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMDocumentType</td>
  * <td valign='top' rowspan='1' colspan='1'>document type name</td>
- * <td valign='top' rowspan='1' colspan='1'>
- * null</td>
+ * <td valign='top' rowspan='1' colspan='1'>null</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
@@ -121,8 +116,7 @@ class DOMUserDataHandler;
  * <td valign='top' rowspan='1' colspan='1'>DOMNotation</td>
  * <td valign='top' rowspan='1' colspan='1'>notation name</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
- * <td valign='top' rowspan='1' colspan='1'>
- * null</td>
+ * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMProcessingInstruction</td>
@@ -132,8 +126,7 @@ class DOMUserDataHandler;
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMText</td>
- * <td valign='top' rowspan='1' colspan='1'>
- * <code>"#text"</code></td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;#text&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>content of the text node</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>

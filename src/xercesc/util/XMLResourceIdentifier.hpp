@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/12/21 16:02:51  cargilld
+ * Attempt to fix various apidoc problems.
+ *
  * Revision 1.8  2004/12/03 19:40:32  cargilld
  * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
  *
@@ -121,14 +124,14 @@ class XMLUTIL_EXPORT XMLResourceIdentifier
 {
 public:
 
+    //@{
     enum ResourceIdentifierType {
         SchemaGrammar = 0,
         SchemaImport,
         SchemaInclude,
         SchemaRedefine ,
         ExternalEntity,
-        UnKnown = 255
-    //@{
+        UnKnown = 255    
     };
 
     /** @name Constructors and Destructor */
@@ -157,6 +160,8 @@ public:
     const XMLCh* getSchemaLocation()    const;
     const XMLCh* getBaseURI()           const;
     const XMLCh* getNameSpace()         const;
+
+    //@}
 
 private :
 

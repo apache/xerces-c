@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/12/21 16:02:51  cargilld
+ * Attempt to fix various apidoc problems.
+ *
  * Revision 1.10  2004/09/13 21:22:42  peiyongz
  * new method: getActualValue()
  *
@@ -241,10 +244,10 @@ public:
     void setValidity(PSVIItem::VALIDITY_STATE validity);
 
     /** reset the object
-     * @param validationContext:  corresponds to schema validation context property
-     * @param normalizedValue:  corresponds to schema normalized value property
-     * @param validityState:  state of item's validity
-     * @param assessmentType:  type of assessment carried out on item
+     * @param validationContext  corresponds to schema validation context property
+     * @param normalizedValue  corresponds to schema normalized value property
+     * @param validityState  state of item's validity
+     * @param assessmentType  type of assessment carried out on item
      */
     void reset(
             const XMLCh* const validationContext

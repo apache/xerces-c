@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/12/21 16:02:51  cargilld
+ * Attempt to fix various apidoc problems.
+ *
  * Revision 1.14  2004/09/29 19:27:07  cargilld
  * Fix for Jira-1217: fixing problems with getXSModel.
  *
@@ -113,7 +116,7 @@ public :
       * it should return false; otherwise, it should return true, so that
       * the caller knows whether the grammar has been adopted.
       *
-      * @param gramToCache: the Grammar to be cached in the grammar pool
+      * @param gramToCache the Grammar to be cached in the grammar pool
       * @return true if the grammar pool has elected to cache the grammar (in which case
       * it is assumed to have adopted it); false if it does not cache it
 	  *
@@ -123,7 +126,7 @@ public :
     /**
       * retrieveGrammar
       *
-      * @param gramDesc: the Grammar Description used to search for grammar
+      * @param gramDesc the Grammar Description used to search for grammar
 	  *                  cached in the grammar pool
 	  *
       */
@@ -135,7 +138,7 @@ public :
       *
       * grammar removed from the grammar pool and owned by the caller
       *
-      * @param nameSpaceKey: Key used to search for grammar in the grammar pool
+      * @param nameSpaceKey Key used to search for grammar in the grammar pool
       * @return the grammar that was removed from the pool (0 if none)
       */
     virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey) = 0;  

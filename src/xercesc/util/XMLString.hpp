@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2004/12/21 16:02:51  cargilld
+ * Attempt to fix various apidoc problems.
+ *
  * Revision 1.30  2004/12/14 02:09:20  cargilld
  * Performance update from Christian Will.
  *
@@ -1558,6 +1561,7 @@ public:
      * The implementation will call MemoryManager::deallocate and then turn the string to a null pointer.
      *
      * @param buf  The string to be deleted and become a null pointer.
+     * @param manager The MemoryManager to use to allocate objects
      */
     static void release
     (
