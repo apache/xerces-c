@@ -597,10 +597,16 @@ export CXX
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
-CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines $bitstobuildDefines"
+
+#
+# these defines are required when building the DLL
+#
+buildDefines="-DPROJ_XMLPARSER  -DPROJ_XMLUTIL  -DPROJ_PARSERS  -DPROJ_SAX4C  -DPROJ_SAX2  -DPROJ_DOM  -DPROJ_VALIDATORS"
+
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $buildDefines $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines $bitstobuildDefines"
 export CXXFLAGS
 
-CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines  $bitstobuildDefines"
+CFLAGS="$CFLAGS $compileroptions $debugflag $buildDefines $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines  $bitstobuildDefines"
 export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment

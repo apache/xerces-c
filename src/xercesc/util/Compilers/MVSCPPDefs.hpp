@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/01/30 19:09:50  tng
+ * [Bug 3041] wrong PLATFORM_IMPORT in MVSCPPDefs.hpp
+ *
  * Revision 1.7  2003/01/20 19:28:52  tng
  * 390: turn on C++ namespace.  Patch from Stephen Dulin.
  *
@@ -137,7 +140,7 @@
 //  to do this.
 // ---------------------------------------------------------------------------
 #define PLATFORM_EXPORT _Export
-#define PLATFORM_IMPORT _Export
+#define PLATFORM_IMPORT
 
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools
