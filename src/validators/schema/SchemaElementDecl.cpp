@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/08/29 20:52:35  tng
+ * Schema: xsi:type support
+ *
  * Revision 1.12  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -119,6 +122,7 @@ SchemaElementDecl::SchemaElementDecl() :
     , fSubstitutionGroupName(0)
     , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
+    , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
 {
 }
@@ -139,6 +143,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fSubstitutionGroupName(0)
     , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
+    , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
 {
     setElementName(prefix, localPart, uriId);
@@ -158,6 +163,7 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fSubstitutionGroupName(0)
     , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
+    , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
 {
     setElementName(elementName);
@@ -182,7 +188,13 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
                                      , const LookupOpts      options
                                      , bool&           wasAdded) const
 {
-    if (fComplexTypeInfo == 0) {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
+    }
+    else if (fComplexTypeInfo) {
+        return fComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
+    }
+    else {
         if (options == XMLElementDecl::AddIfNotFound) {
             SchemaAttDef* retVal = 0;
 
@@ -215,18 +227,20 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
             return 0;
         }
     }
-
-    return fComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
 }
 
 
 XMLAttDefList& SchemaElementDecl::getAttDefList() const
 {
-    if (fComplexTypeInfo == 0) {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getAttDefList();
+    }
+    else if (fComplexTypeInfo) {
+        return fComplexTypeInfo->getAttDefList();
+    }
+    else {
         throw; // REVISIT: add proper error message
     }
-
-	return fComplexTypeInfo->getAttDefList();
 }
 
 
@@ -253,50 +267,70 @@ XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
 
 bool SchemaElementDecl::hasAttDefs() const
 {
-    // If the collection hasn't been faulted in, then no att defs
-    if (fComplexTypeInfo == 0)
-        return false;
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->hasAttDefs();
+    }
+    else if (fComplexTypeInfo) {
+        return fComplexTypeInfo->hasAttDefs();
+    }
 
-    return fComplexTypeInfo->hasAttDefs();
+    // If the collection hasn't been faulted in, then no att defs
+    return false;
+
 }
 
 
 bool SchemaElementDecl::resetDefs()
 {
-    if (fComplexTypeInfo == 0) {
-        return false;
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->resetDefs();
+    }
+    else if (fComplexTypeInfo) {
+        return fComplexTypeInfo->resetDefs();
     }
 
-    return fComplexTypeInfo->resetDefs();
+    return false;
 }
 
 const XMLCh*
 SchemaElementDecl::getFormattedContentModel() const
 {
-    if (fComplexTypeInfo != 0) {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getFormattedContentModel();
+    }
+    else if (fComplexTypeInfo) {
         return fComplexTypeInfo->getFormattedContentModel();
     }
-    return 0; 
-}  
+    return 0;
+}
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Getter methods
 // ---------------------------------------------------------------------------
 const SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const int uriId) const
 {
-    // If no complex type, then return a null
-    if (fComplexTypeInfo == 0)
-        return 0;
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getAttDef(baseName, uriId);
+    }
+    else if (fComplexTypeInfo) {
+        return fComplexTypeInfo->getAttDef(baseName, uriId);
+    }
 
-    return fComplexTypeInfo->getAttDef(baseName, uriId);
+    // If no complex type, then return a null
+    return 0;
+
 }
 
 SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const int uriId)
 {
-    // If no complex type, then return a null
-    if (fComplexTypeInfo == 0)
-        return 0;
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getAttDef(baseName, uriId);
+    }
+    else if (fComplexTypeInfo) {
+        return fComplexTypeInfo->getAttDef(baseName, uriId);
+    }
 
-    return fComplexTypeInfo->getAttDef(baseName, uriId);
+    // If no complex type, then return a null
+    return 0;
 }
 

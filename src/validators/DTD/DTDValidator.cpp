@@ -178,7 +178,6 @@ void DTDValidator::faultInAttr(XMLAttr& toFill, const XMLAttDef& attDef) const
         //  There is a colon, so we have to split apart the name and prefix
         //  part.
         //
-        XMLBuffer bufTmp;
         XMLCh* tmpNameBuf = XMLString::replicate(fullName);
         ArrayJanitor<XMLCh> janNameBuf(tmpNameBuf);
 

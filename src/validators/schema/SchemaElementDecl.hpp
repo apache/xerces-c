@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/29 20:52:35  tng
+ * Schema: xsi:type support
+ *
  * Revision 1.11  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -173,8 +176,8 @@ public :
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);
     virtual XMLContentModel* getContentModel();
-    virtual void setContentModel(XMLContentModel* const newModelToAdopt);      
-    virtual const XMLCh* getFormattedContentModel ()   const;        
+    virtual void setContentModel(XMLContentModel* const newModelToAdopt);
+    virtual const XMLCh* getFormattedContentModel ()   const;
 
 
     // -----------------------------------------------------------------------
@@ -211,6 +214,7 @@ public :
     void setSubstitutionGroupName(const XMLCh* const name);
     void setTypeFromAnotherSchemaURI(const XMLCh* const uriStr);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
+    void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
 private :
     // -----------------------------------------------------------------------
@@ -256,7 +260,10 @@ private :
     //      when ComplexTypeInfo does not exist.  We want to keep track
     //      of these faulted in attributes to avoid duplicate redundant
     //      error.
-
+    //
+    //  fXsiComplexTypeInfo
+    //      Temporary store the xsi:type ComplexType here for validation
+    //      If it presents, then it takes precedence than its own fComplexTypeInfo.
     // -----------------------------------------------------------------------
     ModelTypes                     fModelType;
     DatatypeValidator*             fDatatypeValidator;
@@ -270,6 +277,7 @@ private :
     XMLCh*                         fTypeFromAnotherSchemaURI;
     ComplexTypeInfo*               fComplexTypeInfo;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
+    ComplexTypeInfo*               fXsiComplexTypeInfo;
 };
 
 // ---------------------------------------------------------------------------
@@ -277,7 +285,10 @@ private :
 // ---------------------------------------------------------------------------
 inline ContentSpecNode* SchemaElementDecl::getContentSpec()
 {
-    if (fComplexTypeInfo != 0) {
+    if (fXsiComplexTypeInfo != 0) {
+        return fXsiComplexTypeInfo->getContentSpec();
+    }
+    else if (fComplexTypeInfo != 0) {
         return fComplexTypeInfo->getContentSpec();
     }
 
@@ -286,7 +297,10 @@ inline ContentSpecNode* SchemaElementDecl::getContentSpec()
 
 inline const ContentSpecNode* SchemaElementDecl::getContentSpec() const
 {
-    if (fComplexTypeInfo != 0) {
+    if (fXsiComplexTypeInfo != 0) {
+        return fXsiComplexTypeInfo->getContentSpec();
+    }
+    else if (fComplexTypeInfo != 0) {
         return fComplexTypeInfo->getContentSpec();
     }
 
@@ -301,10 +315,13 @@ SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
 
 inline XMLContentModel* SchemaElementDecl::getContentModel()
 {
-    if (fComplexTypeInfo != 0) {
+    if (fXsiComplexTypeInfo != 0) {
+        return fXsiComplexTypeInfo->getContentModel();
+    }
+    else if (fComplexTypeInfo != 0) {
         return fComplexTypeInfo->getContentModel();
     }
-    return 0;    
+    return 0;
 }
 
 inline void
@@ -370,12 +387,19 @@ inline XMLCh* SchemaElementDecl::getTypeFromAnotherSchemaURI() const {
 
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
 {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo;
+    }
+
     return fComplexTypeInfo;
 }
 
 inline const SchemaAttDef* SchemaElementDecl::getAttWildCard() const {
 
-    if (fComplexTypeInfo) {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getAttWildCard();
+    }
+    else if (fComplexTypeInfo) {
         return fComplexTypeInfo->getAttWildCard();
     }
 
@@ -384,7 +408,10 @@ inline const SchemaAttDef* SchemaElementDecl::getAttWildCard() const {
 
 inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
 
-    if (fComplexTypeInfo) {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getAttWildCard();
+    }
+    else if (fComplexTypeInfo) {
         return fComplexTypeInfo->getAttWildCard();
     }
 
@@ -462,6 +489,12 @@ inline void
 SchemaElementDecl::setComplexTypeInfo(ComplexTypeInfo* const typeInfo)
 {
     fComplexTypeInfo = typeInfo;
+}
+
+inline void
+SchemaElementDecl::setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo)
+{
+    fXsiComplexTypeInfo = typeInfo;
 }
 
 #endif

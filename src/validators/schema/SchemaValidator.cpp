@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/08/29 20:52:35  tng
+ * Schema: xsi:type support
+ *
  * Revision 1.14  2001/08/28 19:20:54  tng
  * Schema: xsi:type support
  *
@@ -592,8 +595,12 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
                     if (typeInfo) {
                         // typeInfo is found
-                        if (typeInfo->getAbstract())
+                        bool error = false;
+
+                        if (typeInfo->getAbstract()) {
                             emitError(XMLValid::NoAbstractInXsiType, aBuffer.getRawBuffer());
+                            error = true;
+                        }
 
                         ComplexTypeInfo* destType = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
                         ComplexTypeInfo* tempType = typeInfo;
@@ -603,12 +610,16 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                                     break;
                                 tempType = tempType->getBaseComplexTypeInfo();
                             }
-                            if (!tempType)
+                            if (!tempType) {
                                 emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                error = true;
+                            }
                             else {
                                 int derivationMethod = typeInfo->getDerivedBy();
-                                if ((((SchemaElementDecl*)elemDef)->getBlockSet() & derivationMethod) != 0)
+                                if ((((SchemaElementDecl*)elemDef)->getBlockSet() & derivationMethod) != 0) {
                                     emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                                    error = true;
+                                }
                             }
                         }
                         else {
@@ -617,8 +628,12 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                             if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
                                 // the type is not derived from ancestor
                                 emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                error = true;
                             }
                         }
+
+                        if (!error)
+                            ((SchemaElementDecl*)elemDef)->setXsiComplexTypeInfo(typeInfo);
                     }
                     else {
                         // typeInfo not found
@@ -958,3 +973,4 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
 
     fDatatypeBuffer.set(toFill.getRawBuffer());
 }
+

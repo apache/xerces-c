@@ -1721,6 +1721,10 @@ void XMLScanner::scanEndTag(bool& gotData)
                 );
             }
         }
+
+        // reset xsi:type ComplexTypeInfo
+        if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+            ((SchemaElementDecl*)topElem->fThisElement)->setXsiComplexTypeInfo(0);
     }
 
     // If this was the root, then done with content
@@ -2185,6 +2189,10 @@ bool XMLScanner::scanStartTag(bool& gotData)
     // Expand the element stack and add the new element
     fElemStack.addLevel(elemDecl, fReaderMgr.getCurrentReaderNum());
     fElemStack.setValidationFlag(fValidate);
+
+    //  Validate the element
+    if (fValidate)
+        fValidator->validateElement(elemDecl);
 
     //
     //  If this is the first element and we are validating, check the root
@@ -3026,6 +3034,10 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     fElemStack.setElement(elemDecl, fReaderMgr.getCurrentReaderNum());
     fElemStack.setCurrentURI(uriId);
 
+    //  Validate the element
+    if (fValidate)
+        fValidator->validateElement(elemDecl);
+
     if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
         ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
         if (typeinfo)
@@ -3077,10 +3089,6 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //
     attCount = buildAttList(*fRawAttrList, attCount, *elemDecl, *fAttrList);
 
-    //  Validate the element
-    if (fValidate)
-        fValidator->validateElement(elemDecl);
-
     //
     //  If empty, validate content right now if we are validating and then
     //  pop the element stack top. Else, we have to update the current stack
@@ -3104,6 +3112,10 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                     , elemDecl->getFormattedContentModel()
                 );
             }
+
+            // reset xsi:type ComplexTypeInfo
+            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+                ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
         }
 
         // If the elem stack is empty, then it was an empty root
