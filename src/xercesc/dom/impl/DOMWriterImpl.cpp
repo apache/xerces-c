@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2002/08/07 18:10:19  peiyongz
+ * Fix to Bug#11534: Wrong CDATA Terminator in DOMWriterImpl
+ *
  * Revision 1.14  2002/07/22 23:24:01  tng
  * DOM L3: writeToString should use the fFormatter to do the transcoding
  *
@@ -237,8 +240,8 @@ static const XMLCh  gStartCDATA[] =
 //]]>
 static const XMLCh  gEndCDATA[] =
 {
-    chCloseSquare, chCloseAngle, chCloseAngle, chNull  // test only: ]>>
-//  chCloseSquare, chCloseSquare, chCloseAngle, chNull
+//    chCloseSquare, chCloseAngle, chCloseAngle, chNull  // test only: ]>>
+      chCloseSquare, chCloseSquare, chCloseAngle, chNull
 };
 
 //<!--
