@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/08/13 15:43:24  knoaman
+ * Use memory manager when creating SAX exceptions.
+ *
  * Revision 1.4  2003/04/21 21:07:38  knoaman
  * Use XMLString::release to prepare for configurable memory manager.
  *
@@ -102,12 +105,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  SAXParseException: Constructors and Destructor
 // ---------------------------------------------------------------------------
 SAXParseException::SAXParseException(const  XMLCh* const    message
-                                    , const Locator&        locator) :
-    SAXException(message)
+                                    , const Locator&        locator
+                                    , MemoryManager* const  manager) :
+    SAXException(message, manager)
     , fColumnNumber(locator.getColumnNumber())
     , fLineNumber(locator.getLineNumber())
-    , fPublicId(XMLString::replicate(locator.getPublicId()))
-    , fSystemId(XMLString::replicate(locator.getSystemId()))
+    , fPublicId(XMLString::replicate(locator.getPublicId(), manager))
+    , fSystemId(XMLString::replicate(locator.getSystemId(), manager))
 {
 }
 
@@ -115,12 +119,13 @@ SAXParseException::SAXParseException(const  XMLCh* const    message
                                     , const XMLCh* const    publicId
                                     , const XMLCh* const    systemId
                                     , const XMLSSize_t      lineNumber
-                                    , const XMLSSize_t      columnNumber) :
-    SAXException(message)
+                                    , const XMLSSize_t      columnNumber
+                                    , MemoryManager* const  manager) :
+    SAXException(message, manager)
     , fColumnNumber(columnNumber)
     , fLineNumber(lineNumber)
-    , fPublicId(XMLString::replicate(publicId))
-    , fSystemId(XMLString::replicate(systemId))
+    , fPublicId(XMLString::replicate(publicId, manager))
+    , fSystemId(XMLString::replicate(systemId, manager))
 {
 }
 
@@ -132,14 +137,14 @@ SAXParseException::SAXParseException(const SAXParseException& toCopy) :
     , fPublicId(0)
     , fSystemId(0)
 {
-    fPublicId = XMLString::replicate(toCopy.fPublicId);
-    fSystemId = XMLString::replicate(toCopy.fSystemId);
+    fPublicId = XMLString::replicate(toCopy.fPublicId, toCopy.fMemoryManager);
+    fSystemId = XMLString::replicate(toCopy.fSystemId, toCopy.fMemoryManager);
 }
 
 SAXParseException::~SAXParseException()
 {
-    XMLString::release(&fPublicId);
-    XMLString::release(&fSystemId);
+    fMemoryManager->deallocate(fPublicId);//XMLString::release(&fPublicId);
+    fMemoryManager->deallocate(fSystemId);//XMLString::release(&fSystemId);
 }
 
 
@@ -152,14 +157,15 @@ SAXParseException::operator=(const SAXParseException& toAssign)
     if (this == &toAssign)
         return *this;
 
+    fMemoryManager->deallocate(fPublicId);//XMLString::release(&fPublicId);
+    fMemoryManager->deallocate(fSystemId);//XMLString::release(&fSystemId);
+
     this->SAXException::operator =(toAssign);
     fColumnNumber = toAssign.fColumnNumber;
     fLineNumber = toAssign.fLineNumber;
 
-    XMLString::release(&fPublicId);
-    XMLString::release(&fSystemId);
-    fPublicId = XMLString::replicate(toAssign.fPublicId);
-    fSystemId = XMLString::replicate(toAssign.fSystemId);
+    fPublicId = XMLString::replicate(toAssign.fPublicId, fMemoryManager);
+    fSystemId = XMLString::replicate(toAssign.fSystemId, fMemoryManager);
 
     return *this;
 }

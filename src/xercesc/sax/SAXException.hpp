@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/08/13 15:43:24  knoaman
+ * Use memory manager when creating SAX exceptions.
+ *
  * Revision 1.4  2003/05/15 18:27:05  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -138,9 +141,10 @@ public:
     //@{
     /** Default constructor
      */
-    SAXException() :
+    SAXException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
-        fMsg(XMLString::replicate(XMLUni::fgZeroLenString))
+        fMsg(XMLString::replicate(XMLUni::fgZeroLenString, manager))
+        , fMemoryManager(manager)
     {
     }
 
@@ -149,9 +153,11 @@ public:
     *
     * @param msg The error or warning message.
     */
-    SAXException(const XMLCh* const msg) :
+    SAXException(const XMLCh* const msg,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
-        fMsg(XMLString::replicate(msg))
+        fMsg(XMLString::replicate(msg, manager))
+        , fMemoryManager(manager)
     {
     }
 
@@ -160,9 +166,11 @@ public:
     *
     * @param msg The error or warning message.
     */
-    SAXException(const char* const msg) :
+    SAXException(const char* const msg,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
-        fMsg(XMLString::transcode(msg))
+        fMsg(XMLString::transcode(msg, manager))
+        , fMemoryManager(manager)
     {
     }
 
@@ -173,14 +181,15 @@ public:
     */
     SAXException(const SAXException& toCopy) :
 
-        fMsg(XMLString::replicate(toCopy.fMsg))
+        fMsg(XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager))
+        , fMemoryManager(toCopy.fMemoryManager)
     {
     }
 
     /** Destructor */
     virtual ~SAXException()
     {
-        delete [] fMsg;
+        fMemoryManager->deallocate(fMsg);//delete [] fMsg;
     }
 
     //@}
@@ -198,8 +207,9 @@ public:
         if (this == &toCopy)
             return *this;
 
-        delete [] fMsg;
-        fMsg = XMLString::replicate(toCopy.fMsg);
+        fMemoryManager->deallocate(fMsg);//delete [] fMsg;
+        fMsg = XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager);
+        fMemoryManager = toCopy.fMemoryManager;
         return *this;
     }
     //@}
@@ -225,27 +235,30 @@ protected :
     //      This is the text of the error that is being thrown.
     // -----------------------------------------------------------------------
     XMLCh*  fMsg;
+    MemoryManager* fMemoryManager;
 };
 
 class SAX_EXPORT SAXNotSupportedException : public SAXException
 {
 
 public:
-	SAXNotSupportedException();
+	SAXNotSupportedException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
     */
-    SAXNotSupportedException(const XMLCh* const msg);
+    SAXNotSupportedException(const XMLCh* const msg,
+                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
     */
-    SAXNotSupportedException(const char* const msg);
+    SAXNotSupportedException(const char* const msg,
+                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Copy constructor
@@ -258,21 +271,23 @@ public:
 class SAX_EXPORT SAXNotRecognizedException : public SAXException
 {
 public:
-	SAXNotRecognizedException();
+	SAXNotRecognizedException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
     */
-    SAXNotRecognizedException(const XMLCh* const msg);
+    SAXNotRecognizedException(const XMLCh* const msg,
+                              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
     */
-    SAXNotRecognizedException(const char* const msg);
+    SAXNotRecognizedException(const char* const msg,
+                              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Copy constructor

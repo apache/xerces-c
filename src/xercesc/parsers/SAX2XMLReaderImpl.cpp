@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2003/08/13 15:43:24  knoaman
+ * Use memory manager when creating SAX exceptions.
+ *
  * Revision 1.25  2003/07/31 17:05:48  peiyongz
  * using getGrammar(URI)
  *
@@ -1404,6 +1407,7 @@ void SAX2XMLReaderImpl::error(  const   unsigned int                code
         , systemId
         , lineNum
         , colNum
+        , fMemoryManager
     );
 
     if (!fErrorHandler)
@@ -1431,7 +1435,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 {
 
     if (fParseInProgress)
-        throw SAXNotSupportedException("Feature modification is not supported during parse.");
+        throw SAXNotSupportedException("Feature modification is not supported during parse.", fMemoryManager);
 	
     if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
     {
@@ -1505,7 +1509,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
         fScanner->setStandardUriConformant(value);
     }
     else
-       throw SAXNotRecognizedException("Unknown Feature");
+       throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 }
 
 bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
@@ -1537,7 +1541,7 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
     else if (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0)
         return fScanner->getStandardUriConformant();
     else
-       throw SAXNotRecognizedException("Unknown Feature");
+       throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 
     return false;
 }
@@ -1545,7 +1549,7 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 {
 	if (fParseInProgress)
-		throw SAXNotSupportedException("Property modification is not supported during parse.");
+		throw SAXNotSupportedException("Property modification is not supported during parse.", fMemoryManager);
 
 	if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
 	{
@@ -1578,7 +1582,7 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
         }
     }
     else
-       throw SAXNotRecognizedException("Unknown Property");
+       throw SAXNotRecognizedException("Unknown Property", fMemoryManager);
 }
 
 
@@ -1593,7 +1597,7 @@ void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
         return (void*)fScanner->getName();
     else
-        throw SAXNotRecognizedException("Unknown Property");
+        throw SAXNotRecognizedException("Unknown Property", fMemoryManager);
     return 0;
 }
 

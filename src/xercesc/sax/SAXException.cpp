@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/08/13 15:43:24  knoaman
+ * Use memory manager when creating SAX exceptions.
+ *
  * Revision 1.2  2002/11/04 14:56:26  tng
  * C++ Namespace Support.
  *
@@ -76,18 +79,20 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 // SAXNotSupportedException Constructors
-SAXNotSupportedException::SAXNotSupportedException()
-	: SAXException()
+SAXNotSupportedException::SAXNotSupportedException(MemoryManager* const manager)
+	: SAXException(manager)
 {
 }
 
-SAXNotSupportedException::SAXNotSupportedException(const XMLCh* const msg)
-	: SAXException(msg)
+SAXNotSupportedException::SAXNotSupportedException(const XMLCh* const msg,
+                                                   MemoryManager* const manager)
+	: SAXException(msg, manager)
 {
 }
 
-SAXNotSupportedException::SAXNotSupportedException(const char* const msg)
-	: SAXException(msg)
+SAXNotSupportedException::SAXNotSupportedException(const char* const msg,
+                                                   MemoryManager* const manager)
+	: SAXException(msg, manager)
 {
 }
 
@@ -97,18 +102,20 @@ SAXNotSupportedException::SAXNotSupportedException(const SAXException& toCopy)
 }
 
 // SAXNotRecognizedException Constructors
-SAXNotRecognizedException::SAXNotRecognizedException()
-	: SAXException()
+SAXNotRecognizedException::SAXNotRecognizedException(MemoryManager* const manager)
+	: SAXException(manager)
 {
 }
 
-SAXNotRecognizedException::SAXNotRecognizedException(const XMLCh* const msg)
-	: SAXException(msg)
+SAXNotRecognizedException::SAXNotRecognizedException(const XMLCh* const msg,
+                                                     MemoryManager* const manager)
+	: SAXException(msg, manager)
 {
 }
 
-SAXNotRecognizedException::SAXNotRecognizedException(const char* const msg)
-	: SAXException(msg)
+SAXNotRecognizedException::SAXNotRecognizedException(const char* const msg,
+                                                     MemoryManager* const manager)
+	: SAXException(msg, manager)
 {
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/08/13 15:43:24  knoaman
+ * Use memory manager when creating SAX exceptions.
+ *
  * Revision 1.23  2003/07/31 17:05:48  peiyongz
  * using getGrammar(URI)
  *
@@ -1276,6 +1279,7 @@ void SAXParser::error(  const   unsigned int                code
         , systemId
         , lineNum
         , colNum
+        , fMemoryManager
     );
 
     if (!fErrorHandler)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/08/13 15:43:24  knoaman
+ * Use memory manager when creating SAX exceptions.
+ *
  * Revision 1.4  2003/05/15 18:27:05  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -132,7 +135,8 @@ public:
     * @see Locator#Locator
     * @see Parser#setLocale
     */
-    SAXParseException(const XMLCh* const message, const Locator& locator);
+    SAXParseException(const XMLCh* const message, const Locator& locator,
+                      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 
   /**
@@ -161,6 +165,7 @@ public:
         , const XMLCh* const    systemId
         , const XMLSSize_t      lineNumber
         , const XMLSSize_t      columnNumber
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
   /**

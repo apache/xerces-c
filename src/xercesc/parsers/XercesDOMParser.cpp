@@ -206,6 +206,7 @@ void XercesDOMParser::error( const   unsigned int                code
         , systemId
         , lineNum
         , colNum
+        , getMemoryManager()
         );
 
     //

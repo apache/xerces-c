@@ -552,6 +552,7 @@ void DOMParser::error(  const   unsigned int                code
         , systemId
         , lineNum
         , colNum
+        , fMemoryManager
         );
 
     //
