@@ -1089,6 +1089,12 @@
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.hpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="sax"
