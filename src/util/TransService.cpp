@@ -54,7 +54,9 @@
  * <http://www.apache.org/>.
  */
 
-
+/*
+ * $Id$
+ */
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -289,7 +291,6 @@ void XMLTransService::initTransService()
     //
     gMappings->put(new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString));
     gMappings->put(new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString2));
-    gMappings->put(new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString3));
 
     //
     //  Add in our mappings for Latin1

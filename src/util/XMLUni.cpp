@@ -55,71 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2000/06/13 19:38:07  aruna1
- * Added functionality to recognize UTF_8 encodings in intrinsic trascoders
- *
- * Revision 1.17  2000/05/04 02:43:45  aruna1
- * solaris : instance=static related changes
- *
- * Revision 1.16  2000/04/19 18:06:20  aruna1
- * Changes for duplicate strings
- *
- * Revision 1.15  2000/04/19 02:26:41  aruna1
- * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
- *
- * Revision 1.14  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.13  2000/02/22 00:36:37  roddey
- * Added a new 'native XMLCh' transcoder to correctly handle
- * internal entities now that XMLCh isn't always UTF-16.
- *
- * Revision 1.12  2000/02/19 00:26:41  roddey
- * Yet, yet, yet still another EBCDIC alias tweak.
- *
- * Revision 1.11  2000/02/18 22:24:18  roddey
- * Ok... yet still one more tweak for EBCDIC aliases
- *
- * Revision 1.10  2000/02/18 22:03:31  roddey
- * One more tweak for EBCDIC encoding aliases.
- *
- * Revision 1.9  2000/02/18 19:55:04  roddey
- * Added Windows-1252 as an intrinsic encoding.
- *
- * Revision 1.8  2000/02/17 00:51:13  roddey
- * Updates for EBCDIC code page issues.
- *
- * Revision 1.7  2000/02/08 00:59:19  roddey
- * Support for new intrinsic encoder for IBM-1047 code page.
- *
- * Revision 1.6  2000/02/06 07:48:06  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/27 23:32:17  roddey
- * There is now an official URL for the magic "xmlns" prefix. So I updated our code
- * to use this new URL, instead of the proprietary one we used previously.
- *
- * Revision 1.4  2000/01/12 20:44:49  roddey
- * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
- * some of our compilers, so a new string was added XMLUni and used in its place.
- *
- * Revision 1.3  1999/12/18 00:18:10  roddey
- * More changes to support the new, completely orthagonal support for
- * intrinsic encodings.
- *
- * Revision 1.2  1999/12/15 19:41:29  roddey
- * Support for the new transcoder system, where even intrinsic encodings are
- * done via the same transcoder abstraction as external ones.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:54  twl
- * Initial checkin
- *
- * Revision 1.5  1999/11/08 20:45:21  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -464,11 +400,6 @@ const XMLCh XMLUni::fgUTF8EncodingString[] =
 const XMLCh XMLUni::fgUTF8EncodingString2[] =
 {
     chLatin_U, chLatin_T, chLatin_F, chDigit_8, chNull
-};
-
-const XMLCh XMLUni::fgUTF8EncodingString3[] =
-{
-    chLatin_U, chLatin_T, chLatin_F, chUnderscore , chDigit_8, chNull
 };
 
 const XMLCh XMLUni::fgUTF16EncodingString[] =

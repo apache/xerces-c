@@ -260,7 +260,6 @@ public :
     static const XMLCh fgUSASCIIEncodingString4[];
     static const XMLCh fgUTF8EncodingString[];
     static const XMLCh fgUTF8EncodingString2[];
-    static const XMLCh fgUTF8EncodingString3[];
     static const XMLCh fgUTF16EncodingString[];
     static const XMLCh fgUTF16EncodingString2[];
     static const XMLCh fgUTF16EncodingString3[];

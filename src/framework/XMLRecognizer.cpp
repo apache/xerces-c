@@ -209,8 +209,7 @@ XMLRecognizer::encodingForName(const XMLCh* const encName)
     //  that one ourselves. It is allowed to fall into 'other'.
     //
     if (!XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString)
-    ||  !XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString2)
-    ||  !XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString3))
+    ||  !XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString2))
     {
         return XMLRecognizer::UTF_8;
     }
