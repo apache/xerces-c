@@ -141,6 +141,7 @@
       ..\..\..\..\..\Build\Win32\BCB5\obj\XML256TableTranscoder.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XML88591Transcoder.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XMLASCIITranscoder.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\XMLNumber.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XMLBigDecimal.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XMLBigInteger.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XMLChTranscoder.obj 

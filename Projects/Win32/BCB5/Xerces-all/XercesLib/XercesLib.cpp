@@ -158,6 +158,7 @@ USEUNIT("..\..\..\..\..\src\util\TransService.cpp");
 USEUNIT("..\..\..\..\..\src\util\XML256TableTranscoder.cpp");
 USEUNIT("..\..\..\..\..\src\util\XML88591Transcoder.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLASCIITranscoder.cpp");
+USEUNIT("..\..\..\..\..\src\util\XMLNumber.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLBigDecimal.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLBigInteger.cpp");
 USEUNIT("..\..\..\..\..\src\util\XMLChTranscoder.cpp");

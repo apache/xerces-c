@@ -102,22 +102,6 @@ SOURCE=.\IDMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NameDatatypeValidator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\datatype\NameDatatypeValidator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\datatype\NCNameDatatypeValidator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\datatype\NCNameDatatypeValidator.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\Platforms\Win32\resource.h
 # End Source File
 # Begin Source File
@@ -757,6 +741,14 @@ SOURCE=..\..\..\..\..\src\util\XMLMsgLoader.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLNetAccessor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLNumber.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLNumber.hpp
 # End Source File
 # Begin Source File
 
