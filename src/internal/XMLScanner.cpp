@@ -494,12 +494,27 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
         fInException = true;
         try
         {
-            emitError
-            (
-                XMLErrs::XMLException
-                , excToCatch.getType()
-                , excToCatch.getMessage()
-            );
+            if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+                emitError
+                (
+                    XMLErrs::XMLException_Warning
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else
+                emitError
+                (
+                    XMLErrs::XMLException_Error
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
         }
 
         catch(...)
@@ -649,12 +664,27 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         fInException = true;
         try
         {
-            emitError
-            (
-                XMLErrs::XMLException
-                , excToCatch.getType()
-                , excToCatch.getMessage()
-            );
+            if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+                emitError
+                (
+                    XMLErrs::XMLException_Warning
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else
+                emitError
+                (
+                    XMLErrs::XMLException_Error
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
         }
 
         catch(...)
@@ -827,12 +857,27 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
         fInException = true;
         try
         {
-            emitError
-            (
-                XMLErrs::XMLException
-                , excToCatch.getType()
-                , excToCatch.getMessage()
-            );
+            if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+                emitError
+                (
+                    XMLErrs::XMLException_Warning
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else
+                emitError
+                (
+                    XMLErrs::XMLException_Error
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
         }
 
         catch(...)

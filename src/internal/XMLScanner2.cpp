@@ -1055,8 +1055,12 @@ void XMLScanner::scanReset(const InputSource& src)
         , XMLReader::Type_General
         , XMLReader::Source_External
     );
-    if (!newReader)
-        ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+    if (!newReader) {
+        if (src.getIssueFatalErrorIfNotFound())
+            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+        else
+            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+    }
 
     // Push this read onto the reader manager
     fReaderMgr.pushReader(newReader, 0);
@@ -1452,27 +1456,6 @@ void XMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 
 void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
 
-    //
-    //  Since we have seen a grammar, set our validation flag
-    //  at this point if the validation scheme is auto
-    //
-    if (fValScheme == Val_Auto && !fValidate) {
-        fValidate = true;
-        fElemStack.setValidationFlag(fValidate);
-    }
-
-    // we have seen a schema, so set up the fValidator as fSchemaValidator
-    if (!fValidator->handlesSchema())
-    {
-        if (fValidatorFromUser) {
-            // the fValidator is from user
-            ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-        }
-        else {
-            fValidator = fSchemaValidator;
-        }
-    }
-
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
@@ -1549,36 +1532,87 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         // Put a janitor on the input source
         Janitor<InputSource> janSrc(srcToFill);
 
-        parser.parse( *srcToFill) ;
+        // Should just issue warning if the schema is not found
+        const bool flag = srcToFill->getIssueFatalErrorIfNotFound();
+        srcToFill->setIssueFatalErrorIfNotFound(false);
+
+        parser.parse(*srcToFill) ;
+
+        // Reset the InputSource
+        srcToFill->setIssueFatalErrorIfNotFound(flag);
+
         if (internalErrorHandler.getSawFatal() && fExitOnFirstFatal)
             emitError(XMLErrs::SchemaScanFatalError);
 
         DOM_Document  document = parser.getDocument(); //Our Grammar
 
-        DOM_Element root = document.getDocumentElement();// This is what we pass to TraverserSchema
-        if (fValidate && root.isNull()) {
-            fValidator->emitError(XMLValid::SchemaRootError, loc);
-        }
-        else
-        {
-            if (fValidate && (!uri || !root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).equals(uri)))
-                fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
+        if (!document.isNull()) {
 
-            grammar = new SchemaGrammar();
-            TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
-            if (fGrammarType == Grammar::DTDGrammarType) {
-                fGrammar = grammar;
-                fGrammarType = Grammar::SchemaGrammarType;
-                fValidator->setGrammar(fGrammar);
-            }
+            DOM_Element root = document.getDocumentElement();// This is what we pass to TraverserSchema
+            if (!root.isNull()) {
+            {
+                //
+                //  Since we have seen a grammar, set our validation flag
+                //  at this point if the validation scheme is auto
+                //
+                if (fValScheme == Val_Auto && !fValidate) {
+                    fValidate = true;
+                    fElemStack.setValidationFlag(fValidate);
+                }
 
-            if (!fReuseGrammar && fValidate) {
-                //  validate the Schema scan so far
-                fValidator->preContentValidation(fReuseGrammar);
+                // we have seen a schema, so set up the fValidator as fSchemaValidator
+                if (!fValidator->handlesSchema())
+                {
+                    if (fValidatorFromUser) {
+                        // the fValidator is from user
+                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                    }
+                    else {
+                        fValidator = fSchemaValidator;
+                    }
+                }
+
+                if (fValidate && (!uri || !root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).equals(uri)))
+                    fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
+
+                grammar = new SchemaGrammar();
+                TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
+
+                if (fGrammarType == Grammar::DTDGrammarType) {
+                    fGrammar = grammar;
+                    fGrammarType = Grammar::SchemaGrammarType;
+                    fValidator->setGrammar(fGrammar);
+                }
+
+                if (!fReuseGrammar && fValidate) {
+                    //  validate the Schema scan so far
+                    fValidator->preContentValidation(fReuseGrammar);
+                }
             }
         }
     }
     else {
+        //
+        //  Since we have seen a grammar, set our validation flag
+        //  at this point if the validation scheme is auto
+        //
+        if (fValScheme == Val_Auto && !fValidate) {
+            fValidate = true;
+            fElemStack.setValidationFlag(fValidate);
+        }
+
+        // we have seen a schema, so set up the fValidator as fSchemaValidator
+        if (!fValidator->handlesSchema())
+        {
+            if (fValidatorFromUser) {
+                // the fValidator is from user
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+            }
+            else {
+                fValidator = fSchemaValidator;
+            }
+        }
+
         if (fGrammarType == Grammar::DTDGrammarType) {
             fGrammar = grammar;
             fGrammarType = Grammar::SchemaGrammarType;

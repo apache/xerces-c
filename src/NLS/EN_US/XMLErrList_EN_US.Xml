@@ -13,6 +13,7 @@
             <Message Id="ContradictoryEncoding" Text="Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it"/>
             <Message Id="UndeclaredElemInCM" Text="Element '{0}' was referenced in a content model but never declared"/>
             <Message Id="UndeclaredElemInAttList" Text="Element '{0}' was referenced in an attlist but never declared"/>
+            <Message Id="XMLException_Warning" Text="An exception occured! Type:{0}, Message:{1}"/>
         </Warning>
         <Error>
             <Message Id="FeatureUnsupported" Text="{0} is unsupported"/>
@@ -130,7 +131,7 @@
             <Message Id="DuplicateAttInDerivation" Text="Attribute '{0}' already defined in base and should not appear in derivation by extension."/>
             <Message Id="NotExpressibleWildCardIntersection" Text="The intensional intersection of {attributes wildcard}s must be expressible"/>
             <Message Id="BadAttDerivation_1" Text="Base type definition does not have any attributes"/>
-            <Message Id="BadAttDerivation_2" Text="Attribute '{0}' has an inconsistent REQUIRED setting with that of the base"/>            
+            <Message Id="BadAttDerivation_2" Text="Attribute '{0}' has an inconsistent REQUIRED setting with that of the base"/>
             <Message Id="BadAttDerivation_3" Text="Type of attribute '{0}' must be validly derived from type of attribute in base"/>
             <Message Id="BadAttDerivation_4" Text="Attribute '{0}' is either not fixed, or has a different value from that of the base"/>
             <Message Id="BadAttDerivation_5" Text="Attribute '{0}' has invalid target namespace with respect to a base wildcard constraint or, base has no wildcard"/>
@@ -161,6 +162,7 @@
             <Message Id="AttGrpPropCorrect3" Text="More than one attribute derived from type ID cannot appear in the same attribute group - '{0}' ignored"/>
             <Message Id="InvalidTargetNSValue" Text="'' is not a legal value for the targetNamespace attribute; the attribute must be absent or contain a nonempty value"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
+            <Message Id="XMLException_Error" Text="An exception occured! Type:{0}, Message:{1}"/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
@@ -282,7 +284,7 @@
             <Message Id="InvalidColonPos" Text="When namespaces are enabled, the colon cannot be the first or last character"/>
             <Message Id="ColonNotLegalWithNS" Text="Colons are not allowed in this name when namespaces are enabled"/>
             <Message Id="SysException" Text="A system exception occured during processing"/>
-            <Message Id="XMLException" Text="An exception occured! Type:{0}, Message:{1}"/>
+            <Message Id="XMLException_Fatal" Text="An exception occured! Type:{0}, Message:{1}"/>
             <Message Id="UnexpectedEOF" Text="Unexpected end of file exception. Message: {0}"/>
             <Message Id="UnexpectedError" Text="UnexpectedError"/>
             <Message Id="BadSchemaLocation" Text="The schemaLocation attribute does not contain pairs of values."/>
@@ -400,7 +402,10 @@
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
-        <Error>
+        <Warning>
+            <Message Id="Scan_CouldNotOpenSource_Warning" Text="Warning: The primary document entity could not be opened. Id={0}"/>
+        </Warning>
+        <FatalError>
             <Message Id="Array_BadIndex" Text="The index is beyond the array bounds "/>
             <Message Id="Array_BadNewSize" Text="The new size is less than the old one"/>
             <Message Id="AttrList_BadIndex" Text="The index given was beyond the max attribute index"/>
@@ -750,10 +755,10 @@
             <Message Id="PD_RecurseUnordered" Text="RecurseUnordered: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_MapAndSum" Text="MapAndSum: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_InvalidContentType" Text="Particle derivation: Invalid content spec node type"/>
-        </Error>
+        </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
-        <Error>
+        <FatalError>
             <Message Id="BadMajorCode" Text="The majorCode parameter to createMessage was out of bounds"/>
             <Message Id="MessageFormatFailure" Text="An internal error occurred while formatting the following message:"/>
             <Message Id="UnterminatedPEReference" Text="The parameter entity reference must end with the ';' delimiter."/>
@@ -772,6 +777,6 @@
             <Message Id="ElementTypeReqInElementDecl" Text="Expected a element type in the element declaration."/>
             <Message Id="UnterminatedAttributeValue" Text="Expected a termination character for the attribute value."/>
             <Message Id="MaximumCodeReached" Text="The maximum size for code has been reached."/>
-        </Error>
+        </FatalError>
     </MsgDomain>
 </MsgFile>
