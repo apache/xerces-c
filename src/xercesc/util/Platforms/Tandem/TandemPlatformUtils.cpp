@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/09 15:30:39  tng
+ * Missing panic function in Tandem
+ *
  * Revision 1.4  2002/12/12 16:29:30  peiyongz
  * loadAMsgSet() added
  *
@@ -144,6 +147,39 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
         panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
+}
+
+void XMLPlatformUtils::panic(const PanicReasons reason)
+{
+    const char* reasonStr = "Unknown reason";
+    switch (reason)
+    {
+    case Panic_NoTransService:
+        reasonStr = "Could not load a transcoding service";
+        break;
+    case Panic_NoDefTranscoder:
+        reasonStr = "Could not load a local code page transcoder";
+        break;
+    case Panic_CantFindLib:
+        reasonStr = "Could not find the xerces-c DLL";
+        break;
+    case Panic_UnknownMsgDomain:
+        reasonStr = "Unknown message domain";
+        break;
+    case Panic_CantLoadMsgDomain:
+        reasonStr = "Cannot load message domain";
+        break;
+    case Panic_SynchronizationErr:
+        reasonStr = "Cannot synchronize system or mutex";
+        break;
+    case Panic_SystemInit:
+        reasonStr = "Cannot initialize the system or mutex";
+        break;
+    }
+
+    fprintf(stderr, "Xerces Panic Error: %s\n", reasonStr);
+
+    exit(-1);
 }
 
 // ---------------------------------------------------------------------------
