@@ -100,8 +100,10 @@ IDAttrImpl(ownerDoc, qualifiedName)
     } else {	//0 < index < this->name.length()-1
         XMLCh* newName;
         XMLCh temp[4000];
-        if (index >= 3999)
-            newName = new (getOwnerDocument()) XMLCh[XMLString::stringLen(qualifiedName)+1];
+        if (index >= 3999) {
+            //newName = new (getOwnerDocument()) XMLCh[XMLString::stringLen(qualifiedName)+1];
+            newName = (XMLCh*) ((IDDocumentImpl *)getOwnerDocument())->allocate(sizeof(XMLCh) * (XMLString::stringLen(qualifiedName)+1));
+        }
         else
             newName = temp;
 
@@ -184,8 +186,10 @@ void IDAttrNSImpl::setPrefix(const XMLCh *prefix)
     XMLCh temp[1000];
     int newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
 
-    if (newQualifiedNameLen >= 999)
-        newName = new (getOwnerDocument()) XMLCh[newQualifiedNameLen + 1];
+    if (newQualifiedNameLen >= 999) {
+        //newName = new (getOwnerDocument()) XMLCh[newQualifiedNameLen + 1];
+        newName = (XMLCh*) ((IDDocumentImpl *)getOwnerDocument())->allocate(sizeof(XMLCh) * (newQualifiedNameLen + 1));
+    }
     else
         newName = temp;
 

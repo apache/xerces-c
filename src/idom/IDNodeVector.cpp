@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/29 18:49:57  tng
+ * IDOM: call allocate directly for array allocation to avoid overloading operator new[] which leads to compilation error on SUN CC 4.2
+ *
  * Revision 1.4  2001/05/23 13:11:39  tng
  * IDOM: Memory fix.
  *
@@ -94,11 +97,16 @@ IDNodeVector::IDNodeVector(IDOM_Document *doc, unsigned int size) {
 
 
 void IDNodeVector::init(IDOM_Document *doc, unsigned int size) {
-	assert(size > 0);
-	data = new (doc) IDOM_Node *[size];
-	assert(data != 0);
-	allocatedSize = size;
-	nextFreeSlot = 0;
+    assert(size > 0);
+    //data = new (doc) IDOM_Node *[size];
+    void* p = ((IDDocumentImpl *)doc)->allocate(sizeof(IDOM_Node*) * size);
+    data = (IDOM_Node**) &p;
+    assert(data != 0);
+    unsigned int i;
+    for (i=0; i<size; i++)
+        data[i] = 0;
+    allocatedSize = size;
+    nextFreeSlot = 0;
 };
 
 
@@ -114,21 +122,25 @@ void IDNodeVector::addElement(IDOM_Node *elem) {
 
 
 void IDNodeVector::checkSpace() {
-	if (nextFreeSlot == allocatedSize) {
-                unsigned int grow = allocatedSize/2;
-                if (grow < 50) grow = 50;
-		unsigned int newAllocatedSize = allocatedSize + grow;
+    if (nextFreeSlot == allocatedSize) {
+        unsigned int grow = allocatedSize/2;
+        if (grow < 50) grow = 50;
+        unsigned int newAllocatedSize = allocatedSize + grow;
         IDOM_Document *doc = data[0]->getOwnerDocument();
-		IDOM_Node **newData = new (doc) IDOM_Node *[newAllocatedSize];
-		assert(newData != 0);
-		for (unsigned int i=0; i<allocatedSize; i++) {
-			newData[i] = data[i];
-		};
-		// delete [] data;  // idom_revisit.  Can't delete!  Recycle?
-		allocatedSize = newAllocatedSize;
-		data = newData;
-	};
-};
+
+        //IDOM_Node **newData = new (doc) IDOM_Node *[newAllocatedSize];
+        void* p = ((IDDocumentImpl *)doc)->allocate(sizeof(IDOM_Node*) * newAllocatedSize);
+        IDOM_Node **newData = (IDOM_Node**) &p;
+
+        assert(newData != 0);
+        for (unsigned int i=0; i<allocatedSize; i++) {
+            newData[i] = data[i];
+        };
+        // delete [] data;  // idom_revisit.  Can't delete!  Recycle?
+        allocatedSize = newAllocatedSize;
+        data = newData;
+    }
+}
 
 	
 IDOM_Node *IDNodeVector::elementAt(unsigned int index) {

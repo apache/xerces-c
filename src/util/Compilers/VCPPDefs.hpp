@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/05/29 18:50:24  tng
+ * IDOM: call allocate directly for array allocation to avoid overloading operator new[] which leads to compilation error on SUN CC 4.2
+ *
  * Revision 1.10  2001/05/28 20:59:21  tng
  * IDOM: move operator new[] to VCPPDefs as only Windows VCPP requires its presense
  *
@@ -175,14 +178,4 @@ inline void operator delete(void* ptr, IDOM_Document *doc)
     return;
 }
 
-// ---------------------------------------------------------------------------
-//  For IDOM: IDOM has overloaded the operator new[], VCPP is confused and gives
-//     error C2660: 'new[]' : function does not take 1 parameters
-//     thus need to define the global operator new[]
-// ---------------------------------------------------------------------------
-//define the global one
-inline void * operator new[](size_t amt)
-{
-    return ::operator new(amt);
-}
 

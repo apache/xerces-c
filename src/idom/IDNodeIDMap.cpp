@@ -88,7 +88,9 @@ IDNodeIDMap::IDNodeIDMap(int initialSize, IDOM_Document *doc)
     fNumEntries = 0;
     fMaxEntries = (unsigned long)(float(fSize) * gMaxFill);
 
-    fTable = new (fDoc) IDOM_Attr*[fSize];
+    //fTable = new (fDoc) IDOM_Attr*[fSize];
+    void* p = ((IDDocumentImpl *)fDoc)->allocate(sizeof(IDOM_Attr*) * fSize);
+    fTable = (IDOM_Attr**) &p;
     unsigned int i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
@@ -251,7 +253,9 @@ void IDNodeIDMap::growTable()
     //
     //  Allocate the new table.
     //
-    fTable = new (fDoc) IDOM_Attr *[fSize];
+    //fTable = new (fDoc) IDOM_Attr *[fSize];
+    void* p = ((IDDocumentImpl *)fDoc)->allocate(sizeof(IDOM_Attr*) * fSize);
+    fTable = (IDOM_Attr**) &p;
     unsigned int i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;

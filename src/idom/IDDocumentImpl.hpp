@@ -300,11 +300,4 @@ inline void * operator new(size_t amt, IDOM_Document *doc)
     return p;
 }
 
-inline void * operator new[](size_t amt, IDOM_Document *doc)
-{
-    // idom_revist.  Probably should be a checked cast.
-    void *p = ((IDDocumentImpl *)doc)->allocate(amt);
-    return p;
-}
-
 #endif

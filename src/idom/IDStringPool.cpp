@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/29 18:49:58  tng
+ * IDOM: call allocate directly for array allocation to avoid overloading operator new[] which leads to compilation error on SUN CC 4.2
+ *
  * Revision 1.4  2001/05/23 13:11:39  tng
  * IDOM: Memory fix.
  *
@@ -107,7 +110,7 @@ static IDStringPoolEntry *createSPE(const XMLCh *str, IDDocumentImpl *doc)
     //  Compute size to allocate.  Note that there's 1 char of string declared in the
     //       struct, so we don't need to add one again to account for the trailing null.
     //
-    size_t sizeToAllocate = sizeof(IDStringPoolEntry) + XMLString::stringLen(str)*sizeof(XMLCh);
+    size_t sizeToAllocate = sizeof(IDStringPoolEntry) + XMLString::stringLen(str-1)*sizeof(XMLCh);
     IDStringPoolEntry *newSPE = (IDStringPoolEntry *)doc->allocate(sizeToAllocate);
     newSPE->fNext = 0;
     XMLCh * nonConstStr = (XMLCh *)newSPE->fString;
@@ -121,7 +124,10 @@ IDStringPool::IDStringPool(int hashTableSize, IDDocumentImpl *doc)
 {
     fDoc           = doc;          // needed to get access to the doc's storage allocator.
     fHashTableSize = hashTableSize;
-    fHashTable = new (fDoc) IDStringPoolEntry *[hashTableSize];
+
+    //fHashTable = new (fDoc) IDStringPoolEntry *[hashTableSize];
+    void* p = doc->allocate(sizeof(IDStringPoolEntry*) * hashTableSize);
+    fHashTable = (IDStringPoolEntry**) &p;
     for (int i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
 };
