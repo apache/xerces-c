@@ -71,7 +71,7 @@ LOOP:
 		
 		# No hint found, so we need to shorten the name manually
 		$kill = length($newName) - $kMaxLength + 1;
-		substr($newName, $kMaxLength / 2, $kill) = "Š";
+		substr($newName, $kMaxLength / 2, $kill) = "_";
 		#print "\tshorten manually\n";
 	}
 	

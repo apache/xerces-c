@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/07/19 18:20:12  andyh
+ * Macintosh port: fix problems with yesterday's code checkin.  A couple
+ * of the changes were mangled or missed.
+ *
  * Revision 1.2  2000/04/04 20:11:29  abagchi
  * Added PTX support
  *
@@ -185,9 +189,10 @@ static const unsigned int   gXercesRevision   = 0;
 #include    <util/Platforms/OS2/OS2Defs.hpp>
 #endif
 
-#if defined(XML_MACOS)
+#if defined(XML_MACOS) || defined(XML_MACOSX)
 #include	<util/Platforms/MaxOS/MacOSDefs.hpp>
 #endif
+
 #if defined(XML_AS400)
 #include	<util/Platforms/OS400/OS400Defs.hpp>
 #endif
