@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/12 18:34:43  peiyongz
+ * loadElement/storeElement
+ *
  * Revision 1.10  2003/11/27 06:08:18  neilg
  * mark DOMTypeInfo-related methods on XMLElementDecl deprecated since they are not thread-safe
  *
@@ -609,6 +612,20 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(XMLElementDecl)
+
+    enum objectType
+    {
+        Schema
+      , DTD
+      , UnKnown
+    };
+
+    virtual XMLElementDecl::objectType  getObjectType() const = 0;
+
+    static void            storeElementDecl(XSerializeEngine&        serEng
+                                          , XMLElementDecl*    const element);
+
+    static XMLElementDecl* loadElementDecl(XSerializeEngine& serEng);
 
 protected :
     // -----------------------------------------------------------------------

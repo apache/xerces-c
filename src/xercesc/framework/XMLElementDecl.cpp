@@ -66,6 +66,9 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/validators/DTD/DTDElementDecl.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -163,6 +166,47 @@ void XMLElementDecl::serialize(XSerializeEngine& serEng)
         serEng>>fExternalElement;
     }
 
+}
+
+void 
+XMLElementDecl::storeElementDecl(XSerializeEngine&        serEng
+                               , XMLElementDecl*    const element)
+{
+    if (element)
+    {
+        serEng<<(int) element->getObjectType();
+        serEng<<element;
+    }
+    else
+    {
+        serEng<<(int) UnKnown;
+    }
+}
+
+XMLElementDecl* 
+XMLElementDecl::loadElementDecl(XSerializeEngine& serEng)
+{
+    int type;
+    serEng>>type;
+
+    switch((XMLElementDecl::objectType)type)
+    {
+    case Schema:
+        SchemaElementDecl* schemaElementDecl;
+        serEng>>schemaElementDecl;
+        return schemaElementDecl;
+        break;
+    case DTD:
+        DTDElementDecl* dtdElementDecl;
+        serEng>>dtdElementDecl;
+        return dtdElementDecl;
+        break;
+    case UnKnown:
+         //fall through
+    default:
+        return 0;
+        break;
+    }
 }
 
 XERCES_CPP_NAMESPACE_END
