@@ -736,6 +736,10 @@ ostream& operator<< (ostream& target, const DOMString& s)
 XMLFormatter& operator<< (XMLFormatter& strm, const DOMString& s)
 {
     unsigned int lent = s.length();
+
+	if (lent <= 0)
+		return strm;
+
     XMLCh*  buf = new XMLCh[lent + 1];
     XMLString::copyNString(buf, s.rawBuffer(), lent);
     buf[lent] = 0;
