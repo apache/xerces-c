@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/07 20:00:07  tng
+ * Schema Fix: No need to re-add the ID, IDREF ... datatype validators if the fUserDefinedRegistry already exists.
+ *
  * Revision 1.2  2002/02/25 21:28:26  tng
  * Schema Fix: Thread-safe the built-in datatype validator factory.
  *
@@ -632,22 +635,22 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
     //   store them in local data fUserDefinedRegistry
     if (fUserDefinedRegistry == 0) {
         fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
+
+        fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
+                           new IDDatatypeValidator());
+        fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
+                           new IDREFDatatypeValidator());
+        fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
+                           new ENTITYDatatypeValidator());
+
+        // Create 'IDREFS' datatype validator
+    	 createDatatypeValidator(XMLUni::fgIDRefsString,
+                        getDatatypeValidator(XMLUni::fgIDRefString), 0, 0, true, 0, true);
+
+        // Create 'ENTITIES' datatype validator
+        createDatatypeValidator(XMLUni::fgEntitiesString,
+    		            getDatatypeValidator(XMLUni::fgEntityString), 0, 0, true, 0, true);
     }
-
-    fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
-                       new IDDatatypeValidator());
-    fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
-                       new IDREFDatatypeValidator());
-    fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
-                       new ENTITYDatatypeValidator());
-
-    // Create 'IDREFS' datatype validator
-	 createDatatypeValidator(XMLUni::fgIDRefsString,
-                    getDatatypeValidator(XMLUni::fgIDRefString), 0, 0, true, 0, true);
-
-    // Create 'ENTITIES' datatype validator
-    createDatatypeValidator(XMLUni::fgEntitiesString,
-		            getDatatypeValidator(XMLUni::fgEntityString), 0, 0, true, 0, true);
 
 }
 
