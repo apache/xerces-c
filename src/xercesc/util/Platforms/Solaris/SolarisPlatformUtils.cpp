@@ -667,7 +667,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
-        return (void *)dup(0);
+        return (FileHandle)dup(0);
 }
 
 void XMLPlatformUtils::platformTerm()
