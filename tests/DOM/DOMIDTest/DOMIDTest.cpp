@@ -266,7 +266,8 @@ int main()
         TASSERT(!elA.isNull());
 
         DOM_Node parent = elA.getParentNode();
-        parent.removeChild(elA);
+        DOM_Node removed = parent.removeChild(elA);
+        removed = 0;
         elA = 0;
 
         // This one should NOT get an element
