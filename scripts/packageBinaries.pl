@@ -753,6 +753,9 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
                            'CFLAGS="-w -O2 -qmaxmem=-1" ' .
                            'CXXFLAGS="-w -O2 -qmaxmem=-1" ';
 
+        if ($opt_m = ~ m/ICU/i) {
+        	$ENV{'LIBPATH'}="$ICUROOT/lib:$ENV{'LIBPATH'}";
+        }
         psystem ("echo LIBPATH=$ENV{'LIBPATH'}");
     }
     if ($platform eq 'HP-UX') {
@@ -781,6 +784,10 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
             $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="-w +O2 +Ofltacc" CFLAGS="-w +O2 +Ofltacc"';
         }
 
+        if ($opt_m = ~ m/ICU/i) {
+        	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$ENV{'SHLIB_PATH'}";
+        }
+        
         psystem ("echo SHLIB_PATH=$ENV{'SHLIB_PATH'}");
     }
     if ($platform =~ m/Linux/i) {
@@ -793,6 +800,11 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         } else {
             $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
         }
+        
+        if ($opt_m = ~ m/ICU/i) {
+        	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
+        }
+                
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
@@ -801,6 +813,11 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         $platform = "solaris";
         if ($opt_c eq "") {$opt_c = "cc";}
         if ($opt_x eq "") {$opt_x = "CC";}
+        
+        if ($opt_m = ~ m/ICU/i) {
+        	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
+        }
+                
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
