@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.42  2001/07/26 20:40:01  peiyongz
+# XMLFloat
+#
 # Revision 1.41  2001/07/24 20:39:44  peiyongz
 # XMLDouble
 #
@@ -347,6 +350,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLEnumerator.hpp \
     XMLExceptMsgs.hpp \
     XMLException.hpp \
+    XMLFloat.hpp \
     XMLMsgLoader.hpp \
     XMLNetAccessor.hpp \
     XMLString.hpp \
@@ -406,6 +410,7 @@ UTIL_CPP_OBJECTS = \
     XMLIBM1140Transcoder.$(TO) \
     XMLEBCDICTranscoder.$(TO) \
     XMLException.$(TO) \
+    XMLFloat.$(TO) \
     XMLString.$(TO) \
     XMLUCSTranscoder.$(TO) \
     XMLUTF16Transcoder.$(TO) \
