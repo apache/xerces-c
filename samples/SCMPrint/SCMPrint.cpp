@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/01/12 21:00:47  cargilld
+ * Fix for xercesc-1219.
+ *
  * Revision 1.5  2004/09/28 04:42:21  cargilld
  * Update sample to use an error handler and only generate xsmodel when a schema document has been loaded successfully.
  *
@@ -507,6 +510,10 @@ void printCompositorTypeConnector(XSModelGroup::COMPOSITOR_TYPE type)
 
 void processParticle(XSParticle *xsParticle)
 {
+    if (!xsParticle) {
+        XERCES_STD_QUALIFIER cout << "xsParticle is NULL"; 
+        return;
+    }
     XSParticle::TERM_TYPE termType = xsParticle->getTermType();
     if (termType == XSParticle::TERM_ELEMENT) {
         XSElementDeclaration *xsElement = xsParticle->getElementTerm();
