@@ -147,6 +147,7 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     docElement=null;
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
     namePool = new DStringPool(257);
+    identifiers = new RefHashTableOf<PoolElem>(109);
     iterators = 0L;
     treeWalkers = 0L;
 }
@@ -162,6 +163,10 @@ DocumentImpl::~DocumentImpl()
     if (treeWalkers != 0L) {
         // The data in the vector is pointers owned by smart pointers, and will be cleaned up when they go away.
         delete treeWalkers;
+    }
+    
+    if (identifiers != 0L) {
+	    delete identifiers;
     }
 
     delete namePool;
