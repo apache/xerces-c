@@ -217,6 +217,7 @@ XMLPlatformUtils::closeFile(const FileHandle theFile
                             , MemoryManager* const manager)
 {
     reinterpret_cast<XMLMacAbstractFile*>(theFile)->close();
+	delete reinterpret_cast<XMLMacAbstractFile*>(theFile);
 }
 
 unsigned int
