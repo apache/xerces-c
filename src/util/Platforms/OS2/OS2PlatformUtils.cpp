@@ -55,24 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/03/02 21:10:37  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.3  2000/03/02 19:55:27  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:29  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:44  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:31  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -86,36 +69,46 @@
 #define INCL_DOSSEMAPHORES
 #define INCL_DOSERRORS
 #define INCL_DOSMISC
+#define INCL_DOSFILEMGR
 
 #include    <util/PlatformUtils.hpp>
 #include    <util/RuntimeException.hpp>
 #include    <util/Janitor.hpp>
+#include    <util/XMLString.hpp>
 #include    <util/XercesDefs.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
-#include    <IO.h>
+#include    <io.h>
+#if defined(XML_USE_ICU_TRANSCODER)
+  #include  <util/Transcoders/ICU/ICUTransService.hpp>
+#elif defined(XML_USE_ICONV_TRANSCODER)
+  #include  <util/Transcoders/Iconv/IconvTransService.hpp>
+#else
+  #error A transcoding service must be chosen
+#endif
+
+  defined(XML_USE_INMEMORY_MSGLOADER)
+  #include  <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#else
+  #error A message loading service must be chosen
+#endif
+
+#if defined(__IBMCPP__)
+#include    <builtin.h>
+#endif
 #include    <OS2.h>
 
 
-
-// ---------------------------------------------------------------------------
-//  Local Methods
-// ---------------------------------------------------------------------------
-static void WriteCharStr( FILE* stream, const char* const toWrite)
-{
-        if (!fputs(toWrite, stream))
-        {
-                throw XMLPlatformUtilsException("Could not write to standard out/err");
-        }
-}
-
+// -----------------------------------------------------------------------
+//  File methods
+// -----------------------------------------------------------------------
 static void WriteUStrStdErr( const XMLCh* const toWrite)
 {
         char* tmpVal = XMLString::transcode(toWrite);
         ArrayJanitor<char> janText(tmpVal);
         if (!fputs(tmpVal, stderr))
         {
-                throw XMLPlatformUtilsException("Could not write to standard error file");
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
         }
 }
 
@@ -125,7 +118,7 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
         ArrayJanitor<char> janText(tmpVal);
         if (!fputs(tmpVal, stdout))
         {
-                throw XMLPlatformUtilsException("Could not write to standard out file");
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
         }
 }
 
@@ -137,108 +130,6 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
-
-void XMLPlatformUtils::setupIntlPath()
-{
-    //
-    //  We need to figure out the path to the Intl classes. They will be
-    //  in the .\Intl subdirectory under this DLL.
-    //
-
-    static const char * xml4cIntlDirEnvVar = "XML4C2INTLDIR";
-    static const char * sharedLibEnvVar    = "LIBPATH";
-
-    char* envVal = getenv(xml4cIntlDirEnvVar);
-    //check if environment variable is set
-    if (envVal != NULL)
-    {
-        // Store this string in the static member
-        unsigned int pathLen = strlen(envVal);
-        fgIntlPath = new char[pathLen + 2];
-
-        strcpy((char *) fgIntlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) fgIntlPath, "/");
-        }
-        return;
-    }
-
-    //
-    //  If we did not find the environment var, so lets try to go the auto
-    //  search route.
-    //
-
-    char libName[256];
-    strcpy(libName, Xerces_DLLName);
-    strcat(libName, gXercesVersionStr);
-    strcat(libName, ".a");
-
-    char* libEnvVar = getenv(sharedLibEnvVar);
-    char* libPath = NULL;
-
-    if (libEnvVar == NULL)
-    {
-        fprintf(stderr,
-                "Error: Could not locate i18n converter files.\n");
-        fprintf(stderr,
-                "Environment variable '%s' is not defined.\n", sharedLibEnvVar);
-        fprintf(stderr,
-                "Environment variable 'XML4C2INTLDIR' is also not defined.\n");
-        exit(-1);
-    }
-
-    //
-    // Its necessary to create a copy because strtok() modifies the
-    // string as it returns tokens. We don't want to modify the string
-    // returned to by getenv().
-    //
-
-    libPath = new char[strlen(libEnvVar) + 1];
-    strcpy(libPath, libEnvVar);
-
-    //First do the searching process for the first directory listing
-    //
-    char*  allPaths = libPath;
-    char*  libPathName;
-
-    while ((libPathName = strtok(allPaths, ":")) != NULL)
-    {
-        FILE*  dummyFptr = 0;
-        allPaths = 0;
-
-        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        dummyFptr = (FILE *) fopen(libfile, "rb");
-        delete [] libfile;
-        if (dummyFptr != NULL)
-        {
-            fclose(dummyFptr);
-            fgIntlPath =
-              new char[strlen(libPathName)+ strlen("/icu/data/")+1];
-            strcpy((char *) fgIntlPath, libPathName);
-            strcat((char *) fgIntlPath, "/icu/data/");
-            break;
-        }
-
-    } // while
-
-    delete libPath;
-
-    if (fgIntlPath == NULL)
-    {
-        fprintf(stderr,
-        "Could not find %s in %s for auto locating the converter files.\n",
-                libName, sharedLibEnvVar);
-        fprintf(stderr,
-                "And the environment variable 'XML4C2INTLDIR' not defined.\n");
-        exit(-1);
-    }
-}
-
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
@@ -247,7 +138,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     // Get the current position
     int curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
-        throw XMLPlatformUtilsException("XMLPlatformUtils::curFilePos - Could not get current pos");
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
 
     return (unsigned int)curPos;
 }
@@ -255,32 +146,24 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
     if (fclose((FILE*)theFile))
-        throw XMLPlatformUtilsException("XMLPlatformUtils::closeFile - Could not close the file handle");
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
 
 unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 {
-    // Get the current position
-    long  int curPos = ftell((FILE*)theFile);
-    if (curPos == -1)
-        throw XMLPlatformUtilsException("XMLPlatformUtils::fileSize - Could not get current pos");
-
-    // Seek to the end and save that value for return
-     if (fseek( (FILE*)theFile, 0, SEEK_END) )
-        throw XMLPlatformUtilsException("XMLPlatformUtils::fileSize - Could not seek to end");
-
-    long int retVal = ftell( (FILE*)theFile);
-    if (retVal == -1)
-        throw XMLPlatformUtilsException("XMLPlatformUtils::fileSize - Could not get the file size");
-
-    // And put the pointer back
-    if (fseek( (FILE*)theFile, curPos, SEEK_SET) )
-        throw XMLPlatformUtilsException("XMLPlatformUtils::fileSize - Could not seek back to original pos");
-
-    return (unsigned int)retVal;
+    return (unsigned int)filelength(fileno((FILE *)theFile));
 }
 
-FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+
+    if (retVal == NULL)
+        return 0;
+    return retVal;
+}
+
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName);
     ArrayJanitor<char> janText((char*)tmpFileName);
@@ -291,284 +174,394 @@ FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
     return retVal;
 }
 
-unsigned int
-XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
-                                , const unsigned int    toRead
-                                , XMLByte* const  toFill)
-// TBT
+FileHandle XMLPlatformUtils::openStdInHandle()
+{
+    return (FileHandle)fdopen(dup(0), "rb");
+}
+
+unsigned int XMLPlatformUtils::readFileBuffer ( FileHandle      theFile
+                            , const unsigned int    toRead
+                            ,       XMLByte* const  toFill )
 {
     size_t noOfItemsRead = fread( (void*) toFill, 1, toRead, (FILE*)theFile);
 
     if(ferror((FILE*)theFile))
     {
-        throw XMLPlatformUtilsException("XMLPlatformUtils::readFileBuffer - Read failed");
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
     }
 
     return (unsigned int)noOfItemsRead;
 }
 
-
 void XMLPlatformUtils::resetFile(FileHandle theFile)
-// TBT
 {
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET) )
-        throw XMLPlatformUtilsException("XMLPlatformUtils::resetFile - Could not seek to beginning");
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
 
 
 
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Timing Methods
-// ---------------------------------------------------------------------------
-unsigned long XMLPlatformUtils::getCurrentMillis()
-// TBT
+// -----------------------------------------------------------------------
+//  File system methods
+// -----------------------------------------------------------------------
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
-   APIRET  retr;
-   ULONG   timerBuf = 0;
+    // Transcode the incoming string
+    char* tmpSrcPath = XMLString::transcode(srcPath);
+    ArrayJanitor<char> janSrcPath(tmpSrcPath);
 
-   retr =  DosQuerySysInfo( QSV_MS_COUNT, QSV_MS_COUNT, (PVOID) &timerBuf,
-                            sizeof( ULONG ) );
-   if ( retr != NO_ERROR )
-      return (timerBuf);
+    char tmpPath[CCHMAXPATH];
+    _fullpath(tmpPath, tmpSrcPath, CCHMAXPATH);
 
-
-   return (timerBuf);
-}
-
-
-/* Function dirname (used in XMLPlatformUtils::getBasePath)
-*
-*  Description:
-*    Function returns directoryname
-*
-*  In:
-*   Path and file: e.gG.: "d:\TestDir\testfile.txt
-*
-*  return:
-*    "": ERROR
-*    Path: Path is returned in the Format: "[drive]:\[path]\"
-*          e.g.: "d:\TestDir\"
-*
-*/
-char* dirname(char* PathName)
-// TBT
-//         new function
-{
-   APIRET rc = NO_ERROR;
-   ULONG  MaxPathLength = 0;
-   ULONG  aulSysInfo[QSV_MAX];
-
-   // variables for path information
-   char drive[2 + 1];  // eg: drive = "d:\n";
-
-   // get system information
-   rc = DosQuerySysInfo(1L,
-                        QSV_MAX,
-                        (PVOID)aulSysInfo,
-                        sizeof(ULONG)*QSV_MAX);
-   if(rc != NO_ERROR) return("");
-
-   // Get Maximum Path Length
-   MaxPathLength = aulSysInfo[QSV_MAX_PATH_LENGTH - 1];
-
-   // allocate space for pathinformation
-   char* dir        = new char[MaxPathLength + 1];
-   char* fname      = new char[MaxPathLength + 1];
-   char* ext        = new char[MaxPathLength + 1];
-   char* returnPath = new char[MaxPathLength + 1];
-
-   // extract pathinformation
-   _splitpath(PathName, drive, dir, fname, ext) ;
-
-   strcpy(returnPath,drive);
-   strcat(returnPath,dir);
-
-   return((char*) returnPath);
-}
-
-XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
-// TBT
-//        So please check if it works correct.
-{
-
-    //
-    //  NOTE: THe path provided has always already been opened successfully,
-    //  so we know that its not some pathological freaky path. It comes in
-    //  in native format, and goes out as Unicode always
-    //
-    char* newSrc = XMLString::transcode(srcPath);
-    ArrayJanitor<char> janText(newSrc);
-
-    // Use a local buffer that is big enough for the largest legal path
-    char* tmpPath = dirname((char*)newSrc);
-    if (strlen(tmpPath) == 0)
-    {
-        throw XMLPlatformUtilsException("XMLPlatformUtils::resetFile - Could not get the base path name");
-    }
-
-    char* newXMLString = new char [strlen(tmpPath) +2];
-    ArrayJanitor<char> newJanitor(newXMLString);
-    strcpy(newXMLString, tmpPath);
-    // TBT
-
-    // Return a copy of the path, in Unicode format
-    return XMLString::transcode(newXMLString);
+    return XMLString::transcode(tmpPath);
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 {
-    // Check for pathological case of empty path
+    // Check for pathological case of an empty path
     if (!toCheck[0])
         return false;
 
     //
-    //  If it starts with a slash, then it cannot be relative. This covers
-    //  both something like "\Test\File.xml" and an NT Lan type remote path
-    //  that starts with a node like "\\MyNode\Test\File.xml".
+    //  If it starts with a drive, then it cannot be relative. Note that
+    //  we checked the drive not being empty above, so worst case it's one
+    //  char long and the check of the 1st char will fail because it's really
+    //  a null character.
     //
-    if (toCheck[0] == XMLCh('/'))
+    if (toCheck[1] == chColon)
+    {
+        if (((toCheck[0] >= chLatin_A) && (toCheck[0] <= chLatin_Z))
+        ||  ((toCheck[0] >= chLatin_a) && (toCheck[0] <= chLatin_z)))
+        {
+            return false;
+        }
+    }
+
+    //
+    //  If it starts with a double slash, then it cannot be relative since
+    //  its a remote file.
+    //
+    if ((toCheck[0] == chBackSlash) && (toCheck[1] == chBackSlash))
         return false;
 
     // Else assume its a relative path
     return true;
 }
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
+XMLCh* XMLPlatformUtils::weavePaths( const   XMLCh* const    basePath
+                                   , const XMLCh* const    relativePath )
+{
+    // Create a buffer as large as both parts and empty it
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+                              + XMLString::stringLen(relativePath)
+                              + 2];
+    *tmpBuf = 0;
 
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-        WriteCharStr(stderr, toWrite);
+    //
+    //  If we have no base path, then just take the relative path as
+    //  is.
+    //
+    if (!basePath || !*basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
+    if ((*basePtr != chForwardSlash)
+    &&  (*basePtr != chBackSlash))
+    {
+        while ((basePtr >= basePath)
+        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+        {
+            basePtr--;
+        }
+    }
+
+    // There is no relevant base path, so just take the relative part
+    if (basePtr < basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    const XMLCh* pathPtr = relativePath;
+    while (true)
+    {
+        // If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
+            break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
+        {
+            pathPtr++;
+            periodCount++;
+        }
+
+        // Has to be followed by a \ or / or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
+            break;
+        }
+        if (*pathPtr)
+            pathPtr++;
+
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePath)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
+
+            if (basePtr < basePath)
+            {
+                // The base cannot provide enough levels, so its in error
+                // <TBD>
+            }
+        }
+    }
+
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePath;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
+
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Orphan the buffer and return it
+    janBuf.orphan();
+    return tmpBuf;
 }
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
+
+
+
+// -----------------------------------------------------------------------
+//  Timing methods
+// -----------------------------------------------------------------------
+unsigned long XMLPlatformUtils::getCurrentMillis()
 {
-        WriteUStrStdErr(toWrite);
+    APIRET  retr;
+    ULONG   timerBuf = 0;
+
+    retr =  DosQuerySysInfo( QSV_MS_COUNT, QSV_MS_COUNT, (PVOID) &timerBuf,
+                             sizeof( ULONG ) );
+//  if ( retr != NO_ERROR )
+//     return (timerBuf);
+
+
+    return (timerBuf);
 }
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-        WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-        WriteCharStr(stdout, toWrite);
-}
+
 
 
 // -----------------------------------------------------------------------
 //  Mutex methods
-//  Base of Mutex handling is copied from Win32PlatformUtil.cpp and
-//  patially from AIXPlatformUtil.cpp
-//  (depended on which code was easier to understand)
 // -----------------------------------------------------------------------
-#ifndef APP_NO_THREADS
-
-
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
-// TBT
 {
-  if (mtxHandle == NULL)
-    return;
+#if defined(__MT__)
+    if (mtxHandle == NULL)
+      return;
 
-  if (DosCloseMutexSem( (HMTX)mtxHandle)) 
-  {
-    throw XMLPlatformUtilsException("Could not destroy a mutex");
-  }
+    if (DosCloseMutexSem( (HMTX)mtxHandle))
+    {
+      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
+    }
+#endif
 }
-
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
-// 
 {
-  if (mtxHandle == NULL)
-    return;
+#if defined(__MT__)
+    if (mtxHandle == NULL)
+      return;
 
-  if (DosRequestMutexSem( (HMTX)mtxHandle,(ULONG) SEM_INDEFINITE_WAIT) ) 
-  {
-    throw XMLPlatformUtilsException("Could not lock a mutex");
-  }
+    if (DosRequestMutexSem( (HMTX)mtxHandle,(ULONG) SEM_INDEFINITE_WAIT) )
+    {
+      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
+    }
+#endif
 }
 
-
 void* XMLPlatformUtils::makeMutex()
-// 
 {
+#if defined(__MT__)
     HMTX hRet; // Mutex Handle
 
     if (DosCreateMutexSem(NULL, &hRet, 0, FALSE))
-        throw XMLPlatformUtilsException("XMLPlatformUtils::makeMutex - Could not create mutex");
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
     return (void*)hRet;
-}
-
-
-void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
-// 
-{
-  if (mtxHandle == NULL)
-     return;
-
-  if (DosReleaseMutexSem( (HMTX)mtxHandle))
-  {
-    throw XMLPlatformUtilsException("Could not unlock a mutex");
-  }
-}
-
-#else // #ifndef APP_NO_THREADS
-
-void XMLPlatformUtils::closeMutex(void* const mtxHandle)
-{
-}
-
-void XMLPlatformUtils::lockMutex(void* const mtxHandle)
-{
-}
-
-void* XMLPlatformUtils::makeMutex()
-{
-        return 0;
+#else
+    return 0;
+#endif
 }
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
+#if defined(__MT__)
+    if (mtxHandle == NULL)
+       return;
+
+    if (DosReleaseMutexSem( (HMTX)mtxHandle))
+    {
+      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
+    }
+#endif
 }
 
-#endif // APP_NO_THREADS
+
 
 // -----------------------------------------------------------------------
 //  Miscellaneous synchronization methods
 // -----------------------------------------------------------------------
-void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
-                                        const void* const newValue ,
-                                        const void* const toCompare)
-// TBT
-// 
+void* XMLPlatformUtils::compareAndSwap ( void**      toFill
+                                       , const void* const newValue
+                                       , const void* const toCompare )
 {
-    void *retVal = *toFill;
+#if defined(__IBMCPP__)
+    return (void *)__smp_cmpxchg4((unsigned int *)toFill,
+                                  (unsigned int)newValue,
+                                  (unsigned int)toCompare);
+#elif defined(__GNUG__)
+    char ret;
+    long int readval;
+    long int * p    = (long **)toFill;
+
+    __asm__ __volatile__ ("lock; cmpxchgl %3, %1\n\tsete %0"
+                          : "=q" (ret), "=m" (*p), "=a" (readval)
+                          : "r" (newValue), "m" (*p), "a" (toCompare)
+                          : "memory");
+    return (void *)(long)ret;
+#else
+    void * retVal = *toFill;
     if (*toFill == toCompare)
-       *toFill = (void *)newValue;
-    return retVal;
+      *toFill = (void *)newValue;
+    return
+#endif
 }
 
-int XMLPlatformUtils::atomicIncrement(int &location)
-// TBT
-// 
+
+
+// -----------------------------------------------------------------------
+//  Atomic Increment and Decrement
+//
+//  The function return value is positive if the result of the operation
+//  was positive. Zero if the result of the operation was zero. Negative
+//  if the result of the operation was negative. Except for the zero
+//  case, the value returned may differ from the actual result of the
+//  operation - only the sign and zero/nonzero state is guaranteed to be
+//  correct.
+// -----------------------------------------------------------------------
+int XMLPlatformUtils::atomicIncrement(int& location)
 {
-   return ++location;
+#if defined(__IBMCPP__)
+    return __smp_inc4(&location);
+#elif defined(__GNUG__)
+    __asm__ __volatile__ ("lock; incl %0" : "=m" (location) : );
+    return location;
+#else
+    return ++location;
+#endif
 }
-int XMLPlatformUtils::atomicDecrement(int &location)
-// TBT
-// 
+
+int XMLPlatformUtils::atomicDecrement(int& location)
 {
+#if defined(__IBMCPP__)
+    return __smp_dec4(&location);
+#elif defined(__GNUG__)
+    __asm__ __volatile__ ("lock; decl %0" : "=m" (location) : );
+    return location;
+#else
     return --location;
+#endif
 }
 
 
-FileHandle XMLPlatformUtils::openStdInHandle()
-// TBT
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: The panic method
+// ---------------------------------------------------------------------------
+void XMLPlatformUtils::panic(const PanicReasons reason)
 {
- return (FileHandle)fdopen(dup(0), "rb"); 
+    const char* reasonStr = "Unknown reason";
+    switch (reason)
+    {
+    case Panic_NoTransService:
+        reasonStr = "Could not load a transcoding service";
+        break;
+    case Panic_NoDefTranscoder:
+        reasonStr = "Could not load a local code page transcoder";
+        break;
+    case Panic_CantFindLib:
+        reasonStr = "Could not find the xerces-c DLL";
+        break;
+    case Panic_UnknownMsgDomain:
+        reasonStr = "Unknown message domain";
+        break;
+    case Panic_CantLoadMsgDomain:
+        reasonStr = "Cannot load message domain";
+        break;
+    case Panic_SynchronizationErr:
+        reasonStr = "Cannot synchronize system or mutex";
+        break;
+    case Panic_SystemInit:
+        reasonStr = "Cannot initialize the system or mutex";
+        break;
+    }
+
+    fprintf(stderr, "%s\n", reasonStr);
+
+    exit(-1);
 }
+
+
+// -----------------------------------------------------------------------
+//  Private static methods. These are provided by the per-platform
+//  implementation files.
+// -----------------------------------------------------------------------
+XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
+{
+#if defined(XML_USE_INMEMORY_MSGLOADER)
+    return new InMemMsgLoader(msgDomain);
+#else
+    return 0;
+#endif
+}
+
+XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
+{
+  return 0;
+}
+
+XMLTransService* XMLPlatformUtils::makeTransService()
+{
+#if defined(XML_USE_ICU_TRANSCODER)
+    return new ICUTransService;
+#elif defined(XML_USE_ICONV_TRANSCODER)
+    return new IconvTransService;
+#else
+    return 0;
+#endif
+}
+
+//void XMLPlatformUtils::platformInit()
+//{
+//}
 
 void XMLPlatformUtils::platformTerm()
 {

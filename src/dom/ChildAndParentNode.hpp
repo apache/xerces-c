@@ -76,12 +76,15 @@
  * ChildNode and all the code of ParentNode is "duplicated" here
  */
 
-#include "ParentNode.hpp"
+
+#include <util/XercesDefs.hpp>
+#include "ChildNode.hpp"
 
 #define THIS_CLASS ChildAndParentNode
 #define PARENT_CLASS ChildNode
-#undef ParentNode_HEADER_GUARD_
-#include "ParentNode.hpp"
+
+#include "CommonParentNode.hpp"
+
 #undef THIS_CLASS
 #undef PARENT_CLASS
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -68,18 +68,55 @@
  */
 
 /**
- * If we could use multiple inheritance ChildAndParentNode would simply inherit
- * both from ChildNode and ParentNode. In this case it only inherits from
- * ChildNode and all the code of ParentNode is "duplicated" here
- */
+ * ParentNode inherits from NodeImpl and adds the capability of having child
+ * nodes. Not every node in the DOM can have children, so only nodes that can
+ * should inherit from this class and pay the price for it.
+ * <P>
+ * While we have a direct reference to the first child, the last child is
+ * stored as the previous sibling of the first child. First child nodes are
+ * marked as being so, and getNextSibling hides this fact.
+ *
+ **/
 
-#include "ChildAndParentNode.hpp"
-#include "DOM_DOMException.hpp"
-#include "TextImpl.hpp"
-#include "DocumentImpl.hpp"
 
-#define THIS_CLASS ChildAndParentNode
-#define PARENT_CLASS ChildNode
+class CDOM_EXPORT THIS_CLASS: public PARENT_CLASS {
+public:
+    DocumentImpl            *ownerDocument; // Document this node belongs to
 
-#include "CommonParentNode.cpp"
+    ChildNode                *firstChild;
+
+    int fChanges;
+
+public:
+    THIS_CLASS(DocumentImpl *ownerDocument);
+    THIS_CLASS(const THIS_CLASS &other);
+    
+    virtual DocumentImpl * getOwnerDocument();
+    virtual void setOwnerDocument(DocumentImpl *doc);
+
+    virtual int changes();
+    virtual void changed();
+
+    virtual NodeListImpl *getChildNodes();
+    virtual NodeImpl * getFirstChild();
+    virtual NodeImpl * getLastChild();
+    virtual unsigned int getLength();
+    virtual bool        hasChildNodes();
+    virtual NodeImpl    *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
+    virtual NodeImpl    *item(unsigned int index);
+    virtual NodeImpl    * removeChild(NodeImpl *oldChild);
+    virtual NodeImpl    *replaceChild(NodeImpl *newChild, NodeImpl *oldChild);
+    virtual void        setReadOnly(bool readOnly, bool deep);
+
+    //Introduced in DOM Level 2
+    virtual void	normalize();
+
+    // NON-DOM
+    // unlike getOwnerDocument this never returns null, even for Document nodes
+    virtual DocumentImpl * getDocument();
+protected:
+    void cloneChildren(const NodeImpl &other);
+    ChildNode * lastChild();
+    void lastChild(ChildNode *);
+};
 

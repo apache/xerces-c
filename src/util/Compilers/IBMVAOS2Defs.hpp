@@ -55,24 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/03/02 19:55:08  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/06 07:48:17  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  1999/11/12 20:36:58  rahulj
- * Changed library name to xerces-c.lib.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:35  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:24  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -82,10 +65,17 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#define PLATFORM_EXPORT     __declspec(dllexport)
+#define PLATFORM_EXPORT     _Export
 #define PLATFORM_IMPORT
 #define XERCES_EXPORT
 
+// ---------------------------------------------------------------------------
+//  Supports L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding.
+//  If your compiler does not support it, don't define this.
+// ---------------------------------------------------------------------------
+#define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
 //  Indicate that we support native bools
@@ -96,7 +86,14 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XMLCh.
 // ---------------------------------------------------------------------------
-typedef unsigned short XMLCh;
+//typedef unsigned short XMLCh;
+typedef wchar_t XMLCh;
+
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short XMLUInt16;
+typedef unsigned int   XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
@@ -109,11 +106,9 @@ typedef unsigned short XMLCh;
 
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the Visual Age C++ version of the
-//  system. We append a previously defined token which holds the DLL
-//  versioning string. This is defined in XercesDefs.hpp which is what this
-//  file is included into.
+//  system. OS/2 supports only 8.3 names for DLLs.
 // ---------------------------------------------------------------------------
-const char* const Xercse_DLLName = "VAOXERCESC" Xerces_DLLVersionStr;
+const char* const Xerces_DLLName = "xerces-c";
 
 
 // ---------------------------------------------------------------------------

@@ -1,6 +1,3 @@
-#ifndef ParentNode_HEADER_GUARD_
-#define ParentNode_HEADER_GUARD_
-
 /*
  * The Apache Software License, Version 1.1
  * 
@@ -80,60 +77,18 @@
  * marked as being so, and getNextSibling hides this fact.
  *
  **/
+#ifndef ParentNode_HEADER_GUARD_
+#define ParentNode_HEADER_GUARD_
 
 #include <util/XercesDefs.hpp>
 #include "ChildNode.hpp"
-#include "DOMString.hpp"
 
-// these are redefined in ChildAndParentNode so that the code can be reused.
-#ifndef THIS_CLASS
 #define THIS_CLASS ParentNode
-#endif
-#ifndef PARENT_CLASS
 #define PARENT_CLASS NodeImpl
-#endif
 
-class CDOM_EXPORT THIS_CLASS: public PARENT_CLASS {
-public:
-    DocumentImpl            *ownerDocument; // Document this node belongs to
-
-    ChildNode                *firstChild;
-
-    int fChanges;
-
-public:
-    THIS_CLASS(DocumentImpl *ownerDocument);
-    THIS_CLASS(const THIS_CLASS &other);
-    
-    virtual DocumentImpl * getOwnerDocument();
-    virtual void setOwnerDocument(DocumentImpl *doc);
-
-    virtual int changes();
-    virtual void changed();
-
-    virtual NodeListImpl *getChildNodes();
-    virtual NodeImpl * getFirstChild();
-    virtual NodeImpl * getLastChild();
-    virtual unsigned int getLength();
-    virtual bool        hasChildNodes();
-    virtual NodeImpl    *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
-    virtual NodeImpl    *item(unsigned int index);
-    virtual NodeImpl    * removeChild(NodeImpl *oldChild);
-    virtual NodeImpl    *replaceChild(NodeImpl *newChild, NodeImpl *oldChild);
-    virtual void        setReadOnly(bool readOnly, bool deep);
-
-    //Introduced in DOM Level 2
-    virtual void	normalize();
-
-    // NON-DOM
-    // unlike getOwnerDocument this never returns null, even for Document nodes
-    virtual DocumentImpl * getDocument();
-protected:
-    void cloneChildren(const NodeImpl &other);
-    ChildNode * lastChild();
-    void lastChild(ChildNode *);
-};
+#include "CommonParentNode.hpp"
 
 #undef THIS_CLASS
 #undef PARENT_CLASS
+
 #endif
