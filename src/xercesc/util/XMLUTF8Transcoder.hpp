@@ -59,6 +59,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>
+#include <xercesc/util/UTFDataFormatException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -116,12 +117,36 @@ public :
 
 
 private :
+
+    inline void checkTrailingBytes(
+                                    const XMLByte      toCheck
+                                  , const unsigned int trailingBytes
+                                  , const unsigned int position       
+                                  ) const;
+
+private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLUTF8Transcoder(const XMLUTF8Transcoder&);
     XMLUTF8Transcoder& operator=(const XMLUTF8Transcoder&);
 };
+
+inline 
+void XMLUTF8Transcoder::checkTrailingBytes(const XMLByte      toCheck
+                                          , const unsigned int trailingBytes
+                                          , const unsigned int position) const
+{
+
+    if((toCheck & 0xC0) != 0x80) 
+    {
+        char len[2]  = {(char)(trailingBytes+0x31), 0};
+        char pos[2]  = {(char)(position+0x31), 0};
+        char byte[2] = {toCheck,0};
+        ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
+    }
+
+}
 
 XERCES_CPP_NAMESPACE_END
 

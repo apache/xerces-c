@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/05/19 20:51:20  peiyongz
+ * XML1.0-3rd Edition: UTF_8
+ *
  * Revision 1.12  2004/01/29 11:48:46  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -384,7 +387,7 @@ public :
     /** Converts from the encoding of the service to the internal XMLCh* encoding
       *
       * @param srcData the source buffer to be transcoded
-      * @param srcCount number of characters in the source buffer
+      * @param srcCount number of bytes in the source buffer
       * @param toFill the destination buffer
       * @param maxChars the max number of characters in the destination buffer
       * @param bytesEaten after transcoding, this will hold the number of bytes

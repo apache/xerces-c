@@ -65,8 +65,6 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
-#include <xercesc/util/UTFDataFormatException.hpp>
-
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -140,9 +138,8 @@ static const XMLByte gFirstByteMark[7] =
 // ---------------------------------------------------------------------------
 XMLUTF8Transcoder::XMLUTF8Transcoder(const  XMLCh* const    encodingName
                                     , const unsigned int    blockSize
-                                    , MemoryManager* const  manager) :
-
-    XMLTranscoder(encodingName, blockSize, manager)
+                                    , MemoryManager* const  manager)
+:XMLTranscoder(encodingName, blockSize, manager)
 {
 }
 
@@ -223,33 +220,167 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
         }
 
+        /***
+         * http://www.unicode.org/reports/tr27/
+         *
+         * Table 3.1B. lists all of the byte sequences that are legal in UTF-8. 
+         * A range of byte values such as A0..BF indicates that any byte from A0 to BF (inclusive) 
+         * is legal in that position. 
+         * Any byte value outside of the ranges listed is illegal. 
+         * For example, 
+         * the byte sequence <C0 AF> is illegal  since C0 is not legal in the 1st Byte column. 
+         * The byte sequence <E0 9F 80> is illegal since in the row 
+         *    where E0 is legal as a first byte, 
+         *    9F is not legal as a second byte. 
+         * The byte sequence <F4 80 83 92> is legal, since every byte in that sequence matches 
+         * a byte range in a row of the table (the last row). 
+         *
+         *
+         * Table 3.1B. Legal UTF-8 Byte Sequences  
+         * Code Points              1st Byte    2nd Byte    3rd Byte    4th Byte 
+         * =========================================================================
+         * U+0000..U+007F            00..7F       
+         * -------------------------------------------------------------------------
+         * U+0080..U+07FF            C2..DF      80..BF      
+         *
+         * -------------------------------------------------------------------------
+         * U+0800..U+0FFF            E0          A0..BF     80..BF   
+         *                                       -- 
+         *                          
+         * U+1000..U+FFFF            E1..EF      80..BF     80..BF    
+         *
+         * --------------------------------------------------------------------------
+         * U+10000..U+3FFFF          F0          90..BF     80..BF       80..BF 
+         *                                       --
+         * U+40000..U+FFFFF          F1..F3      80..BF     80..BF       80..BF 
+         * U+100000..U+10FFFF        F4          80..8F     80..BF       80..BF 
+         *                                           --
+         * ==========================================================================
+         *
+         *  Cases where a trailing byte range is not 80..BF are underlined in the table to 
+         *  draw attention to them. These occur only in the second byte of a sequence.
+         *
+         ***/
+
+        switch(trailingBytes)
+        {
+            case 1 :
+                // UTF-8:   [110y yyyy] [10xx xxxx]
+                // Unicode: [0000 0yyy] [yyxx xxxx]
+                //
+                if (*srcPtr < 0xC2) 
+                {
+                    char byte[2] = {*srcPtr,0};
+
+                    ThrowXMLwithMemMgr1(UTFDataFormatException
+                                      , XMLExcepts::UTF8_Invalid_2BytesSeq
+                                      , byte
+                                      , getMemoryManager());
+                }
+              
+                checkTrailingBytes(*(srcPtr+1), 1, 1);
+
+                break;
+            case 2 :
+                // UTF-8:   [1110 zzzz] [10yy yyyy] [10xx xxxx]
+                // Unicode: [zzzz yyyy] [yyxx xxxx]
+                //
+                if (( *srcPtr == 0xE0) && ( *(srcPtr+1) < 0xA0)) 
+                {
+                    char byte0[2] = {*srcPtr    ,0};
+                    char byte1[2] = {*(srcPtr+1),0};
+
+                    ThrowXMLwithMemMgr2(UTFDataFormatException
+                                      , XMLExcepts::UTF8_Invalid_3BytesSeq
+                                      , byte0
+                                      , byte1
+                                      , getMemoryManager());
+                }
+
+                checkTrailingBytes(*(srcPtr+1), 2, 1);
+                checkTrailingBytes(*(srcPtr+2), 2, 2);
+
+                //irregular three bytes sequence
+                // that is zzzzyy matches leading surrogate tag 110110 or 
+                //                       trailing surrogate tag 110111
+                // *srcPtr=1110 1101 
+                // *(srcPtr+1)=1010 yyyy or 
+                // *(srcPtr+1)=1011 yyyy
+                //
+                // 0xED 1110 1101
+                // 0xA0 1010 0000
+
+                if ((*srcPtr == 0xED) && (*(srcPtr+1) >= 0xA0))
+                {
+                    char byte0[2] = {*srcPtr,    0};
+                    char byte1[2] = {*(srcPtr+1),0};
+
+                     ThrowXMLwithMemMgr2(UTFDataFormatException
+                              , XMLExcepts::UTF8_Irregular_3BytesSeq
+                              , byte0
+                              , byte1
+                              , getMemoryManager());
+                }
+
+                break;
+            case 3 : 
+                // UTF-8:   [1111 0uuu] [10uu zzzz] [10yy yyyy] [10xx xxxx]*
+                // Unicode: [1101 10ww] [wwzz zzyy] (high surrogate)
+                //          [1101 11yy] [yyxx xxxx] (low surrogate)
+                //          * uuuuu = wwww + 1
+                //
+                if (((*srcPtr == 0xF0) && (*(srcPtr+1) < 0x90)) ||
+                    ((*srcPtr == 0xF4) && (*(srcPtr+1) > 0x8F))  )
+                {
+                    char byte0[2] = {*srcPtr    ,0};
+                    char byte1[2] = {*(srcPtr+1),0};
+
+                    ThrowXMLwithMemMgr2(UTFDataFormatException
+                                      , XMLExcepts::UTF8_Invalid_4BytesSeq
+                                      , byte0
+                                      , byte1
+                                      , getMemoryManager());
+                }
+
+                checkTrailingBytes(*(srcPtr+1), 2, 1);
+                checkTrailingBytes(*(srcPtr+2), 2, 1);
+                checkTrailingBytes(*(srcPtr+3), 2, 1);
+                
+                break;
+            default: // trailingBytes > 3
+
+                /***
+                 * The definition of UTF-8 in Annex D of ISO/IEC 10646-1:2000 also allows 
+                 * for the use of five- and six-byte sequences to encode characters that 
+                 * are outside the range of the Unicode character set; those five- and 
+                 * six-byte sequences are illegal for the use of UTF-8 as a transformation 
+                 * of Unicode characters. ISO/IEC 10646 does not allow mapping of unpaired 
+                 * surrogates, nor U+FFFE and U+FFFF (but it does allow other noncharacters).
+                 ***/
+                char len[2]  = {(char)(trailingBytes+0x31), 0};
+                char byte[2] = {*srcPtr,0};
+
+                ThrowXMLwithMemMgr2(UTFDataFormatException
+                                  , XMLExcepts::UTF8_Exceede_BytesLimit
+                                  , byte
+                                  , len
+                                  , getMemoryManager());
+
+                break;
+        }
+
+        // All bytes have been verified, need not to check any more
+
         XMLUInt32 tmpVal = *srcPtr++;
         tmpVal <<= 6;
         for(unsigned int i=1; i<trailingBytes; i++) 
         {
-            if((*srcPtr & 0xC0) == 0x80) 
-            {
-                tmpVal += *srcPtr++; 
-                tmpVal <<= 6;
-            } 
-            else
-            {
-                char len[2] = {(char)(trailingBytes+0x31), 0};
-                char pos[2]= {(char)(i+0x31), 0};
-                char byte[2] = {*srcPtr,0};
-                ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
-            }
+            tmpVal += *srcPtr++; 
+            tmpVal <<= 6;
         }
-        if((*srcPtr & 0xC0) == 0x80) 
-        {
-            tmpVal += *srcPtr++;
-        }
-        else 
-        {
-            char len[2] = {(char)(trailingBytes+0x31), 0};
-            char byte[2] = {*srcPtr,0};
-            ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, len, byte, len, getMemoryManager());
-        }
+
+        tmpVal += *srcPtr++;
+
         // since trailingBytes comes from an array, this logic is redundant
         //  default :
         //      ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
@@ -370,12 +501,8 @@ XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
             encodedBytes = 2;
         else if (curVal < 0x10000)
             encodedBytes = 3;
-        else if (curVal < 0x200000)
+        else if (curVal < 0x110000)
             encodedBytes = 4;
-        else if (curVal < 0x4000000)
-            encodedBytes = 5;
-        else if (curVal <= 0x7FFFFFFF)
-            encodedBytes = 6;
         else
         {
             // If the options say to throw, then throw
