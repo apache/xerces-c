@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/17 18:09:02  roddey
+ * Fixed an infinite loop caused while trying to trim leading
+ * whitespace from the raw URL during parsing.
+ *
  * Revision 1.6  2000/02/06 07:48:06  rahulj
  * Year 2K copyright swat.
  *
@@ -782,6 +786,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     {
         if (!XMLPlatformUtils::fgTransService->isSpace(*srcPtr))
             break;
+        srcPtr++;
     }
 
     // Make sure it wasn't all space
