@@ -3,6 +3,281 @@
 
 <s1 title="Releases">
 
+<s2 title="Xerces-C Changes After version 1.3.0">
+
+<table>
+    <tr>
+        <td >Date</td>
+        <td >Contributor</td>
+        <td >Description</td>
+    </tr>
+
+    <tr>
+        <td >2000/11/07</td>
+        <td >Tinny Ng</td>
+        <td >Bug fix for DTD entity reference problem reported by TOny Wuebben on 10/25.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-11-07</td>
+        <td >Tinny Ng</td>
+        <td >config.guess and config.sub updated to newer versions.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-11-07</td>
+        <td >Pieter Van-Dyck</td>
+        <td >Change InterlockedCompareExchange for compatibility with Borland BCB5
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-11-07</td>
+        <td >Pieter Van-Dyck</td>
+        <td >Fix incorrect version number in gXercesMinVersion.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-11-01</td>
+        <td >Tinny Ng</td>
+        <td >SAX bug fix:  Attribute lists were throwing exceptions rather than returning
+             null when an attribute could not be found by name.
+        </td>
+    </tr>
+
+   <tr>
+        <td >2000-11-01</td>
+        <td >Tinny Ng</td>
+        <td >Scanner bug fix:  with progessive parsing, namesapce and validation
+             options were not being set correctly.  Symptoms included failure to detect
+             ignorable white space.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-31</td>
+        <td >Tinny Ng</td>
+        <td >DOM NodeIterator bug fix: iterators would sometimes continue beyond their
+             starting (root) node.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-20</td>
+        <td >Andy Heninger</td>
+        <td >DOMParser bug fix - erroneous attempt to look up name space URIs
+             while scanning default attribute values in DTD removed.  Was a
+             crashing bug when namespaces were enabled.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-20</td>
+        <td >Andy Heninger</td>
+        <td >DOM NodeFilter - define values for FilterAction enum to match those in the
+             DOM spec.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-19</td>
+        <td >Andy Heninger</td>
+        <td >SAXCount sample, allow multiple files on command line.  DOMCount sample, rename
+             error handler class to say that it is an error handler.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-18</td>
+        <td >James Berry</td>
+        <td >MacOS project file updates.  Small code optimization.  Add comments to clarify and
+             to reflect new fixed XMLCh size.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-17</td>
+        <td >Andy Heninger</td>
+        <td >Bug Fix - problems with multi-byte characters on input buffer boundaries.
+        </td>
+    </tr>
+
+   <tr>
+        <td >2000-10-17</td>
+        <td >Andy Heninger</td>
+        <td >DOMPRintFormatTarget, bad override of writeChars fixed (missing const).
+             XMLFormatTarget, removed version of writeChars with no length.  Can not be
+             safely used, and obscured other errors.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-16</td>
+        <td >Andy Heninger</td>
+        <td >Change XMLCh back to unsigned short on all platforms
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-13</td>
+        <td >Devin Barnhart</td>
+        <td >COM: interpret BSTR as UTF-16 in documents
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-13</td>
+        <td >Edward Bortner</td>
+        <td >Solaris: change detection for native support for type bool to defined(_BOOL).
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-13</td>
+        <td >Nadav Aharoni</td>
+        <td >MXLString::trim() bug fix: failure to null terminate result.
+        </td>
+    </tr>
+
+     <tr>
+        <td >2000-10-10</td>
+        <td >Bill Schindler</td>
+        <td >XMLFormatter:  Fix problems with output to multi-byte encodings.
+        </td>
+    </tr>
+
+     <tr>
+        <td >2000-10-10</td>
+        <td >Andy Heninger</td>
+        <td >From Janitor, remove the addition that is having compile problems in MSVC.
+        </td>
+    </tr>
+
+      <tr>
+        <td >2000-10-10</td>
+        <td >James Berry</td>
+        <td >Fix a bug in returned length of transcoded string.
+             Add a few comments.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-09</td>
+        <td >James Berry</td>
+        <td >ProjectBuilder project to build Xerces.
+        </td>
+    </tr>
+
+   <tr>
+        <td >2000-10-09</td>
+        <td >James Berry</td>
+        <td >  Numerous Changes:
+              - Increase environmental sensitivity with hope of supporting pre OS 9
+                OS versions.
+              - Enhanced path creation/interpretation to support proper unix style
+                paths under Mac OS X instead of the volume rooted paths we previously
+                used. Paths under Classic remain the same.
+              - Better timer resolution.
+              - Detect functionality via unresolved symbols rather than Gestalt
+                where possible.
+              - Softly back away from URLAccess...if it's not installed, we just
+                don't support a net accessor.
+              - Additional support for XMLCh/UniChar size differences under
+                GCC on Mac OS X.
+                  - Fix Mac OS X support. GCC in this environment sets wchar_t to a 32 bit
+                    value which requires an additional transcoding stage (bleh...)
+                  - Improve sensitivity to environment in order to support a broader
+                    range of system versions.
+                  - Fix a few compiler sensitivities.
+              - Carbon.h header support
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-09</td>
+        <td >James Berry</td>
+        <td >Add some auto_ptr functionality to allow modification of monitored
+             pointer value. This eases use of Janitor in some situations.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-10-09</td>
+        <td >James Berry</td>
+        <td >Autosense.hpp: modify sensing of Mac OS X.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-09-28</td>
+        <td >Andy Heninger</td>
+        <td >DOM_Document::putIdentifier() removed.  There never was an implementation
+             for this function.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-09-28</td>
+        <td >Curt Arnold</td>
+        <td >COM wrappers updated.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-09-28</td>
+        <td >Linda Swan</td>
+        <td >AS400 related changes.
+        </td>
+    </tr>
+
+   <tr>
+        <td >2000-09-28</td>
+        <td >Andy Heninger</td>
+        <td >DOM_Document - remove the un-implemented function putIdentifier()
+             from the header.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-09-28</td>
+        <td >Andy Heninger</td>
+        <td >DOMParser MemoryLeak fixed.  Occured when a document redefined the
+              a builtin entity, e.g. &lt;.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-09-28</td>
+        <td >Andy Heninger</td>
+        <td >DOMPrint sample: add deletes before exit so boundschecker runs cleanly.
+        </td>
+    </tr>
+
+
+    <tr>
+        <td >2000-09-22</td>
+        <td >James Berry</td>
+        <td >  Change file access permissions to fsRdPerm. Since we never write, there's
+              no reason to request write access. Thanks to John Mostrom @ Adobe.
+              Also nuke a few spaces and the entire defunct support for reading
+              directly from MacOS resources.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2000-09-22</td>
+        <td >Arundhari Bhowmick</td>
+        <td >DOM Parser:  internal subset entity printing update.
+        </td>
+    </tr>
+
+
+</table>
+</s2>
+
 <s2 title="Xerces-C Version 1.3.0: Sept 21, 2000">
 
 <table >
