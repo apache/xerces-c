@@ -384,11 +384,13 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                 // Save the type for later use
                 attType = attDefForWildCard->getType();
-
-
-                if(fGrammarType == Grammar::SchemaGrammarType)
+                if(fGrammarType == Grammar::SchemaGrammarType) {
                     ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
 
+                    DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
+                    if(tempDV && tempDV->getType() == DatatypeValidator::Union)
+                        ((SchemaAttDef*)attDef)->setMembertypeValidator(((UnionDatatypeValidator *)tempDV)->getMemberTypeValidator());
+                }
             }
             else {
                 normalizeAttValue

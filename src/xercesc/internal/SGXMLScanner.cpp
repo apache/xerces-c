@@ -2190,12 +2190,14 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , elemDecl
                     );
                 }
-
                 // Save the type for later use
                 attType = attDefForWildCard->getType();
 
                 ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
 
+                DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
+                if(tempDV && tempDV->getType() == DatatypeValidator::Union)
+                    ((SchemaAttDef*)attDef)->setMembertypeValidator(((UnionDatatypeValidator *)tempDV)->getMemberTypeValidator());
             }
             else {
                 normalizeAttValue

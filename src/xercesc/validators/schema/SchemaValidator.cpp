@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2003/02/06 13:51:55  gareth
+ * fixed bug with multiple attributes being validated by the same union type.
+ *
  * Revision 1.27  2003/01/29 20:01:20  gareth
  * We now detect when elements/attributes are validated and the result of the validation is stored.
  *
@@ -731,16 +734,17 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         catch (...) {
             emitError(XMLValid::GenericError);
             ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-            ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+            ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
             throw;
         }
     }
 
     if(!valid) {
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-        ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+        ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
     }
-    
+    else if(attDefDV && attDefDV->getType() == DatatypeValidator::Union) 
+        ((SchemaAttDef *)attDef)->setMembertypeValidator(((UnionDatatypeValidator *)attDefDV)->getMemberTypeValidator());
     fTrailing = false;
 
 

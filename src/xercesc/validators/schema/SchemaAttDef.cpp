@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/02/06 13:51:55  gareth
+ * fixed bug with multiple attributes being validated by the same union type.
+ *
  * Revision 1.3  2003/01/29 19:47:16  gareth
  * added DOMTypeInfo and some PSVI methods
  *
@@ -104,6 +107,7 @@ SchemaAttDef::SchemaAttDef() :
     , fAttName(0)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
+    , fMemberTypeValidator(0)
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
@@ -118,6 +122,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     XMLAttDef(type, defType)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
+    , fMemberTypeValidator(0)
     , fAnyDatatypeValidator(0)
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
@@ -138,6 +143,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
+    , fMemberTypeValidator(0)
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
@@ -153,6 +159,7 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fAttName(0)
     , fDatatypeValidator(other->fDatatypeValidator)
     , fAnyDatatypeValidator(other->fAnyDatatypeValidator)
+    , fMemberTypeValidator(other->fMemberTypeValidator)
     , fNamespaceList(0)
     , fValidity(other->fValidity)
     , fValidation(other->fValidation)

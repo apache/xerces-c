@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/02/06 13:51:55  gareth
+ * fixed bug with multiple attributes being validated by the same union type.
+ *
  * Revision 1.3  2003/01/29 19:47:16  gareth
  * added DOMTypeInfo and some PSVI methods
  *
@@ -93,7 +96,6 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/schema/PSVIDefs.hpp>
-
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DatatypeValidator;
@@ -236,6 +238,7 @@ public :
     );
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator);
+    void setMembertypeValidator(const DatatypeValidator* newDatatypeValidator);
     void setNamespaceList(const ValueVectorOf<unsigned int>* const toSet);
     void resetNamespaceList();
     void setValidity(PSVIDefs::Validity valid);
@@ -257,8 +260,12 @@ private :
     //  fDatatypeValidator
     //      The DatatypeValidator used to validate this attribute type.
     //
-    // fAnyDatatypeValidator
+    //  fAnyDatatypeValidator
     //      Tempory storage for the DatatypeValidator used to validate an any
+    //
+    //  fMemberTypeValidator
+    //      Tempory storage used when the validator being used is of union type.
+    //      This stores the actual member validator used to validate.
     //
     //  fNamespaceList
     //      The list of namespace values for a wildcard attribute
@@ -274,6 +281,7 @@ private :
     QName*                       fAttName;
     DatatypeValidator*           fDatatypeValidator;
     DatatypeValidator*           fAnyDatatypeValidator;
+    const DatatypeValidator*     fMemberTypeValidator;
     ValueVectorOf<unsigned int>* fNamespaceList;
     PSVIDefs::Validity           fValidity;
     PSVIDefs::Validation         fValidation;
@@ -341,18 +349,14 @@ inline const XMLCh* SchemaAttDef::getTypeUri() const {
 
 
 inline const XMLCh* SchemaAttDef::getMemberTypeName() const {
-    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fAnyDatatypeValidator)->getMemberTypeName();
-    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeName();
+    if(fMemberTypeValidator) 
+        return fMemberTypeValidator->getTypeLocalName();
     return 0;
 }
 
 inline const XMLCh* SchemaAttDef::getMemberTypeUri() const {
-    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fAnyDatatypeValidator)->getMemberTypeUri();
-    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeUri();
+    if(fMemberTypeValidator) 
+        return fMemberTypeValidator->getTypeUri();
     return 0;
 }
 
@@ -369,11 +373,9 @@ inline const XMLCh* SchemaAttDef::getDOMTypeInfoName() const {
         return SchemaSymbols::fgDT_ANYSIMPLETYPE;
     if(getTypeAnonymous() || getMemberTypeAnonymous())
         return 0;
-
-    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union ||
-       fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union) {
+    if(fMemberTypeValidator)
         return getMemberTypeName();
-    }
+
     return getTypeName();
 }
 
@@ -382,8 +384,7 @@ inline const XMLCh* SchemaAttDef::getDOMTypeInfoUri() const {
         return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
     if(getTypeAnonymous() || getMemberTypeAnonymous())
         return 0;
-    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union ||
-       fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
+    if(fMemberTypeValidator)
         return getMemberTypeUri();
     return getTypeUri();
 }
@@ -398,10 +399,9 @@ inline bool SchemaAttDef::getTypeAnonymous() const {
 }
 
 inline bool SchemaAttDef::getMemberTypeAnonymous() const {
-    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fAnyDatatypeValidator)->getMemberTypeAnonymous();
-    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeAnonymous();
+    if(fMemberTypeValidator) 
+        return fMemberTypeValidator->getAnonymous();
+
     return false;
 }
 
@@ -436,6 +436,11 @@ inline void SchemaAttDef::setAnyDatatypeValidator(DatatypeValidator* newDatatype
     fAnyDatatypeValidator = newDatatypeValidator;
 }
 
+inline void SchemaAttDef::setMembertypeValidator(const DatatypeValidator* newDatatypeValidator)
+{
+    fMemberTypeValidator = newDatatypeValidator;
+}
+
 inline void SchemaAttDef::resetNamespaceList() {
 
     if (fNamespaceList && fNamespaceList->size()) {
@@ -464,8 +469,8 @@ inline void SchemaAttDef::reset() {
         ((UnionDatatypeValidator *)fAnyDatatypeValidator)->reset();
     else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
         ((UnionDatatypeValidator *)fDatatypeValidator)->reset();
-
     fAnyDatatypeValidator = 0;
+    fMemberTypeValidator = 0;
     fValidity = PSVIDefs::UNKNOWN;
     fValidation = PSVIDefs::NONE;    
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/02/06 13:51:55  gareth
+ * fixed bug with multiple attributes being validated by the same union type.
+ *
  * Revision 1.7  2003/01/29 19:55:19  gareth
  * updated to deal with null pointer issue with fValidatedDatatype.
  *
@@ -241,6 +244,13 @@ public:
      */
     bool getMemberTypeAnonymous() const;
 
+
+    /**
+     * Returns the member DatatypeValidator used to validate the content the last time validate 
+     * was called
+     */
+    const DatatypeValidator* getMemberTypeValidator() const;
+
     /**
      * Called inbetween uses of this validator to reset PSVI information
      */
@@ -396,6 +406,10 @@ inline bool UnionDatatypeValidator::getMemberTypeAnonymous() const {
         return fValidatedDatatype->getAnonymous();
     }
     return 0;
+}
+
+inline const DatatypeValidator* UnionDatatypeValidator::getMemberTypeValidator() const {
+    return fValidatedDatatype;
 }
 
 inline void UnionDatatypeValidator::reset() {

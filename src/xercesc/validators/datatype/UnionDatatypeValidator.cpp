@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/02/06 13:51:55  gareth
+ * fixed bug with multiple attributes being validated by the same union type.
+ *
  * Revision 1.7  2003/01/29 19:53:35  gareth
  * we now store information about which validator was used to validate.
  *
@@ -310,7 +313,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
                 fMemberTypeValidators->elementAt(i)->validate(content);
                 memTypeValid = true;
                 
-                //set the name of the type actually used to validate the content
+                //set the validator of the type actually used to validate the content
                 DatatypeValidator *dtv = fMemberTypeValidators->elementAt(i);
                 fValidatedDatatype = dtv;
             }
