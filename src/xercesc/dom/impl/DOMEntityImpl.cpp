@@ -72,7 +72,8 @@ DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
      fSystemId(0),
      fActualEncoding(0),
      fEncoding(0),
-     fVersion(0)
+     fVersion(0),
+     fEntityRefNodeCloned(false)
 {
     fRefEntity  = 0;
     fName        = ((DOMDocumentImpl *)ownerDoc)->getPooledString(eName);
@@ -85,7 +86,8 @@ DOMEntityImpl::DOMEntityImpl(const DOMEntityImpl &other, bool deep)
       fParent(other.fParent),
       fActualEncoding(other.fActualEncoding),
       fEncoding(other.fEncoding),
-      fVersion(other.fVersion)
+      fVersion(other.fVersion),
+      fEntityRefNodeCloned(false)
 {
     fName            = other.fName;
     if (deep)
@@ -178,10 +180,14 @@ DOMEntityReference*  DOMEntityImpl::getEntityRef() const
 
 void  DOMEntityImpl::cloneEntityRefTree() const
 {
+    if (fEntityRefNodeCloned)
+        return;
+
     // cast off const.  This method is const because it is
     //   called from a bunch of logically const methods, like
     //   getFirstChild().
     DOMEntityImpl *ncThis = (DOMEntityImpl *)this;
+
     //lazily clone the entityRef tree to this entity
     if (fParent.fFirstChild != 0)
         return;
@@ -189,6 +195,7 @@ void  DOMEntityImpl::cloneEntityRefTree() const
     if (!fRefEntity)
         return;
 
+    ncThis->fEntityRefNodeCloned = true;
     ncThis->fNode.setReadOnly(false, true);
     ncThis->fParent.cloneChildren(fRefEntity);
     ncThis->fNode.setReadOnly(true, true);

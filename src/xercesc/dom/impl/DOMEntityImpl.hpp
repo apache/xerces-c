@@ -92,7 +92,7 @@ private:
     XMLCh*                fActualEncoding;
     XMLCh*                fEncoding;
     XMLCh*                fVersion;
-
+    bool                  fEntityRefNodeCloned;
     // private helper function
     void	cloneEntityRefTree() const;
 
