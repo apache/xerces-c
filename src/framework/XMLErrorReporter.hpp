@@ -56,6 +56,9 @@
 
  /**
   * $Log$
+  * Revision 1.5  2000/02/16 21:42:58  aruna1
+  * API Doc++ summary changes in
+  *
   * Revision 1.4  2000/02/15 23:59:07  roddey
   * More updated documentation of Framework classes.
   *
@@ -115,6 +118,10 @@ public:
 
     /** @name Destructor */
     //@{
+
+    /**
+      *   Default destructor
+      */
     virtual ~XMLErrorReporter()
     {
     }
@@ -185,13 +192,17 @@ public:
 
 
 protected :
-    // -----------------------------------------------------------------------
-    //  Hidden Constructors
-    // -----------------------------------------------------------------------
+        
+    /** @name Constructor */
+    //@{
+
+    /**
+      *   Default constructor
+      */
     XMLErrorReporter()
     {
     }
-
+    //@}
 
 private:
     // -----------------------------------------------------------------------

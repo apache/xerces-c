@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/16 21:42:58  aruna1
+ * API Doc++ summary changes in
+ *
  * Revision 1.3  2000/02/15 01:21:30  roddey
  * Some initial documentation improvements. More to come...
  *
@@ -102,16 +105,40 @@ public:
 
     /** @name Constructors */
     //@{
+    
+    /**
+      *  Deafult Constructor
+      */
     XMLEntityDecl();
+
+    /**
+      *  Constructor with a const entity name
+      *
+      *  @param  entName   The new name to give to this entity.
+      */
     XMLEntityDecl
     (
         const   XMLCh* const    entName
     );
+    
+    /**
+      *  Constructor with a const entity name and value
+      *
+      *  @param  entName   The new name to give to this entity.
+      *  @param  value    The new value to give to this entity name.
+      */
     XMLEntityDecl
     (
         const   XMLCh* const    entName
         , const XMLCh* const    value
     );
+
+    /**
+      *  Constructor with a const entity name and single XMLCh value
+      *
+      *  @param  entName   The new name to give to this entity.
+      *  @param  value    The new value to give to this entity name.
+      */
     XMLEntityDecl
     (
         const   XMLCh* const    entName
@@ -121,7 +148,12 @@ public:
 
     /** @name Destructor */
     //@{
+
+    /**
+      *  Deafult destructor
+      */
     virtual ~XMLEntityDecl();
+
     //@}
 
 

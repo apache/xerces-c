@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.5  2000/02/16 21:42:58  aruna1
+  * API Doc++ summary changes in
+  *
   * Revision 1.4  2000/02/15 01:21:31  roddey
   * Some initial documentation improvements. More to come...
   *
@@ -103,6 +106,10 @@ public:
 
     /** @name Destructor */
     //@{
+    
+    /**
+      * Default destructor
+      */
     virtual ~XMLEntityHandler()
     {
     }
@@ -175,9 +182,17 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden Constructors
     // -----------------------------------------------------------------------
+    /** @name Constructor */
+    //@{
+    
+    /**
+      * Protected default constructor
+      */
     XMLEntityHandler()
     {
     }
+    //@}
+
 
 
 private:
