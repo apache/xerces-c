@@ -216,7 +216,7 @@ public:
       * To be redefined in UnionDatatypeValidator
       */
 
-    bool isSubstitutableBy(const DatatypeValidator* const toCheck);
+    virtual bool isSubstitutableBy(const DatatypeValidator* const toCheck);
 
 	 //@}
 

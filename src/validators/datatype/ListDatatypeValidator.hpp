@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/16 14:41:38  knoaman
+ * implementation of virtual methods.
+ *
  * Revision 1.2  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -98,7 +101,10 @@ public:
     // -----------------------------------------------------------------------
     /** @name Getter Functions */
     //@{
-
+    /**
+      * Returns whether the type is atomic or not
+      */
+    virtual bool isAtomic() const;
     //@}
 
     // -----------------------------------------------------------------------
@@ -294,6 +300,10 @@ DatatypeValidator* ListDatatypeValidator::getItemTypeDTV() const
         bdv = bdv->getBaseValidator();
 
     return bdv;
+}
+
+inline bool ListDatatypeValidator::isAtomic() const {
+    return false;
 }
 
 // -----------------------------------------------------------------------
