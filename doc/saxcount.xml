@@ -30,10 +30,10 @@ gmake</source>
 
           <p>The SAXCount sample parses an XML file and prints out a count of the number of
           elements in the file. To run SAXCount, enter the following </p>
-<source>SAXCount &lt;XML File&gt;</source>
+          <source>SAXCount &lt;XML File&gt;</source>
           <p>The following parameters may be set from the command line </p>
 <source>Usage:
-    SAXCount [options] <XML file>
+    SAXCount [options] &lt;XML file>
 
 Options:
     -v=xxx      Validation scheme [always | never | auto*]

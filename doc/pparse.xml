@@ -42,7 +42,7 @@ gmake</source>
 <source>PParse &lt;XML file&gt;</source>
 
 <source>
-Usage: PParse [options] <file>
+Usage: PParse [options] &lt;file>
 
 This sample program demonstrates the progressive parse capabilities of
 the parser system. It allows you to do a scanFirst() call followed by
