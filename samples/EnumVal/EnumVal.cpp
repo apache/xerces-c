@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/06/12 22:07:22  rahulj
+ * Correctly rejects unsupported command line options.
+ *
  * Revision 1.8  2000/05/31 18:50:42  rahulj
  * Removed extraneous command line arguments.
  *
@@ -195,7 +198,7 @@ int main(int argC, char* argV[])
     }
     
     // We only have one required parameter, which is the file to process
-    if ((argC == 2) && !strcmp(argV[1], "-?"))
+    if ((argC == 2) && (*(argV[1]) == '-'))
     {
         usage();
         XMLPlatformUtils::Terminate();
