@@ -28,6 +28,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

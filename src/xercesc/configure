@@ -1340,7 +1340,7 @@ esac
 
 cxx=${CXX}
 
-
+cxxver=${CXXVER}
 
 cc=${CC}
 
@@ -1604,6 +1604,7 @@ s%@host_vendor@%$host_vendor%g
 s%@host_os@%$host_os%g
 s%@platform@%$platform%g
 s%@cxx@%$cxx%g
+s%@cxxver@%$cxxver%g
 s%@GXX@%$GXX%g
 s%@cc@%$cc%g
 s%@GCC@%$GCC%g

@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.2  2004/07/09 16:22:16  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.1  2003/05/13 13:24:07  gareth
 # Files for NetBSD Port. Patch by Hiramatsu Yoshifumi.
 #
@@ -71,6 +74,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

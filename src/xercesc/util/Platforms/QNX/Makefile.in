@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.2  2004/07/09 16:24:50  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.1  2003/03/13 22:11:16  tng
 # [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
 #
@@ -63,6 +66,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

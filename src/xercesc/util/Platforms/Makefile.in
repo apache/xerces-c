@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2004/07/09 16:18:53  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.11  2004/03/15 17:06:06  amassari
 # - Added support for MinGW (bug#23176)
 #
@@ -146,6 +149,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

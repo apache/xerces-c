@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2004/07/09 16:32:27  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.4  2004/04/13 16:41:17  peiyongz
 # IdentityConstraintHandler
 #
@@ -75,6 +78,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

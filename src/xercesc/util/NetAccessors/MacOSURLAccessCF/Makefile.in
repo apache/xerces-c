@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2004/07/09 16:17:37  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.2  2002/07/26 16:49:28  tng
 # [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
 #
@@ -68,6 +71,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.43  2004/07/09 16:13:57  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.42  2004/02/24 22:57:27  peiyongz
 # XercesDeprecatedDOMLib
 #
@@ -397,6 +400,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

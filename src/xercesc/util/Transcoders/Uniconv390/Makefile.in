@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2004/07/09 16:30:05  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.2  2004/02/06 15:02:41  cargilld
 # Intrinsic transcoding support for 390.
 #
@@ -66,6 +69,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2004/07/09 16:11:11  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.15  2003/11/12 20:28:16  peiyongz
 # Stateless Grammar: ValidationContext
 #
@@ -148,6 +151,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

@@ -89,7 +89,7 @@ usage()
             [required: no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
     echo "            [default is make default; cc for gnu make]"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, icc or ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, icc or ecc)"
     echo "            [default is make default; g++ for gnu make]"
     echo "       -d (specifies that you want to build debug version) [default: not debug]"
     echo "       -r <thread option> can be 'pthread' or 'dce'
@@ -401,8 +401,18 @@ if test $bitsToBuild = 64; then
               bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
               bitstobuildLink=" -q64 -qwarn64 " ;;
            hp-11)
-              bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
-              bitstobuildLink=" +DA2.0W " ;;
+               if test $cppcompiler; then
+                   case $cppcompiler in
+                       aCC)
+                          bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
+                          bitstobuildLink=" +DA2.0W " ;;     
+                       aCC05)
+                          bitstobuildDefines=" $bitstobuildDefines +DD64 "
+                          bitstobuildLink=" +DD64 " ;;
+                       *)
+                       ;;
+                   esac
+               fi ;;              
            linux)
               bitstobuildDefines=" $bitstobuildDefines " ;;
            *)
@@ -460,8 +470,13 @@ fi
 #
 case $cppcompiler in
    xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc)
+   CXX="$cppcompiler"
       ;;
 
+   aCC05)
+      CXX="aCC"
+      CXXVER="aCC05"
+      ;;
    '')
    	  echo "C++ compiler not specified...we'll assume that configure will find it..."
    	  ;;
@@ -474,8 +489,9 @@ esac
 CC="$ccompiler"
 export CC
 
-CXX="$cppcompiler"
 export CXX
+
+export CXXVER
 
 #
 # Set the extra C and C++ compiler flags
@@ -525,6 +541,7 @@ echo export THREADS=\"$THREADS\"
 echo export BITSTOBUILD=\"$BITSTOBUILD\"
 echo export CC=\"$CC\"
 echo export CXX=\"$CXX\"
+echo export CXXVER=\"$CXXVER\"
 echo export CXXFLAGS=\"$CXXFLAGS\"
 echo export CFLAGS=\"$CFLAGS\"
 echo export LDFLAGS=\"$LDFLAGS\"

@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.5  2004/07/09 16:31:05  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.4  2003/10/14 15:19:24  peiyongz
 # Implementation of Serialization/Deserialization
 #
@@ -93,6 +96,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

@@ -68,6 +68,9 @@ cxx=${CXX}
 AC_SUBST(cxx)
 AC_SUBST(GXX)
 
+cxxver=${CXXVER}
+AC_SUBST(cxxver)
+
 cc=${CC}
 AC_SUBST(cc)
 AC_SUBST(GCC)

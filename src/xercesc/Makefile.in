@@ -71,6 +71,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 PREFIX = @prefix@
 MESSAGELOADER=@messageloader@
 TRANSCODER=@transcoder@

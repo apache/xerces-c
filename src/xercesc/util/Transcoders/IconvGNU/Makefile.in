@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2004/07/09 16:28:52  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.1  2002/08/19 19:38:18  tng
 # [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
 #
@@ -72,6 +75,7 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

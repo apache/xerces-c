@@ -495,10 +495,14 @@ ifeq (${PLATFORM}, HPUX)
   endif
 
   ifeq (${CXX}, aCC)
-    PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC \
-        -D${OSVERDEFINE} +DAportable +Z
-    MAKE_SHARED = ${CXX} -D${PLATFORM} ${LDFLAGS}
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} ${LDFLAGS}
+    ifeq (${CXXVER}, aCC05)
+       PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC -D${OSVERDEFINE} -mt +Z
+    else
+       PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC -D${OSVERDEFINE} +DAportable +Z    
+    endif
+            
+    MAKE_SHARED   = ${CXX} ${PLATFORM_COMPILE_OPTIONS} -D${PLATFORM} ${LDFLAGS}
+    MAKE_SHARED_C = ${CC}  ${PLATFORM_COMPILE_OPTIONS} -D${PLATFORM} ${LDFLAGS}  
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -licuuc -licudata
     else
@@ -509,8 +513,14 @@ ifeq (${PLATFORM}, HPUX)
         ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages
     endif
 
-    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
-    DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.    
+    ifeq (${CXXVER}, aCC05)
+       EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -mt
+       DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -mt   
+    else
+       EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. 
+       DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
+    endif
+    
     SHLIBSUFFIX=.sl
     ICUSHLIBSUFFIX=.sl
   else
