@@ -56,8 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/02/03 23:47:13  rahulj
+ * Removed Dietrich Wolf's email address.
+ *
  * Revision 1.1  2000/02/02 22:24:55  rahulj
- * Initial checkin. Contributed by Dietrich Wolf (dw@orimos.com)
+ * Initial checkin. Contributed by Dietrich Wolf.
  *
  * Revision 1.3  1999/12/03 00:14:52  andyh
  * Removed transcoding stuff, replaced with DOMString::transcode.
