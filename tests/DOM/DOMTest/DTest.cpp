@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2002/08/09 20:21:21  tng
+ * Test DOM L3 compareTreePosition.
+ *
  * Revision 1.24  2002/07/04 15:35:15  tng
  * DOM L3: Test DOMDocument::renameNode
  *
@@ -154,6 +157,21 @@
         OK = false; \
     }
 
+#define COMPARETREEPOSITIONTEST(thisNode, otherNode, position, line) \
+    myposition = thisNode->compareTreePosition(otherNode); \
+    if (position == DOMNode::TREE_POSITION_DISCONNECTED) {  \
+        if ((myposition & DOMNode::TREE_POSITION_DISCONNECTED) != 0) {\
+            fprintf(stderr, "DOMNode::compareTreePosition does not work in line %i\n", line); \
+            OK = false; \
+        } \
+    } \
+    else if ((myposition & position) == 0) {\
+        fprintf(stderr, "DOMNode::compareTreePosition does not work in line %i\n", line); \
+        OK = false; \
+    }
+
+// temp position for compareTreePosition
+short myposition;
 
 //temp XMLCh String Buffer
 XMLCh tempStr[4000];
@@ -268,6 +286,7 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     XMLString::transcode("firstElement", tempStr3, 3999);
     XMLString::catString(tempStr2, tempStr3);
     docFirstElement->setAttribute(tempStr, tempStr2);
+    DOMAttr* docFirstElementAttr = docFirstElement->getAttributeNode(tempStr);
 
     //name + "TargetProcessorChannel" + "This is " + doc->getNodeName() + "'s processing instruction");
     XMLString::copyString(tempStr, name);
@@ -397,6 +416,10 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     //"This should be a comment of some kind "
     XMLString::transcode("This should be a comment of some kind ", tempStr, 3999);
     DOMComment* docComment = doc->createComment(tempStr);
+
+    //Test compareTreePosition before append
+    COMPARETREEPOSITIONTEST(docFirstElementAttr, docComment, DOMNode::TREE_POSITION_DISCONNECTED, __LINE__);
+
     docBodyLevel23->appendChild(docComment);
 
     //"ourEntityNode"
@@ -415,12 +438,72 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     if (rem)
         rem->release();
 
-    DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
 
-//  printf("This document's first element name is " + docFirstElement->getTagName() + "\n");
+//***********Do some quick compareTreePosition tests
+//The tree now looks like
+//
+// docFirstElement (has docFirstElementAttr)
+//      |
+//      |_ docProcessInstruction
+//      |
+//      |_ docBody
+//            |
+//            |_ docBodyLevel21
+//            |         |
+//            |         |_ docBodyLevel31
+//            |         |        |
+//            |         |        |_ docTextNode11
+//            |         |        |
+//            |         |        |_ docTextNode12
+//            |         |        |
+//            |         |        |_ docTextNode13
+//            |         |
+//            |         |_ docBodyLevel32
+//            |                  |
+//            |                  |_ docTextNode2
+//            |
+//            |_ docBodyLevel22
+//            |         |
+//            |         |_ docBodyLevel33
+//            |         |        |
+//            |         |        |_ docTextNode3
+//            |         |
+//            |         |
+//            |         |_ docBodyLevel34
+//            |                  |
+//            |                  |_ docTextNode4
+//            |
+//            |_ docBodyLevel23
+//            |         |
+//            |         |_ docCDATASection
+//            |         |
+//            |         |_ docComment
+//            |
+//            |_ docBodyLevel24
+//                      |
+//                      |_ docReferenceEntity
+//
+
+    COMPARETREEPOSITIONTEST(docProcessingInstruction, docBody, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(docBodyLevel24, docProcessingInstruction, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(docBodyLevel23, docBodyLevel21, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(docBodyLevel21, docTextNode11, DOMNode::TREE_POSITION_DESCENDANT, __LINE__);
+    COMPARETREEPOSITIONTEST(docCDATASection, docFirstElement, DOMNode::TREE_POSITION_ANCESTOR, __LINE__);
+    COMPARETREEPOSITIONTEST(docFirstElement, docFirstElement, DOMNode::TREE_POSITION_SAME_NODE, __LINE__);
+    COMPARETREEPOSITIONTEST(docFirstElement, docFirstElement, DOMNode::TREE_POSITION_EQUIVALENT, __LINE__);
+    COMPARETREEPOSITIONTEST(docReferenceEntity, docFirstElement, DOMNode::TREE_POSITION_ANCESTOR, __LINE__);
+    COMPARETREEPOSITIONTEST(docFirstElementAttr, docFirstElement, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(docFirstElementAttr, docProcessingInstruction, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(docProcessingInstruction, docFirstElementAttr, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(docFirstElementAttr, doc, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(doc, docFirstElementAttr, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(docBodyLevel21, docBodyLevel22, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+
+    COMPARETREEPOSITIONTEST(docNotation, docFirstElement, DOMNode::TREE_POSITION_DISCONNECTED, __LINE__);
 
 
 //***********Following are for errorTests
+    DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
 
     //name + "docTextNode3"
     XMLString::copyString(tempStr, name);
@@ -446,7 +529,7 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     //"entityReferenceText information"
     XMLString::transcode("entityReferenceText information", tempStr, 3999);
     DOMText* entityReferenceText2 = doc->createTextNode(tempStr);
-//************************************************* ERROR TESTS
+//************************************************ ERROR TESTS
     DOMTest tests;
 
     EXCEPTIONSTEST(document->appendChild(docBody), DOMException::HIERARCHY_REQUEST_ERR, OK,  1);
@@ -737,6 +820,13 @@ bool DOMTest::testAttr(DOMDocument* document)
     XMLString::transcode("testAttribute", tempStr, 3999);
     attributeNode = el->getAttributeNode(tempStr);
 
+    //Test compareTreePosition, the equivalent case here
+    XMLString::transcode("dFirstElementdFirstElement", tempStr2, 3999);
+    DOMAttr* docFirstElementAttr = el->getAttributeNode(tempStr2);
+
+    COMPARETREEPOSITIONTEST(docFirstElementAttr, attributeNode, DOMNode::TREE_POSITION_EQUIVALENT, __LINE__);
+
+    // Test the name and other data
     if (XMLString::compareString(tempStr, attributeNode->getName()))
     {
         fprintf(stderr, "Warning!!! DOMAttr's 'getName' method failed to work properly!\n");
@@ -2743,6 +2833,28 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMAttr* renameTestAttributeNS = document->createAttributeNS(tempStr4, tempStr3);
     renameTestElement->setAttributeNode(renameTestAttribute);
     renameTestElementNS->setAttributeNodeNS(renameTestAttributeNS);
+
+    //Test compareTreePosition first before testing rename
+    // renameTestParent
+    //  |
+    //  |_ renameTestElement (has renameTestAttribute)
+    //  |          |
+    //  |          |_ renameTestText
+    //  |
+    //  |_ renameTestElementNS (has renameTestAttributeNS)
+    //  |          |
+    //  |          |_ renameTestTextNS
+    //
+    COMPARETREEPOSITIONTEST(renameTestAttribute, renameTestAttributeNS, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestAttribute, renameTestElement, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestAttribute, renameTestText, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestAttribute, renameTestTextNS, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestAttribute, renameTestParent, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+
+    COMPARETREEPOSITIONTEST(renameTestAttributeNS, renameTestAttribute, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestElement, renameTestAttributeNS, DOMNode::TREE_POSITION_FOLLOWING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestAttributeNS, renameTestText, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
+    COMPARETREEPOSITIONTEST(renameTestTextNS, renameTestAttributeNS, DOMNode::TREE_POSITION_PRECEDING, __LINE__);
 
     // start the rename tests
     // rename the NS Element
