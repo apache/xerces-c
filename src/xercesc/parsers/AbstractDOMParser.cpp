@@ -169,8 +169,8 @@ void AbstractDOMParser::cleanUp()
     if (fDocumentVector)
         delete fDocumentVector;
 
-    if (!fDocumentAdoptedByUser)
-        delete fDocument;
+    if (!fDocumentAdoptedByUser && fDocument)
+        fDocument->release();
 
     delete fNodeStack;
     delete fScanner;
