@@ -129,18 +129,21 @@ protected :
     //@{
 
     /**
-      * Protected default constructor
+      * Protected default constructor and copy constructor
       */
     XMemory()
+    {
+    }
+
+    XMemory(const XMemory&)
     {
     }
     //@}
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
+    //  Unimplemented operators
     // -----------------------------------------------------------------------
-    XMemory(const XMemory&);
     XMemory& operator=(const XMemory&);
 };
 
