@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  2002/02/04 20:12:43  tng
+ * Test DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ *
  * Revision 1.4  2002/02/01 22:43:48  peiyongz
  * sane_include
  *
@@ -314,6 +319,10 @@ int  main()
             nd = iter.previousNode();
             TASSERT(nd == E131);
 
+            //test getRoot
+            TASSERT(iter.getRoot() == root);
+            TASSERT(iter.getRoot() != doc);
+
         }
         TESTEPILOG;
 
@@ -538,6 +547,10 @@ int  main()
             TASSERT(tw.firstChild() == 0);   //E11 rejected and no children is TEXT
             TASSERT(tw.getCurrentNode() == root);
             TASSERT(tw.nextNode() == 0);    //E11 rejected so can't get to textNode1
+
+            //test getRoot
+            TASSERT(tw.getRoot() == root);
+            TASSERT(tw.getRoot() != doc);
         }
         TESTEPILOG;
 
