@@ -320,8 +320,8 @@ private:
     /**
       * Parse block & final items
       */
-    int parseBlockSet(const XMLCh* const blockStr);
-    int parseFinalSet(const XMLCh* const finalStr);
+    int parseBlockSet(const XMLCh* const blockStr, const int blockType);
+    int parseFinalSet(const XMLCh* const finalStr, const int finalType);
 
     /**
       * Return true if a name is an identity constraint, otherwise false
@@ -386,7 +386,8 @@ private:
     SchemaElementDecl* createSchemaElementDecl(const DOM_Element& elem,
                                                const bool topLevel,
                                                const unsigned short elemType,
-                                               bool& isDuplicate);
+                                               bool& isDuplicate,
+                                               const bool isFixedValue);
 
     /**
       * Return the value of a given attribute name from an element node
@@ -472,18 +473,15 @@ private:
       * Check whether a mixed content is emptiable or not.
       * Needed to validate element constraint values (defualt, fixed)
       */
-    bool emptiableMixedContent(const ContentSpecNode* const specNode);
+    bool emptiableParticle(const ContentSpecNode* const specNode);
 
     /**
-      * Used by emptiableMixedContent to get the 'particle' minimum
-      * total range.
-      * 
-      * Note:
-      * The method does not return the exact min. value. It will stop
-      * calculation if a value > 0 is encountered, and the compositor is not
-      * a 'choice'.
+      * Used by emptiableMixedContent to get the 'particle'
+      * minimum/maximum total range. 
       */
-    int  getMinTotalRange(const ContentSpecNode* const specNode);
+    int getMinTotalRange(const ContentSpecNode* const specNode);
+    int getMaxTotalRange(const ContentSpecNode* const specNode);
+
 
     void checkFixedFacet(const DOM_Element&, const XMLCh* const,
                          const DatatypeValidator* const, unsigned int&);
@@ -493,6 +491,19 @@ private:
     void buildValidSubstitutionListB(SchemaElementDecl* const,
                                      SchemaElementDecl* const);
 
+    void checkEnumerationRequiredNotation(const XMLCh* const name,
+                                          const XMLCh* const typeStr);
+
+    // -----------------------------------------------------------------------
+    //  Private constants
+    // -----------------------------------------------------------------------
+    enum
+    {
+        ES_Block
+        , C_Block
+        , S_Final
+        , ECS_Final
+    };
 
     // -----------------------------------------------------------------------
     //  Private data members

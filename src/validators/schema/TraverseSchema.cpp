@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2001/07/09 20:07:49  knoaman
+ * Added <element> constraint checking.
+ *
  * Revision 1.27  2001/07/09 15:22:45  knoaman
  * complete <any> declaration.
  *
@@ -445,8 +448,8 @@ void TraverseSchema::traverseSchemaHeader() {
                                           SchemaSymbols::fgATT_BLOCKDEFAULT);
     const XMLCh* finalVal = getElementAttValue(fSchemaRootElement,
                                           SchemaSymbols::fgATT_FINALDEFAULT);
-    fBlockDefault = defaultVal != 0 ? parseBlockSet(defaultVal) : 0;
-    fFinalDefault = finalVal != 0 ? parseFinalSet(finalVal) : 0;
+    fBlockDefault = parseBlockSet(defaultVal, ES_Block);
+    fFinalDefault = parseFinalSet(finalVal, ECS_Final);
 
 //    fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
 }
@@ -926,7 +929,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
 
     // Get 'final' values
     const XMLCh* finalVal = getElementAttValue(childElem, SchemaSymbols::fgATT_FINAL);
-    int finalSet = parseFinalSet(finalVal);
+    int finalSet = parseFinalSet(finalVal, S_Final);
 
     // annotation?,(list|restriction|union)
     DOM_Element content= checkContent(childElem,
@@ -1098,31 +1101,18 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     // Finish the setup of the typeInfo
     // ------------------------------------------------------------------
-    const XMLCh* lBlock = getElementAttValue(elem, SchemaSymbols::fgATT_BLOCK);
-    const XMLCh* lFinal = getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
-    const XMLCh* lAbstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
-    int blockSet = lBlock != 0 ? parseBlockSet(lBlock) : fBlockDefault;
-    int finalSet = lFinal != 0 ? parseFinalSet(lFinal) : fFinalDefault;
-    int finalBlockValid = SchemaSymbols::RESTRICTION + SchemaSymbols::EXTENSION;
+    const XMLCh* blockAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_BLOCK);
+    const XMLCh* finalAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
+    const XMLCh* abstractAttVal = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
+    int blockSet = parseBlockSet(blockAttVal, C_Block);
+    int finalSet = parseFinalSet(finalAttVal, ECS_Final);
 
     typeInfo->setBlockSet(blockSet);
     typeInfo->setFinalSet(finalSet);
     typeInfo->setScopeDefined(scopeDefined);
 
-    if (XMLString::stringLen(lBlock) != 0
-        && XMLString::compareString(lBlock,SchemaSymbols::fgATTVAL_POUNDALL) != 0
-        && blockSet != finalBlockValid) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeBlockValue, lBlock);
-    }
-
-    if (XMLString::stringLen(lFinal) != 0
-        && XMLString::compareString(lFinal,SchemaSymbols::fgATTVAL_POUNDALL) != 0
-        && finalSet != finalBlockValid) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeFinalValue, lFinal);
-    }
-
-    if (XMLString::stringLen(lAbstract) != 0
-        && XMLString::compareString(lAbstract, SchemaSymbols::fgATTVAL_TRUE) == 0) {
+    if (XMLString::stringLen(abstractAttVal) != 0
+        && XMLString::compareString(abstractAttVal, SchemaSymbols::fgATTVAL_TRUE) == 0) {
         typeInfo->setAbstract(true);
     }
     else {
@@ -1795,7 +1785,7 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
     // Create element decl
     bool isDuplicate = false;
     SchemaElementDecl* elemDecl =
-       createSchemaElementDecl(elem, topLevel, contentSpecType, isDuplicate);
+       createSchemaElementDecl(elem, topLevel, contentSpecType, isDuplicate, (fixed != 0));
 
     if (elemDecl == 0) {
         return 0;
@@ -1876,9 +1866,11 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
         }
         else {
 
+            checkEnumerationRequiredNotation(name, typeStr);
+
             anotherSchemaURI = checkTypeFromAnotherSchema(typeStr);
 
-            // REVISIT- get complex type info
+            // get complex type info
             typeInfo = getElementComplexTypeInfo(typeStr, noErrorFound,
                                                  anotherSchemaURI);
 
@@ -2015,9 +2007,18 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
 
         if(typeInfo != 0 &&
            typeInfo->getContentType() != SchemaElementDecl::Simple &&
-           (typeInfo->getContentType() != SchemaElementDecl::Mixed
-            || !emptiableMixedContent(typeInfo->getContentSpec()))) {
+           typeInfo->getContentType() != SchemaElementDecl::Mixed) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NotSimpleOrMixedElement, name);
+        }
+
+        if(typeInfo != 0 &&
+           (typeInfo->getContentType() == SchemaElementDecl::Mixed
+            && !emptiableParticle(typeInfo->getContentSpec()))) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptiableMixedContent, name);
+        }
+
+        if (validator && (validator->getType() == DatatypeValidator::ID)) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ElemIDValueConstraint, name, deflt);
         }
     }
 
@@ -3465,26 +3466,34 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
     return eltName;
 }
 
-int TraverseSchema::parseBlockSet(const XMLCh* const blockStr) {
+int TraverseSchema::parseBlockSet(const XMLCh* const blockStr,
+                                  const int blockType) {
 
-    if (!blockStr) {
+    if (!XMLString::stringLen(blockStr)) {
         return fBlockDefault;
     }
 
-    if (XMLString::compareString(blockStr, SchemaSymbols::fgATTVAL_POUNDALL) == 0) {
-        return SchemaSymbols::EXTENSION + SchemaSymbols::LIST +
-               SchemaSymbols::RESTRICTION + SchemaSymbols::UNION +
-               SchemaSymbols::SUBSTITUTION;
+    int blockSet = 0;
+
+    if (!XMLString::compareString(blockStr, SchemaSymbols::fgATTVAL_POUNDALL)) {
+        
+        blockSet = SchemaSymbols::EXTENSION + SchemaSymbols::RESTRICTION;
+		
+		if (blockType == ES_Block) {
+			blockSet += SchemaSymbols::SUBSTITUTION;
+        }
+
+        return blockSet;
     }
 
-    int             blockSet = 0;
     XMLStringTokenizer tokenizer(blockStr);
 
     while (tokenizer.hasMoreTokens()) {
 
         XMLCh* token = tokenizer.nextToken();
 
-        if (XMLString::compareString(token, SchemaSymbols::fgATTVAL_SUBSTITUTION) == 0) {
+        if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_SUBSTITUTION)
+			&& blockType == ES_Block) {
 
             if ((blockSet & SchemaSymbols::SUBSTITUTION) == 0 ) {
                 blockSet += SchemaSymbols::SUBSTITUTION;
@@ -3493,16 +3502,7 @@ int TraverseSchema::parseBlockSet(const XMLCh* const blockStr) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionRepeated);
             }
         }
-        else if (XMLString::compareString(token, SchemaSymbols::fgELT_UNION) == 0) {
-
-            if ((blockSet & SchemaSymbols::UNION) == 0) {
-                blockSet += SchemaSymbols::UNION;
-            }
-            else {
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnionRepeated);
-            }
-        }
-        else if (XMLString::compareString(token, SchemaSymbols::fgATTVAL_EXTENSION) == 0) {
+        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
             if ((blockSet & SchemaSymbols::EXTENSION) == 0) {
                 blockSet += SchemaSymbols::EXTENSION;
@@ -3511,16 +3511,7 @@ int TraverseSchema::parseBlockSet(const XMLCh* const blockStr) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
             }
         }
-        else if (XMLString::compareString(token, SchemaSymbols::fgELT_LIST) == 0) {
-
-            if ((blockSet & SchemaSymbols::LIST) == 0 ) {
-                blockSet += SchemaSymbols::LIST;
-            }
-            else {
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListRepeated);
-            }
-        }
-        else if (XMLString::compareString(token, SchemaSymbols::fgATTVAL_RESTRICTION) ) {
+        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
             if ((blockSet & SchemaSymbols::RESTRICTION) == 0 ) {
                 blockSet += SchemaSymbols::RESTRICTION;
@@ -3537,25 +3528,37 @@ int TraverseSchema::parseBlockSet(const XMLCh* const blockStr) {
     return (blockSet == 0 ? fBlockDefault : blockSet);
 }
 
-int TraverseSchema::parseFinalSet(const XMLCh* const finalStr) {
+int TraverseSchema::parseFinalSet(const XMLCh* const finalStr,
+                                  const int finalType) {
 
-    if (!finalStr) {
+    if (!XMLString::stringLen(finalStr)) {
         return fFinalDefault;
     }
 
-    if (XMLString::compareString(finalStr, SchemaSymbols::fgATTVAL_POUNDALL) == 0) {
-        return SchemaSymbols::EXTENSION + SchemaSymbols::LIST +
-               SchemaSymbols::RESTRICTION + SchemaSymbols::UNION;
+    int finalSet = 0;
+
+    if (!XMLString::compareString(finalStr, SchemaSymbols::fgATTVAL_POUNDALL)) {
+
+        finalSet = SchemaSymbols::RESTRICTION;
+
+        if (finalType == S_Final) {
+            finalSet += SchemaSymbols::LIST + SchemaSymbols::UNION;
+        }
+        else {
+            finalSet += SchemaSymbols::EXTENSION;
+        }
+
+        return finalSet;
     }
 
-    int             finalSet = 0;
     XMLStringTokenizer tokenizer(finalStr);
 
     while (tokenizer.hasMoreTokens()) {
 
         XMLCh* token = tokenizer.nextToken();
 
-        if (XMLString::compareString(token, SchemaSymbols::fgELT_UNION) == 0) {
+        if (!XMLString::compareString(token, SchemaSymbols::fgELT_UNION)
+            && finalType == S_Final) {
 
             if ((finalSet & SchemaSymbols::UNION) == 0) {
                 finalSet += SchemaSymbols::UNION;
@@ -3564,7 +3567,8 @@ int TraverseSchema::parseFinalSet(const XMLCh* const finalStr) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnionRepeated);
             }
         }
-        else if (XMLString::compareString(token, SchemaSymbols::fgATTVAL_EXTENSION) == 0) {
+        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_EXTENSION)
+                 && finalType != S_Final) {
 
             if ((finalSet & SchemaSymbols::EXTENSION) == 0) {
                 finalSet += SchemaSymbols::EXTENSION;
@@ -3573,7 +3577,8 @@ int TraverseSchema::parseFinalSet(const XMLCh* const finalStr) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
             }
         }
-        else if (XMLString::compareString(token, SchemaSymbols::fgELT_LIST) == 0) {
+        else if (!XMLString::compareString(token, SchemaSymbols::fgELT_LIST)
+                 && finalType == S_Final) {
 
             if ((finalSet & SchemaSymbols::LIST) == 0 ) {
                 finalSet += SchemaSymbols::LIST;
@@ -3582,7 +3587,7 @@ int TraverseSchema::parseFinalSet(const XMLCh* const finalStr) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListRepeated);
             }
         }
-        else if (XMLString::compareString(token, SchemaSymbols::fgATTVAL_RESTRICTION) ) {
+        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
             if ((finalSet & SchemaSymbols::RESTRICTION) == 0 ) {
                 finalSet += SchemaSymbols::RESTRICTION;
@@ -3918,7 +3923,8 @@ SchemaElementDecl*
 TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
                                         const bool topLevel,
                                         const unsigned short elemType,
-                                        bool& isDuplicate)
+                                        bool& isDuplicate,
+                                        const bool isFixedVal)
 {
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh* elemForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
@@ -3949,39 +3955,30 @@ TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
 
     const XMLCh* block = getElementAttValue(elem,SchemaSymbols::fgATT_BLOCK);
     const XMLCh* final = getElementAttValue(elem,SchemaSymbols::fgATT_FINAL);
-    int blockSet = block != 0 ? parseBlockSet(block) : fBlockDefault;
-    int finalSet = final != 0 ? parseFinalSet(final) : fFinalDefault;
+    int blockSet = parseBlockSet(block, ES_Block);
+    int finalSet = parseFinalSet(final, ECS_Final);
     int elementMiscFlags = 0;
-    int finalValid = SchemaSymbols::RESTRICTION + SchemaSymbols::EXTENSION;
-    int blockValid = finalValid + SchemaSymbols::SUBSTITUTION;
-
-    if (XMLString::stringLen(block) != 0
-        && XMLString::compareString(block,SchemaSymbols::fgATTVAL_POUNDALL) != 0
-        && blockSet != blockValid) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementBlockValue, block);
-    }
-
-    if (XMLString::stringLen(final) != 0
-        && XMLString::compareString(final,SchemaSymbols::fgATTVAL_POUNDALL) != 0
-        && finalSet != finalValid) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementFinalValue, final);
-    }
-
     const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
     const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
 
     if (nillable) {
 
-        if (XMLString::compareString(nillable, SchemaSymbols::fgATTVAL_TRUE) == 0) {
+        if (!XMLString::compareString(nillable, SchemaSymbols::fgATTVAL_TRUE)
+            || !XMLString::compareString(nillable, fgValueOne)) {
             elementMiscFlags += SchemaSymbols::NILLABLE;
         }
     }
 
     if (abstract) {
 
-        if (XMLString::compareString(abstract, SchemaSymbols::fgATTVAL_TRUE) == 0) {
+        if (!XMLString::compareString(abstract, SchemaSymbols::fgATTVAL_TRUE)
+            || !XMLString::compareString(abstract, fgValueOne)) {
             elementMiscFlags += SchemaSymbols::ABSTRACT;
         }
+    }
+
+    if (isFixedVal) {
+        elementMiscFlags += SchemaSymbols::FIXED;
     }
 
     const XMLCh* prefix = getPrefix(name);
@@ -4778,27 +4775,26 @@ void TraverseSchema::restoreSchemaInfo() {
 
 
 bool
-TraverseSchema::emptiableMixedContent(const ContentSpecNode* const specNode) {
+TraverseSchema::emptiableParticle(const ContentSpecNode* const specNode) {
 
-    if (!specNode) {
-        return false;
-    }
-
-    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
+    if (getMinTotalRange(specNode) == 0) {
         return true;
     }
 
-    int min = getMinTotalRange(specNode);
-
-    return (min == 0);
+    return false;
 }
 
 int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
 
+    if (!specNode) {
+        return 0;
+    }
+
     ContentSpecNode::NodeTypes nodeType = specNode->getType();
 
     if (nodeType == ContentSpecNode::ZeroOrMore
-        || nodeType == ContentSpecNode::ZeroOrOne) {
+        || nodeType == ContentSpecNode::ZeroOrOne
+        || specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
         return 0;
     }
 
@@ -4815,18 +4811,71 @@ int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
 
         if (second) {
 
+            int minSecond = getMinTotalRange(second);
+
             if (nodeType == ContentSpecNode::Choice) {
-                min = (min == 0) ? 0 : getMinTotalRange(second);
+
+                if (first->getElement()->getURI() == XMLElementDecl::fgPCDataElemId
+                    || min > minSecond) {
+                    min = minSecond;
+                }
             }
             else {
-                // if min != 0, no point of calculation as content
-                // is not emptiable in case of sequence.
-                min = (min == 0) ? getMinTotalRange(second) : min;
+                min += minSecond;
             }
         }
     }
 
     return min;
+}
+
+int TraverseSchema::getMaxTotalRange(const ContentSpecNode* const specNode) {
+
+    if (!specNode) {
+        return 0;
+    }
+
+    ContentSpecNode::NodeTypes nodeType = specNode->getType();
+
+    if (nodeType == ContentSpecNode::OneOrMore ||
+        nodeType == ContentSpecNode::ZeroOrMore) {
+        return SchemaSymbols::UNBOUNDED;
+    }
+
+    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
+        return 0;
+    }
+
+    const ContentSpecNode* first = 0;
+    const ContentSpecNode* second = 0;
+    int max = 1;
+
+    if (nodeType == ContentSpecNode::Sequence
+        || nodeType == ContentSpecNode::Choice) {
+
+        first = specNode->getFirst();
+        second = specNode->getSecond();
+        max = getMaxTotalRange(first);
+
+        if (second && (max != SchemaSymbols::UNBOUNDED)) {
+
+            int maxSecond = getMaxTotalRange(second);
+
+            if (maxSecond == SchemaSymbols::UNBOUNDED) {
+                max = maxSecond;
+            }
+            else {
+                if (nodeType == ContentSpecNode::Choice) {                
+                    max = (max > maxSecond) ? max : maxSecond;
+                }
+                else {
+                    max += maxSecond;
+                }
+            }
+        }
+    }
+
+    return max;
 }
 
 void TraverseSchema::checkFixedFacet(const DOM_Element& elem,
@@ -4966,6 +5015,16 @@ TraverseSchema::buildValidSubstitutionListF(SchemaElementDecl* const elemDecl,
 
             buildValidSubstitutionListF(chainElem, subsElemDecl);
         }
+    }
+}
+
+void TraverseSchema::checkEnumerationRequiredNotation(const XMLCh* const name,
+                                                      const XMLCh* const type) {
+
+    const XMLCh* localPart = getLocalPart(type);
+
+    if (!XMLString::compareString(localPart, SchemaSymbols::fgELT_NOTATION)) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoNotationType, name);
     }
 }
 

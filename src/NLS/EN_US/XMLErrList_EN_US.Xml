@@ -112,6 +112,8 @@
             <Message Id="Import_1_1" Text="The namespace of an &lt;import&gt; element must be different from the targetNamespace of the &lt;import&gt;ing schema"/>
             <Message Id="Import_1_2" Text="If the namespace on an &lt;import&gt; element is not present, the &lt;import&gt;ing schema must have a targetNamespace"/>
             <Message Id="ElemIDValueConstraint" Text="Element '{0}' must not have a value constraint:'{1}' as its type is derived from ID"/>
+            <Message Id="NoNotationType" Text="It is an error for NOTATION to be used directly in a schema in element/attribute '{0}'"/>
+            <Message Id="EmptiableMixedContent" Text="For element '{0}', the {content type} is mixed, then the {content type}'s particle must be emptiable"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>

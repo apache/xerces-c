@@ -259,6 +259,7 @@ public :
     };
 
     enum {
+        UNBOUNDED = -2,
         INFINITY = -1,
         NILLABLE = 1,
         ABSTRACT = 2,
