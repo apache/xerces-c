@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.11  2003/02/03 16:34:35  peiyongz
  * fix to misplaced derived and base value in error message.
  *
@@ -115,7 +118,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 
@@ -174,8 +176,9 @@ AbstractNumericFacetValidator::AbstractNumericFacetValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:DatatypeValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:DatatypeValidator(baseValidator, facets, finalSet, type, manager)
 , fMaxInclusiveInherited(false)
 , fMaxExclusiveInherited(false)
 , fMinInclusiveInherited(false)
@@ -655,6 +658,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinExclusive
                                  , baseMaxInclusive
+
                                  , XMLExcepts::FACET_minExcl_base_maxIncl)
             }
         }

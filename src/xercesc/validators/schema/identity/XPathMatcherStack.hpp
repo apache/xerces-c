@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,13 +69,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class VALIDATORS_EXPORT XPathMatcherStack
+class VALIDATORS_EXPORT XPathMatcherStack : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    XPathMatcherStack();
+    XPathMatcherStack(MemoryManager* const manager);
 	~XPathMatcherStack();
 
 	// -----------------------------------------------------------------------

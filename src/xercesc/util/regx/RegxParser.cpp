@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 18:42:55  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/03/18 19:38:28  knoaman
  * Schema Errata E2-18 + misc. regex fixes.
  *
@@ -122,14 +125,13 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RegxParser.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/ParseException.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/util/regx/RegxUtil.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/regx/TokenInc.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
-#include <xercesc/util/ParseException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -144,7 +146,7 @@ const unsigned short RegxParser::S_INXBRACKETS	= 2;
 //  RegxParser::ReferencePostion: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RegxParser::ReferencePosition::ReferencePosition(const int refNo,
-												 const int position)
+						 const int position)
 	:fReferenceNo(refNo)
 	, fPosition(position)
 {
@@ -154,8 +156,9 @@ RegxParser::ReferencePosition::ReferencePosition(const int refNo,
 // ---------------------------------------------------------------------------
 //  RegxParser: Constructors and Destructors
 // ---------------------------------------------------------------------------
-RegxParser::RegxParser()
-    :fHasBackReferences(false),
+RegxParser::RegxParser(MemoryManager* const manager)
+    :fMemoryManager(manager),
+     fHasBackReferences(false),
      fOptions(0),
      fOffset(0),
      fNoGroups(1),
@@ -171,7 +174,7 @@ RegxParser::RegxParser()
 
 RegxParser::~RegxParser() {
 
-	delete [] fString;
+	fMemoryManager->deallocate(fString);//delete [] fString;
 	delete fReferences;
 }
 
@@ -193,13 +196,15 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
 	fNoGroups = 1;
 	fHasBackReferences = false;
 	setParseContext(S_NORMAL);
-	delete [] fString;
-	fString = XMLString::replicate(regxStr);
+	if (fString)
+        fMemoryManager->deallocate(fString);//delete [] fString;
+	fString = XMLString::replicate(regxStr, fMemoryManager);
 
 	if (isSet(RegularExpression::EXTENDED_COMMENT)) {
 
-        delete [] fString;
-		fString = RegxUtil::stripExtendedComment(regxStr);
+        if (fString)
+            fMemoryManager->deallocate(fString);//delete [] fString;
+		fString = RegxUtil::stripExtendedComment(regxStr, fMemoryManager);
     }
 
     fStringLen = XMLString::stringLen(fString);
@@ -648,10 +653,10 @@ Token* RegxParser::processCondition() {
         fHasBackReferences =  true;
 
         if (fReferences == 0) {
-            this->fReferences = new RefVectorOf<ReferencePosition>(8, true);
+            this->fReferences = new (fMemoryManager) RefVectorOf<ReferencePosition>(8, true);
         }
 
-        fReferences->addElement(new ReferencePosition(refNo, fOffset));
+        fReferences->addElement(new (fMemoryManager) ReferencePosition(refNo, fOffset));
         fOffset++;
 
         if (fString[fOffset] != chCloseParen)
@@ -840,10 +845,10 @@ Token* RegxParser::processBackReference() {
 
     fHasBackReferences = true;
     if (fReferences == 0) {
-        fReferences = new RefVectorOf<ReferencePosition>(8, true);
+        fReferences = new (fMemoryManager) RefVectorOf<ReferencePosition>(8, true);
     }
 
-    fReferences->addElement(new ReferencePosition(refNo, fOffset - 2));
+    fReferences->addElement(new (fMemoryManager) ReferencePosition(refNo, fOffset - 2));
     processNext();
     return tok;
 }
@@ -1090,8 +1095,11 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
         ThrowXML(ParseException,XMLExcepts::Parser_Atom3);
     
     fOffset = nameEnd + 1;
-    XMLCh* rangeName = new XMLCh[(nameEnd - nameStart) + 1];
-    ArrayJanitor<XMLCh> janRangeName(rangeName);
+    XMLCh* rangeName = (XMLCh*) fMemoryManager->allocate
+    (
+        (nameEnd - nameStart + 1) * sizeof(XMLCh)
+    );//new XMLCh[(nameEnd - nameStart) + 1];
+    ArrayJanitor<XMLCh> janRangeName(rangeName, fMemoryManager);
     XMLString::subString(rangeName, fString, nameStart, nameEnd);
 
     return  fTokenFactory->getRange(rangeName, !(ch == chLatin_p));
@@ -1199,8 +1207,11 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
                 positive = false;
             }
 
-			XMLCh* name = new XMLCh[(nameEnd - fOffset) + 1];
-			ArrayJanitor<XMLCh> janName(name);
+			XMLCh* name = (XMLCh*) fMemoryManager->allocate
+            (
+                (nameEnd - fOffset + 1) * sizeof(XMLCh)
+            );//new XMLCh[(nameEnd - fOffset) + 1];
+			ArrayJanitor<XMLCh> janName(name, fMemoryManager);
 
 			XMLString::subString(name, fString, fOffset, nameEnd);
             RangeToken* rangeTok = fTokenFactory->getRange(name, !positive);

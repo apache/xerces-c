@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,7 +79,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 class IC_Selector;
 
-class VALIDATORS_EXPORT IdentityConstraint
+class VALIDATORS_EXPORT IdentityConstraint : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -128,7 +128,8 @@ protected:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     IdentityConstraint(const XMLCh* const identityConstraintName,
-                       const XMLCh* const elementName);
+                       const XMLCh* const elementName,
+					   MemoryManager* const manager);
 
 private:
     // -----------------------------------------------------------------------
@@ -161,6 +162,7 @@ private:
     XMLCh*                 fElemName;
     IC_Selector*           fSelector;
     RefVectorOf<IC_Field>* fFields;
+    MemoryManager*         fMemoryManager;
 };
 
 
@@ -197,7 +199,7 @@ inline IC_Selector* IdentityConstraint::getSelector() const {
 inline void IdentityConstraint::addField(IC_Field* const field) {
 
     if (!fFields) {
-        fFields = new RefVectorOf<IC_Field>(4);
+        fFields = new (fMemoryManager) RefVectorOf<IC_Field>(4);
     }
 
     fFields->addElement(field);

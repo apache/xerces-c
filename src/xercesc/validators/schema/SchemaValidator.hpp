@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.13  2003/01/20 19:04:48  knoaman
  * Fix for particle derivation checking.
  *
@@ -135,18 +138,18 @@
 #if !defined(SCHEMAVALIDATOR_HPP)
 #define SCHEMAVALIDATOR_HPP
 
-#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
-#include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
-#include <xercesc/validators/datatype/DatatypeValidator.hpp>
-#include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class GrammarResolver;
+class DatatypeValidator;
+class SchemaElementDecl;
 
 //
 //  This is a derivative of the abstract validator interface. This class
@@ -160,7 +163,11 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    SchemaValidator(XMLErrorReporter* const errReporter = 0);
+    SchemaValidator
+    (
+          XMLErrorReporter* const errReporter// = 0
+        , MemoryManager* const    manager
+    );
     virtual ~SchemaValidator();
 
     // -----------------------------------------------------------------------
@@ -368,17 +375,16 @@ private:
     //  fTypeStack
     //      Stack of complex type declarations.
     // -----------------------------------------------------------------------
-    SchemaGrammar* fSchemaGrammar;
-    GrammarResolver* fGrammarResolver;
-    QName* fXsiType;
-    bool fNil;
-
-    DatatypeValidator* fXsiTypeValidator;
-
-    XMLBuffer fDatatypeBuffer;
-    bool fTrailing;
-    bool fSeenId;
-    XSDErrorReporter fSchemaErrorReporter;
+    MemoryManager*                  fMemoryManager;
+    SchemaGrammar*                  fSchemaGrammar;
+    GrammarResolver*                fGrammarResolver;
+    QName*                          fXsiType;
+    bool                            fNil;
+    DatatypeValidator*              fXsiTypeValidator;
+    XMLBuffer                       fDatatypeBuffer;
+    bool                            fTrailing;
+    bool                            fSeenId;
+    XSDErrorReporter                fSchemaErrorReporter;
     ValueStackOf<ComplexTypeInfo*>* fTypeStack;
 };
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/12/04 02:32:43  knoaman
  * #include cleanup.
  *
@@ -99,13 +102,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  ValueStore: Constructors and Destructor
 // ---------------------------------------------------------------------------
 ValueStore::ValueStore(IdentityConstraint* const ic,
-                       XMLScanner* const scanner)
+                       XMLScanner* const scanner,
+                       MemoryManager* const manager)
     : fDoReportError(false)
     , fValuesCount(0)
     , fIdentityConstraint(ic)
+    , fValues(manager)
     , fValueTuples(0)
     , fKeyValueStore(0)
     , fScanner(scanner)
+    , fMemoryManager(manager)
 {
 	fDoReportError = (scanner && scanner->getDoValidation());
 }
@@ -156,10 +162,10 @@ void ValueStore::addValue(IC_Field* const field,
 
         // store values
         if (!fValueTuples) {
-            fValueTuples = new RefVectorOf<FieldValueMap>(4);
+            fValueTuples = new (fMemoryManager) RefVectorOf<FieldValueMap>(4);
         }
 
-        fValueTuples->addElement(new FieldValueMap(fValues));
+        fValueTuples->addElement(new (fMemoryManager) FieldValueMap(fValues));
     }
 }
 
@@ -178,10 +184,10 @@ void ValueStore::append(const ValueStore* const other) {
         if (!contains(valueMap)) {
 
             if (!fValueTuples) {
-                fValueTuples = new RefVectorOf<FieldValueMap>(4);
+                fValueTuples = new (fMemoryManager) RefVectorOf<FieldValueMap>(4);
             }
 
-            fValueTuples->addElement(new FieldValueMap(*valueMap));
+            fValueTuples->addElement(new (fMemoryManager) FieldValueMap(*valueMap));
         }
     }
 }

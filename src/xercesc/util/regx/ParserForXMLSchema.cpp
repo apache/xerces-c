@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:42:54  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/03/18 19:38:28  knoaman
  * Schema Errata E2-18 + misc. regex fixes.
  *
@@ -114,14 +117,15 @@
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/ParseException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  ParserForXMLSchema: Constructors and Destructors
 // ---------------------------------------------------------------------------
-ParserForXMLSchema::ParserForXMLSchema()
-    : RegxParser()
+ParserForXMLSchema::ParserForXMLSchema(MemoryManager* const manager)
+    : RegxParser(manager)
 {
 
 }

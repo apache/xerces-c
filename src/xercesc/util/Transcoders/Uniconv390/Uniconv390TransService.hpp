@@ -126,6 +126,7 @@ protected :
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
+        ,       MemoryManager* const    manager
     );
 
 
@@ -227,8 +228,12 @@ public :
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
 
     virtual char* transcode(const XMLCh* const toTranscode);
+    virtual char* transcode(const XMLCh* const toTranscode,
+                            MemoryManager* const manager);
 
     virtual XMLCh* transcode(const char* const toTranscode);
+    virtual XMLCh* transcode(const char* const toTranscode,
+                             MemoryManager* const manager);
 
     virtual bool transcode
     (

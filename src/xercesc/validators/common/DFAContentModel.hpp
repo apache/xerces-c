@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:16:57  tng
  * Return a reference instead of void for operator=
  *
@@ -157,12 +160,19 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DFAContentModel(const bool              dtd
-                  , ContentSpecNode* const  elemContentSpec);
-
-    DFAContentModel(const bool              dtd
-                  , ContentSpecNode* const  elemContentSpec
-                  , const bool              isMixed);
+    DFAContentModel
+    ( 
+          const bool             dtd
+        , ContentSpecNode* const elemContentSpec
+        , MemoryManager* const   manager
+    );
+    DFAContentModel
+    (
+          const bool             dtd
+        , ContentSpecNode* const elemContentSpec
+        , const bool             isMixed
+        , MemoryManager* const   manager
+    );
 
     virtual ~DFAContentModel();
 
@@ -316,6 +326,7 @@ private :
     bool                    fDTD;
     bool                    fIsMixed;
     ContentLeafNameTypeVector *fLeafNameTypeVector;
+    MemoryManager*             fMemoryManager;
 };
 
 

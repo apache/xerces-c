@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -88,7 +91,6 @@
 
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
-#include <xercesc/util/XMLBigDecimal.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -99,16 +101,21 @@ public:
     // -----------------------------------------------------------------------
     //  Public ctor/dtor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+	/** @name Constructors and Destructor */
     //@{
 
-    DecimalDatatypeValidator();
-
-    DecimalDatatypeValidator(DatatypeValidator*            const baseValidator
-                           , RefHashTableOf<KVStringPair>* const facets
-                           , RefArrayVectorOf<XMLCh>*           const enums
-                           , const int                           finalSet);
-
+    DecimalDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    DecimalDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     virtual ~DecimalDatatypeValidator();
 
 	//@}
@@ -134,19 +141,27 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                         , RefArrayVectorOf<XMLCh>*           const enums
-                                         , const int                           finalSet);
+    virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 protected:
 
 // -----------------------------------------------------------------------
 // ctor provided to be used by derived classes
 // -----------------------------------------------------------------------
-    DecimalDatatypeValidator(DatatypeValidator*            const baseValidator
-                           , RefHashTableOf<KVStringPair>* const facets
-                           , const int                           finalSet
-                           , const ValidatorType                 type);
+    DecimalDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , const int finalSet
+        , const ValidatorType type
+        , MemoryManager* const manager
+    );
 
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericFacetValidator

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -90,8 +90,8 @@ class Token;
  * all associated Op objects will be deleted.
  */
 
-class XMLUTIL_EXPORT OpFactory {
-
+class XMLUTIL_EXPORT OpFactory : public XMemory
+{
 public:
 	// -----------------------------------------------------------------------
     //  Constructors and destructors
@@ -146,6 +146,7 @@ private:
     //      Contains Op objects. Used for memory cleanup.
     // -----------------------------------------------------------------------
     RefVectorOf<Op>* fOpVector;
+    MemoryManager*   fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -111,10 +114,14 @@ public:
 
 protected:
 
-    AbstractNumericFacetValidator(DatatypeValidator*            const baseValidator
-                                , RefHashTableOf<KVStringPair>* const facets
-                                , const int                           finalSet
-                                , const ValidatorType                 type);
+    AbstractNumericFacetValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , const int finalSet
+        , const ValidatorType type
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     void init(RefArrayVectorOf<XMLCh>*  const enums);
 

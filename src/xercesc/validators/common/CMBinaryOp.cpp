@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -104,10 +107,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  CMBinaryOp: Constructors
 // ---------------------------------------------------------------------------
-CMBinaryOp::CMBinaryOp( const   ContentSpecNode::NodeTypes  type
-                        ,       CMNode* const               leftToAdopt
-                        ,       CMNode* const               rightToAdopt) :
-    CMNode(type)
+CMBinaryOp::CMBinaryOp( const ContentSpecNode::NodeTypes type
+                        ,     CMNode* const              leftToAdopt
+                        ,     CMNode* const              rightToAdopt
+                        ,     MemoryManager* const       manager) :
+    CMNode(type, manager)
     , fLeftChild(leftToAdopt)
     , fRightChild(rightToAdopt)
 {

@@ -76,7 +76,8 @@ public:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     IC_Key(const XMLCh* const identityConstraintName,
-           const XMLCh* const elemName);
+           const XMLCh* const elemName,
+           MemoryManager* const manager);
 	~IC_Key();
 
 	// -----------------------------------------------------------------------

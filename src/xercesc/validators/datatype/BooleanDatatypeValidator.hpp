@@ -75,12 +75,18 @@ public:
 	/** @name Constructor. */
     //@{
 
-    BooleanDatatypeValidator();
-
-    BooleanDatatypeValidator(DatatypeValidator*            const baseValidator
-                           , RefHashTableOf<KVStringPair>* const facets
-                           , RefArrayVectorOf<XMLCh>*           const enums
-                           , const int                           finalSet);
+    BooleanDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    BooleanDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     virtual ~BooleanDatatypeValidator();
 
@@ -136,9 +142,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefArrayVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 private:
 
@@ -154,8 +164,8 @@ private:
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-inline BooleanDatatypeValidator::BooleanDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Boolean)
+inline BooleanDatatypeValidator::BooleanDatatypeValidator(MemoryManager* const manager)
+:DatatypeValidator(0, 0, 0, DatatypeValidator::Boolean, manager)
 {
 }
 
@@ -172,12 +182,15 @@ inline BooleanDatatypeValidator::~BooleanDatatypeValidator()
 // Compare methods
 // -----------------------------------------------------------------------
 
-inline DatatypeValidator* BooleanDatatypeValidator::newInstance(
-                                    RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+inline DatatypeValidator* BooleanDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new BooleanDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) BooleanDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 inline void BooleanDatatypeValidator::validate( const XMLCh* const content)

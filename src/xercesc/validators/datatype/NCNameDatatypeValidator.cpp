@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -91,8 +94,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-NCNameDatatypeValidator::NCNameDatatypeValidator()
-:StringDatatypeValidator(0, 0, 0, DatatypeValidator::NCName)
+NCNameDatatypeValidator::NCNameDatatypeValidator(MemoryManager* const manager)
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::NCName, manager)
 {}
 
 NCNameDatatypeValidator::~NCNameDatatypeValidator()
@@ -101,27 +104,32 @@ NCNameDatatypeValidator::~NCNameDatatypeValidator()
 NCNameDatatypeValidator::NCNameDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::NCName)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::NCName, manager)
 {
     init(enums);
 }
 
-DatatypeValidator* NCNameDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* NCNameDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new NCNameDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) NCNameDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 NCNameDatatypeValidator::NCNameDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:StringDatatypeValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, type, manager)
 {
     // do not invoke init() here!!!
 }

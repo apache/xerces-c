@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -101,16 +104,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-FloatDatatypeValidator::FloatDatatypeValidator()
-:AbstractNumericValidator(0, 0, 0, DatatypeValidator::Float)
+FloatDatatypeValidator::FloatDatatypeValidator(MemoryManager* const manager)
+:AbstractNumericValidator(0, 0, 0, DatatypeValidator::Float, manager)
 {}
 
 FloatDatatypeValidator::FloatDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Float)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Float, manager)
 {
     init(enums);
 }
@@ -124,20 +128,21 @@ FloatDatatypeValidator::~FloatDatatypeValidator()
 int FloatDatatypeValidator::compare(const XMLCh* const lValue
                                   , const XMLCh* const rValue)
 {
-    XMLFloat * lObj = new XMLFloat(lValue);
-    Janitor<XMLFloat> jname1(lObj);
-    XMLFloat * rObj = new XMLFloat(rValue);
-    Janitor<XMLFloat> jname2(rObj);
+    XMLFloat lObj(lValue);
+    XMLFloat rObj(rValue);
 
-    return compareValues(lObj, rObj);
+    return compareValues(&lObj, &rObj);
 }
 
-DatatypeValidator* FloatDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* FloatDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new FloatDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) FloatDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // -----------------------------------------------------------------------
@@ -146,8 +151,9 @@ DatatypeValidator* FloatDatatypeValidator::newInstance(
 FloatDatatypeValidator::FloatDatatypeValidator(DatatypeValidator*            const baseValidator
                                              , RefHashTableOf<KVStringPair>* const facets
                                              , const int                           finalSet
-                                             , const ValidatorType                 type)
-:AbstractNumericValidator(baseValidator, facets, finalSet, type)
+                                             , const ValidatorType                 type
+                                             , MemoryManager* const                manager)
+:AbstractNumericValidator(baseValidator, facets, finalSet, type, manager)
 {
     //do not invoke init here !!!
 }
@@ -177,22 +183,22 @@ int  FloatDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  FloatDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new XMLFloat(value);
+    fMaxInclusive = new (fMemoryManager) XMLFloat(value);
 }
 
 void  FloatDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new XMLFloat(value);
+    fMaxExclusive = new (fMemoryManager) XMLFloat(value);
 }
 
 void  FloatDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new XMLFloat(value);
+    fMinInclusive = new (fMemoryManager) XMLFloat(value);
 }
 
 void  FloatDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new XMLFloat(value);
+    fMinExclusive = new (fMemoryManager) XMLFloat(value);
 }
 
 void  FloatDatatypeValidator::setEnumeration()
@@ -235,12 +241,12 @@ void  FloatDatatypeValidator::setEnumeration()
         checkContent(fStrEnumeration->elementAt(i), false);
     }
 
-    fEnumeration = new RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new XMLFloat(fStrEnumeration->elementAt(i)), i);
+        fEnumeration->insertElementAt(new (fMemoryManager) XMLFloat(fStrEnumeration->elementAt(i)), i);
     }
 }
 
@@ -261,7 +267,7 @@ void FloatDatatypeValidator::checkContent( const XMLCh* const content, bool asBa
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {

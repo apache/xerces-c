@@ -83,7 +83,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class VALIDATORS_EXPORT SchemaInfo
+class VALIDATORS_EXPORT SchemaInfo : public XMemory
 {
 public:
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -222,8 +225,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DFAContentModel::DFAContentModel(const bool             dtd
-                               , ContentSpecNode* const elemContentSpec) :
+DFAContentModel::DFAContentModel( const bool             dtd
+                                , ContentSpecNode* const elemContentSpec
+                                , MemoryManager* const   manager) :
 
     fElemMap(0)
     , fElemMapType(0)
@@ -240,14 +244,16 @@ DFAContentModel::DFAContentModel(const bool             dtd
     , fDTD(dtd)
     , fIsMixed(false)
     , fLeafNameTypeVector(0)
+    , fMemoryManager(manager)
 {
     // And build the DFA data structures
     buildDFA(elemContentSpec);
 }
 
-DFAContentModel::DFAContentModel(const bool             dtd
-                               , ContentSpecNode* const elemContentSpec
-                               , const bool             isMixed ):
+DFAContentModel::DFAContentModel( const bool             dtd
+                                , ContentSpecNode* const elemContentSpec
+                                , const bool             isMixed
+                                , MemoryManager* const   manager):
 
     fElemMap(0)
     , fElemMapType(0)
@@ -264,6 +270,7 @@ DFAContentModel::DFAContentModel(const bool             dtd
     , fDTD(dtd)
     , fIsMixed(isMixed)
     , fLeafNameTypeVector(0)
+    , fMemoryManager(manager)
 {
     // And build the DFA data structures
     buildDFA(elemContentSpec);
@@ -275,19 +282,19 @@ DFAContentModel::~DFAContentModel()
     //  Clean up all the stuff that is not just temporary representation
     //  data that was cleaned up after building the DFA.
     //
-    delete [] fFinalStateFlags;
+    fMemoryManager->deallocate(fFinalStateFlags); //delete [] fFinalStateFlags;
 
     unsigned index;
     for (index = 0; index < fTransTableSize; index++)
-        delete [] fTransTable[index];
-    delete [] fTransTable;
+        fMemoryManager->deallocate(fTransTable[index]); //delete [] fTransTable[index];
+    fMemoryManager->deallocate(fTransTable); //delete [] fTransTable;
 
     for (index = 0; index < fLeafCount; index++)
         delete fElemMap[index];
-    delete [] fElemMap;
+    fMemoryManager->deallocate(fElemMap); //delete [] fElemMap;
 
-    delete [] fElemMapType;
-    delete [] fLeafListType;
+    fMemoryManager->deallocate(fElemMapType); //delete [] fElemMapType;
+    fMemoryManager->deallocate(fLeafListType); //delete [] fLeafListType;
 
 	delete fLeafNameTypeVector;
 }
@@ -536,17 +543,25 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  DFA state position and count the number of such leafs, which is left
     //  in the fLeafCount member.
     //
-    CMLeaf* nodeEOC = new CMLeaf(new QName(XMLUni::fgZeroLenString,
-                                           XMLUni::fgZeroLenString,
-                                           XMLContentModel::gEOCFakeId)
-                                 , ~0
-                                 , true);
+    CMLeaf* nodeEOC = new (fMemoryManager) CMLeaf
+    (
+        new (fMemoryManager) QName
+        (
+            XMLUni::fgZeroLenString
+            , XMLUni::fgZeroLenString
+            , XMLContentModel::gEOCFakeId
+        )
+        , ~0
+        , true
+        , fMemoryManager
+    );
     CMNode* nodeOrgContent = buildSyntaxTree(curNode);
-    fHeadNode = new CMBinaryOp
+    fHeadNode = new (fMemoryManager) CMBinaryOp
     (
         ContentSpecNode::Sequence
         , nodeOrgContent
         , nodeEOC
+        , fMemoryManager
     );
 
     //
@@ -573,8 +588,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  initial tree build (which built their position numbers, we will put
     //  them in the array according to their position values.
     //
-    fLeafList = new CMLeaf*[fLeafCount];
-    fLeafListType = new ContentSpecNode::NodeTypes[fLeafCount];
+    fLeafList = (CMLeaf**) fMemoryManager->allocate(fLeafCount*sizeof(CMLeaf*)); //new CMLeaf*[fLeafCount];
+    fLeafListType = (ContentSpecNode::NodeTypes*) fMemoryManager->allocate
+    (
+        fLeafCount * sizeof(ContentSpecNode::NodeTypes)
+    ); //new ContentSpecNode::NodeTypes[fLeafCount];
     postTreeBuildInit(fHeadNode, 0);
 
     //
@@ -582,9 +600,12 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  for all the nodes. So we allocate an array of pointers to state sets,
     //  one for each leaf node (i.e. each significant DFA position.)
     //
-    fFollowList = new CMStateSet*[fLeafCount];
+    fFollowList = (CMStateSet**) fMemoryManager->allocate
+    (
+        fLeafCount * sizeof(CMStateSet*)
+    ); //new CMStateSet*[fLeafCount];
     for (index = 0; index < fLeafCount; index++)
-        fFollowList[index] = new CMStateSet(fLeafCount);
+        fFollowList[index] = new (fMemoryManager) CMStateSet(fLeafCount, fMemoryManager);
     calcFollowList(fHeadNode);
 
     //
@@ -608,18 +629,24 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  So we need to a zero based range of indexes that map to element types.
     //  This element map provides that mapping.
     //
-    fElemMap = new QName*[fLeafCount];
-    fElemMapType = new ContentSpecNode::NodeTypes[fLeafCount];
+    fElemMap = (QName**) fMemoryManager->allocate
+    (
+        fLeafCount * sizeof(QName*)
+    ); //new QName*[fLeafCount];
+    fElemMapType = (ContentSpecNode::NodeTypes*) fMemoryManager->allocate
+    (
+        fLeafCount * sizeof(ContentSpecNode::NodeTypes)
+    ); //new ContentSpecNode::NodeTypes[fLeafCount];
     fElemMapSize = 0;
 
 
     for (unsigned int outIndex = 0; outIndex < fLeafCount; outIndex++)
     {
-        fElemMap[outIndex] = new QName();
+        fElemMap[outIndex] = new (fMemoryManager) QName();
 
         if ( (fLeafListType[outIndex] & 0x0f) != ContentSpecNode::Leaf )
             if (!fLeafNameTypeVector)
-                fLeafNameTypeVector = new ContentLeafNameTypeVector();
+                fLeafNameTypeVector = new (fMemoryManager) ContentLeafNameTypeVector(fMemoryManager);
 
         // Get the current leaf's element index
         const QName* element = fLeafList[outIndex]->getElement();
@@ -668,7 +695,10 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
      **/
     // don't forget to delete it
 
-    int *fLeafSorter = new int[fLeafCount + fElemMapSize];
+    int *fLeafSorter = (int*) fMemoryManager->allocate
+    (
+        (fLeafCount + fElemMapSize) * sizeof(int)
+    ); //new int[fLeafCount + fElemMapSize];
     unsigned int fSortCount = 0;
 
     for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
@@ -710,15 +740,25 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  have to expand though, it if does, the overhead will be somewhat ugly.
     //
     unsigned int curArraySize = fLeafCount * 4;
-    const CMStateSet** statesToDo = new const CMStateSet*[curArraySize];
-    fFinalStateFlags = new bool[curArraySize];
-    fTransTable = new unsigned int*[curArraySize];
+    const CMStateSet** statesToDo = (const CMStateSet**) 
+        fMemoryManager->allocate
+        (
+            curArraySize * sizeof(const CMStateSet*)
+        ); //new const CMStateSet*[curArraySize];
+    fFinalStateFlags = (bool*) fMemoryManager->allocate
+    (
+        curArraySize * sizeof(bool)
+    ); //new bool[curArraySize];
+    fTransTable = (unsigned int**) fMemoryManager->allocate
+    (
+        curArraySize * sizeof(unsigned int*)
+    ); //new unsigned int*[curArraySize];
 
     //
     //  Ok we start with the initial set as the first pos set of the head node
     //  (which is the seq node that holds the content model and the EOC node.)
     //
-    const CMStateSet* setT = new CMStateSet(fHeadNode->getFirstPos());
+    const CMStateSet* setT = new (fMemoryManager) CMStateSet(fHeadNode->getFirstPos());
 
     //
     //  Init our two state flags. Basically the unmarked state counter is
@@ -747,8 +787,14 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
     // TODO: in the future, we may change the 29 to something
     //       derived from curArraySize.
-    RefHashTableOf<XMLInteger> *stateTable = new RefHashTableOf<XMLInteger>(curArraySize, true, new HashCMStateSet());
-    //stateTable->put((CMStateSet*)setT, new XMLInteger(0));
+    RefHashTableOf<XMLInteger> *stateTable =
+        new (fMemoryManager) RefHashTableOf<XMLInteger>
+        (
+            curArraySize
+            , true
+            , new (fMemoryManager) HashCMStateSet()
+        );
+    //stateTable->put((CMStateSet*)setT, new (fMemoryManager) XMLInteger(0));
 
     //
     //  Ok, almost done with the algorithm from hell... We now enter the
@@ -785,7 +831,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             //  one. Otherwise, zero out the existing one.
             //
             if (!newSet)
-                newSet = new CMStateSet(fLeafCount);
+                newSet = new (fMemoryManager) CMStateSet
+                (
+                    fLeafCount
+                    , fMemoryManager
+                );
             else
                 newSet->zeroBits();
 
@@ -868,7 +918,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     //
                     statesToDo[curState] = newSet;
                     fTransTable[curState] = makeDefStateList();
-                    stateTable->put(newSet, new XMLInteger(curState));
+                    stateTable->put
+                    (
+                        newSet
+                        , new (fMemoryManager) XMLInteger(curState)
+                    );
 
                     // We now have a new state to do so bump the count
                     curState++;
@@ -897,9 +951,20 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     //  size by 50% and allocate new arrays.
                     //
                     const unsigned int newSize = (unsigned int)(curArraySize * 1.5);
-                    const CMStateSet** newToDo = new const CMStateSet*[newSize];
-                    bool* newFinalFlags = new bool[newSize];
-                    unsigned int** newTransTable = new unsigned int*[newSize];
+                    const CMStateSet** newToDo = (const CMStateSet**) 
+                        fMemoryManager->allocate
+                        (
+                            newSize * sizeof(const CMStateSet*)
+                        ); //new const CMStateSet*[newSize];
+                    bool* newFinalFlags = (bool*) fMemoryManager->allocate
+                    (
+                        newSize * sizeof(bool)
+                    ); //new bool[newSize];
+                    unsigned int** newTransTable = (unsigned int**)
+                        fMemoryManager->allocate
+                        (
+                            newSize * sizeof(unsigned int*)
+                        ); //new unsigned int*[newSize];
 
                     // Copy over all of the existing content
                     for (unsigned int expIndex = 0; expIndex < curArraySize; expIndex++)
@@ -910,9 +975,9 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     }
 
                     // Clean up the old stuff
-                    delete [] statesToDo;
-                    delete [] fFinalStateFlags;
-                    delete [] fTransTable;
+                    fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
+                    fMemoryManager->deallocate(fFinalStateFlags); //delete [] fFinalStateFlags;
+                    fMemoryManager->deallocate(fTransTable); //delete [] fTransTable;
 
                     // Store the new array size and pointers
                     curArraySize = newSize;
@@ -951,7 +1016,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
     for (index = 0; index < fLeafCount; index++)
         delete fFollowList[index];
-    delete [] fFollowList;
+    fMemoryManager->deallocate(fFollowList); //delete [] fFollowList;
 
     //
     // removeAll() will delete all data, XMLInteger,
@@ -962,13 +1027,13 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
     for (index = 0; index < curState; index++)
         delete (CMStateSet*)statesToDo[index];
-    delete [] statesToDo;
+    fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
 
     for (index = 0; index < fLeafCount; index++)
         delete fLeafList[index];
-    delete [] fLeafList;
+    fMemoryManager->deallocate(fLeafList); //delete [] fLeafList;
 
-    delete [] fLeafSorter;
+    fMemoryManager->deallocate(fLeafSorter); //delete [] fLeafSorter;
 
 }
 
@@ -985,7 +1050,13 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         || (curType & 0x0f) == ContentSpecNode::Any_Other
         || (curType & 0x0f) == ContentSpecNode::Any_NS)
     {
-        retNode = new CMAny(curType, curNode->getElement()->getURI(), fLeafCount++);
+        retNode = new (fMemoryManager) CMAny
+        (
+            curType
+            , curNode->getElement()->getURI()
+            , fLeafCount++
+            , fMemoryManager
+        );
     }
     else if (curType == ContentSpecNode::Leaf)
     {
@@ -995,7 +1066,12 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         //  This makes the positions zero based since we store first and then
         //  increment.
         //
-        retNode = new CMLeaf(curNode->getElement(), fLeafCount++);
+        retNode = new (fMemoryManager) CMLeaf
+        (
+            curNode->getElement()
+            , fLeafCount++
+            , fMemoryManager
+        );
     }
      else
     {
@@ -1016,14 +1092,25 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
             //
             CMNode* newLeft = buildSyntaxTree(leftNode);
             CMNode* newRight = buildSyntaxTree(rightNode);
-            retNode = new CMBinaryOp(curType, newLeft, newRight);
+            retNode = new (fMemoryManager) CMBinaryOp
+            (
+                curType
+                , newLeft
+                , newRight
+                , fMemoryManager
+            );
         }
          else if (curType == ContentSpecNode::ZeroOrMore
                || curType == ContentSpecNode::ZeroOrOne
                || curType == ContentSpecNode::OneOrMore)
         {
             // This one is fine as is, just change to our form
-            retNode = new CMUnaryOp(curType, buildSyntaxTree(leftNode));
+            retNode = new (fMemoryManager) CMUnaryOp
+            (
+                curType
+                , buildSyntaxTree(leftNode)
+                , fMemoryManager
+            );
         }
          else
         {
@@ -1108,7 +1195,10 @@ void DFAContentModel::calcFollowList(CMNode* const curNode)
 //
 unsigned int* DFAContentModel::makeDefStateList() const
 {
-    unsigned int* retArray = new unsigned int[fElemMapSize];
+    unsigned int* retArray = (unsigned int*) fMemoryManager->allocate
+    (
+        fElemMapSize * sizeof(unsigned int)
+    ); //new unsigned int[fElemMapSize];
     for (unsigned int index = 0; index < fElemMapSize; index++)
         retArray[index] = XMLContentModel::gInvalidTrans;
     return retArray;
@@ -1132,11 +1222,18 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
          ((curType & 0x0f) == ContentSpecNode::Any_NS) ||
          ((curType & 0x0f) == ContentSpecNode::Any_Other)  )
     {
-        fLeafList[newIndex] = new CMLeaf(new QName(XMLUni::fgZeroLenString
-                                                 , XMLUni::fgZeroLenString
-                                                 , ((CMAny*) nodeCur)->getURI())
-                                       , ((CMAny*)nodeCur)->getPosition()
-                                       , true);
+        fLeafList[newIndex] = new (fMemoryManager) CMLeaf
+        (
+            new (fMemoryManager) QName
+            (
+                XMLUni::fgZeroLenString
+                , XMLUni::fgZeroLenString
+                , ((CMAny*) nodeCur)->getURI()
+            )
+            , ((CMAny*)nodeCur)->getPosition()
+            , true
+            , fMemoryManager
+        );
         fLeafListType[newIndex] = curType;
         ++newIndex;
     }
@@ -1166,8 +1263,12 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
             // will NOT delete the nodeCur --twice--,
             // thuse to make delete the owner of the nodeCur possible.
             //
-            fLeafList[newIndex] = new CMLeaf(((CMLeaf*)nodeCur)->getElement(),
-                                           ((CMLeaf*)nodeCur)->getPosition());
+            fLeafList[newIndex] = new (fMemoryManager) CMLeaf
+            (
+                ((CMLeaf*)nodeCur)->getElement()
+                , ((CMLeaf*)nodeCur)->getPosition()
+                , fMemoryManager
+            );
             fLeafListType[newIndex] = ContentSpecNode::Leaf;
             ++newIndex;
         }
@@ -1214,11 +1315,17 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     // Unique Particle Attribution
     // store the conflict results between any two elements in fElemMap
     // XMLContentModel::gInvalidTrans: not compared; 0: no conflict; 1: conflict
-    unsigned int** fConflictTable = new unsigned int*[fElemMapSize];
+    unsigned int** fConflictTable = (unsigned int**) fMemoryManager->allocate
+    (
+        fElemMapSize * sizeof(unsigned int*)
+    ); //new unsigned int*[fElemMapSize];
 
     // initialize the conflict table
     for (j = 0; j < fElemMapSize; j++) {
-        fConflictTable[j] = new unsigned int[fElemMapSize];
+        fConflictTable[j] = (unsigned int*) fMemoryManager->allocate
+        (
+            fElemMapSize * sizeof(unsigned int)
+        ); //new unsigned int[fElemMapSize];
         for (k = j+1; k < fElemMapSize; k++)
             fConflictTable[j][k] = XMLContentModel::gInvalidTrans;
     }
@@ -1275,8 +1382,8 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     }
 
     for (i = 0; i < fElemMapSize; i++)
-        delete [] fConflictTable[i];
-    delete [] fConflictTable;
+        fMemoryManager->deallocate(fConflictTable[i]); //delete [] fConflictTable[i];
+    fMemoryManager->deallocate(fConflictTable); //delete [] fConflictTable;
 }
 
 XERCES_CPP_NAMESPACE_END

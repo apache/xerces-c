@@ -72,7 +72,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 /**
   * An instance of this class has ranges captured in matching
   */
-class XMLUTIL_EXPORT Match {
+  class XMLUTIL_EXPORT Match : public XMemory
+{
 public:
 
 	// -----------------------------------------------------------------------

@@ -78,9 +78,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDElementDecl::DTDElementDecl() :
+DTDElementDecl::DTDElementDecl(MemoryManager* const manager) :
 
-    fAttDefs(0)
+    XMLElementDecl(manager)
+    , fAttDefs(0)
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(Any)
@@ -89,10 +90,12 @@ DTDElementDecl::DTDElementDecl() :
 {
 }
 
-DTDElementDecl::DTDElementDecl( const   XMLCh* const              elemRawName
-                              , const   unsigned int              uriId
-                              , const DTDElementDecl::ModelTypes  type) :
-    fAttDefs(0)
+DTDElementDecl::DTDElementDecl( const XMLCh* const               elemRawName
+                              , const unsigned int               uriId
+                              , const DTDElementDecl::ModelTypes type
+                              , MemoryManager* const             manager) :
+    XMLElementDecl(manager)
+    , fAttDefs(0)
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(type)
@@ -102,9 +105,11 @@ DTDElementDecl::DTDElementDecl( const   XMLCh* const              elemRawName
     setElementName(elemRawName, uriId);
 }
 
-DTDElementDecl::DTDElementDecl( QName* const                elementName
-                              , const DTDElementDecl::ModelTypes  type) :
-    fAttDefs(0)
+DTDElementDecl::DTDElementDecl( QName* const                     elementName
+                              , const DTDElementDecl::ModelTypes type
+                              , MemoryManager* const             manager) :
+    XMLElementDecl(manager)
+    , fAttDefs(0)
     , fAttList(0)
     , fContentSpec(0)
     , fModelType(type)
@@ -120,7 +125,7 @@ DTDElementDecl::~DTDElementDecl()
     delete fAttList;
     delete fContentSpec;
     delete fContentModel;
-    delete [] fFormattedModel;
+    getMemoryManager()->deallocate(fFormattedModel);//delete [] fFormattedModel;
 }
 
 
@@ -149,7 +154,7 @@ XMLAttDef* DTDElementDecl::findAttr(const   XMLCh* const    qName
             faultInAttDefList();
 
         // And add a default attribute for this name
-        retVal = new DTDAttDef(qName);
+        retVal = new (getMemoryManager()) DTDAttDef(qName);
         retVal->setElemId(getId());
         fAttDefs->put((void*)retVal->getFullName(), retVal);
 
@@ -295,17 +300,16 @@ void DTDElementDecl::addAttDef(DTDAttDef* const toAdd)
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLCh*
-DTDElementDecl::formatContentModel() const
+XMLCh* DTDElementDecl::formatContentModel() const
 {
     XMLCh* newValue = 0;
     if (fModelType == Any)
     {
-        newValue = XMLString::replicate(XMLUni::fgAnyString);
+        newValue = XMLString::replicate(XMLUni::fgAnyString, getMemoryManager());
     }
      else if (fModelType == Empty)
     {
-        newValue = XMLString::replicate(XMLUni::fgEmptyString);
+        newValue = XMLString::replicate(XMLUni::fgEmptyString, getMemoryManager());
     }
      else
     {
@@ -316,7 +320,7 @@ DTDElementDecl::formatContentModel() const
         //
         XMLBuffer bufFmt;
         getContentSpec()->formatSpec(bufFmt);
-        newValue = XMLString::replicate(bufFmt.getRawBuffer());
+        newValue = XMLString::replicate(bufFmt.getRawBuffer(), getMemoryManager());
     }
     return newValue;
 }
@@ -330,7 +334,7 @@ XMLContentModel* DTDElementDecl::makeContentModel()
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(true, this->getContentSpec());
+        cmRet = new (getMemoryManager()) MixedContentModel(true, this->getContentSpec());
     }
      else if (fModelType == Children)
     {
@@ -375,7 +379,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
     if (specNode->getType() == ContentSpecNode::Leaf)
     {
         // Create a simple content model
-        return new SimpleContentModel
+        return new (getMemoryManager()) SimpleContentModel
         (
             true
             , specNode->getElement()
@@ -393,7 +397,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
         if ((specNode->getFirst()->getType() == ContentSpecNode::Leaf)
         &&  (specNode->getSecond()->getType() == ContentSpecNode::Leaf))
         {
-            return new SimpleContentModel
+            return new (getMemoryManager()) SimpleContentModel
             (
                 true
                 , specNode->getFirst()->getElement()
@@ -413,7 +417,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
         //
         if (specNode->getFirst()->getType() == ContentSpecNode::Leaf)
         {
-            return new SimpleContentModel
+            return new (getMemoryManager()) SimpleContentModel
             (
                 true
                 , specNode->getFirst()->getElement()
@@ -428,14 +432,19 @@ XMLContentModel* DTDElementDecl::createChildModel()
     }
 
     // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(true, this->getContentSpec());
+    return new (getMemoryManager()) DFAContentModel
+    (
+        true
+        , this->getContentSpec()
+        , getMemoryManager()
+    );
 }
 
 
 void DTDElementDecl::faultInAttDefList() const
 {
     // Use a hash modulus of 29 and tell it owns its elements
-    ((DTDElementDecl*)this)->fAttDefs = new RefHashTableOf<DTDAttDef>(29, true);
+    ((DTDElementDecl*)this)->fAttDefs = new (getMemoryManager()) RefHashTableOf<DTDAttDef>(29, true);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -64,10 +64,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+
 XERCES_CPP_NAMESPACE_BEGIN
+
+class MemoryManager;
 
 class XMLUTIL_EXPORT RegxUtil {
 public:
@@ -83,7 +85,8 @@ public:
 	static bool isLowSurrogate(const XMLCh ch);
 	static bool isHighSurrogate(const XMLCh ch);
 	static XMLCh* decomposeToSurrogates(XMLInt32 ch);
-	static XMLCh* stripExtendedComment(const XMLCh* const expression);
+	static XMLCh* stripExtendedComment(const XMLCh* const expression,
+                                       MemoryManager* const manager = 0);
 
 private:
 	// -----------------------------------------------------------------------

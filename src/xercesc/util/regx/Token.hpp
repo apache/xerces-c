@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -76,7 +75,8 @@ class RangeToken;
 class TokenFactory;
 
 
-class XMLUTIL_EXPORT Token {
+class XMLUTIL_EXPORT Token : public XMemory
+{
 public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor

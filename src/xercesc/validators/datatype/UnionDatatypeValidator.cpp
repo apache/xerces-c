@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/05/15 18:53:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/02/06 13:51:55  gareth
  * fixed bug with multiple attributes being validated by the same union type.
  *
@@ -115,8 +118,8 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-UnionDatatypeValidator::UnionDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Union)
+UnionDatatypeValidator::UnionDatatypeValidator(MemoryManager* const manager)
+:DatatypeValidator(0, 0, 0, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
@@ -130,8 +133,9 @@ UnionDatatypeValidator::~UnionDatatypeValidator()
 
 UnionDatatypeValidator::UnionDatatypeValidator(
                         RefVectorOf<DatatypeValidator>* const memberTypeValidators
-                      , const int                                         finalSet)
-:DatatypeValidator(0, 0, finalSet, DatatypeValidator::Union)
+                      , const int                             finalSet
+                      , MemoryManager* const                  manager)
+:DatatypeValidator(0, 0, finalSet, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
@@ -150,9 +154,10 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 UnionDatatypeValidator::UnionDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Union)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
@@ -339,7 +344,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
         if (getRegex() == 0)
         {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/01/30 21:56:22  tng
  * Performance: call getRawData instead of toString
  *
@@ -111,8 +114,9 @@ DateTimeValidator::DateTimeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:AbstractNumericFacetValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:AbstractNumericFacetValidator(baseValidator, facets, finalSet, type, manager)
 {
     //do not invoke init() here !!!
 }
@@ -175,7 +179,7 @@ void DateTimeValidator::checkContent(const XMLCh* const content
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {
@@ -341,7 +345,7 @@ void DateTimeValidator::setEnumeration()
         return;
 
     int enumLength = fStrEnumeration->size();
-    fEnumeration = new RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
     fEnumerationInherited = false;
 
     for ( int i = 0; i < enumLength; i++)

@@ -93,7 +93,11 @@ public :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
-    XSDDOMParser(XMLValidator* const valToAdopt = 0);
+    XSDDOMParser
+    (
+          XMLValidator* const  valToAdopt = 0
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     /**
       * Destructor

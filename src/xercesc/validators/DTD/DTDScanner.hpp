@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 18:54:51  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/02/05 22:07:09  tng
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
  *
@@ -105,7 +108,7 @@ class XMLScanner;
  */
 class DocTypeHandler;
 
-class VALIDATORS_EXPORT DTDScanner
+class VALIDATORS_EXPORT DTDScanner : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -137,7 +140,12 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDScanner(DTDGrammar* dtdGrammar, DocTypeHandler* const docTypeHandler);
+    DTDScanner
+    (
+          DTDGrammar*           dtdGrammar
+        , DocTypeHandler* const docTypeHandler
+        , MemoryManager* const  manager
+    );
     virtual ~DTDScanner();
 
     // -----------------------------------------------------------------------
@@ -286,6 +294,7 @@ private:
     //      current reader to decide whether we are processing an external/internal
     //      declaration
     // -----------------------------------------------------------------------
+    MemoryManager*                  fMemoryManager;
     DocTypeHandler*                 fDocTypeHandler;
     DTDAttDef*                      fDumAttDef;
     DTDElementDecl*                 fDumElemDecl;

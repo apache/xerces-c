@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,8 +64,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/regx/Token.hpp>
 #include <xercesc/util/Mutexes.hpp>
@@ -85,7 +83,8 @@ class ParenToken;
 class StringToken;
 class UnionToken;
 
-class XMLUTIL_EXPORT TokenFactory {
+class XMLUTIL_EXPORT TokenFactory : public XMemory
+{
 
 public:
 	// -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:16:57  tng
  * Return a reference instead of void for operator=
  *
@@ -238,12 +241,12 @@ private :
     //      Boolean to allow DTDs to validate even with namespace support.
     //
     // -----------------------------------------------------------------------
-    unsigned int    fCount;
-    QName**         fChildren;
-    ContentSpecNode::NodeTypes*  fChildTypes;
-    bool            fOrdered;
-    bool            fDTD;
-
+    unsigned int                fCount;
+    QName**                     fChildren;
+    ContentSpecNode::NodeTypes* fChildTypes;
+    bool                        fOrdered;
+    bool                        fDTD;
+    MemoryManager*              fMemoryManager;
 };
 
 inline ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVector() const

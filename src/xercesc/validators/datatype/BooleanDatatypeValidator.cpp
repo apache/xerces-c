@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -122,9 +125,10 @@ const XMLCh fgValueSpace[][32] =
 BooleanDatatypeValidator::BooleanDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Boolean)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Boolean, manager)
 {
 
     // Set Facets if any defined
@@ -180,7 +184,7 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,8 +64,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/Mutexes.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -75,9 +75,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 class RangeToken;
 class RangeFactory;
 class TokenFactory;
+class XMLStringPool;
 
-
-class XMLUTIL_EXPORT RangeTokenElemMap {
+class XMLUTIL_EXPORT RangeTokenElemMap : public XMemory
+{
 
 public:
     RangeTokenElemMap(unsigned int categoryId);
@@ -109,8 +110,8 @@ private:
 };
 
 
-class XMLUTIL_EXPORT RangeTokenMap {
-
+class XMLUTIL_EXPORT RangeTokenMap : public XMemory
+{
 public:
     // -----------------------------------------------------------------------
     //  Putter methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.12  2003/01/17 15:35:57  knoaman
  * Fix for attribute checking of schema declarations.
  *
@@ -211,8 +214,10 @@ static XMLRegisterCleanup GeneralAttCheckCleanup;
 // ---------------------------------------------------------------------------
 //  GeneralAttributeCheck: Constructors and Destructor
 // ---------------------------------------------------------------------------
-GeneralAttributeCheck::GeneralAttributeCheck()
-    : fIDRefList(0)
+GeneralAttributeCheck::GeneralAttributeCheck(MemoryManager* const manager)
+    : fMemoryManager(manager)
+    , fIDRefList(0)
+    , fIDValidator(manager)
 {
     mapElements();
 }
@@ -227,7 +232,7 @@ GeneralAttributeCheck::~GeneralAttributeCheck()
 // ---------------------------------------------------------------------------
 void GeneralAttributeCheck::setUpValidators() {
 
-    DatatypeValidatorFactory dvFactory;
+    DatatypeValidatorFactory dvFactory(fMemoryManager);
 
     dvFactory.expandRegistryToFullSchemaSet();
     fNonNegIntDV = dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER);

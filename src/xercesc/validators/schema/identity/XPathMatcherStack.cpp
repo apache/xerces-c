@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -77,13 +80,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XPathMatherStack: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XPathMatcherStack::XPathMatcherStack()
+XPathMatcherStack::XPathMatcherStack(MemoryManager* const manager)
     : fMatchersCount(0)
-    , fContextStack(new ValueStackOf<int>(8))
+    , fContextStack(new (manager) ValueStackOf<int>(8))
     , fMatchers(0)
 {
     try {
-        fMatchers = new RefVectorOf<XPathMatcher>(8);
+        fMatchers = new (manager) RefVectorOf<XPathMatcher>(8);
     }
     catch(...) {
 

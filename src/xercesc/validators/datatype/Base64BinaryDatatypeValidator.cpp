@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/01/27 19:24:17  peiyongz
  * normalize Base64 data before checking against enumeration.
  *
@@ -123,8 +126,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, DatatypeValidator::Base64Binary)
+Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator(MemoryManager* const manager)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::Base64Binary, manager)
 {}
 
 Base64BinaryDatatypeValidator::~Base64BinaryDatatypeValidator()
@@ -133,19 +136,23 @@ Base64BinaryDatatypeValidator::~Base64BinaryDatatypeValidator()
 Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::Base64Binary)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::Base64Binary, manager)
 {
     init(enums);
 }
 
-DatatypeValidator* Base64BinaryDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* Base64BinaryDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new Base64BinaryDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) Base64BinaryDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // ---------------------------------------------------------------------------

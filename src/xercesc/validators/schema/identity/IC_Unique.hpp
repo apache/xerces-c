@@ -80,7 +80,8 @@ public:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     IC_Unique(const XMLCh* const identityConstraintName,
-              const XMLCh* const elemName);
+              const XMLCh* const elemName,
+              MemoryManager* const manager);
 	~IC_Unique();
 
 	// -----------------------------------------------------------------------

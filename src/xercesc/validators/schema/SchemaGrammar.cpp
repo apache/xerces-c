@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -117,7 +120,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaGrammar::SchemaGrammar() :
+SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     fTargetNamespace(0)
     , fElemDeclPool(0)
     , fElemNonDeclPool(0)
@@ -130,7 +133,9 @@ SchemaGrammar::SchemaGrammar() :
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
     , fIDRefList(0)
+    , fMemoryManager(manager)
     , fValidated(false)
+    , fDatatypeRegistry(manager)
 {
     //
     //  Init all the pool members.
@@ -138,13 +143,13 @@ SchemaGrammar::SchemaGrammar() :
     //  <TBD> Investigate what the optimum values would be for the various
     //  pools.
     //
-    fElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109);
+    fElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109);
 
     try {
-        fElemNonDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(29);
-        fGroupElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109, false);
+        fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29);
+        fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false);
         fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
-        fIDRefList = new RefHashTableOf<XMLRefInfo>(29);
+        fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(29);
         fDatatypeRegistry.expandRegistryToFullSchemaSet();
 
         //
@@ -183,7 +188,15 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
     // if not, then add this in
     if (!retVal)
     {
-        retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
+        retVal = new (fMemoryManager) SchemaElementDecl
+        (
+            prefixName
+            , baseName
+            , uriId
+            , SchemaElementDecl::Any
+            , Grammar::TOP_LEVEL_SCOPE
+            , fMemoryManager
+        );
         const unsigned int elemId = fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
         retVal->setId(elemId);
         wasAdded = true;
@@ -202,7 +215,15 @@ XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
         , unsigned int          scope
         , const bool            notDeclared)
 {
-    SchemaElementDecl* retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
+    SchemaElementDecl* retVal = new (fMemoryManager) SchemaElementDecl
+    (
+        prefixName
+        , baseName
+        , uriId
+        , SchemaElementDecl::Any
+        , Grammar::TOP_LEVEL_SCOPE
+        , fMemoryManager
+    );
     const unsigned int elemId = (notDeclared) ? fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal)
                                               : fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
     retVal->setId(elemId);
@@ -228,7 +249,7 @@ void SchemaGrammar::cleanUp()
     delete fElemNonDeclPool;
     delete fGroupElemDeclPool;
     delete fNotationDeclPool;
-    delete [] fTargetNamespace;
+    fMemoryManager->deallocate(fTargetNamespace);//delete [] fTargetNamespace;
     delete fAttributeDeclRegistry;
     delete fComplexTypeRegistry;
     delete fGroupInfoRegistry;

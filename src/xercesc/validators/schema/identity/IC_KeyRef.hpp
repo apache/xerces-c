@@ -77,7 +77,8 @@ public:
     // -----------------------------------------------------------------------
     IC_KeyRef(const XMLCh* const identityConstraintName,
               const XMLCh* const elemName,
-              IdentityConstraint* const icKey);
+              IdentityConstraint* const icKey,
+              MemoryManager* const manager);
 	~IC_KeyRef();
 
 	// -----------------------------------------------------------------------

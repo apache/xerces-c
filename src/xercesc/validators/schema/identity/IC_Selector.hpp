@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,7 +75,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class FieldActivator;
 
 
-class VALIDATORS_EXPORT IC_Selector
+class VALIDATORS_EXPORT IC_Selector : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -100,7 +100,9 @@ public:
 	// -----------------------------------------------------------------------
     //  Factory methods
     // -----------------------------------------------------------------------
-    XPathMatcher* createMatcher(FieldActivator* const fieldActivator, const int initialDepth);
+    XPathMatcher* createMatcher(FieldActivator* const fieldActivator,
+                                const int initialDepth,
+                                MemoryManager* const manager);
 
 private:
     // -----------------------------------------------------------------------
@@ -143,8 +145,11 @@ private:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    SelectorMatcher(XercesXPath* const anXPath, IC_Selector* const selector,
-                    FieldActivator* const fieldActivator, const int initialDepth);
+    SelectorMatcher(XercesXPath* const anXPath,
+                    IC_Selector* const selector,
+                    FieldActivator* const fieldActivator,
+                    const int initialDepth,
+                    MemoryManager* const manager);
 
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators

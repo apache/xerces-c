@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 18:47:05  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/04/07 16:52:13  peiyongz
  * Bug# 18672: IconvGNUTranscoder can't be build when namespaces is on.
  *                       Patch from Bacek@yandex-team.ru (Vasily Tchekalkin)
@@ -658,12 +661,13 @@ IconvGNUTransService::makeNewXMLTranscoder
     const    XMLCh* const    encodingName
     ,    XMLTransService::Codes&    resValue
     , const    unsigned int    blockSize
+    ,        MemoryManager* const    manager
 )
 {
     resValue = XMLTransService::UnsupportedEncoding;
     IconvGNUTranscoder    *newTranscoder = NULL;
 
-    char    *encLocal = XMLString::transcode(encodingName);
+    char    *encLocal = XMLString::transcode(encodingName, manager);
     iconv_t    cd_from, cd_to;
 
     {
@@ -672,7 +676,7 @@ IconvGNUTransService::makeNewXMLTranscoder
         if (cd_from == (iconv_t)-1) {
             resValue = XMLTransService::SupportFilesNotFound;
             if (encLocal)
-                delete [] encLocal;
+                manager->deallocate(encLocal);//delete [] encLocal;
             return NULL;
         }
         cd_to = iconv_open (encLocal, fUnicodeCP);
@@ -680,10 +684,10 @@ IconvGNUTransService::makeNewXMLTranscoder
             resValue = XMLTransService::SupportFilesNotFound;
             iconv_close (cd_from);
             if (encLocal)
-                delete [] encLocal;
+                manager->deallocate(encLocal);//delete [] encLocal;
             return NULL;
         }
-        newTranscoder = new IconvGNUTranscoder (encodingName,
+        newTranscoder = new (manager) IconvGNUTranscoder (encodingName,
                              blockSize,
                              cd_from, cd_to,
                              uChSize(), UBO());
@@ -691,7 +695,7 @@ IconvGNUTransService::makeNewXMLTranscoder
     if (newTranscoder)
         resValue = XMLTransService::Ok;
     if (encLocal)
-        delete [] encLocal;
+        manager->deallocate(encLocal);//delete [] encLocal;
     return newTranscoder;
 }
 

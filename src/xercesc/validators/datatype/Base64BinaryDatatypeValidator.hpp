@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/01/27 19:24:17  peiyongz
  * normalize Base64 data before checking against enumeration.
  *
@@ -94,16 +97,21 @@ public:
     // -----------------------------------------------------------------------
     //  Public ctor/dtor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+	/** @name Constructors and Destructor */
     //@{
 
-    Base64BinaryDatatypeValidator();
-
-    Base64BinaryDatatypeValidator(DatatypeValidator*            const baseValidator
-                                , RefHashTableOf<KVStringPair>* const facets
-                                , RefArrayVectorOf<XMLCh>*           const enums
-                                , const int                           finalSet);
-
+    Base64BinaryDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    Base64BinaryDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     virtual ~Base64BinaryDatatypeValidator();
 
 	//@}
@@ -112,9 +120,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                         , RefArrayVectorOf<XMLCh>*           const enums
-                                         , const int                           finalSet);
+    virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 protected:
 

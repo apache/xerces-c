@@ -69,11 +69,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
-#include <xercesc/util/RefHash2KeysTableOf.hpp>
-#include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
+#include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -84,7 +82,7 @@ class TraverseSchema;
 class DOMElement;
 
 
-class VALIDATORS_EXPORT GeneralAttributeCheck
+class VALIDATORS_EXPORT GeneralAttributeCheck : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -219,7 +217,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructor/Destructor
     // -----------------------------------------------------------------------
-    GeneralAttributeCheck();
+    GeneralAttributeCheck(MemoryManager* const manager);
     ~GeneralAttributeCheck();
 
     // -----------------------------------------------------------------------
@@ -285,8 +283,9 @@ private:
     static DatatypeValidator*                fAnyURIDV;
     static unsigned short                    fgElemAttTable[E_Count][A_Count];
     static const XMLCh*                      fAttNames[A_Count];
-    IDDatatypeValidator                      fIDValidator;
+    MemoryManager*                           fMemoryManager;
     RefHashTableOf<XMLRefInfo>*              fIDRefList;
+    IDDatatypeValidator                      fIDValidator;
 };
 
 

@@ -316,7 +316,8 @@ XMLCh Iconv400TransService::toUnicodeLower(XMLCh comp1) const
 XMLTranscoder*
 Iconv400TransService::makeNewXMLTranscoder(  const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize)
+                                        , const unsigned int            blockSize
+                                        ,       MemoryManager* const    manager)
 {
     UErrorCode uerr = U_ZERO_ERROR;
     UConverter* converter = ucnv_openU(encodingName, &uerr);
@@ -325,7 +326,7 @@ Iconv400TransService::makeNewXMLTranscoder(  const   XMLCh* const            enc
         resValue = XMLTransService::UnsupportedEncoding;
         return 0;
     }
-    return new Iconv400Transcoder(encodingName, converter, blockSize);
+    return new (manager) Iconv400Transcoder(encodingName, converter, blockSize);
 }
 
 
@@ -769,6 +770,76 @@ char* Iconv400LCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retBuf;
 }
 
+char* Iconv400LCPTranscoder::transcode(const XMLCh* const toTranscode,
+                                       MemoryManager* const manager)
+{
+    char* retBuf = 0;
+
+    // Check for a couple of special cases
+    if (!toTranscode)
+        return 0;
+
+    if (!*toTranscode)
+    {
+        retBuf = (char*) manager->allocate(sizeof(char));//new char[1];
+        retBuf[0] = 0;
+        return retBuf;
+    }
+
+    // Caculate a return buffer size not too big, but less likely to overflow
+    int32_t targetLen = (int32_t)(u_strlen(toTranscode) * 1.25);
+
+    // Allocate the return buffer
+    retBuf = (char*) manager->allocate((targetLen + 1) * sizeof(char));//new char[targetLen + 1];
+
+    // Lock now while we call the converter.
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t targetCap;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        //Convert the Unicode string to char*
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , retBuf
+            , targetLen + 1
+            , toTranscode
+            , &err
+        );
+    }
+
+    // If targetLen is not enough then buffer overflow might occur
+    if (err == U_BUFFER_OVERFLOW_ERROR)
+    {
+        // Reset the error, delete the old buffer, allocate a new one, and try again
+        err = U_ZERO_ERROR;
+        manager->deallocate(retBuf);//delete [] retBuf;
+        retBuf = (char*) manager->allocate(targetCap * sizeof(char));//new char[targetCap];
+
+        // Lock again before we retry
+        XMLMutexLock lockConverter(&fMutex);
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , retBuf
+            , targetCap
+            , toTranscode
+            , &err
+        );
+    }
+
+    if (U_FAILURE(err))
+    {
+        manager->deallocate(retBuf);//delete [] retBuf;
+        return 0;
+    }
+
+    // Cap it off and return
+    retBuf[targetCap] = 0;
+    return retBuf;
+}
+
 XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode)
 {
     // Watch for a few pyscho corner cases
@@ -834,6 +905,78 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode)
     {
         // Clean up if we got anything allocated
         delete [] retVal;
+        return 0;
+    }
+
+    return retVal;
+}
+
+XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode,
+                                        MemoryManager* const manager)
+{
+    // Watch for a few pyscho corner cases
+    if (!toTranscode)
+        return 0;
+
+    XMLCh* retVal = 0;
+    if (!*toTranscode)
+    {
+        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
+        retVal[0] = 0;
+        return retVal;
+    }
+
+    //
+    //  Get the length of the string to transcode. The Unicode string will
+    //  almost always be no more chars than were in the source, so this is
+    //  the best guess as to the storage needed.
+    //
+    const int32_t srcLen = (int32_t)strlen(toTranscode);
+    // Allocate unicode string of equivalent length in unicode bytes
+    retVal = (XMLCh*) manager->allocate((srcLen + 1) * sizeof(XMLCh));//new XMLCh[srcLen+1];
+
+    // Now lock while we do these calculations
+    UErrorCode err = U_ZERO_ERROR;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        //
+        //  Here we don't know what the target length will be so use 0 and
+        //  expect an U_BUFFER_OVERFLOW_ERROR in which case it'd get resolved
+        //  by the correct capacity value.
+        //
+        int32_t targetCap;
+        targetCap = ucnv_toUChars
+        (
+            fConverter
+            , retVal
+            , srcLen+1
+            , toTranscode
+            , srcLen
+            , &err
+        );
+
+        if (err != U_BUFFER_OVERFLOW_ERROR)
+	{
+
+        err = U_ZERO_ERROR;
+        retVal = (XMLCh*) manager->allocate(targetCap * sizeof(XMLCh));//new XMLCh[targetCap];
+        ucnv_toUChars
+        (
+            fConverter
+            , retVal
+            , targetCap
+            , toTranscode
+            , srcLen
+            , &err
+           );
+	 }
+   }
+
+    if (U_FAILURE(err))
+    {
+        // Clean up if we got anything allocated
+        manager->deallocate(retVal);//delete [] retVal;
         return 0;
     }
 

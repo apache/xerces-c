@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -89,11 +92,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ValueStoreCache: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ValueStoreCache::ValueStoreCache()
+ValueStoreCache::ValueStoreCache(MemoryManager* const manager)
     : fValueStores(0)
     , fGlobalICMap(0)
     , fIC2ValueStoreMap(0)
     , fGlobalMapStack(0)
+    , fScanner(0)
+    , fMemoryManager(manager)
 {
     try {
         init();
@@ -124,7 +129,7 @@ void ValueStoreCache::startDocument() {
 void ValueStoreCache::startElement() {
 
     fGlobalMapStack->push(fGlobalICMap);
-    fGlobalICMap = new RefHashTableOf<ValueStore>(13, false, new HashPtr());
+    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>(13, false, new (fMemoryManager) HashPtr());
 }
 
 void ValueStoreCache::endElement() {
@@ -166,10 +171,10 @@ void ValueStoreCache::cleanUp() {
 
 void ValueStoreCache::init() {
 
-    fValueStores = new RefVectorOf<ValueStore>(8);
-    fGlobalICMap = new RefHashTableOf<ValueStore>(13, false, new HashPtr());
-    fIC2ValueStoreMap = new RefHash2KeysTableOf<ValueStore>(13, false, new HashPtr());
-    fGlobalMapStack = new RefStackOf<RefHashTableOf<ValueStore> >(8);
+    fValueStores = new (fMemoryManager) RefVectorOf<ValueStore>(8);
+    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>(13, false, new (fMemoryManager) HashPtr());
+    fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore>(13, false, new (fMemoryManager) HashPtr());
+    fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore> >(8);
 }
 
 void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
@@ -181,7 +186,7 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
     for (unsigned int i=0; i<icCount; i++) {
 
         IdentityConstraint* ic = elemDecl->getIdentityConstraintAt(i);
-        ValueStore* valueStore = valueStore = new ValueStore(ic, fScanner);
+        ValueStore* valueStore = valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
         fValueStores->addElement(valueStore);
         fIC2ValueStoreMap->put(ic, initialDepth, valueStore);
     }
@@ -199,7 +204,7 @@ void ValueStoreCache::transplant(IdentityConstraint* const ic, const int initial
     if (currVals) {
         currVals->append(newVals);
     } else {
-        ValueStore* valueStore = new ValueStore(ic, fScanner);
+        ValueStore* valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
         fValueStores->addElement(valueStore);
         valueStore->append(newVals);
         fGlobalICMap->put(ic, valueStore);

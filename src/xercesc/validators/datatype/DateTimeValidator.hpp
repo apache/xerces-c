@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -103,10 +106,14 @@ protected:
     // -----------------------------------------------------------------------
     //  ctor used by derived class
     // -----------------------------------------------------------------------
-    DateTimeValidator(DatatypeValidator*            const baseValidator
-                    , RefHashTableOf<KVStringPair>* const facets
-                    , const int                           finalSet
-                    , const ValidatorType                 type);
+    DateTimeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , const int finalSet
+        , const ValidatorType type
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //
     // Abstract interface

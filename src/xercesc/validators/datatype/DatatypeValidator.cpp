@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/01/29 19:52:32  gareth
  * PSVI API additions.
  *
@@ -99,6 +102,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,8 +112,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
                                      RefHashTableOf<KVStringPair>* const facets,
                                      const int finalSet,
-                                     const ValidatorType type)
-    : fFinalSet(finalSet)
+                                     const ValidatorType type,
+                                     MemoryManager* const manager)
+    : fMemoryManager(manager)
+    , fAnonymous(false)
+    , fFinalSet(finalSet)
     , fFacetsDefined(0)
     , fFixed(0)
     , fType(type)
@@ -117,10 +124,9 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
     , fFacets(facets)
     , fPattern(0)
     , fRegex(0)
-    , fTypeLocalName(0)
+    , fTypeLocalName(XMLUni::fgZeroLenString)
     , fTypeName(0)
-    , fTypeUri(0) 
-    , fAnonymous(false)
+    , fTypeUri(XMLUni::fgZeroLenString)
 {
 }
 
@@ -144,6 +150,91 @@ const XMLCh* DatatypeValidator::getWSstring(const short theType) const
     }
 
 }
+
+void DatatypeValidator::setTypeName(const XMLCh* const name, const XMLCh* const uri)
+{
+    if (fTypeName) {
+
+        fMemoryManager->deallocate(fTypeName);
+        fTypeName = 0;
+    }
+
+    if (name || uri) {
+
+        unsigned int nameLen = XMLString::stringLen(name);
+        unsigned int uriLen = XMLString::stringLen(uri);
+
+        fTypeName = (XMLCh*) fMemoryManager->allocate
+        (
+            (nameLen + uriLen + 2)*sizeof(XMLCh)
+        );
+        fTypeUri = fTypeName;
+        fTypeLocalName = &fTypeName[uriLen+1];
+
+        if (uri)
+			XMLString::moveChars(fTypeName, uri, uriLen+1);
+        else
+			fTypeName[0] = chNull;
+
+        if (name)
+            XMLString::moveChars(&fTypeName[uriLen+1], name, nameLen+1);
+        else
+            fTypeName[uriLen+1] = chNull;
+    }
+    else
+    {
+        fTypeUri = fTypeLocalName = XMLUni::fgZeroLenString;
+    }
+}
+
+void DatatypeValidator::setTypeName(const XMLCh* const typeName)
+{
+    if (fTypeName)
+    {
+        fMemoryManager->deallocate(fTypeName);
+        fTypeName = 0;
+    }
+
+    if (typeName)
+    {
+        unsigned int nameLen = XMLString::stringLen(typeName);
+        int commaOffset = XMLString::indexOf(typeName, chComma);
+
+        fTypeName = (XMLCh*) fMemoryManager->allocate
+        (
+            (nameLen + 1) * sizeof(XMLCh)
+        );
+	    XMLString::moveChars(fTypeName, typeName, nameLen+1);
+
+        if ( commaOffset == -1) {
+            fTypeUri = SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
+            fTypeLocalName = fTypeName;
+        }
+        else {
+            fTypeUri = fTypeName;
+            fTypeLocalName = &fTypeName[commaOffset+1];
+            fTypeName[commaOffset] = chNull;
+        }
+    }
+    else
+    {
+        fTypeUri = fTypeLocalName = XMLUni::fgZeroLenString;
+    }
+}
+
+// ---------------------------------------------------------------------------
+//  DatatypeValidator: CleanUp methods
+// ---------------------------------------------------------------------------
+void DatatypeValidator::cleanUp() {
+
+	delete fFacets;
+    delete fRegex;
+    if (fPattern)
+        fMemoryManager->deallocate(fPattern);//delete [] fPattern;
+    if (fTypeName)
+        fMemoryManager->deallocate(fTypeName);
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -123,8 +126,8 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-ListDatatypeValidator::ListDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, DatatypeValidator::List)
+ListDatatypeValidator::ListDatatypeValidator(MemoryManager* const manager)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::List, manager)
 ,fContent(0)
 {}
 
@@ -132,8 +135,9 @@ ListDatatypeValidator::ListDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::List)
+                        , const int                           finalSet
+                        , MemoryManager* const manager)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::List, manager)
 ,fContent(0)
 {
     //
@@ -152,12 +156,15 @@ ListDatatypeValidator::ListDatatypeValidator(
 ListDatatypeValidator::~ListDatatypeValidator()
 {}
 
-DatatypeValidator* ListDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* ListDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new ListDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) ListDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 
@@ -232,7 +239,7 @@ void ListDatatypeValidator::checkContent( BaseRefVectorOf<XMLCh>* tokenVector
         if (getRegex() == 0)
         {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {

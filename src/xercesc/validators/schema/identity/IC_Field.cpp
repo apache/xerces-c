@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/01/13 16:30:19  knoaman
  * [Bug 14469] Validator doesn't enforce xsd:key.
  *
@@ -85,9 +88,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  FieldMatcher: Constructors and Destructor
 // ---------------------------------------------------------------------------
-FieldMatcher::FieldMatcher(XercesXPath* const xpath, IC_Field* const aField,
-                           ValueStore* const valueStore)
-    : XPathMatcher(xpath, 0)
+FieldMatcher::FieldMatcher(XercesXPath* const xpath,
+                           IC_Field* const aField,
+                           ValueStore* const valueStore,
+                           MemoryManager* const manager)
+    : XPathMatcher(xpath, (IdentityConstraint*) 0, manager)
     , fField(aField)
     , fValueStore(valueStore)
 {
@@ -144,9 +149,10 @@ bool IC_Field::operator!= (const IC_Field& other) const {
 // ---------------------------------------------------------------------------
 //  IC_Field: Factory methods
 // ---------------------------------------------------------------------------
-XPathMatcher* IC_Field::createMatcher(ValueStore* const valueStore) {
+XPathMatcher* IC_Field::createMatcher(ValueStore* const valueStore,
+                                      MemoryManager* const manager) {
 
-    return new FieldMatcher(fXPath, this, valueStore);
+    return new (manager) FieldMatcher(fXPath, this, valueStore, manager);
 }
 
 XERCES_CPP_NAMESPACE_END

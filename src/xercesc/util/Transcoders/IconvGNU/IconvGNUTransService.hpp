@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:47:05  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:15:57  tng
  * Return a reference instead of void for operator=
  *
@@ -243,6 +246,7 @@ protected :
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
+        ,       MemoryManager* const    manager
     );
 
 
@@ -359,6 +363,8 @@ public:
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
 
     virtual char* transcode(const XMLCh* const toTranscode);
+    virtual char* transcode(const XMLCh* const toTranscode,
+                            MemoryManager* const manager);
 
     virtual bool transcode
     (
@@ -368,6 +374,8 @@ public:
     );
 
     virtual XMLCh* transcode(const char* const toTranscode);
+    virtual XMLCh* transcode(const char* const toTranscode,
+                             MemoryManager* const manager);
 
     virtual bool transcode
     (

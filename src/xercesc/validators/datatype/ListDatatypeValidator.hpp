@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -122,16 +125,21 @@ public:
     // -----------------------------------------------------------------------
     //  Public ctor/dtor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+	/** @name Constructors and Destructor */
     //@{
 
-    ListDatatypeValidator();
-
-    ListDatatypeValidator(DatatypeValidator*            const baseValidator
-                        , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet);
-
+    ListDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    ListDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     virtual ~ListDatatypeValidator();
 
 	//@}
@@ -183,9 +191,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                         , RefArrayVectorOf<XMLCh>*           const enums
-                                         , const int                           finalSet);
+    virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     DatatypeValidator* getItemTypeDTV() const;
 

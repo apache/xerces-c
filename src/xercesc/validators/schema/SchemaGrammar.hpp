@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -159,7 +162,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    SchemaGrammar();
+    SchemaGrammar(MemoryManager* const manager);
     virtual ~SchemaGrammar();
 
     // -----------------------------------------------------------------------
@@ -351,11 +354,12 @@ private:
     RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
     RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
-    DatatypeValidatorFactory               fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
     RefHashTableOf<XMLRefInfo>*            fIDRefList;
+    MemoryManager*                         fMemoryManager;
     bool                                   fValidated;
+    DatatypeValidatorFactory               fDatatypeRegistry;
 };
 
 
@@ -415,9 +419,11 @@ inline RefHashTableOf<XMLRefInfo>* SchemaGrammar::getIDRefList() const {
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
-inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace) {
-    delete [] fTargetNamespace;
-    fTargetNamespace = XMLString::replicate(targetNamespace);
+inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace)
+{
+    if (fTargetNamespace)
+        fMemoryManager->deallocate(fTargetNamespace);//delete [] fTargetNamespace;
+    fTargetNamespace = XMLString::replicate(targetNamespace, fMemoryManager);
 }
 
 inline void

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/01/13 20:16:51  knoaman
  * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
  *
@@ -82,7 +85,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -90,8 +92,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  AnySimpleTypeDatatypeValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
-AnySimpleTypeDatatypeValidator::AnySimpleTypeDatatypeValidator()
-    : DatatypeValidator(0, 0, SchemaSymbols::XSD_RESTRICTION, DatatypeValidator::AnySimpleType)
+AnySimpleTypeDatatypeValidator::AnySimpleTypeDatatypeValidator(MemoryManager* const manager)
+    : DatatypeValidator(0, 0, SchemaSymbols::XSD_RESTRICTION, DatatypeValidator::AnySimpleType, manager)
 {
 
 }
@@ -104,11 +106,14 @@ AnySimpleTypeDatatypeValidator::~AnySimpleTypeDatatypeValidator()
 // ---------------------------------------------------------------------------
 //  AnySimpleTypeDatatypeValidator: Instance methods
 // ---------------------------------------------------------------------------
-DatatypeValidator*
-AnySimpleTypeDatatypeValidator::newInstance(RefHashTableOf<KVStringPair>* const facets,
-                                            RefArrayVectorOf<XMLCh>* const enums,
-                                            const int finalSet) {
-
+DatatypeValidator* AnySimpleTypeDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
+{
     // We own them, so we will delete them first
     delete facets;
     delete enums;

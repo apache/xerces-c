@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/03/01 20:59:06  peiyongz
  * TotalDigits value must be a positiveInteger
  *
@@ -145,6 +148,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+#include <xercesc/util/XMLBigDecimal.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -155,8 +159,8 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-DecimalDatatypeValidator::DecimalDatatypeValidator()
-:AbstractNumericValidator(0, 0, 0, DatatypeValidator::Decimal)
+DecimalDatatypeValidator::DecimalDatatypeValidator(MemoryManager* const manager)
+:AbstractNumericValidator(0, 0, 0, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
 {}
@@ -165,8 +169,9 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal)
+                        , const int                           finalSet
+                        , MemoryManager* const manager)
+:AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
 {
@@ -182,20 +187,21 @@ DecimalDatatypeValidator::~DecimalDatatypeValidator()
 int DecimalDatatypeValidator::compare(const XMLCh* const lValue
                                     , const XMLCh* const rValue)
 {
-    XMLBigDecimal * lObj = new XMLBigDecimal(lValue);
-    Janitor<XMLBigDecimal> jname1(lObj);
-    XMLBigDecimal * rObj = new XMLBigDecimal(rValue);
-    Janitor<XMLBigDecimal> jname2(rObj);
+    XMLBigDecimal lObj(lValue);
+    XMLBigDecimal rObj(rValue);
 
-    return compareValues(lObj, rObj);
+    return compareValues(&lObj, &rObj);
 }
 
-DatatypeValidator* DecimalDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* DecimalDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new DecimalDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) DecimalDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // -----------------------------------------------------------------------
@@ -204,8 +210,9 @@ DatatypeValidator* DecimalDatatypeValidator::newInstance(
 DecimalDatatypeValidator::DecimalDatatypeValidator(DatatypeValidator*            const baseValidator
                                                  , RefHashTableOf<KVStringPair>* const facets
                                                  , const int                           finalSet
-                                                 , const ValidatorType                 type)
-:AbstractNumericValidator(baseValidator, facets, finalSet, type)
+                                                 , const ValidatorType                 type
+                                                 , MemoryManager* const                manager)
+:AbstractNumericValidator(baseValidator, facets, finalSet, type, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
 {
@@ -399,22 +406,22 @@ int  DecimalDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  DecimalDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new XMLBigDecimal(value);
+    fMaxInclusive = new (fMemoryManager) XMLBigDecimal(value);
 }
 
 void  DecimalDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new XMLBigDecimal(value);
+    fMaxExclusive = new (fMemoryManager) XMLBigDecimal(value);
 }
 
 void  DecimalDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new XMLBigDecimal(value);
+    fMinInclusive = new (fMemoryManager) XMLBigDecimal(value);
 }
 
 void  DecimalDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new XMLBigDecimal(value);
+    fMinExclusive = new (fMemoryManager) XMLBigDecimal(value);
 }
 
 void DecimalDatatypeValidator::setEnumeration()
@@ -456,12 +463,12 @@ void DecimalDatatypeValidator::setEnumeration()
         checkContent(fStrEnumeration->elementAt(i), false);
     }
 
-    fEnumeration = new RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
+        fEnumeration->insertElementAt(new (fMemoryManager) XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
     }
 
 }
@@ -485,7 +492,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {

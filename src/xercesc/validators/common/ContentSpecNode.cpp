@@ -81,23 +81,24 @@ XERCES_CPP_NAMESPACE_BEGIN
 //        aka inline function compilation error on AIX 4.2, xlC 3 r ev.1
 // ---------------------------------------------------------------------------
 
-ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
+ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy) :
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     const QName* tempElement = toCopy.getElement();
     if (tempElement)
-        fElement = new QName(*tempElement);
+        fElement = new (fMemoryManager) QName(*tempElement);
     else
         fElement = 0;
 
     const ContentSpecNode *tmp = toCopy.getFirst();
     if (tmp)
-        fFirst = new ContentSpecNode(*tmp);
+        fFirst = new (fMemoryManager) ContentSpecNode(*tmp);
     else
         fFirst = 0;
 
     tmp = toCopy.getSecond();
     if (tmp)
-        fSecond = new ContentSpecNode(*tmp);
+        fSecond = new (fMemoryManager) ContentSpecNode(*tmp);
     else
         fSecond = 0;
 

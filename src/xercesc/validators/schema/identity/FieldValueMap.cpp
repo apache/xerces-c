@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:59  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -80,10 +83,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  FieldValueMap: Constructors and Destructor
 // ---------------------------------------------------------------------------
-FieldValueMap::FieldValueMap()
+FieldValueMap::FieldValueMap(MemoryManager* const manager)
     : fFields(0)
     , fValidators(0)
     , fValues(0)
+    , fMemoryManager(manager)
 {
 }
 
@@ -91,15 +95,16 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
     : fFields(0)
     , fValidators(0)
     , fValues(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try {
         if (other.fFields) {
 
             unsigned int valuesSize = other.fValues->size();
 
-            fFields = new ValueVectorOf<IC_Field*>(*(other.fFields));
-            fValidators = new ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
-            fValues = new RefArrayVectorOf<XMLCh>(other.fFields->curCapacity());
+            fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(*(other.fFields));
+            fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
+            fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(other.fFields->curCapacity());
 
             for (unsigned int i=0; i<valuesSize; i++) {
                 fValues->addElement(XMLString::replicate(other.fValues->elementAt(i)));

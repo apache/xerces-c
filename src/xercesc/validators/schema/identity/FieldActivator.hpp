@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -83,14 +83,15 @@ class IC_Field;
 class XPathMatcherStack;
 
 
-class VALIDATORS_EXPORT FieldActivator
+class VALIDATORS_EXPORT FieldActivator : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     FieldActivator(ValueStoreCache* const valueStoreCache,
-                   XPathMatcherStack* const matcherStack);
+                   XPathMatcherStack* const matcherStack,
+                   MemoryManager* const manager);
 	FieldActivator(const FieldActivator& other);
 	~FieldActivator();
 
@@ -132,6 +133,7 @@ private:
     // -----------------------------------------------------------------------
     ValueStoreCache*   fValueStoreCache;
     XPathMatcherStack* fMatcherStack;
+    MemoryManager*     fMemoryManager;
 };
 
 

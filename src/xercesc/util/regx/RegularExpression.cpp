@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 18:42:54  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/05/12 10:08:22  gareth
  * The correct file this time.
  *
@@ -119,6 +122,7 @@
 #include <xercesc/util/regx/ParserForXMLSchema.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/ParseException.hpp>
+#include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -357,7 +361,7 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 	fPattern = XMLString::replicate(pattern);
 
 	RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
-		? new ParserForXMLSchema() : new RegxParser();
+		? new ParserForXMLSchema(XMLPlatformUtils::fgMemoryManager) : new RegxParser(XMLPlatformUtils::fgMemoryManager);
 
     if (regxParser) {
         regxParser->setTokenFactory(fTokenFactory);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:16:57  tng
  * Return a reference instead of void for operator=
  *
@@ -240,26 +243,27 @@ public :
 // ---------------------------------------------------------------------------
 //  SimpleContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-inline
-SimpleContentModel::SimpleContentModel( const bool                        dtd
-                                      , QName* const                      firstChild
-                                      , QName* const                      secondChild
-                                      , const ContentSpecNode::NodeTypes  cmOp) :
-
-    fFirstChild(0)
+inline SimpleContentModel::SimpleContentModel
+(
+      const bool                       dtd
+    , QName* const                     firstChild
+    , QName* const                     secondChild
+    , const ContentSpecNode::NodeTypes cmOp
+)
+    : fFirstChild(0)
     , fSecondChild(0)
     , fOp(cmOp)
 	, fDTD(dtd)
 {
     if (firstChild)
-        fFirstChild = new QName(*firstChild);
+        fFirstChild = new (XMLPlatformUtils::fgMemoryManager) QName(*firstChild);
     else
-        fFirstChild = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fFirstChild = new (XMLPlatformUtils::fgMemoryManager) QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 
     if (secondChild)
-        fSecondChild = new QName(*secondChild);
+        fSecondChild = new (XMLPlatformUtils::fgMemoryManager) QName(*secondChild);
     else
-        fSecondChild = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fSecondChild = new (XMLPlatformUtils::fgMemoryManager) QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline SimpleContentModel::~SimpleContentModel()

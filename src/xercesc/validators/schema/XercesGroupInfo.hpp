@@ -83,13 +83,13 @@ class ContentSpecNode;
 class XSDLocator;
 
 
-class VALIDATORS_EXPORT XercesGroupInfo
+class VALIDATORS_EXPORT XercesGroupInfo : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesGroupInfo();
+    XercesGroupInfo(MemoryManager* const manager);
 	~XercesGroupInfo();
 
 	// -----------------------------------------------------------------------

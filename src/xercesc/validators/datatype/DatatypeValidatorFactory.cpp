@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.13  2003/03/18 19:42:17  knoaman
  * Schema Errata E2-18.
  *
@@ -383,8 +386,9 @@ RefHashTableOf<DatatypeValidator>* DatatypeValidatorFactory::fBuiltInRegistry = 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DatatypeValidatorFactory::DatatypeValidatorFactory()
+DatatypeValidatorFactory::DatatypeValidatorFactory(MemoryManager* const manager)
     : fUserDefinedRegistry(0)
+    , fMemoryManager(manager)
 {
 }
 
@@ -718,29 +722,43 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
     // So instead of storing them in the static fBuiltInRegistry,
     //   store them in local data fUserDefinedRegistry
     if (fUserDefinedRegistry == 0)
-        fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
+        fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29);
 
     if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
 
-        DatatypeValidator *dv = new IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        DatatypeValidator *dv = new (fMemoryManager) IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
         dv->setTypeName(XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         fUserDefinedRegistry->put((void*) XMLUni::fgIDString, dv);
 
-        dv = new IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv = new (fMemoryManager) IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
         dv->setTypeName(XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString, dv);
 
-        dv = new ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv = new (fMemoryManager) ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
         dv->setTypeName(XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         fUserDefinedRegistry->put((void*) XMLUni::fgEntityString, dv);
 
         // Create 'IDREFS' datatype validator
-    	createDatatypeValidator(XMLUni::fgIDRefsString,
-                        getDatatypeValidator(XMLUni::fgIDRefString), 0, 0, true, 0, true);
+    	createDatatypeValidator
+        (
+            XMLUni::fgIDRefsString
+            , getDatatypeValidator(XMLUni::fgIDRefString)
+            , 0
+            , 0
+            , true
+            , 0
+        );
 
         // Create 'ENTITIES' datatype validator
-        createDatatypeValidator(XMLUni::fgEntitiesString,
-    		            getDatatypeValidator(XMLUni::fgEntityString), 0, 0, true, 0, true);
+        createDatatypeValidator
+        (
+            XMLUni::fgEntitiesString
+    		, getDatatypeValidator(XMLUni::fgEntityString)
+            , 0
+            , 0
+            , true
+            , 0
+        );
     }
 
 }
@@ -748,14 +766,16 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: factory methods
 // ---------------------------------------------------------------------------
-DatatypeValidator*
-DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
-		                                          DatatypeValidator* const baseValidator,
-                                                  RefHashTableOf<KVStringPair>* const facets,
-                                                  RefArrayVectorOf<XMLCh>* const enums,
-                                                  const bool derivedByList,
-                                                  const int finalSet,
-                                                  const bool userDefined)
+DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
+(
+      const XMLCh* const                  typeName
+	, DatatypeValidator* const            baseValidator
+    , RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const bool                          isDerivedByList
+    , const int                           finalSet
+    , const bool                          isUserDefined
+)
 {
 	if (baseValidator == 0) {
 
@@ -771,9 +791,11 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
     }
 
 	DatatypeValidator* datatypeValidator = 0;
+    MemoryManager* const manager = (isUserDefined)
+        ? fMemoryManager : XMLPlatformUtils::fgMemoryManager;
 
-    if (derivedByList) {
-        datatypeValidator = new ListDatatypeValidator(baseValidator, facets, enums, finalSet);
+    if (isDerivedByList) {
+        datatypeValidator = new (manager) ListDatatypeValidator(baseValidator, facets, enums, finalSet);
     }
     else {
 
@@ -786,15 +808,21 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
             }
         }
 
-        datatypeValidator = baseValidator->newInstance(facets, enums, finalSet);
+        datatypeValidator = baseValidator->newInstance
+        (
+            facets
+            , enums
+            , finalSet
+            , manager
+        );
     }
 
     if (datatypeValidator != 0) {
 
-        if (userDefined) {
+        if (isUserDefined) {
 
             if (!fUserDefinedRegistry) {
-                fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
+                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29);
             }
 
             fUserDefinedRegistry->put((void *)typeName, datatypeValidator);
@@ -802,6 +830,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
         else {
             fBuiltInRegistry->put((void *)typeName, datatypeValidator);
         }
+
         datatypeValidator->setTypeName(typeName);
     }
 
@@ -809,25 +838,29 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 }
 
 
-DatatypeValidator*
-DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
-                                                  RefVectorOf<DatatypeValidator>* const validators,
-                                                  const int finalSet,
-                                                  const bool userDefined)
+DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
+(
+      const XMLCh* const                    typeName
+    , RefVectorOf<DatatypeValidator>* const validators
+    , const int                             finalSet
+    , const bool                            userDefined
+)
 {
     if (validators == 0)
         return 0;
 
     DatatypeValidator* datatypeValidator = 0;
+    MemoryManager* const manager = (userDefined)
+        ? fMemoryManager : XMLPlatformUtils::fgMemoryManager;
 
-    datatypeValidator = new UnionDatatypeValidator(validators, finalSet);
+    datatypeValidator = new (manager) UnionDatatypeValidator(validators, finalSet);
 
     if (datatypeValidator != 0) {
 
         if (userDefined) {
 
             if (!fUserDefinedRegistry) {
-                fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
+                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29);
             }
 
             fUserDefinedRegistry->put((void *)typeName, datatypeValidator);

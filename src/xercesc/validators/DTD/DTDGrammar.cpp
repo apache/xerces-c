@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:54:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/12/04 02:47:25  knoaman
  * scanner re-organization.
  *
@@ -95,8 +98,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------
 //  DTDGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDGrammar::DTDGrammar() :
-    fElemDeclPool(0)
+DTDGrammar::DTDGrammar(MemoryManager* const manager) :
+    fMemoryManager(manager)
+    , fElemDeclPool(0)
     , fElemNonDeclPool(0)
     , fEntityDeclPool(0)
     , fNotationDeclPool(0)
@@ -108,10 +112,10 @@ DTDGrammar::DTDGrammar() :
     //  <TBD> Investigate what the optimum values would be for the various
     //  pools.
     //
-    fElemDeclPool = new NameIdPool<DTDElementDecl>(109);
-    fElemNonDeclPool = new NameIdPool<DTDElementDecl>(29);
-    fEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
-    fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
+    fElemDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(109);
+    fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29);
+    fEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109);
+    fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109);
 
     //
     //  Call our own reset method. This lets us have the pool setup stuff
@@ -145,7 +149,13 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
     // if not, then add this in
     if (!retVal)
     {
-        retVal = new DTDElementDecl(qName, uriId, DTDElementDecl::Any);
+        retVal = new (fMemoryManager) DTDElementDecl
+        (
+            qName
+            , uriId
+            , DTDElementDecl::Any
+            , fMemoryManager
+        );
         const unsigned int elemId = fElemNonDeclPool->put(retVal);
         retVal->setId(elemId);
         wasAdded = true;
@@ -164,7 +174,13 @@ XMLElementDecl* DTDGrammar::putElemDecl (const   unsigned int    uriId
         , unsigned int          scope
         , const bool            notDeclared)
 {
-    DTDElementDecl* retVal = new DTDElementDecl(qName, uriId, DTDElementDecl::Any);
+    DTDElementDecl* retVal = new (fMemoryManager) DTDElementDecl
+    (
+        qName
+        , uriId
+        , DTDElementDecl::Any
+        , fMemoryManager
+    );
     const unsigned int elemId = (notDeclared) ? fElemNonDeclPool->put(retVal)
                                               : fElemDeclPool->put(retVal);
     retVal->setId(elemId);

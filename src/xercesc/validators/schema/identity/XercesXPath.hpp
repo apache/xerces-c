@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,7 @@ class XMLStringPool;
 class NamespaceScope;
 
 
-class VALIDATORS_EXPORT XercesNodeTest
+class VALIDATORS_EXPORT XercesNodeTest : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -125,7 +125,8 @@ private:
 /**
   * A location path step comprised of an axis and node test.
   */
-class VALIDATORS_EXPORT XercesStep {
+class VALIDATORS_EXPORT XercesStep : public XMemory
+{
 public:
     // -----------------------------------------------------------------------
     //  Constants
@@ -169,7 +170,7 @@ private:
 /**
   * A location path representation for an XPath expression.
   */
-class VALIDATORS_EXPORT XercesLocationPath
+class VALIDATORS_EXPORT XercesLocationPath : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -206,7 +207,7 @@ private:
 };
 
 
-class VALIDATORS_EXPORT XercesXPath
+class VALIDATORS_EXPORT XercesXPath : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -311,10 +312,11 @@ private:
     unsigned int                     fEmptyNamespaceId;
     XMLCh*                           fExpression;
     RefVectorOf<XercesLocationPath>* fLocationPaths;
+    MemoryManager*                   fMemoryManager;
 };
 
 
-class VALIDATORS_EXPORT XPathScanner
+class VALIDATORS_EXPORT XPathScanner : public XMemory
 {
 public:
     // -----------------------------------------------------------------------

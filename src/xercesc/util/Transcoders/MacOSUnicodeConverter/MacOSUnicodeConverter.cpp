@@ -533,7 +533,8 @@ MacOSUnicodeConverter::ConvertWideToNarrow(const XMLCh* wide, char* narrow, std:
 XMLTranscoder*
 MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int			blockSize)
+                                        , const unsigned int			blockSize
+                                        ,       MemoryManager* const    manager)
 {
 	XMLTranscoder* result = NULL;
 	resValue = XMLTransService::Ok;
@@ -578,7 +579,7 @@ MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
 		resValue = XMLTransService::UnsupportedEncoding;
 	}
 	else
-		result = new MacOSTranscoder(encodingName, textToUnicodeInfo, unicodeToTextInfo, blockSize);
+		result = new (manager) MacOSTranscoder(encodingName, textToUnicodeInfo, unicodeToTextInfo, blockSize);
 	
     return result;
 }

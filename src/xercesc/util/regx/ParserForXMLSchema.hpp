@@ -79,7 +79,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-    ParserForXMLSchema();
+    ParserForXMLSchema(MemoryManager* const manager);
     ~ParserForXMLSchema();
 
     // -----------------------------------------------------------------------

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -97,17 +100,18 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-IDREFDatatypeValidator::IDREFDatatypeValidator()
-:StringDatatypeValidator(0, 0, 0, DatatypeValidator::IDREF)
+IDREFDatatypeValidator::IDREFDatatypeValidator(MemoryManager* const manager)
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::IDREF, manager)
 ,fIDRefList(0)
 {}
 
 IDREFDatatypeValidator::IDREFDatatypeValidator(
                                            DatatypeValidator*            const baseValidator
                                          , RefHashTableOf<KVStringPair>* const facets
-                                         , RefArrayVectorOf<XMLCh>*           const enums
-                                         , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::IDREF)
+                                         , RefArrayVectorOf<XMLCh>*      const enums
+                                         , const int                           finalSet
+                                         , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::IDREF, manager)
 ,fIDRefList(0)
 {
     init(enums);
@@ -116,20 +120,24 @@ IDREFDatatypeValidator::IDREFDatatypeValidator(
 IDREFDatatypeValidator::~IDREFDatatypeValidator()
 {}
 
-DatatypeValidator* IDREFDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* IDREFDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new IDREFDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) IDREFDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 IDREFDatatypeValidator::IDREFDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:StringDatatypeValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, type, manager)
 ,fIDRefList(0)
 {
     // do not invoke init() here!!!
@@ -158,7 +166,7 @@ void IDREFDatatypeValidator::addIdRef(const XMLCh* const content)
     XMLRefInfo* find = fIDRefList->get(content);
     if (!find)
     {
-        find = new XMLRefInfo(content);
+        find = new (fMemoryManager) XMLRefInfo(content);
         fIDRefList->put((void*)find->getRefName(), find);
     }
 

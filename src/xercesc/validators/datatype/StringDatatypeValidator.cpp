@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:53:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -136,17 +139,18 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-StringDatatypeValidator::StringDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, DatatypeValidator::String)
+StringDatatypeValidator::StringDatatypeValidator(MemoryManager* const manager)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::String, manager)
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
 {}
 
 StringDatatypeValidator::StringDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::String)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::String, manager)
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
 {
     init(enums);
@@ -155,20 +159,24 @@ StringDatatypeValidator::StringDatatypeValidator(
 StringDatatypeValidator::~StringDatatypeValidator()
 {}
 
-DatatypeValidator* StringDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* StringDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new StringDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) StringDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 StringDatatypeValidator::StringDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:AbstractStringValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:AbstractStringValidator(baseValidator, facets, finalSet, type, manager)
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
 {
     // do not invoke init() here!!!

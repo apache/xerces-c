@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -95,7 +98,6 @@
 #if !defined(CMBINARYOP_HPP)
 #define CMBINARYOP_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/validators/common/CMNode.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -110,9 +112,10 @@ public :
     // -----------------------------------------------------------------------
     CMBinaryOp
     (
-        const   ContentSpecNode::NodeTypes  type
-        ,       CMNode* const               leftToAdopt
-        ,       CMNode* const               rightToAdopt
+        const ContentSpecNode::NodeTypes type
+        ,     CMNode* const              leftToAdopt
+        ,     CMNode* const              rightToAdopt
+        ,     MemoryManager* const       manager
     );
     ~CMBinaryOp();
 

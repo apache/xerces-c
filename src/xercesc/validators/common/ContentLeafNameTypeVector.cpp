@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -77,7 +80,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -85,19 +87,26 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ContentLeafNameTypeVector: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ContentLeafNameTypeVector::ContentLeafNameTypeVector()
-: fLeafNames(0)
+ContentLeafNameTypeVector::ContentLeafNameTypeVector
+(
+    MemoryManager* const manager
+)
+: fMemoryManager(manager)
+, fLeafNames(0)
 , fLeafTypes(0)
 , fLeafCount(0)
 {
 }
 
 ContentLeafNameTypeVector::ContentLeafNameTypeVector
-       (    QName** const                      names
-          , ContentSpecNode::NodeTypes* const  types
-          , const unsigned int                       count
-       )
-: fLeafNames(0)
+(
+      QName** const                     names
+    , ContentSpecNode::NodeTypes* const types
+    , const unsigned int                count
+    , MemoryManager* const              manager
+)
+: fMemoryManager(manager)
+, fLeafNames(0)
 , fLeafTypes(0)
 , fLeafCount(0)
 {
@@ -108,10 +117,13 @@ ContentLeafNameTypeVector::ContentLeafNameTypeVector
 copy ctor
 ***/
 ContentLeafNameTypeVector::ContentLeafNameTypeVector
-      (const ContentLeafNameTypeVector& toCopy)
-	  :fLeafNames(0)
-	  ,fLeafTypes(0)
-	  ,fLeafCount(0)
+(
+    const ContentLeafNameTypeVector& toCopy
+)
+: fMemoryManager(toCopy.fMemoryManager)
+, fLeafNames(0)
+, fLeafTypes(0)
+, fLeafCount(0)
 {
     fLeafCount=toCopy.getLeafCount();
     init(fLeafCount);

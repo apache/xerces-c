@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,13 +83,15 @@ class XMLScanner;
 class ValueStoreCache;
 
 
-class VALIDATORS_EXPORT ValueStore
+class VALIDATORS_EXPORT ValueStore : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    ValueStore(IdentityConstraint* const ic, XMLScanner* const scanner);
+    ValueStore(IdentityConstraint* const ic,
+               XMLScanner* const scanner,
+               MemoryManager* const manager);
 	~ValueStore();
 
 	// -----------------------------------------------------------------------
@@ -150,6 +152,7 @@ private:
     RefVectorOf<FieldValueMap>* fValueTuples;
     ValueStore*                 fKeyValueStore;
     XMLScanner*                 fScanner; // for error reporting - REVISIT
+    MemoryManager*              fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

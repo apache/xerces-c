@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -154,6 +157,7 @@ MixedContentModel::MixedContentModel(const bool             dtd
  , fChildTypes(0)
  , fOrdered(ordered)
  , fDTD(dtd)
+ , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     //
     //  Create a vector of unsigned ints that will be filled in with the
@@ -161,7 +165,6 @@ MixedContentModel::MixedContentModel(const bool             dtd
     //  it an initial capacity of 64 which should be more than enough for
     //  99% of the scenarios.
     //
-
     ValueVectorOf<QName*> children(64);
     ValueVectorOf<ContentSpecNode::NodeTypes> childTypes(64);
 
@@ -182,8 +185,11 @@ MixedContentModel::MixedContentModel(const bool             dtd
     //  fill them in.
     //
     fCount = children.size();
-    fChildren = new QName*[fCount];
-    fChildTypes = new ContentSpecNode::NodeTypes[fCount];
+    fChildren = (QName**) fMemoryManager->allocate(fCount * sizeof(QName*)); //new QName*[fCount];
+    fChildTypes = (ContentSpecNode::NodeTypes*) fMemoryManager->allocate
+    (
+        fCount * sizeof(ContentSpecNode::NodeTypes)
+    ); //new ContentSpecNode::NodeTypes[fCount];
     for (unsigned int index = 0; index < fCount; index++) {
         fChildren[index] = children.elementAt(index);
         fChildTypes[index] = childTypes.elementAt(index);
@@ -192,8 +198,8 @@ MixedContentModel::MixedContentModel(const bool             dtd
 
 MixedContentModel::~MixedContentModel()
 {
-    delete [] fChildren;
-    delete [] fChildTypes;
+    fMemoryManager->deallocate(fChildren); //delete [] fChildren;
+    fMemoryManager->deallocate(fChildTypes); //delete [] fChildTypes;
 }
 
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -87,16 +90,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-YearMonthDatatypeValidator::YearMonthDatatypeValidator()
-:DateTimeValidator(0, 0, 0, DatatypeValidator::YearMonth)
+YearMonthDatatypeValidator::YearMonthDatatypeValidator(MemoryManager* const manager)
+:DateTimeValidator(0, 0, 0, DatatypeValidator::YearMonth, manager)
 {}
 
 YearMonthDatatypeValidator::YearMonthDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:DateTimeValidator(baseValidator, facets, finalSet, DatatypeValidator::YearMonth)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:DateTimeValidator(baseValidator, facets, finalSet, DatatypeValidator::YearMonth, manager)
 {
     init(enums);
 }
@@ -104,12 +108,15 @@ YearMonthDatatypeValidator::YearMonthDatatypeValidator(
 YearMonthDatatypeValidator::~YearMonthDatatypeValidator()
 {}
 
-DatatypeValidator* YearMonthDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* YearMonthDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new YearMonthDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) YearMonthDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 //
@@ -117,7 +124,7 @@ DatatypeValidator* YearMonthDatatypeValidator::newInstance(
 //
 XMLDateTime* YearMonthDatatypeValidator::parse(const XMLCh* const content)
 {
-    XMLDateTime *pRetDate = new XMLDateTime(content);
+    XMLDateTime *pRetDate = new (fMemoryManager) XMLDateTime(content);
 
     try
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:49:42  tng
  * C++ Namespace Support.
  *
@@ -90,11 +93,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XercesAttGroupInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XercesAttGroupInfo::XercesAttGroupInfo()
+XercesAttGroupInfo::XercesAttGroupInfo(MemoryManager* const manager)
     : fTypeWithId(false)
     , fAttributes(0)
     , fAnyAttributes(0)
     , fCompleteWildCard(0)
+    , fMemoryManager(manager)
 {
 
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -114,11 +117,8 @@
 #if !defined(CMLEAF_HPP)
 #define CMLEAF_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMNode.hpp>
-#include <xercesc/validators/common/CMStateSet.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -135,14 +135,16 @@ public :
     // -----------------------------------------------------------------------
     CMLeaf
     (
-          QName* const          element
-        , const unsigned int    position = ~0
+          QName* const         element
+        , const unsigned int   position = ~0
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     CMLeaf
     (
-          QName* const          element
-        , const unsigned int    position
-        , const bool            adopt
+          QName* const         element
+        , const unsigned int   position
+        , const bool           adopt
+        , MemoryManager* const manager
     );
     ~CMLeaf();
 
@@ -199,18 +201,22 @@ private :
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
-inline CMLeaf::CMLeaf(    QName* const          element
-                        , const unsigned int    position) :
-    CMNode(ContentSpecNode::Leaf)
+inline CMLeaf::CMLeaf(       QName* const         element
+                     , const unsigned int         position
+                     ,       MemoryManager* const manager) :
+    CMNode(ContentSpecNode::Leaf, manager)
     , fElement(0)
     , fPosition(position)
     , fAdopt(false)
 {
     if (!element)
     {
-        fElement = new QName(XMLUni::fgZeroLenString
-                           , XMLUni::fgZeroLenString
-                           , XMLElementDecl::fgInvalidElemId);
+        fElement = new (fMemoryManager) QName
+        (
+              XMLUni::fgZeroLenString
+            , XMLUni::fgZeroLenString
+            , XMLElementDecl::fgInvalidElemId
+        );
         // We have to be responsible for this QName - override default fAdopt
         fAdopt = true;
     }
@@ -220,19 +226,23 @@ inline CMLeaf::CMLeaf(    QName* const          element
     }
 }
 
-inline CMLeaf::CMLeaf(    QName* const          element
-                        , const unsigned int    position
-                        , const bool            adopt) :
-    CMNode(ContentSpecNode::Leaf)
+inline CMLeaf::CMLeaf(       QName* const         element
+                     , const unsigned int         position
+                     , const bool                 adopt
+                     ,       MemoryManager* const manager) :
+    CMNode(ContentSpecNode::Leaf, manager)
     , fElement(0)
     , fPosition(position)
     , fAdopt(adopt)
 {
     if (!element)
     {
-        fElement = new QName(XMLUni::fgZeroLenString
-                           , XMLUni::fgZeroLenString
-                           , XMLElementDecl::fgInvalidElemId);
+        fElement = new (fMemoryManager) QName
+        (
+              XMLUni::fgZeroLenString
+            , XMLUni::fgZeroLenString
+            , XMLElementDecl::fgInvalidElemId
+        );
         // We have to be responsible for this QName - override adopt parameter
         fAdopt = true;
     }

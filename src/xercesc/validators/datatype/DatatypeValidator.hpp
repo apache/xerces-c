@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,13 +61,17 @@
 #if !defined(DATATYPEVALIDATOR_HPP)
 #define DATATYPEVALIDATOR_HPP
 
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/KVStringPair.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class MemoryManager;
 
 /**
   * DataTypeValidator defines the interface that data type validators must
@@ -85,7 +89,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   */
 
 
-class VALIDATORS_EXPORT DatatypeValidator
+class VALIDATORS_EXPORT DatatypeValidator : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -269,9 +273,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-	virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const,
-                                           RefArrayVectorOf<XMLCh>* const enums,
-                                           const int finalSet) = 0;
+	virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    ) = 0;
 
     /**
      * Returns the uri,name of the type this validator is for
@@ -300,6 +308,10 @@ public:
      */
     const XMLCh* getTypeLocalName() const;
 
+    /**
+     * Returns the plugged-in memory manager
+     */
+    MemoryManager* getMemoryManager() const;
 
 protected:
     // -----------------------------------------------------------------------
@@ -321,7 +333,8 @@ protected:
 	DatatypeValidator(DatatypeValidator* const baseValidator,
                       RefHashTableOf<KVStringPair>* const facets,
                       const int finalSet,
-                      const ValidatorType type);
+                      const ValidatorType type,
+                      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 
@@ -362,6 +375,14 @@ protected:
       * get WSString
       */
     const XMLCh*   getWSstring(const short WSType) const;
+
+    // -----------------------------------------------------------------------
+    //  Protected data members
+    //
+    //  fMemoryManager
+    //      Pluggable memory manager for dynamic allocation/deallocation.
+    // -----------------------------------------------------------------------
+    MemoryManager*                fMemoryManager;
 
 private:
     // -----------------------------------------------------------------------
@@ -413,6 +434,7 @@ private:
     //      true if this type is anonynous
     //
     // -----------------------------------------------------------------------
+    bool                          fAnonymous;
     int                           fFinalSet;
     int                           fFacetsDefined;
     int                           fFixed;
@@ -421,10 +443,9 @@ private:
 	RefHashTableOf<KVStringPair>* fFacets;
     XMLCh*                        fPattern;
     RegularExpression*            fRegex;
-    XMLCh*                        fTypeLocalName;
     XMLCh*                        fTypeName;
-    XMLCh*                        fTypeUri;
-    bool                          fAnonymous;
+    const XMLCh*                  fTypeLocalName;
+    const XMLCh*                  fTypeUri;
 };
 
 
@@ -456,24 +477,89 @@ inline DatatypeValidator::ValidatorType DatatypeValidator::getType() const
     return fType;
 }
 
+inline int DatatypeValidator::getFacetsDefined() const
+{
+    return fFacetsDefined;
+}
+
+inline int DatatypeValidator::getFixed() const
+{
+    return fFixed;
+}
+
+inline const XMLCh* DatatypeValidator::getPattern() const
+{
+    return fPattern;
+}
+
+inline RegularExpression* DatatypeValidator::getRegex() const
+{
+    return fRegex;
+}
+
+inline const XMLCh* DatatypeValidator::getTypeName() const
+{
+    return fTypeLocalName;
+}
+
+inline bool DatatypeValidator::getAnonymous() const
+{
+    return fAnonymous;
+}
+
+inline const XMLCh* DatatypeValidator::getTypeLocalName() const
+{
+    return fTypeLocalName;
+}
+
+inline const XMLCh* DatatypeValidator::getTypeUri() const
+{
+    return fTypeUri;
+}
+
+inline MemoryManager* DatatypeValidator::getMemoryManager() const
+{
+    return fMemoryManager;
+}
+
+// ---------------------------------------------------------------------------
+//  DatatypeValidator: Setters
+// ---------------------------------------------------------------------------
 inline void DatatypeValidator::setType(ValidatorType theType)
 {
     fType = theType;
 }
 
-// ---------------------------------------------------------------------------
-//  DatatypeValidator: CleanUp methods
-// ---------------------------------------------------------------------------
-inline void DatatypeValidator::cleanUp() {
-
-	delete fFacets;
-    delete [] fPattern;
-    delete fRegex;
-    delete [] fTypeName;
-    delete [] fTypeLocalName;
-    delete [] fTypeUri;
+inline void DatatypeValidator::setFacetsDefined(int facets)
+{
+    fFacetsDefined |= facets;
 }
 
+inline void DatatypeValidator::setFixed(int fixed)
+{
+    fFixed |= fixed;
+}
+
+inline void DatatypeValidator::setPattern(const XMLCh* pattern)
+{
+    if (fPattern)
+        fMemoryManager->deallocate(fPattern);//delete [] fPattern;
+    fPattern = XMLString::replicate(pattern, fMemoryManager);
+}
+
+inline void DatatypeValidator::setRegex(RegularExpression* const regex)
+{
+    fRegex = regex;
+}
+
+inline bool DatatypeValidator::isAtomic() const {
+
+    return true;
+}
+
+inline void DatatypeValidator::setAnonymous() {
+    fAnonymous = true;
+}
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidators: Compare methods
@@ -502,123 +588,6 @@ DatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
     }
 
     return false;
-}
-
-inline int DatatypeValidator::getFacetsDefined() const
-{
-    return fFacetsDefined;
-}
-
-inline void DatatypeValidator::setFacetsDefined(int facets)
-{
-    fFacetsDefined |= facets;
-}
-
-inline int DatatypeValidator::getFixed() const
-{
-    return fFixed;
-}
-
-inline void DatatypeValidator::setFixed(int fixed)
-{
-    fFixed |= fixed;
-}
-
-inline const XMLCh* DatatypeValidator::getPattern() const
-{
-    return fPattern;
-}
-
-inline void DatatypeValidator::setPattern(const XMLCh* pattern)
-{
-    delete [] fPattern;
-    fPattern = XMLString::replicate(pattern);
-}
-
-inline RegularExpression* DatatypeValidator::getRegex() const
-{
-    return fRegex;
-}
-
-inline void DatatypeValidator::setRegex(RegularExpression* const regex)
-{
-    fRegex = regex;
-}
-
-inline bool DatatypeValidator::isAtomic() const {
-
-    return true;
-}
-
-inline const XMLCh* DatatypeValidator::getTypeName() const {
-    return fTypeName;
-}
-
-inline const XMLCh* DatatypeValidator::getTypeLocalName() const {
-    if(!fTypeLocalName) {
-        int index = XMLString::indexOf(fTypeName, chComma);
-        int length = XMLString::stringLen(fTypeName);
-        XMLCh *tName = new XMLCh[length - index + 1];
-        XMLString::subString(tName, fTypeName, index + 1, length);
-        ((DatatypeValidator *)this)->fTypeLocalName = tName;
-    }
-
-    return fTypeLocalName;
-}
-
-inline const XMLCh* DatatypeValidator::getTypeUri() const {
-    if(!fTypeUri) {
-        int index = XMLString::indexOf(fTypeName, chComma);
-        XMLCh *uri = new XMLCh[index + 1];
-        XMLString::subString(uri, fTypeName, 0, index);
-        ((DatatypeValidator *)this)->fTypeUri = uri;
-    }
-
-    return fTypeUri;
-}
-
-inline void DatatypeValidator::setTypeName(const XMLCh* const name, const XMLCh* const uri) {
-
-    delete [] fTypeName;
-    delete [] fTypeLocalName;
-    delete [] fTypeUri;
-
-    fTypeUri = XMLString::replicate(uri);
-    fTypeLocalName = XMLString::replicate(name);
-    XMLBuffer buf;
-    buf.set(uri);
-    buf.append(chComma);
-    buf.append(name);
-    fTypeName = XMLString::replicate(buf.getRawBuffer());
-}
-
-inline void DatatypeValidator::setTypeName(const XMLCh* const typeName) {
-
-    delete [] fTypeName;
-    delete [] fTypeLocalName;
-    fTypeLocalName = 0;
-    delete [] fTypeUri;
-    fTypeUri = 0;
-
-    //REVISIT this is a lot of work, cant we set this earlier when we have the info?
-    if( XMLString::indexOf( typeName, chComma ) < 0 ) {
-        XMLBuffer buf;
-        buf.set(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-        buf.append(chComma);
-        buf.append(typeName);
-        fTypeName = XMLString::replicate(buf.getRawBuffer());
-    }
-    else {
-        fTypeName = XMLString::replicate(typeName);
-    }
-}
-
-inline void DatatypeValidator::setAnonymous() {
-    fAnonymous = true;
-}
-
-inline bool DatatypeValidator::getAnonymous() const {
-    return fAnonymous;
 }
 
 

@@ -332,7 +332,8 @@ void ICUTransService::lowerCase(XMLCh* const toLowerCase) const
 XMLTranscoder* ICUTransService::
 makeNewXMLTranscoder(const  XMLCh* const            encodingName
                     ,       XMLTransService::Codes& resValue
-                    , const unsigned int            blockSize)
+                    , const unsigned int            blockSize
+                    ,       MemoryManager* const    manager)
 {
     //
     //  If UChar and XMLCh are not the same size, then we have premassage the
@@ -360,7 +361,7 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
         return 0;
     }
 
-    return new ICUTranscoder(encodingName, converter, blockSize);
+    return new (manager) ICUTranscoder(encodingName, converter, blockSize);
 }
 
 

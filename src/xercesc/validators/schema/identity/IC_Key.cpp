@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -78,8 +81,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  IC_Key: Constructors and Destructor
 // ---------------------------------------------------------------------------
 IC_Key::IC_Key(const XMLCh* const identityConstraintName,
-               const XMLCh* const elemName)
-    : IdentityConstraint(identityConstraintName, elemName)
+               const XMLCh* const elemName,
+			   MemoryManager* const manager)
+    : IdentityConstraint(identityConstraintName, elemName, manager)
 {
 }
 

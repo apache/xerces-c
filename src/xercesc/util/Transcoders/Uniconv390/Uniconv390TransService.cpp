@@ -472,16 +472,17 @@ DBGPRINTF2("makeNewLCPTranscoder() localencoding=%s \n",nl_langinfo(CODESET));
 XMLTranscoder* Uniconv390TransService::
 makeNewXMLTranscoder(const  XMLCh* const            encodingName
                     ,       XMLTransService::Codes& resValue
-                    , const unsigned int            blockSize)
+                    , const unsigned int            blockSize
+                    ,       MemoryManager* const    manager)
 {
-char * localname = XMLString::transcode(encodingName);
-ArrayJanitor<char> janText((char*)localname);
+char * localname = XMLString::transcode(encodingName, manager);
+ArrayJanitor<char> janText((char*)localname, manager);
 DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSize);
 
    if (gForceTranscode == MUST_USE_ICU) {
       if (gViewTranscoder)
          printf("IXM1001I XML - Using ICU - %s\n",localname);
-      return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize);
+      return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
    }
 
    uniconvconverter *tconv=addConverter(localname,resValue);
@@ -493,13 +494,13 @@ DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSi
       else {
          if (gViewTranscoder)
             printf("IXM1002I XML - Using ICU - %s\n",localname);
-         return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize);
+         return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
       }
    }
 
    if (gViewTranscoder)
       printf("IXM1003I XML - Using Unicode Services - %s\n",localname);
-   return new Uniconv390Transcoder(encodingName, tconv, blockSize);
+   return new (manager) Uniconv390Transcoder(encodingName, tconv, blockSize);
 }
 
 
@@ -772,6 +773,61 @@ char* Uniconv390LCPTranscoder::transcode(const XMLCh* const toTranscode)
    return retVal;
 }
 
+char* Uniconv390LCPTranscoder::transcode(const XMLCh* const toTranscode,
+                                         MemoryManager* const manager)
+{
+//printf("Uniconv390LCPTranscoder::transcode(const XMLCh* const toTranscode) ");
+//printf("transcode handle=%x\n",fConverter->fIconv390DescriptorTo);
+   if (!toTranscode)
+      return 0;
+
+   char* retVal = 0;
+    // find out the length of the source and use this as an estimate for the needed buffer length.
+   unsigned int  wLent = getWideCharLength(toTranscode);
+   if (wLent == 0) {
+      retVal = (char*) manager->allocate(sizeof(char));//new char[1];
+      retVal[0] = 0;
+      return retVal;
+   }
+   retVal = (char*) manager->allocate((wLent * 2 + 1) * sizeof(char));//new char[wLent * 2 + 1]; // get double just to be sure.
+   while (true) {
+      int retCode;
+      char *tmpInPtr = (char*) toTranscode;
+      char *tmpOutPtr = (char*) retVal;
+      unsigned int inByteLeft = wLent*sizeof(XMLCh);
+      unsigned int outByteLeft = wLent*sizeof(XMLCh);
+//printf("!!!transcode len=%d\n",wLent);
+
+      { // Locking scope
+         XMLMutexLock lockConverter(&fConverter->fMutex);
+         retCode = uniconv(fConverter->fIconv390DescriptorTo, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+      }
+//printf("!!!transcode uniconv finished rc=%d errno=%d\n",retCode,errno);
+      // If the data does not fit into our estimation of the buffer size, then delete the buffer,
+      // double the estimated length and try again.
+      if ( ((retCode < 0) && (errno == E2BIG)) || (outByteLeft == 0) ) {
+//printf("!!!Uniconv390LCPTranscoder::transcode(const XMLCh* const toTranscode):Retrying with a bigger buffer.......\n");
+         manager->deallocate(retVal);//delete [] retVal;
+         wLent*=2;
+         retVal = (char*) manager->allocate
+         (
+             (wLent*sizeof(XMLCh) + 1) * sizeof(char)
+         );//new char[wLent*sizeof(XMLCh) + 1];
+      }
+      // If uniconv doesn't complete for any other reason, then return failure.
+      else if (retCode < 0) {
+         return 0;
+      }
+      // it was successful so break out of the loop
+      else {
+         *tmpOutPtr = 0x00;
+         break;
+      }
+   }
+//printf("Uniconv390LCPTranscoder::transcode(const XMLCh* const toTranscode):%s\n",retVal);
+   return retVal;
+}
+
 XMLCh* Uniconv390LCPTranscoder::transcode(const char* const toTranscode)
 {
 DBGPRINTF2("Uniconv390LCPTranscoder::transcode(const char* const toTranscode):%s \n",toTranscode);
@@ -801,6 +857,43 @@ DBGPRINTF2("Uniconv390LCPTranscoder::transcode(const char* const toTranscode):%s
    // return failure.
    if (retCode < 0) {
       delete [] retVal;
+      return 0;
+   }
+   *tmpOutPtr = 0x00;
+   *(tmpOutPtr+1) = 0x00;
+   return retVal;
+}
+
+XMLCh* Uniconv390LCPTranscoder::transcode(const char* const toTranscode,
+                                          MemoryManager* const manager)
+{
+DBGPRINTF2("Uniconv390LCPTranscoder::transcode(const char* const toTranscode):%s \n",toTranscode);
+//printf("transcode handle=%x\n",fConverter->fIconv390DescriptorFrom);
+   if (!toTranscode)
+      return 0;
+
+   XMLCh* retVal = 0;
+   const unsigned int len = strlen(toTranscode);
+   retVal = (XMLCh*) manager->allocate((len + 1) * sizeof(XMLCh));//new XMLCh[len + 1]; // +1 is for the null terminator!
+   if (len == 0) {
+      retVal[0] = 0;
+      return retVal;
+   }
+
+   int retCode;
+   char *tmpInPtr = (char*) toTranscode;
+   char *tmpOutPtr = (char*) retVal;
+   unsigned int inByteLeft = len;
+   unsigned int outByteLeft = len*sizeof(XMLCh);
+   { // locking scope
+      XMLMutexLock lockConverter(&fConverter->fMutex);
+      retCode = uniconv(fConverter->fIconv390DescriptorFrom, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
+   }
+   // Because we check the length in the beginning, and we make sure the output buffer
+   // is big enough, uniconv should complete the transcoding. If it doesn't for any reason, then
+   // return failure.
+   if (retCode < 0) {
+      manager->deallocate(retVal);//delete [] retVal;
       return 0;
    }
    *tmpOutPtr = 0x00;

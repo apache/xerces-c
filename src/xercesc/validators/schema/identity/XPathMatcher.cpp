@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/01/13 20:16:52  knoaman
  * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
  *
@@ -97,7 +100,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XPathMatcher::XPathMatcher(XercesXPath* const xpath)
+XPathMatcher::XPathMatcher( XercesXPath* const xpath
+                          , MemoryManager* const manager)
     : fLocationPathSize(0)
     , fMatched(0)
     , fNoMatchDepth(0)
@@ -105,6 +109,7 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath)
     , fStepIndexes(0)
     , fLocationPaths(0)
     , fIdentityConstraint(0)
+    , fMemoryManager(manager)
 {
     try {
         init(xpath);
@@ -118,7 +123,8 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath)
 
 
 XPathMatcher::XPathMatcher(XercesXPath* const xpath,
-                           IdentityConstraint* const ic)
+                           IdentityConstraint* const ic,
+						   MemoryManager* const manager)
     : fLocationPathSize(0)
     , fMatched(0)
     , fNoMatchDepth(0)
@@ -126,6 +132,7 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath,
     , fStepIndexes(0)
     , fLocationPaths(0)
     , fIdentityConstraint(ic)
+    , fMemoryManager(manager)
 {
     try {
         init(xpath);
@@ -155,13 +162,22 @@ void XPathMatcher::init(XercesXPath* const xpath) {
 
         if (fLocationPathSize) {
 
-            fStepIndexes = new RefVectorOf<ValueStackOf<int> >(fLocationPathSize);
-            fCurrentStep = new int[fLocationPathSize];
-            fNoMatchDepth = new int[fLocationPathSize];
-            fMatched = new int[fLocationPathSize];
+            fStepIndexes = new (fMemoryManager) RefVectorOf<ValueStackOf<int> >(fLocationPathSize);
+            fCurrentStep = (int*) fMemoryManager->allocate
+            (
+                fLocationPathSize * sizeof(int)
+            );//new int[fLocationPathSize];
+            fNoMatchDepth = (int*) fMemoryManager->allocate
+            (
+                fLocationPathSize * sizeof(int)
+            );//new int[fLocationPathSize];
+            fMatched = (int*) fMemoryManager->allocate
+            (
+                fLocationPathSize * sizeof(int)
+            );//new int[fLocationPathSize];
 
             for(unsigned int i=0; i < fLocationPathSize; i++) {
-                fStepIndexes->addElement(new ValueStackOf<int>(8));
+                fStepIndexes->addElement(new (fMemoryManager) ValueStackOf<int>(8));
             }
         }
     }

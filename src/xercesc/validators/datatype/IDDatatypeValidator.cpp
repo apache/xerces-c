@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -99,17 +102,18 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-IDDatatypeValidator::IDDatatypeValidator()
-:StringDatatypeValidator(0, 0, 0, DatatypeValidator::ID)
+IDDatatypeValidator::IDDatatypeValidator(MemoryManager* const manager)
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::ID, manager)
 ,fIDRefList(0)
 {}
 
 IDDatatypeValidator::IDDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ID)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ID, manager)
 ,fIDRefList(0)
 {
     init(enums);
@@ -118,20 +122,24 @@ IDDatatypeValidator::IDDatatypeValidator(
 IDDatatypeValidator::~IDDatatypeValidator()
 {}
 
-DatatypeValidator* IDDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* IDDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new IDDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) IDDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 IDDatatypeValidator::IDDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:StringDatatypeValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, type, manager)
 ,fIDRefList(0)
 {
     // do not invoke init() here!!!
@@ -164,7 +172,7 @@ void IDDatatypeValidator::addId(const XMLCh * const content)
     }
      else
     {
-        find = new XMLRefInfo(content);
+        find = new (fMemoryManager) XMLRefInfo(content);
         fIDRefList->put((void*)find->getRefName(), find);
     }
 

@@ -107,7 +107,7 @@ class XSDDOMParser;
 class XMLErrorReporter;
 
 
-class VALIDATORS_EXPORT TraverseSchema
+class VALIDATORS_EXPORT TraverseSchema : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -123,6 +123,7 @@ public:
         , const XMLCh* const      schemaURL
         , XMLEntityHandler* const entityHandler
         , XMLErrorReporter* const errorReporter
+        , MemoryManager* const    manager
     );
 
     ~TraverseSchema();
@@ -773,10 +774,11 @@ private:
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
     RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
     RefHash2KeysTableOf<SchemaInfo>*               fSchemaInfoList;
-    GeneralAttributeCheck                          fAttributeCheck;
     XSDDOMParser*                                  fParser;
     XSDErrorReporter                               fXSDErrorReporter;
     XSDLocator*                                    fLocator;
+    MemoryManager*                                 fMemoryManager;
+    GeneralAttributeCheck                          fAttributeCheck;
 
     friend class GeneralAttributeCheck;
 };

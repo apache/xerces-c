@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.10  2003/02/22 18:28:26  peiyongz
  * Schema Errata E2-35 Length, minLength and maxLength in different derivation steps.
  *
@@ -122,7 +125,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
@@ -167,8 +169,9 @@ AbstractStringValidator::AbstractStringValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:DatatypeValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:DatatypeValidator(baseValidator, facets, finalSet, type, manager)
 ,fLength(0)
 ,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
 ,fMinLength(0)
@@ -643,7 +646,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {
@@ -698,8 +701,8 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
     if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
     {
-        XMLCh* normContent = XMLString::replicate(content);
-        ArrayJanitor<XMLCh>  jan(normContent);
+        XMLCh* normContent = XMLString::replicate(content, fMemoryManager);
+        ArrayJanitor<XMLCh>  jan(normContent, fMemoryManager);
         normalizeContent(normContent);
 
         int i=0;

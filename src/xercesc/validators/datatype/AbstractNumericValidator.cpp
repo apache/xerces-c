@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/02/02 23:55:40  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -101,8 +104,9 @@ AbstractNumericValidator::AbstractNumericValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , const int                           finalSet
-                        , const ValidatorType                 type)
-:AbstractNumericFacetValidator(baseValidator, facets, finalSet, type)
+                        , const ValidatorType                 type
+                        , MemoryManager* const                manager)
+:AbstractNumericFacetValidator(baseValidator, facets, finalSet, type, manager)
 {
     //do not invoke init() here !!!
 }

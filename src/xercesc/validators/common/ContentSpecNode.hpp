@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -158,8 +161,8 @@
 #if !defined(CONTENTSPECNODE_HPP)
 #define CONTENTSPECNODE_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -167,7 +170,7 @@ class XMLBuffer;
 class Grammar;
 
 
-class ContentSpecNode
+class ContentSpecNode : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -296,6 +299,7 @@ private :
     //      Indicate the maximum times that this node can occur
     //      -1 (Unbounded), default (1)
     // -----------------------------------------------------------------------
+    MemoryManager*      fMemoryManager;
     QName*              fElement;
     ContentSpecNode*    fFirst;
     ContentSpecNode*    fSecond;
@@ -311,7 +315,8 @@ private :
 // ---------------------------------------------------------------------------
 inline ContentSpecNode::ContentSpecNode() :
 
-    fElement(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fElement(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
@@ -325,7 +330,8 @@ inline ContentSpecNode::ContentSpecNode() :
 inline
 ContentSpecNode::ContentSpecNode(QName* const element) :
 
-    fElement(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fElement(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
@@ -335,14 +341,15 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
     , fMaxOccurs(1)
 {
     if (element)
-        fElement = new QName(*element);
+        fElement = new (fMemoryManager) QName(*element);
 }
 
 inline
 ContentSpecNode::ContentSpecNode(QName* const element
                                , const bool copyQName) :
 
-    fElement(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fElement(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
@@ -354,7 +361,7 @@ ContentSpecNode::ContentSpecNode(QName* const element
     if (copyQName)
     {
         if (element)
-            fElement = new QName(*element);
+            fElement = new (fMemoryManager) QName(*element);
     }
     else
     {
@@ -369,7 +376,8 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
                                 , const bool                    adoptFirst
                                 , const bool                    adoptSecond) :
 
-    fElement(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fElement(0)
     , fFirst(firstAdopt)
     , fSecond(secondAdopt)
     , fType(type)
@@ -476,7 +484,7 @@ inline void ContentSpecNode::setElement(QName* const element)
     delete fElement;
     fElement = 0;
     if (element)
-        fElement = new QName(*element);
+        fElement = new (fMemoryManager) QName(*element);
 }
 
 inline void ContentSpecNode::setFirst(ContentSpecNode* const toAdopt)

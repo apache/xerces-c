@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,7 +75,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class ValueStore;
 
 
-class VALIDATORS_EXPORT IC_Field
+class VALIDATORS_EXPORT IC_Field : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -106,7 +106,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Factory methods
     // -----------------------------------------------------------------------
-    XPathMatcher* createMatcher(ValueStore* const valueStore);
+    XPathMatcher* createMatcher(ValueStore* const valueStore,
+                                MemoryManager* const manager);
 
 private:
     // -----------------------------------------------------------------------
@@ -148,8 +149,10 @@ private:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    FieldMatcher(XercesXPath* const anXPath, IC_Field* const aField,
-                 ValueStore* const valueStore);
+    FieldMatcher(XercesXPath* const anXPath,
+                 IC_Field* const aField,
+                 ValueStore* const valueStore,
+                 MemoryManager* const manager);
 
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators

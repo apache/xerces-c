@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:54:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/01/29 19:46:40  gareth
  * added DOMTypeInfo API
  *
@@ -154,19 +157,19 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDElementDecl();
-
+    DTDElementDecl(MemoryManager* const manager);
     DTDElementDecl
     (
-        const XMLCh* const    elemRawName
-      , const unsigned int    uriId
-      , const ModelTypes      modelType = Any
+          const XMLCh* const   elemRawName
+        , const unsigned int   uriId
+        , const ModelTypes     modelType// = Any
+        , MemoryManager* const manager
     );
-
     DTDElementDecl
     (
-        QName* const    elementName
-      , const ModelTypes      modelType = Any
+          QName* const         elementName
+        , const ModelTypes     modelType// = Any
+        , MemoryManager* const manager
     );
 
     ~DTDElementDecl();

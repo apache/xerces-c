@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -87,14 +90,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  IdentityConstraint: Constructors and Destructor
 // ---------------------------------------------------------------------------
 IdentityConstraint::IdentityConstraint(const XMLCh* const identityConstraintName,
-                                       const XMLCh* const elemName)
-    : fIdentityConstraintName(XMLString::replicate(identityConstraintName))
+                                       const XMLCh* const elemName,
+                                       MemoryManager* const manager)
+    : fIdentityConstraintName(0)
     , fElemName(0)
     , fSelector(0)
     , fFields(0)
+    , fMemoryManager(manager)
 {
     try {
-        fElemName = XMLString::replicate(elemName);
+        fIdentityConstraintName = XMLString::replicate(identityConstraintName, fMemoryManager);
+        fElemName = XMLString::replicate(elemName, fMemoryManager);
     }
     catch(...) {
 
@@ -159,8 +165,8 @@ void IdentityConstraint::setSelector(IC_Selector* const selector) {
 // ---------------------------------------------------------------------------
 void IdentityConstraint::cleanUp() {
 
-    delete [] fIdentityConstraintName;
-    delete [] fElemName;
+    fMemoryManager->deallocate(fIdentityConstraintName);//delete [] fIdentityConstraintName;
+    fMemoryManager->deallocate(fElemName);//delete [] fElemName;
     delete fFields;
     delete fSelector;
 }

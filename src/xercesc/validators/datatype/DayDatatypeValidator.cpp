@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -87,16 +90,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-DayDatatypeValidator::DayDatatypeValidator()
-:DateTimeValidator(0, 0, 0, DatatypeValidator::Day)
+DayDatatypeValidator::DayDatatypeValidator(MemoryManager* const manager)
+:DateTimeValidator(0, 0, 0, DatatypeValidator::Day, manager)
 {}
 
 DayDatatypeValidator::DayDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:DateTimeValidator(baseValidator, facets, finalSet, DatatypeValidator::Day)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:DateTimeValidator(baseValidator, facets, finalSet, DatatypeValidator::Day, manager)
 {
     init(enums);
 }
@@ -104,12 +108,15 @@ DayDatatypeValidator::DayDatatypeValidator(
 DayDatatypeValidator::~DayDatatypeValidator()
 {}
 
-DatatypeValidator* DayDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* DayDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new DayDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) DayDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 //
@@ -117,7 +124,7 @@ DatatypeValidator* DayDatatypeValidator::newInstance(
 //
 XMLDateTime* DayDatatypeValidator::parse(const XMLCh* const content)
 {
-    XMLDateTime *pRetDate = new XMLDateTime(content);
+    XMLDateTime *pRetDate = new (fMemoryManager) XMLDateTime(content);
 
     try
     {

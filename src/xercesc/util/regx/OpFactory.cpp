@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:42:54  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -81,6 +84,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/regx/Op.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,8 +92,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  OpFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
 OpFactory::OpFactory() :
-    fOpVector(new RefVectorOf<Op>(16, true)) {
-
+    fOpVector(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+{
+    fOpVector = new (fMemoryManager) RefVectorOf<Op>(16, true);
 }
 
 OpFactory::~OpFactory() {
@@ -103,14 +109,14 @@ OpFactory::~OpFactory() {
 // ---------------------------------------------------------------------------
 Op* OpFactory::createDotOp() {
 
-	Op* tmpOp = new Op(Op::O_DOT);
+	Op* tmpOp = new (fMemoryManager) Op(Op::O_DOT);
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
 }
 
 CharOp* OpFactory::createCharOp(int data) {
 
-	CharOp* tmpOp = new CharOp(Op::O_CHAR, data);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CHAR, data);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -118,7 +124,7 @@ CharOp* OpFactory::createCharOp(int data) {
 
 CharOp* OpFactory::createAnchorOp(int data) {
 
-	CharOp* tmpOp = new CharOp(Op::O_ANCHOR, data);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_ANCHOR, data);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -126,7 +132,7 @@ CharOp* OpFactory::createAnchorOp(int data) {
 
 CharOp* OpFactory::createCaptureOp(int number, const Op* const next) {
 
-	CharOp* tmpOp = new CharOp(Op::O_CAPTURE, number);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CAPTURE, number);
 
 	tmpOp->setNextOp(next);
 	fOpVector->addElement(tmpOp);
@@ -135,7 +141,7 @@ CharOp* OpFactory::createCaptureOp(int number, const Op* const next) {
 
 UnionOp* OpFactory::createUnionOp(int size) {
 
-	UnionOp* tmpOp = new UnionOp(Op::O_UNION, size);
+	UnionOp* tmpOp = new (fMemoryManager) UnionOp(Op::O_UNION, size);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -143,7 +149,7 @@ UnionOp* OpFactory::createUnionOp(int size) {
 
 ChildOp* OpFactory::createClosureOp(int id) {
 
-	ModifierOp* tmpOp = new ModifierOp(Op::O_CLOSURE, id, -1);
+	ModifierOp* tmpOp = new (fMemoryManager) ModifierOp(Op::O_CLOSURE, id, -1);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -151,7 +157,7 @@ ChildOp* OpFactory::createClosureOp(int id) {
 
 ChildOp* OpFactory::createNonGreedyClosureOp() {
 
-	ChildOp* tmpOp = new ChildOp(Op::O_NONGREEDYCLOSURE);
+	ChildOp* tmpOp = new (fMemoryManager) ChildOp(Op::O_NONGREEDYCLOSURE);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -159,7 +165,7 @@ ChildOp* OpFactory::createNonGreedyClosureOp() {
 
 ChildOp* OpFactory::createQuestionOp(bool nonGreedy) {
 
-	ChildOp* tmpOp = new ChildOp(nonGreedy ? Op::O_NONGREEDYQUESTION :
+	ChildOp* tmpOp = new (fMemoryManager)  ChildOp(nonGreedy ? Op::O_NONGREEDYQUESTION :
 											 Op::O_QUESTION);
 
 	fOpVector->addElement(tmpOp);
@@ -168,7 +174,7 @@ ChildOp* OpFactory::createQuestionOp(bool nonGreedy) {
 
 RangeOp* OpFactory::createRangeOp(const Token* const token) {
 
-	RangeOp* tmpOp = new RangeOp(Op::O_RANGE, token);
+	RangeOp* tmpOp = new (fMemoryManager)  RangeOp(Op::O_RANGE, token);
 	
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -177,7 +183,7 @@ RangeOp* OpFactory::createRangeOp(const Token* const token) {
 ChildOp* OpFactory::createLookOp(const short type, const Op* const next,
 						         const Op* const branch) {
 
-	ChildOp* tmpOp = new ChildOp(type);
+	ChildOp* tmpOp = new (fMemoryManager) ChildOp(type);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -187,7 +193,7 @@ ChildOp* OpFactory::createLookOp(const short type, const Op* const next,
 
 CharOp* OpFactory::createBackReferenceOp(int refNo) {
 
-	CharOp* tmpOp = new CharOp(Op::O_BACKREFERENCE, refNo);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_BACKREFERENCE, refNo);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -195,7 +201,7 @@ CharOp* OpFactory::createBackReferenceOp(int refNo) {
 
 StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
 
-	StringOp* tmpOp = new StringOp(Op::O_STRING, literal);
+	StringOp* tmpOp = new (fMemoryManager) StringOp(Op::O_STRING, literal);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -204,7 +210,7 @@ StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
 ChildOp* OpFactory::createIndependentOp(const Op* const next,
 							            const Op* const branch) {
 
-	ChildOp* tmpOp = new ChildOp(Op::O_INDEPENDENT);
+	ChildOp* tmpOp = new (fMemoryManager) ChildOp(Op::O_INDEPENDENT);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -216,7 +222,7 @@ ModifierOp* OpFactory::createModifierOp(const Op* const next,
                                         const Op* const branch,
                                         const int add, const int mask) {
 
-	ModifierOp* tmpOp = new ModifierOp(Op::O_MODIFIER, add, mask);
+	ModifierOp* tmpOp = new (fMemoryManager) ModifierOp(Op::O_MODIFIER, add, mask);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -228,7 +234,7 @@ ConditionOp* OpFactory::createConditionOp(const Op* const next, const int ref,
 								          const Op* const yesFlow,
 								          const Op* const noFlow) {
 
-	ConditionOp* tmpOp = new ConditionOp(Op::O_CONDITION, ref, conditionFlow,
+	ConditionOp* tmpOp = new (fMemoryManager) ConditionOp(Op::O_CONDITION, ref, conditionFlow,
 										 yesFlow, noFlow);
 
 	tmpOp->setNextOp(next);

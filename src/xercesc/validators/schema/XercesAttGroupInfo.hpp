@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,13 +76,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class VALIDATORS_EXPORT XercesAttGroupInfo
+class VALIDATORS_EXPORT XercesAttGroupInfo : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesAttGroupInfo();
+    XercesAttGroupInfo(MemoryManager* const manager);
 	~XercesAttGroupInfo();
 
 	// -----------------------------------------------------------------------
@@ -126,6 +126,7 @@ private:
     RefVectorOf<SchemaAttDef>* fAttributes;
     RefVectorOf<SchemaAttDef>* fAnyAttributes;
     SchemaAttDef*              fCompleteWildCard;
+    MemoryManager*             fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------
@@ -212,11 +213,11 @@ inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
                                              const bool toClone) {
 
     if (!fAttributes) {
-        fAttributes = new RefVectorOf<SchemaAttDef>(4);
+        fAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(4);
     }
 
     if (toClone) {
-        fAttributes->addElement(new SchemaAttDef(toAdd));
+        fAttributes->addElement(new (fMemoryManager) SchemaAttDef(toAdd));
     }
     else {
         fAttributes->addElement(toAdd);
@@ -227,11 +228,11 @@ inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
                                              const bool toClone) {
 
     if (!fAnyAttributes) {
-        fAnyAttributes = new RefVectorOf<SchemaAttDef>(2);
+        fAnyAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(2);
     }
 
     if (toClone) {
-        fAnyAttributes->addElement(new SchemaAttDef(toAdd));
+        fAnyAttributes->addElement(new (fMemoryManager) SchemaAttDef(toAdd));
     }
     else {
         fAnyAttributes->addElement(toAdd);

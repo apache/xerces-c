@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/01/06 19:40:05  knoaman
  * Throw an invalid datatype value exception if fEntityDeclPool is NULL.
  *
@@ -107,17 +110,18 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-ENTITYDatatypeValidator::ENTITYDatatypeValidator()
-:StringDatatypeValidator(0, 0, 0, DatatypeValidator::ENTITY)
+ENTITYDatatypeValidator::ENTITYDatatypeValidator(MemoryManager* const manager)
+:StringDatatypeValidator(0, 0, 0, DatatypeValidator::ENTITY, manager)
 ,fEntityDeclPool(0)
 {}
 
 ENTITYDatatypeValidator::ENTITYDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ENTITY)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ENTITY, manager)
 ,fEntityDeclPool(0)
 {
     init(enums);
@@ -126,12 +130,15 @@ ENTITYDatatypeValidator::ENTITYDatatypeValidator(
 ENTITYDatatypeValidator::~ENTITYDatatypeValidator()
 {}
 
-DatatypeValidator* ENTITYDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* ENTITYDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new ENTITYDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) ENTITYDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // -----------------------------------------------------------------------

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,13 +82,13 @@ class IC_Field;
 class DatatypeValidator;
 
 
-class VALIDATORS_EXPORT FieldValueMap
+class VALIDATORS_EXPORT FieldValueMap : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    FieldValueMap();
+    FieldValueMap(MemoryManager* const manager);
     FieldValueMap(const FieldValueMap& other);
 	~FieldValueMap();
 
@@ -125,6 +125,7 @@ private:
     ValueVectorOf<IC_Field*>*          fFields;
     ValueVectorOf<DatatypeValidator*>* fValidators;
     RefArrayVectorOf<XMLCh>*           fValues;
+    MemoryManager*                     fMemoryManager;
 };
 
 
@@ -198,9 +199,9 @@ inline void FieldValueMap::put(IC_Field* const key,
                                const XMLCh* const value) {
 
     if (!fFields) {
-        fFields = new ValueVectorOf<IC_Field*>(4);
-        fValidators = new ValueVectorOf<DatatypeValidator*>(4);
-        fValues = new RefArrayVectorOf<XMLCh>(4);
+        fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(4);
+        fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(4);
+        fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4);
     }
 
     int keyIndex = indexOf(key);

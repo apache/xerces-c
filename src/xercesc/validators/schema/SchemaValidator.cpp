@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.28  2003/02/06 13:51:55  gareth
  * fixed bug with multiple attributes being validated by the same union type.
  *
@@ -251,9 +254,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaValidator::SchemaValidator(XMLErrorReporter* const errReporter) :
+SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
+                                , MemoryManager* const    manager) :
 
     XMLValidator(errReporter)
+    , fMemoryManager(manager)
     , fGrammarResolver(0)
     , fSchemaGrammar(0)
     , fTrailing(false)

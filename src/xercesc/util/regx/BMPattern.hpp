@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,11 +63,13 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT BMPattern {
+class XMLUTIL_EXPORT BMPattern : public XMemory
+{
 public:
 	// -----------------------------------------------------------------------
 	//  Public Constructors and Destructor
@@ -83,8 +85,15 @@ public:
       *
       * @param  ignoreCase  A flag to indicate whether to ignore case
 	  *						matching or not.
+      *
+      * @param  manager     The configurable memory manager
       */
-	BMPattern(const XMLCh* const pattern, bool ignoreCase);
+	BMPattern
+    (
+        const XMLCh* const pattern
+        , bool ignoreCase
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 	/**
       * This is the constructor which takes all of the information
@@ -96,8 +105,16 @@ public:
 	  *
       * @param  ignoreCase  A flag to indicate whether to ignore case
 	  *						matching or not.
+      *
+      * @param  manager     The configurable memory manager
       */
-	BMPattern(const XMLCh* const pattern, int tableSize, bool ignoreCase);
+	BMPattern
+    (
+        const XMLCh* const pattern
+        , int tableSize
+        , bool ignoreCase
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 	//@}
 
@@ -160,22 +177,13 @@ private :
     //      This is a table of offsets for shifting purposes used by the BM
 	//		search algorithm, and its length.
     // -----------------------------------------------------------------------
-	XMLCh*			fPattern;
-	XMLCh*			fUppercasePattern;
-	bool			fIgnoreCase;
-	int*			fShiftTable;
-	unsigned int	fShiftTableLen;
+	bool           fIgnoreCase;
+	unsigned int   fShiftTableLen;
+	int*           fShiftTable;
+	XMLCh*         fPattern;
+	XMLCh*         fUppercasePattern;
+    MemoryManager* fMemoryManager; 
 };
-
-// ---------------------------------------------------------------------------
-//  BMPattern: Cleanup
-// ---------------------------------------------------------------------------
-inline void BMPattern::cleanUp() {
-
-	delete [] fPattern;
-	delete [] fUppercasePattern;
-	delete [] fShiftTable;
-}
 
 XERCES_CPP_NAMESPACE_END
 

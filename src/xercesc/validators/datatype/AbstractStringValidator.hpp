@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/01/27 19:24:17  peiyongz
  * normalize Base64 data before checking against enumeration.
  *
@@ -170,10 +173,14 @@ public:
 
 protected:
 
-    AbstractStringValidator(DatatypeValidator*            const baseValidator
-                          , RefHashTableOf<KVStringPair>* const facets
-                          , const int                           finalSet
-                          , const ValidatorType                 type);
+    AbstractStringValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , const int finalSet
+        , const ValidatorType type
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     void init(RefArrayVectorOf<XMLCh>*           const enums);
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/01/29 19:57:30  gareth
  * API to retrive local and uri part of the type name
  *
@@ -176,8 +179,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ComplexTypeInfo::ComplexTypeInfo()
-    : fAbstract(false)
+ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
+    : fAnonymous(false)
+    , fAbstract(false)
     , fAdoptContentSpec(true)
     , fAttWithTypeId(false)
     , fPreprocessed(false)
@@ -205,7 +209,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fContentSpecOrgURISize(16)
     , fSpecNodesToDelete(0)
     , fLocator(0)
-    , fAnonymous(false)
+    , fMemoryManager(manager)
 {
 
 }
@@ -213,9 +217,9 @@ ComplexTypeInfo::ComplexTypeInfo()
 
 ComplexTypeInfo::~ComplexTypeInfo()
 {
-    delete [] fTypeName;
-    delete [] fTypeLocalName;
-    delete [] fTypeUri;
+    fMemoryManager->deallocate(fTypeName); //delete [] fTypeName;
+    fMemoryManager->deallocate(fTypeLocalName); //delete [] fTypeLocalName;
+    fMemoryManager->deallocate(fTypeUri); //delete [] fTypeUri;
 
     if (fAdoptContentSpec) {
         delete fContentSpec;
@@ -229,8 +233,8 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fLocator;
 
     delete fContentModel;
-    delete [] fFormattedModel;
-    delete [] fContentSpecOrgURI;
+    fMemoryManager->deallocate(fFormattedModel); //delete [] fFormattedModel;
+    fMemoryManager->deallocate(fContentSpecOrgURI); //delete [] fContentSpecOrgURI;
 }
 
 // ---------------------------------------------------------------------------
@@ -326,7 +330,7 @@ XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const qName
             faultInAttDefList();
 
         // And add a default attribute for this name
-        retVal = new SchemaAttDef(prefix, baseName, uriId);
+        retVal = new (fMemoryManager) SchemaAttDef(prefix, baseName, uriId);
         retVal->setElemId(getElementId());
         fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 
@@ -364,7 +368,7 @@ void ComplexTypeInfo::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                                       XMLValidator*     const pValidator)
 {
     if (fContentSpec) {
-        ContentSpecNode* specNode = new ContentSpecNode(*fContentSpec);
+        ContentSpecNode* specNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
         XMLContentModel* cm = makeContentModel(true, specNode);
 
         if (cm) {
@@ -383,7 +387,7 @@ void ComplexTypeInfo::faultInAttDefList() const
 {
     // Use a hash modulus of 29 and tell it owns its elements
     ((ComplexTypeInfo*)this)->fAttDefs =
-                    new RefHash2KeysTableOf<SchemaAttDef>(29, true);
+                    new (fMemoryManager) RefHash2KeysTableOf<SchemaAttDef>(29, true);
 }
 
 XMLCh* ComplexTypeInfo::formatContentModel() const
@@ -391,13 +395,13 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     XMLCh* newValue = 0;
     if (fContentType == SchemaElementDecl::Any)
     {
-        newValue = XMLString::replicate(XMLUni::fgAnyString);
+        newValue = XMLString::replicate(XMLUni::fgAnyString, fMemoryManager);
     }
-     else if (fContentType == SchemaElementDecl::Empty)
+    else if (fContentType == SchemaElementDecl::Empty)
     {
-        newValue = XMLString::replicate(XMLUni::fgEmptyString);
+        newValue = XMLString::replicate(XMLUni::fgEmptyString, fMemoryManager);
     }
-     else
+    else
     {
         //
         //  Use a temp XML buffer to format into. Content models could be
@@ -409,9 +413,12 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
         if (specNode) {
             XMLBuffer bufFmt;
 
-
             specNode->formatSpec(bufFmt);
-            newValue = XMLString::replicate(bufFmt.getRawBuffer());
+            newValue = XMLString::replicate
+            (
+                bufFmt.getRawBuffer()
+                , fMemoryManager
+            );
         }
     }
     return newValue;
@@ -420,14 +427,17 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
 XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* const specNode)
 {
     if ((specNode || fContentSpec) && !fSpecNodesToDelete) {
-        fSpecNodesToDelete = new RefVectorOf<ContentSpecNode>(8);
+        fSpecNodesToDelete = new (fMemoryManager) RefVectorOf<ContentSpecNode>(8);
     }
 
     // expand the content spec first
     ContentSpecNode* aSpecNode = specNode;
     if (aSpecNode) {
 
-        fContentSpecOrgURI = new unsigned int[fContentSpecOrgURISize];
+        fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
+        (
+            fContentSpecOrgURISize * sizeof(unsigned int)
+        ); //new unsigned int[fContentSpecOrgURISize];
         aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
         fSpecNodesToDelete->addElement(aSpecNode);
     }
@@ -454,7 +464,7 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(false, aSpecNode);
+        cmRet = new (fMemoryManager) MixedContentModel(false, aSpecNode);
     }
     else if (fContentType == SchemaElementDecl::Mixed_Complex) {
 
@@ -514,12 +524,12 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
             // All the nodes under an ALL must be additional ALL nodes and
             // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
             // We collapse the ELEMENTs into a single vector.
-            return new AllContentModel(specNode, true);
+            return new (fMemoryManager) AllContentModel(specNode, true, fMemoryManager);
         }
         else if (specType == ContentSpecNode::ZeroOrOne) {
             // An ALL node can appear under a ZERO_OR_ONE node.
             if (specNode->getFirst()->getType() == ContentSpecNode::All) {
-                return new AllContentModel(specNode->getFirst(), true);
+                return new (fMemoryManager) AllContentModel(specNode->getFirst(), true, fMemoryManager);
             }
         }
 
@@ -528,7 +538,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
      else if (specType == ContentSpecNode::Leaf)
     {
         // Create a simple content model
-        return new SimpleContentModel
+        return new (fMemoryManager) SimpleContentModel
         (
             false
             , specNode->getElement()
@@ -547,7 +557,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
         &&  (specNode->getSecond())
         &&  (specNode->getSecond()->getType() == ContentSpecNode::Leaf))
         {
-            return new SimpleContentModel
+            return new (fMemoryManager) SimpleContentModel
             (
                 false
                 , specNode->getFirst()->getElement()
@@ -567,7 +577,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
         //
         if (specNode->getFirst()->getType() == ContentSpecNode::Leaf)
         {
-            return new SimpleContentModel
+            return new (fMemoryManager) SimpleContentModel
             (
                 false
                 , specNode->getFirst()->getElement()
@@ -576,11 +586,11 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
             );
         }
         else if (specNode->getFirst()->getType() == ContentSpecNode::All)
-            return new AllContentModel(specNode->getFirst(), false);
+            return new (fMemoryManager) AllContentModel(specNode->getFirst(), false, fMemoryManager);
 
     }
     else if (specType == ContentSpecNode::All)
-        return new AllContentModel(specNode, false);
+        return new (fMemoryManager) AllContentModel(specNode, false, fMemoryManager);
 
     else
     {
@@ -588,7 +598,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     }
 
     // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(false, specNode, isMixed);
+    return new (fMemoryManager) DFAContentModel(false, specNode, isMixed, fMemoryManager);
 }
 
 ContentSpecNode*
@@ -677,20 +687,20 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
     }
     else if (minOccurs == 0 && maxOccurs == 1) {
 
-        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrOne, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrOne, retNode, 0);
     }
     else if (minOccurs == 0 && maxOccurs == -1) {
-        retNode = new ContentSpecNode(ContentSpecNode::ZeroOrMore, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrMore, retNode, 0);
     }
     else if (minOccurs == 1 && maxOccurs == -1) {
-        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
     }
     else if (maxOccurs == -1) {
 
-        retNode = new ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
 
         for (int i=0; i < (int)(minOccurs-1); i++) {
-            retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+            retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
                                           saveNode, retNode, false);
         }
     }
@@ -699,12 +709,12 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         if (minOccurs == 0) {
 
             ContentSpecNode* optional =
-                new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0);
+                new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0);
 
             retNode = optional;
 
             for (int i=0; i < (int)(maxOccurs-minOccurs-1); i++) {
-                retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
                                               retNode, optional, true, false);
             }
         }
@@ -712,11 +722,11 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
 
             if (minOccurs > 1) {
 
-                retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
                                               retNode, saveNode, true, false);
 
                 for (int i=1; i < (int)(minOccurs-1); i++) {
-                    retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                    retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
                                                   retNode, saveNode, true, false);
                 }
             }
@@ -725,13 +735,13 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
 
             if (counter > 0) {
 
-                ContentSpecNode* optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
+                ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
 
-                retNode = new ContentSpecNode(ContentSpecNode::Sequence, retNode, optional);
+                retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence, retNode, optional);
 
                 for (int j=1; j < counter; j++) {
 
-                    retNode = new ContentSpecNode(ContentSpecNode::Sequence,
+                    retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
 					                              retNode, optional, true, false);
                 }
             }
@@ -744,7 +754,10 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
 void ComplexTypeInfo::resizeContentSpecOrgURI() {
 
     unsigned int newSize = fContentSpecOrgURISize * 2;
-    unsigned int* newContentSpecOrgURI = new unsigned int[newSize];
+    unsigned int* newContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(unsigned int)
+    ); //new unsigned int[newSize];
 
     // Copy the existing values
     unsigned int index = 0;
@@ -755,7 +768,7 @@ void ComplexTypeInfo::resizeContentSpecOrgURI() {
         newContentSpecOrgURI[index] = 0;
 
     // Delete the old array and udpate our members
-    delete [] fContentSpecOrgURI;
+    fMemoryManager->deallocate(fContentSpecOrgURI); //delete [] fContentSpecOrgURI;
     fContentSpecOrgURI = newContentSpecOrgURI;
     fContentSpecOrgURISize = newSize;
 }

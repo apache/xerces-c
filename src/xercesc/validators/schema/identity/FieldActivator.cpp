@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -84,15 +87,18 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  FieldActivator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 FieldActivator::FieldActivator(ValueStoreCache* const valueStoreCache,
-                               XPathMatcherStack* const matcherStack)
+                               XPathMatcherStack* const matcherStack,
+                               MemoryManager* const manager)
     : fValueStoreCache(valueStoreCache)
     , fMatcherStack(matcherStack)
+    , fMemoryManager(manager)
 {
 }
 
 FieldActivator::FieldActivator(const FieldActivator& other)
     : fValueStoreCache(other.fValueStoreCache)
     , fMatcherStack(other.fMatcherStack)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 }
 
@@ -121,7 +127,7 @@ FieldActivator& FieldActivator::operator =(const FieldActivator& other) {
 XPathMatcher* FieldActivator::activateField(IC_Field* const field, const int initialDepth) {
 
     ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field, initialDepth);
-    XPathMatcher* matcher = field->createMatcher(valueStore);
+    XPathMatcher* matcher = field->createMatcher(valueStore, fMemoryManager);
 
     field->setMayMatch(true);
     fMatcherStack->addMatcher(matcher);

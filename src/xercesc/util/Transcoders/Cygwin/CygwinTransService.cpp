@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:47:02  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/03/09 17:02:20  peiyongz
  * PanicHandler
  *
@@ -672,9 +675,10 @@ bool CygwinTransService::isAlias(const   HKEY            encodingKey
 
 
 XMLTranscoder*
-CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
+CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const           encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize)
+                                        , const unsigned int            blockSize
+                                        ,       MemoryManager* const    manager)
 {
     const unsigned int upLen = 1024;
     XMLCh upEncoding[upLen + 1];
@@ -703,7 +707,7 @@ CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const            encodin
     }
 
     // We found it, so return a Cygwin transcoder for this encoding
-    return new CygwinTranscoder
+    return new (manager) CygwinTranscoder
     (
         encodingName
         , theEntry->getWinCP()
@@ -1024,6 +1028,36 @@ char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retVal;
 }
 
+char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode
+                                     MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    char* retVal = 0;
+    if (*toTranscode)
+    {
+        // Calc the needed size
+        const unsigned int neededLen = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, NULL, 0, NULL, NULL);
+        if (neededLen == (unsigned int)-1)
+            return 0;
+
+        // Allocate a buffer of that size plus one for the null and transcode
+        // Returned length of WideCharToMultiByte includes terminating NUL.
+        retVal = (char*) manager->allocate((neededLen+1) * sizeof(char)); //new char[neededLen+1];
+        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, neededLen+1, NULL, NULL);
+
+        // And cap it off anyway just to make sure
+        retVal[neededLen] = 0;
+    }
+    else
+    {
+        retVal = (char*) manager->allocate(sizeof(char)); //new char[1];
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
 
 XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode)
 {
@@ -1048,6 +1082,35 @@ XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode)
     else
     {
         retVal = new XMLCh[1];
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
+XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode,
+                                      MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    XMLCh* retVal = 0;
+    if (*toTranscode)
+    {
+        // Calculate the buffer size required
+        const unsigned int neededLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, NULL, 0);
+        if (neededLen == (unsigned int)-1)
+            return 0;
+
+        // Allocate a buffer of that size plus one for the null and transcode
+        retVal = (XMLCh*) manager->allocate((neededLen + 1) * sizeof(XMLCh)); //new XMLCh[neededLen + 1];
+        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, neededLen + 1);
+
+        // Cap it off just to make sure. We are so paranoid!
+        retVal[neededLen] = 0;
+    }
+    else
+    {
+        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
         retVal[0] = 0;
     }
     return retVal;

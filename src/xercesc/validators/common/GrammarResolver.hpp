@@ -79,7 +79,8 @@ class DatatypeValidatorFactory;
  *
  */
 
-class VALIDATORS_EXPORT GrammarResolver {
+class VALIDATORS_EXPORT GrammarResolver : public XMemory
+{
 public:
 
     /** @name Constructor and Destructor */
@@ -88,7 +89,7 @@ public:
      *
      * Default Constructor
      */
-    GrammarResolver();
+    GrammarResolver(MemoryManager* const manager);
 
     /**
       * Destructor
@@ -208,6 +209,8 @@ private:
     //
     //  fDataTypeReg           DatatypeValidatorFactory registery
     //
+    //  fMemoryManager         Pluggable memory manager for dynamic memory
+    //                         allocation/deallocation
     // -----------------------------------------------------------------------
     bool                       fCacheGrammar;
     bool                       fUseCachedGrammar;
@@ -215,6 +218,7 @@ private:
     RefHashTableOf<Grammar>*   fGrammarRegistry;
     RefHashTableOf<Grammar>*   fCachedGrammarRegistry;
     DatatypeValidatorFactory*  fDataTypeReg;
+    MemoryManager*             fMemoryManager;
 };
 
 inline XMLStringPool* GrammarResolver::getStringPool() {

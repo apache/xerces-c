@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:54:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/01/29 19:46:40  gareth
  * added DOMTypeInfo API
  *
@@ -82,7 +85,6 @@
 #if !defined(DTDATTDEF_HPP)
 #define DTDATTDEF_HPP
 
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

@@ -74,7 +74,6 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
-#include <xercesc/util/Janitor.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
@@ -92,13 +91,13 @@ class SchemaElementDecl;
 class XSDLocator;
 
 
-class VALIDATORS_EXPORT ComplexTypeInfo
+class VALIDATORS_EXPORT ComplexTypeInfo : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Public Constructors/Destructor
     // -----------------------------------------------------------------------
-    ComplexTypeInfo();
+    ComplexTypeInfo(MemoryManager* const manager);
     ~ComplexTypeInfo();
 
     // -----------------------------------------------------------------------
@@ -213,6 +212,7 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
+    bool                               fAnonymous;
     bool                               fAbstract;
     bool                               fAdoptContentSpec;
     bool                               fAttWithTypeId;
@@ -241,7 +241,7 @@ private:
     unsigned int                       fUniqueURI;
     unsigned int                       fContentSpecOrgURISize;
     XSDLocator*                        fLocator;
-    bool                               fAnonymous;
+    MemoryManager*                     fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------
@@ -402,7 +402,10 @@ inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const
     if(!fTypeLocalName) {
         int index = XMLString::indexOf(fTypeName, chComma);
         int length = XMLString::stringLen(fTypeName);
-        XMLCh *tName = new XMLCh[length - index + 1];
+        XMLCh *tName = (XMLCh*) fMemoryManager->allocate
+        (
+            (length - index + 1) * sizeof(XMLCh)
+        ); //new XMLCh[length - index + 1];
         XMLString::subString(tName, fTypeName, index + 1, length);
         ((ComplexTypeInfo *)this)->fTypeLocalName = tName;
     }
@@ -414,7 +417,10 @@ inline const XMLCh* ComplexTypeInfo::getTypeUri() const
 {
     if(!fTypeUri) {
         int index = XMLString::indexOf(fTypeName, chComma);
-        XMLCh *uri = new XMLCh[index + 1];
+        XMLCh *uri = (XMLCh*) fMemoryManager->allocate
+        (
+            (index + 1) * sizeof(XMLCh)
+        ); //new XMLCh[index + 1];
         XMLString::subString(uri, fTypeName, 0, index);
         ((ComplexTypeInfo *)this)->fTypeUri = uri;
     }
@@ -478,13 +484,12 @@ ComplexTypeInfo::setContentType(const int contentType) {
 
 inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
 
-    delete [] fTypeName;
-    delete [] fTypeLocalName;
-    fTypeLocalName = 0;
-    delete [] fTypeUri;
-    fTypeUri = 0;
+    fMemoryManager->deallocate(fTypeName);//delete [] fTypeName;
+    fMemoryManager->deallocate(fTypeLocalName);//delete [] fTypeLocalName;
+    fMemoryManager->deallocate(fTypeUri);//delete [] fTypeUri;
+    fTypeLocalName = fTypeUri = 0;
 
-    fTypeName = XMLString::replicate(typeName);
+    fTypeName = XMLString::replicate(typeName, fMemoryManager);
 }
 
 inline void
@@ -508,7 +513,7 @@ ComplexTypeInfo::setBaseComplexTypeInfo(ComplexTypeInfo* const typeInfo) {
 inline void ComplexTypeInfo::addElement(SchemaElementDecl* const elem) {
 
     if (!fElements) {
-        fElements = new RefVectorOf<SchemaElementDecl>(8, false);
+        fElements = new (fMemoryManager) RefVectorOf<SchemaElementDecl>(8, false);
     }
     else if (fElements->containsElement(elem)) {
         return;

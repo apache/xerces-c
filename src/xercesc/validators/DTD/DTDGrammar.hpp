@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:54:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -117,7 +120,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDGrammar();
+    DTDGrammar(MemoryManager* const manager);
     virtual ~DTDGrammar();
 
 
@@ -268,12 +271,13 @@ private:
     //      or not. When using a cached grammar, no need for pre content
     //      validation.
     // -----------------------------------------------------------------------
-    NameIdPool<DTDElementDecl>*     fElemDeclPool;
-    NameIdPool<DTDElementDecl>*     fElemNonDeclPool;
-    NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
-    NameIdPool<XMLNotationDecl>*    fNotationDeclPool;
-    unsigned int                    fRootElemId;
-    bool                            fValidated;
+    MemoryManager*               fMemoryManager;
+    NameIdPool<DTDElementDecl>*  fElemDeclPool;
+    NameIdPool<DTDElementDecl>*  fElemNonDeclPool;
+    NameIdPool<DTDEntityDecl>*   fEntityDeclPool;
+    NameIdPool<XMLNotationDecl>* fNotationDeclPool;
+    unsigned int                 fRootElemId;
+    bool                         fValidated;
 };
 
 

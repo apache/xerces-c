@@ -61,7 +61,6 @@
 #if !defined(NAMESPACESCOPE_HPP)
 #define NAMESPACESCOPE_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/StringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -72,7 +71,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // at a particular instant in time.
 //
 
-class VALIDATORS_EXPORT NamespaceScope
+class VALIDATORS_EXPORT NamespaceScope : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -90,13 +89,13 @@ public :
     //      The fMapCapacity is how large fMap has grown so far. fMapCount
     //      is how many of them are valid right now.
     // -----------------------------------------------------------------------
-    struct PrefMapElem
+    struct PrefMapElem : public XMemory
     {
         unsigned int        fPrefId;
         unsigned int        fURIId;
     };
 
-    struct StackElem
+    struct StackElem : public XMemory
     {
         PrefMapElem*        fMap;
         unsigned int        fMapCapacity;
@@ -174,6 +173,7 @@ private :
     unsigned int  fStackTop;
     XMLStringPool fPrefixPool;
     StackElem**   fStack;
+    MemoryManager* fMemoryManager;
 };
 
 

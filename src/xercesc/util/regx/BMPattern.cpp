@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:42:54  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -76,20 +79,26 @@
 #include <xercesc/util/regx/BMPattern.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  BMPattern: Constructors
 // ---------------------------------------------------------------------------
-BMPattern::BMPattern(const XMLCh* const pattern, bool ignoreCase)
-	:fPattern(XMLString::replicate(pattern)),
-	 fUppercasePattern(0),
-	 fIgnoreCase(ignoreCase),
-	 fShiftTable(0),
-	 fShiftTableLen(256) {
+BMPattern::BMPattern( const XMLCh*         const pattern
+                    ,       bool                 ignoreCase
+                    ,       MemoryManager* const manager) :
 
+    fIgnoreCase(ignoreCase)
+    , fShiftTableLen(256)
+    , fShiftTable(0)
+    , fPattern(0)
+    , fUppercasePattern(0)
+    , fMemoryManager(manager)
+{
 	try {
+        fPattern = XMLString::replicate(pattern, fMemoryManager);
 		initialize();
 	}
 	catch(...) {
@@ -99,14 +108,20 @@ BMPattern::BMPattern(const XMLCh* const pattern, bool ignoreCase)
 	}
 }
 
-BMPattern::BMPattern(const XMLCh* const pattern, int tableSize, bool ignoreCase)
-	:fPattern(XMLString::replicate(pattern)),
-	 fUppercasePattern(0),
-	 fIgnoreCase(ignoreCase),
-	 fShiftTable(0),
-	 fShiftTableLen(tableSize) {
-	
+BMPattern::BMPattern( const XMLCh*         const pattern
+                    ,       int                  tableSize
+                    ,       bool                 ignoreCase
+                    ,       MemoryManager* const manager) :
+
+    fIgnoreCase(ignoreCase)
+    , fShiftTableLen(tableSize)
+    , fShiftTable(0)
+    , fPattern(0)
+    , fUppercasePattern(0)
+    , fMemoryManager(manager)
+{
 	try {
+        fPattern = XMLString::replicate(pattern, fMemoryManager);
 		initialize();
 	}
 	catch(...) {
@@ -135,11 +150,11 @@ int BMPattern::matches(const XMLCh* const content, int start, int limit) {
 
 	if (fIgnoreCase) {
 		
-		ucContent = XMLString::replicate(content);
+		ucContent = XMLString::replicate(content, fMemoryManager);
 		XMLString::upperCase(ucContent);
 	}
 
-	ArrayJanitor<XMLCh> janUCContent(ucContent);
+	ArrayJanitor<XMLCh> janUCContent(ucContent, fMemoryManager);
 
 	int index = start + patternLen;
 
@@ -184,17 +199,17 @@ void BMPattern::initialize() {
 	const unsigned int	patternLen = XMLString::stringLen(fPattern);
 	XMLCh* lowercasePattern = 0;
 
-	fShiftTable = new int[fShiftTableLen];
+	fShiftTable = (int*) fMemoryManager->allocate(fShiftTableLen*sizeof(int)); //new int[fShiftTableLen];
 
 	if (fIgnoreCase) {
 
-		fUppercasePattern = XMLString::replicate(fPattern);
-		lowercasePattern = XMLString::replicate(fPattern);
+		fUppercasePattern = XMLString::replicate(fPattern, fMemoryManager);
+		lowercasePattern = XMLString::replicate(fPattern, fMemoryManager);
 		XMLString::upperCase(fUppercasePattern);
 		XMLString::lowerCase(lowercasePattern);
 	}
 
-	ArrayJanitor<XMLCh> janLowercase(lowercasePattern);
+	ArrayJanitor<XMLCh> janLowercase(lowercasePattern, fMemoryManager);
 
 	for (unsigned int i=0; i< fShiftTableLen; i++)
 		fShiftTable[i] = patternLen;
@@ -220,6 +235,16 @@ void BMPattern::initialize() {
 			}
 		}
 	}
+}
+
+// ---------------------------------------------------------------------------
+//  BMPattern: Cleanup
+// ---------------------------------------------------------------------------
+void BMPattern::cleanUp() {
+
+    fMemoryManager->deallocate(fPattern);//delete [] fPattern;
+    fMemoryManager->deallocate(fUppercasePattern);//delete [] fUppercasePattern;
+    fMemoryManager->deallocate(fShiftTable);
 }
 
 XERCES_CPP_NAMESPACE_END

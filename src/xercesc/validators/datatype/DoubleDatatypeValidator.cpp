@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -91,7 +94,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/DoubleDatatypeValidator.hpp>
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
@@ -100,16 +102,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-DoubleDatatypeValidator::DoubleDatatypeValidator()
-:AbstractNumericValidator(0, 0, 0, DatatypeValidator::Double)
+DoubleDatatypeValidator::DoubleDatatypeValidator(MemoryManager* const manager)
+:AbstractNumericValidator(0, 0, 0, DatatypeValidator::Double, manager)
 {}
 
 DoubleDatatypeValidator::DoubleDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Double)
+                        , RefArrayVectorOf<XMLCh>*      const enums
+                        , const int                           finalSet
+                        , MemoryManager* const                manager)
+:AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Double, manager)
 {
     init(enums);
 }
@@ -123,20 +126,21 @@ DoubleDatatypeValidator::~DoubleDatatypeValidator()
 int DoubleDatatypeValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue)
 {
-    XMLDouble * lObj = new XMLDouble(lValue);
-    Janitor<XMLDouble> jname1(lObj);
-    XMLDouble * rObj = new XMLDouble(rValue);
-    Janitor<XMLDouble> jname2(rObj);
+    XMLDouble lObj(lValue);
+    XMLDouble rObj(rValue);
 
-    return compareValues(lObj, rObj);
+    return compareValues(&lObj, &rObj);
 }
 
-DatatypeValidator* DoubleDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+DatatypeValidator* DoubleDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new DoubleDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) DoubleDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // -----------------------------------------------------------------------
@@ -145,8 +149,9 @@ DatatypeValidator* DoubleDatatypeValidator::newInstance(
 DoubleDatatypeValidator::DoubleDatatypeValidator(DatatypeValidator*            const baseValidator
                                                , RefHashTableOf<KVStringPair>* const facets
                                                , const int                           finalSet
-                                               , const ValidatorType                 type)
-:AbstractNumericValidator(baseValidator, facets, finalSet, type)
+                                               , const ValidatorType                 type
+                                               , MemoryManager* const                manager)
+:AbstractNumericValidator(baseValidator, facets, finalSet, type, manager)
 {
     //do not invoke init here !!!
 }
@@ -176,22 +181,22 @@ int  DoubleDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  DoubleDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new XMLDouble(value);
+    fMaxInclusive = new (fMemoryManager) XMLDouble(value);
 }
 
 void  DoubleDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new XMLDouble(value);
+    fMaxExclusive = new (fMemoryManager) XMLDouble(value);
 }
 
 void  DoubleDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new XMLDouble(value);
+    fMinInclusive = new (fMemoryManager) XMLDouble(value);
 }
 
 void  DoubleDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new XMLDouble(value);
+    fMinExclusive = new (fMemoryManager) XMLDouble(value);
 }
 
 void  DoubleDatatypeValidator::setEnumeration()
@@ -234,12 +239,12 @@ void  DoubleDatatypeValidator::setEnumeration()
         checkContent(fStrEnumeration->elementAt(i), false);
     }
 
-    fEnumeration = new RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new XMLDouble(fStrEnumeration->elementAt(i)), i);
+        fEnumeration->insertElementAt(new (fMemoryManager) XMLDouble(fStrEnumeration->elementAt(i)), i);
     }
 }
 
@@ -261,7 +266,7 @@ void DoubleDatatypeValidator::checkContent( const XMLCh* const content, bool asB
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
             {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -91,9 +94,13 @@ NamespaceScope::NamespaceScope() :
     , fStackCapacity(8)
     , fStackTop(0)
     , fStack(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     // Do an initial allocation of the stack and zero it out
-    fStack = new StackElem*[fStackCapacity];
+    fStack = (StackElem**) fMemoryManager->allocate
+    (
+        fStackCapacity * sizeof(StackElem*)
+    );//new StackElem*[fStackCapacity];
     memset(fStack, 0, fStackCapacity * sizeof(StackElem*));
 }
 
@@ -110,12 +117,12 @@ NamespaceScope::~NamespaceScope()
             break;
 
         // Delete the row for this entry, then delete the row structure
-        delete [] fStack[stackInd]->fMap;
+        fMemoryManager->deallocate(fStack[stackInd]->fMap);//delete [] fStack[stackInd]->fMap;
         delete fStack[stackInd];
     }
 
     // Delete the stack array itself now
-    delete [] fStack;
+    fMemoryManager->deallocate(fStack);//delete [] fStack;
 }
 
 
@@ -131,7 +138,7 @@ unsigned int NamespaceScope::increaseDepth()
     // If this element has not been initialized yet, then initialize it
     if (!fStack[fStackTop])
     {
-        fStack[fStackTop] = new StackElem;
+        fStack[fStackTop] = new (fMemoryManager) StackElem;
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
@@ -258,7 +265,10 @@ void NamespaceScope::expandMap(StackElem* const toExpand)
     //
     const unsigned int newCapacity = oldCap ?
                                      (unsigned int)(oldCap * 1.25) : 16;
-    PrefMapElem* newMap = new PrefMapElem[newCapacity];
+    PrefMapElem* newMap = (PrefMapElem*) fMemoryManager->allocate
+    (
+        newCapacity * sizeof(PrefMapElem)
+    );//new PrefMapElem[newCapacity];
 
     //
     //  Copy over the old stuff. We DON'T have to zero out the new stuff
@@ -268,7 +278,7 @@ void NamespaceScope::expandMap(StackElem* const toExpand)
     memcpy(newMap, toExpand->fMap, oldCap * sizeof(PrefMapElem));
 
     // Delete the old map and store the new stuff
-    delete [] toExpand->fMap;
+    fMemoryManager->deallocate(toExpand->fMap);//delete [] toExpand->fMap;
     toExpand->fMap = newMap;
     toExpand->fMapCapacity = newCapacity;
 }
@@ -277,7 +287,10 @@ void NamespaceScope::expandStack()
 {
     // Expand the capacity by 25% and allocate a new buffer
     const unsigned int newCapacity = (unsigned int)(fStackCapacity * 1.25);
-    StackElem** newStack = new StackElem*[newCapacity];
+    StackElem** newStack = (StackElem**) fMemoryManager->allocate
+    (
+        newCapacity * sizeof(StackElem*)
+    );//new StackElem*[newCapacity];
 
     // Copy over the old stuff
     memcpy(newStack, fStack, fStackCapacity * sizeof(StackElem*));
@@ -295,7 +308,7 @@ void NamespaceScope::expandStack()
     );
 
     // Delete the old array and update our members
-    delete [] fStack;
+    fMemoryManager->deallocate(fStack);//delete [] fStack;
     fStack = newStack;
     fStackCapacity = newCapacity;
 }

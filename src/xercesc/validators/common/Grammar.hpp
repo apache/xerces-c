@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -103,7 +106,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // This abstract class specifies the interface for a Grammar
 //
 
-class VALIDATORS_EXPORT Grammar
+class VALIDATORS_EXPORT Grammar : public XMemory
 {
 public:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -126,8 +129,8 @@ static const XMLCh BASE_URI[] =
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
-AnyURIDatatypeValidator::AnyURIDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, DatatypeValidator::AnyURI)
+AnyURIDatatypeValidator::AnyURIDatatypeValidator(MemoryManager* const manager)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::AnyURI, manager)
 ,fTempURI(0)
 {}
 
@@ -140,8 +143,9 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefArrayVectorOf<XMLCh>*           const enums
-                        , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::AnyURI)
+                        , const int                           finalSet
+                        , MemoryManager* const manager)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::AnyURI, manager)
 ,fTempURI(0)
 {
     try
@@ -158,9 +162,10 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
 DatatypeValidator* AnyURIDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
                                     , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+                                    , const int                           finalSet
+                                    , MemoryManager* const manager)
 {
-    return (DatatypeValidator*) new AnyURIDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new AnyURIDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // ---------------------------------------------------------------------------

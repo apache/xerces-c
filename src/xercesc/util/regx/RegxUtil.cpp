@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:42:55  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -77,7 +80,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RegxUtil.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -94,59 +97,60 @@ XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch) {
 }
 
 
-XMLCh* RegxUtil::stripExtendedComment(const XMLCh* const expression) {
+XMLCh* RegxUtil::stripExtendedComment(const XMLCh* const expression,
+                                      MemoryManager* const manager) {
 
-	unsigned int strLen = XMLString::stringLen(expression);
+    XMLCh* buffer = (manager) ? XMLString::replicate(expression)
+                              : XMLString::replicate(expression, manager);
 
-	if (strLen == 0)
-		return 0;
+    if (buffer)
+    {
+        const XMLCh* inPtr = expression;
+        XMLCh* outPtr = buffer;
 
-	XMLBuffer buffer;
-	unsigned int offset = 0;
+        while (*inPtr) {
 
-	while (offset < strLen) {
+            XMLCh ch = *inPtr++;
 
-		XMLCh ch = expression[offset++];
+            if (ch == chFF || ch == chCR || ch == chLF
+                || ch == chSpace || ch == chHTab) {
+                continue;
+            }
 
-		if (ch == chFF || ch == chCR || ch == chLF
-			|| ch == chSpace || ch == chHTab) {
-			continue;
-		}
+		    // Skips chracters between '#' and a line end.
+		    if (ch == chPound) {
 
-		// Skips chracters between '#' and a line end.
-		if (ch == chPound) {
+                while (*inPtr) {
 
-			while (offset < strLen) {
+                    ch = *inPtr++;
+                    if (ch == chLF || ch == chCR)
+                        break;
+                }
 
-				ch = expression[offset++];
-				if (ch == chLF || ch == chCR)
-					break;
-			}
-			continue;
-		}
+                continue;
+            }
 
-		XMLCh next;
-		if (ch == chBackSlash && offset < strLen) {
+            if (ch == chBackSlash && *inPtr) {
 
-			if ((next = expression[offset]) == chPound
-				|| next == chHTab || next == chLF || next == chFF
-				|| next == chCR || next == chSpace) {
+			    if ((ch = *inPtr++) == chPound || ch == chHTab || ch == chLF
+                    || ch == chFF || ch == chCR || ch == chSpace) {
+                    *outPtr++ = ch;
+                }
+                else { // Other escaped character.
 
-				buffer.append(next);
-				offset++;
-			} else {                         // Other escaped character.
+                    *outPtr++ = chBackSlash;
+                    *outPtr++ = ch;
+                }
+            }
+            else { // As is.
+                *outPtr++ = ch;
+            }
+        }
 
-				buffer.append(chBackSlash);
-				buffer.append(next);
-				offset++;
-			}
-		}
-		else {                             // As is.
-			buffer.append(ch);
-		}
-	}
+        *outPtr = chNull; // null terminate
+    }
 
-	return XMLString::replicate(buffer.getRawBuffer());
+    return buffer;
 }
 
 XERCES_CPP_NAMESPACE_END

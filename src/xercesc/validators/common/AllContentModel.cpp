@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -93,9 +96,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  AllContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-AllContentModel::AllContentModel(ContentSpecNode* const parentContentSpec
-                               , const bool             isMixed) :
-   fCount(0)
+AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
+                                , const bool             isMixed
+                                , MemoryManager* const   manager) :
+   fMemoryManager(manager)
+ , fCount(0)
  , fChildren(0)
  , fChildOptional(0)
  , fNumRequired(0)
@@ -128,8 +133,8 @@ AllContentModel::AllContentModel(ContentSpecNode* const parentContentSpec
     //  fill them in.
     //
     fCount = children.size();
-    fChildren = new QName*[fCount];
-    fChildOptional = new bool[fCount];
+    fChildren = (QName**) fMemoryManager->allocate(fCount * sizeof(QName*)); //new QName*[fCount];
+    fChildOptional = (bool*) fMemoryManager->allocate(fCount * sizeof(bool)); //new bool[fCount];
     for (unsigned int index = 0; index < fCount; index++) {
         fChildren[index] = children.elementAt(index);
         fChildOptional[index] = childOptional.elementAt(index);
@@ -138,8 +143,8 @@ AllContentModel::AllContentModel(ContentSpecNode* const parentContentSpec
 
 AllContentModel::~AllContentModel()
 {
-    delete [] fChildren;
-    delete [] fChildOptional;
+    fMemoryManager->deallocate(fChildren); //delete [] fChildren;
+    fMemoryManager->deallocate(fChildOptional); //delete [] fChildOptional;
 }
 
 // ---------------------------------------------------------------------------
@@ -162,7 +167,7 @@ AllContentModel::validateContent( QName** const         children
         return -1;
 
     // Check for duplicate element
-    bool* elementSeen = new bool[fCount];
+    bool* elementSeen = (bool*) fMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
 
     // initialize the array
     for (unsigned int i = 0; i < fCount; i++)
@@ -190,7 +195,7 @@ AllContentModel::validateContent( QName** const         children
                 // If this element was seen already, indicate an error was
                 // found at the duplicate index.
                 if (elementSeen[inIndex]) {
-                    delete [] elementSeen;
+                    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
                     return outIndex;
                 }
                 else
@@ -205,13 +210,13 @@ AllContentModel::validateContent( QName** const         children
 
         // We did not find this one, so the validation failed
         if (inIndex == fCount) {
-            delete [] elementSeen;
+            fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
             return outIndex;
         }
 
     }
 
-    delete [] elementSeen;
+    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
 
     // Were all the required elements of the <all> encountered?
     if (numRequiredSeen != fNumRequired) {
@@ -239,7 +244,7 @@ int AllContentModel::validateContentSpecial(QName** const           children
         return -1;
 
     // Check for duplicate element
-    bool* elementSeen = new bool[fCount];
+    bool* elementSeen = (bool*) fMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
 
     // initialize the array
     for (unsigned int i = 0; i < fCount; i++)
@@ -266,7 +271,7 @@ int AllContentModel::validateContentSpecial(QName** const           children
                 // If this element was seen already, indicate an error was
                 // found at the duplicate index.
                 if (elementSeen[inIndex]) {
-                    delete [] elementSeen;
+                    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
                     return outIndex;
                 }
                 else
@@ -281,13 +286,13 @@ int AllContentModel::validateContentSpecial(QName** const           children
 
         // We did not find this one, so the validation failed
         if (inIndex == fCount) {
-            delete [] elementSeen;
+            fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
             return outIndex;
         }
 
     }
 
-    delete [] elementSeen;
+    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
 
     // Were all the required elements of the <all> encountered?
     if (numRequiredSeen != fNumRequired) {

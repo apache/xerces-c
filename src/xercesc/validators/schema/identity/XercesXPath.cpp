@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/12/20 22:10:48  tng
  * XML 1.1
  *
@@ -270,10 +273,13 @@ XercesXPath::XercesXPath(const XMLCh* const xpathExpr,
                          const unsigned int emptyNamespaceId,
                          const bool isSelector)
     : fEmptyNamespaceId(emptyNamespaceId)
-    , fExpression(XMLString::replicate(xpathExpr))
+    , fExpression(0)
     , fLocationPaths(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    try {
+    try
+    {
+        fExpression = XMLString::replicate(xpathExpr, fMemoryManager);
         parseExpression(stringPool, scopeContext);
 
         if (isSelector) {
@@ -320,7 +326,7 @@ bool XercesXPath::operator!=(const XercesXPath& other) const {
 // ---------------------------------------------------------------------------
 void XercesXPath::cleanUp() {
 
-    delete [] fExpression;
+    fMemoryManager->deallocate(fExpression);//delete [] fExpression;
     delete fLocationPaths;
 }
 
@@ -356,11 +362,11 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
     bool                              success = scanner.scanExpression(fExpression, 0, length, &tokens);
     bool                              firstTokenOfLocationPath=true;
     unsigned int                      tokenCount = tokens.size();
-    RefVectorOf<XercesStep>*          stepsVector = new RefVectorOf<XercesStep>(16);
+    RefVectorOf<XercesStep>*          stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16);
     Janitor<RefVectorOf<XercesStep> > janSteps(stepsVector);
 
     if (tokenCount) {
-        fLocationPaths = new RefVectorOf<XercesLocationPath>(8);
+        fLocationPaths = new (fMemoryManager) RefVectorOf<XercesLocationPath>(8);
     }
 
     for (unsigned int i = 0; i < tokenCount; i++) {
@@ -381,9 +387,9 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                     ThrowXML(XPathException, XMLExcepts::XPath_NoMultipleUnion);
                 }
 
-                fLocationPaths->addElement(new XercesLocationPath(stepsVector));
+                fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
                 janSteps.orphan();
-                stepsVector = new RefVectorOf<XercesStep>(16);
+                stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16);
                 janSteps.reset(stepsVector);
                 firstTokenOfLocationPath = true;
             }
@@ -414,8 +420,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
                     {
-                        XercesNodeTest* nodeTest = new XercesNodeTest(XercesNodeTest::WILDCARD);
-                        XercesStep* step = new XercesStep(XercesStep::ATTRIBUTE, nodeTest);
+                        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD);
+                        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
                     }
@@ -443,8 +449,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         if (isNamespaceAtt) {
 
                             // build step
-                            XercesNodeTest* nodeTest = new XercesNodeTest(prefix, uri);
-                            XercesStep* step = new XercesStep(XercesStep::ATTRIBUTE, nodeTest);
+                            XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri);
+                            XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                             stepsVector->addElement(step);
                             break;
                         }
@@ -455,8 +461,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         QName aQName(prefix, localPart, uri);
 
                         // build step
-                        XercesNodeTest* nodeTest = new XercesNodeTest(&aQName);
-                        XercesStep* step = new XercesStep(XercesStep::ATTRIBUTE, nodeTest);
+                        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(&aQName);
+                        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
                     }
@@ -484,8 +490,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             }
         case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
             {
-                XercesNodeTest* nodeTest = new XercesNodeTest(XercesNodeTest::WILDCARD);
-                XercesStep* step = new XercesStep(XercesStep::CHILD, nodeTest);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD);
+                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
                 break;
@@ -515,8 +521,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 if (isNamespace) {
 
                     // build step
-                    XercesNodeTest* nodeTest = new XercesNodeTest(prefix, uri);
-                    XercesStep* step = new XercesStep(XercesStep::CHILD, nodeTest);
+                    XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri);
+                    XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
                     stepsVector->addElement(step);
                     break;
                 }
@@ -526,8 +532,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 QName aQName(prefix, localPart, uri);
 
                 // build step
-                XercesNodeTest* nodeTest = new XercesNodeTest(&aQName);
-                XercesStep* step = new XercesStep(XercesStep::CHILD, nodeTest);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(&aQName);
+                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
                 break;
@@ -535,8 +541,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         case XercesXPath::EXPRTOKEN_PERIOD:
             {
                 // build step
-                XercesNodeTest* nodeTest = new XercesNodeTest(XercesNodeTest::NODE);
-                XercesStep* step = new XercesStep(XercesStep::SELF, nodeTest);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE);
+                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::SELF, nodeTest);
                 stepsVector->addElement(step);
 
                 if (firstTokenOfLocationPath && i+1 < tokenCount) {
@@ -558,8 +564,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                             }
                         }
                         // build step
-                        nodeTest = new XercesNodeTest(XercesNodeTest::NODE);
-                        step = new XercesStep(XercesStep::DESCENDANT, nodeTest);
+                        nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE);
+                        step = new (fMemoryManager) XercesStep(XercesStep::DESCENDANT, nodeTest);
                         stepsVector->addElement(step);
                     }
                 }
@@ -604,7 +610,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         }
     }
 
-    fLocationPaths->addElement(new XercesLocationPath(stepsVector));
+    fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
     janSteps.orphan();
 }
 

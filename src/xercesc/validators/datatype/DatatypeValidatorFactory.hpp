@@ -97,7 +97,7 @@ typedef RefHashTableOf<DatatypeValidator> DVHashTable;
 typedef RefArrayVectorOf<XMLCh> XMLChRefVector;
 
 
-class VALIDATORS_EXPORT DatatypeValidatorFactory
+class VALIDATORS_EXPORT DatatypeValidatorFactory : public XMemory
 {
 public:
 
@@ -107,7 +107,10 @@ public:
     /** @name Constructors */
     //@{
 
-    DatatypeValidatorFactory();
+    DatatypeValidatorFactory
+    (
+        MemoryManager* const manager// = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@}
 
@@ -174,40 +177,53 @@ public:
      * Creates a new datatype validator of type baseValidator's class and
      * adds it to the registry
      *
-     * @param  typeName       Datatype validator name
+     * @param  typeName        Datatype validator name
      *
-     * @param  baseValidator  Base datatype validator
+     * @param  baseValidator   Base datatype validator
      *
-     * @param  facets         datatype facets if any
+     * @param  facets          datatype facets if any
      *
-     * @param  enums          vector of values for enum facet
+     * @param  enums           vector of values for enum facet
      *
-     * @param  derivedByList  Indicates whether the datatype is derived by
-     *                        list or not
+     * @param  isDerivedByList Indicates whether the datatype is derived by
+     *                         list or not
      *
      * @param  finalSet       'final' values of the simpleType
+     *
+     * @param  isUserDefined  Indicates whether the datatype is built-in or
+     *                        user defined
      */
-     DatatypeValidator* createDatatypeValidator(const XMLCh* const,
-                                               DatatypeValidator* const,
-                                               RefHashTableOf<KVStringPair>* const,
-                                               RefArrayVectorOf<XMLCh>* const enums,
-                                               const bool,
-                                               const int = 0,
-                                               const bool = true);
+    DatatypeValidator* createDatatypeValidator
+    (
+        const XMLCh* const                    typeName
+        , DatatypeValidator* const            baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const      enums
+        , const bool                          isDerivedByList
+        , const int                           finalSet = 0
+        , const bool                          isUserDefined = true
+    );
 
     /**
-      * Creates a new datatype validator of type UnionDatatypeValidator and
-      * adds it to the registry
-      *
-      * @param  typeName       Datatype validator name
-      *
-      * @param  validators     Vector of datatype validators
-      *
-      */
-    DatatypeValidator* createDatatypeValidator(const XMLCh* const,
-                                               RefVectorOf<DatatypeValidator>* const,
-                                               const int finalSet,
-                                               const bool = true);
+     * Creates a new datatype validator of type UnionDatatypeValidator and
+     * adds it to the registry
+     *
+     * @param  typeName       Datatype validator name
+     *
+     * @param  validators     Vector of datatype validators
+     *
+     * @param  finalSet       'final' values of the simpleType
+     *
+     * @param  isUserDefined  Indicates whether the datatype is built-in or
+     *                        user defined
+     */
+    DatatypeValidator* createDatatypeValidator
+    (
+          const XMLCh* const                    typeName
+        , RefVectorOf<DatatypeValidator>* const validators
+        , const int                             finalSet
+        , const bool                            isUserDefined = true
+    );
 
     //@}
 
@@ -238,6 +254,7 @@ private:
     // -----------------------------------------------------------------------
     XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XERCES_CPP_NAMESPACE_QUALIFIER DatatypeValidator>*        fUserDefinedRegistry;
     static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
+    XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager* const fMemoryManager;
 
     friend class XPath2ContextImpl;
 };

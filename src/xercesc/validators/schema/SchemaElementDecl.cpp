@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/01/29 19:47:16  gareth
  * added DOMTypeInfo and some PSVI methods
  *
@@ -151,9 +154,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaElementDecl::SchemaElementDecl() :
-
-    fModelType(Any)
+SchemaElementDecl::SchemaElementDecl(MemoryManager* const manager) :
+    XMLElementDecl(manager)
+    , fModelType(Any)
     , fDatatypeValidator(0)
     , fEnclosingScope(Grammar::TOP_LEVEL_SCOPE)
     , fBlockSet(0)
@@ -180,8 +183,9 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
                                    , const int                           uriId
                                    , const SchemaElementDecl::ModelTypes type
                                    , const int                           enclosingScope
-                                   ) :
-    fModelType(type)
+                                   , MemoryManager* const                manager) :
+    XMLElementDecl(manager)
+    , fModelType(type)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
     , fBlockSet(0)
@@ -207,8 +211,9 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
 SchemaElementDecl::SchemaElementDecl(const QName* const                  elementName
                                    , const SchemaElementDecl::ModelTypes type
                                    , const int                           enclosingScope
-                                   ) :
-    fModelType(type)
+                                   , MemoryManager* const                manager) :
+    XMLElementDecl(manager)
+    , fModelType(type)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
     , fBlockSet(0)
@@ -233,7 +238,7 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
 
 SchemaElementDecl::~SchemaElementDecl()
 {
-    delete [] fDefaultValue;
+    getMemoryManager()->deallocate(fDefaultValue);//delete [] fDefaultValue;
     delete fAttDefs;
     delete fIdentityConstraints;
     delete fAttWildCard;
@@ -263,7 +268,7 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
             // If no att list exist yet, then create one
             if (!fAttDefs) {
                 // Use a hash modulus of 29 and tell it owns its elements
-                ((SchemaElementDecl*)this)->fAttDefs = new RefHash2KeysTableOf<SchemaAttDef>(29, true);
+                ((SchemaElementDecl*)this)->fAttDefs = new (getMemoryManager()) RefHash2KeysTableOf<SchemaAttDef>(29, true);
             }
 
             retVal = fAttDefs->get(baseName, uriId);
@@ -272,7 +277,7 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
             if (!retVal)
             {
                 // And add a default attribute for this name
-                retVal = new SchemaAttDef(prefix, baseName, uriId);
+                retVal = new (getMemoryManager()) SchemaAttDef(prefix, baseName, uriId);
                 retVal->setElemId(getId());
                 fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
 

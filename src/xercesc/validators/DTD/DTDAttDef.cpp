@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:54:50  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -104,7 +107,7 @@ DTDAttDef::DTDAttDef(const  XMLCh* const            attName
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fName(0)
 {
-    fName = XMLString::replicate(attName);
+    fName = XMLString::replicate(attName, getMemoryManager());
 }
 
 DTDAttDef::DTDAttDef(   const   XMLCh* const            attName
@@ -117,12 +120,12 @@ DTDAttDef::DTDAttDef(   const   XMLCh* const            attName
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fName(0)
 {
-    fName = XMLString::replicate(attName);
+    fName = XMLString::replicate(attName, getMemoryManager());
 }
 
 DTDAttDef::~DTDAttDef()
 {
-    delete [] fName;
+    getMemoryManager()->deallocate(fName); //delete [] fName;
 }
 
 
@@ -131,8 +134,8 @@ DTDAttDef::~DTDAttDef()
 // ---------------------------------------------------------------------------
 void DTDAttDef::setName(const XMLCh* const newName)
 {
-    delete [] fName;
-    fName = XMLString::replicate(newName);
+    getMemoryManager()->deallocate(fName); //delete [] fName;
+    fName = XMLString::replicate(newName, getMemoryManager());
 }
 
 XERCES_CPP_NAMESPACE_END

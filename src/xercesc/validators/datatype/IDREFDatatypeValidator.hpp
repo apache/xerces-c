@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -108,15 +111,21 @@ public:
     // -----------------------------------------------------------------------
     //  Public ctor/dtor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+	/** @name Constructors and Destructor */
     //@{
 
-    IDREFDatatypeValidator();
-
-    IDREFDatatypeValidator(DatatypeValidator*            const baseValidator
-                         , RefHashTableOf<KVStringPair>* const facets
-                         , RefArrayVectorOf<XMLCh>*           const enums
-                         , const int                           finalSet);
+    IDREFDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    IDREFDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     virtual ~IDREFDatatypeValidator();
 
@@ -144,9 +153,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                         , RefArrayVectorOf<XMLCh>*           const enums
-                                         , const int                           finalSet);
+    virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     inline void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
 
@@ -155,10 +168,14 @@ protected:
     //
     // ctor provided to be used by derived classes
     //
-    IDREFDatatypeValidator(DatatypeValidator*            const baseValidator
-                         , RefHashTableOf<KVStringPair>* const facets
-                         , const int                           finalSet
-                         , const ValidatorType                 type);
+    IDREFDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , const int finalSet
+        , const ValidatorType type
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     virtual void checkValueSpace(const XMLCh* const content);
 

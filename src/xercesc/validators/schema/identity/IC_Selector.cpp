@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 18:59:34  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/01/13 16:30:19  knoaman
  * [Bug 14469] Validator doesn't enforce xsd:key.
  *
@@ -96,8 +99,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 SelectorMatcher::SelectorMatcher(XercesXPath* const xpath,
                                  IC_Selector* const selector,
                                  FieldActivator* const fieldActivator,
-                                 const int initialDepth)
-    : XPathMatcher(xpath, selector->getIdentityConstraint())
+                                 const int initialDepth,
+                                 MemoryManager* const manager)
+    : XPathMatcher(xpath, selector->getIdentityConstraint(), manager)
     , fInitialDepth(initialDepth)
     , fElementDepth(0)
     , fMatchedDepth(-1)
@@ -188,9 +192,11 @@ bool IC_Selector::operator !=(const IC_Selector& other) const {
 // ---------------------------------------------------------------------------
 //  IC_Selector: Factory methods
 // ---------------------------------------------------------------------------
-XPathMatcher* IC_Selector::createMatcher(FieldActivator* const fieldActivator, const int initialDepth) {
+XPathMatcher* IC_Selector::createMatcher(FieldActivator* const fieldActivator,
+                                         const int initialDepth,
+                                         MemoryManager* const manager) {
 
-    return new SelectorMatcher(fXPath, this, fieldActivator, initialDepth);
+    return new (manager) SelectorMatcher(fXPath, this, fieldActivator, initialDepth, manager);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/05/15 18:53:26  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -79,7 +82,6 @@
 
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
-#include <xercesc/util/XMLNumber.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -101,10 +103,14 @@ public:
 
 protected:
 
-    AbstractNumericValidator(DatatypeValidator*            const baseValidator
-                           , RefHashTableOf<KVStringPair>* const facets
-                           , const int                           finalSet
-                           , const ValidatorType                 type);
+    AbstractNumericValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , const int finalSet
+        , const ValidatorType type
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     inline void init(RefArrayVectorOf<XMLCh>*  const enums);
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/15 18:57:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/01/29 19:47:16  gareth
  * added DOMTypeInfo and some PSVI methods
  *
@@ -179,22 +182,23 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    SchemaElementDecl();
-
+    SchemaElementDecl(MemoryManager* const manager);
     SchemaElementDecl
     (
-        const XMLCh* const       prefix
-      , const XMLCh* const       localPart
-      , const int                uriId
-      , const ModelTypes         modelType = Any
-      , const int                enclosingScope = Grammar::TOP_LEVEL_SCOPE
+          const XMLCh* const   prefix
+        , const XMLCh* const   localPart
+        , const int            uriId
+        , const ModelTypes     modelType// = Any
+        , const int            enclosingScope// = Grammar::TOP_LEVEL_SCOPE
+        , MemoryManager* const manager
     );
 
     SchemaElementDecl
     (
-        const QName* const       elementName
-      , const ModelTypes         modelType = Any
-      , const int                enclosingScope = Grammar::TOP_LEVEL_SCOPE
+          const QName* const   elementName
+        , const ModelTypes     modelType// = Any
+        , const int            enclosingScope// = Grammar::TOP_LEVEL_SCOPE
+        , MemoryManager* const manager
     );
 
     ~SchemaElementDecl();
@@ -783,10 +787,10 @@ inline void SchemaElementDecl::setMiscFlags(const int flags)
 inline void SchemaElementDecl::setDefaultValue(const XMLCh* const value)
 {
     if (fDefaultValue) {
-        delete[] fDefaultValue;
+        getMemoryManager()->deallocate(fDefaultValue);//delete[] fDefaultValue;
     }
 
-    fDefaultValue = XMLString::replicate(value);
+    fDefaultValue = XMLString::replicate(value, getMemoryManager());
 }
 
 inline void

@@ -74,7 +74,10 @@ public:
 	/** @name Constructor */
     //@{
 
-    AnySimpleTypeDatatypeValidator();
+    AnySimpleTypeDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 	//@}
 
@@ -158,9 +161,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-	DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const,
-                                   RefArrayVectorOf<XMLCh>* const enums,
-                                   const int finalSet);
+	virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:16:57  tng
  * Return a reference instead of void for operator=
  *
@@ -102,19 +105,22 @@
 #if !defined(CMNODE_HPP)
 #define CMNODE_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class CMNode
+class CMNode : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructors
     // -----------------------------------------------------------------------
-    CMNode(const ContentSpecNode::NodeTypes type);
+    CMNode
+    (
+        const ContentSpecNode::NodeTypes type
+        , MemoryManager* const manager
+    );
     virtual ~CMNode();
 
 
@@ -144,6 +150,14 @@ protected :
     // -----------------------------------------------------------------------
     virtual void calcFirstPos(CMStateSet& toUpdate) const = 0;
     virtual void calcLastPos(CMStateSet& toUpdate) const = 0;
+
+    // -----------------------------------------------------------------------
+    //  Protected data members
+    //
+    //  fMemoryManager
+    //      Pluggable memory manager for dynamic allocation/deallocation.
+    // -----------------------------------------------------------------------
+    MemoryManager*             fMemoryManager;
 
 
 private :
@@ -177,10 +191,10 @@ private :
     //      has to be stored redundantly, but we need to fault in the
     //      state set members and they have to be sized to this size.
     // -----------------------------------------------------------------------
-    ContentSpecNode::NodeTypes  fType;
-    CMStateSet*                 fFirstPos;
-    CMStateSet*                 fLastPos;
-    unsigned int                fMaxStates;
+    ContentSpecNode::NodeTypes fType;
+    CMStateSet*                fFirstPos;
+    CMStateSet*                fLastPos;
+    unsigned int               fMaxStates;
 };
 
 
@@ -188,9 +202,11 @@ private :
 // ---------------------------------------------------------------------------
 //  CMNode: Constructors and Destructors
 // ---------------------------------------------------------------------------
-inline CMNode::CMNode(const ContentSpecNode::NodeTypes type) :
+inline CMNode::CMNode(const ContentSpecNode::NodeTypes type,
+                      MemoryManager* const manager) :
 
-    fType(type)
+    fMemoryManager(manager)
+    , fType(type)
     , fFirstPos(0)
     , fLastPos(0)
     , fMaxStates(~0)
@@ -222,7 +238,7 @@ inline const CMStateSet& CMNode::getFirstPos() const
     if (!fFirstPos)
     {
         CMNode* unconstThis = (CMNode*)this;
-        unconstThis->fFirstPos = new CMStateSet(fMaxStates);
+        unconstThis->fFirstPos = new (fMemoryManager) CMStateSet(fMaxStates, fMemoryManager);
         unconstThis->calcFirstPos(*fFirstPos);
     }
     return *fFirstPos;
@@ -237,7 +253,7 @@ inline const CMStateSet& CMNode::getLastPos() const
     if (!fLastPos)
     {
         CMNode* unconstThis = (CMNode*)this;
-        unconstThis->fLastPos = new CMStateSet(fMaxStates);
+        unconstThis->fLastPos = new (fMemoryManager) CMStateSet(fMaxStates, fMemoryManager);
         unconstThis->calcLastPos(*fLastPos);
     }
     return *fLastPos;

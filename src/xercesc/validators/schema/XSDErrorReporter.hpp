@@ -62,7 +62,7 @@
 #if !defined(XSDERRORREPORTER_HPP)
 #define XSDERRORREPORTER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -73,7 +73,7 @@ class XMLErrorReporter;
 /**
  *  This class reports schema errors
  */
-class VALIDATORS_EXPORT XSDErrorReporter
+class VALIDATORS_EXPORT XSDErrorReporter : public XMemory
 {
 public:
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -112,23 +115,25 @@
 #if !defined(CMSTATESET_HPP)
 #define CMSTATESET_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
-#include <xercesc/framework/XMLValidityCodes.hpp>
+#include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class CMStateSet
+class CMStateSet : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    CMStateSet(const unsigned int bitCount) :
+    CMStateSet( const unsigned int bitCount
+              , MemoryManager* const manager) :
 
         fBitCount(bitCount)
         , fByteArray(0)
+        , fMemoryManager(manager)
     {
         //
         //  See if we need to allocate the byte array or whether we can live
@@ -139,7 +144,7 @@ public :
             fByteCount = fBitCount / 8;
             if (fBitCount % 8)
                 fByteCount++;
-            fByteArray = new XMLByte[fByteCount];
+            fByteArray = (XMLByte*) fMemoryManager->allocate(fByteCount*sizeof(XMLByte)); //new XMLByte[fByteCount];
         }
 
         // Init all the bits to zero
@@ -157,6 +162,7 @@ public :
     CMStateSet(const CMStateSet& toCopy) :
         fBitCount(toCopy.fBitCount)
       , fByteArray(0)
+      , fMemoryManager(toCopy.fMemoryManager)
     {
         //
         //  See if we need to allocate the byte array or whether we can live
@@ -167,7 +173,7 @@ public :
             fByteCount = fBitCount / 8;
             if (fBitCount % 8)
                 fByteCount++;
-            fByteArray = new XMLByte[fByteCount];
+            fByteArray = (XMLByte*) fMemoryManager->allocate(fByteCount*sizeof(XMLByte)); //new XMLByte[fByteCount];
 
             memcpy((void *) fByteArray,
                    (const void *) toCopy.fByteArray,
@@ -186,7 +192,7 @@ public :
     ~CMStateSet()
     {
         if (fByteArray)
-            delete [] fByteArray;
+            fMemoryManager->deallocate(fByteArray); //delete [] fByteArray;
     }
 
 
@@ -392,6 +398,7 @@ private :
     unsigned int    fBits1;
     unsigned int    fBits2;
     XMLByte*        fByteArray;
+    MemoryManager*  fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

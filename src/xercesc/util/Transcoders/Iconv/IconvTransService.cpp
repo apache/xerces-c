@@ -62,10 +62,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include "IconvTransService.hpp"
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
-#include "IconvTransService.hpp"
+#include <xercesc/framework/MemoryManager.hpp>
 #include <wchar.h>
+
 #if defined (XML_GCC) || defined (XML_PTX) || defined (XML_IBMVAOS2)
     #if defined(XML_BEOS)
         wint_t towlower(wint_t wc) {
@@ -214,7 +216,8 @@ bool IconvTransService::supportsSrcOfs() const
 XMLTranscoder*
 IconvTransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            )
+                                        , const unsigned int            
+                                        ,       MemoryManager* const)
 {
     //
     //  NOTE: We don't use the block size here
@@ -347,6 +350,58 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retVal;
 }
 
+char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode,
+                                    MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    char* retVal = 0;
+    if (*toTranscode)
+    {
+        unsigned int  wLent = getWideCharLength(toTranscode);
+
+        wchar_t       tmpWideCharArr[gTempBuffArraySize];
+        wchar_t*      allocatedArray = 0;
+        wchar_t*      wideCharBuf = 0;
+
+        if (wLent >= gTempBuffArraySize)
+            wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
+            (
+                (wLent + 1) * sizeof(wchar_t)
+            );//new wchar_t[wLent + 1];
+        else
+            wideCharBuf = tmpWideCharArr;
+
+        for (unsigned int i = 0; i < wLent; i++)
+        {
+            wideCharBuf[i] = toTranscode[i];
+        }
+        wideCharBuf[wLent] = 0x00;
+
+        // Calc the needed size.
+        const size_t neededLen = ::wcstombs(NULL, wideCharBuf, 0);
+        if (neededLen == -1)
+        {
+            manager->deallocate(allocatedArray);//delete [] allocatedArray;
+            retVal = (char*) manager->allocate(sizeof(char)); //new char[1];
+            retVal[0] = 0;
+            return retVal;
+        }
+
+        retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char));//new char[neededLen + 1];
+        ::wcstombs(retVal, wideCharBuf, neededLen);
+        retVal[neededLen] = 0;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+    }
+    else
+    {
+        retVal = (char*) manager->allocate(sizeof(char));//new char[1];
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
 
 bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
@@ -438,6 +493,52 @@ XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode)
     else
     {
         retVal = new XMLCh[1];
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
+XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
+                                     MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    XMLCh* retVal = 0;
+    if (*toTranscode)
+    {
+        const unsigned int len = calcRequiredSize(toTranscode);
+        if (len == 0)
+        {
+            retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
+            retVal[0] = 0;
+            return retVal;
+        }
+
+        wchar_t       tmpWideCharArr[gTempBuffArraySize];
+        wchar_t*      allocatedArray = 0;
+        wchar_t*      wideCharBuf = 0;
+
+        if (len >= gTempBuffArraySize)
+            wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
+            (
+                (len + 1) * sizeof(wchar_t)
+            );//new wchar_t[len + 1];
+        else
+            wideCharBuf = tmpWideCharArr;
+
+        ::mbstowcs(wideCharBuf, toTranscode, len);
+        retVal = (XMLCh*) manager->allocate((len + 1) *sizeof(XMLCh));//new XMLCh[len + 1];
+        for (unsigned int i = 0; i < len; i++)
+        {
+            retVal[i] = (XMLCh) wideCharBuf[i];
+        }
+        retVal[len] = 0x00;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+    }
+    else
+    {
+        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
         retVal[0] = 0;
     }
     return retVal;

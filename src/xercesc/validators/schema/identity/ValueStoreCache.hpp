@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,13 +99,13 @@ class SchemaElementDecl;
 class XMLScanner;
 
 
-class VALIDATORS_EXPORT ValueStoreCache
+class VALIDATORS_EXPORT ValueStoreCache : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    ValueStoreCache();
+    ValueStoreCache(MemoryManager* const manager);
 	~ValueStoreCache();
 
 	// -----------------------------------------------------------------------
@@ -164,6 +164,7 @@ private:
     RefHash2KeysTableOf<ValueStore>*         fIC2ValueStoreMap;
     RefStackOf<RefHashTableOf<ValueStore> >* fGlobalMapStack;
     XMLScanner*                              fScanner;
+    MemoryManager*                           fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

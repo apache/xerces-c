@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -99,14 +102,15 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Constructor and Destructor
 // ---------------------------------------------------------------------------
-GrammarResolver::GrammarResolver() :
+GrammarResolver::GrammarResolver(MemoryManager* const manager) :
     fCacheGrammar(false)
     , fUseCachedGrammar(false)
     , fGrammarRegistry(0)
     , fCachedGrammarRegistry(0)
     , fDataTypeReg(0)
+    , fMemoryManager(manager)	 
 {
-    fGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+    fGrammarRegistry = new (manager) RefHashTableOf<Grammar>(29, true);
 }
 
 GrammarResolver::~GrammarResolver()
@@ -130,7 +134,7 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
 
         if (!fDataTypeReg) {
 
-            fDataTypeReg = new DatatypeValidatorFactory();
+            fDataTypeReg = new (fMemoryManager) DatatypeValidatorFactory(fMemoryManager);
             fDataTypeReg->expandRegistryToFullSchemaSet();
         }
 
@@ -222,7 +226,7 @@ void GrammarResolver::cacheGrammars()
     }
 
     if (!fCachedGrammarRegistry)
-        fCachedGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true);
 
     // Cache
     for (unsigned int i=0; i<keyCount; i++) {
@@ -240,7 +244,7 @@ void GrammarResolver::cacheGrammars()
 void GrammarResolver::cacheGrammarFromParse(const bool aValue) {
 
     if (aValue && !fCachedGrammarRegistry) {
-        fCachedGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true);
     }
 
     fCacheGrammar = aValue;

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/05/15 18:53:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/02/06 13:51:55  gareth
  * fixed bug with multiple attributes being validated by the same union type.
  *
@@ -112,7 +115,6 @@
 #define UNION_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -123,10 +125,13 @@ public:
     // -----------------------------------------------------------------------
     //  Public ctor/dtor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+	/** @name Constructors and Destructor. */
     //@{
 
-    UnionDatatypeValidator();
+    UnionDatatypeValidator
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //
     // constructor for native Union datatype validator
@@ -134,8 +139,12 @@ public:
     //      <union   memberTypes="member1 member2 ...">
     // </simpleType>
     //
-    UnionDatatypeValidator(RefVectorOf<DatatypeValidator>* const memberTypeValidators
-                         , const int                             finalSet);
+    UnionDatatypeValidator
+    (
+        RefVectorOf<DatatypeValidator>* const memberTypeValidators
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //
     // constructor for derived Union datatype validator
@@ -146,10 +155,14 @@ public:
     //      </restriction>
     // </simpleType>
     //
-    UnionDatatypeValidator(DatatypeValidator*            const baseValidator
-                         , RefHashTableOf<KVStringPair>* const facets
-                         , RefArrayVectorOf<XMLCh>*           const enums
-                         , const int                           finalSet);
+    UnionDatatypeValidator
+    (
+        DatatypeValidator* const baseValidator
+        , RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     virtual ~UnionDatatypeValidator();
 
@@ -219,9 +232,13 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefArrayVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance
+    (
+        RefHashTableOf<KVStringPair>* const facets
+        , RefArrayVectorOf<XMLCh>* const enums
+        , const int finalSet
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
 
@@ -291,12 +308,15 @@ private:
      DatatypeValidator*               fValidatedDatatype;
 };
 
-inline DatatypeValidator* UnionDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefArrayVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+inline DatatypeValidator* UnionDatatypeValidator::newInstance
+(
+      RefHashTableOf<KVStringPair>* const facets
+    , RefArrayVectorOf<XMLCh>* const      enums
+    , const int                           finalSet
+    , MemoryManager* const                manager
+)
 {
-    return (DatatypeValidator*) new UnionDatatypeValidator(this, facets, enums, finalSet);
+    return (DatatypeValidator*) new (manager) UnionDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 inline void UnionDatatypeValidator::validate( const XMLCh* const content)

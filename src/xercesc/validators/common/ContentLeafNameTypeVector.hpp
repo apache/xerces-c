@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:16:57  tng
  * Return a reference instead of void for operator=
  *
@@ -83,13 +86,12 @@
 #if !defined(CONTENTLEAFNAMETYPEVECTOR_HPP)
 #define CONTENTLEAFNAMETYPEVECTOR_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class ContentLeafNameTypeVector
+class ContentLeafNameTypeVector : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -100,12 +102,13 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ContentLeafNameTypeVector();
+    ContentLeafNameTypeVector(MemoryManager* const manager);
     ContentLeafNameTypeVector
     (
-        QName** const                      qName
-      , ContentSpecNode::NodeTypes* const  types
-      , const unsigned int                       count
+        QName** const                     qName
+      , ContentSpecNode::NodeTypes* const types
+      , const unsigned int                count
+      , MemoryManager* const              manager
     );
 
     ~ContentLeafNameTypeVector();
@@ -150,6 +153,7 @@ private :
     //  Private Data Members
     //
     // -----------------------------------------------------------------------
+    MemoryManager*                fMemoryManager;
     QName**                       fLeafNames;
     ContentSpecNode::NodeTypes   *fLeafTypes;
     unsigned int                  fLeafCount;
@@ -157,15 +161,18 @@ private :
 
 inline void ContentLeafNameTypeVector::cleanUp()
 {
-	delete [] fLeafNames;
-	delete [] fLeafTypes;
+	fMemoryManager->deallocate(fLeafNames); //delete [] fLeafNames;
+	fMemoryManager->deallocate(fLeafTypes); //delete [] fLeafTypes;
 }
 
 inline void ContentLeafNameTypeVector::init(const unsigned int size)
 {
-	fLeafNames = new QName*[size];
-	fLeafTypes = new ContentSpecNode::NodeTypes [size];
-	fLeafCount = size;
+    fLeafNames = (QName**) fMemoryManager->allocate(size * sizeof(QName*));//new QName*[size];
+    fLeafTypes = (ContentSpecNode::NodeTypes *) fMemoryManager->allocate
+    (
+        size * sizeof(ContentSpecNode::NodeTypes)
+    ); //new ContentSpecNode::NodeTypes [size];
+    fLeafCount = size;
 }
 
 XERCES_CPP_NAMESPACE_END

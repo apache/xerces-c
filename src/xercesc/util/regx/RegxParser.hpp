@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,8 @@ class Token;
 class RangeToken;
 class TokenFactory;
 
-class XMLUTIL_EXPORT RegxParser {
+class XMLUTIL_EXPORT RegxParser : public XMemory
+{
 public:
 
 	// -----------------------------------------------------------------------
@@ -122,7 +123,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RegxParser();
+	RegxParser(MemoryManager* const manager);
 	virtual ~RegxParser();
 
     // -----------------------------------------------------------------------
@@ -206,7 +207,7 @@ private:
 	// -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
-    class ReferencePosition
+    class ReferencePosition : public XMemory
     {
         public :
             ReferencePosition(const int refNo, const int position);
@@ -224,6 +225,7 @@ private:
 	// -----------------------------------------------------------------------
     //  Private data members
 	// -----------------------------------------------------------------------
+    MemoryManager*                  fMemoryManager;
 	bool                            fHasBackReferences;
 	int                             fOptions;
 	int                             fOffset;

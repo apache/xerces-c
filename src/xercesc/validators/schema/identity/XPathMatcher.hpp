@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,21 +82,24 @@ class XMLStringPool;
 class XercesLocationPath;
 class XMLAttr;
 
-class VALIDATORS_EXPORT XPathMatcher
+class VALIDATORS_EXPORT XPathMatcher : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    XPathMatcher(XercesXPath* const xpath);
     XPathMatcher(XercesXPath* const xpath,
-                 IdentityConstraint* const ic);
+                 MemoryManager* const manager);
+    XPathMatcher(XercesXPath* const xpath,
+                 IdentityConstraint* const ic,
+                 MemoryManager* const manager);
     virtual ~XPathMatcher();
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     IdentityConstraint* getIdentityConstraint() const { return fIdentityConstraint; }
+    MemoryManager* getMemoryManager() const { return fMemoryManager; }
 
     // -----------------------------------------------------------------------
     //  Match methods
@@ -181,6 +184,7 @@ private:
     RefVectorOf<ValueStackOf<int> >* fStepIndexes;
     RefVectorOf<XercesLocationPath>* fLocationPaths;
     IdentityConstraint*              fIdentityConstraint;
+    MemoryManager*                   fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------
@@ -188,9 +192,9 @@ private:
 // ---------------------------------------------------------------------------
 inline void XPathMatcher::cleanUp() {
 
-    delete [] fMatched;
-    delete [] fNoMatchDepth;
-    delete [] fCurrentStep;
+    fMemoryManager->deallocate(fMatched);//delete [] fMatched;
+    fMemoryManager->deallocate(fNoMatchDepth);//delete [] fNoMatchDepth;
+    fMemoryManager->deallocate(fCurrentStep);//delete [] fCurrentStep;
     delete fStepIndexes;
 }
 

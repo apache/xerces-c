@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/05/15 18:47:04  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.11  2003/03/09 17:02:57  peiyongz
  * PanicHandler
  *
@@ -842,6 +845,7 @@ IconvFBSDTransService::makeNewXMLTranscoder
     const    XMLCh* const    encodingName
     ,    XMLTransService::Codes&    resValue
     , const     unsigned int    blockSize
+    ,       MemoryManager* const    manager
 )
 {
 #ifndef XML_USE_LIBICONV
@@ -860,7 +864,7 @@ IconvFBSDTransService::makeNewXMLTranscoder
     resValue = XMLTransService::UnsupportedEncoding;
     IconvFBSDTranscoder    *newTranscoder = NULL;
 
-    char    *encLocal = XMLString::transcode(encodingName);
+    char    *encLocal = XMLString::transcode(encodingName, manager);
     iconv_t    cd_from, cd_to;
 
     {
@@ -869,7 +873,7 @@ IconvFBSDTransService::makeNewXMLTranscoder
         if (cd_from == (iconv_t)-1) {
             resValue = XMLTransService::SupportFilesNotFound;
             if (encLocal)
-            delete [] encLocal;
+            manager->deallocate(encLocal);//delete [] encLocal;
             return NULL;
         }
         cd_to = iconv_open (encLocal, fUnicodeCP);
@@ -877,10 +881,10 @@ IconvFBSDTransService::makeNewXMLTranscoder
             resValue = XMLTransService::SupportFilesNotFound;
             iconv_close (cd_from);
             if (encLocal)
-            delete [] encLocal;
+            manager->deallocate(encLocal);//delete [] encLocal;
             return NULL;
         }
-        newTranscoder = new IconvFBSDTranscoder (encodingName,
+        newTranscoder = new (manager) IconvFBSDTranscoder (encodingName,
                              blockSize,
                              cd_from, cd_to,
                              uChSize(), UBO());
@@ -888,7 +892,7 @@ IconvFBSDTransService::makeNewXMLTranscoder
     if (newTranscoder)
         resValue = XMLTransService::Ok;
     if (encLocal)
-        delete [] encLocal;
+        manager->deallocate(encLocal);//delete [] encLocal;
     return newTranscoder;
 
 #endif /* !XML_USE_LIBICONV */

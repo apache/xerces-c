@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 18:48:27  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -96,7 +99,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 #include <xercesc/validators/common/CMUnaryOp.hpp>
@@ -106,9 +108,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  CMUnaryOp: Constructors and Destructor
 // ---------------------------------------------------------------------------
-CMUnaryOp::CMUnaryOp(   const   ContentSpecNode::NodeTypes  type
-                        ,       CMNode* const               nodeToAdopt) :
-    CMNode(type)
+CMUnaryOp::CMUnaryOp( const ContentSpecNode::NodeTypes type
+                    ,       CMNode* const              nodeToAdopt
+                    ,       MemoryManager* const       manager) :
+    CMNode(type, manager)
     , fChild(nodeToAdopt)
 {
     // Insure that its one of the types we require

@@ -537,7 +537,8 @@ bool Win32TransService::isAlias(const   HKEY            encodingKey
 XMLTranscoder*
 Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize)
+                                        , const unsigned int            blockSize
+                                        ,       MemoryManager* const    manager)
 {
     const unsigned int upLen = 1024;
     XMLCh upEncoding[upLen + 1];
@@ -561,7 +562,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     }
 
     // We found it, so return a Win32 transcoder for this encoding
-    return new Win32Transcoder
+    return new (manager) Win32Transcoder
     (
         encodingName
         , theEntry->getWinCP()
@@ -902,6 +903,35 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retVal;
 }
 
+char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
+                                    MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    char* retVal = 0;
+    if (*toTranscode)
+    {
+        // Calc the needed size
+        const unsigned int neededLen = ::wcstombs(0, toTranscode, 0);
+        if (neededLen == (unsigned int)-1)
+            return 0;
+
+        // Allocate a buffer of that size plus one for the null and transcode
+        retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char)); //new char[neededLen + 1];
+        ::wcstombs(retVal, toTranscode, neededLen + 1);
+
+        // And cap it off anyway just to make sure
+        retVal[neededLen] = 0;
+    }
+     else
+    {
+        retVal = (char*) manager->allocate(sizeof(char)); //new char[1];
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
 
 XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
 {
@@ -930,6 +960,39 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
      else
     {
         retVal = new XMLCh[1];
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
+XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
+                                     MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    XMLCh* retVal = 0;
+    if (*toTranscode)
+    {
+        // Calculate the buffer size required
+        const unsigned int neededLen = calcRequiredSize(toTranscode);
+        if (neededLen == 0)
+        {
+            retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
+            retVal[0] = 0;
+            return retVal;
+        }
+
+        // Allocate a buffer of that size plus one for the null and transcode
+        retVal = (XMLCh*) manager->allocate((neededLen + 1) * sizeof(XMLCh)); //new XMLCh[neededLen + 1];
+        ::mbstowcs(retVal, toTranscode, neededLen + 1);
+
+        // Cap it off just to make sure. We are so paranoid!
+        retVal[neededLen] = 0;
+    }
+     else
+    {
+        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh*)); //new XMLCh[1];
         retVal[0] = 0;
     }
     return retVal;

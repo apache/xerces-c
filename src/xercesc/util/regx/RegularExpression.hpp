@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,14 +64,13 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/regx/Op.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/BMPattern.hpp>
-#include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/regx/ModifierToken.hpp>
 #include <xercesc/util/regx/ConditionToken.hpp>
 #include <xercesc/util/regx/OpFactory.hpp>
@@ -81,13 +80,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Forward Declaration
 // ---------------------------------------------------------------------------
-class Token;
-class BMPattern;
 class RangeToken;
 class Match;
-class TokenFactory;
 
-class XMLUTIL_EXPORT RegularExpression {
+class XMLUTIL_EXPORT RegularExpression : public XMemory
+{
 public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
@@ -168,7 +165,7 @@ private:
     // -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
-    class XMLUTIL_EXPORT Context
+    class XMLUTIL_EXPORT Context : public XMemory
     {
         public :
             Context();
