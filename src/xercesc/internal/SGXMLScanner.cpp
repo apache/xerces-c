@@ -3171,6 +3171,10 @@ void SGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
+    // fModel may need updating, as fGrammarResolver could have cleaned it
+    if(fModel && getPSVIHandler())
+        fModel = fGrammarResolver->getXSModel();
+
     fGrammar = fSchemaGrammar;
     fGrammarType = Grammar::DTDGrammarType;
     fRootGrammar = 0;

@@ -1201,6 +1201,10 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
+    // fModel may need updating, as fGrammarResolver could have cleaned it
+    if(fModel && getPSVIHandler())
+        fModel = fGrammarResolver->getXSModel();
+
     {
         XMLDTDDescriptionImpl   theDTDDescription(XMLUni::fgDTDEntityString, fMemoryManager);
         fDTDGrammar = (DTDGrammar*) fGrammarResolver->getGrammar(&theDTDDescription);
