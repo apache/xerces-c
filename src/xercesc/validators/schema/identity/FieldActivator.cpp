@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 01:13:10  cargilld
+ * Fix memhandlertest failure (memory not deleted).
+ *
  * Revision 1.7  2003/12/17 00:18:41  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -127,6 +130,7 @@ FieldActivator::FieldActivator(const FieldActivator& other)
 
 FieldActivator::~FieldActivator()
 {
+    delete fMayMatch;
 }
 
 // ---------------------------------------------------------------------------
