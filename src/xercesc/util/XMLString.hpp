@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/27 19:24:43  peiyongz
+ * Bug#12087: patch from Thomas Ford (tom@decisionsoft.com)
+ *
  * Revision 1.2  2002/02/20 18:17:02  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -1034,7 +1037,7 @@ public:
       */
     static int patternMatch
     (
-                XMLCh* const    toSearch
+          const XMLCh* const    toSearch
         , const XMLCh* const    pattern
     );
 

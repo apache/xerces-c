@@ -1173,28 +1173,28 @@ XMLCh* XMLString::findAny(          XMLCh* const    toSearch
     return 0;
 }
 
-int XMLString::patternMatch(        XMLCh* const    toSearch
+int XMLString::patternMatch(  const XMLCh* const    toSearch
                             , const XMLCh* const    pattern)
 {
     if (!toSearch || !pattern )
         return -1;
 
-    XMLCh* srcPtr = toSearch;
     const int patnLen = XMLString::stringLen(pattern);
+	if ( !patnLen )
+		return -1;
+
+    const XMLCh* srcPtr    = toSearch;
+    const XMLCh* patnStart = toSearch;
     int  patnIndex = 0;
-    bool patnMatch;
 
     while (*srcPtr)
     {
-        patnMatch = (*srcPtr++ == pattern[patnIndex++]);
-
-        if (!patnMatch)
+        if ( !(*srcPtr++ == pattern[patnIndex++]))
         {
             patnIndex = 0;
-            patnMatch = (*srcPtr == pattern[patnIndex++]);
+            srcPtr = ++patnStart;
         }
-
-        if (patnMatch)
+        else
         {
             if (patnIndex == patnLen)
                 // full pattern match found
@@ -1204,6 +1204,7 @@ int XMLString::patternMatch(        XMLCh* const    toSearch
 
     return -1;
 }
+
 
 unsigned int XMLString::hashN(  const   XMLCh* const    tohash
                                 , const unsigned int    n
