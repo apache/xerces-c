@@ -290,6 +290,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         }
         if ($platform =~ m/Linux/) {
            $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
+	   $platform =~ tr/A-Z/a-z/;
         }
         if ($platform =~ m/SunOS/) {
            $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
@@ -311,23 +312,46 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
                 exit(1);
         }
 
+        $platform =~ tr/A-Z/a-z/;
 
         # Make the target directory and its main subdirectories
         system ("mkdir $targetdir");
         system ("mkdir $targetdir/bin");
         system ("mkdir $targetdir/lib");
-		if (length($ICUROOT) > 0) {
-        	system ("mkdir $targetdir/lib/icu");
-        	system ("mkdir $targetdir/lib/icu/data");
-        	system ("mkdir $targetdir/include/icu");
-		}
+	if (length($ICUROOT) > 0) {
+		system ("mkdir $targetdir/lib/icu");
+		system ("mkdir $targetdir/lib/icu/data");
+		system ("mkdir $targetdir/include/icu");
+	}
         system ("mkdir $targetdir/include");
         system ("mkdir $targetdir/include/sax");
         system ("mkdir $targetdir/include/framework");
         system ("mkdir $targetdir/include/internal");
         system ("mkdir $targetdir/include/parsers");
         system ("mkdir $targetdir/include/util");
+	system ("mkdir $targetdir/include/util/Compilers");
+	system ("mkdir $targetdir/include/util/MsgLoaders");
+	system ("mkdir $targetdir/include/util/MsgLoaders/ICU");
+	system ("mkdir $targetdir/include/util/MsgLoaders/InMemory");
+	system ("mkdir $targetdir/include/util/MsgLoaders/MsgCatalog");
+	system ("mkdir $targetdir/include/util/MsgLoaders/Win32");
+	system ("mkdir $targetdir/include/util/Platforms");
+	system ("mkdir $targetdir/include/util/Platforms/AIX");
+	system ("mkdir $targetdir/include/util/Platforms/HPUX");
+	system ("mkdir $targetdir/include/util/Platforms/Linux");
+	system ("mkdir $targetdir/include/util/Platforms/MacOS");
+	system ("mkdir $targetdir/include/util/Platforms/OS2");
+	system ("mkdir $targetdir/include/util/Platforms/OS390");
+	system ("mkdir $targetdir/include/util/Platforms/Solaris");
+	system ("mkdir $targetdir/include/util/Platforms/Tandem");
+	system ("mkdir $targetdir/include/util/Platforms/Win32");
+	system ("mkdir $targetdir/include/util/Transcoders");
+	system ("mkdir $targetdir/include/util/Transcoders/ICU");
+	system ("mkdir $targetdir/include/util/Transcoders/Iconv");
+	system ("mkdir $targetdir/include/util/Transcoders/Win32");
         system ("mkdir $targetdir/include/dom");
+        system ("mkdir $targetdir/include/validators");
+        system ("mkdir $targetdir/include/validators/DTD");
         system ("mkdir $targetdir/samples");
         system ("mkdir $targetdir/samples/data");
         system ("mkdir $targetdir/samples/SAXCount");
@@ -381,6 +405,27 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
         system("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
         system("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
+	system("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
+	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/*.hpp $targetdir/include/util/MsgLoaders");
+	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/ICU/*.hpp $targetdir/include/util/MsgLoaders/ICU");
+	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/InMemory/*.hpp $targetdir/include/util/MsgLoaders/InMemory");
+	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/util/MsgLoaders/MsgCatalog");
+	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/Win32/*.hpp $targetdir/include/util/MsgLoaders/Win32");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/*.hpp $targetdir/include/util/Platforms");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/AIX/*.hpp $targetdir/include/util/Platforms/AIX");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/HPUX/*.hpp $targetdir/include/util/Platforms/HPUX");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/Linux/*.hpp $targetdir/include/util/Platforms/Linux");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
+	system("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
+	system("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
+	system("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
+	system("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
+	system("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
+	system("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
 		
 		if (length($ICUROOT) > 0) {
 			print "\nInternational files are being copied from \'" . $ICUROOT . "\'";
