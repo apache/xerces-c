@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/09/02 09:04:44  gareth
+ * added API to get enumerator to referenced grammars.
+ *
  * Revision 1.17  2003/09/01 12:59:59  gareth
  * added API to get an enumerator for the cached grammars.
  *
@@ -296,9 +299,15 @@ GrammarResolver::getGrammarEnumerator() const
 }
 
 RefHashTableOfEnumerator<Grammar>
-GrammarResolver::getCachedGrammarEnumerator() const
+GrammarResolver::getReferencedGrammarEnumerator() const
 {
     return RefHashTableOfEnumerator<Grammar>(fGrammarFromPool);
+}
+
+RefHashTableOfEnumerator<Grammar>
+GrammarResolver::getCachedGrammarEnumerator() const
+{
+    return fGrammarPool->getGrammarEnumerator();
 }
 
 bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
