@@ -228,7 +228,7 @@ public :
     static const XMLCh fgXercesLoadExternalDTD[];
     static const XMLCh fgXercesContinueAfterFatalError[];
     static const XMLCh fgXercesValidationErrorAsFatal[];
-    static const XMLCh fgXercesResetDocumentPool[];
+    static const XMLCh fgXercesAdoptDOMDocument[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
