@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/03/27 16:16:43  tng
+ * use __IBMCPP__ instead of __xlC__ to determine xlC compiler
+ *
  * Revision 1.9  2003/03/13 22:11:46  tng
  * [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
  *
@@ -263,8 +266,6 @@
     #define XML_BORLAND
 #elif defined(_MSC_VER)
     #define XML_VISUALCPP
-#elif defined(__xlC__)
-    #define XML_CSET
 #elif defined(XML_SOLARIS)
     #if defined(__SUNPRO_CC) && (__SUNPRO_CC >=0x500)
         #define XML_SUNCC5
@@ -307,6 +308,8 @@
         #if (__IBMC__ >= 400 || __IBMCPP__ >= 400)
             #define XML_IBMVA4_OS2
         #endif
+    #elif defined(XML_AIX)
+        #define XML_CSET              
     #endif
 #elif defined(XML_TRU64) && defined(__DECCXX)
     #define XML_DECCXX
