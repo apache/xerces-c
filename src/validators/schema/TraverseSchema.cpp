@@ -4741,9 +4741,6 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
         SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(typeURI));
 
         if (!impInfo) {
-
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnresolvedPrefix, prefix);
-            noErrorDetected = false;
             return 0;
         }
 
@@ -5060,36 +5057,53 @@ void TraverseSchema::processAttributeDeclRef(const DOM_Element& elem,
     // check for different namespace
     SchemaInfo* saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    SchemaAttDef* refAttDef = 0;
 
     if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
 
-        SchemaInfo* impInfo = fSchemaInfo->getImportInfo(attURI);
+        Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
 
-        if (!impInfo) {
+        if (grammar == 0 || grammar->getGrammarType() != Grammar::SchemaGrammarType) {
 
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TopLevelAttributeNotFound, refName);
+            reportSchemaError(XMLUni::fgValidityDomain, XMLValid::GrammarNotFound, uriStr);
             return;
         }
 
-        infoType = SchemaInfo::IMPORT;
-        fSchemaInfo->setCurrentScope(fCurrentScope);
-        fSchemaInfo->setScopeCount(fScopeCount);
-        restoreSchemaInfo(impInfo, infoType);
+        refAttDef = (SchemaAttDef*) ((SchemaGrammar*) grammar)->getAttributeDeclRegistry()->get(localPart);
+
+        if (!refAttDef) {
+
+            SchemaInfo* impInfo = fSchemaInfo->getImportInfo(attURI);
+
+            if (!impInfo) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TopLevelAttributeNotFound, refName);
+                return;
+            }
+
+            infoType = SchemaInfo::IMPORT;
+            fSchemaInfo->setCurrentScope(fCurrentScope);
+            fSchemaInfo->setScopeCount(fScopeCount);
+            restoreSchemaInfo(impInfo, infoType);
+        }
     }
 
     // if Global attribute registry does not contain the ref attribute, get
     // the referred attribute declaration and traverse it.
-    if (fAttributeDeclRegistry->containsKey(localPart) == false) {
+    if (!refAttDef) {
+		
+        if (fAttributeDeclRegistry->containsKey(localPart) == false) {
 
-        DOM_Element referredAttribute =
-            fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTE, localPart, &fSchemaInfo);
+            DOM_Element referredAttribute =
+                fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTE, localPart, &fSchemaInfo);
 
-        if (referredAttribute != 0) {
-            traverseAttributeDecl(referredAttribute, 0);
+            if (referredAttribute != 0) {
+                traverseAttributeDecl(referredAttribute, 0);
+            }
         }
-    }
 
-    SchemaAttDef* refAttDef = (SchemaAttDef*) fAttributeDeclRegistry->get(localPart);
+        refAttDef = (SchemaAttDef*) fAttributeDeclRegistry->get(localPart);
+    }
 
     // restore schema information, if necessary
     if (fSchemaInfo != saveInfo) {
