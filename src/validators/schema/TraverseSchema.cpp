@@ -633,6 +633,24 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
     }
 
     // ------------------------------------------------------------------
+    // Resolve namespace to a grammar
+    // ------------------------------------------------------------------	
+    if (nameSpace) {
+
+        Grammar* aGrammar = fGrammarResolver->getGrammar(nameSpace);
+
+        if (aGrammar) {
+			
+            if (aGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                return;
+            }
+            else { // empty string namespace
+                //REVISIT
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------
     // Get 'schemaLocation' attribute
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
@@ -664,25 +682,6 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
 
         fSchemaInfo->addSchemaInfo(importSchemaInfo, SchemaInfo::IMPORT);
         return;
-    }
-
-    SchemaGrammar* importedGrammar = 0;
-	
-    if (nameSpace) {
-
-        Grammar* aGrammar = fGrammarResolver->getGrammar(nameSpace);
-
-        if (aGrammar) {
-			
-            if (aGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
-
-                importedGrammar = (SchemaGrammar*) aGrammar;
-                return;
-            }
-            else { // empty string namespace
-                //REVISIT
-            }
-        }
     }
 
     // ------------------------------------------------------------------
