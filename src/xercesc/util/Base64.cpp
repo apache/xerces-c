@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/25 18:14:35  peiyongz
+ * Schema Errata: E2-9 Base64
+ *
  * Revision 1.5  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -97,8 +100,7 @@
 #include <xercesc/util/Base64.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/TransService.hpp>
+#include <xercesc/internal/XMLReader.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -134,6 +136,31 @@ XMLByte Base64::base64Inverse[BASELENGTH];
 const XMLByte Base64::base64Padding = chEqual;
 
 bool Base64::isInitialized = false;
+
+/**
+ *     E2-9
+ *    
+ *     Canonical-base64Binary ::= (B64line* B64lastline)?
+ *
+ *      B64line ::= B64x15 B64x15 B64x15 B64x15 B64x15 B64 #xA
+ *                  76 Base64 characters followed by newline
+ *
+ *      B64x15  ::= B64 B64 B64 B64 B64
+ *                  B64 B64 B64 B64 B64
+ *                  B64 B64 B64 B64 B64
+ *
+ *      B64lastline ::= B64x4? B64x4? B64x4? B64x4?
+ *                      B64x4? B64x4? B64x4? B64x4?
+ *                      B64x4? B64x4? B64x4? B64x4?
+ *                      B64x4? B64x4? B64x4? B64x4?
+ *                      B64x4? B64x4?
+ *                      (B64x4 | (B64 B64 B16 '=') | (B64 B04 '=='))
+ *                      #xA
+ *
+ *      B64x4   ::= B64 B64 B64 B64
+ *      B04     ::= [AQgw]
+ *      B16     ::= [AEIMQUYcgkosw048]
+*/
 
 // number of quadruplets per one line ( must be >1 and <19 )
 const unsigned int Base64::quadsPerLine = 15;
@@ -269,6 +296,22 @@ int Base64::getDataLength( const XMLCh* const inputData )
 //
 // temporary data, rawInputData, is ALWAYS released by this function.
 //
+
+/***
+ *     E2-9
+ *
+ *     Base64Binary ::= S? B64quartet* B64final?
+ *
+ *     B64quartet   ::= B64 S? B64 S? B64 S? B64 S?
+ *
+ *     B64final     ::= B64 S? B04 S? '=' S? '=' S?
+ *                    | B64 S? B64 S? B16 S? '=' S?
+ *
+ *     B04          ::= [AQgw]
+ *     B16          ::= [AEIMQUYcgkosw048]
+ *     B64          ::= [A-Za-z0-9+/]
+*/
+
 XMLByte* Base64::decode(const XMLByte* const inputData,
                         unsigned int*        outputLength)
 {
@@ -279,9 +322,8 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
         return 0;
 
     //
-    // remove all whitespaces from the base64Data
+    // remove all XML whitespaces from the base64Data
     //
-
     int inputLength = XMLString::stringLen( (const char* const)inputData );
     XMLByte* rawInputData = new XMLByte[ inputLength + 1 ];
     ArrayJanitor<XMLByte> jan(rawInputData);
@@ -290,8 +332,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
     int rawInputLength = 0;
     while ( inputIndex < inputLength )
     {
-//        if( !isspace( inputData[ inputIndex ] ))
-        if (!XMLPlatformUtils::fgTransService->isSpace(inputData[inputIndex]))
+        if (!XMLReader::isWhitespace(inputData[inputIndex]))
             rawInputData[ rawInputLength++ ] = inputData[ inputIndex ];
 
         inputIndex++;
