@@ -68,6 +68,7 @@
         <li>Externalize validation, actual/canonical value production for arbitrary strings</li> 
         <li>Laxly validate schema annotations</li>
         <li>Upgrade to ICU 3.0</li>
+        <li>Handle elements with a large number of attributes more efficiently</li>
       </ul>
     </s3>
 
