@@ -184,7 +184,7 @@ private:
     XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
     XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* specNode = 0);
     XMLCh* formatContentModel () const ;
-    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const bool toAdoptSpecNode = true);
+    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs, const bool toAdoptSpecNode = true);
     ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode = true, const bool checkUPA = false);
     void resizeContentSpecOrgURI();
 

@@ -725,6 +725,7 @@ private:
     ValueVectorOf<unsigned int>*            fCurrentGroupStack;
     GeneralAttributeCheck*                  fAttributeCheck;
     RefHash2KeysTableOf<XMLCh>*             fGlobalTypes;
+    RefHash2KeysTableOf<XMLCh>*             fGlobalAttributes;
     RefHash2KeysTableOf<XMLCh>*             fGlobalGroups;
     RefHash2KeysTableOf<XMLCh>*             fGlobalAttGroups;
     RefHash2KeysTableOf<XMLCh>*             fRedefineComponents;

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/08/27 20:14:42  knoaman
+ * Validate attributes in <all>, <redefine>, <group> and <attributeGroup> declarations.
+ * Misc. fixes.
+ *
  * Revision 1.4  2001/06/06 13:09:02  knoaman
  * Use BooleanDatatypeValidator to validate values.
  *
@@ -462,10 +466,23 @@ void GeneralAttributeCheck::mapElements() {
     fElementMap->put((void*) SchemaSymbols::fgELT_IMPORT, prefixContext, attList);
 
     // for element "redefine" - global (same as include)
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Schema_L_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_REDEFINE, prefixContext, attList);
+
 
     // element "attributeGroup" - global
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Name_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, prefixContext, attList);
 
     // element "group" - global
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Name_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_GROUP, prefixContext, attList);
 
     // element "annotation" - global
 
@@ -489,7 +506,18 @@ void GeneralAttributeCheck::mapElements() {
     fElementMap->put((void*) SchemaSymbols::fgELT_ELEMENT, prefixContext, attList);
 
     // element "attributeGroup" - local ref
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Ref_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, prefixContext, attList);
 
+    // element "group" - local ref
+    attList = new RefVectorOf<AttributeInfo>(4, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_MaxOccurs_D]);
+    attList->addElement(fAttributes[Att_MinOccurs_D]);
+    attList->addElement(fAttributes[Att_Ref_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_GROUP, prefixContext, attList);
 
     // element "attribute" - local name
     prefixContext = localNamePrefix;
@@ -678,6 +706,11 @@ void GeneralAttributeCheck::mapElements() {
     fElementMap->put((void*) SchemaSymbols::fgELT_MINEXCLUSIVE, prefixContext, attList);
 
     // element "all" - local name
+    attList = new RefVectorOf<AttributeInfo>(3, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_MaxOccurs1_D]);
+    attList->addElement(fAttributes[Att_MinOccurs1_D]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_ALL, prefixContext, attList);
 
     // element "unique" - local name
 

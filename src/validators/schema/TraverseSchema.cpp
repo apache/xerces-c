@@ -211,6 +211,7 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fCurrentGroupStack(0)
     , fAttributeCheck(0)
     , fGlobalTypes(0)
+    , fGlobalAttributes(0)
     , fGlobalGroups(0)
     , fGlobalAttGroups(0)
     , fRedefineComponents(0)
@@ -264,6 +265,7 @@ void TraverseSchema::doTraverseSchema() {
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
     fCurrentGroupStack = new ValueVectorOf<unsigned int>(8);
     fGlobalTypes = new RefHash2KeysTableOf<XMLCh>(29, false);
+    fGlobalAttributes = new RefHash2KeysTableOf<XMLCh>(13, false);
     fGlobalGroups = new RefHash2KeysTableOf<XMLCh>(13, false);
     fGlobalAttGroups = new RefHash2KeysTableOf<XMLCh>(13, false);
     fSubstitutionGroups = new RefHash2KeysTableOf<SchemaElementDecl>(29, false);
@@ -774,8 +776,6 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
         bool adoptSpecNode = true;
         DOMString childName = child.getLocalName();
 
-        hadContent = true;
-
         if (childName.equals(SchemaSymbols::fgELT_ELEMENT)) {
 
             QName* eltQName = traverseElementDecl(child);
@@ -831,6 +831,10 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
                               fBuffer.getRawBuffer());
         }
 
+        if (contentSpecNode) {
+            hadContent = true;
+        }
+
         if (seeParticle) {
             checkMinMax(contentSpecNode, child, Not_All_Context);
         }
@@ -854,7 +858,7 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
         }
     }
 
-    if (hadContent && right != 0) {
+    if (hadContent) {
         left = new ContentSpecNode((ContentSpecNode::NodeTypes) modelGroupType,
                                    left, right, toAdoptLeft, toAdoptRight);
         toAdoptLeft = true;
@@ -1627,11 +1631,11 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
 
     ContentSpecNode* left = 0;
     ContentSpecNode* right = 0;
+    bool hadContent = false;
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
         ContentSpecNode* contentSpecNode = 0;
-        bool seeParticle = false;
         DOMString childName = child.getLocalName();
 
         if (childName.equals(SchemaSymbols::fgELT_ELEMENT)) {
@@ -1644,7 +1648,7 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
             }
 
             contentSpecNode = new ContentSpecNode(eltQName);
-            seeParticle = true;
+            checkMinMax(contentSpecNode, child, All_Element);
         }
         else {
 
@@ -1653,9 +1657,7 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
             continue;
         }
 
-        if (seeParticle) {
-            checkMinMax(contentSpecNode, child, All_Element);
-        }
+        hadContent = true;
 
         if (!left) {
             left = contentSpecNode;
@@ -1669,7 +1671,7 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
         }
     }
 
-    if (right) {
+    if (hadContent) {
         left = new ContentSpecNode(ContentSpecNode::All, left, right);
     }
 
@@ -1780,7 +1782,6 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     }
 
     // Check for duplicate declaration
-    // REVISIT - need to add attributeGroup check
     const XMLCh* attForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
     const XMLCh* qualified = SchemaSymbols::fgATTVAL_QUALIFIED;
     int uriIndex = fEmptyNamespaceURI;
@@ -1792,14 +1793,7 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         uriIndex = fTargetNSURI;
     }
 
-    if (topLevel) {
-        if (fAttributeDeclRegistry->containsKey(name)) {
-
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, name);
-            return;
-        }
-    }
-    else if (typeInfo && typeInfo->getAttDef(name, uriIndex) != 0) {
+    if (typeInfo && typeInfo->getAttDef(name, uriIndex) != 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, name);
         return;
@@ -3572,10 +3566,26 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
                 }
             }
 
-            traverseAttributeGroupDecl(child, 0);
+            if (!fAttGroupRegistry->containsKey(typeName)) {
+                traverseAttributeGroupDecl(child, 0);
+            }
         }
         else if (name.equals(SchemaSymbols::fgELT_ATTRIBUTE ) ) {
-            traverseAttributeDecl( child, 0);
+
+            if (XMLString::stringLen(typeName)) {
+                if (fGlobalAttributes->containsKey(typeName, fTargetNSURI)) {
+
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, typeName);
+                    continue;
+                }
+                else {
+                    fGlobalAttributes->put((void*) typeName, fTargetNSURI, 0);
+                }
+            }
+
+            if (!typeName || !fAttributeDeclRegistry->containsKey(typeName)) {
+                traverseAttributeDecl( child, 0);
+            }
         }
         else if (name.equals(SchemaSymbols::fgELT_GROUP)) {
 
@@ -4641,11 +4651,15 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         if (maxOccurs < 1) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue,
                               tmpMaxStr, SchemaSymbols::fgATT_MAXOCCURS);
+            if (specNode)
+                specNode->setMaxOccurs(minOccurs);
         }
         else if (maxOccurs < minOccurs) {
 
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidMin2MaxOccurs,
                               tmpMinStr, tmpMaxStr);
+            if (specNode)
+                specNode->setMaxOccurs(minOccurs);
         }
     }
 
@@ -5350,11 +5364,6 @@ int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
     }
 
     ContentSpecNode::NodeTypes nodeType = specNode->getType();
-
-    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
-        return 0;
-    }
-
     const ContentSpecNode* first = 0;
     const ContentSpecNode* second = 0;
     int min = specNode->getMinOccurs();
@@ -6286,6 +6295,10 @@ bool TraverseSchema::openRedefinedSchema(const DOM_Element& redefineElem) {
 
     const XMLCh* includeURL = srcToFill->getSystemId();
 
+    if (!XMLString::compareString(includeURL, fCurrentSchemaURL)) {
+        return false;
+    }
+
     if (fIncludeLocations->containsKey(includeURL)) {
 
         restoreSchemaInfo(fIncludeLocations->get(includeURL));
@@ -6743,6 +6756,7 @@ void TraverseSchema::cleanUp() {
     delete fCurrentTypeNameStack;
     delete fCurrentGroupStack;
     delete fGlobalTypes;
+    delete fGlobalAttributes;
     delete fGlobalGroups;
     delete fGlobalAttGroups;
     delete fRedefineComponents;
