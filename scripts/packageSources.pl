@@ -100,8 +100,12 @@ sub package_sources {
    system ("doxygen");
 
    # Now create the User documentation from the XML sources
+   
+   # Select APache style or IBM Alphaworks style docs.
+   $styleFile = "style-apachexml.jar";
    if (length($ICUROOT) > 0) {
-   	change_documentation_entities("$srctargetdir/doc/entities.ent");
+   	change_documentation_entities("$srctargetdir/doc/dtd/entities.ent");
+   	$styleFile = "style-ibm.zip";
    }
 
    if ($platform =~ m/Windows/ || $platform =~ m/CYGWIN_NT/) {
@@ -110,28 +114,12 @@ sub package_sources {
       system("$RM -rf *.dep");
       system("$RM -rf *.mak");
       system("$RM -rf Makefile");
-      system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan.jar;../tools/jars/xerces.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/style-apachexml.jar");
+      system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan.jar;../tools/jars/xerces.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/$styleFile");
 
    }
    else {   # all UNIX flavors
-      chdir("$srctargetdir/tools/jars");
-	  system("mkdir styles");
-	  chdir("styles");
-      system("unzip ../style-apachexml.jar");
-      system("chmod 755 META-INF dtd graphics resources stylesheets");
-	  chdir("$srctargetdir");
-      open(CDOCS, "<createdocs.bat") || die("Could not edit createdocs.bat");
-	  open(UNIXCDOCS, ">createdocs.sh") || die("Could not create createdocs.sh");
-	  while($line = <CDOCS>) {
-	  	  $line =~ s/\;/:/g;
-		  $line =~ s/jars\/style-apachexml.jar/jars\/styles/g;
-		  print UNIXCDOCS $line;
-	  }
-	  close(CDOCS);
-	  close(UNIXCDOCS);
-      system("sh createdocs.sh");
-	  unlink("createdocs.sh");
-	  system("\\rm -rf $srctargetdir/tools/jars/styles");
+   
+#   Docs are only building on Windows for now...
 
       $RM = "\\rm";
       system("find $srctargetdir -name \"*.o\" -print -exec rm -f {} \\;");
@@ -297,11 +285,10 @@ sub change_documentation_entities()
         while ($line = <FIZZLE>) {
                 $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
                 $line =~ s/"Xerces-C"/"XML4C"/g;
-                $line =~ s/"1\.1\.0"/"3\.1\.0"/g;
+                $line =~ s/"1\.3\.0"/"3\.3\.0"/g;
                 $line =~ s/"Xerces"/"XML4C"/g;
-                $line =~ s/"xerces-c-1_1_0"/"xml4c-3_1_0"/g;
-                $line =~ s/"xerces-c-src-1_1_0"/"xml4c-src-3_1_0"/g;
-                $line =~ s/"xerces-c_1"/"xerces-c_1"/g;
+                $line =~ s/"xerces-c-1_3_0"/"xml4c-3_3_0"/g;
+                $line =~ s/"xerces-c-src-1_3_0"/"xml4c-src-3_3_0"/g;
                 $line =~ s/xerces-c-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
                 $line =~ s/xml\.apache\.org\/dist/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
                 print FIZZLEOUT $line;
