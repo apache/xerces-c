@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/07 14:25:36  knoaman
+ * Fix compliation error on Unix.
+ *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
  *
@@ -607,7 +610,7 @@ void XPathScanner::init() {
 bool XPathScanner::scanExpression(const XMLCh* const data,
                                   int currentOffset,
                                   const int endOffset,
-                                  ValueVectorOf<int>* tokens) {
+                                  ValueVectorOf<int>* const tokens) {
 
     bool      starIsMultiplyOperator = false;
     int       nameOffset = -1;

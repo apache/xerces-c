@@ -170,9 +170,9 @@ const XMLCh fgDotForwardSlash[] =
 
 const XMLCh* fgIdentityConstraints[] =
 {
-    { SchemaSymbols::fgELT_UNIQUE },
-    { SchemaSymbols::fgELT_KEY },
-    { SchemaSymbols::fgELT_KEYREF }
+    SchemaSymbols::fgELT_UNIQUE,
+    SchemaSymbols::fgELT_KEY,
+    SchemaSymbols::fgELT_KEYREF
 };
 
 // ---------------------------------------------------------------------------
