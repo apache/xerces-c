@@ -53,6 +53,10 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 # 
+# $Log$
+# Revision 1.4  1999/12/21 19:54:44  rahulj
+# Added Apache license and version tags.
+#
 #
 
 ###################################################################
