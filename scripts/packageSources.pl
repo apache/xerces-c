@@ -147,14 +147,12 @@ sub package_sources {
 
       # Change the directory permissions
       system ("chmod 644 `find $srctargetdir -type f`");
-      system ("chmod 755 `find $srctargetdir/scripts -type f`");
       system ("chmod 755 `find $srctargetdir -type d`");
-      system ("chmod +x `find $srctargetdir/scripts -type f`");
       # Change the script file permissions
-      system ("chmod +x $srctargetdir/src/runConfigure $srctargetdir/src/configure $srctargetdir/src/install-sh");
-      system ("chmod +x $srctargetdir/src/config.sub $srctargetdir/src/config.guess $srctargetdir/src/config.status");
-      system ("chmod +x $srctargetdir/samples/runConfigure $srctargetdir/samples/configure $srctargetdir/samples/install-sh");
-      system ("chmod +x $srctargetdir/samples/config.sub $srctargetdir/samples/config.guess $srctargetdir/samples/config.status");
+      system ("chmod 755 $srctargetdir/src/runConfigure $srctargetdir/src/configure $srctargetdir/src/install-sh");
+      system ("chmod 755 $srctargetdir/src/config.sub $srctargetdir/src/config.guess");
+      system ("chmod 755 $srctargetdir/samples/runConfigure $srctargetdir/samples/configure $srctargetdir/samples/install-sh");
+      system ("chmod 755 $srctargetdir/samples/config.sub $srctargetdir/samples/config.guess");
       # To make sure that configure script is updated, run autoconf
       chdir ("$srctargetdir/src");
       system("autoconf");
