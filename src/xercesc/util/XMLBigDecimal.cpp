@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/03 00:03:18  peiyongz
+ * parseContent
+ *
  * Revision 1.18  2003/12/23 21:48:14  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0
  *
@@ -175,6 +178,16 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
 , fIntVal(0)
 , fMemoryManager(manager)
 {
+    parseContent(strValue);
+}
+
+XMLBigDecimal::~XMLBigDecimal()
+{
+    cleanUp();
+}
+
+void XMLBigDecimal::parseContent(const XMLCh* const strValue)
+{
     if ((!strValue) || (!*strValue))
         ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
 
@@ -198,11 +211,6 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
         cleanUp();
         throw;
     }
-}
-
-XMLBigDecimal::~XMLBigDecimal()
-{
-    cleanUp();
 }
 
 void XMLBigDecimal::cleanUp()

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2004/01/03 00:03:18  peiyongz
+ * parseContent
+ *
  * Revision 1.20  2003/12/31 02:34:11  neilg
  * enable production of canonical representations for dates with negative years, or years >9999
  *
@@ -584,6 +587,10 @@ const XMLCh*  XMLDateTime::getFormattedString() const
 int XMLDateTime::getSign() const
 {
     return 0;
+}
+
+void XMLDateTime::parseContent(const XMLCh* const)
+{
 }
 
 // ---------------------------------------------------------------------------

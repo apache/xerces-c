@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2004/01/03 00:03:18  peiyongz
+ * parseContent
+ *
  * Revision 1.14  2003/12/31 02:34:11  neilg
  * enable production of canonical representations for dates with negative years, or years >9999
  *
@@ -185,6 +188,8 @@ public:
     virtual const XMLCh*  getFormattedString() const;
 
     virtual int           getSign() const;
+
+    virtual void       parseContent(const XMLCh* const);
 
     // -----------------------------------------------------------------------
     // Canonical Representation

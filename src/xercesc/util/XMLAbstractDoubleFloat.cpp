@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.23  2004/01/03 00:03:18  peiyongz
+ * parseContent
+ *
  * Revision 1.22  2003/12/23 21:48:14  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0
  *
@@ -174,6 +177,11 @@ XMLAbstractDoubleFloat::~XMLAbstractDoubleFloat()
 {
      fMemoryManager->deallocate(fRawData);//delete [] fRawData;
      fMemoryManager->deallocate(fFormattedString);//delete [] fFormattedString;
+}
+
+void XMLAbstractDoubleFloat::parseContent(const XMLCh* const strValue)
+{
+    init(strValue);
 }
 
 void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)

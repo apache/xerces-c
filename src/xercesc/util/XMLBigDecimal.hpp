@@ -124,6 +124,8 @@ public:
 
     virtual int           getSign() const;
 
+    virtual void          parseContent(const XMLCh* const);
+
     const XMLCh*          getValue() const;
 
     unsigned int          getScale() const;
