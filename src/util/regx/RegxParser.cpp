@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/07/26 12:46:48  knoaman
+ * Fix for bug 2815.
+ *
  * Revision 1.5  2001/06/06 13:49:27  jberry
  * Fix two improper NULL tests
  *
@@ -120,19 +123,18 @@ RegxParser::ReferencePosition::ReferencePosition(const int refNo,
 //  RegxParser: Constructors and Destructors
 // ---------------------------------------------------------------------------
 RegxParser::RegxParser()
-	:fHasBackReferences(false),
-	 fOptions(0),
-	 fOffset(0),
-	 fNoGroups(1),
-	 fParseContext(S_NORMAL),
-	 fStringLen(0),
+    :fHasBackReferences(false),
+     fOptions(0),
+     fOffset(0),
+     fNoGroups(1),
+     fParseContext(S_NORMAL),
+     fStringLen(0),
      fState(0),
-	 fCharData(0),
-	 fString(0),
-	 fReferences(0),
-     fTokenFactory()
+     fCharData(0),
+     fString(0),
+     fReferences(0),
+     fTokenFactory(0)
 {
-
 }
 
 RegxParser::~RegxParser() {
