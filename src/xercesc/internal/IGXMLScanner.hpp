@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/28 05:13:29  neilg
+ * Fix state-ful duplicate attribute detection when the integrated
+ * scanner is in use and namespaces are off.  Also, implement
+ * change to PSVIHandler interface to remove prefix passing.
+ *
  * Revision 1.15  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -285,6 +290,7 @@ private :
     bool scanAttValue
     (
         const   XMLAttDef* const    attDef
+        , const   XMLCh* const      attrName
         ,       XMLBuffer&          toFill
     );
     bool scanContent(const bool extEntity);

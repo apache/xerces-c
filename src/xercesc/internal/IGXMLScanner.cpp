@@ -1653,6 +1653,9 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     //  pairs until we get there.
     unsigned int    attCount = 0;
     unsigned int    curAttListSize = fAttrList->size();
+    wasAdded = false;
+    fElemCount++;
+
     while (true)
     {
         // And get the next non-space character
@@ -1737,27 +1740,14 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
             //  See if this attribute is declared for this element. If we are
             //  not validating of course it will not be at first, but we will
             //  fault it into the pool (to avoid lots of redundant errors.)
-            wasAdded = false;
-            XMLAttDef* attDef = elemDecl->findAttr
-            (
-                fAttNameBuf.getRawBuffer()
-                , 0
-                , 0
-                , 0
-                , XMLElementDecl::AddIfNotFound
-                , wasAdded
-            );
-
-            if (wasAdded)
+            XMLCh * namePtr = fAttNameBuf.getRawBuffer();
+            XMLAttDef* attDef = ((DTDElementDecl *)elemDecl)->getAttDef(namePtr);
+            if (!attDef)
             {
                 //  If there is a validation handler, then we are validating
                 //  so emit an error.
                 if (fValidate)
-                {
-                    // This is to tell the Validator that this attribute was
-                    // faulted-in, was not an attribute in the attdef originally
-                    attDef->setCreateReason(XMLAttDef::JustFaultIn);
-
+                { 
                     fValidator->emitError
                     (
                         XMLValid::AttNotDefinedForElement
@@ -1765,45 +1755,52 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                         , elemDecl->getFullName()
                     );
                 }
+                unsigned int *curCountPtr = fUndeclaredAttrRegistry->get(namePtr);
+                if(!curCountPtr)
+                {
+                    curCountPtr = getNewUIntPtr();
+                     *curCountPtr = fElemCount;
+                    fUndeclaredAttrRegistry->put((void *)namePtr, curCountPtr);
+                }
+                else if(*curCountPtr < fElemCount)
+                    *curCountPtr = fElemCount;
+                else
+                {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , namePtr
+                        , elemDecl->getFullName()
+                     );
+                }
             }
             else
             {
-                // If this attribute was faulted-in and first occurence,
-                // then emit an error
-                if (fValidate && attDef->getCreateReason() == XMLAttDef::JustFaultIn
-                    && !attDef->getProvided())
+                // prepare for duplicate detection
+                unsigned int *curCountPtr = fAttDefRegistry->get(attDef);
+                if(!curCountPtr)
                 {
-                    fValidator->emitError
-                    (
-                        XMLValid::AttNotDefinedForElement
-                        , fAttNameBuf.getRawBuffer()
+                    curCountPtr = getNewUIntPtr();
+                    *curCountPtr = fElemCount;
+                    fAttDefRegistry->put(attDef, curCountPtr);
+                }
+                else if(*curCountPtr < fElemCount)
+                    *curCountPtr = fElemCount;
+                else
+                {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , attDef->getFullName()
                         , elemDecl->getFullName()
                     );
                 }
             }
-
-            //  If its already provided, then there are more than one of
-            //  this attribute in this start tag, so emit an error.
-            if (attDef->getProvided())
-            {
-                emitError
-                (
-                    XMLErrs::AttrAlreadyUsedInSTag
-                    , attDef->getFullName()
-                    , elemDecl->getFullName()
-                );
-            }
-            else
-            {
-                // Mark this one as already seen
-                attDef->setProvided(true);
-            }
-
             //  Skip any whitespace before the value and then scan the att
             //  value. This will come back normalized with entity refs and
             //  char refs expanded.
             fReaderMgr.skipPastSpaces();
-            if (!scanAttValue(attDef, fAttValueBuf))
+            if (!scanAttValue(attDef, namePtr, fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -1841,7 +1838,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
             //  determine if it has a valid value. It will output any needed
             //  errors, but we just keep going. We only need to do this if
             //  we are validating.
-            if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
+            if (attDef)
             {
                 // Let the validator pass judgement on the attribute value
                 if (fValidate)
@@ -1865,10 +1862,10 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                 curAtt = new (fMemoryManager) XMLAttr
                 (
                     -1
-                    , fAttNameBuf.getRawBuffer()
+                    , namePtr
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
-                    , attDef->getType()
+                    , (attDef)?attDef->getType():XMLAttDef::CData
                     , true
                     , fMemoryManager
                 );
@@ -1880,10 +1877,10 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                 curAtt->set
                 (
                     -1
-                    , fAttNameBuf.getRawBuffer()
+                    , namePtr
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
-                    , attDef->getType()
+                    , (attDef)?attDef->getType():XMLAttDef::CData
                 );
                 curAtt->setSpecified(true);
             }
@@ -1948,8 +1945,9 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
             const XMLAttDef& curDef = attDefList.getAttDef(i);
             const XMLAttDef::DefAttTypes defType = curDef.getDefaultType();
 
-            if (!curDef.getProvided())
-            {
+            unsigned int *attCountPtr = fAttDefRegistry->get(&curDef);
+            if (!attCountPtr || *attCountPtr < fElemCount)
+            { // did not occur
                 if (fValidate)
                 {
                     // If we are validating and its required, then an error
@@ -2777,7 +2775,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         (
             eName->getLocalPart()
             , fURIStringPool->getValueForId(eName->getURI())
-            , eName->getPrefix()
             , fPSVIAttrList
         );
     }
@@ -3348,7 +3345,6 @@ void IGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     (
         elemDecl->getBaseName()
         , fURIStringPool->getValueForId(elemDecl->getURI())
-        , elemDecl->getElementName()->getPrefix()
         , fPSVIElement
     );
 

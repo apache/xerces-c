@@ -1730,7 +1730,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         (
             eName->getLocalPart()
             , fURIStringPool->getValueForId(eName->getURI())
-            , eName->getPrefix()
             , fPSVIAttrList
         );
     }
@@ -4773,7 +4772,6 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     (
         elemDecl->getBaseName()
         , fURIStringPool->getValueForId(elemDecl->getURI())
-        , elemDecl->getElementName()->getPrefix()
         , fPSVIElement
     );
 

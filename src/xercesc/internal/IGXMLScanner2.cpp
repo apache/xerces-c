@@ -2152,6 +2152,7 @@ bool IGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
 
 
 bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
+                                  , const XMLCh* const        attrName
                                   ,       XMLBuffer&          toFill)
 {
     enum States
@@ -2161,8 +2162,9 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     };
 
     // Get the type and name
-    const XMLAttDef::AttTypes type = attDef->getType();
-    const XMLCh* const attrName = attDef->getFullName();
+    const XMLAttDef::AttTypes type = (attDef)
+                ?attDef->getType()
+                :XMLAttDef::CData;
 
     // Reset the target buffer
     toFill.reset();
@@ -2177,7 +2179,9 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
 
     // Get attribute def - to check to see if it's declared externally or not
-    bool  isAttExternal = attDef->isExternal();
+    bool  isAttExternal = (attDef)
+                ?attDef->isExternal()
+                :false;
 
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
