@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/15 18:37:49  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.9  2003/04/25 17:21:31  peiyongz
  * throw exception if getcwd() fails
  *
@@ -299,8 +302,8 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
 
     if (retVal == NULL)
@@ -319,8 +322,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
 FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 {
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     return fopen( tmpFileName , "wb" );
 }
 
@@ -397,15 +400,16 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                                     MemoryManager* const manager)
 {
     //
     //  NOTE: The path provided has always already been opened successfully,
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
     //
-    char* newSrc = XMLString::transcode(srcPath);
-    ArrayJanitor<char> janText(newSrc);
+    char* newSrc = XMLString::transcode(srcPath, fgMemoryManager);
+    ArrayJanitor<char> janText(newSrc, fgMemoryManager);
 
     // Use a local buffer that is big enough for the largest legal path
     char absPath[PATH_MAX + 1];
@@ -417,7 +421,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetBasePathName);
     }
-    return XMLString::transcode(absPath);
+    return XMLString::transcode(absPath, manager);
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
@@ -438,7 +442,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
-XMLCh* XMLPlatformUtils::getCurrentDirectory()
+XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
     char  dirBuf[PATH_MAX + 1];
     char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
@@ -449,7 +453,7 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory()
                  XMLExcepts::File_CouldNotGetBasePathName);
     }
 
-    return XMLString::transcode(curDir);
+    return XMLString::transcode(curDir, manager);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 
@@ -496,7 +500,7 @@ void XMLPlatformUtils::platformInit()
         panic( PanicHandler::Panic_SystemInit );
 }
 
-class  RecursiveMutex
+class  RecursiveMutex : public XMemory
 {
 public:
     pthread_mutex_t   mutex;

@@ -128,7 +128,8 @@ char*	ConvertSlashToColon(char* p, std::size_t charCount);
 
 XMLCh*	XMLCreateFullPathFromFSRef_X(const FSRef& startingRef);
 XMLCh*	XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef);
-XMLCh*	XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec);
+XMLCh*	XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec,
+                                            MemoryManager* const manager);
 bool	XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref);
 bool	XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref);
 bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec);
@@ -304,7 +305,8 @@ XMLPlatformUtils::resetFile(FileHandle theFile)
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
 XMLCh*
-XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                              MemoryManager* const manager)
 {
     XMLCh* path = NULL;
 
@@ -312,13 +314,13 @@ XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     {
         FSRef ref;
         if (!XMLParsePathToFSRef(srcPath, ref) || (path = XMLCreateFullPathFromFSRef(ref)) == NULL)
-            path = XMLString::replicate(srcPath);
+            path = XMLString::replicate(srcPath, manager);
     }
     else
     {
         FSSpec spec;
-        if (!XMLParsePathToFSSpec(srcPath, spec) || (path = XMLCreateFullPathFromFSSpec(spec)) == NULL)
-            path = XMLString::replicate(srcPath);
+        if (!XMLParsePathToFSSpec(srcPath, spec) || (path = XMLCreateFullPathFromFSSpec(spec, manager)) == NULL)
+            path = XMLString::replicate(srcPath, manager);
     }
 
     return path;
@@ -332,13 +334,13 @@ XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 }
 
 
-XMLCh* XMLPlatformUtils::getCurrentDirectory()
+XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
 	//	Get a newly allocated path to the current directory
 	FSSpec spec;
 	XMLCh* path =
 		(noErr == FSMakeFSSpec(0, 0, NULL, &spec))
-			? XMLCreateFullPathFromFSSpec(spec)
+			? XMLCreateFullPathFromFSSpec(spec, manager)
 			: NULL;
 			
     if (!path)
@@ -998,8 +1000,8 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
 	//	Manually parse the path using FSSpec APIs.
 	
     //	Transcode the path into ascii
-    const char* p = XMLString::transcode(pathName);
-    ArrayJanitor<const char> janPath(p);
+    const char* p = XMLString::transcode(pathName, fgMemoryManager);
+    ArrayJanitor<const char> janPath(p, fgMemoryManager);
     const char* pEnd;
     std::size_t segLen;
 
@@ -1201,7 +1203,7 @@ XMLCreateFullPathFromFSRef_X(const FSRef& startingRef)
 	uniBuf[pathLen++] = 0;
 	
 	//	Transcode into a dynamically allocated buffer of XMLChs
-	ArrayJanitor<XMLCh> result(new XMLCh[pathLen]);
+	ArrayJanitor<XMLCh> result((XMLCh*) fgMemoryManager->allocate(pathLen * sizeof(XMLCh))/*new XMLCh[pathLen]*/, fgMemoryManager);
 	if (result.get() != NULL)
 		CopyUniCharsToXMLChs(uniBuf, result.get(), pathLen, pathLen);
 		
@@ -1245,7 +1247,11 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 			// name plus separator, dump it to the dynamic result buffer.
 			if (bufPos < (std::size_t)name.length + 1)
 			{
-				ArrayJanitor<XMLCh> temp(new XMLCh[bufCnt + resultLen]);
+				ArrayJanitor<XMLCh> temp
+                (
+                    (XMLCh*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(XMLCh));//new XMLCh[bufCnt + resultLen]
+                    , fgMemoryManager
+                );
 				
 				// Copy in the static buffer
 				std::memcpy(temp.get(), &buf[bufPos], bufCnt * sizeof(XMLCh));
@@ -1273,7 +1279,11 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 	while (err == noErr && catalogInfo.parentDirID != fsRtParID);
 	
 	// Composite existing buffer + any previous result buffer
-	ArrayJanitor<XMLCh> final(new XMLCh[bufCnt + resultLen]);
+	ArrayJanitor<XMLCh> final
+    (
+        (XMLCh*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(XMLCh))//new XMLCh[bufCnt + resultLen]
+        , fgMemoryManager
+    );
 	
 	// Copy in the static buffer
 	std::memcpy(final.get(), &buf[bufPos], bufCnt * sizeof(XMLCh));
@@ -1287,7 +1297,8 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 
 
 XMLCh*
-XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec)
+XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec,
+                            MemoryManager* const manager)
 {
 	XMLCh* result = NULL;
 	
@@ -1310,7 +1321,7 @@ XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec)
 	else
 	{
 		//	Create using FSSpecs only
-		result = XMLCreateFullPathFromFSSpec_Classic(startingSpec);
+		result = XMLCreateFullPathFromFSSpec_Classic(startingSpec, manager);
 	}
 		
 	return result;
@@ -1318,7 +1329,8 @@ XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec)
 
 
 XMLCh*
-XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
+XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec,
+                                    MemoryManager* const manager)
 {
 	//	Manually create the path using FSSpec APIs.
     OSStatus err = noErr;
@@ -1352,7 +1364,11 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 			// name plus separator, dump it to the dynamic result buffer.
 			if (bufPos < nameLen + 1)
 			{
-				ArrayJanitor<char> temp(new char[bufCnt + resultLen]);
+				ArrayJanitor<char> temp
+                (
+                    (char*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(char))//new char[bufCnt + resultLen]
+                    , fgMemoryManager
+                );
 				
 				// Copy in the static buffer
 				std::memcpy(temp.get(), &buf[bufPos], bufCnt);
@@ -1384,7 +1400,11 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 	while (err == noErr && spec.parID != fsRtParID);
 	
 	// Composite existing buffer with any previous result buffer
-	ArrayJanitor<char> final(new char[bufCnt + resultLen]);
+	ArrayJanitor<char> final
+    (
+        (char*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(char))//new char[bufCnt + resultLen]
+        , fgMemoryManager
+    );
 	
 	// Copy in the static buffer
 	std::memcpy(final.get(), &buf[bufPos], bufCnt);
@@ -1394,7 +1414,7 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 		std::memcpy(final.get() + bufCnt, result.get(), resultLen);
 
     // Cleanup and transcode to unicode
-    return XMLString::transcode(final.get());
+    return XMLString::transcode(final.get(), manager);
 }
 
 

@@ -148,8 +148,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
 
     if (retVal == NULL)
@@ -188,16 +188,17 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // -----------------------------------------------------------------------
 //  File system methods
 // -----------------------------------------------------------------------
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                                     MemoryManager* const manager)
 {
     // Transcode the incoming string
-    char* tmpSrcPath = XMLString::transcode(srcPath);
-    ArrayJanitor<char> janSrcPath(tmpSrcPath);
+    char* tmpSrcPath = XMLString::transcode(srcPath, fgMemoryManager);
+    ArrayJanitor<char> janSrcPath(tmpSrcPath, fgMemoryManager);
 
     char tmpPath[CCHMAXPATH];
     _fullpath(tmpPath, tmpSrcPath, CCHMAXPATH);
 
-    return XMLString::transcode(tmpPath);
+    return XMLString::transcode(tmpPath, manager);
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
@@ -232,7 +233,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
-XMLCh* XMLPlatformUtils::getCurrentDirectory()
+XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
 
     /*** 
@@ -242,7 +243,7 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory()
     ***/
 
     XMLCh curDir[]={ chPeriod, chForwardSlash, chNull};
-    return getFullPath(curDir);
+    return getFullPath(curDir, manager);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 

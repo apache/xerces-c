@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/15 18:37:49  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/04/24 02:58:31  peiyongz
  * Logical Path Resolution
  *
@@ -207,7 +210,8 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 
 FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
 {
-    const char* tmpFileName = XMLString::transcode(fileName);
+    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> tmpFileNameJan((char*)tmpFileName , fgMemoryManager);
     FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
 
     if (retVal == NULL)
@@ -242,7 +246,8 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                                     MemoryManager* const manager)
 {
 
     //
@@ -250,7 +255,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
     //
-    char* newSrc = XMLString::transcode(srcPath);
+    char* newSrc = XMLString::transcode(srcPath, fgMemoryManager);
 
     // Use a local buffer that is big enough for the largest legal path
      char* tmpPath = dirname((char*)newSrc);
@@ -259,12 +264,15 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
         throw XMLPlatformUtilsException("XMLPlatformUtils::resetFile - Could not get the base path name");
     }
 
-    char* newXMLString = new char [strlen(tmpPath) +1];
-    ArrayJanitor<char> newJanitor(newXMLString);
+    char* newXMLString = (char*) fgMemoryManager->allocate
+    (
+        (strlen(tmpPath) +1) * sizeof(char)
+    );//new char [strlen(tmpPath) +1];
+    ArrayJanitor<char> newJanitor(newXMLString, fgMemoryManager);
     strcpy(newXMLString, tmpPath);
         strcat(newXMLString , "/");
     // Return a copy of the path, in Unicode format
-    return XMLString::transcode(newXMLString);
+    return XMLString::transcode(newXMLString, manager);
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)

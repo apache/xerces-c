@@ -61,11 +61,11 @@
 #ifndef FILEHANDLEIMPL_HPP
 #define FILEHANDLEIMPL_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class FileHandleImpl
+class FileHandleImpl : public XMemory
 {
   private:
   FILE*      Handle;       // handle from fopen

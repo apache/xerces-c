@@ -301,8 +301,8 @@ static FileHandleImpl* openRead(char* tmpFileName)
         optionBufferSize += (strlen(pathobj.getfopenParms()) + 1);
      }
 
-     char* optionBuffer = new char[optionBufferSize];
-     ArrayJanitor<char> janText((char*)optionBuffer);
+     char* optionBuffer = (char*) fgMemoryManager->allocate(optionBufferSize * sizeof(char));//new char[optionBufferSize];
+     ArrayJanitor<char> janText((char*)optionBuffer, fgMemoryManager);
      strcpy(optionBuffer,"rb");
 
      // Build the options buffer
@@ -360,8 +360,11 @@ static FileHandleImpl* openRead(char* tmpFileName)
     //     path/path2/filename.ext  => //path.path2.ext(filename)
     //     path/path2/filename      => //path.path2.filename
 
-    char* datasetName = new char[ strlen(tmpFileName) + 5 ];
-    ArrayJanitor<char> janText1((char*)datasetName);
+    char* datasetName = (char*) fgMemoryManager->allocate
+    (
+        (strlen(tmpFileName) + 5) * sizeof(char)
+    );//new char[ strlen(tmpFileName) + 5 ];
+    ArrayJanitor<char> janText1((char*)datasetName, fgMemoryManager);
     char *datasetPos = datasetName, *tmpPos = tmpFileName;
 
     // We are in EBCDIC mode here
@@ -499,8 +502,8 @@ static FileHandleImpl* openWrite(char* tmpFileName)
     if (pathobj.getfopenParms())
        optionBufferSize += (strlen(pathobj.getfopenParms()) + 1);
 
-    char* optionBuffer = new char[optionBufferSize];
-    ArrayJanitor<char> janText((char*)optionBuffer);
+    char* optionBuffer = (char*) fgMemoryManager->allocate((optionBufferSize) * sizeof(char));//new char[optionBufferSize];
+    ArrayJanitor<char> janText((char*)optionBuffer, fgMemoryManager);
     strcpy(optionBuffer,"wb");
 
     // Build the options buffer
@@ -638,8 +641,8 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
-    char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
 
     return openRead(tmpFileName);
 }
@@ -647,8 +650,11 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 
 FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 {
-    char* tmpFileName = new char[strlen(fileName) + 1];
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    char* tmpFileName = (char*) fgMemoryManager->allocate
+    (
+        (strlen(fileName) + 1) * sizeof(char)
+    );//new char[strlen(fileName) + 1];
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     strcpy(tmpFileName,fileName);
 
     return openRead(tmpFileName);
@@ -657,8 +663,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
 FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 {
-    char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
 
     return openWrite(tmpFileName);
 }
@@ -666,8 +672,11 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
 {
-    char* tmpFileName = new char[strlen(fileName) + 1];
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    char* tmpFileName = (char*) fgMemoryManager->allocate
+    (
+        (strlen(fileName) + 1) * sizeof(char)
+    );//new char[strlen(fileName) + 1];
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     strcpy(tmpFileName,fileName);
 
     return openWrite(tmpFileName);
@@ -833,7 +842,8 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                                     MemoryManager* const manager)
 {
 
     //
@@ -841,16 +851,16 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
     //
-    char* newSrc = XMLString::transcode(srcPath);
-    ArrayJanitor<char> janText(newSrc);
+    char* newSrc = XMLString::transcode(srcPath, fgMemoryManager);
+    ArrayJanitor<char> janText(newSrc, fgMemoryManager);
 
     Path390 pathobj;
     pathobj.setPath(newSrc);
 
     char* retPath = 0;
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[_POSIX_PATH_MAX];
-    ArrayJanitor<char> janText2(absPath);
+    char *absPath = (char*) fgMemoryManager->allocate((_POSIX_PATH_MAX) * sizeof(char));//new char[_POSIX_PATH_MAX];
+    ArrayJanitor<char> janText2(absPath, fgMemoryManager);
 
     if ( (pathobj.getPathType() == PATH390_HFS) || (pathobj.getPathType() == PATH390_OTHER) ) {
        //get the absolute path
@@ -858,9 +868,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
        if (!retPath) {
           ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
           }
-       return XMLString::transcode(absPath);
+       return XMLString::transcode(absPath, manager);
     }
-    return XMLString::transcode(newSrc);
+    return XMLString::transcode(newSrc, manager);
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
@@ -893,8 +903,8 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
          return false;
     }
 
-    char* tmpFileName = XMLString::transcode(toCheck);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    char* tmpFileName = XMLString::transcode(toCheck, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     Path390 pathobj;
     pathobj.setPath(tmpFileName);
 
@@ -903,7 +913,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 }
 
-XMLCh* XMLPlatformUtils::getCurrentDirectory()
+XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
 
     /*** 
@@ -913,7 +923,7 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory()
     ***/
 
     XMLCh curDir[]={ chPeriod, chForwardSlash, chNull};
-    return getFullPath(curDir);
+    return getFullPath(curDir, manager);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 

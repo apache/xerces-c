@@ -292,7 +292,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //
     if (*srcPtr)
     {
-        tmpUName = XMLString::replicate(nameToOpen);
+        tmpUName = XMLString::replicate(nameToOpen, fgMemoryManager);
 
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)
@@ -324,7 +324,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
         //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
         //    so that we can open it.
         //
-        char* tmpName = XMLString::transcode(nameToOpen);
+        char* tmpName = XMLString::transcode(nameToOpen, fgMemoryManager);
         retVal = ::CreateFileA
             (
             tmpName
@@ -335,11 +335,11 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
             , FILE_FLAG_SEQUENTIAL_SCAN
             , 0
             );
-        delete [] tmpName;
+        fgMemoryManager->deallocate(tmpName);//delete [] tmpName;
     }
 
     if (tmpUName)
-        delete [] tmpUName;
+        fgMemoryManager->deallocate(tmpUName);//delete [] tmpUName;
 
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;
@@ -408,7 +408,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     //
     if (*srcPtr)
     {
-        tmpUName = XMLString::replicate(fileName);
+        tmpUName = XMLString::replicate(fileName, fgMemoryManager);
 
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)
@@ -440,7 +440,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
         //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
         //    so that we can open it.
         //
-        char* tmpName = XMLString::transcode(nameToOpen);
+        char* tmpName = XMLString::transcode(nameToOpen, fgMemoryManager);
         retVal = ::CreateFileA
             (
             tmpName
@@ -451,11 +451,11 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
             , FILE_ATTRIBUTE_NORMAL
             , 0
             );
-        delete [] tmpName;
+        fgMemoryManager->deallocate(tmpName);//delete [] tmpName;
     }
 
     if (tmpUName)
-        delete [] tmpUName;
+        fgMemoryManager->deallocate(tmpUName);//delete [] tmpUName;
 
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;
@@ -554,7 +554,8 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                                     MemoryManager* const manager)
 {
     //
     //  If we are on NT, then use wide character APIs, else use ASCII APIs.
@@ -572,13 +573,13 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
             return 0;
 
         // Return a copy of the path
-        return XMLString::replicate(tmpPath);
+        return XMLString::replicate(tmpPath, manager);
     }
      else
     {
         // Transcode the incoming string
-        char* tmpSrcPath = XMLString::transcode(srcPath);
-        ArrayJanitor<char> janSrcPath(tmpSrcPath);
+        char* tmpSrcPath = XMLString::transcode(srcPath, fgMemoryManager);
+        ArrayJanitor<char> janSrcPath(tmpSrcPath, fgMemoryManager);
 
         // Use a local buffer that is big enough for the largest legal path
         const unsigned int bufSize = 511;
@@ -589,7 +590,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
             return 0;
 
         // Return a transcoded copy of the path
-        return XMLString::transcode(tmpPath);
+        return XMLString::transcode(tmpPath, manager);
     }
 }
 
@@ -625,7 +626,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
-XMLCh* XMLPlatformUtils::getCurrentDirectory()
+XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
     //
     //  If we are on NT, then use wide character APIs, else use ASCII APIs.
@@ -642,7 +643,7 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory()
             return 0;
 
         // Return a copy of the path
-        return XMLString::replicate(tmpPath);
+        return XMLString::replicate(tmpPath, manager);
     }
      else
     {
@@ -655,7 +656,7 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory()
             return 0;
 
         // Return a transcoded copy of the path
-        return XMLString::transcode(tmpPath);
+        return XMLString::transcode(tmpPath, manager);
     }
 }
 

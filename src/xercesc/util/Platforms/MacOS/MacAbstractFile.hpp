@@ -60,12 +60,12 @@
 
 #pragma once
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 //	Abstract class for files. This could be used to allow multiple file paradigms.
-class XMLMacAbstractFile
+class XMLMacAbstractFile : public XMemory
 {
     public:
         XMLMacAbstractFile() {}

@@ -249,8 +249,8 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 #include <qusec.h>
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {   char errno_id[7];
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
     errno = 0;
     FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
 
@@ -281,8 +281,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
 FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 {
-    const char* tmpFileName = XMLString::transcode(fileName);
-    ArrayJanitor<char> janText((char*)tmpFileName);
+    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
+    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
 
     return openFileToWrite(tmpFileName);
 }
@@ -393,7 +393,8 @@ char *realpath(const char *file_name, char *resolved_name)
 
 
 
-XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
+                                     MemoryManager* const manager)
 {
 
     //
@@ -401,8 +402,8 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     //  so we know that its not some pathological freaky path. It comes in
     //  in native format, and goes out as Unicode always
     //
-    char* newSrc = XMLString::transcode(srcPath);
-     ArrayJanitor<char> janText(newSrc);
+    char* newSrc = XMLString::transcode(srcPath, fgMemoryManager);
+     ArrayJanitor<char> janText(newSrc, fgMemoryManager);
     // Use a local buffer that is big enough for the largest legal path
     char absPath[PATH_MAX + 1];
 	//get the absolute path
@@ -412,7 +413,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     {
 		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
     }
-    return XMLString::transcode(absPath);
+    return XMLString::transcode(absPath, manager);
 
 
 }
@@ -434,7 +435,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
     return true;
 }
 
-XMLCh* XMLPlatformUtils::getCurrentDirectory()
+XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
     char  dirBuf[PATH_MAX + 1];
     char  *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
@@ -445,7 +446,7 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory()
                  XMLExcepts::File_CouldNotGetBasePathName);
     }
 
-    return XMLString::transcode(curDir);
+    return XMLString::transcode(curDir, manager);
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c) 
@@ -577,7 +578,7 @@ void XMLPlatformUtils::platformInit()
 	}
 }
 
-class  RecursiveMutex
+class  RecursiveMutex : public XMemory
 {
 public:
     pthread_mutex_t   mutex;
