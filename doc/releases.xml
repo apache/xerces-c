@@ -26,6 +26,13 @@
     </tr>
 
     <tr>
+        <td>2002-08-26</td>
+        <td>Abe Backus</td>
+        <td>[Bug 12004] Samples/Tests don't build under cygwin.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-08-23</td>
         <td>Tinny Ng</td>
         <td>[Bug 11981] inproper "AND" operator in AutoSense.hpp
