@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/07 18:21:27  jpolast
+ * change SAX_EXPORT module to SAX2_EXPORT
+ *
  * Revision 1.1  2000/08/02 18:02:34  jpolast
  * initial checkin of sax2 implementation
  * submitted by Simon Fell (simon@fell.com)
@@ -97,7 +100,7 @@ class Attributes;
   * @see ErrorHandler#ErrorHandler
   */
 
-class SAX_EXPORT DefaultHandler :
+class SAX2_EXPORT DefaultHandler :
 
     public EntityResolver, 
 	public DTDHandler, 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/07 18:21:27  jpolast
+ * change SAX_EXPORT module to SAX2_EXPORT
+ *
  * Revision 1.1  2000/08/02 18:02:35  jpolast
  * initial checkin of sax2 implementation
  * submitted by Simon Fell (simon@fell.com)
@@ -70,7 +73,7 @@
 #include <parsers/SAX2XMLReaderImpl.hpp>
 #include <sax/SAXException.hpp>
 
-class SAX_EXPORT XMLReaderFactory
+class SAX2_EXPORT XMLReaderFactory
 {
 private:
 	XMLReaderFactory() ;
