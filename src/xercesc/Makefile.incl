@@ -477,7 +477,7 @@ ifeq (${PLATFORM}, CYGWIN)
               -Xlinker --warn-once \
               -Xlinker -Map -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.map \
               -Xlinker --output-def -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.def \
-              -Xlinker --out-implib -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.lib
+              -Xlinker --out-implib -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.dll.a
         SHLIBSUFFIX=.dll
 endif
 

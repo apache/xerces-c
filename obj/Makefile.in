@@ -194,9 +194,11 @@ else
 	-mkdir -p ${PREFIX}/lib
 ifeq (${PLATFORM}, CYGWIN)
 	-mkdir -p ${PREFIX}/bin
-	$(CP) ${FQ_LINK_NAME} ${PREFIX}/bin
-	rm -rf ${PREFIX}/lib/${LINK_NAME} && \
-	ln -s ${PREFIX}/bin/${LINK_NAME} ${PREFIX}/lib/${LINK_NAME}
+	$(CP) ${FQ_REAL_NAME} ${PREFIX}/bin
+	$(CP) $(XML_LIB_DIR)/${LIBNAME}${VER}.dll.a ${PREFIX}/lib
+	rm -rf ${PREFIX}/lib/${LIBNAME}.dll.a ${PREFIX}/lib/libxerces.dll.a
+	ln -s ${PREFIX}/lib/${LIBNAME}${VER}.dll.a ${PREFIX}/lib/${LIBNAME}.dll.a
+	ln -s ${PREFIX}/lib/${LIBNAME}${VER}.dll.a ${PREFIX}/lib/libxerces.dll.a
 else
 	$(CP) ${FQ_REAL_NAME} $(PREFIX)/lib
 endif
