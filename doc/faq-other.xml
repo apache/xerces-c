@@ -168,7 +168,7 @@ SUCH DAMAGE.</source>
          for the purposes of handling Schema identity constraints.  For full XPath
          support, you can refer
          <jump href="http://xml.apache.org/xalan-c/overview.html">Apache Xalan C++</jump> or
-         other Open Source Project like
+         other Open Source Projects like
          <jump href="http://software.decisionsoft.com">Pathan</jump>.
        </p>
 
