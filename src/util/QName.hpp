@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,109 +56,114 @@
 
 /*
  * $Log$
- * Revision 1.3  2001/02/26 19:44:15  tng
+ * Revision 1.1  2001/02/26 19:44:25  tng
  * Schema: add utility class QName, by Pei Yong Zhang.
- *
- * Revision 1.2  2000/08/09 22:11:17  jpolast
- * changes to allow const instances of the sax2
- * Attributes class.
- *
- * Revision 1.1  2000/08/02 18:09:14  jpolast
- * initial checkin: attributes vector needed for
- * Attributes class as defined by sax2 spec
- *
  *
  */
 
+#if !defined(QNAME_HPP)
+#define QNAME_HPP
 
-#if !defined(VECATTRIBUTESIMPL_HPP)
-#define VECATTRIBUTESIMPL_HPP
+#include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
+#include <util/XMLUni.hpp>
 
-#include <sax2/Attributes.hpp>
-#include <framework/XMLAttr.hpp>
-#include <util/RefVectorOf.hpp>
-#include <framework/XMLValidator.hpp>
-#include <framework/XMLBuffer.hpp>
-
-class XMLPARSER_EXPORT VecAttributesImpl : public Attributes
+class XMLUTIL_EXPORT QName
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors and Destructor
+    //  Contructors and Destructor
     // -----------------------------------------------------------------------
-    VecAttributesImpl();
-    ~VecAttributesImpl();
+    /** Default constructor. */
+    QName();
 
-
-    // -----------------------------------------------------------------------
-    //  Implementation of the attributes interface
-    // -----------------------------------------------------------------------
-    virtual unsigned int getLength() const ;
-
-	virtual const XMLCh* getURI(const unsigned int index) const;
-    virtual const XMLCh* getLocalName(const unsigned int index) const ;
-    virtual const XMLCh* getQName(const unsigned int index) const ;
-    virtual const XMLCh* getType(const unsigned int index) const ;
-    virtual const XMLCh* getValue(const unsigned int index) const ;
-
-	virtual int getIndex(const XMLCh* const uri, const XMLCh* const localPart ) const  ;
-	virtual int getIndex(const XMLCh* const qName ) const  ;
-
-	virtual const XMLCh* getType(const XMLCh* const uri, const XMLCh* const localPart ) const  ;
-    virtual const XMLCh* getType(const XMLCh* const qName) const ;
-
-    virtual const XMLCh* getValue(const XMLCh* const qName) const;
-	virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const  ;
-
-
-    // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setVector
-    (
-        const   RefVectorOf<XMLAttr>* const srcVec
-        , const unsigned int                count
-		, const XMLValidator * const		validator
-        , const bool                        adopt = false
+    /** Constructs a specified qname. */
+    QName
+    (   const XMLCh* const        prefix
+       ,const XMLCh* const        localPart
+	   ,const int                 uriId = -1
     );
 
+    /** Copy constructor. */
+    QName(const QName& qname);
+
+    ~QName();
+
+    // -----------------------------------------------------------------------
+    //  Getters
+    // -----------------------------------------------------------------------
+    const XMLCh* getPrefix() const;
+
+	const XMLCh* getLocalPart() const;
+
+	const int getURI() const;
+
+	const XMLCh* getRawName() const;
+
+    // -----------------------------------------------------------------------
+    //  Setters
+    // -----------------------------------------------------------------------
+    void setName
+    (
+        const XMLCh* const        prefix
+       ,const XMLCh* const        localPart
+	   ,const int                 uriId = -1
+    );
+
+    void setPrefix(const XMLCh*) ;
+
+	void setLocalPart(const XMLCh*) ;
+
+	void setURI(const int) ;
+
+    // -----------------------------------------------------------------------
+    //  comparison
+    // -----------------------------------------------------------------------
+	bool operator==(const QName&);
+
+    // -----------------------------------------------------------------------
+    //  Misc
+    // -----------------------------------------------------------------------
+	void cleanUp();
+
 private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    VecAttributesImpl(const VecAttributesImpl&);
-    void operator=(const VecAttributesImpl&);
-
 
     // -----------------------------------------------------------------------
-    //  Private data members
+    //  Private instance variables
     //
-    //  fAdopt
-    //      Indicates whether the passed vector is to be adopted or not. If
-    //      so, we destroy it when we are destroyed (and when a new vector is
-    //      set!)
+    //  We copy the followings from XMLAttr.hpp, but stick to Java version's
+	//  naming convention
     //
-    //  fCount
-    //      The count of elements in the vector that should be considered
-    //      valid. This is an optimization to allow vector elements to be
-    //      reused over and over but a different count of them be valid for
-    //      each use.
-    //
-    //  fVector
-    //      The vector that provides the backing for the list.
+    //  fPrefix
+    //  fPrefixBufSz
+    //      The prefix that was applied to this attribute's name, and the
+    //      current size of the buffer (minus one for the null.) Prefixes
+    //      really don't matter technically but it might be required for
+    //      pratical reasons, to recreate the original document for instance.
 	//
-	//	fValidator
-	//		This is a pointer to the in use validator, so that we can resolve
-	//		namespace URIs from UriIds
-	//
-	//	fURIBuffer
-	//		A temporary buffer which is re-used when getting namespace URI's
+    //  fLocalPart
+    //  fLocalPartBufSz
+    //      The base part of the name of the attribute, and the current size
+    //      of the buffer (minus one, where the null is.)
+    //
+    //  fRawName
+    //  fRawNameBufSz
+    //      This is the QName form of the name, which is faulted in (from the
+    //      prefix and name) upon request. The size field indicates the
+    //      current size of the buffer (minus one for the null.) It will be
+    //      zero until fauled in.
+    //
+    //  fURIId
+    //      The id of the URI that this attribute belongs to.
     // -----------------------------------------------------------------------
-    bool                        fAdopt;
-    unsigned int                fCount;
-    const RefVectorOf<XMLAttr>* fVector;
-	const XMLValidator *		fValidator ;
-	//XMLBuffer				    fURIBuffer ;
+    XMLCh*              fPrefix;
+    unsigned int        fPrefixBufSz;
+    XMLCh*              fLocalPart;
+    unsigned int        fLocalPartBufSz;
+    XMLCh*              fRawName;
+    unsigned int        fRawNameBufSz;
+    int                 fURIId;
+
 };
 
-#endif // ! VECATTRIBUTESIMPL_HPP
+#endif

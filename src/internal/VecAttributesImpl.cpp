@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/02/26 19:44:14  tng
+ * Schema: add utility class QName, by Pei Yong Zhang.
+ *
  * Revision 1.3  2000/11/02 01:14:07  andyh
  * SAX bug fix:  Attribute lists were throwing exceptions rather than returning
  * null when an attribute could not be found by name.  Fixed by Tinny Ng.
@@ -180,7 +183,7 @@ int VecAttributesImpl::getIndex(const XMLCh* const uri, const XMLCh* const local
     return -1; 
 }
 
-int VecAttributesImpl::getIndex(const XMLCh* const QName ) const 
+int VecAttributesImpl::getIndex(const XMLCh* const qName ) const 
 {
     //
     //  Search the vector for the attribute with the given name and return
@@ -190,7 +193,7 @@ int VecAttributesImpl::getIndex(const XMLCh* const QName ) const
     {
         const XMLAttr* curElem = fVector->elementAt(index);
 
-        if (!XMLString::compareString(curElem->getQName(), QName))
+        if (!XMLString::compareString(curElem->getQName(), qName))
             return index ;
     }
     return -1; 
@@ -201,9 +204,9 @@ const XMLCh* VecAttributesImpl::getType(const XMLCh* const uri, const XMLCh* con
     return getType(getIndex(uri, localPart)) ;
 }
 
-const XMLCh* VecAttributesImpl::getType(const XMLCh* const QName) const 
+const XMLCh* VecAttributesImpl::getType(const XMLCh* const qName) const 
 {
-    return getType(getIndex(QName)) ;
+    return getType(getIndex(qName)) ;
 }
 
 const XMLCh* VecAttributesImpl::getValue(const XMLCh* const uri, const XMLCh* const localPart ) const 
@@ -211,9 +214,9 @@ const XMLCh* VecAttributesImpl::getValue(const XMLCh* const uri, const XMLCh* co
     return getValue(getIndex(uri, localPart)) ;
 }
 
-const XMLCh* VecAttributesImpl::getValue(const XMLCh* const QName) const 
+const XMLCh* VecAttributesImpl::getValue(const XMLCh* const qName) const 
 {
-    return getValue(getIndex(QName)) ;
+    return getValue(getIndex(qName)) ;
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/02/26 19:44:19  tng
+ * Schema: add utility class QName, by Pei Yong Zhang.
+ *
  * Revision 1.3  2000/08/09 22:19:28  jpolast
  * many conformance & stability changes:
  *   - ContentHandler::resetDocument() removed
@@ -105,7 +108,7 @@
   * list:
   *
   * <pre>
-  * public void startElement (String uri, String localpart, String QName, Attributes atts) {
+  * public void startElement (String uri, String localpart, String qName, Attributes atts) {
   *   for (int i = 0; i < atts.getLength(); i++) {
   *     String Qname = atts.getQName(i);
   *		String URI   = atts.getURI(i)
@@ -124,7 +127,7 @@
   * type of specific attributes:
   *
   * <pre>
-  * public void startElement (String uri, String localpart, String QName, Attributes atts) {
+  * public void startElement (String uri, String localpart, String qName, Attributes atts) {
   *   String identifier = atts.getValue("id");
   *   String label = atts.getValue("label");
   *   [...]
@@ -202,7 +205,7 @@ public:
     virtual const XMLCh* getLocalName(const unsigned int index) const = 0;
 
   /**
-    * Return the QName of an attribute in this list (by position).
+    * Return the qName of an attribute in this list (by position).
     *
     * The QNames must be unique: the SAX parser shall not include the
     * same attribute twice.  Attributes without values (those declared
@@ -210,7 +213,7 @@ public:
     * omitted from the list.
     *
     * @param index The index of the attribute in the list (starting at 0).
-    * @return The QName of the indexed attribute, or null
+    * @return The qName of the indexed attribute, or null
     *         if the index is out of range.
     * @see #getLength 
     */
@@ -276,7 +279,7 @@ public:
      * @return The index of the attribute, or -1 if it does not
      *         appear in the list.
      */
-	virtual int getIndex(const XMLCh* const QName ) const = 0 ;
+	virtual int getIndex(const XMLCh* const qName ) const = 0 ;
 
    /**
      * Look up an attribute's type by Namespace name.
@@ -302,7 +305,7 @@ public:
      *         attribute is not in the list or if qualified names
      *         are not available.
      */
-    virtual const XMLCh* getType(const XMLCh* const QName) const = 0;
+    virtual const XMLCh* getType(const XMLCh* const qName) const = 0;
 
    /**
      * Look up an attribute's value by Namespace name.
@@ -327,7 +330,7 @@ public:
      *         attribute is not in the list or if qualified names
      *         are not available.
      */
-    virtual const XMLCh* getValue(const XMLCh* const QName) const = 0;
+    virtual const XMLCh* getValue(const XMLCh* const qName) const = 0;
 
     //@}
 

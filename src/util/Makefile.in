@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.27  2001/02/26 19:44:23  tng
+# Schema: add utility class QName, by Pei Yong Zhang.
+#
 # Revision 1.26  2001/02/15 18:41:41  tng
 # Schema: Exception Handling added by Pei Yong Zhang.  Add NumberFormatException, ParseException,
 # InvalidDatatypeFacetException, and InvalidDatatypeValueException.  The associated
@@ -234,6 +237,7 @@ UTIL_CPP_PUBHEADERS = \
     NumberFormatException.hpp \
     ParseException.hpp \
     PlatformUtils.hpp \
+    QName.hpp \
     RefArrayOf.hpp \
     RefHashTableOf.hpp \
     RefStackOf.hpp \
@@ -300,6 +304,7 @@ UTIL_CPP_OBJECTS = \
     KVStringPair.$(TO) \
     Mutexes.$(TO) \
     PlatformUtils.$(TO) \
+    QName.$(TO) \
     StringPool.$(TO) \
     XMLURL.$(TO) \
     TransService.$(TO) \
