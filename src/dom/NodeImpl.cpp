@@ -82,9 +82,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
                    const DOMString &initValue)
 {
     this->ownerDocument=ownerDoc;
-    this->namespaceURI=null;	//DOM Level 2
-    this->prefix=null;			//DOM Level 2
-    this->localName=null;		//DOM Level 2
     this->name=nam.clone();
     this->value=initValue.clone();
     
@@ -104,9 +101,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 NodeImpl::NodeImpl(const NodeImpl &other) {
-    this->namespaceURI = other.namespaceURI.clone();	//DOM Level 2
-    this->prefix = other.prefix.clone();                //DOM Level 2
-    this->localName = other.localName.clone();          //DOM Level 2
     this->name  = other.name.clone();
     this->value = other.value.clone();
     this->readOnly = false;
@@ -365,51 +359,23 @@ bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
 
 DOMString NodeImpl::getNamespaceURI()
 {
-    return namespaceURI;
+    return 0;
 }
 
 DOMString NodeImpl::getPrefix()
 {
-    return prefix;
+    return 0;
 }
 
 DOMString NodeImpl::getLocalName()
 {
-    return localName;
+    return 0;
 }
 
 
 void NodeImpl::setPrefix(const DOMString &fPrefix)
 {
-    DOMString xml = DStringPool::getStaticString("xml", &s_xml);
-    DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
-    DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
-    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
-
-    if (readOnly)
-	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if(fPrefix != null && !DocumentImpl::isXMLName(fPrefix))
-        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-    if (namespaceURI == null || localName == null ||  //if not Element or Attr node
-        getNodeType() == DOM_Node::ATTRIBUTE_NODE && name.equals(xmlns))
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-
-    if (fPrefix == null || fPrefix.length() == 0) {
-	this -> prefix = null;
-	name = localName;
-	return;
-    }
-
-    XMLCh *p = fPrefix.rawBuffer();
-    for (int i = fPrefix.length(); --i >= 0;)
-	if (*p++ == chColon)	//prefix is malformed
-	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-    if (fPrefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-	getNodeType() == DOM_Node::ATTRIBUTE_NODE && fPrefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-
-    name = this -> prefix = fPrefix;
-    name = name + chColon + localName;    //nodeName is changed too
+    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR,null);
 }
 
 
@@ -422,6 +388,14 @@ DOMString NodeImpl::getXmlnsURIString() {
                                         &s_xmlnsURI);
 }
 
+DOMString NodeImpl::getXmlString() {
+    return DStringPool::getStaticString("xml", &s_xml);
+}
+
+DOMString NodeImpl::getXmlURIString() {
+    return DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace",
+                                        &s_xmlURI);
+}
 
 //Return a URI mapped from the given prefix and namespaceURI as below
 //	prefix	namespaceURI		output

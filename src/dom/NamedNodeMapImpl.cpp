@@ -55,46 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2000/03/02 19:54:01  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/06 07:47:33  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/02/04 01:49:26  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.6  2000/01/22 01:38:30  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.5  2000/01/08 00:09:28  andyh
- * Correcf failures in DOMTest with entity references and read-only nodes.
- * Correct reference counting problem NamedNodeMap.
- * Add export methods to NamedNodeMap and DocumentTypeImpl.
- * Redo DocumentImpl::cloneNode
- *
- * (Changes by Chih-Hsiang Chou)
- *
- * Revision 1.4  2000/01/06 19:43:25  aruna1
- * Modifed ?: consturct on solaris to assign DOMString objects
- *
- * Revision 1.3  2000/01/05 01:16:08  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:11  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:29  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "NamedNodeMapImpl.hpp"
@@ -360,10 +321,13 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 	if (defaults != null && (d = defaults->getNamedItem(name)) != null) {
 	    if (n->isAttrImpl() && d->isAttrImpl()) {	//DOM Level 2
 		d = d->cloneNode(true); //copy d and ownerElement of n
-		((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
-		d->namespaceURI = n->namespaceURI == null ? DOMString(null) : n->namespaceURI.clone();
-		d->prefix = n->prefix == null ? DOMString(null) : n->prefix.clone();
-		d->localName = n->localName == null ? DOMString(null) : n->localName.clone();
+		((AttrImpl*)d)->setOwnerElement(((AttrImpl*)n)->getOwnerElement());
+		d->getNamespaceURI() = n->getNamespaceURI() == null ?
+                    DOMString(null) : n->getNamespaceURI().clone();
+		d->getPrefix() = n->getPrefix() == null ?
+                    DOMString(null) : n->getPrefix().clone();
+		d->getLocalName() = n->getLocalName() == null ?
+                    DOMString(null) : n->getLocalName().clone();
 	    }
             nodes->setElementAt(d, i);
 	} else
@@ -600,13 +564,17 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
     //find if n has a default value defined in DTD, if so replace n in nodes
     //by its corresponding default value node, otherwise remove n from nodes
     NodeImpl * d;
-    if (defaults != null && (d = defaults->getNamedItemNS(namespaceURI, localName)) != null) {
+    if (defaults != null
+        && (d = defaults->getNamedItemNS(namespaceURI, localName)) != null) {
 	if (n->isAttrImpl() && d->isAttrImpl()) {
 	    d = d->cloneNode(true); //copy d and ownerElement of n
-	    ((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
-	    d->namespaceURI = n->namespaceURI == null ? DOMString(null) : n->namespaceURI.clone();
-	    d->prefix = n->prefix == null ? DOMString(null) : n->prefix.clone();
-	    d->localName = n->localName == null ? DOMString(null) : n->localName.clone();
+	    ((AttrImpl*)d)->setOwnerElement(((AttrImpl*)n)->getOwnerElement());
+	    d->getNamespaceURI() = n->getNamespaceURI() == null ?
+                DOMString(null) : n->getNamespaceURI().clone();
+	    d->getPrefix() = n->getPrefix() == null ?
+                DOMString(null) : n->getPrefix().clone();
+	    d->getLocalName() = n->getLocalName() == null ?
+                DOMString(null) : n->getLocalName().clone();
 	}
         nodes -> setElementAt(d, i);	//replace n in nodes by d
     } else

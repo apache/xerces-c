@@ -83,8 +83,6 @@ protected:
     
 public:
     ElementImpl(DocumentImpl *ownerDoc, const DOMString &name);
-    ElementImpl(DocumentImpl *ownerDoc,   //DOM Level 2
-	const DOMString &namespaceURI, const DOMString &qualifiedName);
     ElementImpl(const ElementImpl &other, bool deep=false);
     virtual ~ElementImpl();
     

@@ -115,11 +115,6 @@ public:
     static int              gLiveNodeImpls;         // Counters for debug & tuning.
     static int              gTotalNodeImpls;
 
-    //Introduced in DOM Level 2
-    DOMString		    namespaceURI;	    //namespace URI of this node
-    DOMString		    prefix;		    //namespace prefix of this node
-    DOMString		    localName;		    //local part of qualified name
-    
 public:
     NodeImpl(DocumentImpl *ownerDocument,
         const DOMString &name,
@@ -179,8 +174,10 @@ protected:
     //Utility, not part of DOM Level 2 API
     static const DOMString&	mapPrefix(const DOMString &prefix,
 	const DOMString &namespaceURI, short nType);
-    DOMString getXmlnsString();
-    DOMString getXmlnsURIString();
+    static DOMString getXmlnsString();
+    static DOMString getXmlnsURIString();
+    static DOMString getXmlString();
+    static DOMString getXmlURIString();
 };
 
 

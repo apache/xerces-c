@@ -805,6 +805,14 @@ SOURCE=..\..\..\..\..\src\dom\AttrImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\AttrNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\AttrNSImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\CDATASectionImpl.cpp
 # End Source File
 # Begin Source File
@@ -1074,6 +1082,14 @@ SOURCE=..\..\..\..\..\src\dom\ElementImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\ElementImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ElementNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\ElementNSImpl.hpp
 # End Source File
 # Begin Source File
 

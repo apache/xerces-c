@@ -101,6 +101,7 @@ DOM_CPP_PUBHEADERS = \
 
 DOM_CPP_PRIVHEADERS =  \
 	AttrImpl.hpp \
+	AttrNSImpl.hpp \
 	CDATASectionImpl.hpp \
 	CharacterDataImpl.hpp \
 	CommentImpl.hpp \
@@ -112,6 +113,7 @@ DOM_CPP_PRIVHEADERS =  \
 	DomMemDebug.hpp \
 	ElementDefinitionImpl.hpp \
 	ElementImpl.hpp \
+	ElementNSImpl.hpp \
 	EntityImpl.hpp \
 	EntityReferenceImpl.hpp \
 	MemDebug.hpp \
@@ -133,6 +135,7 @@ DOM_C_FILES =
 
 DOM_CPP_OBJECTS = \
 	AttrImpl.$(TO) \
+	AttrNSImpl.$(TO) \
 	CDATASectionImpl.$(TO) \
 	CharacterDataImpl.$(TO) \
 	CommentImpl.$(TO) \
@@ -166,6 +169,7 @@ DOM_CPP_OBJECTS = \
 	DomMemDebug.$(TO) \
 	ElementDefinitionImpl.$(TO) \
 	ElementImpl.$(TO) \
+	ElementNSImpl.$(TO) \
 	EntityImpl.$(TO) \
 	EntityReferenceImpl.$(TO) \
 	NamedNodeMapImpl.$(TO) \

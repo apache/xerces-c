@@ -74,37 +74,6 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
     specified = true;
 };
 
-//DOM Level 2
-AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
-    const DOMString &fNamespaceURI, const DOMString &qualifiedName)
-:  NodeContainer (ownerDoc, qualifiedName, DOMString())
-{
-    DOMString xmlns = getXmlnsString();
-    DOMString xmlnsURI = getXmlnsURIString();
-
-    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
-    if (index < 0)
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-    bool xmlnsAlone = false;	//true if attribute name is "xmlns"
-    if (index == 0) {	//qualifiedName contains no ':'
-        if (this->name.equals(xmlns)) {
-	    if (!fNamespaceURI.equals(xmlnsURI))
-		throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-	    xmlnsAlone = true;
-	}
-	this -> prefix = null;
-	this -> localName = this -> name;
-    } else {	//0 < index < this->name.length()-1
-	this -> prefix = this->name.substringData(0, index);
-	this -> localName = this->name.substringData(index+1, this->name.length()-index-1);
-    }
-
-    const DOMString& URI = xmlnsAlone ? xmlnsURI : mapPrefix(prefix, fNamespaceURI, getNodeType());
-    this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
-
-    specified = true;
-};
-
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
 : NodeContainer(other)
 {
@@ -120,9 +89,7 @@ AttrImpl::~AttrImpl() {
 
 NodeImpl * AttrImpl::cloneNode(bool deep) 
 {
-    AttrImpl *newnode;
-    newnode = new AttrImpl(*this, deep);
-    return newnode;
+    return new AttrImpl(*this, deep);
 };
 
 

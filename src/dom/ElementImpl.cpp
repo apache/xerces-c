@@ -87,43 +87,7 @@ NodeContainer(ownerDoc, nam, null)
     attributes = new NamedNodeMapImpl(ownerDoc,defaultAttrs);
 };
 
-//DOM Level 2
-ElementImpl::ElementImpl(DocumentImpl *ownerDoc,
-    const DOMString &fNamespaceURI, const DOMString &qualifiedName) :
-NodeContainer(ownerDoc, qualifiedName, null)
-{
-    DOMString xmlns = getXmlnsString();
-    DOMString xmlnsURI = getXmlnsURIString();
 
-    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
-    if (index < 0)
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-    if (index == 0) {	//qualifiedName contains no ':'
-	this -> prefix = null;
-	this -> localName = this -> name;
-    } else {	//0 < index < this->name.length()-1
-	this -> prefix = this->name.substringData(0, index);
-	this -> localName = this->name.substringData(index+1, this->name.length()-index-1);
-    }
-
-    const DOMString& URI = mapPrefix(prefix, fNamespaceURI, getNodeType());
-    this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
-
-    // If there is an ElementDefintion, set its Attributes up as
-    // shadows behind our own.
-    NamedNodeMapImpl *defaultAttrs = null;
-    DocumentTypeImpl *doctype = (DocumentTypeImpl *) ownerDocument->getDoctype();
-    if (doctype != null)
-    {
-        ElementDefinitionImpl *eldef=(ElementDefinitionImpl *)
-            doctype->getElements()->getNamedItem(this->name);
-        if(eldef!=null)
-            defaultAttrs=(NamedNodeMapImpl *)eldef->getAttributes();
-    }
-    attributes = new NamedNodeMapImpl(ownerDoc,defaultAttrs);
-}
-
-    
 ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
 : NodeContainer(other)
 {
@@ -341,7 +305,7 @@ void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
     AttrImpl *att = (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
     // Remove it (and let the NamedNodeMap recreate the default, if any)
     if (att != null) {
-        attributes->removeNamedItemNS(namespaceURI, localName);
+        attributes->removeNamedItemNS(fNamespaceURI, fLocalName);
 	att->setOwnerElement(null);
         if (att->nodeRefCount == 0)
             NodeImpl::deleteIf(att);

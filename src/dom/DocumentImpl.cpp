@@ -68,7 +68,9 @@
 
 #include "DocumentTypeImpl.hpp"
 #include "ElementImpl.hpp"
+#include "ElementNSImpl.hpp"
 #include "AttrImpl.hpp"
+#include "AttrNSImpl.hpp"
 #include "CDATASectionImpl.hpp"
 #include "CommentImpl.hpp"
 #include "DocumentFragmentImpl.hpp"
@@ -173,8 +175,7 @@ DocumentImpl::~DocumentImpl()
 
 
 NodeImpl *DocumentImpl::cloneNode(bool deep) {
-    bool ns = localName != null;    //true if namespace involved, i.e. DOM Level 2 and after
-    DocumentImpl *newdoc = ns ? new DocumentImpl(namespaceURI, name, null) : new DocumentImpl();
+    DocumentImpl *newdoc = new DocumentImpl();
     if (deep)
         for (NodeImpl *n=getFirstChild(); n!=null; n=n->getNextSibling()) {
 	    if (n -> isDocumentTypeImpl()) {
@@ -584,7 +585,7 @@ ElementImpl *DocumentImpl::createElementNS(const DOMString &fNamespaceURI,
     if(!isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     //DOMString pooledTagName = this->namePool->getPooledString(qualifiedName);
-    return new ElementImpl(this, fNamespaceURI, qualifiedName);
+    return new ElementNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
@@ -593,7 +594,7 @@ AttrImpl *DocumentImpl::createAttributeNS(const DOMString &fNamespaceURI,
 {
     if(!isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-    return new AttrImpl(this, fNamespaceURI, qualifiedName); 
+    return new AttrNSImpl(this, fNamespaceURI, qualifiedName); 
 }
 
 

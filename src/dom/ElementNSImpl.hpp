@@ -1,5 +1,5 @@
-#ifndef AttrImpl_HEADER_GUARD_
-#define AttrImpl_HEADER_GUARD_
+#ifndef ElementNSImpl_HEADER_GUARD_
+#define ElementNSImpl_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -71,38 +71,29 @@
 //
 
 
+#include "ElementImpl.hpp"
 
-#include <util/XercesDefs.hpp>
-#include "NodeContainer.hpp"
-#include "DOM_Node.hpp"
 
-class ElementImpl;
-
-class CDOM_EXPORT AttrImpl: public NodeContainer {
+class CDOM_EXPORT ElementNSImpl: public ElementImpl {
+protected:
+    //Introduced in DOM Level 2
+    DOMString namespaceURI;     //namespace URI of this node
+    DOMString prefix;           //namespace prefix of this node
+    DOMString localName;        //local part of qualified name
+    
     
 public:
-    bool specified;
-
-public:
-    AttrImpl(DocumentImpl *ownerDocument, const DOMString &aName);
-    AttrImpl(const AttrImpl &other, bool deep=false);
-    virtual ~AttrImpl();
-    virtual NodeImpl *cloneNode(bool deep=false);
-    virtual short getNodeType();
-    virtual DOMString getName();
-    virtual DOMString getNodeValue();
-    virtual NodeImpl * getParentNode();
-    virtual bool getSpecified();
-    virtual DOMString getValue();
-    virtual bool isAttrImpl();
-    virtual void setNodeValue(const DOMString &value);
-    virtual void setSpecified(bool arg);
-    virtual void setValue(const DOMString &value);
-    virtual DOMString toString();
-
+    ElementNSImpl(DocumentImpl *ownerDoc, const DOMString &name);
+    ElementNSImpl(DocumentImpl *ownerDoc, //DOM Level 2
+	const DOMString &namespaceURI, const DOMString &qualifiedName);
+    ElementNSImpl(const ElementNSImpl &other, bool deep=false);
+    
+    virtual NodeImpl * cloneNode(bool deep);
     //Introduced in DOM Level 2
-    ElementImpl *getOwnerElement();
-    void setOwnerElement(ElementImpl *ownerElem);    //internal use only
+    virtual DOMString	getNamespaceURI();
+    virtual DOMString   getPrefix();
+    virtual DOMString   getLocalName();
+    virtual void        setPrefix(const DOMString &prefix);
 };
 
 #endif

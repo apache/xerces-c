@@ -224,11 +224,8 @@ void DocumentTypeImpl::setOwnerDocument(DocumentImpl *docImpl)
 DocumentTypeImpl *DocumentTypeImpl::exportNode(DocumentImpl *docImpl, bool deep)
 {
     DocumentTypeImpl *doctype;
-    if (localName != null) {	//true if namespace involved, i.e. DOM Level 2 and after
-	doctype = new DocumentTypeImpl(name, publicId, systemId);
-	doctype -> setOwnerDocument(docImpl);
-    } else
-	doctype = new DocumentTypeImpl(docImpl, name);
+    doctype = new DocumentTypeImpl(name, publicId, systemId);
+    doctype -> setOwnerDocument(docImpl);
     if (deep) {
 	delete doctype -> entities;
 	delete doctype -> notations;
