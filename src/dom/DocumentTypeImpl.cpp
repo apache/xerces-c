@@ -69,7 +69,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dtName) 
     : NodeContainer(ownerDoc),
     publicId(null), systemId(null), internalSubset(null) //DOM Level 2
-	, isIntSubsetReading(false)	
+	, intSubsetReading(false)	
 {
     name = dtName.clone();
     entities = new NamedNodeMapImpl(this);
@@ -83,7 +83,7 @@ DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
 	: NodeContainer(null),
     publicId(fPublicId), systemId(fSystemId), internalSubset(null)
-	, isIntSubsetReading(false)
+	, intSubsetReading(false)
 {
     name = qualifiedName.clone();
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
@@ -108,7 +108,7 @@ DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
     publicId		= other.publicId.clone();
     systemId		= other.systemId.clone();
 	internalSubset	= other.internalSubset.clone();
-	isIntSubsetReading = other.isIntSubsetReading;
+	intSubsetReading = other.intSubsetReading;
 };
 
 
@@ -203,6 +203,12 @@ DOMString DocumentTypeImpl::getInternalSubset()
     return internalSubset;
 }
 
+bool DocumentTypeImpl::isIntSubsetReading()
+{
+    return intSubsetReading;
+}
+
+
 //set functions
 
 void        DocumentTypeImpl::setPublicId(const DOMString& value)
@@ -241,7 +247,7 @@ DocumentTypeImpl *DocumentTypeImpl::exportNode(DocumentImpl *docImpl, bool deep)
     DocumentTypeImpl *doctype;
     doctype = new DocumentTypeImpl(name, publicId, systemId);
 	doctype -> internalSubset = internalSubset;
-	doctype -> isIntSubsetReading = false;
+	doctype -> intSubsetReading = false;
     doctype -> setOwnerDocument(docImpl);
     if (deep) {
 		delete doctype -> entities;

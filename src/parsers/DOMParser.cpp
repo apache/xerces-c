@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.19  2000/04/20 18:58:06  aruna1
+* Changes for internalSubset string building in DocType
+*
 * Revision 1.18  2000/04/19 18:07:38  aruna1
 * Changes to reflect the calls for XMLUni strings fgPubIDString, fgSysIDString and fgNDATAString
 *
@@ -152,6 +155,7 @@
 #include <dom/NotationImpl.hpp>
 #include <dom/NamedNodeMapImpl.hpp>
 
+#include <validators/DTD/ContentSpecNode.hpp>
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Constructors and Destructor
@@ -769,11 +773,94 @@ void DOMParser::attDef
     , const DTDAttDef&          attDef
     , const bool                ignoring
 	)
-{
-	if(fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->attDef(elemDecl,attDef, ignoring );
-	}
+{	
+    if(fOldDocTypeHandler)
+    {
+        fOldDocTypeHandler->attDef(elemDecl,attDef, ignoring );
+    }
+ 
+    if (fDocumentType->isIntSubsetReading())
+    {
+        DOMString attString;
+        if (elemDecl.hasAttDefs()) 
+        {
+            attString.appendData(chOpenAngle);
+            attString.appendData(chBang);
+            attString.appendData(XMLUni::fgAttListString);
+            attString.appendData(chSpace);
+            attString.appendData(elemDecl.getFullName());
+            
+            attString.appendData(chSpace);
+            attString.appendData(attDef.getFullName());
+            
+            // Get the type and display it
+            const XMLAttDef::AttTypes type = attDef.getType();
+            switch(type)
+            {
+            case XMLAttDef::CData :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgCDATAString);
+                break;
+            case XMLAttDef::ID :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgIDString);
+                break;
+            case XMLAttDef::IDRef :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgIDRefString);
+                break;
+            case XMLAttDef::IDRefs :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgIDRefsString);
+                break;
+            case XMLAttDef::Entity :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgEntityString);
+                break;
+            case XMLAttDef::Entities :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgEntitiesString);
+                break;
+            case XMLAttDef::NmToken :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgNmTokenString);
+                break;
+            case XMLAttDef::NmTokens :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgNmTokensString);
+                break;
+                
+            case XMLAttDef::Notation :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgNotationString);
+                break;
+                
+            case XMLAttDef::Enumeration :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgEnumerationString);
+                break;
+            }
+            //get te default types of the attlist
+            const XMLAttDef::DefAttTypes def = attDef.getDefaultType();
+            switch(def)
+            {
+            case XMLAttDef::Required :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgRequiredString);
+                break;
+            case XMLAttDef::Implied :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgImpliedString);
+                break;
+            case XMLAttDef::Fixed :
+                attString.appendData(chSpace);
+                attString.appendData(XMLUni::fgFixedString);
+                break;
+            }
+            attString.appendData(chCloseAngle);
+            fDocumentType->internalSubset.appendData(attString);
+        }
+    }
 }
 
 void DOMParser::doctypeComment
@@ -784,7 +871,22 @@ void DOMParser::doctypeComment
 	if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->doctypeComment(comment);
-	}
+    }
+    if (fDocumentType->isIntSubsetReading())
+    {
+        if (comment != 0)
+        {
+            DOMString comString;
+            comString.appendData(XMLUni::fgCommentString);
+            comString.appendData(chSpace);
+            comString.appendData(comment);
+            comString.appendData(chSpace);
+            comString.appendData(chDash);
+            comString.appendData(chDash);
+            comString.appendData(chCloseAngle);
+            fDocumentType->internalSubset.appendData(comString);
+        }
+    }
 }
 
 void DOMParser::doctypeDecl
@@ -814,10 +916,25 @@ void DOMParser::doctypePI
     , const XMLCh* const    data
 )
 {
-	if (fOldDocTypeHandler)
+    if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->doctypePI(target, data);
 	}
+    if (fDocumentType->isIntSubsetReading())
+	{
+		//add these chars to internalSubset variable
+        DOMString pi;
+        pi.appendData(chOpenAngle);
+        pi.appendData(chQuestion);
+        pi.appendData(target);
+        pi.appendData(chSpace);
+        pi.appendData(data);
+        pi.appendData(chQuestion);
+        pi.appendData(chCloseAngle);
+
+		fDocumentType->internalSubset.appendData(pi);
+	}
+	
 }
 
 
@@ -827,16 +944,13 @@ void DOMParser::doctypeWhitespace
     , const unsigned int    length
 )
 {
-	if (fDocumentType->isIntSubsetReading == true)
-	{
-		//add thes chars to internalSubset variable
-		fDocumentType->internalSubset.appendData(chars);
-	}
-
 	if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->doctypeWhitespace(chars, length);
 	}
+
+    if (fDocumentType->isIntSubsetReading())
+		fDocumentType->internalSubset.appendData(chars);
 }
 
 void DOMParser::elementDecl
@@ -845,9 +959,29 @@ void DOMParser::elementDecl
     , const bool            isIgnored
 )
 {
-	if (fOldDocTypeHandler)
+    if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->elementDecl(decl, isIgnored);
+	}
+    if (fDocumentType->isIntSubsetReading())
+	{
+        DOMString elemDecl;
+        
+        elemDecl.appendData(chOpenAngle);
+        elemDecl.appendData(chBang);
+        elemDecl.appendData(XMLUni::fgElemString);
+        elemDecl.appendData(chSpace);
+        elemDecl.appendData(decl.getFullName());
+
+        //get the ContentSpec information
+        const XMLCh* contentModel = decl.getFormattedContentModel(*fValidator);
+        if (contentModel != 0) {
+            elemDecl.appendData(chSpace);
+            elemDecl.appendData(contentModel);
+        }
+        
+        elemDecl.appendData(chCloseAngle);
+		fDocumentType->internalSubset.appendData(elemDecl);
 	}
 }
 
@@ -864,7 +998,7 @@ void DOMParser::endAttList
 
 void DOMParser::endIntSubset()
 {
-	fDocumentType->isIntSubsetReading = false;
+	fDocumentType->intSubsetReading = false;
 	if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->endIntSubset();
@@ -894,11 +1028,12 @@ void DOMParser::entityDecl
 
 	fDocumentType->entities->setNamedItem( entity ); 
 
-	if (fDocumentType->isIntSubsetReading == true)
+	if (fDocumentType->isIntSubsetReading())
 	{
 		//add thes chars to internalSubset variable
 		DOMString entityName;
 		entityName.appendData(chOpenAngle);
+        entityName.appendData(chBang);
 		entityName.appendData(XMLUni::fgEntityString);
 		entityName.appendData(chSpace);
 
@@ -977,7 +1112,7 @@ void DOMParser::startAttList
 
 void DOMParser::startIntSubset()
 {
-	fDocumentType->isIntSubsetReading = true;
+	fDocumentType->intSubsetReading = true;
 	if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->startIntSubset();

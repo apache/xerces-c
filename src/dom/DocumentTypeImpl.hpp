@@ -86,11 +86,12 @@ private:
     DOMString			systemId;
 	DOMString			internalSubset;
 
-    bool				isIntSubsetReading;
+    bool				intSubsetReading;
 
     virtual void        setPublicId(const DOMString& value);
     virtual void        setSystemId(const DOMString& value);
     virtual void        setInternalSubset(const DOMString &value);
+    bool                isIntSubsetReading();
 
 	friend class DOMParser;
     
