@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/27 06:08:18  neilg
+ * mark DOMTypeInfo-related methods on XMLElementDecl deprecated since they are not thread-safe
+ *
  * Revision 1.9  2003/11/24 05:19:15  neilg
  * update method documentation
  *
@@ -477,11 +480,13 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
 
     /**
      * @return the uri part of DOM Level 3 TypeInfo
+     * @deprecated
      */
     virtual const XMLCh* getDOMTypeInfoUri() const = 0;
 
     /**
      * @return the name part of DOM Level 3 TypeInfo
+     * @deprecated
      */
     virtual const XMLCh* getDOMTypeInfoName() const = 0;
 
