@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2004/09/24 11:25:31  cargilld
+ * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
+ *
  * Revision 1.4  2004/09/23 21:44:13  cargilld
  * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
  *
@@ -42,6 +45,7 @@
  *
  */
 
+#include <xercesc/util/XercesDefs.hpp>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -50,7 +54,6 @@
 #include <iconv_cnv.hpp>
 #include <qmhrtvm.h>
 #include <qusec.h>
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/Platforms/OS400/OS400PlatformUtils.hpp>
 #include <iconv.h>
 #include <errno.h>
