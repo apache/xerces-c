@@ -4037,23 +4037,10 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         fReaderMgr.skipPastChar(chCloseAngle);
     }
 
-    //
-    //  If we have a document handler then call the XML Decl callback.
-    //
-    //  !NOTE! Do this before we possibly update the reader with the
+    //  Do this before we possibly update the reader with the
     //  actual encoding string. Otherwise, we will pass the wrong thing
     //  for the last parameter!
-    //
-    if (fDocHandler)
-    {
-        fDocHandler->XMLDecl
-        (
-            bbVersion.getRawBuffer()
-            , bbEncoding.getRawBuffer()
-            , bbStand.getRawBuffer()
-            , fReaderMgr.getCurrentEncodingStr()
-        );
-    }
+    const XMLCh* actualEnc = fReaderMgr.getCurrentEncodingStr();
 
     //
     //  Ok, we've now seen the real encoding string, if there was one, so
@@ -4070,6 +4057,23 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     {
         if (!fReaderMgr.getCurrentReader()->setEncoding(bbEncoding.getRawBuffer()))
             emitError(XMLErrs::ContradictoryEncoding, bbEncoding.getRawBuffer());
+        else
+            actualEnc = bbEncoding.getRawBuffer();
+    }
+
+    //
+    //  If we have a document handler then call the XML Decl callback.
+    //
+    //
+    if (fDocHandler)
+    {
+        fDocHandler->XMLDecl
+        (
+            bbVersion.getRawBuffer()
+            , bbEncoding.getRawBuffer()
+            , bbStand.getRawBuffer()
+            , actualEnc
+        );
     }
 }
 
