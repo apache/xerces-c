@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 19:58:05  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/12/17 15:16:10  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -491,7 +495,7 @@ public:
 	RecursiveMutex() {
 		if (pthread_mutex_init(&mutex, NULL))
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+					 XMLExcepts::Mutex_CouldNotCreate, XMLPlatformUtils::fgMemoryManager);
 		recursionCount = 0;
 		tid = 0;
 	};
@@ -499,7 +503,7 @@ public:
 	~RecursiveMutex() {
 		if (pthread_mutex_destroy(&mutex))
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
+					 XMLExcepts::Mutex_CouldNotDestroy, XMLPlatformUtils::fgMemoryManager);
 	};
 
 	void lock() {
@@ -510,7 +514,7 @@ public:
 		}
 		if (pthread_mutex_lock(&mutex) != 0)
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+					 XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
 		tid = pthread_self();
 		recursionCount = 1;
 	};
@@ -521,7 +525,7 @@ public:
 
 		if (pthread_mutex_unlock(&mutex) != 0)
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-					 XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
+					 XMLExcepts::Mutex_CouldNotUnlock, XMLPlatformUtils::fgMemoryManager);
 		tid = 0;
 	};
 };

@@ -268,7 +268,7 @@ void IGXMLScanner::scanDocument(const InputSource& src)
             fDocHandler->endDocument();
 
         //cargill debug:
-        fGrammarResolver->getXSModel();
+        //fGrammarResolver->getXSModel();
 
         // Reset the reader manager to close all files, sockets, etc...
         fReaderMgr.reset();

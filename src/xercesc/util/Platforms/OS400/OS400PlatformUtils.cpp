@@ -601,7 +601,7 @@ public:
 
     RecursiveMutex() {
 		       if (pthread_mutex_init(&mutex, NULL))
-			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, fgMemoryManager);
+			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, XMLPlatformUtils::fgMemoryManager);
                        recursionCount = 0;
                        tid.reservedHiId = 0;
 		       tid.reservedLoId = 0;
@@ -610,7 +610,7 @@ public:
 
     ~RecursiveMutex() {
 			if (pthread_mutex_destroy(&mutex))
-			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
+			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, XMLPlatformUtils::fgMemoryManager);
                       };
 
      void lock()      {
@@ -620,7 +620,7 @@ public:
 			      return;
 			  }
 			  if (pthread_mutex_lock(&mutex) != 0)
-			      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, fgMemoryManager);
+			      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
 			  tid = pthread_self();
 			  recursionCount = 1;
 		      };
@@ -631,7 +631,7 @@ public:
                               return;
 
 			  if (pthread_mutex_unlock(&mutex) != 0)
-			      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, fgMemoryManager);
+			      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, XMLPlatformUtils::fgMemoryManager);
                           tid.reservedHandle= 0;
 			  tid.reservedHiId = 0;
 			  tid.reservedLoId = 0;
