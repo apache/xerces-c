@@ -243,10 +243,9 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 if (fValidate && !isNSAttr)
                 {
-                    // This is to tell the reuse Validator that this attribute was
+                    // This is to tell the Validator that this attribute was
                     // faulted-in, was not an attribute in the attdef originally
-                    if(!fReuseGrammar)
-                       attDef->setCreateReason(XMLAttDef::JustFaultIn);
+                    attDef->setCreateReason(XMLAttDef::JustFaultIn);
 
                     XMLBuffer bufURI;
                     getURIText(uriId, bufURI);
@@ -266,35 +265,47 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
             else
             {
-                // If we are reusing validator and this attribute was faulted-in,
+                // If this attribute was faulted-in and first occurence,
                 // then emit an error
-                if (fValidate && !isNSAttr)
+                if (fValidate && !isNSAttr
+                    && attDef->getCreateReason() == XMLAttDef::JustFaultIn
+                    && !attDef->getProvided())
                 {
-                   if (fReuseGrammar && attDef->getCreateReason()==XMLAttDef::JustFaultIn)
-                   {
-                      //reset the CreateReason to avoid redundant error
-                      attDef->setCreateReason(XMLAttDef::NoReason);
+                    XMLBuffer bufURI;
+                    getURIText(uriId, bufURI);
 
-                      XMLBuffer bufURI;
-                      getURIText(uriId, bufURI);
-
-                      XMLBuffer bufMsg;
-                      bufMsg.append(chOpenCurly);
-                      bufMsg.append(bufURI.getRawBuffer());
-                      bufMsg.append(chCloseCurly);
-                      bufMsg.append(suffPtr);
-                      fValidator->emitError
-                      (
-                          XMLValid::AttNotDefinedForElement
-                          , bufMsg.getRawBuffer()
-                          , elemDecl.getFullName()
-                      );
-                   }
+                    XMLBuffer bufMsg;
+                    bufMsg.append(chOpenCurly);
+                    bufMsg.append(bufURI.getRawBuffer());
+                    bufMsg.append(chCloseCurly);
+                    bufMsg.append(suffPtr);
+                    fValidator->emitError
+                    (
+                        XMLValid::AttNotDefinedForElement
+                        , bufMsg.getRawBuffer()
+                        , elemDecl.getFullName()
+                    );
                 }
              }
 
-            // Mark this one as provided (even if it was faulted in)
-            attDef->setProvided(true);
+            //
+            //  If its already provided, then there are more than one of
+            //  this attribute in this start tag, so emit an error.
+            //
+            if (attDef->getProvided())
+            {
+                emitError
+                (
+                    XMLErrs::AttrAlreadyUsedInSTag
+                    , attDef->getFullName()
+                    , elemDecl.getFullName()
+                );
+            }
+             else
+            {
+                // Mark this one as already seen
+                attDef->setProvided(true);
+            }
 
             //
             //  Now normalize the raw value since we have the attribute type. We
@@ -312,7 +323,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //
             //  If we found an attdef for this one, then lets validate it.
             //
-            if (!wasAdded)
+            if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
             {
                 if (fValidate)
                 {
@@ -335,24 +346,6 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             // Save the type for later use
             attType = attDef->getType();
-
-            // Make sure it's not a dup of anything so far
-            for (unsigned int inner = 0; inner < retCount; inner++)
-            {
-                // If they have the same URI, then compare names
-                if (uriId == toFill.elementAt(inner)->getURIId())
-                {
-                    if (!XMLString::compareString(suffPtr, toFill.elementAt(inner)->getName()))
-                    {
-                        emitError
-                        (
-                            XMLErrs::AttrAlreadyUsedInSTag
-                            , attDef->getFullName()
-                            , elemDecl.getFullName()
-                        );
-                    }
-                }
-            }
         }
          else
         {
@@ -1106,7 +1099,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
     }
 
     // walk through the list again to deal with "xsi:...."
-    if (fDoSchema && fSeeXsi && !fReuseGrammar)
+    if (fDoSchema && fSeeXsi)
     {
         for (index = 0; index < attCount; index++)
         {
@@ -1121,19 +1114,22 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
 
             // if schema URI has been seen, scan for the schema location and uri
             // and resolve the schema grammar; or scan for schema type
-
             if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
-                if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
-                    parseSchemaLocation(valuePtr);
-                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
-                    resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
-                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_TYPE))
-                    fXsiType.set(valuePtr);
-                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILL)) {
-                    if (fValidator) {
-                        if (!XMLString::compareString(valuePtr, SchemaSymbols::fgATTVAL_TRUE))
+
+                if (!fReuseGrammar) {
+                    if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
+                        parseSchemaLocation(valuePtr);
+                    else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
+                        resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
+                }
+
+                if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_TYPE)) {
+                        fXsiType.set(valuePtr);
+                }
+                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILL)
+                         && fValidator
+                         && !XMLString::compareString(valuePtr, SchemaSymbols::fgATTVAL_TRUE)) {
                             ((SchemaValidator*)fValidator)->setNillable(true);
-                    }
                 }
             }
         }

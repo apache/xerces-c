@@ -2344,10 +2344,9 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 //
                 if (fValidate)
                 {
-                   // This is to tell the reuse Validator that this attribute was
-                   // faulted-in, was not an attribute in the attdef originally
-                    if(!fReuseGrammar)
-                       attDef->setCreateReason(XMLAttDef::JustFaultIn);
+                    // This is to tell the Validator that this attribute was
+                    // faulted-in, was not an attribute in the attdef originally
+                    attDef->setCreateReason(XMLAttDef::JustFaultIn);
 
                     fValidator->emitError
                     (
@@ -2359,22 +2358,17 @@ bool XMLScanner::scanStartTag(bool& gotData)
             }
             else
             {
-               // If we are reusing validator and this attribute was faulted-in,
-               // then emit an error
-               if (fValidate)
-               {
-                  if (fReuseGrammar && attDef->getCreateReason()==XMLAttDef::JustFaultIn)
-                  {
-                      //reset the CreateReason to avoid redundant error
-                      attDef->setCreateReason(XMLAttDef::NoReason);
-
-                      fValidator->emitError
-                      (
-                          XMLValid::AttNotDefinedForElement
-                          , fAttNameBuf.getRawBuffer()
-                          , elemDecl->getFullName()
-                      );
-                   }
+                // If this attribute was faulted-in and first occurence,
+                // then emit an error
+                if (fValidate && attDef->getCreateReason() == XMLAttDef::JustFaultIn
+                    && !attDef->getProvided())
+                {
+                    fValidator->emitError
+                    (
+                        XMLValid::AttNotDefinedForElement
+                        , fAttNameBuf.getRawBuffer()
+                        , elemDecl->getFullName()
+                    );
                 }
             }
 
@@ -2447,7 +2441,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  errors, but we just keep going. We only need to do this if
             //  we are validating.
             //
-            if (!wasAdded)
+            if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
             {
                 // Let the validator pass judgement on the attribute value
                 if (fValidate)
