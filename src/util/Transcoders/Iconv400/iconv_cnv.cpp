@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.1  2001/06/25 16:19:14  tng
+ * Rename iconv_cnv.c to iconv_cnv.cpp.  AS400 changes by Linda Swan.
+ *
  * Revision 1.3  2001/06/19 19:31:04  tng
  * Latest AS/400 update.
  *
@@ -71,8 +74,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#include <iconv_util.h>
-#include <iconv_cnv.h>
+#include <iconv_util.hpp>
+#include <iconv_cnv.hpp>
 #include <qmhrtvm.h>
 #include <qusec.h>
 #include <util/Platforms/OS400/OS400PlatformUtils.hpp>
@@ -140,7 +143,7 @@ UConverter*  ucnv_openU (const UChar * name,
 			 UErrorCode * err)
 {
   char asciiName[MAX_CONVERTER_NAME_LENGTH];
-  
+
   if (U_FAILURE (*err))
     return NULL;
   if (name == NULL)
@@ -158,7 +161,7 @@ UConverter*  ucnv_openU (const UChar * name,
 
 void ucnv_close (UConverter * converter)
 {
-/* for iconv we will close the handles and free the converter storage*/ 
+/* for iconv we will close the handles and free the converter storage*/
   iconv_close(converter->sharedData->toiconv_handle);
   iconv_close(converter->sharedData->fromiconv_handle);
   if (converter == NULL)
@@ -174,11 +177,11 @@ void ucnv_close (UConverter * converter)
 /* XMLReader calls this and uses fact that it is different than min
 to go thru a calculation otherwise if max and min same then there is
 a calculation speed up - we will keep the two routines but have them
-return different sizes - later will ifdef XMLreader for ICONV to remove the calls*/ 
+return different sizes - later will ifdef XMLreader for ICONV to remove the calls*/
  int8_t  ucnv_getMaxCharSize (const UConverter * converter)
 {
   return (4); /* dummy returns just need to be different in XMLParser - need something else for ICU replacement */
-} 
+}
 /* currently required for iconv support */
 /* see note for ucnv_getMaxCharSize */
 int8_t  ucnv_getMinCharSize (const UConverter * converter)
@@ -204,12 +207,12 @@ void   ucnv_fromUnicode (UConverter * _this,
       *err = U_ILLEGAL_ARGUMENT_ERROR;
       return;
     }
-  
- 
+
+
   /*calls the specific conversion routines */
   Converter_fromUnicode(_this,target,targetLimit,source,sourceLimit,
 					   offsets,flush,err);
-  
+
   return;
 }
 
@@ -232,7 +235,7 @@ void   ucnv_toUnicode (UConverter * _this,
       return;
     }
 
-  
+
 
   /*calls the specific conversion routines */
   Convert_toUnicode(_this,target,targetLimit,source,sourceLimit,
@@ -448,7 +451,7 @@ UChar ucnv_getNextUChar (UConverter * converter,
 			 const char *sourceLimit,
 			 UErrorCode * err)
 {
-  
+
 
   /*calls the specific conversion routines */
   /*as dictated in a code review, avoids a switch statement */
@@ -468,7 +471,7 @@ UChar ucnv_getNextUChar (UConverter * converter,
 * @param internal: used internally to store store state data across calls
 * @param err: fills in an error status
 */
-void 
+void
 T_UConverter_fromCodepageToCodepage (UConverter * outConverter,
 				     UConverter * inConverter,
 				     char **target,
@@ -667,24 +670,24 @@ void Converter_fromUnicode(UConverter * _this,
     if (errno == E2BIG)
       {
 	  *err = U_BUFFER_OVERFLOW_ERROR;
-          return; 
+          return;
       }
     else
 
       if ((errno ==EBADDATA)|| (errno ==ECONVERT))
 
        {
-        char errno_id[7]; 
-        send_message(NULL,ICONV_CONVERT_PROBLEM,'d'); 
+        char errno_id[7];
+        send_message(NULL,ICONV_CONVERT_PROBLEM,'d');
         convert_errno(errno_id,errno);
-        send_message(NULL,errno_id,'d'); 
+        send_message(NULL,errno_id,'d');
         *err = U_INVALID_CHAR_FOUND;
 	return;
 	}
 
 
   return;
-       } 
+       }
 
 void Convert_toUnicode(UConverter * _this,
 				  UChar ** target,
@@ -709,24 +712,24 @@ void Convert_toUnicode(UConverter * _this,
     if (errno == E2BIG)
       {
 	  *err = U_BUFFER_OVERFLOW_ERROR;
-          return; 
+          return;
       }
     else
 
       if ((errno ==EBADDATA)|| (errno ==ECONVERT))
 
        {
-        char errno_id[7]; 
-        send_message(NULL,ICONV_CONVERT_PROBLEM,'d'); 
+        char errno_id[7];
+        send_message(NULL,ICONV_CONVERT_PROBLEM,'d');
         convert_errno(errno_id,errno);
-        send_message(NULL,errno_id,'d'); 
+        send_message(NULL,errno_id,'d');
         *err = U_INVALID_CHAR_FOUND;
         return;
-	   
+	
 	}
 
 }
-  
+
 
   return;
 }
@@ -740,30 +743,30 @@ UChar getNextUChar(UConverter* converter,
   UChar* myUCharptr;
   size_t numberibytes=sizeof(UChar);
   size_t numberobytes=sizeof(UChar);
-  int chardone; 
-  if ((*source)+1 > sourceLimit) 
+  int chardone;
+  if ((*source)+1 > sourceLimit)
     {
       *err = U_INDEX_OUTOFBOUNDS_ERROR;
       return 0xFFFD;
     }
-  
-  
+
+
   /*pick up the iconv handle */
-  /* convert the requested character - need to cache characters 6 will do - XMLReader is using this function to get header to process*/  
+  /* convert the requested character - need to cache characters 6 will do - XMLReader is using this function to get header to process*/
   myUCharptr  = &myUChar;
- chardone =iconv(converter->sharedData->toiconv_handle,(char**)source,  (size_t*) &numberibytes,(char **)&myUCharptr,(size_t *)&numberobytes); 
+ chardone =iconv(converter->sharedData->toiconv_handle,(char**)source,  (size_t*) &numberibytes,(char **)&myUCharptr,(size_t *)&numberobytes);
   if (myUChar != 0xFFFD) return myUChar;
   else
-    {      
+    {
       UChar* myUCharPtr = &myUChar;
       const char* sourceFinal = *source;
-      
+
       *err = U_INVALID_CHAR_FOUND;
-      
+
 
       /*makes the internal caching transparent to the user*/
       if (*err == U_INDEX_OUTOFBOUNDS_ERROR) *err = U_ZERO_ERROR;
-      
+
       return myUChar;
     }
 }
