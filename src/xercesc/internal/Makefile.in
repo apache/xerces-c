@@ -84,12 +84,14 @@ INTERNAL_CPP_PUBHEADERS = \
 	ElemStack.hpp \
 	EndOfEntityException.hpp \
 	IANAEncodings.hpp \
-	IGXMLScanner.hpp \
 	ReaderMgr.hpp \
 	SGXMLScanner.hpp \
 	VecAttrListImpl.hpp \
 	VecAttributesImpl.hpp \
+	IGXMLScanner.hpp \
 	WFXMLScanner.hpp \
+	SGXMLScanner.hpp \
+	DGXMLScanner.hpp \
 	XMLInternalErrorHandler.hpp \
 	XMLReader.hpp \
 	XMLScanner.hpp \
