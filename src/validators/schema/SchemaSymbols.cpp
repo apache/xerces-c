@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/14 17:53:48  tng
+ * Schema: Update Schema URL
+ *
  * Revision 1.5  2001/05/11 15:17:43  tng
  * Schema: Nillable fixes.
  *
@@ -88,12 +91,12 @@ const XMLCh SchemaSymbols::fgURI_XSI[] =
 {
     chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash,
     chForwardSlash, chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w,
-	chDigit_3, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-	chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash, chDigit_1,
-	chDigit_0, chForwardSlash, chLatin_X, chLatin_M, chLatin_L, chLatin_S,
-	chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chDash, chLatin_i,
-	chLatin_n, chLatin_s, chLatin_t, chLatin_a, chLatin_n, chLatin_c,
-	chLatin_e, chNull
+    chDigit_3, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+    chDigit_2, chDigit_0, chDigit_0, chDigit_1, chForwardSlash,
+    chLatin_X, chLatin_M, chLatin_L, chLatin_S,
+    chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chDash, chLatin_i,
+    chLatin_n, chLatin_s, chLatin_t, chLatin_a, chLatin_n, chLatin_c,
+    chLatin_e, chNull
 };
 
 const XMLCh SchemaSymbols::fgURI_SCHEMAFORSCHEMA[] =
@@ -101,9 +104,9 @@ const XMLCh SchemaSymbols::fgURI_SCHEMAFORSCHEMA[] =
     chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash,
     chForwardSlash, chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w,
     chDigit_3, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-    chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash, chDigit_1,
-    chDigit_0, chForwardSlash, chLatin_X, chLatin_M, chLatin_L, chLatin_S,
-	chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chNull
+    chDigit_2, chDigit_0, chDigit_0, chDigit_1, chForwardSlash,
+    chLatin_X, chLatin_M, chLatin_L, chLatin_S,
+    chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chNull
 };
 
 const XMLCh SchemaSymbols::fgXSI_SCHEMALOCACTION[] =

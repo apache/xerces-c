@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns='http://www.w3.org/2000/10/XMLSchema'>
+<schema xmlns='http://www.w3.org/2001/XMLSchema'>
 
  <element name="personnel">
   <complexType>
@@ -19,7 +19,7 @@
    </sequence>
    <attribute name="id"  type="ID" use='required'/>
    <attribute name="note" type="string"/>
-   <attribute name="contr" use='default' value="false">
+   <attribute name="contr" default="false">
     <simpleType>
      <restriction base = "string">
        <enumeration value="true"/>
@@ -27,6 +27,7 @@
      </restriction>
     </simpleType>
    </attribute>
+   <attribute name="salary" type="integer"/>
   </complexType>
  </element>
 
