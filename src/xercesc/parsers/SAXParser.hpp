@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2004/09/29 19:28:12  cargilld
+ * Mark SAXParser as deprecated.
+ *
  * Revision 1.35  2004/09/29 19:00:29  peiyongz
  * [jira1207] --patch from Dan Rosen
  *
@@ -258,6 +261,10 @@ class PSVIHandler;
   *
   * <p>It can be used to instantiate a validating or non-validating
   * parser, by setting a member flag.</p>
+  *
+  * @deprecated This interface has been replaced by the SAX2
+  *             interface, which includes Namespace support.
+  *             See SAX2XMLReader for more information.
   */
 
 class PARSERS_EXPORT SAXParser :
