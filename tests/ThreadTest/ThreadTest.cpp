@@ -144,14 +144,12 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     pthread_attr_init(&attr); 
     x = pthread_create( &tId, &attr,  (pthreadfunc)func,  param);
 #endif
-    //x = thr_create( NULL, NULL,  (pthreadfunc)func,  param, NULL, &tId);
     if (x == -1)
     {
         fprintf(stderr, "Error starting thread.  Errno = %d\n", errno);
         exit(-1);
     }
     
-    //pthread_join(tId, NULL);
 }    
 #else
 #error This platform is not supported
@@ -215,10 +213,10 @@ struct RunInfo
 //------------------------------------------------------------------------------
 struct ThreadInfo
 {
-    bool    fHeartBeat;     // Set true by the thread each time it finishes
-                            //   parsing a file.
-    int     fParses;        // Number of parses completed.
-    int     fThreadNum;     // Identifying number for this thread.
+    bool    fHeartBeat;            // Set true by the thread each time it finishes
+                                   //   parsing a file.
+    unsigned int     fParses;      // Number of parses completed.
+    int              fThreadNum;   // Identifying number for this thread.
     ThreadInfo() {
         fHeartBeat = false;
         fParses = 0;
@@ -822,6 +820,7 @@ void threadMain (void *param)
         
         
         thInfo->fHeartBeat = true;
+        thInfo->fParses++;
     }
 }
 
@@ -946,9 +945,25 @@ int main (int argc, char **argv)
     };
     
     //
-    //  Time's up, we are done.  The threads are still running; we just return
+    //  Time's up, we are done.  (We only get here if this was a timed run)
+    //  Tally up the total number of parses completed by each of the threads.
+    //  To Do:  Run the main thread at higher priority, so that the worker threads
+    //    won't make much progress while we are adding up the results.
+    //  
+    double totalParsesCompleted = 0;       
+    for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
+    {
+        totalParsesCompleted += gThreadInfo[threadNum].fParses;
+        // printf("%f   ", totalParsesCompleted);
+    }
+
+    double parsesPerMinute = totalParsesCompleted / (double(gRunInfo.totalTime) / double(60));
+    printf("\n%8.1f parses per minute.", parsesPerMinute);
+
+    //  The threads are still running; we just return
     //   and leave it to the operating sytem to kill them.
     //
+
     return 0;
 }
 
