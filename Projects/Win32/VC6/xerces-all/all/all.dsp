@@ -59,26 +59,26 @@ MTL=midl.exe
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "all___Win32_64Debug"
-# PROP BASE Intermediate_Dir "all___Win32_64Debug"
+# PROP BASE Output_Dir "Debug"
+# PROP BASE Intermediate_Dir "Debug"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "64Debug"
-# PROP Intermediate_Dir "64Debug"
+# PROP Output_Dir "Debug"
+# PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 
 !ELSEIF  "$(CFG)" == "all - Win64 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "all___Win32_64Release"
-# PROP BASE Intermediate_Dir "all___Win32_64Release"
+# PROP BASE Output_Dir "Release"
+# PROP BASE Intermediate_Dir "Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "64Release"
-# PROP Intermediate_Dir "64Release"
+# PROP Output_Dir "Release"
+# PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 
 !ENDIF 
