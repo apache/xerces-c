@@ -4262,6 +4262,11 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeVector.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.cpp
+
+"$(INTDIR)\DOMNormalizer.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+	
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNotationImpl.cpp
 
 "$(INTDIR)\DOMNotationImpl.obj" : $(SOURCE) "$(INTDIR)"
