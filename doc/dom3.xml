@@ -44,7 +44,7 @@
         <code>DOMErrorHandler</code>, <code>DOMError</code>, <code>DOMLocator</code>
     </li>
     <li>
-        <code>DOMNode</code>: set/getUserData, isSameNode, isEqualNode, compareTreePosition
+        <code>DOMNode</code>: set/getUserData, isSameNode, isEqualNode, compareTreePosition, lookupNamespaceURI, lookupNamespacePrefix
     </li>
     <li>
         <code>DOMText</code>: getIsWhitespaceInElementContent

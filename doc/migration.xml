@@ -28,7 +28,7 @@
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
         <li>64 bit binaries distribution on Windows IA64 and Linux IA64</li>
-        <li>DOM Level 3 DOMNode::compareTreePosition</li>
+        <li>DOM Level 3 DOMNode::compareTreePosition, DOMNode::lookupNamespaceURI, DOMNode::lookupNamespacePrefix </li>
         <li>plus many more bug fixes</li>
       </ul>
     </s3>
@@ -50,7 +50,8 @@
         <anchor name="ModifiedAPI210"/>
         <s4 title="Modified Public API">
             <ul>
-              <li>DOMNodeList::item, and DOMNodeList::getLength have been added a const modifier.</li>
+              <li>DOMNodeList: item, and getLength have been added a const modifier.</li>
+              <li>DOMNode: lookupNamespacePrefix, isDefaultNamespace, and lookupNamespaceURI have been added a const modifier.</li>
             </ul>
         </s4>
 
