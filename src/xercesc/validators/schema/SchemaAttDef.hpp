@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/29 19:47:16  gareth
+ * added DOMTypeInfo and some PSVI methods
+ *
  * Revision 1.2  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -87,6 +90,9 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/validators/datatype/DatatypeValidator.hpp>
+#include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
+#include <xercesc/validators/schema/PSVIDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -101,7 +107,6 @@ class QName;
 class VALIDATORS_EXPORT SchemaAttDef : public XMLAttDef
 {
 public :
-
     // -----------------------------------------------------------------------
     //  Constructors and Destructors
     // -----------------------------------------------------------------------
@@ -134,7 +139,82 @@ public :
     //  Implementation of the XMLAttDef interface
     // -----------------------------------------------------------------------
     virtual const XMLCh* getFullName() const;
+    virtual void reset();
 
+
+    // ----------------------------------------------------------------------
+    // Partial implementation of PSVI
+    // The values these methods return are only accurate until the DOMAttr
+    // is created that uses the values. After this a celan up method is called
+    // and the SchemaAttDef may be used again.
+    // note that some of this information has dependancies. For example,
+    // if something is not valid then the information returned by the other 
+    // calls may be meaningless
+    // See http://www.w3.org/TR/xmlschema-1/ for detailed information
+    // ----------------------------------------------------------------------
+
+    /** 
+     * The appropriate case among the following:
+     * 1 If it was strictly assessed, then the appropriate case among the following:
+     * 1.1 If it was valid as defined by Attribute Locally Valid (3.2.4), then valid;
+     * 1.2 otherwise invalid.
+     * 2 otherwise notKnown.
+     */
+    PSVIDefs::Validity getValidity() const;
+
+    /**
+     * The appropriate case among the following:
+     * 1 If it was strictly assessed, then full;
+     * 2 otherwise none.
+     */
+    PSVIDefs::Validation getValidationAttempted() const;
+
+    /**
+     * @return the complexity. Always simple for attrs
+     */
+    PSVIDefs::Complexity getTypeType() const;
+
+    /**
+     * The target namespace of the type definition.
+     */
+    const XMLCh* getTypeUri() const;
+
+    /**
+     * The {name} of the type definition, if it is not absent. 
+     */
+    const XMLCh* getTypeName() const;
+
+    /**
+     * true if the {name} of the type definition is absent, otherwise false.
+     */
+    bool getTypeAnonymous() const;
+
+    /**
+     * If this method returns true and validity is VALID then the next three 
+     * produce accurate results
+     * @return true if the element is validated using a union type
+     */
+    bool isTypeDefinitionUnion() const;
+
+    /**
+     * The {target namespace} of the actual member type definition.
+     */
+    const XMLCh* getMemberTypeUri() const;
+
+    /**
+     * @return true if the {name} of the actual member type definition is absent, otherwise false.
+     */
+    bool getMemberTypeAnonymous() const;
+
+    /**
+     * @return the {name} of the actual member type definition, if it is not absent. 
+     */
+    const XMLCh* getMemberTypeName() const;
+
+    virtual const XMLCh* getDOMTypeInfoUri() const;
+    virtual const XMLCh* getDOMTypeInfoName() const;
+    
+    
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -155,9 +235,11 @@ public :
        ,const int                 uriId = -1
     );
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
+    void setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setNamespaceList(const ValueVectorOf<unsigned int>* const toSet);
     void resetNamespaceList();
-
+    void setValidity(PSVIDefs::Validity valid);
+    void setValidationAttempted(PSVIDefs::Validation validation);
 
 private :
     // -----------------------------------------------------------------------
@@ -175,14 +257,26 @@ private :
     //  fDatatypeValidator
     //      The DatatypeValidator used to validate this attribute type.
     //
+    // fAnyDatatypeValidator
+    //      Tempory storage for the DatatypeValidator used to validate an any
+    //
     //  fNamespaceList
     //      The list of namespace values for a wildcard attribute
+    //
+    //  fValidity
+    //      After this attr has been validated this is its validity
+    //
+    //  fValidation
+    //      The type of validation that happened to this attr
     //
     // -----------------------------------------------------------------------
     unsigned int                 fElemId;
     QName*                       fAttName;
     DatatypeValidator*           fDatatypeValidator;
+    DatatypeValidator*           fAnyDatatypeValidator;
     ValueVectorOf<unsigned int>* fNamespaceList;
+    PSVIDefs::Validity           fValidity;
+    PSVIDefs::Validation         fValidation;
 };
 
 
@@ -205,6 +299,119 @@ inline DatatypeValidator* SchemaAttDef::getDatatypeValidator() const
     return fDatatypeValidator;
 }
 
+inline void SchemaAttDef::setValidity(PSVIDefs::Validity valid) {
+    fValidity = valid;
+}
+
+inline void SchemaAttDef::setValidationAttempted(PSVIDefs::Validation validation) {
+    fValidation = validation;
+}
+
+
+inline const XMLCh* SchemaAttDef::getTypeName() const {
+    if(fAnyDatatypeValidator) 
+        return fAnyDatatypeValidator->getTypeLocalName();
+    else if(fDatatypeValidator)
+        return fDatatypeValidator->getTypeLocalName();
+
+    //its anySimpleType if we have not done validation on it
+    if(getValidationAttempted() == PSVIDefs::NONE)
+        return SchemaSymbols::fgDT_ANYSIMPLETYPE;
+
+
+    return 0;
+}
+
+inline PSVIDefs::Complexity SchemaAttDef::getTypeType() const {
+    return PSVIDefs::SIMPLE;
+}
+
+inline const XMLCh* SchemaAttDef::getTypeUri() const {
+    if(fAnyDatatypeValidator) 
+        return fAnyDatatypeValidator->getTypeUri();
+    else if(fDatatypeValidator) 
+        return fDatatypeValidator->getTypeUri();
+
+    //its anySimpleType if we have not done validation on it
+    if(getValidationAttempted() == PSVIDefs::NONE)
+        return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
+
+    return 0;
+}
+
+
+inline const XMLCh* SchemaAttDef::getMemberTypeName() const {
+    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
+        return ((UnionDatatypeValidator*)fAnyDatatypeValidator)->getMemberTypeName();
+    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
+        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeName();
+    return 0;
+}
+
+inline const XMLCh* SchemaAttDef::getMemberTypeUri() const {
+    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
+        return ((UnionDatatypeValidator*)fAnyDatatypeValidator)->getMemberTypeUri();
+    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
+        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeUri();
+    return 0;
+}
+
+inline PSVIDefs::Validity SchemaAttDef::getValidity() const {
+    return fValidity;
+}
+
+inline PSVIDefs::Validation SchemaAttDef::getValidationAttempted() const {
+    return fValidation;
+}
+
+inline const XMLCh* SchemaAttDef::getDOMTypeInfoName() const {
+    if(fValidity != PSVIDefs::VALID)
+        return SchemaSymbols::fgDT_ANYSIMPLETYPE;
+    if(getTypeAnonymous() || getMemberTypeAnonymous())
+        return 0;
+
+    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union ||
+       fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union) {
+        return getMemberTypeName();
+    }
+    return getTypeName();
+}
+
+inline const XMLCh* SchemaAttDef::getDOMTypeInfoUri() const {
+    if(fValidity != PSVIDefs::VALID)
+        return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
+    if(getTypeAnonymous() || getMemberTypeAnonymous())
+        return 0;
+    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union ||
+       fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
+        return getMemberTypeUri();
+    return getTypeUri();
+}
+
+inline bool SchemaAttDef::getTypeAnonymous() const {
+    if(fAnyDatatypeValidator) 
+        return fAnyDatatypeValidator->getAnonymous();
+    else if(fDatatypeValidator)
+        return fDatatypeValidator->getAnonymous();
+
+    return false;
+}
+
+inline bool SchemaAttDef::getMemberTypeAnonymous() const {
+    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
+        return ((UnionDatatypeValidator*)fAnyDatatypeValidator)->getMemberTypeAnonymous();
+    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
+        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeAnonymous();
+    return false;
+}
+
+inline bool SchemaAttDef::isTypeDefinitionUnion() const {
+   if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union ||
+      fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
+       return true;
+    return false;
+}
+
 inline ValueVectorOf<unsigned int>*
 SchemaAttDef::getNamespaceList() const {
     return fNamespaceList;
@@ -222,6 +429,11 @@ inline void SchemaAttDef::setElemId(const unsigned int newId)
 inline void SchemaAttDef::setDatatypeValidator(DatatypeValidator* newDatatypeValidator)
 {
     fDatatypeValidator = newDatatypeValidator;
+}
+
+inline void SchemaAttDef::setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator)
+{
+    fAnyDatatypeValidator = newDatatypeValidator;
 }
 
 inline void SchemaAttDef::resetNamespaceList() {
@@ -245,6 +457,17 @@ inline void SchemaAttDef::setNamespaceList(const ValueVectorOf<unsigned int>* co
     else  {
         resetNamespaceList();
     }
+}
+
+inline void SchemaAttDef::reset() {
+    if(fAnyDatatypeValidator && fAnyDatatypeValidator->getType() == DatatypeValidator::Union)
+        ((UnionDatatypeValidator *)fAnyDatatypeValidator)->reset();
+    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
+        ((UnionDatatypeValidator *)fDatatypeValidator)->reset();
+
+    fAnyDatatypeValidator = 0;
+    fValidity = PSVIDefs::UNKNOWN;
+    fValidation = PSVIDefs::NONE;    
 }
 
 XERCES_CPP_NAMESPACE_END

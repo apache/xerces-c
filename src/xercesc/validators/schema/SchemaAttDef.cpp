@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/29 19:47:16  gareth
+ * added DOMTypeInfo and some PSVI methods
+ *
  * Revision 1.2  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -100,7 +103,10 @@ SchemaAttDef::SchemaAttDef() :
     fElemId(XMLElementDecl::fgInvalidElemId)
     , fAttName(0)
     , fDatatypeValidator(0)
+    , fAnyDatatypeValidator(0)
     , fNamespaceList(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
 {
 }
 
@@ -112,7 +118,10 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     XMLAttDef(type, defType)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
+    , fAnyDatatypeValidator(0)
     , fNamespaceList(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
 {
     fAttName = new QName(prefix, localPart, uriId);
 }
@@ -128,7 +137,10 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const                     prefix
     XMLAttDef(attValue, type, defType, enumValues)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
+    , fAnyDatatypeValidator(0)
     , fNamespaceList(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
 {
     fAttName = new QName(prefix, localPart, uriId);
 }
@@ -140,7 +152,10 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fAttName(0)
     , fDatatypeValidator(other->fDatatypeValidator)
+    , fAnyDatatypeValidator(other->fAnyDatatypeValidator)
     , fNamespaceList(0)
+    , fValidity(other->fValidity)
+    , fValidation(other->fValidation)
 {
     QName* otherName = other->getAttName();
     fAttName = new QName(otherName->getPrefix(),

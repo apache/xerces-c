@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/01/29 19:47:16  gareth
+ * added DOMTypeInfo and some PSVI methods
+ *
  * Revision 1.6  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -159,10 +162,16 @@ SchemaElementDecl::SchemaElementDecl() :
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
+    , fXsiSimpleTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
+    , fSeenValidation(false)
+    , fSeenNoValidation(false)
+    , fHadContent(false)
 {
 }
 
@@ -181,10 +190,16 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
+    , fXsiSimpleTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
+    , fSeenValidation(false)
+    , fSeenNoValidation(false)
+    , fHadContent(false)
 {
     setElementName(prefix, localPart, uriId);
 }
@@ -202,10 +217,16 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
+    , fXsiSimpleTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
+    , fSeenValidation(false)
+    , fSeenNoValidation(false)
+    , fHadContent(false)
 {
     setElementName(elementName);
 }
