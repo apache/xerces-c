@@ -21,9 +21,6 @@
        <anchor name="limitation"/>
        <s2 title="Limitations">
          <ul>
-            <li>No interface is provided for exposing the post-schema
-            validation infoset , beyond
-            that provided by DOM or SAX;</li>
             <li>Due to the way in which the parser constructs content
             models for elements with complex content, specifying large
             values for the <code>minOccurs</code> or <code>maxOccurs</code>
