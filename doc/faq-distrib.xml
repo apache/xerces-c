@@ -92,9 +92,9 @@
             <em>one</em> file:<br></br>
 
             &XercesCWindowsDLL;.dll for Windows NT/2000, or<br/>
-            &XercesCUnixLib;.a for AIX, or<br/>
-            &XercesCUnixLib;.so for Solaris/Linux, or<br/>
-            &XercesCUnixLib;.sl for HP-UX.</p>
+            &XercesCUnixLib;&XercesCUnixSoName;.so for AIX, or<br/>
+            &XercesCUnixLib;.so.&XercesCUnixSoName; for Solaris/Linux, or<br/>
+            &XercesCUnixLib;.sl.&XercesCUnixSoName; for HP-UX.</p>
 
             <p>However, if you are using the XML4C binaries then in
             <em>addition</em> to the library file

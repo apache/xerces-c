@@ -128,8 +128,18 @@
       <p>In order to run an application built using &XercesCProjectName; you must
         set up your path and library search path properly. In the stand-alone version
         from Apache, you must have the &XercesCName; runtime library available from
-        your path settings. On Windows this library is called <code>&XercesCWindowsDLL;.dll</code> which must be available from your <code>PATH</code> settings. (Note that now there are separate debug and release dlls for
-        Windows. If the release dll is named <code>&XercesCWindowsDLL;.dll</code> then the debug dll is named <code>&XercesCWindowsDLL;d.dll)</code>. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code> (or <code>.a</code> or <code>.sl</code>) which must be available from your <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
+        your path settings.
+      </p>
+      <p>On Windows this library is called <code>&XercesCWindowsDLL;.dll</code>
+        which must be available from your <code>PATH</code> settings. (Note that there are
+        separate debug and release dlls for Windows.  The release dll is named
+        <code>&XercesCWindowsDLL;.dll</code>, and the debug dll
+        is named <code>&XercesCWindowsDLL;d.dll)</code>.
+      </p>
+      <p>On UNIX platforms the library is called &XercesCUnixLib;.so.&XercesCUnixSoName; (or
+         &XercesCUnixLib;&XercesCUnixSoName;.so or &XercesCUnixLib;.sl.&XercesCUnixSoName;)
+         which must be available from your <code>LD_LIBRARY_PATH</code>
+         (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
 
       <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>, you need to point your library path to that directory.</p>
 
