@@ -5482,7 +5482,6 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
             specNode->setMinOccurs(0);
             specNode->setMaxOccurs(SchemaSymbols::UNBOUNDED);
             typeInfo->setContentSpec(specNode);
-            typeInfo->setContentType(SchemaElementDecl::Mixed_Complex);
         }
 
         typeInfo->setDerivedBy(0);
