@@ -475,13 +475,15 @@
         XMLCh tempStr[100];
         XMLString::transcode("LS", tempStr, 99);
         DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
-        DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder();
+        DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
         // optionally you can set some features on this builder
         if (parser->canSetFeature(XMLUni::fgDOMValidation, true)
             parser->setFeature(XMLUni::fgDOMValidation, true);
         if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true)
             parser->setFeature(XMLUni::fgDOMNamespaces, true);
+        if (parser->canSetFeature((XMLUni::fgDOMDatatypeNormalization, true)
+            parser->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
 
 
         // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
@@ -490,9 +492,10 @@
         parser->setErrorHandler(errHandler);
 
         char* xmlFile = "x1.xml";
+        DOMDocument *doc = 0;
 
         try {
-            parser->parseURI(xmlFile);
+            doc = parser->parseURI(xmlFile);
         }
         catch (const XMLException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.getMessage());
@@ -525,7 +528,57 @@
 
         <anchor name="InputSourceWrapper"/>
         <s3 title="How to interchange DOMInputSource and SAX InputSource?">
-        <p>...</p>
+        <p>DOM L3 has introduced a DOMInputSource which is similar to the SAX InputSource. The &XercesCName; internals
+        (XMLScanner, Reader, etc.) use the SAX InputSource to process the xml data. In order to support DOM L3, we need
+        to provide a mechanism to allow the &XercesCName; internals to talk to a DOMInputSource object. Similarly, &XercesCName;
+        provides some framework classes for specialized types of input source (i.e. LocalFileInputSource, etc.) that are
+        derived from the SAX InputSource. In DOM L3, to allow users implementing their own DOMEntityResolver(s), which return
+        a DOMInputSource, to utilize these framework classes, we need to provide a mechanism to map a SAX InputSource to a
+        DOMInputSource. We are introducing to wrapper classes to interchange DOMInputSource and SAXInputSource. 
+        </p>
+
+           <s4 title="Wrapper4DOMInputSource">
+           <p>
+           Wraps a DOMInputSource object to a SAX InputSource.
+           </p>
+           <source>
+    #include &lt;xercesc/dom/DOMInputSource.hpp>
+    #include &lt;xercesc/framework/Wrapper4DOMInputSource.hpp>
+
+    class DBInputSource: public DOMInputSource
+    {
+    ...
+    };
+
+    ...
+    DOMInputSource *domIS = new DBInputSource;
+    Wrapper4DOMInputSource domISWrapper(domIS);
+    XercesDOMParser parser;
+
+    parser.parse(domISWrapper);
+           </source>
+           </s4>
+
+           <s4 title="Wrapper4InputSource">
+           <p>
+           Wraps a SAX InputSource object to a DOMInputSource.
+           </p>
+           <source>
+    #include &lt;xercesc/framework/WrapperInputSource.hpp>
+    #include &lt;xercesc/framework/LocalFileInputSource.hpp>
+
+    DOMInputSource* MyEntityResolver::resolveEntity(const XMLCh* const publicId,
+                                                    const XMLCh* const systemId,
+                                                    const XMLCh* const baseURI)
+    {
+        return new Wrapper4InputSource(new LocalFileInputSource(baseURI, systemId));
+    }
+
+           </source>
+           </s4>
+
+        <p>Please refer to the <jump href="api.html">API Documentataion</jump> for more detail.
+        </p>
         </s3>
 
         <anchor name="DOMBuilderFeatures"/>
