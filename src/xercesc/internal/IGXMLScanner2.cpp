@@ -94,7 +94,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-static XMLAttDefList& getAttDefList(bool              isSchemaGrammar
+inline XMLAttDefList& getAttDefList(bool              isSchemaGrammar
                                   , ComplexTypeInfo*  currType
                                   , XMLElementDecl*   elemDecl);
 

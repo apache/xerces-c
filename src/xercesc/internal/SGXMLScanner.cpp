@@ -88,7 +88,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-static XMLAttDefList& getAttDefList(ComplexTypeInfo* currType, XMLElementDecl* elemDecl);
+inline XMLAttDefList& getAttDefList(ComplexTypeInfo* currType, XMLElementDecl* elemDecl);
 
 // ---------------------------------------------------------------------------
 //  SGXMLScanner: Constructors and Destructor
