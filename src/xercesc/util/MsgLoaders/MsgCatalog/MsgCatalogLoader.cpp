@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/17 03:56:15  neilg
+ * add default memory manager parameter to loadMsg method that uses char * parameters
+ *
  * Revision 1.15  2003/08/21 16:36:08  peiyongz
  * use PlatformUtils::panic()
  *
@@ -282,7 +285,8 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3
-                            , const char* const             repText4)
+                            , const char* const             repText4
+                            , MemoryManager * const manager) 
 {
     //
     //  Transcode the provided parameters and call the other version,
@@ -292,27 +296,28 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     XMLCh* tmp2 = 0;
     XMLCh* tmp3 = 0;
     XMLCh* tmp4 = 0;
+    MemoryManager *managerOoUse = (manager)?manager:XMLPlatformUtils::fgMemoryManager;
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1, XMLPlatformUtils::fgMemoryManager);
+        tmp1 = XMLString::transcode(repText1, managerToUse);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2, XMLPlatformUtils::fgMemoryManager);
+        tmp2 = XMLString::transcode(repText2, managerToUse);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3, XMLPlatformUtils::fgMemoryManager);
+        tmp3 = XMLString::transcode(repText3, managerToUse);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4, XMLPlatformUtils::fgMemoryManager);
+        tmp4 = XMLString::transcode(repText4, managerToUse);
 
     bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
 
     if (tmp1)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp1);//delete [] tmp1;
+        managerToUse->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
+        managerToUse->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp3);//delete [] tmp3;
+        managerToUse->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp4);//delete [] tmp4;
+        managerToUse->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

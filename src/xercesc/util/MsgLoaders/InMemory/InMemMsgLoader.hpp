@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 03:56:15  neilg
+ * add default memory manager parameter to loadMsg method that uses char * parameters
+ *
  * Revision 1.3  2003/03/07 18:15:44  tng
  * Return a reference instead of void for operator=
  *
@@ -140,6 +143,7 @@ public :
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0
         , const char* const             repText4 = 0
+        , MemoryManager * const manager = 0
     );
 
 

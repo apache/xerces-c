@@ -111,6 +111,7 @@ public :
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0
         , const char* const             repText4 = 0
+        , MemoryManager * const manager = 0
     );
 
 

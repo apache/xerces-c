@@ -231,7 +231,8 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             , const char* const            repText1
                             , const char* const            repText2
                             , const char* const            repText3
-                            , const char* const            repText4)
+                            , const char* const            repText4
+                            , MemoryManager * const manager)
 {
     char * msgId;
     int size=0;
@@ -251,6 +252,7 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
         msgId = DOMMsg[msgToLoad - 2];
 
     // Call the other version to load up the message
+    // note that no one is deleting repTexts...
     if (!localMsg(msgId, toFill, maxChars, repTexts, size))
         return false;
 

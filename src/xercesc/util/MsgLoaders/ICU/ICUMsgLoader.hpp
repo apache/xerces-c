@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 03:56:15  neilg
+ * add default memory manager parameter to loadMsg method that uses char * parameters
+ *
  * Revision 1.6  2003/05/15 18:29:48  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -153,6 +156,7 @@ public :
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0
         , const char* const             repText4 = 0
+        , MemoryManager * const manager = 0
     );
 
 
