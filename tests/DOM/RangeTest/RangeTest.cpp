@@ -213,7 +213,7 @@ int  main()
     {
 
         XMLCh tempStr[100];
-        XMLString::transcode("Core",tempStr,99);
+        XMLString::transcode("Range",tempStr,99);
         {
             DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMDocument* doc = impl->createDocument();

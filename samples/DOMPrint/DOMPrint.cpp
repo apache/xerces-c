@@ -60,22 +60,22 @@
 
 // ---------------------------------------------------------------------------
 //  This sample program invokes the XercesDOMParser to build a DOM tree for
-//  the specified input file. It then invokes DOMWriter::writeNode() to 
-//  serialize the resultant DOM tree into StdOutmyFormTarget, if no error 
-//  occurs during the parsing. 
+//  the specified input file. It then invokes DOMWriter::writeNode() to
+//  serialize the resultant DOM tree into StdOutmyFormTarget, if no error
+//  occurs during the parsing.
 //
 //
 //  Note: Application needs to provide its own implementation of DOMErrorHandler
-//        (in this sample, the DOMPrintErrorHandler), if it would receive 
+//        (in this sample, the DOMPrintErrorHandler), if it would receive
 //        notification from the serializer in case any error occurs during
 //        the serialization.
 //
 //  Note: And application needs to provide its own implementation of DOMWriterFilter
 //        as well (in this sample, the DOMPrintFilter), if it would like to
-//        filtering out certain part of the DOM representation. but must be aware 
+//        filtering out certain part of the DOM representation. but must be aware
 //        that thus may render the resultant XML stream invalid.
 //
-//  Note: Application may choose any combination of characters as the end of line 
+//  Note: Application may choose any combination of characters as the end of line
 //        sequence to be used in the resultant XML stream, but must be aware that
 //        thus may render the serialized XML stream ill formed.
 //
@@ -85,7 +85,7 @@
 //        to terminate serialization prematurely, and thus no complete serialization
 //        be done.
 //
-//  Note: Application shall query the serializer first, before set any 
+//  Note: Application shall query the serializer first, before set any
 //        feature/mode(true, false), or be ready to catch exception if this
 //        feature/mode is not supported by the serializer.
 //
@@ -146,7 +146,16 @@
 //      then it is defaults to the encoding of the input XML file.
 //
 //  gMyEOLSequence
-//      The end of line sequence we are to output. 
+//      The end of line sequence we are to output.
+//
+//  gSplitCdataSections
+//      Indicates whether split-cdata-sections is to be enabled or not.
+//
+//  gDiscardDefaultContent
+//      Indicates whether default content is discarded or not.
+//
+//  gUseFilter
+//      Indicates if user wants to plug in the DOMPrintFilter.
 //
 //  gValScheme
 //      Indicates what validation scheme to use. It defaults to 'auto', but
@@ -191,8 +200,8 @@ void usage()
             "                input XML file has not XML declaration.\n"
             "    -weol=xxx   Set the end of line sequence. Default set by DOMWriter\n"
             "    -wscs=xxx   Enable/Disable split-cdata-sections.      Default on  \n"
-			"    -wddc=xxx   Enable/Disable discard-default-content.   Default on  \n"
-			"    -wflt=xxx   Enable/Disable filtering.                 Default off \n"
+            "    -wddc=xxx   Enable/Disable discard-default-content.   Default on  \n"
+            "    -wflt=xxx   Enable/Disable filtering.                 Default off \n"
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n\n"
             "The parser has intrinsic support for the following encodings:\n"
@@ -414,7 +423,7 @@ int main(int argC, char* argV[])
         {
 			// get a serializer, an instance of DOMWriter
 			XMLCh tempStr[100];
-			XMLString::transcode("Core", tempStr, 99);
+			XMLString::transcode("LS", tempStr, 99);
 			DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
 			DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
 
@@ -422,7 +431,7 @@ int main(int argC, char* argV[])
 			theSerializer->setNewLine(gMyEOLSequence);
 			theSerializer->setEncoding(gOutputEncoding);
 
-			// plug in user's own filter 
+			// plug in user's own filter
 			if (gUseFilter)
 			{
 				// even we say to show attribute, but the DOMWriter
@@ -435,8 +444,8 @@ int main(int argC, char* argV[])
 				//
 				myFilter = new DOMPrintFilter(DOMNodeFilter::SHOW_ELEMENT   |
                                               DOMNodeFilter::SHOW_ATTRIBUTE |
-                                              DOMNodeFilter::SHOW_DOCUMENT_TYPE 
-											  ); 
+                                              DOMNodeFilter::SHOW_DOCUMENT_TYPE
+											  );
 				theSerializer->setFilter(myFilter);
 			}
 
@@ -470,12 +479,12 @@ int main(int argC, char* argV[])
 
 			delete theSerializer;
 
-            // 
-			// Filter, formatTarget and error handler 
+            //
+			// Filter, formatTarget and error handler
 			// are NOT owned by the serializer.
 			//
-			delete myFormTarget;      
-			delete myErrorHandler;   
+			delete myFormTarget;
+			delete myErrorHandler;
 
 			if (gUseFilter)
 				delete myFilter;      	

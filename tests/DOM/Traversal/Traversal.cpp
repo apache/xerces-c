@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2002/06/04 16:14:44  tng
+ * Use proper feature in DOMImplementationRegistry::getDOMImplementation
+ *
  * Revision 1.10  2002/06/03 20:51:46  tng
  * DOM L3: Add DOMImplementationRegistry and DOMImplementationSource
  *
@@ -187,8 +190,8 @@ int  main()
 
     // Create a XMLCh buffer for string manipulation
     XMLCh tempStr[4000];
-    XMLCh coreStr[100];
-    XMLString::transcode("Core",coreStr,99);
+    XMLCh featureStr[100];
+    XMLString::transcode("Traversal",featureStr,99);
 
 
 
@@ -211,7 +214,7 @@ int  main()
                       - comment
          */
 
-        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(coreStr);
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(featureStr);
         DOMDocument* doc = impl->createDocument();
 
         //Creating a root element
