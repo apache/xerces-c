@@ -237,7 +237,7 @@ DOMCasts.hpp DOMChildNode.hpp DOMDeepNodeListPool.hpp \
 DOMNodeIDMap.hpp DOMNodeVector.hpp DOMParentNode.hpp DOMStringPool.hpp \
 NameIdPool.hpp KVStringPair.hpp Janitor.hpp BitOps.hpp BitSet.hpp \
 CountedPointer.hpp  TransENameMap.hpp \
-FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp KeyRefPair.hpp\
+FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp KeyRefPair.hpp \
 KVStringPair.hpp NameIdPool.hpp NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp \
 RefArrayOf.hpp RefHash*.hpp RefStackOf.hpp \
 RefVectorOf.hpp ValueArrayOf.hpp ValueStackOf.hpp ValueVectorOf.hpp \
