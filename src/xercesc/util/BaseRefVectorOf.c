@@ -267,9 +267,10 @@ ensureExtraCapacity(const unsigned int length)
     if (newMax <= fMaxCount)
         return;
 
-    // Avoid too many reallocations by providing a little more space
-    if (newMax < fMaxCount + 32)
-        newMax = fMaxCount + 32;
+	// Choose how much bigger based on the current size.
+	// This will grow half as much again.
+    if (newMax < fMaxCount + fMaxCount/2)
+        newMax = fMaxCount + fMaxCount/2;
 
     // Allocate the new array and copy over the existing stuff
     TElem** newList = (TElem**) fMemoryManager->allocate
