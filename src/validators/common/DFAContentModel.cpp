@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/08/16 21:52:40  peiyongz
+ * stateTable created to optimize the identification of new state created.
+ *
  * Revision 1.17  2001/07/31 17:45:25  peiyongz
  * Fix: memory leak in postTreeBuildInit()
  *
@@ -155,7 +158,8 @@
 #include <validators/common/Grammar.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
 #include <util/RefHashTableOf.hpp>
-
+#include <util/HashCMStateSet.hpp>
+#include <util/XMLInteger.hpp>
 
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
@@ -655,12 +659,16 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     statesToDo[curState] = setT;
     curState++;
 
-    //
-    // RefHashTableOf<unsigned int> stateTable(curArraySize, false);
-    // In XML4J, a hash table is created, with CMStateSet as key and
-    // the related index value as data.
-    // We don't do HashTable searching here 'cause the performance
-    // gain is NOT so clear.
+    // 
+    // the stateTable is an auxiliary means to fast
+    // identification of new state created (instead
+    // of squential loop statesToDo to find out), 
+    // while the role that statesToDo plays remain unchanged.
+    // 
+    // TODO: in the future, we may change the 29 to something
+    //       derived from curArraySize.
+    RefHashTableOf<XMLInteger> *stateTable = new RefHashTableOf<XMLInteger>(curArraySize, true, new HashCMStateSet());
+    //stateTable->put((CMStateSet*)setT, new XMLInteger(0));
 
     //
     //  Ok, almost done with the algorithm from hell... We now enter the
@@ -756,12 +764,18 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 //  Search the 'states to do' list to see if this new
                 //  state set is already in there.
                 //
+
+                /***
                 unsigned int stateIndex = 0;
                 for (; stateIndex < curState; stateIndex++)
                 {
                     if (*statesToDo[stateIndex] == *newSet)
                         break;
                 }
+                ***/
+
+                XMLInteger *stateObj = (XMLInteger*) (stateTable->get(newSet));
+                unsigned int stateIndex = (stateObj == 0 ? curState : stateObj->intValue());
 
                 // If we did not find it, then add it
                 if (stateIndex == curState)
@@ -773,6 +787,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     //
                     statesToDo[curState] = newSet;
                     fTransTable[curState] = makeDefStateList();
+                    stateTable->put(newSet, new XMLInteger(curState));
 
                     // We now have a new state to do so bump the count
                     curState++;
@@ -862,6 +877,13 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     for (index = 0; index < fLeafCount; index++)
         delete fFollowList[index];
     delete [] fFollowList;
+
+    //
+    // removeAll() will delete all data, XMLInteger,
+    // while the keys are to be deleted by the 
+    // deletion of statesToDo.
+    //
+    delete stateTable;
 
     for (index = 0; index < curState; index++)
         delete (CMStateSet*)statesToDo[index];
