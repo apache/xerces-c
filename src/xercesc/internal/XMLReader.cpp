@@ -184,7 +184,6 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     , fRefFrom(from)
     , fSentTrailingSpace(false)
     , fSource(source)
-    , fSpareCh(0)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
     , fStream(streamToAdopt)
@@ -259,7 +258,6 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fRefFrom(from)
     , fSentTrailingSpace(false)
     , fSource(source)
-    , fSpareCh(0)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
     , fStream(streamToAdopt)
@@ -371,7 +369,6 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fRefFrom(from)
     , fSentTrailingSpace(false)
     , fSource(source)
-    , fSpareCh(0)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
     , fStream(streamToAdopt)
@@ -478,7 +475,7 @@ bool XMLReader::refreshCharBuffer()
 
     // If we are full, then don't do anything.
     if (spareChars == kCharBufSize)
-        return false;
+        return true;
 
     //
     //  If no transcoder has been created yet, then we never saw the

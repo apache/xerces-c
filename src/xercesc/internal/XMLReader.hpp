@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/02 17:20:05  knoaman
+ * Remove unused data member.
+ *
  * Revision 1.7  2002/11/28 19:19:12  knoaman
  * Performance: remove unnecessary if condition.
  *
@@ -559,7 +562,6 @@ private:
     RefFrom                     fRefFrom;
     bool                        fSentTrailingSpace;
     Sources                     fSource;
-    XMLCh                       fSpareCh;
     unsigned int                fSrcOfsBase;
     bool                        fSrcOfsSupported;
     XMLCh*                      fSystemId;
