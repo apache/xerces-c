@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/10/20 17:37:05  amassari
+ * Removed compiler warning
+ *
  * Revision 1.7  2003/10/17 21:09:03  peiyongz
  * renaming methods
  *
@@ -864,7 +867,7 @@ void XSerializeEngine::fillBuffer(int miniBytesNeeded)
     ensureLoading();
     ensureLoadBuffer();
 
-	TEST_THROW_ARG2( ((miniBytesNeeded <= 0) || (miniBytesNeeded > fBufSize))
+	TEST_THROW_ARG2( ((miniBytesNeeded <= 0) || ((unsigned long)miniBytesNeeded > fBufSize))
               , miniBytesNeeded
               , fBufSize
               , XMLExcepts::XSer_Inv_FillBuffer_Size
