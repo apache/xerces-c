@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/12/16 22:28:25  knoaman
+ * Make isAtomic inline.
+ *
  * Revision 1.5  2002/12/06 16:45:54  tng
  * header include cleanup.
  *
@@ -182,10 +185,6 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
         return 0;
     }
 
-}
-
-bool ListDatatypeValidator::isAtomic() const {
-    return false;
 }
 
 void ListDatatypeValidator::validate( const XMLCh* const content)

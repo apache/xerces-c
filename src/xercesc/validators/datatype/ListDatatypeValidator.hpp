@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/12/16 22:28:25  knoaman
+ * Make isAtomic inline.
+ *
  * Revision 1.3  2002/11/20 19:57:44  peiyongz
  * validate content as a whole against pattern.
  *
@@ -249,6 +252,11 @@ private:
 inline const XMLCh* const ListDatatypeValidator::getContent() const
 {
     return fContent;
+}
+
+inline bool ListDatatypeValidator::isAtomic() const
+{
+    return false;
 }
 
 // -----------------------------------------------------------------------
