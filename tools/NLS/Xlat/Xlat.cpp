@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/05/14 19:11:34  gareth
+ * Added code creation for new method that returns error serverity the DOM way.
+ *
  * Revision 1.17  2003/04/14 08:41:00  gareth
  * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
  *
@@ -712,7 +715,8 @@ int Xlat_main(int argC, XMLCh** argV)
                     fwprintf(outHeader, L"#include <xercesc/framework/XMLErrorReporter.hpp>\n");
 
                 //  Write out the namespace declaration
-                fwprintf(outHeader, L"#include <xercesc/util/XercesDefs.hpp>\n\n");
+                fwprintf(outHeader, L"#include <xercesc/util/XercesDefs.hpp>\n");
+                fwprintf(outHeader, L"#include <xercesc/dom/DOMError.hpp>\n\n");
                 fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_BEGIN\n\n");
 
                 //  Now the message codes
@@ -896,6 +900,22 @@ int Xlat_main(int argC, XMLCh** argV)
                         , xmlStrToPrintable(errNameSpace)
                     );
                     releasePrintableStr
+
+                    fwprintf
+                    (
+                        outHeader
+                        , L"    static DOMError::ErrorSeverity  DOMErrorType(const %s::Codes toCheck)\n"
+                          L"    {\n"
+                          L"       if ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds))\n"
+                          L"           return DOMError::DOM_SEVERITY_WARNING;\n"
+                          L"       else if ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds))\n"
+                          L"            return DOMError::DOM_SEVERITY_FATAL_ERROR;\n"
+                          L"       else return DOMError::DOM_SEVERITY_ERROR;\n"
+                          L"    }\n"
+                        , xmlStrToPrintable(errNameSpace)
+                    );
+                    releasePrintableStr
+
                 }
 
 
