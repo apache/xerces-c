@@ -97,16 +97,27 @@
 #include <memory>
 #include <algorithm>
 
-#if TARGET_API_MAC_CARBON
-	#include <Carbon.h>
+#if defined(XML_MACOSX)
+    //	Include from Frameworks Headers under ProjectBuilder
+	#include <CarbonCore/Files.h>
+	#include <CarbonCore/Gestalt.h>
+	#include <CarbonCore/TextUtils.h>
+	#include <CarbonCore/TextEncodingConverter.h>
+	#include <CarbonCore/Multiprocessing.h>
+	#include <CarbonCore/DriverSynchronization.h>
+	#include <CarbonCore/DriverServices.h>
+	#include <CoreFoundation/CFString.h>
+	#include <URLAccess/URLAccess.h>
 #else
-	#include <Files.h>
+    //	Classic include styles
+    #include <Files.h>
 	#include <Gestalt.h>
-	#include <Traps.h>
 	#include <TextUtils.h>
 	#include <TextEncodingConverter.h>
 	#include <Multiprocessing.h>
 	#include <DriverSynchronization.h>
+	#include <DriverServices.h>
+	#include <CFString.h>
 	#include <URLAccess.h>
 #endif
 
@@ -374,17 +385,25 @@ XMLPlatformUtils::panic(const PanicReasons reason)
     else
         reasonStr = "Unknown error source";
     
-    //
-    //  This isn't real friendly and should be cleaned up.
-    //	Replace this code to do whatever you need to do.
-    //
     char text[256];
     std::snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
     
+    //
+    //  The default handling of panics is not very friendly.
+    //	To replace it with something more friendly, you'll need to:
+    //	- #define XML_USE_CUSTOM_PANIC_PROC
+    //	- Write, and link with, XMLCustomPanicProc
+    //	- Implement your panic handling within XMLCustomPanicProc.
+    //
+#if defined(XML_USE_CUSTOM_PANIC_PROC)
+    XMLCustomPanicProc(reason, reasonStr);
+#else
     Str255 pasText;
     CopyCStringToPascal(text, pasText);
     DebugStr(pasText);
+#endif
     
+    //	Life's got us down. Good-bye world.
     std::exit(-1);
 }
 
@@ -1235,7 +1254,7 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
                 
                 // Update our spec
                 if (err == noErr)
-                    err = FSMakeFSSpec(spec.vRefNum, catInfo.dirInfo.ioDrParID, NULL, &spec);
+                    err = FSMakeFSSpec(spec.vRefNum, catInfo.dirInfo.ioDrDirID, NULL, &spec);
                 
                 break;
             }

@@ -63,9 +63,11 @@
 #include <util/XercesDefs.hpp>
 #include <cstdlib>
 
-#if TARGET_API_MAC_CARBON
-	#include <Carbon.h>
+#if defined(XML_MACOSX)
+    //	Framework includes from ProjectBuilder
+	#include <CarbonCore/Files.h>
 #else
+    //	Classic includes otherwise
 	#include <Files.h>
 #endif
 
@@ -105,6 +107,16 @@ class XMLMacFile : public XMLMacAbstractFile
         bool	mFileValid;
 };
 
+
+//
+//	Support for customized panic handling:
+//  The default handling of panics is not very friendly.
+//	To replace it with something more friendly, you'll need to:
+//		- #define XML_USE_CUSTOM_PANIC_PROC
+//		- Write, and link with, XMLCustomPanicProc
+//		- Implement your panic handling within XMLCustomPanicProc.
+//
+extern "C" void XMLCustomPanicProc(XMLPlatformUtils::PanicReasons panicReason, const char* reasonStr);
 
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!
