@@ -26,10 +26,10 @@ $|=1;   # Force a flush after every print
 # Setup global variables
 #
 &Getopt('sopcxmntrb');
-my $XERCESCROOT = $opt_s;
-my $targetdir              = $opt_o;
-my $ICUROOT           = $ENV{'ICUROOT'};
-my $ICUIsPresent      = (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0);
+my $XERCESCROOT    = $opt_s;
+my $targetdir      = $opt_o;
+my $ICUROOT        = $ENV{'ICUROOT'};
+my $ICUIsPresent   = (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0);
 my $ICUResourceDir = "$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources";
     
 # Check for the environment variables and exit if error
@@ -38,8 +38,8 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("  where options are:\n");
     print ("    -s <source_directory>\n");
     print ("    -o <target_directory>\n");
-    print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7, ecl or icl)\n");
-    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6 or VC7)\n");
+    print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7, VC7.1, ecl or icl)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7 or VC7.1)\n");
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
@@ -145,27 +145,33 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
       
     if ($opt_x eq "" || $opt_x =~ m/VC6/i )
     {
-        $DevStudioVer = "6.0";
+        $DevStudioVer   = "6.0";
         $VCBuildDir     = "VC6"; 
-        $ProjectDir      = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
+        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }
+    elsif ($opt_x =~ m/VC7.1/i ) 
+    {
+        $DevStudioVer   = "7.1";
+        $VCBuildDir     = "VC7.1"; 
+        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
+    }    
     elsif ($opt_x =~ m/VC7/i ) 
     {
-        $DevStudioVer = "7.0";
+        $DevStudioVer   = "7.0";
         $VCBuildDir     = "VC7"; 
-        $ProjectDir      = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
+        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }
     elsif ($opt_x =~ m/ecl/i || $opt_x =~ m/icl/i )
     {
-        $DevStudioVer = "6.1";
+        $DevStudioVer   = "6.1";
         $VCBuildDir     = "VC6"; 
-        $PlatformName = "Win64";
-        $ProjectDir       = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all/all";
+        $PlatformName   = "Win64";
+        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all/all";
     }
     else
     {
         print ("Error: Invalid compilers used \n");
-        print ("-x <C++ compiler name> VC6, VC7, ecl and icl \n");        
+        print ("-x <C++ compiler name> VC6, VC7, VC7.1, ecl and icl \n");        
         exit(1);            	    	
     }
 
@@ -213,7 +219,9 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
         } elsif ($DevStudioVer eq "7.0") {
             changeWindowsProjectForFileOnlyNA_VC7("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj");
-        }
+        } elsif ($DevStudioVer eq "7.1") {
+            changeWindowsProjectForFileOnlyNA_VC7("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj");
+        }        
         #else: for now we do not build FO with ecl
     }
 
@@ -253,7 +261,17 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
                 psystem("type buildlog_release.txt");
 
                 psystem("devenv /rebuild debug /out buildlog_debug.txt /project all allinone.sln");
-                psystem("type buildlog_debug.txt");                            	
+                psystem("type buildlog_debug.txt");
+            } elsif ($DevStudioVer eq "7.1") {
+            	# ICU only has allinone.sln for VC7.0
+            	# So the build with ICU on VC7.1 may fail until the VC7.1 version is available            	
+                pchdir ("$ICUROOT/source/allinone");
+
+                psystem("devenv /rebuild Release /out buildlog_release.txt /project all allinone.sln");
+                psystem("type buildlog_release.txt");
+
+                psystem("devenv /rebuild debug /out buildlog_debug.txt /project all allinone.sln");
+                psystem("type buildlog_debug.txt");                
             } else { #"6.1"
                 pchdir ("$ICUROOT/source/allinone/all");            	
  	  #ship release dlls only
@@ -288,6 +306,8 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $Transcoder , $MsgLoader);
         } elsif ($DevStudioVer eq "7.0") {
             change_windows_project_for_ICU_VC7("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
+        } elsif ($DevStudioVer eq "7.1") {
+            change_windows_project_for_ICU_VC7("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);            
         } else { # "6.1"
             change_windows_makefile_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak", $Transcoder, $MsgLoader);
         }
@@ -329,7 +349,11 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     } elsif ($DevStudioVer eq "7.0") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
         psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
-        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");                
+        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");
+    } elsif ($DevStudioVer eq "7.1") {
+        psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
+        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
+        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");        
     } else { # "6.1"
         psystem( "nmake -f all.mak \"CFG=all - $PlatformName Release\" CPP=$opt_x.exe >buildlog_release.txt 2>&1");
     }
