@@ -70,7 +70,6 @@
 #include <windows.h>
 #include "Win32MsgLoader.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
@@ -95,6 +94,7 @@ BOOL APIENTRY DllMain(HINSTANCE hModule,
   return TRUE;
 }
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Global module handle
