@@ -746,7 +746,7 @@ const XMLCh XMLUni::fgIOException_Name[] =
 
 const XMLCh XMLUni::fgNoSuchElementException_Name[] =
 {
-        chLatin_N, chLatin_o, chLatin_S, chLatin_u, chLatin_h, chLatin_h
+        chLatin_N, chLatin_o, chLatin_S, chLatin_u, chLatin_c, chLatin_h
     ,   chLatin_E, chLatin_l, chLatin_e, chLatin_e, chLatin_m, chLatin_e
     ,   chLatin_n, chLatin_t, chLatin_E, chLatin_x, chLatin_c, chLatin_e
     ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
