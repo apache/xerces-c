@@ -94,4 +94,19 @@ public:
     virtual NodeImpl *removeNamedItemNS(const DOMString &namespaceURI, const DOMString &localName);
 };
 
+// ---------------------------------------------------------------------------
+//  AttrMapImpl: Getters & Setters
+// ---------------------------------------------------------------------------
+
+inline bool AttrMapImpl::hasDefaults()
+{
+	return attrDefaults;
+}
+
+inline void AttrMapImpl::hasDefaults(bool value)
+{
+	attrDefaults = value;
+}
+
+
 #endif

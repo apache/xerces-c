@@ -96,16 +96,6 @@ AttrMapImpl *AttrMapImpl::cloneAttrMap(NodeImpl *ownerNode)
 	return newmap;
 }
 
-bool AttrMapImpl::hasDefaults()
-{
-	return attrDefaults;
-}
-
-void AttrMapImpl::hasDefaults(bool value)
-{
-	attrDefaults = value;
-}
-
 NodeImpl *AttrMapImpl::removeNamedItem(const DOMString &name)
 {
 	NodeImpl* removed = NamedNodeMapImpl::removeNamedItem(name);
