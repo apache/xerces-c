@@ -609,21 +609,17 @@ bool XMLReader::refreshCharBuffer()
 // ---------------------------------------------------------------------------
 bool XMLReader::getName(XMLBuffer& toFill, const bool token)
 {
-    //
     //  Ok, first lets see if we have chars in the buffer. If not, then lets
     //  reload.
-    //
     if (fCharIndex == fCharsAvail)
     {
         if (!refreshCharBuffer())
             return false;
     }
 
-    //
     //  Lets check the first char for being a first name char. If not, then
     //  what's the point in living mannnn? Just give up now. We only do this
     //  if its a name and not a name token that they want.
-    //
     if (!token)
     {
         if (!XMLReader::isFirstNameChar(fCharBuf[fCharIndex]))
@@ -634,38 +630,23 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
         fCurCol++;
     }
 
-    //
     //  And now we loop until we run out of data in this reader or we hit
     //  a non-name char.
-    //
     do {
-        unsigned int curCol = fCurCol;
-        unsigned int charIndex = fCharIndex;
-        unsigned int charsAvail = fCharsAvail;
 
-        while (charIndex < charsAvail)
+        while (fCharIndex < fCharsAvail)
         {
-            const XMLCh curCh = fCharBuf[charIndex];
-
-            //
             //  Check the current char and take it if its a name char. Else
             //  break out.
-            //
-            if (!XMLReader::isNameChar(curCh))
+            if (!XMLReader::isNameChar(fCharBuf[fCharIndex]))
             {
-                fCharIndex  = charIndex;
-                fCurCol = curCol;
-
                 return !toFill.isEmpty();
             }
 
-            toFill.append(curCh);
-            curCol++;
-            charIndex++;
+            toFill.append(fCharBuf[fCharIndex++]);
+            fCurCol++;
         }
 
-        fCharIndex  = charIndex;
-        fCurCol = curCol;
     // If we don't get no more, then break out.
     } while (refreshCharBuffer());
 
@@ -864,42 +845,31 @@ bool XMLReader::skipSpaces(bool& skippedSomething)
     XMLSSize_t    orgLine = fCurLine;
     XMLSSize_t    orgCol  = fCurCol;
 
-    //
     //  We enter a loop where we skip over spaces until we hit the end of
     //  this reader or a non-space value. The return indicates whether we
     //  hit the non-space (true) or the end (false).
-    //
     while (true)
     {
         // Loop through the current chars in the buffer
         while (fCharIndex < fCharsAvail)
         {
-            // Get the current char out of the buffer
-            XMLCh curCh = fCharBuf[fCharIndex];
-
-            //
             //  See if its a white space char. If so, then process it. Else
             //  we've hit a non-space and need to return.
-            //
-            if (XMLReader::isWhitespace(curCh))
+            if (XMLReader::isWhitespace(fCharBuf[fCharIndex]))
             {
-                // Eat this char
-                fCharIndex++;
+                // Get the current char out of the buffer and eat it
+                XMLCh curCh = fCharBuf[fCharIndex++];
 
-                //
                 //  Ok, we've got some whitespace here. So we have to store
                 //  it. But we have to normalize it and update the line and
                 //  column info along the way.
-                //
                 if (curCh == chCR)
                 {
                     fCurCol = 1;
                     fCurLine++;
 
-                    //
                     //  If not already internalized, then convert it to an
                     //  LF and eat any following LF.
-                    //
                     if (fSource == Source_External)
                     {
                         if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
@@ -908,33 +878,29 @@ bool XMLReader::skipSpaces(bool& skippedSomething)
                                 || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                                 fCharIndex++;
                         }
-                        curCh = chLF;
                     }
                 }
-                 else if (curCh == chLF
-                          || ((curCh == chNEL) && fNEL))
+                else if (curCh == chLF
+                         || ((curCh == chNEL) && fNEL))
                 {
-                    curCh = chLF;
                     fCurCol = 1;
                     fCurLine++;
                 }
-                 else
+                else
                 {
                     fCurCol++;
                 }
             }
-             else
+            else
             {
                 skippedSomething = (orgLine != fCurLine) || (orgCol != fCurCol);
                 return true;
             }
         }
 
-        //
         //  We've eaten up the current buffer, so lets try to reload it. If
         //  we don't get anything new, then break out. If we do, then we go
         //  back to the top to keep getting spaces.
-        //
         if (!refreshCharBuffer())
             break;
     }
