@@ -1163,6 +1163,18 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IANAEncodings.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp
 # End Source File
 # Begin Source File
@@ -1187,6 +1199,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\XMLInternalErrorHandler.hpp
 # End Source File
 # Begin Source File
@@ -1207,7 +1227,11 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner2.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.hpp
 # End Source File
 # End Group
 # Begin Group "sax"

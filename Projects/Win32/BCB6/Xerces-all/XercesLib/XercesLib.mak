@@ -106,12 +106,15 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRecognizer.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttributesImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttrListImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\WFXMLScanner.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLReader.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner2.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScannerResolver.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj \

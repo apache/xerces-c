@@ -96,12 +96,15 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRecognizer.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLValidator.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttributesImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttrListImpl.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\WFXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLReader.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner2.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScannerResolver.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj
@@ -427,12 +430,15 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLRecognizer.cpp" FORMNAME="" UNITNAME="XMLRecognizer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp" FORMNAME="" UNITNAME="XMLValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ElemStack.cpp" FORMNAME="" UNITNAME="ElemStack" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp" FORMNAME="" UNITNAME="IGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp" FORMNAME="" UNITNAME="IGXMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp" FORMNAME="" UNITNAME="ReaderMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp" FORMNAME="" UNITNAME="VecAttributesImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp" FORMNAME="" UNITNAME="VecAttrListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp" FORMNAME="" UNITNAME="WFXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLReader.cpp" FORMNAME="" UNITNAME="XMLReader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp" FORMNAME="" UNITNAME="XMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScanner2.cpp" FORMNAME="" UNITNAME="XMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp" FORMNAME="" UNITNAME="XMLScannerResolver" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\Dummy.cpp" FORMNAME="" UNITNAME="Dummy" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\InputSource.cpp" FORMNAME="" UNITNAME="InputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\SAXException.cpp" FORMNAME="" UNITNAME="SAXException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

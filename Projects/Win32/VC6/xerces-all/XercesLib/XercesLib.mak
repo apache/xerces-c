@@ -185,6 +185,8 @@ CLEAN :
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
+	-@erase "$(INTDIR)\IGXMLScanner.obj"
+	-@erase "$(INTDIR)\IGXMLScanner2.obj"
 	-@erase "$(INTDIR)\InputSource.obj"
 	-@erase "$(INTDIR)\KVStringPair.obj"
 	-@erase "$(INTDIR)\ListDatatypeValidator.obj"
@@ -263,6 +265,7 @@ CLEAN :
 	-@erase "$(INTDIR)\VecAttributesImpl.obj"
 	-@erase "$(INTDIR)\VecAttrListImpl.obj"
 	-@erase "$(INTDIR)\Version.res"
+	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
@@ -303,7 +306,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
-	-@erase "$(INTDIR)\XMLScanner2.obj"
+	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -472,12 +475,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\ElemStack.obj" \
+	"$(INTDIR)\IGXMLScanner.obj" \
+	"$(INTDIR)\IGXMLScanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
+	"$(INTDIR)\WFXMLScanner.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
-	"$(INTDIR)\XMLScanner2.obj" \
+	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -829,6 +835,8 @@ CLEAN :
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
+	-@erase "$(INTDIR)\IGXMLScanner.obj"
+	-@erase "$(INTDIR)\IGXMLScanner2.obj"
 	-@erase "$(INTDIR)\InputSource.obj"
 	-@erase "$(INTDIR)\KVStringPair.obj"
 	-@erase "$(INTDIR)\ListDatatypeValidator.obj"
@@ -908,6 +916,7 @@ CLEAN :
 	-@erase "$(INTDIR)\VecAttributesImpl.obj"
 	-@erase "$(INTDIR)\VecAttrListImpl.obj"
 	-@erase "$(INTDIR)\Version.res"
+	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
@@ -948,7 +957,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
-	-@erase "$(INTDIR)\XMLScanner2.obj"
+	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -1118,12 +1127,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\ElemStack.obj" \
+	"$(INTDIR)\IGXMLSCanner.obj" \
+	"$(INTDIR)\IGXMLSCanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
+	"$(INTDIR)\WFXMLSCanner.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
-	"$(INTDIR)\XMLScanner2.obj" \
+	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -1475,6 +1487,8 @@ CLEAN :
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
+	-@erase "$(INTDIR)\IGXMLScanner.obj"
+	-@erase "$(INTDIR)\IGXMLScanner2.obj"
 	-@erase "$(INTDIR)\InputSource.obj"
 	-@erase "$(INTDIR)\KVStringPair.obj"
 	-@erase "$(INTDIR)\ListDatatypeValidator.obj"
@@ -1554,6 +1568,7 @@ CLEAN :
 	-@erase "$(INTDIR)\VecAttributesImpl.obj"
 	-@erase "$(INTDIR)\VecAttrListImpl.obj"
 	-@erase "$(INTDIR)\Version.res"
+	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
@@ -1594,7 +1609,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
-	-@erase "$(INTDIR)\XMLScanner2.obj"
+	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -1764,12 +1779,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\ElemStack.obj" \
+	"$(INTDIR)\IGXMLScanner.obj" \
+	"$(INTDIR)\IGXMLScanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
+	"$(INTDIR)\WFXMLScanner.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
-	"$(INTDIR)\XMLScanner2.obj" \
+	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -2121,6 +2139,8 @@ CLEAN :
 	-@erase "$(INTDIR)\IDDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IdentityConstraint.obj"
 	-@erase "$(INTDIR)\IDREFDatatypeValidator.obj"
+	-@erase "$(INTDIR)\IGXMLScanner.obj"
+	-@erase "$(INTDIR)\IGXMLScanner2.obj"
 	-@erase "$(INTDIR)\InputSource.obj"
 	-@erase "$(INTDIR)\KVStringPair.obj"
 	-@erase "$(INTDIR)\ListDatatypeValidator.obj"
@@ -2199,6 +2219,7 @@ CLEAN :
 	-@erase "$(INTDIR)\VecAttributesImpl.obj"
 	-@erase "$(INTDIR)\VecAttrListImpl.obj"
 	-@erase "$(INTDIR)\Version.res"
+	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
@@ -2239,7 +2260,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
-	-@erase "$(INTDIR)\XMLScanner2.obj"
+	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -2409,12 +2430,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\ElemStack.obj" \
+	"$(INTDIR)\IGXMLScanner.obj" \
+	"$(INTDIR)\IGXMLScanner2.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
+	"$(INTDIR)\WFXMLScanner.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
-	"$(INTDIR)\XMLScanner2.obj" \
+	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -3363,6 +3387,18 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\ElemStack.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp
+
+"$(INTDIR)\IGXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
+
+"$(INTDIR)\IGXMLScanner2.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp
 
 "$(INTDIR)\ReaderMgr.obj" : $(SOURCE) "$(INTDIR)"
@@ -3381,6 +3417,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp
+
+"$(INTDIR)\WFXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\XMLReader.cpp
 
 "$(INTDIR)\XMLReader.obj" : $(SOURCE) "$(INTDIR)"
@@ -3393,9 +3435,9 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner2.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp
 
-"$(INTDIR)\XMLScanner2.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\XMLScannerResolver.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
