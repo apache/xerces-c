@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/08/21 16:50:23  tng
+ * Schema: Unique Particle Attribution Constraint Checking.
+ *
  * Revision 1.20  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -1160,6 +1163,13 @@ void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pG
                 if (fTransTable[i][j] != XMLContentModel::gInvalidTrans &&
                     fTransTable[i][k] != XMLContentModel::gInvalidTrans &&
                     fConflictTable[j][k] == XMLContentModel::gInvalidTrans) {
+
+                    // If this is text in a Schema mixed content model, skip it.
+                    if ( fIsMixed &&
+                         (( fElemMap[j]->getURI() == XMLElementDecl::fgPCDataElemId) ||
+                          ( fElemMap[k]->getURI() == XMLElementDecl::fgPCDataElemId)))
+                        continue;
+
                     if (XercesElementWildcard::conflict(fElemMapType[j], fElemMap[j], fElemMapType[k], fElemMap[k], &comparator)) {
                        fConflictTable[j][k] = 1;
 
