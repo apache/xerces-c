@@ -58,11 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2000/07/29 05:30:00  jberry
- * Addition of NetAccessor functionality for MacOS, built on URLAccess library
- *
- *
+ * $Id$
  */
 
 

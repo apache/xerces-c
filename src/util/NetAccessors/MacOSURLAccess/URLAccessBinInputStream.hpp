@@ -58,11 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2000/07/29 05:30:00  jberry
- * Addition of NetAccessor functionality for MacOS, built on URLAccess library
- *
- *
+ * $Id$
  */
 
 #if !defined(URLACCESSBININPUTSTREAM_HPP)
@@ -73,7 +69,11 @@
 #include <util/XMLExceptMsgs.hpp>
 #include <util/BinInputStream.hpp>
 
-#include <URLAccess.h>
+#if defined(TARGET_API_MAC_CARBON)
+	#include <Carbon.h>
+#else
+	#include <URLAccess.h>
+#endif
 
 
 //
