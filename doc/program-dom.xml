@@ -516,7 +516,7 @@
             return -1;
         }
 
-        delete parser;
+        parser->release();
         delete errHandler;
         return 0;
     }
@@ -534,7 +534,7 @@
         provides some framework classes for specialized types of input source (i.e. LocalFileInputSource, etc.) that are
         derived from the SAX InputSource. In DOM L3, to allow users implementing their own DOMEntityResolver(s), which return
         a DOMInputSource, to utilize these framework classes, we need to provide a mechanism to map a SAX InputSource to a
-        DOMInputSource. We are introducing to wrapper classes to interchange DOMInputSource and SAXInputSource. 
+        DOMInputSource. We are introducing to wrapper classes to interchange DOMInputSource and SAXInputSource.
         </p>
 
            <s4 title="Wrapper4DOMInputSource">
@@ -908,6 +908,23 @@
 
             <p/>
 
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/dom/adoptDOMDocument</em></td></tr>
+                <tr><td><em>true:</em></td><td> The caller will adopt the DOMDocument that is returned from
+                the parse method and thus is responsible to call DOMDocument::release() to release the
+                associated memory.  The parser will not release it.   The ownership is transferred
+                from the parser to the caller. </td></tr>
+                <tr><td><em>false:</em></td><td> The returned DOMDocument from the parse method is owned by
+                the parser and thus will be deleted when the parser is released. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="apiDocs/classDOMBuilder.html">
+                DOMBuilder API Documentation</jump>, (DOMBuilder::parse and DOMBuilder::resetDocumentPool)
+                </td></tr>
+            </table>
+
+            <p/>
+
            </s4>
 
         </s3>
@@ -925,8 +942,8 @@
 
            <p>Property values can be queried using the function <code>void* DOMBuilder::getFeature(const XMLCh* const)</code>.
             The parser owns the returned pointer, and the memory allocated for the returned pointer will
-            be destroyed when the parser is deleted.  To ensure accessibility of the returned information after
-            the parser is deleted, callers need to copy and store the returned information somewhere else.
+            be destroyed when the parser is released.  To ensure accessibility of the returned information after
+            the parser is released, callers need to copy and store the returned information somewhere else.
             Since the returned pointer is a generic void pointer, check the column "Value Type" below to learn
             exactly what type of object each property returns for replication.</p>
 
@@ -1039,7 +1056,7 @@
         }
 
 
-        delete theSerializer;
+        theSerializer->release();
         delete myErrorHandler;
         delete myFilter;
         delete myFormTarget;
@@ -1088,10 +1105,10 @@
                 <tr><td colspan="2"><em>entities</em></td></tr>
                 <tr><td><em>true:</em></td><td> EntityReference nodes are serialized as an entity
 				 reference of the form "&amp;entityName;" in the output. </td></tr>
-                <tr><td><em>false:</em></td><td> EntityReference nodes are serialized as expanded 
+                <tr><td><em>false:</em></td><td> EntityReference nodes are serialized as expanded
 				sustitution text, unless the corresponding entity definition is not found. </td></tr>
                 <tr><td><em>default:</em></td><td> true </td></tr>
-                <tr><td><em>note:</em></td><td> This feature only affects the output XML stream. 
+                <tr><td><em>note:</em></td><td> This feature only affects the output XML stream.
 				The dom tree to be serialized will not be changed. </td></tr>
                 <tr><td><em>see:</em></td><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
