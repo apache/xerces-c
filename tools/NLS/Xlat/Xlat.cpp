@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/07/04 17:40:07  tng
+ * Use new DOM in Xlat.
+ *
  * Revision 1.11  2002/03/01 16:18:38  tng
  * Nest entire code in an inner block so that reference counting should recover
  * all document and DOMString storage when this block exits.
@@ -282,7 +285,7 @@ static void parseError(const SAXParseException& toCatch)
 
 
 static void
-enumMessages(   const   DOM_Element             srcElem
+enumMessages(   const   DOMElement*             srcElem
                 ,       XlatFormatter* const    toCall
                 ,       FILE* const             headerFl
                 , const MsgTypes                msgType
@@ -302,21 +305,21 @@ enumMessages(   const   DOM_Element             srcElem
     //  a Message element. Each one represents a message to output. We keep
     //  a count so that we can output a const value afterwards.
     //
-    DOM_Node curNode = srcElem.getFirstChild();
-    while (!curNode.isNull())
+    DOMNode* curNode = srcElem->getFirstChild();
+    while (curNode)
     {
         // Skip over text nodes or comment nodes ect...
-        if (curNode.getNodeType() != DOM_Node::ELEMENT_NODE)
+        if (curNode->getNodeType() != DOMNode::ELEMENT_NODE)
         {
-            curNode = curNode.getNextSibling();
+            curNode = curNode->getNextSibling();
             continue;
         }
 
         // Convert it to an element node
-        const DOM_Element& curElem = (const DOM_Element&)curNode;
+        const DOMElement* curElem = (const DOMElement*)curNode;
 
         // Ok, this should be a Message node
-        if (!curElem.getTagName().equals(L"Message"))
+        if (XMLString::compareString(curElem->getTagName(), L"Message"))
         {
             wprintf(L"Expected a Message node\n\n");
             throw ErrReturn_SrcFmtError;
@@ -327,20 +330,20 @@ enumMessages(   const   DOM_Element             srcElem
         //  to be passed to the formatter. We have to translate the message
         //  type into one of the offical enum values.
         //
-        DOMString msgText = curElem.getAttribute(L"Text");
-        DOMString msgId   = curElem.getAttribute(L"Id");
+        const XMLCh* msgText = curElem->getAttribute(L"Text");
+        const XMLCh* msgId   = curElem->getAttribute(L"Id");
 
         //
         //  Write out an entry to the target header file. These are enums, so
         //  we use the id as the enum name.
         //
-        fwprintf(headerFl, L"      , %-32s   = %d\n", msgId.rawBuffer(), count);
+        fwprintf(headerFl, L"      , %-32s   = %d\n", msgId, count);
 
         // And tell the formatter about this one
         toCall->nextMessage
         (
-            msgText.rawBuffer()
-            , msgId.rawBuffer()
+            msgText
+            , msgId
             , count
             , count
         );
@@ -349,7 +352,7 @@ enumMessages(   const   DOM_Element             srcElem
         count++;
 
         // Move to the next child of the source element
-        curNode = curNode.getNextSibling();
+        curNode = curNode->getNextSibling();
     }
 
     // Write out an upper range bracketing id for this type of error
@@ -399,10 +402,8 @@ extern "C" int wmain(int argC, XMLCh** argV)
 
     {
         //  Nest entire code in an inner block.
-        //     Reference counting should recover all document
-        //     storage when this block exits.
-
-        DOM_Document srcDoc;
+        
+        DOMDocument* srcDoc;
         const unsigned int bufSize = 4095;
         XMLCh tmpFileBuf[bufSize + 1];
         try
@@ -424,12 +425,12 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  Ok, lets invoke the DOM parser on the input file and build
                 //  a DOM tree. Turn on validation when we do this.
                 //
-                DOMParser parser;
+                XercesDOMParser parser;
                 parser.setDoValidation(true);
                 XlatErrHandler errHandler;
                 parser.setErrorHandler(&errHandler);
                 parser.parse(tmpFileBuf);
-                srcDoc = parser.getDocument();
+                srcDoc = parser.adoptDocument();
             }
 
             catch(const XMLException& toCatch)
@@ -465,11 +466,11 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //  Lets handle the root element stuff first. This one holds any over
             //  all information.
             //
-            DOM_Element rootElem = srcDoc.getDocumentElement();
-            DOMString localeStr = rootElem.getAttribute(L"Locale");
+            DOMElement* rootElem = srcDoc->getDocumentElement();
+            const XMLCh* localeStr = rootElem->getAttribute(L"Locale");
 
             // Make sure that the locale matches what we were given
-            if (XMLString::compareString(localeStr.rawBuffer(), gLocale))
+            if (XMLString::compareString(localeStr, gLocale))
             {
                 wprintf(L"The file's locale does not match the target locale\n");
                 throw ErrReturn_LocaleErr;
@@ -480,19 +481,19 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //  the sets of (potentially separately) loadable messages. More
             //  importantly they all have their own error id space.
             //
-            DOM_NodeList msgSetList = rootElem.getElementsByTagName(L"MsgDomain");
+            DOMNodeList* msgSetList = rootElem->getElementsByTagName(L"MsgDomain");
 
             //
             //  Loop through them and look for the domains that we know are
             //  supposed to be there.
             //
-            const unsigned int count = msgSetList.getLength();
+            const unsigned int count = msgSetList->getLength();
 
             //
             //  Ok, its good enough to get started. So lets call the start output
             //  method on the formatter.
             //
-            formatter->startOutput(localeStr.rawBuffer(), gOutPath);
+            formatter->startOutput(localeStr, gOutPath);
 
             //
             //  For each message domain element, we call start and end domain
@@ -505,14 +506,14 @@ extern "C" int wmain(int argC, XMLCh** argV)
             for (unsigned int index = 0; index < count; index++)
             {
                 // We know its a DOM Element, so go ahead and cast it
-                DOM_Node curNode = msgSetList.item(index);
-                const DOM_Element& curElem = (const DOM_Element&)curNode;
+                DOMNode* curNode = msgSetList->item(index);
+                const DOMElement* curElem = (const DOMElement*)curNode;
 
                 //
                 //  Get some of  the attribute strings that we need, and transcode
                 //  couple that need to be in local format.
                 //
-                DOMString domainStr = curElem.getAttribute(L"Domain");
+                const XMLCh* domainStr = curElem->getAttribute(L"Domain");
 
                 //
                 //  Look at the domain and set up our application specific info
@@ -522,17 +523,17 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //
                 const XMLCh* headerName = 0;
                 const XMLCh* errNameSpace = 0;
-                if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgXMLErrDomain))
+                if (!XMLString::compareString(domainStr, XMLUni::fgXMLErrDomain))
                 {
                     headerName = L"XMLErrorCodes.hpp";
                     errNameSpace = L"XMLErrs";
                 }
-                 else if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgValidityDomain))
+                 else if (!XMLString::compareString(domainStr, XMLUni::fgValidityDomain))
                 {
                     headerName = L"XMLValidityCodes.hpp";
                     errNameSpace = L"XMLValid";
                 }
-                 else if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
+                 else if (!XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
                 {
                     headerName = L"XMLExceptMsgs.hpp";
                     errNameSpace = L"XMLExcepts";
@@ -570,7 +571,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 fwprintf(outHeader, L"#define ERRHEADER_%s\n\n", errNameSpace);
 
                 // If its not the exception domain, then we need a header included
-                if (XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
+                if (XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
                     fwprintf(outHeader, L"#include <xercesc/framework/XMLErrorReporter.hpp>\n\n");
 
                 fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", errNameSpace);
@@ -578,7 +579,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 // Tell the formatter that a new domain is starting
                 formatter->startDomain
                 (
-                    domainStr.rawBuffer()
+                    domainStr
                     , errNameSpace
                 );
 
@@ -593,35 +594,35 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  Loop through the children of this node, which should take us
                 //  through the optional Warning, Error, and Validity subsections.
                 //
-                DOM_Node typeNode = curElem.getFirstChild();
+                DOMNode* typeNode = curElem->getFirstChild();
                 bool typeGotten[3] = { false, false, false };
-                while (!typeNode.isNull())
+                while (typeNode)
                 {
                     // Skip over text nodes or comment nodes ect...
-                    if (typeNode.getNodeType() != DOM_Node::ELEMENT_NODE)
+                    if (typeNode->getNodeType() != DOMNode::ELEMENT_NODE)
                     {
-                        typeNode = typeNode.getNextSibling();
+                        typeNode = typeNode->getNextSibling();
                         continue;
                     }
 
                     // Convert it to an element node
-                    const DOM_Element& typeElem = (const DOM_Element&)typeNode;
+                    const DOMElement* typeElem = (const DOMElement*)typeNode;
 
                     // Now get its tag name and convert that to a message type enum
-                    DOMString typeName = typeElem.getTagName();
+                    const XMLCh* typeName = typeElem->getTagName();
 
                     MsgTypes type;
-                    if (typeName.equals(L"Warning"))
+                    if (!XMLString::compareString(typeName, L"Warning"))
                     {
                         type = MsgType_Warning;
                         typeGotten[0] = true;
                     }
-                     else if (typeName.equals(L"Error"))
+                     else if (!XMLString::compareString(typeName, L"Error"))
                     {
                         type = MsgType_Error;
                         typeGotten[1] = true;
                     }
-                     else if (typeName.equals(L"FatalError"))
+                     else if (!XMLString::compareString(typeName, L"FatalError"))
                     {
                         type = MsgType_FatalError;
                         typeGotten[2] = true;
@@ -649,7 +650,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                     formatter->endMsgType(type);
 
                     // Move to the next child of the source element
-                    typeNode = typeNode.getNextSibling();
+                    typeNode = typeNode->getNextSibling();
                 }
 
                 //
@@ -680,7 +681,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 }
 
                 // Tell the formatter that this domain is ending
-                formatter->endDomain(domainStr.rawBuffer(), count);
+                formatter->endDomain(domainStr, count);
 
                 // Close out the enum declaration
                 fwprintf(outHeader, L"    };\n\n");
@@ -690,7 +691,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 //  for testing the error types. We don't do this for the
                 //  exceptions header.
                 //
-                if (XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
+                if (XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
                 {
                     fwprintf
                     (
@@ -754,9 +755,12 @@ extern "C" int wmain(int argC, XMLCh** argV)
         catch(const ErrReturns retVal)
         {
             // And call the termination method
+            delete srcDoc;
             XMLPlatformUtils::Terminate();
             return retVal;
         }
+
+        delete srcDoc;
     }
 
     // And call the termination method
