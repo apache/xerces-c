@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/16 22:51:04  abagchi
+ * defined PLATFORM_EXPORT to _Export
+ *
  * Revision 1.3  2000/02/08 02:32:59  abagchi
  * Changed characters from ASCII to Hex
  *
@@ -86,8 +89,8 @@
 // ---------------------------------------------------------------------------
 // Define these away for this platform
 // ---------------------------------------------------------------------------
-#define PLATFORM_EXPORT
-#define PLATFORM_IMPORT
+#define PLATFORM_EXPORT _Export
+#define PLATFORM_IMPORT _Export
 
 // ---------------------------------------------------------------------------
 //  Supports L"" prefixed constants. There are places
