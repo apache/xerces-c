@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/09 09:57:27  gareth
+ * Fixed compile error by adding private member. Not very efficient. Should be looked at again.
+ *
  * Revision 1.7  2002/12/06 16:43:33  tng
  * Fix the error messages thrown from net accessor module.
  *
@@ -138,7 +141,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
       : fSocket(0)
       , fBytesProcessed(0)
+      , fURLText(0)
 {
+
+    //REVISIT inefficient - this is used by the error reporting in readBytes. Do we need it?
+    fURLText = XMLString::replicate(urlSource.getURLText());
+
     //
     // Pull all of the parts of the URL out of th urlSource object, and transcode them
     //   and transcode them back to ASCII.
@@ -316,6 +324,7 @@ UnixHTTPURLInputStream::~UnixHTTPURLInputStream()
 {
     shutdown(fSocket, 2);
     close(fSocket);
+    delete[] fURLText;
 }
 
 
@@ -340,7 +349,7 @@ unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
         len = read(fSocket, (void *) toFill, maxToRead);
         if (len == -1)
         {
-            ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+            ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, fURLText);
         }
     }
 

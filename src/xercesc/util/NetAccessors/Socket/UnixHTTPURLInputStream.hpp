@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/09 09:57:27  gareth
+ * Fixed compile error by adding private member. Not very efficient. Should be looked at again.
+ *
  * Revision 1.2  2002/11/04 15:11:38  tng
  * C++ Namespace Support.
  *
@@ -127,6 +130,8 @@ private :
     //  fBufferPos, fBufferEnd
     //      Pointers into fBuffer, showing start and end+1 of content
     //      that readBytes must return.
+    //  fURLText
+    //      Full URL text for error reporting
     // -----------------------------------------------------------------------
 
     int                 fSocket;
@@ -134,6 +139,7 @@ private :
     char                fBuffer[4000];
     char *              fBufferEnd;
     char *              fBufferPos;
+    XMLCh *             fURLText;
 
 }; // UnixHTTPURLInputStream
 
