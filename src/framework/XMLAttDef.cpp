@@ -101,10 +101,10 @@ const XMLCh* const gAttTypeStrings[XMLAttDef::AttTypes_Count] =
 const XMLCh* const gDefAttTypeStrings[XMLAttDef::DefAttTypes_Count] =
 {
     XMLUni::fgDefaultString
+    , XMLUni::fgFixedString
     , XMLUni::fgRequiredString
     , XMLUni::fgImpliedString
     , XMLUni::fgImpliedString
-    , XMLUni::fgFixedString
     , XMLUni::fgImpliedString
     , XMLUni::fgImpliedString
     , XMLUni::fgImpliedString

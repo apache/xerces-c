@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/11/15 16:36:36  knoaman
+ * Re-organize constant values.
+ *
  * Revision 1.12  2001/08/09 15:23:37  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -168,14 +171,14 @@ public:
     enum DefAttTypes
     {
         Default                  = 0
-        , Required               = 1
-        , Implied                = 2
-        , Prohibited             = 3
-        , Fixed                  = 4
-        , Required_And_Fixed     = 5
-        , ProcessContents_Strict = 6
-        , ProcessContents_Lax    = 7
-        , ProcessContents_Skip   = 8
+        , Fixed                  = 1
+        , Required               = 2
+        , Required_And_Fixed     = 3
+        , Implied                = 4
+        , ProcessContents_Strict = 5
+        , ProcessContents_Lax    = 6
+        , ProcessContents_Skip   = 7
+        , Prohibited             = 8
 
         , DefAttTypes_Count
         , DefAttTypes_Min   = 0
