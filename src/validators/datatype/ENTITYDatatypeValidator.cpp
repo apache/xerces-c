@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/11/13 13:21:59  tng
+ * Schema fix: Entities should be unparsed.
+ *
  * Revision 1.6  2001/10/09 20:50:27  peiyongz
  * init(): take 1 arg
  *
@@ -139,7 +142,7 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
         DTDEntityDecl* decl = fEntityDeclPool->getByKey(content);
 
         if (!decl                ||
-            (decl->isUnparsed())  )
+            (!decl->isUnparsed())  )
         {
             ThrowXML1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_ENTITY_Invalid
