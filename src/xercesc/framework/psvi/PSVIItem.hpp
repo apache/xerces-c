@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/09/13 21:22:42  peiyongz
+ * new method: getActualValue()
+ *
  * Revision 1.9  2004/09/08 13:56:07  peiyongz
  * Apache License Version 2.0
  *
@@ -64,6 +67,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // forward declarations
 class XSTypeDefinition; 
 class XSSimpleTypeDefinition;
+class XSValue;
 
 class XMLPARSER_EXPORT PSVIItem : public XMemory
 {
@@ -218,6 +222,15 @@ public:
     const XMLCh *getCanonicalRepresentation() const;
 
     //@}
+
+    /**
+     * 
+     * Get actual value in the form of XSValue,
+     * caller needs to delete the object returned.
+     *
+     * @return  an XSValue 
+     */
+    virtual XSValue *getActualValue() const;
 
     //----------------------------------
     /** methods needed by implementation */

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/09/13 21:22:42  peiyongz
+ * new method: getActualValue()
+ *
  * Revision 1.6  2004/09/08 13:56:07  peiyongz
  * Apache License Version 2.0
  *
@@ -39,6 +42,9 @@
  */
 
 #include <xercesc/framework/psvi/PSVIItem.hpp>
+#include <xercesc/framework/psvi/XSValue.hpp>
+#include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
+#include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -80,6 +86,81 @@ void PSVIItem::setValidationAttempted(PSVIItem::ASSESSMENT_TYPE attemptType)
 void PSVIItem::setValidity(PSVIItem::VALIDITY_STATE validity)
 {
     fValidityState = validity;
+}
+
+XSValue* PSVIItem::getActualValue() const
+{
+    /***
+     * assessment 
+	 *    VALIDATION_PARTIAL 
+	 *    VALIDATION_FULL 
+     * validity
+	 *    VALIDITY_INVALID 
+	 *    VALIDITY_VALID
+     ***/
+    if ((fAssessmentType==VALIDATION_NONE) || (fValidityState==VALIDITY_NOTKNOWN))
+        return 0;
+    
+    /***
+     *  XSSimpleType or
+     *  XSComplexType's CONTENTTYPE_SIMPLE
+     *  allowed
+     ***/
+    if ((!fType) ||
+        ((fType->getTypeCategory() == XSTypeDefinition::COMPLEX_TYPE) &&
+         (((XSComplexTypeDefinition*)fType)->getContentType() != XSComplexTypeDefinition::CONTENTTYPE_SIMPLE)))
+        return 0;
+    
+    /*** 
+     * Resolve dv
+     *
+     * 1. If fMemberType is not null, use the fMemberType->fDataTypeValidator
+     * 2. If fType is XSSimpleType, use fType->fDataTypeValidator
+     * 3. If fType is XSComplexType, use fType->fXSSimpleTypeDefinition-> fDataTypeValidator
+     *
+    ***/
+
+    DatatypeValidator *dv = 0;
+
+     if (fMemberType)
+     {
+         /***
+          *  Now that fType is either XSSimpleTypeDefinition or
+          *  XSComlextTypeDefinition with CONTENTTYPE_SIMPLE, the
+          *  fMemberType must be XSSimpleTypeDefinition if present
+         ***/
+         dv=((XSSimpleTypeDefinition*) fMemberType)->getDatatypeValidator();
+     }
+     else if (fType->getTypeCategory() == XSTypeDefinition::SIMPLE_TYPE)
+     {
+         dv=((XSSimpleTypeDefinition*) fType)->getDatatypeValidator();
+     }
+     else
+     {
+         XSSimpleTypeDefinition* simType = ((XSComplexTypeDefinition*)fType)->getSimpleType();
+         if (simType)
+             dv = simType->getDatatypeValidator();
+     }
+
+     if (!dv) return 0;
+
+     /***
+      * Get the ultimate base dv in the datatype registry
+      ***/
+     DatatypeValidator *basedv = DatatypeValidatorFactory::getBuiltInBaseValidator(dv);
+
+     if (!basedv) return 0;
+    
+     XSValue::Status  status=XSValue::st_Init;
+
+     return XSValue::getActualValue(fNormalizedValue
+                                  , XSValue::getDataType(basedv->getTypeLocalName())
+                                  , status
+                                  , XSValue::ver_10
+                                  , false
+                                  , fMemoryManager);
+
+
 }
 
 XERCES_CPP_NAMESPACE_END
