@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/04/06 23:50:38  roddey
+ * Now the low level formatter handles doing char refs for
+ * unrepresentable chars (in addition to the replacement char style
+ * already done.)
+ *
  * Revision 1.3  2000/04/06 19:09:21  roddey
  * Some more improvements to output formatting. Now it will correctly
  * handle doing the 'replacement char' style of dealing with chars
@@ -270,6 +275,17 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                                     ? fUnRepFlags : unrepFlags;
 
     //
+    //  If the actual unrep action is that they want to provide char refs
+    //  for unrepresentable chars, then this one is a much more difficult
+    //  one to do cleanly, and we handle it separately.
+    //
+    if (actualUnRep == UnRep_CharRef)
+    {
+        specialFormat(toFormat, count, actualEsc);
+        return;
+    }
+
+    //
     //  Use that to figure out what I should pass to the transcoder. If we
     //  are doing character references or failing for unrepresentable chars,
     //  then we just throw, since we should never get a call for something
@@ -428,6 +444,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                         srcPtr++;
                 }
             }
+
         }
     }
 }
@@ -563,4 +580,84 @@ const XMLByte* XMLFormatter::getQuoteRef()
     ((XMLFormatter*)this)->fQuoteRef = new XMLByte[outBytes + 1];
     memcpy(fQuoteRef, fTmpBuf, outBytes + 1);
     return fQuoteRef;
+}
+
+
+void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
+                                , const unsigned int    count
+                                , const EscapeFlags     escapeFlags)
+{
+    //
+    //  We have to check each character and see if it could be represented.
+    //  As long as it can, we just keep up with where we started and how
+    //  many chars we've checked. When we hit an unrepresentable one, we
+    //  stop, transcode everything we've collected, then start handling
+    //  the unrepresentables via char refs. We repeat this until we get all
+    //  the chars done.
+    //
+    const XMLCh*    srcPtr = toFormat;
+    const XMLCh*    endPtr = toFormat + count;
+
+    // Set up the common part of the buffer that we build char refs into
+    XMLCh tmpBuf[32];
+    tmpBuf[0] = chAmpersand;
+    tmpBuf[1] = chPound;
+    tmpBuf[2] = chLatin_x;
+
+    while (srcPtr < endPtr)
+    {
+        const XMLCh* tmpPtr = srcPtr;
+        while (tmpPtr < endPtr)
+        {
+            if (fXCoder->canTranscodeTo(*tmpPtr))
+                tmpPtr++;
+            else
+                break;
+        }
+
+        if (tmpPtr > srcPtr)
+        {
+            // We got at least some chars that can be done normally
+            formatBuf
+            (
+                srcPtr
+                , tmpPtr - srcPtr
+                , escapeFlags
+                , XMLFormatter::UnRep_Fail
+            );
+
+            // Update the source pointer to our new spot
+            srcPtr = tmpPtr;
+        }
+         else
+        {
+            //
+            //  We hit something unrepresentable. So continue forward doing
+            //  char refs until we hit something representable again or the
+            //  end of input.
+            //
+            while (srcPtr < endPtr)
+            {
+                // Build a char ref for the current char
+                XMLString::binToText(*srcPtr, &tmpBuf[3], 8, 16);
+                const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+                tmpBuf[bufLen] = chSemiColon;
+                tmpBuf[bufLen+1] = chNull;
+
+                // And now call recursively back to our caller to format this
+                formatBuf
+                (
+                    tmpBuf
+                    , bufLen + 1
+                    , XMLFormatter::NoEscapes
+                    , XMLFormatter::UnRep_Fail
+                );
+
+                // Move up the source pointer and break out if needed
+                srcPtr++;
+                if (fXCoder->canTranscodeTo(*srcPtr))
+                    break;
+            }
+        }
+    }
 }

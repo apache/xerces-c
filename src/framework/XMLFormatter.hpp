@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/04/06 23:50:38  roddey
+ * Now the low level formatter handles doing char refs for
+ * unrepresentable chars (in addition to the replacement char style
+ * already done.)
+ *
  * Revision 1.3  2000/04/06 19:09:21  roddey
  * Some more improvements to output formatting. Now it will correctly
  * handle doing the 'replacement char' style of dealing with chars
@@ -216,6 +221,12 @@ private :
     const XMLByte* getLTRef();
     const XMLByte* getQuoteRef();
 
+    void specialFormat
+    (
+        const   XMLCh* const    toFormat
+        , const unsigned int    count
+        , const EscapeFlags     escapeFlags
+    );
 
 
     // -----------------------------------------------------------------------
