@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1055,6 +1055,45 @@ void DOMNSTests()
 
 
     //
+    // isSupported test (similar to hasFeature)
+    //
+    TESTPROLOG;
+    {
+        DOM_Document doc;
+        doc = DOM_Document::createDocument();
+        TASSERT(doc.isSupported("XML", "")       == true);
+        TASSERT(doc.isSupported("XML", "1.0")    == true);
+        TASSERT(doc.isSupported("XML", "2.0")    == true);
+        TASSERT(doc.isSupported("XML", "3.0")    == false);
+
+        TASSERT(doc.isSupported("Core", "")       == true);
+        TASSERT(doc.isSupported("coRe", "1.0")    == true);
+        TASSERT(doc.isSupported("core", "2.0")    == true);
+        TASSERT(doc.isSupported("cORe", "3.0")    == false);
+
+        TASSERT(doc.isSupported("Traversal", "") == true);
+        TASSERT(doc.isSupported("traversal", "1.0") == false);
+        TASSERT(doc.isSupported("TraVersal", "2.0") == true);
+
+        TASSERT(doc.isSupported("Range", "")        == true);
+        TASSERT(doc.isSupported("raNge", "1.0")     == false);
+        TASSERT(doc.isSupported("RaNge", "2.0")     == true);
+
+
+        TASSERT(doc.isSupported("HTML", "")           == false);
+        TASSERT(doc.isSupported("Views", "")          == false);
+        TASSERT(doc.isSupported("StyleSheets", "")    == false);
+        TASSERT(doc.isSupported("CSS", "")            == false);
+        TASSERT(doc.isSupported("CSS2", "")           == false);
+        TASSERT(doc.isSupported("Events", "")         == false);
+        TASSERT(doc.isSupported("UIEvents", "")       == false);
+        TASSERT(doc.isSupported("MouseEvents", "")    == false);
+        TASSERT(doc.isSupported("MutationEvents", "") == false);
+        TASSERT(doc.isSupported("HTMLEvents", "")     == false);
+    }
+    TESTEPILOG;
+
+    //
     // CreateDocumentType
     //
     TESTPROLOG;
@@ -1615,6 +1654,15 @@ void DOMNSTests()
         TASSERT(nnm.getNamedItemNS("", "attrc") == attrc);
         TASSERT(nnm.getNamedItemNS("", "attra") == 0);
         TASSERT(nnm.getNamedItemNS("http://nsa", "attrb") == 0);
+
+        // Test hasAttributes, hasAttribute, hasAttributeNS
+        TASSERT(doc.hasAttributes() ==  false);
+        TASSERT(attrc.hasAttributes() == false);
+        TASSERT(rootEl.hasAttributes() == true);
+        TASSERT(rootEl.hasAttribute("attrc") == true);
+        TASSERT(rootEl.hasAttribute("wrong") == false);
+        TASSERT(rootEl.hasAttributeNS("http://nsa", "attra") == true);
+        TASSERT(rootEl.hasAttributeNS("http://nsa", "wrong") == false);
     }
     TESTEPILOG;
 
