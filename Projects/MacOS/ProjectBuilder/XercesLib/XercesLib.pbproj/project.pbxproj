@@ -4700,13 +4700,6 @@
 				2096544D008111847F000001,
 				2096544E008111847F000001,
 				2096544F008111847F000001,
-				20965450008111847F000001,
-				20965451008111847F000001,
-				20965452008111847F000001,
-				20965453008111847F000001,
-				20965454008111847F000001,
-				20965455008111847F000001,
-				20965456008111847F000001,
 				209654720081120E7F000001,
 				F50CFC0B00B9CF4801000001,
 				F50CFC0C00B9CF4801000001,
@@ -4809,6 +4802,13 @@
 				F5882D0400CC2B1801000001,
 				F53FCAD100CC2CCD01000001,
 				F53FCAD500CC2D4E01000001,
+				F511DA1500CE71B801000001,
+				F511DA1600CE71B801000001,
+				F511DA1700CE71B801000001,
+				F511DA1800CE71B801000001,
+				F511DA1900CE71B801000001,
+				F511DA1A00CE71B801000001,
+				F511DA1B00CE71B801000001,
 			);
 			isa = PBXHeadersBuildPhase;
 			name = Headers;
@@ -4960,13 +4960,6 @@
 				20965466008111847F000001,
 				20965467008111847F000001,
 				20965468008111847F000001,
-				20965469008111847F000001,
-				2096546A008111847F000001,
-				2096546B008111847F000001,
-				2096546C008111847F000001,
-				2096546D008111847F000001,
-				2096546E008111847F000001,
-				2096546F008111847F000001,
 				209654730081120E7F000001,
 				F50CFC1900B9CF4801000001,
 				F50CFC1A00B9CF4801000001,
@@ -5043,6 +5036,13 @@
 				F53FCAD200CC2CCD01000001,
 				F53FCAD600CC2D4E01000001,
 				F53FCAD800CC2D9001000001,
+				F511DA1C00CE71B801000001,
+				F511DA1D00CE71B801000001,
+				F511DA1E00CE71B801000001,
+				F511DA1F00CE71B801000001,
+				F511DA2000CE71B801000001,
+				F511DA2100CE71B801000001,
+				F511DA2200CE71B801000001,
 			);
 			isa = PBXSourcesBuildPhase;
 			name = Sources;
@@ -5484,90 +5484,6 @@
 			path = schema;
 			refType = 4;
 		};
-		20965429008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaAttDef.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaAttDef.cpp";
-			refType = 0;
-		};
-		2096542A008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaAttDef.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaAttDef.hpp";
-			refType = 0;
-		};
-		2096542B008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaAttDefList.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaAttDefList.cpp";
-			refType = 0;
-		};
-		2096542C008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaAttDefList.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaAttDefList.hpp";
-			refType = 0;
-		};
-		2096542D008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaElementDecl.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaElementDecl.cpp";
-			refType = 0;
-		};
-		2096542E008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaElementDecl.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaElementDecl.hpp";
-			refType = 0;
-		};
-		2096542F008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaGrammar.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaGrammar.cpp";
-			refType = 0;
-		};
-		20965430008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaGrammar.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaGrammar.hpp";
-			refType = 0;
-		};
-		20965431008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaSymbols.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaSymbols.cpp";
-			refType = 0;
-		};
-		20965432008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaSymbols.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaSymbols.hpp";
-			refType = 0;
-		};
-		20965433008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaValidator.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaValidator.cpp";
-			refType = 0;
-		};
-		20965434008111847F000001 = {
-			isa = PBXFileReference;
-			name = SchemaValidator.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/SchemaValidator.hpp";
-			refType = 0;
-		};
-		20965435008111847F000001 = {
-			isa = PBXFileReference;
-			name = XUtil.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/XUtil.cpp";
-			refType = 0;
-		};
-		20965436008111847F000001 = {
-			isa = PBXFileReference;
-			name = XUtil.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/src/validators/schema/XUtil.hpp";
-			refType = 0;
-		};
 		20965437008111847F000001 = {
 			fileRef = 209653FC008111847F000001;
 			isa = PBXBuildFile;
@@ -5718,48 +5634,6 @@
 			settings = {
 			};
 		};
-		20965450008111847F000001 = {
-			fileRef = 2096542A008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965451008111847F000001 = {
-			fileRef = 2096542C008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965452008111847F000001 = {
-			fileRef = 2096542E008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965453008111847F000001 = {
-			fileRef = 20965430008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965454008111847F000001 = {
-			fileRef = 20965432008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965455008111847F000001 = {
-			fileRef = 20965434008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965456008111847F000001 = {
-			fileRef = 20965436008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		20965458008111847F000001 = {
 			fileRef = 209653FB008111847F000001;
 			isa = PBXBuildFile;
@@ -5858,48 +5732,6 @@
 		};
 		20965468008111847F000001 = {
 			fileRef = 20965425008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		20965469008111847F000001 = {
-			fileRef = 20965429008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		2096546A008111847F000001 = {
-			fileRef = 2096542B008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		2096546B008111847F000001 = {
-			fileRef = 2096542D008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		2096546C008111847F000001 = {
-			fileRef = 2096542F008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		2096546D008111847F000001 = {
-			fileRef = 20965431008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		2096546E008111847F000001 = {
-			fileRef = 20965433008111847F000001;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		2096546F008111847F000001 = {
-			fileRef = 20965435008111847F000001;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7021,6 +6853,90 @@
 		};
 		F50CFCBF00B9D1E001000001 = {
 			fileRef = F50CFCBD00B9D1DF01000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1500CE71B801000001 = {
+			fileRef = F50CFBF800B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1600CE71B801000001 = {
+			fileRef = F50CFBFA00B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1700CE71B801000001 = {
+			fileRef = F50CFBFC00B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1800CE71B801000001 = {
+			fileRef = F50CFBFE00B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1900CE71B801000001 = {
+			fileRef = F50CFC0200B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1A00CE71B801000001 = {
+			fileRef = F50CFC0400B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1B00CE71B801000001 = {
+			fileRef = F50CFC0A00B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1C00CE71B801000001 = {
+			fileRef = F50CFBF700B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1D00CE71B801000001 = {
+			fileRef = F50CFBF900B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1E00CE71B801000001 = {
+			fileRef = F50CFBFB00B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA1F00CE71B801000001 = {
+			fileRef = F50CFBFD00B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA2000CE71B801000001 = {
+			fileRef = F50CFC0100B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA2100CE71B801000001 = {
+			fileRef = F50CFC0300B9CF4801000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F511DA2200CE71B801000001 = {
+			fileRef = F50CFC0900B9CF4801000001;
 			isa = PBXBuildFile;
 			settings = {
 			};
