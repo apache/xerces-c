@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2001/07/18 13:30:14  knoaman
+ * no message
+ *
  * Revision 1.30  2001/07/12 15:32:57  knoaman
  * Added constraint checking for simple types (list/union).
  *
@@ -662,10 +665,15 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
         return;
     }
 
-    SchemaGrammar* importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
+    SchemaGrammar* importedGrammar = 0;
 
-    if (importedGrammar) {
-        return;
+	if (nameSpace) {
+
+        importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
+
+        if (importedGrammar) {
+            return;
+        }
     }
 
     // ------------------------------------------------------------------
@@ -739,7 +747,7 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
 
             if (XMLString::compareString(targetNSURIString, nameSpace) != 0) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportNamespaceDifference,
-                                  schemaLocation, targetNSURIString, nameSpace);
+					              schemaLocation, targetNSURIString, nameSpace);
             }
             else {
 
