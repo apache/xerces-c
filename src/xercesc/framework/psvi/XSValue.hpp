@@ -55,8 +55,11 @@
  */
 
 /*
- * $Log $
- * $Id $
+ * $Log$
+ * Revision 1.2  2004/08/11 17:06:44  peiyongz
+ * Do not panic if can't create RegEx
+ *
+ * $Id$
  */
 
 #if !defined(XSVALUE_HPP)
@@ -84,6 +87,7 @@ public:
             st_NoCanRep,
             st_NoActVal,
             st_NotSupported,
+            st_CantCreateRegEx,
             st_UnknownType
     };
 
@@ -453,10 +457,6 @@ private:
                ,       int                  base
                ,       MemoryManager* const manager
                );
-
-
-    static
-    RegularExpression*     getRegex();
 
     // -----------------------------------------------------------------------
     //  data members

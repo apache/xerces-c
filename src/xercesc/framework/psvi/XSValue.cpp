@@ -55,8 +55,11 @@
  */
 
 /*
- * $Log $
- * $Id $
+ * $Log$
+ * Revision 1.2  2004/08/11 17:06:44  peiyongz
+ * Do not panic if can't create RegEx
+ *
+ * $Id$
  */
 
 #include <limits.h>
@@ -184,7 +187,7 @@ static XMLMutex& gXSValueMutex()
     return *sXSValueMutext;
 }
 
-static RegularExpression& getRegEx()
+static RegularExpression* getRegEx()
 {
     if (!sXSValueRegEx)
     {
@@ -203,14 +206,14 @@ static RegularExpression& getRegEx()
             }
             catch (...)
             {
-			    XMLPlatformUtils::panic(PanicHandler::Panic_CanCreateRegEx);
+                return 0;
             }
 
             XSValueRegExCleanup.registerCleanup(XSValue::reinitRegEx);
         }
     }
 
-    return *sXSValueRegEx;
+    return sXSValueRegEx;
 }
 
 // ---------------------------------------------------------------------------
@@ -852,8 +855,17 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
             }
 
-            return (datatype == XSValue::dt_token) ?
-                true : getRegEx().matches(content, manager);
+            if (datatype == XSValue::dt_language)
+            {
+                RegularExpression* regEx = getRegEx();
+                if (!regEx)
+                {
+                    context.fStatus = XSValueContext::st_CantCreateRegEx;
+                    return false;
+                }
+
+                return regEx->matches(content, manager);
+            }
 
             break;
         case XSValue::dt_NMTOKEN:
