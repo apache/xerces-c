@@ -90,10 +90,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMDocumentTraversal() {};
-    DOMDocumentTraversal(const DOMDocumentTraversal &) {};
-    DOMDocumentTraversal & operator = (const DOMDocumentTraversal &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMDocumentTraversal(const DOMDocumentTraversal &);
+    DOMDocumentTraversal & operator = (const DOMDocumentTraversal &);
     //@}
 
 public:

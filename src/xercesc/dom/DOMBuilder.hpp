@@ -93,10 +93,18 @@ protected :
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMBuilder() {};
-    DOMBuilder(const DOMBuilder &) {};
-    DOMBuilder & operator = (const DOMBuilder &) {return *this;};
+    //@}
+
+private:    
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMBuilder(const DOMBuilder &);
+    DOMBuilder & operator = (const DOMBuilder &);
     //@}
 
 public:

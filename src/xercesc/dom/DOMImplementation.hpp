@@ -79,17 +79,23 @@ class DOMDocumentType;
 
 class CDOM_EXPORT DOMImplementation : public DOMImplementationLS
 {
-
-protected :
+protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
-
+    //@{    
         DOMImplementation() {};                                      // no plain constructor
-        DOMImplementation(const DOMImplementation &) {};   // no copy construtor.
-        DOMImplementation & operator = (const DOMImplementation &) {return *this;};  // No Assignment
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+        DOMImplementation(const DOMImplementation &);   // no copy construtor.
+        DOMImplementation & operator = (const DOMImplementation &);  // No Assignment
     //@}
 
 

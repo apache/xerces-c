@@ -98,15 +98,23 @@ class BinInputStream;
   */
 class CDOM_EXPORT DOMInputSource
 {
-protected :
+protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMInputSource() {};
-    DOMInputSource(const DOMInputSource &) {};
-    DOMInputSource & operator = (const DOMInputSource &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMInputSource(const DOMInputSource &);
+    DOMInputSource & operator = (const DOMInputSource &);
     //@}
 
 public:

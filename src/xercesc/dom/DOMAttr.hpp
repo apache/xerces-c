@@ -100,10 +100,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMAttr() {};
-    DOMAttr(const DOMAttr &) {};
-    DOMAttr & operator = (const DOMAttr &) {return *this;};
+    //@}
+
+private:    
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMAttr(const DOMAttr &);
+    DOMAttr & operator = (const DOMAttr &);
     //@}
 
 public:

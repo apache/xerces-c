@@ -81,10 +81,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMProcessingInstruction() {};
-    DOMProcessingInstruction(const DOMProcessingInstruction &) {};
-    DOMProcessingInstruction & operator = (const DOMProcessingInstruction &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMProcessingInstruction(const DOMProcessingInstruction &);
+    DOMProcessingInstruction & operator = (const DOMProcessingInstruction &);
     //@}
 
 public:

@@ -100,10 +100,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMEntityReference() {};
-    DOMEntityReference(const DOMEntityReference &) {};
-    DOMEntityReference & operator = (const DOMEntityReference &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMEntityReference(const DOMEntityReference &);
+    DOMEntityReference & operator = (const DOMEntityReference &);
     //@}
 
 public:

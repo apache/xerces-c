@@ -108,10 +108,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMCDATASection() {};
-    DOMCDATASection(const DOMCDATASection &) {};
-    DOMCDATASection & operator = (const DOMCDATASection &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMCDATASection(const DOMCDATASection &);
+    DOMCDATASection & operator = (const DOMCDATASection &);
     //@}
 
 public:

@@ -80,10 +80,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMDocumentRange() {};
-    DOMDocumentRange(const DOMDocumentRange &) {};
-    DOMDocumentRange & operator = (const DOMDocumentRange &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMDocumentRange(const DOMDocumentRange &);
+    DOMDocumentRange & operator = (const DOMDocumentRange &);
     //@}
 
 public:

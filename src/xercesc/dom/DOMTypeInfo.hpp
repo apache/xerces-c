@@ -74,14 +74,22 @@ XERCES_CPP_NAMESPACE_BEGIN
 class CDOM_EXPORT DOMTypeInfo
 {
 protected:
-    //-----------------------------------------------------------------------------------
-    //  Constructor
-    //-----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMTypeInfo() {};
-    DOMTypeInfo(const DOMTypeInfo &) {};
-    DOMTypeInfo & operator = (const DOMTypeInfo &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMTypeInfo(const DOMTypeInfo &);
+    DOMTypeInfo & operator = (const DOMTypeInfo &);
     //@}
 
 public:

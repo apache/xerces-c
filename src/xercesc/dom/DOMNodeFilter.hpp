@@ -92,10 +92,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMNodeFilter() {};
-    DOMNodeFilter(const DOMNodeFilter &) {};
-    DOMNodeFilter & operator = (const DOMNodeFilter &) {return *this;};
+    //@}    
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMNodeFilter(const DOMNodeFilter &);
+    DOMNodeFilter & operator = (const DOMNodeFilter &);
     //@}
 
 public:

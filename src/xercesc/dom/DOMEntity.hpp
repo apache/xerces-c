@@ -109,10 +109,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMEntity() {};
-    DOMEntity(const DOMEntity &) {};
-    DOMEntity & operator = (const DOMEntity &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMEntity(const DOMEntity &);
+    DOMEntity & operator = (const DOMEntity &);
     //@}
 
 public:

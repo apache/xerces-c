@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/03/07 19:59:09  tng
+ * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
+ *
  * Revision 1.8  2002/11/04 15:09:25  tng
  * C++ Namespace Support.
  *
@@ -110,15 +113,23 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class CDOM_EXPORT DOMWriterFilter : public DOMNodeFilter {
-protected :
+protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMWriterFilter() {};
-    DOMWriterFilter(const DOMWriterFilter &) {};
-    DOMWriterFilter & operator = (const DOMWriterFilter &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMWriterFilter(const DOMWriterFilter &);
+    DOMWriterFilter & operator = (const DOMWriterFilter &);
     //@}
 
 

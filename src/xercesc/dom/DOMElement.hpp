@@ -105,10 +105,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMElement() {};
-    DOMElement(const DOMElement &) {};
-    DOMElement & operator = (const DOMElement &) {return *this;};
+    //@}
+    
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMElement(const DOMElement &);
+    DOMElement & operator = (const DOMElement &);
     //@}
 
 public:

@@ -108,10 +108,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMDocument() {};
-    DOMDocument(const DOMDocument &) {};
-    DOMDocument & operator = (const DOMDocument &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMDocument(const DOMDocument &);
+    DOMDocument & operator = (const DOMDocument &);
     //@}
 
 public:
@@ -1163,7 +1171,7 @@ public:
                                                   const XMLSSize_t columnNum) = 0;
     //@}
 
-protected:
+private:
     friend class DOMNode;
     friend class DOMImplementation;
 

@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/03/07 19:59:09  tng
+ * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
+ *
  * Revision 1.9  2002/11/27 18:46:39  tng
  * Documentation: clarify that DOMWriter::writeToString always returns string in UTF-16
  *
@@ -322,10 +325,17 @@ protected :
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMWriter() {};
-    DOMWriter(const DOMWriter &) {};
-    DOMWriter & operator = (const DOMWriter &) {return *this;};
+    //@}
+private:        
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMWriter(const DOMWriter &);
+    DOMWriter & operator = (const DOMWriter &);
     //@}
 
 

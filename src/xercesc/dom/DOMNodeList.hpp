@@ -87,10 +87,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMNodeList() {};
-    DOMNodeList(const DOMNodeList &) {};
-    DOMNodeList & operator = (const DOMNodeList &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMNodeList(const DOMNodeList &);
+    DOMNodeList & operator = (const DOMNodeList &);
     //@}
 
 public:

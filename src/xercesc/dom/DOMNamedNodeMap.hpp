@@ -88,10 +88,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMNamedNodeMap() {};
-    DOMNamedNodeMap(const DOMNamedNodeMap &) {};
-    DOMNamedNodeMap & operator = (const DOMNamedNodeMap &) {return *this;};
+    //@}
+
+private:    
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMNamedNodeMap(const DOMNamedNodeMap &);
+    DOMNamedNodeMap & operator = (const DOMNamedNodeMap &);
     //@}
 
 public:

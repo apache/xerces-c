@@ -87,15 +87,23 @@ XERCES_CPP_NAMESPACE_BEGIN
  * @since DOM Level 2
  */
 class CDOM_EXPORT DOMTreeWalker {
-protected :
+protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMTreeWalker() {};
-    DOMTreeWalker(const DOMTreeWalker &) {};
-    DOMTreeWalker & operator = (const DOMTreeWalker &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMTreeWalker(const DOMTreeWalker &);
+    DOMTreeWalker & operator = (const DOMTreeWalker &);
     //@}
 
 public:

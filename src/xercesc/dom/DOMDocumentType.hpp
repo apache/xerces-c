@@ -88,10 +88,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMDocumentType() {};
-    DOMDocumentType(const DOMDocumentType &) {};
-    DOMDocumentType & operator = (const DOMDocumentType &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMDocumentType(const DOMDocumentType &);
+    DOMDocumentType & operator = (const DOMDocumentType &);
     //@}
 
 public:

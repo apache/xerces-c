@@ -77,16 +77,23 @@ XERCES_CPP_NAMESPACE_BEGIN
  * @since DOM Level 1
  */
 class CDOM_EXPORT DOMComment: public DOMCharacterData {
-
 protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMComment() {};
-    DOMComment(const DOMComment &) {};
-    DOMComment & operator = (const DOMComment &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMComment(const DOMComment &);
+    DOMComment & operator = (const DOMComment &);
     //@}
 
 public:

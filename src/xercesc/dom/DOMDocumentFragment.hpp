@@ -114,10 +114,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMDocumentFragment() {};
-    DOMDocumentFragment(const DOMDocumentFragment &) {};
-    DOMDocumentFragment & operator = (const DOMDocumentFragment &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMDocumentFragment(const DOMDocumentFragment &);
+    DOMDocumentFragment & operator = (const DOMDocumentFragment &);
     //@}
 
 public:

@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/03/07 19:59:04  tng
+ * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
+ *
  * Revision 1.7  2002/11/04 15:09:24  tng
  * C++ Namespace Support.
  *
@@ -104,10 +107,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMError() {};
-    DOMError(const DOMError &) {};
-    DOMError & operator = (const DOMError &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMError(const DOMError &);
+    DOMError & operator = (const DOMError &);
     //@}
 
 public:

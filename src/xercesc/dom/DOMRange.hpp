@@ -78,10 +78,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMRange() {};
-    DOMRange(const DOMRange &) {};
-    DOMRange & operator = (const DOMRange &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMRange(const DOMRange &);
+    DOMRange & operator = (const DOMRange &);
     //@}
 
 public:

@@ -86,10 +86,18 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMNotation() {};
-    DOMNotation(const DOMNotation &) {};
-    DOMNotation & operator = (const DOMNotation &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMNotation(const DOMNotation &);
+    DOMNotation & operator = (const DOMNotation &);
     //@}
 
 public:

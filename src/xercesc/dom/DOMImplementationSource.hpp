@@ -85,10 +85,18 @@ protected :
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMImplementationSource() {};
-    DOMImplementationSource(const DOMImplementationSource &) {};
-    DOMImplementationSource & operator = (const DOMImplementationSource &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMImplementationSource(const DOMImplementationSource &);
+    DOMImplementationSource & operator = (const DOMImplementationSource &);
     //@}
 
 

@@ -79,16 +79,23 @@ XERCES_CPP_NAMESPACE_BEGIN
  * @since DOM Level 3
  */
 class CDOM_EXPORT DOMUserDataHandler {
-
 protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{
+    //@{    
     DOMUserDataHandler() {};
-    DOMUserDataHandler(const DOMUserDataHandler &) {};
-    DOMUserDataHandler & operator = (const DOMUserDataHandler &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMUserDataHandler(const DOMUserDataHandler &);
+    DOMUserDataHandler & operator = (const DOMUserDataHandler &);
     //@}
 
 public:
