@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:11  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/02 15:31:48  knoaman
+ * Modiy QName comparison (operator=).
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/12/06 17:48:36  tng
  * Performance Enhancement.  Added setNPrefix and setNLocalPart methods that allow code to take advantage of the fact that it knows the length of the prefix and local name, when possible.  That can avoid a copy of the prefix into a null-terminated temporary variable before copying into the fPrefix.
@@ -414,9 +417,11 @@ void QName::setValues(const QName& qname)
 // -----------------------------------------------------------------------
 bool QName::operator==(const QName& qname)
 {
-return (XMLString::compareString(fPrefix, qname.getPrefix())==0) &&
-       (XMLString::compareString(fLocalPart, qname.getLocalPart())==0) &&
-       (fURIId == qname.getURI());
+    if (fURIId == 0) // null URI
+        return (XMLString::compareString(getRawName(),qname.getRawName())==0);
+
+    return ((fURIId == qname.getURI()) &&
+           (XMLString::compareString(fLocalPart, qname.getLocalPart())==0));
 }
 
 // ---------------------------------------------------------------------------
