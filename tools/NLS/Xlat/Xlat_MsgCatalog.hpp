@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:27  twl
- * Initial revision
+ * Revision 1.2  1999/12/20 22:51:09  roddey
+ * Updated to deal with the new transcoder interface.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:27  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:42:06  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -128,9 +131,9 @@ private :
     //      This is the current output file.
     //
     //  fTranscoder
-    //      This is our transcoder. We transcode to UTF-8 in order to output
-    //      Unicode based text to the message catalog.
+    //      This is our transcoder. We transcode to the local code page in
+    //      order to output Unicode based text to the message catalog.
     // -----------------------------------------------------------------------
-    FILE*           fOutFl;
-    XMLTranscoder*  fTranscoder;
+    FILE*               fOutFl;
+    XMLLCPTranscoder*   fTranscoder;
 };

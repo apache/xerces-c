@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:24  twl
- * Initial revision
+ * Revision 1.2  1999/12/20 22:51:09  roddey
+ * Updated to deal with the new transcoder interface.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:24  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:42:06  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -84,17 +87,10 @@ MsgCatFormatter::MsgCatFormatter() :
     //  Try to create a transcoder for the format that we were told
     //  to output in.
     //
-    XMLTransService::Codes resValue;
-    fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
-    (
-        L"UTF8"
-        , resValue
-        , 0
-    );
-
+    fTranscoder = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
     if (!fTranscoder)
     {
-        wprintf(L"Could not create UTF-8 transcoder\n");
+        wprintf(L"Could not create LCP transcoder\n");
         throw ErrReturn_NoTranscoder;
     }
 }
