@@ -110,7 +110,9 @@
 #endif
 
 
-#if defined (XML_USE_NETACCESSOR_SOCKET)
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+    #include <xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp>
+#elif defined (XML_USE_NETACCESSOR_SOCKET)
     #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
@@ -127,7 +129,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
-#if defined (XML_USE_NETACCESSOR_SOCKET)
+#if defined (XML_USE_NETACCESSOR_LIBWWW)
+    return new LibWWWNetAccessor();
+#elif defined (XML_USE_NETACCESSOR_SOCKET)
     return new SocketNetAccessor();
 #else
     return 0;
