@@ -867,15 +867,7 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (!srcText)
         return 0;
 
-    unsigned int retVal = -1;
-    
-    #if defined(XML_METROWERKS)
-    	const unsigned int srcLen = ::wcslen(srcText);
-    	retVal = ::wcsmbslen(srcText, srcLen);
-    #else
-     	retVal = ::wcstombs(0, srcText, 0);
-    #endif
-    
+    const unsigned int retVal = ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
     if (retVal == (unsigned int)-1)
         return 0;
     return retVal;
@@ -892,17 +884,7 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
     if (*toTranscode)
     {
         // Calc the needed size
-        unsigned int neededLen;
-        
-       #if defined(XML_METROWERKS)
-	    	const unsigned int srcLen = ::wcslen(toTranscode);
-	    	neededLen = ::wcsmbslen(toTranscode, srcLen);
-	    #else
-	     	neededLen = ::wcstombs(0, toTranscode, 0);
-	    #endif
-
-        if (neededLen == (unsigned int)-1)
-            return 0;
+        const unsigned int neededLen = calcRequiredSize(toTranscode);
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = new char[neededLen + 1];
@@ -929,9 +911,7 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
     if (*toTranscode)
     {
         // Calc the needed size
-        const unsigned int neededLen = ::wcstombs(0, toTranscode, 0);
-        if (neededLen == (unsigned int)-1)
-            return 0;
+        const unsigned int neededLen = calcRequiredSize(toTranscode, manager);
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char)); //new char[neededLen + 1];
