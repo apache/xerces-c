@@ -2382,19 +2382,11 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 , elemDecl->getFullName()
             );
         }
-
-        //
-        //  If we are not validating, then mark it as declared since it makes
-        //  things simpler and we aren't going to do do the validation checks
-        //  that need to know if it was really declared or not anyway.
-        //
-        if (!fValidate)
-            elemDecl->setCreateReason(XMLElementDecl::Declared);
     }
      else
     {
         // If its not marked declared and validating, then emit an error
-        if (!elemDecl->isDeclared() && fValidate)
+        if (fValidate && !elemDecl->isDeclared())
         {
             fValidator->emitError
             (
@@ -3272,14 +3264,6 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 , elemDecl->getFullName()
             );
         }
-
-        //
-        //  If we are not validating, then mark it as declared since it makes
-        //  things simpler and we aren't going to do do the validation checks
-        //  that need to know if it was really declared or not anyway.
-        //
-        if (!fValidate)
-            elemDecl->setCreateReason(XMLElementDecl::Declared);
     }
      else
     {
