@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/11 21:51:01  knoaman
+ * Schema updates and fixes.
+ *
  * Revision 1.3  2001/05/11 13:26:48  tng
  * Copyright update.
  *
@@ -100,7 +103,7 @@ const unsigned short RegxParser::S_INBRACKETS	= 1;
 const unsigned short RegxParser::S_INXBRACKETS	= 2;
 
 // ---------------------------------------------------------------------------
-//  RegularExpression::ReferencePostion: Constructors and Destructor
+//  RegxParser::ReferencePostion: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RegxParser::ReferencePosition::ReferencePosition(const int refNo,
 												 const int position)
@@ -1466,6 +1469,14 @@ XMLInt32 RegxParser::decodeEscaped() {
 	} // end switch
 
     return ch;
+}
+
+// ---------------------------------------------------------------------------
+//  RegxParser: Helper Methods
+// ---------------------------------------------------------------------------
+bool RegxParser::checkQuestion(const int off) {
+
+    return ((off < fStringLen) && fString[off] == chQuestion);
 }
 
 /**

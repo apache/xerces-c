@@ -295,10 +295,6 @@ inline bool RegxParser::isSet(const int flag) {
     return (fOptions & flag) == flag;
 }
 
-inline bool RegxParser::checkQuestion(const int off) {
-
-    return off < fStringLen && fString[off] == chQuestion;
-}
 
 inline int RegxParser::hexChar(const XMLInt32 ch) {
 

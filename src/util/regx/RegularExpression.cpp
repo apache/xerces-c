@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/11 21:50:58  knoaman
+ * Schema updates and fixes.
+ *
  * Revision 1.3  2001/05/11 13:26:46  tng
  * Copyright update.
  *
@@ -837,6 +840,7 @@ bool RegularExpression::matchDot(Context* const context, int& offset,
 			return false;
 	}
 
+    offset = (direction > 0) ? ++tmpOffset : tmpOffset;
 	return true;
 }
 
@@ -1014,18 +1018,22 @@ bool RegularExpression::matchString(Context* const context,
 									const short direction, const bool ignoreCase)
 {
 	int length = XMLString::stringLen(literal);
+	int tmpOffset = (direction > 0) ? offset : offset - length;
 
-	if (context->fLimit - offset < length)
+	if (context->fLimit - tmpOffset < length)
 		return false;
 
 	bool match = ignoreCase
-					? XMLString::regionIMatches(context->fString, offset,
+					? XMLString::regionIMatches(context->fString, tmpOffset,
 												literal, 0, length)
-					: XMLString::regionMatches(context->fString, offset,
+					: XMLString::regionMatches(context->fString, tmpOffset,
 											   literal, 0, length);
 
-	offset = direction > 0 ? offset + length : offset - length;
-	return true;
+	if (match) {
+	    offset = direction > 0 ? offset + length : offset - length;
+    }
+
+	return match;
 }
 
 int RegularExpression::matchCapture(Context* const context, const Op* const op,

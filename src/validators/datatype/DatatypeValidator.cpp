@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/11 21:51:09  knoaman
+ * Schema updates and fixes.
+ *
  * Revision 1.5  2001/05/11 13:27:27  tng
  * Copyright update.
  *
@@ -88,10 +91,10 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
                                      const int finalSet,
                                      const ValidatorType type)
     : fFinalSet(finalSet)
+    , fFacetsDefined(0)
+    , fType(type)
     , fBaseValidator(baseValidator)
     , fFacets(facets)
-    , fType(type)
-    , fFacetsDefined(0)
     , fPattern(0)
     , fRegex(0)
 {

@@ -65,7 +65,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/regx/RegxParser.hpp>
-#include <util/RuntimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -142,122 +141,6 @@ private:
 	// -----------------------------------------------------------------------
 };
 
-// ---------------------------------------------------------------------------
-//  ParserForXMLSchema: Helper methods
-// ---------------------------------------------------------------------------
-inline bool ParserForXMLSchema::checkQuestion(const int off) {
-
-    return false;
-}
-
-
-// ---------------------------------------------------------------------------
-//  ParserForXMLSchema: Parsing/Processing methods
-// ---------------------------------------------------------------------------
-inline Token* ParserForXMLSchema::processLook(const unsigned short tokType) {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_A() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_B() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_b() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_C() {
-
-    processNext();
-    return getTokenForShorthand(chLatin_C);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_c() {
-
-	processNext();
-	return getTokenForShorthand(chLatin_c);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_g() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_gt() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_I() {
-
-	processNext();
-	return getTokenForShorthand(chLatin_I);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_i() {
-
-	processNext();
-	return getTokenForShorthand(chLatin_i);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_lt() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_X() {
-
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_Z() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBacksolidus_z() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processBackReference() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processCondition() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processIndependent() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processModifiers() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline Token* ParserForXMLSchema::processParen2() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
-
-inline RangeToken* ParserForXMLSchema::parseSetOperations() {
-
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
-}
 #endif
 
 /**

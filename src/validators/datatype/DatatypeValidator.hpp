@@ -335,15 +335,12 @@ private:
     // -----------------------------------------------------------------------
 
     int                           fFinalSet;
+    int                           fFacetsDefined;
+    ValidatorType                 fType;
 	DatatypeValidator*            fBaseValidator;
 	RefHashTableOf<KVStringPair>* fFacets;
-
-    ValidatorType                 fType;
-    int                           fFacetsDefined;
-    const XMLCh*                  fPattern;
-    RegularExpression            *fRegex;
-
-    //ValueVectorOf<bool>        *fFixed;
+    XMLCh*                        fPattern;
+    RegularExpression*            fRegex;
 };
 
 
@@ -386,8 +383,8 @@ inline void DatatypeValidator::setType(ValidatorType theType)
 inline void DatatypeValidator::cleanUp() {
 
 	delete fFacets;
+    delete [] fPattern;
     delete fRegex;
-
 }
 
 
@@ -437,7 +434,8 @@ inline const XMLCh* DatatypeValidator::getPattern() const
 
 inline void DatatypeValidator::setPattern(const XMLCh* pattern)
 {
-    fPattern = pattern;
+    delete [] fPattern;
+    fPattern = XMLString::replicate(pattern);
 }
 
 inline RegularExpression* DatatypeValidator::getRegex() const

@@ -185,7 +185,7 @@ private:
     // -----------------------------------------------------------------------
     void reportSchemaError(const XMLCh* const msgDomain, const int errorCode);
     void reportSchemaError(const XMLCh* const msgDomain,
-                           const int errorCode,
+                           const int errorCode, 
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
@@ -200,7 +200,7 @@ private:
     void retrieveNamespaceMapping();
 
     /**
-      * Extract all top-level attribute, attributeGroup, and group Decls and
+      * Extract all top-level attribute, attributeGroup, and group Decls and 
       * put them in the 3 hash tables in the SchemaGrammar.
       */
 	void extractTopLevel3Components(const DOM_Element& rootElem);
@@ -215,13 +215,13 @@ private:
       * Parameters:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
-      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?)
+      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?) 
       *
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
       * Used by traverseSimpleTypeDecl.
 	  */
-	DOM_Element checkContent(const DOM_Element& rootElem,
+	DOM_Element checkContent(const DOM_Element& rootElem, 
                              const DOM_Element& contentElem,
                              const bool isEmpty);
 
@@ -390,12 +390,7 @@ private:
     const XMLCh* getElementAttValue(const DOM_Element& elem,
                                     const XMLCh* const attName);
 
-    /**
-      * Checks whether an name is a valid NCName.
-      */
-    bool isValidNCName(const XMLCh* const name);
-
-    ContentSpecNode* expandContentModel(ContentSpecNode* const specNode,
+    ContentSpecNode* expandContentModel(ContentSpecNode* const specNode, 
                                         const DOM_Element& elem);
 
     /**
@@ -563,7 +558,7 @@ TraverseSchema::isValidRefDeclaration(const DOM_Element& elem) {
              || elem.getAttribute(SchemaSymbols::fgATT_BLOCK).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_FINAL).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_TYPE).length() != 0
-             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0
+             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0 
              || elem.getAttribute(SchemaSymbols::fgATT_FIXED).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_SUBSTITUTIONGROUP).length() != 0);
 }
@@ -579,7 +574,7 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
         fBuffer.set(attValue.rawBuffer(), attValue.length());
         unsigned int elemId = fStringPool.addOrFind(fBuffer.getRawBuffer());
 
-        return fStringPool.getValueForId(elemId);
+        return fStringPool.getValueForId(elemId);  
     }
 
     return 0;
@@ -590,7 +585,7 @@ inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
     if (XMLString::compareString(baseURI,fTargetNSURIString) != 0
         && XMLString::compareString(baseURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
         && XMLString::stringLen(baseURI) != 0) {
-        //REVISIT, !!!! a hack: for schema that has no
+        //REVISIT, !!!! a hack: for schema that has no 
         //target namespace, e.g. personal-schema.xml
         return true;
     }
