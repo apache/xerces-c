@@ -114,6 +114,7 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 , fDocumentType(0)
 , fDocumentVector(0)
 , fCreateCommentNodes(true)
+, fDocumentAdoptedByUser(false)
 {
     //
     //  Create a scanner and tell it what validator to use. Then set us
@@ -135,16 +136,20 @@ AbstractDOMParser::~AbstractDOMParser()
     if (fDocumentVector)
         delete fDocumentVector;
 
-    delete fDocument;
+    if (!fDocumentAdoptedByUser)
+        delete fDocument;
     delete fNodeStack;
     delete fScanner;
 }
 
 
+// ---------------------------------------------------------------------------
+//  XercesDOMParser: Utilities
+// ---------------------------------------------------------------------------
 void AbstractDOMParser::reset()
 {
     // if fDocument exists already, store the old pointer in the vector for deletion later
-    if (fDocument) {
+    if (fDocument && !fDocumentAdoptedByUser) {
         if (!fDocumentVector) {
             // allocate the vector if not exists yet
             fDocumentVector  = new RefVectorOf<DOMDocumentImpl>(10, true) ;
@@ -160,9 +165,30 @@ void AbstractDOMParser::reset()
     fCurrentEntity   = 0;
     fParseInProgress = false;
     fWithinElement   = false;
+    fDocumentAdoptedByUser = false;
     fNodeStack->removeAllElements();
 };
 
+
+void AbstractDOMParser::resetPool()
+{
+    //  We cannot enter here while a regular parse is in progress.
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    if (fDocumentVector)
+        fDocumentVector->removeAllElements();
+
+    delete fDocument;
+    fDocument = 0;
+}
+
+
+DOMDocument* AbstractDOMParser::adoptDocument()
+{
+    fDocumentAdoptedByUser = true;
+    return fDocument;
+}
 
 
 // ---------------------------------------------------------------------------
@@ -421,22 +447,6 @@ void AbstractDOMParser::parseReset(XMLPScanToken& token)
 }
 
 
-// ---------------------------------------------------------------------------
-//  AbstractDOMParser: Utilities
-// ---------------------------------------------------------------------------
-void AbstractDOMParser::resetDocumentPool()
-{
-    //  We cannot enter here while a regular parse is in progress.
-    if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
-
-    if (fDocumentVector)
-        fDocumentVector->removeAllElements();
-
-    delete fDocument;
-    fDocument = 0;
-}
-
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Implementation of XMLDocumentHandler interface
@@ -644,7 +654,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             DOMAttrImpl *attr = (DOMAttrImpl *)
                 fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
             attr->setValue(oneAttrib -> getValue());
-            elemImpl->setAttributeNode(attr);
+            DOMNode* remAttr = elemImpl->setAttributeNode(attr);
+            if (remAttr)
+                remAttr->release();
 
             //DOMAttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
             //    oneAttrib -> getValue());
@@ -672,7 +684,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             DOMAttrImpl *attr = (DOMAttrImpl *)
                 fDocument->createAttribute(oneAttrib->getName());
             attr->setValue(oneAttrib -> getValue());
-            elemImpl->setAttributeNode(attr);
+            DOMNode* rem = elemImpl->setAttributeNode(attr);
+            if (rem)
+                rem->release();
 				attr->setSpecified(oneAttrib->getSpecified());
 
 				// Attributes of type ID.  If this is one, add it to the hashtable of IDs
@@ -1072,11 +1086,16 @@ void AbstractDOMParser::endAttList
                     insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
                 }
                 insertAttr->setValue(attr->getValue());
-                elemImpl->setAttributeNode(insertAttr);
+                DOMNode* remAttr = elemImpl->setAttributeNode(insertAttr);
+                if (remAttr)
+                    remAttr->release();
+
                 insertAttr->setSpecified(false);
             }
         }
-        fDocumentType->getElements()->setNamedItem(elemImpl);
+        DOMNode* rem = fDocumentType->getElements()->setNamedItem(elemImpl);
+        if (rem)
+            rem->release();
     }
 }
 
@@ -1105,16 +1124,8 @@ void AbstractDOMParser::entityDecl
     DOMEntityImpl *previousDef = (DOMEntityImpl *)
 	    fDocumentType->getEntities()->setNamedItem( entity );
 
-    #ifdef _revisit
-    //
-    //  If this new entity node is replacing an entity node that was already
-    //    in the entities named node map (happens if documents redefine the
-    //    predefined entited such as lt), we need to delete the original
-    //    entitiy node, assuming no-one else was referencing it.
-    //
-    if (previousDef != 0 && previousDef->nodeRefCount == 0)
-    	        NodeImpl::deleteIf(previousDef);
-    #endif
+    if (previousDef)
+        previousDef->release();
 
     if (fDocumentType->isIntSubsetReading())
     {
@@ -1181,12 +1192,13 @@ void AbstractDOMParser::notationDecl
     , const bool                isIgnored
 )
 {
-	DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());
-	notation->setPublicId(notDecl.getPublicId());
-	notation->setSystemId(notDecl.getSystemId());
+    DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());
+    notation->setPublicId(notDecl.getPublicId());
+    notation->setSystemId(notDecl.getSystemId());
 
-	fDocumentType->getNotations()->setNamedItem( notation );
-
+    DOMNode* rem = fDocumentType->getNotations()->setNamedItem( notation );
+    if (rem)
+        rem->release();
 }
 
 void AbstractDOMParser::startAttList

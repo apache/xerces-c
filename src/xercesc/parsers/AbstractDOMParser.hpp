@@ -117,6 +117,12 @@ public :
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Utility methods
+    // -----------------------------------------------------------------------
+
+    /** @name Utility methods */
+    //@{
     /** Reset the parser
       *
       * This method resets the state of the DOM driver and makes
@@ -124,30 +130,22 @@ public :
       */
     void reset();
 
-    /** Reset the documents vector pool and release all the associated memory
-      * back to the system.
+    /** Adopt the DOM document
       *
-      * When parsing a document using a DOM parser, all memory allocated
-      * for a DOM tree is associated to the DOM document.
+      * This method returns the DOMDocument object representing the
+      * root of the document tree.
       *
-      * If you do multiple parse using the same DOM parser instance, then
-      * multiple DOM documents will be generated and saved in a vector pool.
-      * All these documents (and thus all the allocated memory)
-      * won't be deleted until the parser instance is destroyed.
+      * The caller will adopt the DOMDocument and thus is responsible to
+      * call DOMDocument::release() to release the associated memory.
+      * The parser will not delete it.   The ownership is transferred
+      * from the parser to the caller.
       *
-      * If you don't need these DOM documents anymore and don't want to
-      * destroy the DOM parser instance at this moment, then you can call this method
-      * to reset the document vector pool and release all the allocated memory
-      * back to the system.
-      *
-      * It is an error to call this method if you are in the middle of a
-      * parse (e.g. in the mid of a progressive parse).
-      *
-      * @exception IOException An exception from the parser if this function
-      *            is called when a parse is in progress.
-      *
+      * @return The adopted DOMDocument object which represents the entire
+      *         XML document.
       */
-    void resetDocumentPool();
+    DOMDocument* adoptDocument();
+
+    //@}
 
 
     // -----------------------------------------------------------------------
@@ -162,6 +160,8 @@ public :
       * This method returns the DOMDocument object representing the
       * root of the document tree. This object provides the primary
       * access to the document's data.
+      *
+      * The returned DOMDocument object is owned by the parser.
       *
       * @return The DOMDocument object which represents the entire
       *         XML document.
@@ -659,7 +659,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       * @see InputSource#InputSource
       */
-    virtual void parse(const InputSource& source, const bool reuseGrammar = false);
+    void parse(const InputSource& source, const bool reuseGrammar = false);
 
     /** Parse via a file path or URL
       *
@@ -680,7 +680,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       * @see #parse(InputSource,...)
       */
-    virtual void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
+    void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
 
     /** Parse via a file path or URL (in the local code page)
       *
@@ -700,7 +700,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       * @see #parse(InputSource,...)
       */
-    virtual void parse(const char* const systemId, const bool reuseGrammar = false);
+    void parse(const char* const systemId, const bool reuseGrammar = false);
 
     /** Begin a progressive parse operation
       *
@@ -1084,6 +1084,9 @@ public :
     //@}
 
 
+    // -----------------------------------------------------------------------
+    //  Deprecated Methods
+    // -----------------------------------------------------------------------
     /** @name Deprecated Methods */
     //@{
     /**
@@ -1112,11 +1115,14 @@ public :
       * @see #getDoValidation
       */
     void setDoValidation(const bool newState);
+    //@}
 
-    /**
-      * Deprecated doctypehandler interfaces
-      */
-	virtual void attDef
+    // -----------------------------------------------------------------------
+    //  Implementation of the deprecated DocTypeHandler interface.
+    // -----------------------------------------------------------------------
+    /** @name Deprecated DocTypeHandler Interfaces */
+    //@{
+    virtual void attDef
     (
         const   DTDElementDecl&     elemDecl
         , const DTDAttDef&          attDef
@@ -1273,6 +1279,8 @@ protected :
     virtual DOMElement* createElementNSNode(const XMLCh *fNamespaceURI,
                                               const XMLCh *qualifiedName);
 
+    void resetPool();
+
 
 private :
     // -----------------------------------------------------------------------
@@ -1323,6 +1331,11 @@ private :
     //
     //  fCreateCommentNodes
     //      Indicates whether comment nodes should be created.
+    //
+    //  fDocumentAdoptedByUser
+    //      The DOMDocument ownership has been transferred to application
+    //      If set to true, the parser does not own the document anymore
+    //      and thus will not release its memory.
     // -----------------------------------------------------------------------
     bool                          fCreateEntityReferenceNodes;
     bool                          fIncludeIgnorableWhitespace;
@@ -1338,6 +1351,7 @@ private :
     DOMDocumentTypeImpl*          fDocumentType;
     RefVectorOf<DOMDocumentImpl>* fDocumentVector;
     bool                          fCreateCommentNodes;
+    bool                          fDocumentAdoptedByUser;
 };
 
 
