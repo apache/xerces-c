@@ -24,7 +24,6 @@
 
             <li>Which compiler/version you are using (MSVC6? gcc? cc? aCC?) </li>
             <li>Sample XML file that causes the bug</li>
-            <li>Sample Schema file (if required to recreate the bug)</li>
             <li>Sample DTD file (if required to recreate the bug)</li>
         </ul>
     </s2>
@@ -44,6 +43,7 @@
             <li>Sumit Chawla</li>
             <li>John Bellardo</li>
             <li>Arundhati Bhowmick</li>
+            <li>Simon Fell</li>
             <li>Paul Ferguson</li>
             <li>Pierpaolo Fumagalli</li>
             <li>Susan Hardenbrook</li>
@@ -55,6 +55,7 @@
             <li>David Nickerson</li>
             <li>Michael Ottati</li>
             <li>Mike Pogue</li>
+            <li>Joe Polastre</li>
             <li>John Ponzo</li>
             <li>Dean Roddey</li>
             <li>Steven Rosenthal</li>

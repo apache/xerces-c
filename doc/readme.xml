@@ -13,7 +13,8 @@
         <jump href="http://www.w3.org/TR/1998/REC-xml-19980210">XML 1.0</jump> recommendation
         and associated standards (
         <jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM 1.0</jump>,
-        <jump href="http://www.megginson.com/SAX/index.html">SAX 1.0</jump>,
+        <jump href="http://www.megginson.com/SAX/SAX1/index.html">SAX 1.0</jump>,
+        <jump href="http://www.megginson.com/SAX/index.html">SAX 2.0</jump>,
         <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>). It also provides
         early implementations of
         <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2 version 1.0</jump>
@@ -48,7 +49,7 @@
             <li>Conforms to <jump href="http://www.w3.org/TR/1998/REC-xml-19980210">XML Spec 1.0</jump></li>
             <li>Tracking of latest
             <jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM (Level 1.0)</jump>,
-            <jump href="http://www.megginson.com/SAX/index.html">SAX</jump> and
+            <jump href="http://www.megginson.com/SAX/index.html">SAX/SAX2</jump> and
             <jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump> specifications.</li>
             <li>Experimental
             <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2.0</jump> implementation</li>
