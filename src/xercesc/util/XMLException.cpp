@@ -74,23 +74,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  Local data
-//
-//  gDefErrMsg
-//      For now, if we cannot load an exception message, we load up the
-//      default.
-// ---------------------------------------------------------------------------
-static const XMLCh  gDefErrMsg[] =
-{
-        chLatin_C, chLatin_o, chLatin_u, chLatin_l, chLatin_d
-    ,   chSpace, chLatin_n, chLatin_o, chLatin_t, chSpace
-    ,   chLatin_l, chLatin_o, chLatin_a, chLatin_d, chSpace
-    ,   chLatin_m, chLatin_e, chLatin_s, chLatin_s, chLatin_a
-    ,   chLatin_g, chLatin_e, chNull
-};
-
-
-// ---------------------------------------------------------------------------
 //  Local, static data
 // ---------------------------------------------------------------------------
 static XMLMsgLoader* sMsgLoader = 0;
@@ -274,7 +257,7 @@ void XMLException::loadExceptText(const XMLExcepts::Codes toLoad)
 	{
 		fMsg = XMLString::replicate
         (
-            gDefErrMsg
+        XMLUni::fgDefErrMsg
             , fMemoryManager
         );
 		return;
@@ -304,7 +287,7 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
 	{
 		fMsg = XMLString::replicate
         (
-            gDefErrMsg
+        XMLUni::fgDefErrMsg
             , fMemoryManager
         );
 		return;
@@ -334,7 +317,7 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
 	{
 		fMsg = XMLString::replicate
         (
-            gDefErrMsg
+        XMLUni::fgDefErrMsg
             , fMemoryManager
         );
 		return;
