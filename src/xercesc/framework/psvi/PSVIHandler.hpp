@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.2  2003/09/22 15:03:06  neilg
+  * clearly the local name of an element should be a string, not an XMLElementDecl...
+  *
   * Revision 1.1  2003/09/16 14:33:36  neilg
   * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
   *
@@ -104,7 +107,7 @@ public:
       */
     virtual void handleElementPSVI
     (
-        const   XMLElementDecl *        localName 
+        const   XMLCh *                 localName 
         , const XMLCh* const            uri
         , const XMLCh* const            prefix
         , const PSVIElement *           elementInfo
@@ -124,7 +127,7 @@ public:
       */
     virtual void handleAttributesPSVI
     (
-        const   XMLElementDecl *        localName 
+        const   XMLCh *                 localName 
         , const XMLCh* const            uri
         , const XMLCh* const            prefix
         , const PSVIAttributeList *     psviAttributes
