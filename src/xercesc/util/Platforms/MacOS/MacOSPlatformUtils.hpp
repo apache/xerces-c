@@ -83,7 +83,9 @@ class XMLMacAbstractFile
         virtual void close() = 0;
         virtual unsigned int size() = 0;
         virtual void open(const XMLCh* const) = 0;
+        virtual void openFileToWrite(const XMLCh* const) = 0;
         virtual unsigned int read(const unsigned int, XMLByte* const) = 0;
+        virtual void write(const long byteCount, const XMLByte* const buffer) = 0;
         virtual void reset() = 0;
 };
 
@@ -99,10 +101,15 @@ class XMLMacFile : public XMLMacAbstractFile
         void close();
         unsigned int size();
         void open(const XMLCh* const);
+        void openFileToWrite(const XMLCh* const);
         unsigned int read(const unsigned int, XMLByte* const);
+        void write(const long byteCount, const XMLByte* const buffer);
         void reset();
         
     protected:
+        void create(const XMLCh* const);
+        void openWithPermission(const XMLCh* const, int macPermission);
+
         short	mFileRefNum;
         bool	mFileValid;
 };

@@ -268,7 +268,7 @@ XMLMacFile::size()
 
 
 void
-XMLMacFile::open(const XMLCh* const fileName)
+XMLMacFile::openWithPermission(const XMLCh* const fileName, int macPermission)
 {
     OSErr err = noErr;
 
@@ -286,7 +286,7 @@ XMLMacFile::open(const XMLCh* const fileName)
             err = FSGetDataForkName(&forkName);
 
         if (err == noErr)
-            err = FSOpenFork(&ref, forkName.length, forkName.unicode, fsRdPerm, &mFileRefNum);
+            err = FSOpenFork(&ref, forkName.length, forkName.unicode, macPermission, &mFileRefNum);
     }
     else
     {
@@ -295,13 +295,121 @@ XMLMacFile::open(const XMLCh* const fileName)
             err = fnfErr;
 
         if (err == noErr)
-            err = FSpOpenDF(&spec, fsRdPerm, &mFileRefNum);
+            err = FSpOpenDF(&spec, macPermission, &mFileRefNum);
     }
 
     if (err != noErr)
         ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     mFileValid = true;
+}
+
+
+void
+XMLMacFile::create(const XMLCh* const filePath)
+{
+    OSErr err = noErr;
+    
+    //	Split path into directory and filename components
+    int posSlash = XMLString::lastIndexOf(filePath, '/', XMLString::stringLen(filePath) - 1);
+    int posName = (posSlash == -1) ? 0 : posSlash+1;
+
+    const XMLCh* namePtr = filePath + posName;
+    int nameLen = XMLString::stringLen(namePtr);
+
+    //	Make a temporary buffer of the directory
+    ArrayJanitor<XMLCh> dirPath(new XMLCh[namePtr - filePath + 1]);
+    XMLString::subString(dirPath.get(), filePath, 0, posName);
+
+    //	Parse path to directory
+    if (gHasHFSPlusAPIs)
+    {
+        FSRef ref;
+
+        //	If we find an existing file, delete it
+        if (XMLParsePathToFSRef(filePath, ref))
+            FSDeleteObject(&ref);
+
+        //	Get a ref to the directory
+        if (!XMLParsePathToFSRef(dirPath.get(), ref))
+            err = fnfErr;
+
+        //	Create a new file
+        if (err == noErr)
+        {
+            UniChar uniName[256];
+            err = FSCreateFileUnicode(
+                    &ref,
+                    nameLen, CopyXMLChsToUniChars(namePtr, uniName, nameLen, sizeof(uniName)),
+                    0, NULL, NULL, NULL);
+        }
+    }
+    else
+    {
+        FSSpec spec;
+
+        //	If we find an existing file, delete it
+        if (XMLParsePathToFSSpec(filePath, spec))
+            FSpDelete(&spec);
+
+        //	Get a spec to the parent directory
+        if (!XMLParsePathToFSSpec(dirPath.get(), spec))
+            err = fnfErr;
+
+        //	Check that the new name is not too long for HFS
+        if (err == noErr && nameLen > 31)
+            err = errFSNameTooLong;
+
+        if (err == noErr)
+        {
+            //	Transcode the unicode name to native encoding
+            ArrayJanitor<const char> nativeName(XMLString::transcode(namePtr));
+            unsigned char name[31 * 2 + 1 * 2 + 1];
+            
+            // Make a partial pathname from our current spec to the new object
+            unsigned char* partial = &name[1];
+
+            *partial++ = ':';      			 // Partial leads with :
+            const unsigned char* specName = spec.name; // Copy in spec name
+            for (int specCnt = *specName++; specCnt > 0; --specCnt)
+                *partial++ = *specName++;
+
+            *partial++ = ':';      			 // Separator
+            char c;
+            for (const char* p = nativeName.get(); (c = *p++) != 0; ) // Copy in new element
+                *partial++ = (c == ':') ? '/' : c;	// Convert : to /
+
+            name[0] = partial - &name[1];   // Set the name length
+
+            //	Update the spec: this will probably return fnfErr
+            err = FSMakeFSSpec(spec.vRefNum, spec.parID, name, &spec);
+
+            //	Create the file
+            err = FSpCreate(&spec, '??\??', 'TEXT', smSystemScript);
+        }
+    }
+
+    //	Fail if we didn't create the file
+    if (err != noErr)
+    {
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+        //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+    }
+}
+
+
+void
+XMLMacFile::open(const XMLCh* const fileName)
+{
+    openWithPermission(fileName, fsRdPerm);
+}
+
+
+void
+XMLMacFile::openFileToWrite(const XMLCh* const fileName)
+{
+    create(fileName);
+    openWithPermission(fileName, fsRdWrPerm);
 }
 
 
@@ -331,6 +439,42 @@ XMLMacFile::read(const unsigned int toRead, XMLByte* const toFill)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
 
     return bytesRead;
+}
+
+
+void
+XMLMacFile::write(const long byteCount, const XMLByte* const buffer)
+{
+    long bytesWritten = 0;
+    OSErr err = noErr;
+
+    if (byteCount <= 0 || buffer == NULL)
+        return;
+
+    if (!mFileValid)
+    {
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+        //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+    }
+
+    if (gHasHFSPlusAPIs)
+    {
+        ByteCount actualCount;
+        err = FSWriteFork(mFileRefNum, fsFromMark, 0, byteCount, buffer, &actualCount);
+        bytesWritten = actualCount;
+    }
+    else
+    {
+        long count = byteCount;
+        err = FSWrite(mFileRefNum, &count, buffer);
+        bytesWritten = count;
+    }
+
+    if ((err != noErr && err != eofErr) || (bytesWritten != byteCount))
+    {
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+        //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+    }
 }
 
 
@@ -431,9 +575,8 @@ XMLPlatformUtils::fileSize(const FileHandle theFile)
 FileHandle
 XMLPlatformUtils::openFile(const char* const fileName)
 {
-    const XMLCh* xmlPath = XMLString::transcode(fileName);
-    ArrayJanitor<const XMLCh> jan(xmlPath);
-    return openFile(xmlPath);
+    ArrayJanitor<const XMLCh> xmlPath(XMLString::transcode(fileName));
+    return openFile(xmlPath.get());
 }
 
 
@@ -444,12 +587,32 @@ XMLPlatformUtils::openFile(const XMLCh* const fileName)
     if (!gFileSystemCompatible)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
 
-    XMLMacFile* file = new XMLMacFile();
-    Janitor<XMLMacAbstractFile> janFile(file);
+    Janitor<XMLMacAbstractFile> file(new XMLMacFile());
     file->open(fileName);
-    janFile.orphan();
 
-    return file;
+    return file.release();
+}
+
+
+FileHandle
+XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    ArrayJanitor<const XMLCh> xmlPath(XMLString::transcode(fileName));
+    return openFileToWrite(xmlPath.get());
+}
+
+
+FileHandle
+XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    // Check to make sure the file system is in a state where we can use it
+    if (!gFileSystemCompatible)
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile);
+
+    Janitor<XMLMacAbstractFile> file(new XMLMacFile());
+    file->openFileToWrite(fileName);
+
+    return file.release();
 }
 
 
@@ -462,11 +625,20 @@ XMLPlatformUtils::openStdInHandle()
 
 
 unsigned int
-XMLPlatformUtils::readFileBuffer(   const   FileHandle      theFile
-                                 , const unsigned int    toRead
-                                 ,       XMLByte* const  toFill)
+XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
+                                 ,  const unsigned int    toRead
+                                 ,        XMLByte* const  toFill)
 {
     return theFile->read(toRead, toFill);
+}
+
+
+void
+XMLPlatformUtils::writeBufferToFile(   const   FileHandle   theFile
+                                    ,  const long		    toWrite
+                                    ,  const XMLByte* const toFlush)
+{
+    return theFile->write(toWrite, toFlush);
 }
 
 
@@ -1023,7 +1195,7 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 	
 	//	If it's a relative path, pre-pend the current directory to the path.
 	//	FSPathMakeRef doesn't deal with relativity on the front of the path
-	if (*p == '.')
+	if (*p != '/')
 	{
 		//	Right justify the user path to make room for the pre-pended path
 		std::memmove(p + kMaxStaticPathChars - pathLen, p, pathLen);
@@ -1687,7 +1859,6 @@ TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
     TECObjectRef tec = 0;
     ByteCount bytesConsumed = 0;
     ByteCount bytesProduced = 0;
-
 
     TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
                                         kTextEncodingDefaultVariant,
