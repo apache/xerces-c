@@ -91,7 +91,7 @@ public:
                   const XMLCh* const defaultValue, const short dvIndex);
     ~AttributeInfo();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     short  getDefaultOption() const;
@@ -101,7 +101,7 @@ public:
 
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
     void cleanUp();
@@ -133,20 +133,20 @@ public:
     // -----------------------------------------------------------------------
     //  Instance methods
     // -----------------------------------------------------------------------
-	static GeneralAttributeCheck* instance();
+    static GeneralAttributeCheck* instance();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constants
     // -----------------------------------------------------------------------
     static const unsigned short GlobalContext;
     static const unsigned short LocalContext;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
-	void checkAttributes(const DOM_Element& elem,
+    void checkAttributes(const DOM_Element& elem,
                          const unsigned short elemContext,
-						 TraverseSchema* const schema);
+                         TraverseSchema* const schema);
 
 private:
     // -----------------------------------------------------------------------
@@ -154,31 +154,31 @@ private:
     // -----------------------------------------------------------------------
     GeneralAttributeCheck();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     GeneralAttributeCheck(const GeneralAttributeCheck&);
     void operator=(const GeneralAttributeCheck&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Setup methods
     // -----------------------------------------------------------------------
     void setUpAttributes();
     void setUpValidators();
     void mapElements();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
     void cleanUp();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
     void validate(const XMLCh* const attName, const XMLCh* const attValue,
                   const short dvIndex, TraverseSchema* const schema);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private Constants
     // -----------------------------------------------------------------------
     // attributes 
@@ -228,13 +228,13 @@ private:
         Att_Value_WS_N,
         Att_Version_N,
 
-		// TO DO - Add XPath
+        // TO DO - Add XPath
 
         Att_Count
     };
 
-	// direct value compare
-	enum {
+    // direct value compare
+    enum {
         DT_Block = -1,
         DT_Block1 = -2,
         DT_Final = -3,
@@ -248,8 +248,7 @@ private:
         DT_ProcessContents = -11,
         DT_Public = -12,
         DT_Use = -13,
-        DT_WhiteSpace = -14,
-        DT_Boolean = -15
+        DT_WhiteSpace = -14
     };
 
     // datatype validators
@@ -259,8 +258,9 @@ private:
         DT_NonNegInt,
         DT_QName,
         DT_Token,
+        DT_Boolean,
 
-		// add XPath
+        // add XPath
         DT_Count
     };
 

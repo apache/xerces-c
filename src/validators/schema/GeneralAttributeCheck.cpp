@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/06 13:09:02  knoaman
+ * Use BooleanDatatypeValidator to validate values.
+ *
  * Revision 1.3  2001/05/18 20:05:30  knoaman
  * Modified wording of error messages.
  *
@@ -187,19 +190,19 @@ void GeneralAttributeCheck::setUpAttributes() {
                           SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
 
     fAttributes[Att_Attribute_FD_D] =
-		new AttributeInfo(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT, Att_Optional_Default,
+        new AttributeInfo(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT, Att_Optional_Default,
                           SchemaSymbols::fgATTVAL_UNQUALIFIED, DT_Form);
 
     fAttributes[Att_Base_R] = 
-		new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Required,
+        new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Required,
                           0, 0);
 
     fAttributes[Att_Base_N] = 
-		new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Optional_NoDefault,
+        new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Optional_NoDefault,
                           0, 0);
 
     fAttributes[Att_Block_N] =
-	    new AttributeInfo(SchemaSymbols::fgATT_BLOCK, Att_Optional_NoDefault,
+        new AttributeInfo(SchemaSymbols::fgATT_BLOCK, Att_Optional_NoDefault,
                           0, DT_Block);
 
     fAttributes[Att_Block1_N] =
@@ -222,7 +225,7 @@ void GeneralAttributeCheck::setUpAttributes() {
         new AttributeInfo(SchemaSymbols::fgATT_FINAL, Att_Optional_NoDefault,
                           0, DT_Final);
 
-	fAttributes[Att_Final1_N] =
+    fAttributes[Att_Final1_N] =
         new AttributeInfo(SchemaSymbols::fgATT_FINAL, Att_Optional_NoDefault,
                           0, DT_Final1);
         
@@ -369,9 +372,12 @@ void GeneralAttributeCheck::setUpValidators() {
 
     DatatypeValidatorFactory dvFactory;
 
-	dvFactory.expandRegistryToFullSchemaSet();
+    dvFactory.expandRegistryToFullSchemaSet();
     fValidators[DT_NonNegInt] = 
         dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
+
+    fValidators[DT_Boolean] = 
+        dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_BOOLEAN);
 
     // TO DO - add remaining valdiators
 }
@@ -387,11 +393,11 @@ void GeneralAttributeCheck::mapElements() {
 
     RefVectorOf<AttributeInfo>* attList = 0;
     int prefixContext = globalPrefix;
-	
+
     fElementMap = new RefHash2KeysTableOf<RefVectorOfAttributeInfo>(25);
 
     // element "attribute" - global
-	attList = new RefVectorOf<AttributeInfo>(5, false);
+    attList = new RefVectorOf<AttributeInfo>(5, false);
     attList->addElement(fAttributes[Att_Default_N]);
     attList->addElement(fAttributes[Att_Fixed_N]);
     attList->addElement(fAttributes[Att_ID_N]);
@@ -457,7 +463,7 @@ void GeneralAttributeCheck::mapElements() {
 
     // for element "redefine" - global (same as include)
 
-	// element "attributeGroup" - global
+    // element "attributeGroup" - global
 
     // element "group" - global
 
@@ -487,7 +493,7 @@ void GeneralAttributeCheck::mapElements() {
 
     // element "attribute" - local name
     prefixContext = localNamePrefix;
-	attList = new RefVectorOf<AttributeInfo>(7, false);
+    attList = new RefVectorOf<AttributeInfo>(7, false);
     attList->addElement(fAttributes[Att_Default_N]);
     attList->addElement(fAttributes[Att_Fixed_N]);
     attList->addElement(fAttributes[Att_Form_N]);
@@ -694,7 +700,7 @@ void GeneralAttributeCheck::mapElements() {
 // ---------------------------------------------------------------------------
 void GeneralAttributeCheck::cleanUp() {
 
-	for (unsigned int index = 0; index < Att_Count; index++) {
+    for (unsigned int index = 0; index < Att_Count; index++) {
             delete fAttributes[index];
     }
 
@@ -708,14 +714,14 @@ void GeneralAttributeCheck::cleanUp() {
 // ---------------------------------------------------------------------------
 GeneralAttributeCheck* GeneralAttributeCheck::instance() {
 
-	if (!fInstance) {
+    if (!fInstance) {
 
-		fInstance = new GeneralAttributeCheck();
+        fInstance = new GeneralAttributeCheck();
         XMLPlatformUtils::registerLazyData
         (
             new XMLDeleterFor<GeneralAttributeCheck>(fInstance)
         );
-	}
+    }
 
     return fInstance;
 }
@@ -732,20 +738,20 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
         return;
     }
 
-	DOMString                   name = elem.getLocalName();
+    DOMString                   name = elem.getLocalName();
     int                         prefixContext = globalPrefix;
     unsigned int                nameLen = name.length();
     XMLCh*                      elemName = 0;
     const XMLCh*                contextStr = fgGlobal;
     RefVectorOf<AttributeInfo>* elemAttrs = 0;
 
-	if (nameLen) {
+    if (nameLen) {
         elemName = new XMLCh[nameLen + 1];
         XMLString::copyNString(elemName, name.rawBuffer(), nameLen);
         elemName[nameLen] = chNull;
     }
 
-	ArrayJanitor<XMLCh> janName(elemName);
+    ArrayJanitor<XMLCh> janName(elemName);
 
     if (elemContext == LocalContext) {
 
@@ -761,19 +767,19 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
     elemAttrs = fElementMap->get(elemName, prefixContext);
 
-	if (!elemAttrs) {
+    if (!elemAttrs) {
         // We should report an error
         return;
     }
 
-	unsigned int           size = elemAttrs->size();
+    unsigned int           size = elemAttrs->size();
     RefHashTableOf<XMLCh>  attNameList(5);
 
     for (unsigned int i=0; i< size; i++) {
 
         AttributeInfo* attInfo = elemAttrs->elementAt(i);
 
-		if (attInfo) {
+        if (attInfo) {
 
             XMLCh* attName = attInfo->getName();
             DOMString attValue = elem.getAttribute(attName);
@@ -786,7 +792,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
                 fBuffer.set(attValue.rawBuffer(), attValueLen);
                 validate(attName, fBuffer.getRawBuffer(),
                          attInfo->getValidatorIndex(), schema);
-			}
+            }
             else {
                 if (attInfo->getDefaultOption() == Att_Required) {
                     schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
@@ -799,30 +805,30 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
     // ------------------------------------------------------------------
     // Check for disallowed attributes
     // ------------------------------------------------------------------
-	DOM_NamedNodeMap eltAttrs = elem.getAttributes();
+    DOM_NamedNodeMap eltAttrs = elem.getAttributes();
     int attrCount = eltAttrs.getLength();
 
     for (int j = 0; j < attrCount; j++) {
 
         DOM_Node  attribute = eltAttrs.item(j);
 
-		if (attribute.isNull()) {
+        if (attribute.isNull()) {
             break;
         }
 
         // Bypass attributes that start with xml 
         DOMString attName = attribute.getNodeName();
-		fBuffer.set(attName.rawBuffer(), attName.length());
-		XMLCh* tmpName = fBuffer.getRawBuffer();
+        fBuffer.set(attName.rawBuffer(), attName.length());
+        XMLCh* tmpName = fBuffer.getRawBuffer();
 
         if ((*tmpName == chLatin_X || *tmpName == chLatin_x)
            && (*(tmpName+1) == chLatin_M || *(tmpName+1) == chLatin_m)
            && (*(tmpName+2) == chLatin_L || *(tmpName+2) == chLatin_l)) {
             continue;
-		}
+        }
 
-	    attName = attribute.getLocalName();
-		fBuffer.set(attName.rawBuffer(), attName.length());
+        attName = attribute.getLocalName();
+        fBuffer.set(attName.rawBuffer(), attName.length());
 
         if (!attNameList.containsKey(fBuffer.getRawBuffer())) {
             schema->reportSchemaError(XMLUni::fgXMLErrDomain,
@@ -837,7 +843,7 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
                                      const short dvIndex,
                                      TraverseSchema* const schema)
 {
-	bool isInvalid = false;
+    bool isInvalid = false;
     DatatypeValidator* dv = 0;
 
     switch (dvIndex) {
@@ -846,10 +852,10 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
             && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_UNQUALIFIED) != 0) {
             isInvalid = true;
         }
-		break;
+        break;
     case DT_MaxOccurs:
             // maxOccurs = (nonNegativeInteger | unbounded)
-		if (XMLString::compareString(attValue, fgUnbounded) != 0) {
+        if (XMLString::compareString(attValue, fgUnbounded) != 0) {
             dv = fValidators[DT_NonNegInt];
         }
         break;
@@ -886,14 +892,11 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
         }
         break;
     case DT_Boolean:
-        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_TRUE) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_FALSE) != 0) {
-            isInvalid = true;
-        }
+        dv = fValidators[DT_Boolean];
         break;
     case DT_NonNegInt:
-		dv = fValidators[DT_NonNegInt];
-		break;
+        dv = fValidators[DT_NonNegInt];
+        break;
     }
 
     if (dv) {
@@ -905,11 +908,11 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
         }
     }
 
-	if (isInvalid) {
-		      schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
+    if (isInvalid) {
+              schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
                                       XMLErrs::InvalidAttValue,
                                       attValue, attName);
-	}
+    }
 }
 
 /**
