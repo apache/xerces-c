@@ -78,7 +78,8 @@ public:
     HexBinaryDatatypeValidator();
 
     HexBinaryDatatypeValidator(DatatypeValidator*            const baseValidator
-                             , RefHashTableOf<KVStringPair>* const facets     
+                             , RefHashTableOf<KVStringPair>* const facets    
+                             , RefVectorOf<XMLCh>*           const enums                             
                              , const int                           finalSet);
 
     virtual ~HexBinaryDatatypeValidator();
@@ -135,6 +136,7 @@ public:
       */
     DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
                                  , RefHashTableOf<KVStringPair>* const facets
+                                 , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
 
@@ -143,7 +145,8 @@ private:
     void checkContent( const XMLCh* const content, bool asBase);
 
     void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets);
+            , RefHashTableOf<KVStringPair>* const facets
+            , RefVectorOf<XMLCh>*           const enums);
 
     void cleanUp();
 
@@ -169,7 +172,7 @@ private:
 
     void                 setMinLength(unsigned int);
 
-    void                 setEnumeration(RefVectorOf<XMLCh>* );
+    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -180,7 +183,8 @@ private:
     // -----------------------------------------------------------------------    
      int                  fLength;
      int                  fMaxLength;  
-     int                  fMinLength;  
+     int                  fMinLength; 
+     bool                 fEnumerationInherited;     
      RefVectorOf<XMLCh>*  fEnumeration;
 
 };
@@ -193,6 +197,7 @@ inline HexBinaryDatatypeValidator::HexBinaryDatatypeValidator()
 ,fLength(0)
 ,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
 ,fMinLength(0)
+,fEnumerationInherited(false)
 ,fEnumeration(0)
 {}
 
@@ -217,9 +222,10 @@ inline int HexBinaryDatatypeValidator::compare(const XMLCh* const lValue
 inline DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
                                       DatatypeValidator* const            baseValidator
                                     , RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new HexBinaryDatatypeValidator(baseValidator, facets, finalSet);
+    return (DatatypeValidator*) new HexBinaryDatatypeValidator(baseValidator, facets, enums, finalSet);
 }
 
 inline void HexBinaryDatatypeValidator::validate( const XMLCh* const content)
@@ -230,7 +236,8 @@ inline void HexBinaryDatatypeValidator::validate( const XMLCh* const content)
 inline void HexBinaryDatatypeValidator::cleanUp()
 {
     //~RefVectorOf will delete all adopted elements
-    delete fEnumeration;
+    if (fEnumeration && !fEnumerationInherited)
+        delete fEnumeration;
 }
 
 // -----------------------------------------------------------------------
@@ -276,12 +283,18 @@ inline void HexBinaryDatatypeValidator::setMinLength(unsigned int newMinLength)
     fMinLength = newMinLength;
 }
 
-inline void HexBinaryDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* newEnum)
+inline void HexBinaryDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
+                                                  , bool                inherited)
 {
-    if (fEnumeration)
-        delete fEnumeration;
+    if (enums)
+    {
+        if (fEnumeration && !fEnumerationInherited)
+            delete fEnumeration;
 
-    fEnumeration = newEnum;
+        fEnumeration = enums;
+        fEnumerationInherited = inherited;
+        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
+    }
 }
 
 /**

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/28 21:11:17  tng
+ * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
+ *
  * Revision 1.3  2001/05/18 13:36:44  tng
  * Schema: Catch RegularExpression exception and NumberFormatException
  *
@@ -90,6 +93,7 @@ const XMLCh fgValueSpace[][32] =
 BooleanDatatypeValidator::BooleanDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
+                        , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Boolean)
 {

@@ -78,6 +78,7 @@ public:
 
     StringDatatypeValidator(DatatypeValidator*            const baseValidator
                           , RefHashTableOf<KVStringPair>* const facets
+                          , RefVectorOf<XMLCh>*           const enums
                           , const int                           finalSet);
 
 
@@ -136,6 +137,7 @@ public:
       */
     DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
                                  , RefHashTableOf<KVStringPair>* const facets
+                                 , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
 private:
@@ -143,7 +145,8 @@ private:
     void checkContent(const XMLCh* const content, bool asBase);
 
     void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets);
+            , RefHashTableOf<KVStringPair>* const facets
+            , RefVectorOf<XMLCh>*           const enums);
 
     void cleanUp();
 
@@ -169,7 +172,7 @@ private:
 
     void                 setMinLength(unsigned int);
 
-    void                 setEnumeration(RefVectorOf<XMLCh>* );
+    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
     void                 setWhiteSpace(short);
 
@@ -180,9 +183,9 @@ private:
      unsigned int         fLength;
      unsigned int         fMaxLength;
      unsigned int         fMinLength;
-     RefVectorOf<XMLCh>*  fEnumeration;
+     bool                 fEnumerationInherited;
      short                fWhiteSpace;         //DatatypeValidator::PRESERVE
-
+     RefVectorOf<XMLCh>*  fEnumeration;
 };
 
 // ---------------------------------------------------------------------------
@@ -193,8 +196,9 @@ inline StringDatatypeValidator::StringDatatypeValidator()
 ,fLength(0)
 ,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
 ,fMinLength(0)
-,fEnumeration(0)
+,fEnumerationInherited(false)
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
+,fEnumeration(0)
 {}
 
 inline StringDatatypeValidator::~StringDatatypeValidator()
@@ -222,9 +226,10 @@ inline int StringDatatypeValidator::compare(const XMLCh* const lValue
 inline DatatypeValidator* StringDatatypeValidator::newInstance(
                                       DatatypeValidator* const            baseValidator
                                     , RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new StringDatatypeValidator(baseValidator, facets, finalSet);
+    return (DatatypeValidator*) new StringDatatypeValidator(baseValidator, facets, enums, finalSet);
 }
 
 inline void StringDatatypeValidator::validate( const XMLCh* const content)
@@ -235,7 +240,8 @@ inline void StringDatatypeValidator::validate( const XMLCh* const content)
 inline void StringDatatypeValidator::cleanUp()
 {
     //~RefVectorOf will delete all adopted elements
-    delete fEnumeration;
+    if (fEnumeration && !fEnumerationInherited)
+        delete fEnumeration;
 }
 
 // -----------------------------------------------------------------------
@@ -281,12 +287,18 @@ inline void StringDatatypeValidator::setMinLength(unsigned int newMinLength)
     fMinLength = newMinLength;
 }
 
-inline void StringDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* newEnum)
+inline void StringDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
+                                                  , bool                inherited)
 {
-    if (fEnumeration)
-        delete fEnumeration;
+    if (enums)
+    {
+        if (fEnumeration && !fEnumerationInherited)
+            delete fEnumeration;
 
-    fEnumeration = newEnum;
+        fEnumeration = enums;
+        fEnumerationInherited = inherited;
+        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
+    }
 }
 
 inline void StringDatatypeValidator::setWhiteSpace(short newValue)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/05/28 21:11:18  tng
+ * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
+ *
  * Revision 1.8  2001/05/23 16:05:11  tng
  * Schema: NormalizedString fix.  By Pei Yong Zhang.
  *
@@ -100,17 +103,19 @@ static XMLCh value2[BUF_LEN+1];
 StringDatatypeValidator::StringDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
+                        , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::String)
 ,fLength(0)
 ,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
 ,fMinLength(0)
-,fEnumeration(0)
+,fEnumerationInherited(false)
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
+,fEnumeration(0)
 {
     try
     {
-        init(baseValidator, facets);
+        init(baseValidator, facets, enums);
     }
     catch (XMLException&)
     {
@@ -120,11 +125,15 @@ StringDatatypeValidator::StringDatatypeValidator(
 }
 
 void StringDatatypeValidator::init(DatatypeValidator*            const baseValidator
-                                 , RefHashTableOf<KVStringPair>* const facets)
+                                 , RefHashTableOf<KVStringPair>* const facets
+                                 , RefVectorOf<XMLCh>*           const enums)
 {
     // Set Facets if any defined
     if (facets)
     {
+        if (enums)
+            setEnumeration(enums, false);
+
         XMLCh* key;
         XMLCh* value;
         RefHashTableOfEnumerator<KVStringPair> e(facets);
@@ -195,11 +204,6 @@ void StringDatatypeValidator::init(DatatypeValidator*            const baseValid
                 if (getPattern())
                     setFacetsDefined(DatatypeValidator::FACET_PATTERN);
                 // do not construct regex until needed
-            }
-            else if (XMLString::compareString(key, SchemaSymbols::fgELT_ENUMERATION)==0)
-            {
-                setEnumeration(XMLString::tokenizeString(value));
-                setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_WHITESPACE)==0)
             {
@@ -467,21 +471,7 @@ void StringDatatypeValidator::init(DatatypeValidator*            const baseValid
             if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
                 ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
             {
-                // need to adopt the Vector
-                RefVectorOf<XMLCh>*  fBaseEnumeration = pBaseValidator->getEnumeration();
-                int enumLength = fBaseEnumeration->size();
-
-                RefVectorOf<XMLCh>* tmpEnumeration = new RefVectorOf<XMLCh>(enumLength, true);
-                for ( int i = 0; i < enumLength; i++)
-                {
-                    int strLen = XMLString::stringLen(fBaseEnumeration->elementAt(i));
-                    XMLCh* tmp = new XMLCh[strLen+1];
-                    XMLString::moveChars(tmp, fBaseEnumeration->elementAt(i), strLen);
-                    tmpEnumeration->insertElementAt(tmp, i);
-                }
-
-                setEnumeration(tmpEnumeration);
-                setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
+                setEnumeration(pBaseValidator->getEnumeration(), true);
             }
 
             // we don't inherit pattern

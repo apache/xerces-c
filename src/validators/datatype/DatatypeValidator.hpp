@@ -81,6 +81,7 @@
   *
   */
 
+
 class VALIDATORS_EXPORT DatatypeValidator
 {
 public:
@@ -241,6 +242,7 @@ public:
       */
 	virtual DatatypeValidator* newInstance(DatatypeValidator* const,
                                            RefHashTableOf<KVStringPair>* const,
+                                           RefVectorOf<XMLCh>* const enums,
                                            const int finalSet) = 0;
 
 protected:
@@ -255,7 +257,7 @@ protected:
       * @param  baseValidator  The base datatype validator for derived
       *                        validators. Null if native validator.
       *
-      * @param  facets         A hashtable of datatype facets.
+      * @param  facets         A hashtable of datatype facets (except enum).
       *
       * @param  finalSet       'final' value of the simpleType
       */

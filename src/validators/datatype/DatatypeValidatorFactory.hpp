@@ -92,6 +92,7 @@
 // ---------------------------------------------------------------------------
 typedef RefHashTableOf<KVStringPair> KVStringPairHashTable;
 typedef RefHashTableOf<DatatypeValidator> DVHashTable;
+typedef RefVectorOf<XMLCh> XMLChRefVector;
 
 
 class VALIDATORS_EXPORT DatatypeValidatorFactory
@@ -182,6 +183,8 @@ public:
       *
       * @param  facets         datatype facets if any
       *
+      * @param  enums          vector of values for enum facet
+      *
       * @param  derivedByList  Indicates whether the datatype is derived by
 	  *                        list or not
       *
@@ -190,6 +193,7 @@ public:
 	DatatypeValidator* createDatatypeValidator(const XMLCh* const,
 		                                       DatatypeValidator* const,
                                                RefHashTableOf<KVStringPair>* const,
+                                               RefVectorOf<XMLCh>* const enums,
                                                const bool,
                                                const int = 0,
                                                const bool = true);

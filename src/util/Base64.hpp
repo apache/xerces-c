@@ -95,7 +95,7 @@ public :
      * @param binaryData Byte array containing Base64 data
      * @return Array containind decoded data.
      */
-    static XMLCh* decode(const XMLCh* const base64Data);
+    static XMLCh* decode(const XMLCh* const base64Data, int& base64DataLen);
 
     //@}
 

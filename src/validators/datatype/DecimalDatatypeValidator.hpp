@@ -79,6 +79,7 @@ public:
 
     DecimalDatatypeValidator(DatatypeValidator*            const baseValidator
                            , RefHashTableOf<KVStringPair>* const facets
+                           , RefVectorOf<XMLCh>*           const enums
                            , const int                           finalSet);
 
     virtual ~DecimalDatatypeValidator();
@@ -126,6 +127,7 @@ public:
       */
     DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
                                  , RefHashTableOf<KVStringPair>* const facets
+                                 , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
 private:
@@ -133,7 +135,8 @@ private:
     void checkContent( const XMLCh* const content, bool asBase);
 
     void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets);
+            , RefHashTableOf<KVStringPair>* const facets
+            , RefVectorOf<XMLCh>*           const enums);
 
     void cleanUp();
 
@@ -179,6 +182,7 @@ private:
     // -----------------------------------------------------------------------
 	 unsigned int         fTotalDigits;
 	 unsigned int         fFractionDigits;
+     bool                 fEnumerationInherited;
 
      XMLBigDecimal*       fMaxInclusive;
      XMLBigDecimal*       fMaxExclusive;
@@ -193,6 +197,7 @@ inline DecimalDatatypeValidator::DecimalDatatypeValidator()
 :DatatypeValidator(0, 0, 0, DatatypeValidator::Decimal)
 , fTotalDigits(0)
 , fFractionDigits(0)
+, fEnumerationInherited(false)
 , fMaxInclusive(0)
 , fMaxExclusive(0)
 , fMinInclusive(0)
@@ -219,9 +224,10 @@ inline int DecimalDatatypeValidator::compare(const XMLCh* const lValue
 inline DatatypeValidator* DecimalDatatypeValidator::newInstance(
                                       DatatypeValidator* const            baseValidator
                                     , RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new DecimalDatatypeValidator(baseValidator, facets, finalSet);
+    return (DatatypeValidator*) new DecimalDatatypeValidator(baseValidator, facets, enums, finalSet);
 }
 
 inline void DecimalDatatypeValidator::validate( const XMLCh* const content)
@@ -237,7 +243,8 @@ inline void DecimalDatatypeValidator::cleanUp()
     delete fMinExclusive;
 
     //~RefVectorOf will delete all adopted elements
-    delete fEnumeration;
+    if (fEnumeration && !fEnumerationInherited)
+        delete fEnumeration;
 }
 
 // -----------------------------------------------------------------------

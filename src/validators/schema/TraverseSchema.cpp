@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/05/28 21:11:21  tng
+ * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
+ *
  * Revision 1.11  2001/05/22 19:22:45  knoaman
  * Added checking for element declaration value constraint (default/fixed).
  *
@@ -1987,7 +1990,7 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
 
             int strId = fStringPool.addOrFind(qualifiedName);
             fDatatypeRegistry->createDatatypeValidator(
-				  fStringPool.getValueForId(strId), baseValidator,0, true, finalSet);
+				  fStringPool.getValueForId(strId), baseValidator, 0, 0, true, finalSet);
 		}
     }
     catch(const InvalidDatatypeValueException& idve) {
@@ -2060,7 +2063,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
 	// Get facets if any existing
     RefHashTableOf<KVStringPair>*  facets = 0;
-    XMLBuffer                      enumData;
+    RefVectorOf<XMLCh>*            enums = 0;
     XMLBuffer                      pattern;
     DOMString                      facetName;
     bool                           isFirstPattern = true;
@@ -2089,8 +2092,12 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                 // if validator is a notation datatype validator, we need
                 // to get the qualified name first before adding it to the
                 // enum buffer
-                enumData.append(attValue.rawBuffer(), attValueLen);
-                enumData.append(chSpace);
+                if (!enums) {
+                    enums = new RefVectorOf<XMLCh>(8, true);
+                }
+
+                fBuffer.set(attValue.rawBuffer(), attValueLen);
+                enums->addElement(XMLString::replicate(fBuffer.getRawBuffer()));
             }
             else if (XMLString::compareString(facetStr,
 					                 SchemaSymbols::fgELT_PATTERN) == 0) {
@@ -2138,11 +2145,6 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                     new KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer()));
     }
 
-    if (!enumData.isEmpty()) {
-        facets->put((void*) SchemaSymbols::fgELT_ENUMERATION,
-                    new KVStringPair(SchemaSymbols::fgELT_ENUMERATION, enumData.getRawBuffer()));
-    }
-
     XMLCh* qualifiedName = getQualifiedName(typeNameIndex);
 
     try {
@@ -2154,8 +2156,8 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
             int strId = fStringPool.addOrFind(qualifiedName);
             fDatatypeRegistry->createDatatypeValidator
-				   (fStringPool.getValueForId(strId), baseValidator, facets,
-                    false, finalSet);
+                   (fStringPool.getValueForId(strId), baseValidator, facets,
+                    enums, false, finalSet);
 		}
     }
     catch(const InvalidDatatypeValueException& idve) {
@@ -2466,7 +2468,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // Build up the facet info
             // ---------------------------------------------------------------
             RefHashTableOf<KVStringPair>*  facets = 0;
-            XMLBuffer                      enumData;
+            RefVectorOf<XMLCh>*            enums = 0;
             XMLBuffer                      pattern;
             const XMLCh*                   facetName;
             int                            facetId;
@@ -2499,8 +2501,11 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     if (XMLString::compareString(facetName, 
 					                 SchemaSymbols::fgELT_ENUMERATION) == 0) {
 
-                        enumData.append(fBuffer.getRawBuffer());
-                        enumData.append(chSpace);
+                        if (!enums) {
+                            enums = new RefVectorOf<XMLCh>(8, true);
+                        }
+
+                        enums->addElement(XMLString::replicate(fBuffer.getRawBuffer()));
                     }
                     else if (XMLString::compareString(facetName,
 					                 SchemaSymbols::fgELT_PATTERN) == 0) {
@@ -2530,7 +2535,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                 content = XUtil::getNextSiblingElement(content); 
             }
 
-            if (facets != 0) {
+            if (facets) {
 
                 if (!pattern.isEmpty()) {
                     facets->put
@@ -2544,18 +2549,6 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     );
                 }
 
-                if (!enumData.isEmpty()) {
-                    facets->put
-                    (
-                        (void*) SchemaSymbols::fgELT_ENUMERATION,
-                        new KVStringPair
-                            (
-                                SchemaSymbols::fgELT_ENUMERATION,
-                                enumData.getRawBuffer()
-                            )
-                    );
-				}
-
                 XMLCh* qualifiedName = 
                     getQualifiedName(fStringPool.addOrFind(typeName));
 
@@ -2567,9 +2560,9 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     (
                         fDatatypeRegistry->createDatatypeValidator
                         (
-				            fStringPool.getValueForId(nameId), 
-						    typeInfo->getBaseDatatypeValidator(),
-                            facets, false, 0
+                            fStringPool.getValueForId(nameId), 
+                            typeInfo->getBaseDatatypeValidator(),
+                            facets, enums, false, 0
                         )
                     );
 				}

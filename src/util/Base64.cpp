@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/28 21:11:16  tng
+ * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
+ *
  * Revision 1.2  2001/05/16 19:01:04  tng
  * Schema: Typo fix in Base64
  *
@@ -89,15 +92,27 @@ XMLCh Base64::base64Alphabet[BASELENGTH];
 // delete the buffer allocated by decode() if
 // decoding is successfully done.
 //
+// In previous version, we use XMLString::strLen(decodedData)
+// to get the length, this will fail for test case containing
+// consequtive "A", such "AAFF", or "ab56AA56". Instead of 
+// returning 3/6, we have 0 and 3, indicating that "AA", after
+// decoded, is interpreted as <null> by the strLen().
+//
+// Since decode() has track of length of the decoded data, we
+// will get this length from decode(), instead of strLen().
+//
 int Base64::getDataLength(const XMLCh* const base64Data)
 {
-    XMLCh* decodedData = decode(base64Data);
+    int    retLen = 0;
+    XMLCh* decodedData = decode(base64Data, retLen);
+
     if ( !decodedData )
         return -1;
-
-    int base64Len = XMLString::stringLen(decodedData);
-    delete[] decodedData;
-    return base64Len;
+    else
+    {
+        delete[] decodedData;
+        return retLen;
+    }
 }
 
 //
@@ -108,7 +123,7 @@ int Base64::getDataLength(const XMLCh* const base64Data)
 //
 // temporary data, normalizedBase64Data, is ALWAYS released by this function.
 //
-XMLCh* Base64::decode(const XMLCh* const base64Data)
+XMLCh* Base64::decode(const XMLCh* const base64Data, int& base64DataLen)
 {
     if (!isInitialized)
         init();
@@ -231,6 +246,7 @@ XMLCh* Base64::decode(const XMLCh* const base64Data)
         decodedData[encodedIndex] = 0; 
     }
 
+    base64DataLen = encodedIndex;
     return decodedData;
 }
 

@@ -77,6 +77,7 @@ public:
 
     BooleanDatatypeValidator(DatatypeValidator*            const baseValidator
                            , RefHashTableOf<KVStringPair>* const facets
+                           , RefVectorOf<XMLCh>*           const enums
                            , const int                           finalSet);
 
     virtual ~BooleanDatatypeValidator();
@@ -133,6 +134,7 @@ public:
       */
     DatatypeValidator* newInstance(DatatypeValidator* const            baseValidator
                                  , RefHashTableOf<KVStringPair>* const facets
+                                 , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
 private:
@@ -170,9 +172,10 @@ inline BooleanDatatypeValidator::~BooleanDatatypeValidator()
 inline DatatypeValidator* BooleanDatatypeValidator::newInstance(
                                       DatatypeValidator* const            baseValidator
                                     , RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)
 {
-    return (DatatypeValidator*) new BooleanDatatypeValidator(baseValidator, facets, finalSet);
+    return (DatatypeValidator*) new BooleanDatatypeValidator(baseValidator, facets, enums, finalSet);
 }
 
 inline void BooleanDatatypeValidator::validate( const XMLCh* const content)

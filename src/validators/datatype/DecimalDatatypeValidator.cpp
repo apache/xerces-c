@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/28 21:11:18  tng
+ * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
+ *
  * Revision 1.6  2001/05/18 20:18:02  tng
  * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
  *
@@ -95,10 +98,12 @@ static XMLCh value2[BUF_LEN+1];
 DecimalDatatypeValidator::DecimalDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
+                        , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal)
 , fTotalDigits(0)
 , fFractionDigits(0)
+, fEnumerationInherited(false)
 , fMaxInclusive(0)
 , fMaxExclusive(0)
 , fMinInclusive(0)
@@ -107,7 +112,7 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
 {
     try
     {
-        init(baseValidator, facets);
+        init(baseValidator, facets, enums);
     }
 
     catch (XMLException&)
@@ -119,7 +124,8 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
 }
 
 void DecimalDatatypeValidator::init(DatatypeValidator*            const baseValidator
-                                  , RefHashTableOf<KVStringPair>* const facets)
+                                  , RefHashTableOf<KVStringPair>* const facets
+                                  , RefVectorOf<XMLCh>*           const enums)
 {
     // Set Facets if any defined
     if (facets)
@@ -128,6 +134,12 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
         XMLCh* value;
         RefVectorOf<XMLCh>*             fStrEnumeration = 0; // save the literal value
         Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);
+
+        if (enums)
+        {
+            fStrEnumeration = enums;
+            setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
+        }
 
         RefHashTableOfEnumerator<KVStringPair> e(facets);
 
@@ -143,14 +155,6 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                 if (getPattern())
                     setFacetsDefined(DatatypeValidator::FACET_PATTERN);
                 // do not construct regex until needed
-            }
-            else if (XMLString::compareString(key, SchemaSymbols::fgELT_ENUMERATION)==0)
-            {
-                if (fStrEnumeration)
-                    delete fStrEnumeration;
-
-                fStrEnumeration = XMLString::tokenizeString(value);
-                setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXINCLUSIVE)==0)
             {
@@ -667,13 +671,18 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
                          ( fStrEnumeration != 0 ))
                     {
-                        int i = 0;
+                        int i;
                         int enumLength = fStrEnumeration->size();
                         try
                         {
-                            for ( ; i < enumLength; i++)
+                            for ( i = 0; i < enumLength; i++)
+                            {
                                 // ask parent do a complete check
                                 numBase->checkContent(fStrEnumeration->elementAt(i), false);
+                                // shall pass this->checkContent() as well
+                                checkContent(fStrEnumeration->elementAt(i), false);
+                            }
+                                
                         }
 
                         catch ( XMLException& )
@@ -687,9 +696,10 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         // we need to convert from fStrEnumeration to fEnumeration
                         try
                         {
-                            setEnumeration( new RefVectorOf<XMLBigDecimal>(enumLength, true));
+                            fEnumeration = new RefVectorOf<XMLBigDecimal>(enumLength, true);
+                            fEnumerationInherited = false;
                             for ( i = 0; i < enumLength; i++)
-                                getEnumeration()->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
+                                fEnumeration->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
 
                         }
                         catch ( NumberFormatException& )
@@ -790,15 +800,9 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
                         (( getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
                     {
+                        fEnumeration = numBase->getEnumeration();
+                        fEnumerationInherited = true;
                         setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-                        // need to adopt the Vector
-                        RefVectorOf<XMLBigDecimal>*  fBaseEnumeration = numBase->getEnumeration();
-                        int enumLength = fBaseEnumeration->size();
-                        setEnumeration(new RefVectorOf<XMLBigDecimal>(enumLength, true));
-                        for ( int i = 0; i < enumLength; i++)
-                            //invoke XMLBigDecimal's copy ctor
-                            getEnumeration()->insertElementAt(new XMLBigDecimal(*(fBaseEnumeration->elementAt(i))), i);
-
                     }
 
                     // inherit maxExclusive
