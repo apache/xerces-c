@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/27 23:32:17  roddey
+ * There is now an official URL for the magic "xmlns" prefix. So I updated our code
+ * to use this new URL, instead of the proprietary one we used previously.
+ *
  * Revision 1.4  2000/01/12 20:44:49  roddey
  * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
  * some of our compilers, so a new string was added XMLUni and used in its place.
@@ -508,11 +512,11 @@ const XMLCh XMLUni::fgXMLNSColonString[] =
 const XMLCh XMLUni::fgXMLNSURIName[] =
 {
         chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
-    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c
-    ,   chLatin_h, chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g
-    ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chForwardSlash
-    ,   chLatin_N, chLatin_S, chLatin_M, chLatin_a, chLatin_p, chLatin_U
-    ,   chLatin_R, chLatin_I, chNull
+    ,   chForwardSlash, chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w
+    ,   chDigit_3, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chForwardSlash
+    ,   chNull
 };
 
 const XMLCh XMLUni::fgXMLErrDomain[] =
