@@ -57,6 +57,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/14 19:25:44  roddey
+ * Fixed some small bugs in how it used strings returned from DOM calls.
+ *
  * Revision 1.3  2000/02/06 07:48:41  rahulj
  * Year 2K copyright swat.
  *
@@ -282,20 +285,20 @@ enumMessages(   const   DOM_Element             srcElem
         //  to be passed to the formatter. We have to translate the message
         //  type into one of the offical enum values.
         //
-        XMLCh* msgText = curElem.getAttribute(L"Text").rawBuffer();
-        XMLCh* msgId   = curElem.getAttribute(L"Id").rawBuffer();
+        DOMString msgText = curElem.getAttribute(L"Text");
+        DOMString msgId   = curElem.getAttribute(L"Id");
 
         //
         //  Write out an entry to the target header file. These are enums, so
         //  we use the id as the enum name.
         //
-        fwprintf(headerFl, L"      , %-32s   = %d\n", msgId, count);
+        fwprintf(headerFl, L"      , %-32s   = %d\n", msgId.rawBuffer(), count);
 
         // And tell the formatter about this one
         toCall->nextMessage
         (
-            msgText
-            , msgId
+            msgText.rawBuffer()
+            , msgId.rawBuffer()
             , count
             , count
         );
@@ -416,10 +419,10 @@ extern "C" int wmain(int argC, XMLCh** argV)
         //  all information.
         //
         DOM_Element rootElem = srcDoc.getDocumentElement();
-        const XMLCh* localeStr = rootElem.getAttribute(L"Locale").rawBuffer();
+        DOMString localeStr = rootElem.getAttribute(L"Locale");
 
         // Make sure that the locale matches what we were given
-        if (XMLString::compareString(localeStr, gLocale))
+        if (XMLString::compareString(localeStr.rawBuffer(), gLocale))
         {
             wprintf(L"The file's locale does not match the target locale\n");
             throw ErrReturn_LocaleErr;
@@ -442,7 +445,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
         //  Ok, its good enough to get started. So lets call the start output
         //  method on the formatter.
         //
-        formatter->startOutput(localeStr, gOutPath);
+        formatter->startOutput(localeStr.rawBuffer(), gOutPath);
 
         //
         //  For each message domain element, we call start and end domain
@@ -462,7 +465,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //  Get some of  the attribute strings that we need, and transcode
             //  couple that need to be in local format.
             //
-            const XMLCh* const domainStr = curElem.getAttribute(L"Domain").rawBuffer();
+            DOMString domainStr = curElem.getAttribute(L"Domain");
 
             //
             //  Look at the domain and set up our application specific info
@@ -472,17 +475,17 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //
             const XMLCh* headerName = 0;
             const XMLCh* errNameSpace = 0;
-            if (!XMLString::compareString(domainStr, XMLUni::fgXMLErrDomain))
+            if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgXMLErrDomain))
             {
                 headerName = L"XMLErrorCodes.hpp";
                 errNameSpace = L"XML4CErrs";
             }
-             else if (!XMLString::compareString(domainStr, XMLUni::fgValidityDomain))
+             else if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgValidityDomain))
             {
                 headerName = L"XMLValidityCodes.hpp";
                 errNameSpace = L"XML4CValid";
             }
-             else if (!XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
+             else if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
             {
                 headerName = L"XMLExceptMsgs.hpp";
                 errNameSpace = L"XML4CExcepts";
@@ -520,7 +523,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
             fwprintf(outHeader, L"#define ERRHEADER_%s\n\n", errNameSpace);
 
             // If its not the exception domain, then we need a header included
-            if (XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
+            if (XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
                 fwprintf(outHeader, L"#include <framework/XMLErrorReporter.hpp>\n\n");
 
             fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", errNameSpace);
@@ -528,7 +531,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
             // Tell the formatter that a new domain is starting
             formatter->startDomain
             (
-                domainStr
+                domainStr.rawBuffer()
                 , errNameSpace
             );
 
@@ -568,7 +571,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 }
                  else if (typeName.equals(L"Error"))
                 {
-                    if (!XMLString::compareString(domainStr, XMLUni::fgValidityDomain))
+                    if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgValidityDomain))
                     {
                         type = MsgType_Validity;
                         typeGotten[2] = true;
@@ -633,7 +636,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
             }
 
             // Tell the formatter that this domain is ending
-            formatter->endDomain(domainStr, count);
+            formatter->endDomain(domainStr.rawBuffer(), count);
 
             // Close out the enum declaration
             fwprintf(outHeader, L"    };\n\n");
@@ -643,7 +646,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
             //  for testing the error types. We don't do this for the
             //  exceptions header.
             //
-            if (XMLString::compareString(domainStr, XMLUni::fgExceptDomain))
+            if (XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgExceptDomain))
             {
                 fwprintf
                 (
