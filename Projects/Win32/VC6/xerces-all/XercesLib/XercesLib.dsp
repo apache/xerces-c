@@ -7,19 +7,19 @@
 CFG=XercesLib - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak" CFG="XercesLib - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "XercesLib - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XercesLib - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -84,7 +84,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_5_2D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1D.lib" /pdbtype:sept /version:1.5.2
 # SUBTRACT LINK32 /pdb:none
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -112,6 +112,10 @@ SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32Defs.hpp
 
 SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32PlatformUtils.cpp
 # ADD CPP /Ze
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLRegisterCleanup.hpp
 # End Source File
 # End Group
 # Begin Group "MsgLoaders"
