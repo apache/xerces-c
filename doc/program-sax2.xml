@@ -4,71 +4,6 @@
 <s1 title="SAX2 Programming Guide">
 
     <anchor name="ConstructParser2"/>
-    <s2 title="Constructing an XML Reader">
-      <p>In order to use &XercesCName; to parse XML files, you will
-        need to create an instance of the SAX2XMLReader class. The example
-        below shows the code you need in order to create an instance
-        of SAX2XMLReader. The ContentHandler and ErrorHandler instances
-        required by the SAX API are provided using the DefaultHandler
-        class supplied with &XercesCName;.</p>
-
-<source>
-#include &lt;xercesc/sax2/SAX2XMLReader.hpp>
-#include &lt;xercesc/sax2/XMLReaderFactory.hpp>
-#include &lt;xercesc/sax2/DefaultHandler.hpp>
-#include &lt;xercesc/util/XMLString.hpp>
-
-int main (int argc, char* args[]) {
-
-    try {
-        XMLPlatformUtils::Initialize();
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Error during initialization! :\n"
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return 1;
-    }
-
-    char* xmlFile = "x1.xml";
-    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-    parser->setFeature(XMLUni::fgSAX2CoreValidation, true)   // optional
-    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true)   // optional
-
-    DefaultHandler* defaultHandler = new DefaultHandler();
-    parser->setContentHandler(defaultHandler);
-    parser->setErrorHandler(defaultHandler);
-
-    try {
-        parser->parse(xmlFile);
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (const SAXParseException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (...) {
-        cout &lt;&lt; "Unexpected Exception \n" ;
-        return -1;
-    }
-
-    delete parser;
-    delete defaultHandler;
-    return 0;
-}</source>
-    </s2>
-
     <anchor name="UsingSAX2API"/>
     <s2 title="Using the SAX2 API">
       <p>The SAX2 API for XML parsers was originally developed for
@@ -145,6 +80,71 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
         &XercesCName; and are documented in the include
         files. Examples of their usage appear in the source code to
         the sample applications.</p>
+    </s2>
+
+    <s2 title="Constructing an XML Reader">
+      <p>In order to use &XercesCName; to parse XML files, you will
+        need to create an instance of the SAX2XMLReader class. The example
+        below shows the code you need in order to create an instance
+        of SAX2XMLReader. The ContentHandler and ErrorHandler instances
+        required by the SAX API are provided using the DefaultHandler
+        class supplied with &XercesCName;.</p>
+
+<source>
+#include &lt;xercesc/sax2/SAX2XMLReader.hpp>
+#include &lt;xercesc/sax2/XMLReaderFactory.hpp>
+#include &lt;xercesc/sax2/DefaultHandler.hpp>
+#include &lt;xercesc/util/XMLString.hpp>
+
+int main (int argc, char* args[]) {
+
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Error during initialization! :\n"
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return 1;
+    }
+
+    char* xmlFile = "x1.xml";
+    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+    parser->setFeature(XMLUni::fgSAX2CoreValidation, true)   // optional
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true)   // optional
+
+    DefaultHandler* defaultHandler = new DefaultHandler();
+    parser->setContentHandler(defaultHandler);
+    parser->setErrorHandler(defaultHandler);
+
+    try {
+        parser->parse(xmlFile);
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+
+    delete parser;
+    delete defaultHandler;
+    return 0;
+}</source>
     </s2>
 
     <anchor name="SAX2Features"/>

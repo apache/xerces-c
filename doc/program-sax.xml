@@ -4,70 +4,6 @@
 <s1 title="SAX1 Programming Guide">
 
     <anchor name="ConstructParser"/>
-    <s2 title="Constructing a SAXParser">
-      <p>In order to use &XercesCName; to parse XML files, you will
-        need to create an instance of the SAXParser class. The example
-        below shows the code you need in order to create an instance
-        of SAXParser. The DocumentHandler and ErrorHandler instances
-        required by the SAX API are provided using the HandlerBase
-        class supplied with &XercesCName;.</p>
-
-<source>
-#include &lt;xercesc/parsers/SAXParser.hpp>
-#include &lt;xercesc/sax/HandlerBase.hpp>
-#include &lt;xercesc/util/XMLString.hpp>
-
-int main (int argc, char* args[]) {
-
-    try {
-        XMLPlatformUtils::Initialize();
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return 1;
-    }
-
-    char* xmlFile = "x1.xml";
-    SAXParser* parser = new SAXParser();
-    parser->setDoValidation(true);    // optional.
-    parser->setDoNamespaces(true);    // optional
-
-    DocumentHandler* docHandler = new HandlerBase();
-    ErrorHandler* errHandler = (ErrorHandler*) docHandler;
-    parser->setDocumentHandler(docHandler);
-    parser->setErrorHandler(errHandler);
-
-    try {
-        parser->parse(xmlFile);
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (const SAXParseException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (...) {
-        cout &lt;&lt; "Unexpected Exception \n" ;
-        return -1;
-    }
-
-    delete parser;
-    delete docHandler;
-    return 0;
-}</source>
-    </s2>
-
     <anchor name="UsingSAX1API"/>
     <s2 title="Using the SAX API">
       <p>The SAX API for XML parsers was originally developed for
@@ -137,6 +73,70 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
         &XercesCName; and are documented in the include
         files. Examples of their usage appear in the source code to
         the sample applications.</p>
+    </s2>
+
+    <s2 title="Constructing a SAXParser">
+      <p>In order to use &XercesCName; to parse XML files, you will
+        need to create an instance of the SAXParser class. The example
+        below shows the code you need in order to create an instance
+        of SAXParser. The DocumentHandler and ErrorHandler instances
+        required by the SAX API are provided using the HandlerBase
+        class supplied with &XercesCName;.</p>
+
+<source>
+#include &lt;xercesc/parsers/SAXParser.hpp>
+#include &lt;xercesc/sax/HandlerBase.hpp>
+#include &lt;xercesc/util/XMLString.hpp>
+
+int main (int argc, char* args[]) {
+
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Error during initialization! :\n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return 1;
+    }
+
+    char* xmlFile = "x1.xml";
+    SAXParser* parser = new SAXParser();
+    parser->setDoValidation(true);    // optional.
+    parser->setDoNamespaces(true);    // optional
+
+    DocumentHandler* docHandler = new HandlerBase();
+    ErrorHandler* errHandler = (ErrorHandler*) docHandler;
+    parser->setDocumentHandler(docHandler);
+    parser->setErrorHandler(errHandler);
+
+    try {
+        parser->parse(xmlFile);
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+
+    delete parser;
+    delete docHandler;
+    return 0;
+}</source>
     </s2>
 
 </s1>

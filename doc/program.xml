@@ -10,9 +10,12 @@
       or jump directly to:</p>
     <ul>
       <li><jump href="program-dom.html#Objectives">Design Objectives</jump></li>
-      <li><jump href="program-dom.html#ConstructXercesDOMParser">Constructing a XercesDOMParser</jump></li>
-      <li><jump href="program-dom.html#UsingDOMAPI">Using DOM API</jump></li>
       <li><jump href="program-dom.html#DOM3">DOM Level 3 Support in &XercesCName; </jump></li>
+      <li><jump href="program-dom.html#UsingDOMAPI">Using DOM API</jump></li>
+      <li><jump href="program-dom.html#ConstructXercesDOMParser">Constructing a XercesDOMParser</jump></li>
+      <li><jump href="program-dom.html#ConstructDOMBuilder">Constructing a DOMBuilder</jump></li>
+      <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMInputSource and SAX InputSource?</jump></li>
+      <li><jump href="program-dom.html#ConstructDOMWriter">Constructing a DOMWriter</jump></li>
       <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
     </ul>
   </s2>
@@ -21,8 +24,8 @@
     <p>Read the <jump href="program-sax.html">SAX Programming Guide</jump> document
       or jump directly to:</p>
     <ul>
-      <li><jump href="program-sax.html#ConstructParser">Constructing a SAXParser</jump></li>
       <li><jump href="program-sax.html#UsingSAX1API">Using the SAX API</jump></li>
+      <li><jump href="program-sax.html#ConstructParser">Constructing a SAXParser</jump></li>
     </ul>
   </s2>
 
@@ -30,8 +33,8 @@
     <p>Read the <jump href="program-sax2.html">SAX2 Programming Guide</jump> document
       or jump directly to:</p>
     <ul>
-      <li><jump href="program-sax2.html#ConstructParser2">Constructing an XML Reader</jump></li>
       <li><jump href="program-sax2.html#UsingSAX2API">Using the SAX2 API</jump></li>
+      <li><jump href="program-sax2.html#ConstructParser2">Constructing an XML Reader</jump></li>
       <li><jump href="program-sax2.html#SAX2Features">Supported Features</jump></li>
       <li><jump href="program-sax2.html#SAX2Properties">Supported Properties</jump></li>
     </ul>

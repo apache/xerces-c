@@ -16,67 +16,12 @@
       </ul>
     </s2>
 
-    <anchor name="ConstructXercesDOMParser"/>
-    <s2 title="Constructing a XercesDOMParser">
-      <p>In order to use &XercesCName; to parse XML files using DOM, you
-        will need to create an instance of the XercesDOMParser class. The example
-        below shows the code you need in order to create an instance of the
-        XercesDOMParser.</p>
-
-      <source>
-#include &lt;xercesc/parsers/XercesDOMParser.hpp>
-#include &lt;xercesc/dom/DOM.hpp>
-#include &lt;xercesc/sax/HandlerBase.hpp>
-#include &lt;xercesc/util/XMLString.hpp>
-
-int main (int argc, char* args[]) {
-
-    try {
-        XMLPlatformUtils::Initialize();
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return 1;
-    }
-
-    char* xmlFile = "x1.xml";
-    XercesDOMParser* parser = new XercesDOMParser();
-    parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
-    parser->setDoNamespaces(true);    // optional
-
-    ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
-    parser->setErrorHandler(errHandler);
-
-    try {
-        parser->parse(xmlFile);
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (const DOMException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (...) {
-        cout &lt;&lt; "Unexpected Exception \n" ;
-        return -1;
-    }
-
-    delete parser;
-    delete errHandler;
-    return 0;
-}
-      </source>
+    <anchor name="DOM3"/>
+    <s2 title="DOM Level 3 Support in &XercesCName;">
+      <p>The &XercesCName; &XercesCVersion; contains a partial implementation of the W3C
+         Document Object Model Level 3.  This implementation is experimental.    See the document
+         <jump href="dom3.html"> DOM Level 3 Support</jump> for details.
+      </p>
     </s2>
 
     <anchor name="UsingDOMAPI"/>
@@ -95,7 +40,7 @@ int main (int argc, char* args[]) {
        <anchor name="DOMClassNames"/>
        <s3 title="Class Names">
          <p>
-           The DOM class names are prefixed with "DOM", e.g. "DOMNode". The intent is
+           The DOM class names are prefixed with "DOM" (if not already), e.g. "DOMNode". The intent is
            to prevent conflicts between DOM class names and other names
            that may already be in use by an application or other
            libraries that a DOM based application must link with.</p>
@@ -194,11 +139,233 @@ int main (int argc, char* args[]) {
 
        </s3>
     </s2>
-    <anchor name="DOM3"/>
-    <s2 title="DOM Level 3 Support in &XercesCName;">
-      <p>The &XercesCName; &XercesCVersion; contains a partial implementation of the W3C
-         Document Object Model Level 3.  This implementation is experimental.    See the document
-         <jump href="dom3.html"> DOM Level 3 Support</jump> for details.
+
+    <anchor name="ConstructXercesDOMParser"/>
+    <s2 title="Constructing a XercesDOMParser">
+      <p>In order to use &XercesCName; to parse XML files using DOM, you
+        can create an instance of the XercesDOMParser class. The example
+        below shows the code you need in order to create an instance of the
+        XercesDOMParser.</p>
+
+      <source>
+#include &lt;xercesc/parsers/XercesDOMParser.hpp>
+#include &lt;xercesc/dom/DOM.hpp>
+#include &lt;xercesc/sax/HandlerBase.hpp>
+#include &lt;xercesc/util/XMLString.hpp>
+
+int main (int argc, char* args[]) {
+
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Error during initialization! :\n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return 1;
+    }
+
+    XercesDOMParser* parser = new XercesDOMParser();
+    parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
+    parser->setDoNamespaces(true);    // optional
+
+    ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
+    parser->setErrorHandler(errHandler);
+
+    char* xmlFile = "x1.xml";
+
+    try {
+        parser->parse(xmlFile);
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (const DOMException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+
+    delete parser;
+    delete errHandler;
+    return 0;
+}
+      </source>
+    </s2>
+
+    <anchor name="ConstructDOMBuilder"/>
+    <s2 title="Constructing a DOMBuilder">
+      <p>DOMBuilder is a new interface introduced by the
+        <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+        W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
+        DOMBuilder provides the "Load" interface for parsing XML documents and building the
+        corresponding DOM document tree from various input sources.
+      </p>
+      <p>A DOMBuilder instance is obtained from the DOMImplementationLS interface by invoking
+        its createDOMBuilder method.  For example:
+      </p>
+<source>
+#include &lt;xercesc/dom/DOM.hpp>
+#include &lt;xercesc/util/XMLString.hpp>
+
+int main (int argc, char* args[]) {
+
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Error during initialization! :\n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return 1;
+    }
+
+
+    XMLCh tempStr[100];
+    XMLString::transcode("LS", tempStr, 99);
+    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
+    DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder();
+
+    // optionally you can set some features on this builder
+    if (parser->canSetFeature(XMLUni::fgDOMValidation, true)
+        parser->setFeature(XMLUni::fgDOMValidation, true);
+    if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true)
+        parser->setFeature(XMLUni::fgDOMNamespaces, true);
+
+
+    // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
+    // and set it to the builder
+    MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
+    parser->setErrorHandler(errHandler);
+
+    char* xmlFile = "x1.xml";
+
+    try {
+        parser->parseURI(xmlFile);
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (const DOMException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+
+    delete parser;
+    delete errHandler;
+    return 0;
+}
+</source>
+       <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
+       DOMCount for more detail.
+      </p>
+    </s2>
+
+    <anchor name="InputSourceWrapper"/>
+    <s2 title="How to interchange DOMInputSource and SAX InputSource?">
+    <p>...</p>
+    </s2>
+
+    <anchor name="ConstructDOMWriter"/>
+    <s2 title="Constructing a DOMWriter">
+      <p>DOMWriter is a new interface introduced by the
+        <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+        W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
+        DOMWriter provides the "Save" interface for serializing (writing) a DOM document into
+        XML data.   The XML data can be written to various type of output stream.
+      </p>
+      <p>A DOMWriter instance is obtained from the DOMImplementationLS interface by invoking
+        its createDOMWriter method.  For example:
+      </p>
+<source>
+#include &lt;xercesc/dom/DOM.hpp>
+#include &lt;xercesc/util/XMLString.hpp>
+
+int serializeDOM(DOMNode* node) {
+
+    XMLCh tempStr[100];
+    XMLString::transcode("LS", tempStr, 99);
+    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
+    DOMWriter* theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+
+    // optionally you can set some features on this serializer
+    if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true))
+        theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true);
+
+    if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true))
+         theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+
+    // optionally you can implement your DOMWriterFilter (e.g. MyDOMWriterFilter)
+    // and set it to the serializer
+    MyDOMWriterFilter* myFilter = new myDOMWriterFilter();
+    theSerializer->setFilter(myFilter);
+
+    // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
+    // and set it to the serializer
+    MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
+    theSerializer->setErrorHandler(myErrorHandler);
+
+    // StdOutFormatTarget prints the resultant XML stream
+    // to stdout once it receives any thing from the serializer.
+    StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
+
+    try {
+        // do the serialization through DOMWriter::writeNode();
+        theSerializer->writeNode(myFormTarget, *node);
+    }
+    catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (const DOMException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+
+
+    delete theSerializer;
+    delete myErrorHandler;
+    delete myFilter;
+    delete myFormTarget;
+    return 0;
+}
+
+</source>
+       <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
+       DOMPrint for more detail.
       </p>
     </s2>
 

@@ -61,8 +61,8 @@
             <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">
             DOM Level 3.0 Core Specification</jump>, W3C Working Draft of 09 April 2002 and
             <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-            DOM Level 3.0 Load and Save Specification</jump>, W3C Working Draft of 09 April 2002.
-            This implementation is experimental.
+            DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>,
+            W3C Working Draft of 09 April 2002.  This implementation is experimental.
             See <jump href="dom3.html">DOM Level 3 Support</jump> for details.</li>
             <li>Source code, samples, and documentation is provided.</li>
             <li>Programmatic generation and validation of XML</li>
