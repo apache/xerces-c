@@ -2158,8 +2158,6 @@ bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr)
     {
         if (!haveBaseURI)
             return false;
-        else
-            return true;
         return true;
     }
 
