@@ -233,7 +233,7 @@ void DOMDocumentTypeImpl::setOwnerDocument(DOMDocument *doc) {
             delete [] temp;
 
             temp = (XMLCh*) internalSubset; // cast off const
-            systemId = docImpl->cloneString(internalSubset);
+            internalSubset = docImpl->cloneString(internalSubset);
             delete [] temp;
 
             temp = (XMLCh*) name; // cast off const
