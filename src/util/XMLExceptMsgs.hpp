@@ -286,11 +286,30 @@ public :
       , RethrowError                       = 275
       , Out_Of_Memory                      = 276
       , DV_InvalidOperation                = 277
-      , E_HighBounds                       = 278
-      , W_LowBounds                        = 279
-      , W_HighBounds                       = 280
-      , F_LowBounds                        = 281
-      , F_HighBounds                       = 282
+      , XPath_NoAttrSelector               = 278
+      , XPath_NoUnionAtStart               = 279
+      , XPath_NoMultipleUnion              = 280
+      , XPath_MissingAttr                  = 281
+      , XPath_ExpectedToken1               = 282
+      , XPath_PrefixNoURI                  = 283
+      , XPath_NoDoubleColon                = 284
+      , XPath_ExpectedStep1                = 285
+      , XPath_ExpectedStep2                = 286
+      , XPath_ExpectedStep3                = 287
+      , XPath_NoForwardSlash               = 288
+      , XPath_NoDoubleForwardSlash         = 289
+      , XPath_NoForwardSlashAtStart        = 290
+      , XPath_NoSelectionOfRoot            = 291
+      , XPath_EmptyExpr                    = 292
+      , XPath_NoUnionAtEnd                 = 293
+      , XPath_InvalidChar                  = 294
+      , XPath_TokenNotSupported            = 295
+      , XPath_FindSolution                 = 296
+      , E_HighBounds                       = 297
+      , W_LowBounds                        = 298
+      , W_HighBounds                       = 299
+      , F_LowBounds                        = 300
+      , F_HighBounds                       = 301
     };
 
 };

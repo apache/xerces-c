@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/11/02 14:13:45  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.10  2001/10/25 15:07:46  tng
  * Thread safe the static instance.
  *
@@ -379,6 +382,12 @@ void GeneralAttributeCheck::setUpAttributes() {
     fAttributes[Att_Version_N] =
         new AttributeInfo(SchemaSymbols::fgATT_VERSION, Att_Optional_NoDefault,
                           0, 0);
+
+    fAttributes[Att_XPath_R] =
+        new AttributeInfo(SchemaSymbols::fgATT_XPATH, Att_Required, 0, DT_String);
+
+    fAttributes[Att_XPath1_R] =
+        new AttributeInfo(SchemaSymbols::fgATT_XPATH, Att_Required, 0, DT_String);
 }
 
 void GeneralAttributeCheck::setUpValidators() {
@@ -754,13 +763,35 @@ void GeneralAttributeCheck::mapElements() {
     fElementMap->put((void*) SchemaSymbols::fgELT_DOCUMENTATION, prefixContext, attList);
 
     // element "unique" - local name
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Name_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_UNIQUE, prefixContext, attList);
+
+    // element "key" - local name
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Name_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_KEY, prefixContext, attList);
 
     // element "keyref" - local name
+    attList = new RefVectorOf<AttributeInfo>(3, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Name_R]);
+    attList->addElement(fAttributes[Att_Refer_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_KEYREF, prefixContext, attList);
 
     // element "selector" - local name
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_XPath_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_SELECTOR, prefixContext, attList);
 
     // element "field" - local name
-
+    attList = new RefVectorOf<AttributeInfo>(2, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_XPath1_R]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_FIELD, prefixContext, attList);
 }
 
 // ---------------------------------------------------------------------------
@@ -878,6 +909,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
             XMLCh* attName = attInfo->getName();
             DOMString attValue = elem.getAttribute(attName);
+            DOM_Attr attNode = elem.getAttributeNode(attName);
             unsigned int attValueLen = attValue.length();
 
             attNameList.put((void*) attName, 0);
@@ -888,7 +920,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
                 validate(attName, aBuffer.getRawBuffer(),
                          attInfo->getValidatorIndex(), schema);
             }
-            else {
+            else if (attNode == 0) {
                 if (attInfo->getDefaultOption() == Att_Required) {
                     schema->reportSchemaError(XMLUni::fgXMLErrDomain,
                         XMLErrs::AttributeRequired, attName, contextStr, elemName);

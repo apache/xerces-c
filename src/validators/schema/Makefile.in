@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.18  2001/11/02 14:13:45  knoaman
+# Add support for identity constraints.
+#
 # Revision 1.17  2001/08/22 11:33:43  tng
 # typo: XercesElementWildcard
 #
@@ -170,9 +173,13 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	XercesGroupInfo.$(TO) \
 	XUtil.$(TO)
 
-all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
+all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS) identity
 
 includes::	pubheaders $(VALIDATORS_SCHEMA_C_FILES)
+	cd identity ; $(MAKE) $@ ; cd ..
+
+identity::
+	cd identity ; $(MAKE) ; cd ..
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
@@ -185,12 +192,15 @@ depend:: includes
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_SCHEMA_CPP_OBJECTS))
+	cd identity ; $(MAKE) $@ ; cd ..
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(VALIDATORS_SCHEMA_CPP_PUBHEADERS))
+	cd identity ; $(MAKE) $@ ; cd ..
 
 install::
 	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
 	$(CP) $(VALIDATORS_SCHEMA_CPP_PUBHEADERS) $(VALIDATORS_SCHEMA_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	cd identity ; $(MAKE) $@ ; cd ..

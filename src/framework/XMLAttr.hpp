@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/11/02 14:21:18  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.8  2001/05/11 13:25:31  tng
  * Copyright update.
  *
@@ -182,6 +185,11 @@ public:
 
     /** @name Getter methods */
     //@{
+
+    /**
+      * This methode returns the attribute name in a QName format.
+      */
+    QName* getAttName() const;
 
     /**
       * This method gets a const pointer tot he name of the attribute. The
@@ -386,6 +394,11 @@ inline XMLAttr::~XMLAttr()
 // ---------------------------------------------------------------------------
 //  XMLAttr: Getter methods
 // ---------------------------------------------------------------------------
+inline QName* XMLAttr::getAttName() const
+{
+    return fAttName;
+}
+
 inline const XMLCh* XMLAttr::getName() const
 {
     return fAttName->getLocalPart();

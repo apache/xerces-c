@@ -231,8 +231,8 @@ private:
         Att_Value_STR_N,
         Att_Value_WS_N,
         Att_Version_N,
-
-        // TO DO - Add XPath
+        Att_XPath_R,
+        Att_XPath1_R,
 
         Att_Count
     };

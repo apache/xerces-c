@@ -62,12 +62,15 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/schema/TraverseSchema.hpp>
+#include <sax/EntityResolver.hpp>
+#include <validators/schema/identity/IC_Key.hpp>
+#include <validators/schema/identity/IC_KeyRef.hpp>
+#include <validators/schema/identity/IC_Unique.hpp>
+#include <validators/schema/identity/IC_Field.hpp>
+#include <validators/schema/identity/IC_Selector.hpp>
+#include <validators/schema/identity/XercesXPath.hpp>
 #include <validators/datatype/DatatypeValidatorFactory.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <util/Janitor.hpp>
-#include <util/KVStringPair.hpp>
 #include <util/XMLStringTokenizer.hpp>
-#include <util/QName.hpp>
 #include <validators/schema/XUtil.hpp>
 #include <validators/common/GrammarResolver.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
@@ -77,22 +80,18 @@
 #include <validators/schema/ComplexTypeInfo.hpp>
 #include <validators/schema/NamespaceScope.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
-#include <framework/XMLValidityCodes.hpp>
-#include <framework/XMLErrorCodes.hpp>
 #include <internal/XMLScanner.hpp>
 #include <internal/XMLInternalErrorHandler.hpp>
-#include <framework/XMLValidator.hpp>
-#include <sax/EntityResolver.hpp>
-#include <sax/InputSource.hpp>
 #include <framework/LocalFileInputSource.hpp>
 #include <framework/URLInputSource.hpp>
 #include <parsers/DOMParser.hpp>
-#include <dom/DOM_DOMException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <validators/schema/identity/XPathException.hpp>
 #include <validators/schema/GeneralAttributeCheck.hpp>
 #include <validators/schema/XercesGroupInfo.hpp>
 #include <validators/schema/XercesAttGroupInfo.hpp>
+#include <util/HashPtr.hpp>
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -154,6 +153,28 @@ const XMLCh fgValueZero[] =
     chDigit_0, chNull
 };
 
+const XMLCh fgForwardSlash[] =
+{
+    chForwardSlash, chNull
+};
+
+const XMLCh fgDot[] =
+{
+    chPeriod, chNull
+};
+
+const XMLCh fgDotForwardSlash[] =
+{
+    chPeriod, chForwardSlash, chNull
+};
+
+const XMLCh* fgIdentityConstraints[] =
+{
+    { SchemaSymbols::fgELT_UNIQUE },
+    { SchemaSymbols::fgELT_KEY },
+    { SchemaSymbols::fgELT_KEYREF }
+};
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -197,17 +218,20 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fCurrentComplexType(0)
     , fCurrentTypeNameStack(0)
     , fCurrentGroupStack(0)
+    , fIC_NamespaceDepth(0)
+    , fIC_Elements(0)
     , fAttributeCheck(0)
-    , fGlobalTypes(0)
-    , fGlobalAttributes(0)
-    , fGlobalGroups(0)
-    , fGlobalAttGroups(0)
+    , fGlobalDeclarations(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
+    , fIdentityConstraintNames(0)
     , fSubstitutionGroups(0)
     , fValidSubstitutionGroups(0)
     , fRefElements(0)
     , fRefElemScope(0)
+    , fIC_NodeListNS(0)
+    , fIC_ElementsNS(0)
+    , fIC_NamespaceDepthNS(0)
 {
 
     try {
@@ -349,8 +373,26 @@ void TraverseSchema::doTraverseSchema(const DOM_Element& schemaRoot,
     fScopeCount = 0;
     processChildren(schemaRoot);
 
-    // Handle identity constraints
-    // TO DO
+    // Handle identity constraints - keyref
+    if (fIC_ElementsNS && fIC_ElementsNS->containsKey(fTargetNSURIString)) {
+
+        fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
+        fIC_NamespaceDepth = fIC_NamespaceDepthNS->get(fTargetNSURIString);
+
+        unsigned int icListSize = fIC_Elements->size();
+
+        for (unsigned int i=0; i < icListSize; i++) {
+        
+            SchemaElementDecl* curElem = fIC_Elements->elementAt(i);
+            ValueVectorOf<DOM_Element>* icNodes =  fIC_NodeListNS->get(curElem);
+            unsigned int icNodesSize = icNodes->size();
+            unsigned int scopeDepth = fIC_NamespaceDepth->elementAt(i);
+
+            for (unsigned int j = 0; j < icNodesSize; j++) {
+                traverseKeyRef(icNodes->elementAt(j), curElem, scopeDepth);
+            }
+        }
+    }
     
     // Element consistency checks - substitution groups
     if (fFullConstraintChecking) {
@@ -616,12 +658,20 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
 
     SchemaGrammar* importedGrammar = 0;
 	
-	if (nameSpace) {
+    if (nameSpace) {
 
-		importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
+        Grammar* aGrammar = fGrammarResolver->getGrammar(nameSpace);
 
-        if (importedGrammar) {
-           return;
+        if (aGrammar) {
+			
+            if (aGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+
+                importedGrammar = (SchemaGrammar*) aGrammar;
+                return;
+            }
+            else { // empty string namespace
+                //REVISIT
+            }
         }
     }
 
@@ -1701,9 +1751,9 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     const XMLCh* useVal = getElementAttValue(elem, SchemaSymbols::fgATT_USE);
     DOM_Element  simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
-    if(XMLString::stringLen(defaultVal) != 0) {
+    if(defaultVal) {
 
-        if (XMLString::stringLen(fixedVal) != 0) {
+        if (fixedVal) {
 
             fixedVal = 0;
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue);
@@ -1900,10 +1950,9 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     }
 
     // validate fixed/default values
-    const XMLCh* valueToCheck = XMLString::stringLen(defaultVal) ? defaultVal : fixedVal;
+    const XMLCh* valueToCheck = defaultVal ? defaultVal : fixedVal;
 
-    if (attType == XMLAttDef::Simple && dv != 0
-        && XMLString::stringLen(valueToCheck) != 0) {
+    if (attType == XMLAttDef::Simple && dv && valueToCheck) {
 
         try {
             dv->validate(valueToCheck);
@@ -1932,24 +1981,24 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     }
     else if (required) {
 
-        if (XMLString::stringLen(fixedVal) == 0) {
-            attDef->setDefaultType(XMLAttDef::Required);
+        if (fixedVal) {
+            attDef->setDefaultType(XMLAttDef::Required_And_Fixed);
         }
         else {
-            attDef->setDefaultType(XMLAttDef::Required_And_Fixed);
+            attDef->setDefaultType(XMLAttDef::Required);
         }
     }
     else {
 
-        if (XMLString::stringLen(fixedVal) != 0) {
+        if (fixedVal) {
             attDef->setDefaultType(XMLAttDef::Fixed);
         }
-        else if (XMLString::stringLen(defaultVal) != 0) {
+        else if (defaultVal) {
             attDef->setDefaultType(XMLAttDef::Default);
         }
     }
 
-    if (XMLString::stringLen(valueToCheck) != 0) {
+    if (valueToCheck) {
         attDef->setValue(valueToCheck);
     }
 
@@ -2369,11 +2418,6 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
         }
     }
 
-    // key/keyref/unique processing
-    // TO DO
-
-
-
     // set element information, but first check for duplicate elements with
     // different types.
     if (isDuplicate) {
@@ -2394,6 +2438,60 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
         elemDecl->setModelType(contentSpecType);
         elemDecl->setContentSpec(contentSpecNode);
         elemDecl->setTypeFromAnotherSchemaURI(anotherSchemaURI);
+
+        // key/keyref/unique processing
+        DOM_Element ic = XUtil::getFirstChildElementNS(elem, fgIdentityConstraints,
+                                                       SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
+        ValueVectorOf<DOM_Element>* icNodes = 0;
+
+        while (ic != 0) {
+
+            if ( ic.getLocalName().equals(SchemaSymbols::fgELT_KEY) ) {
+                traverseKey(ic, elemDecl);
+            }
+            else if ( ic.getLocalName().equals(SchemaSymbols::fgELT_UNIQUE) ) {
+                traverseUnique(ic, elemDecl);
+            }
+            else {
+
+                if (!icNodes) {
+                    icNodes = new ValueVectorOf<DOM_Element>(8);
+                }
+
+                icNodes->addElement(ic);
+            }
+
+            ic = XUtil::getNextSiblingElementNS(ic, fgIdentityConstraints,
+                                                SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
+        }
+
+        if (icNodes) {
+
+            if (!fIC_ElementsNS) {
+
+                fIC_ElementsNS = new RefHashTableOf<ElemVector>(13);
+                fIC_NamespaceDepthNS = new RefHashTableOf<ValueVectorOf<unsigned int> >(13);
+                fIC_NodeListNS = new RefHashTableOf<ValueVectorOf<DOM_Element> >(29, true, new HashPtr());
+            }
+
+            if (fIC_ElementsNS->containsKey(fTargetNSURIString)) {
+
+                fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
+                fIC_NamespaceDepth = fIC_NamespaceDepthNS->get(fTargetNSURIString);
+            }
+
+            if (!fIC_Elements) {
+
+                fIC_Elements = new ValueVectorOf<SchemaElementDecl*>(8);
+                fIC_NamespaceDepth = new ValueVectorOf<unsigned int>(8);
+                fIC_ElementsNS->put((void*) fTargetNSURIString, fIC_Elements);
+                fIC_NamespaceDepthNS->put((void*) fTargetNSURIString, fIC_NamespaceDepth);
+            }
+
+            fIC_NodeListNS->put(elemDecl, icNodes);
+            fIC_Elements->addElement(elemDecl);
+            fIC_NamespaceDepth->addElement(fSchemaInfo->getNamespaceScopeLevel());
+        }
     }
 
     return new QName(elemDecl->getElementName());
@@ -2665,7 +2763,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                     const XMLCh* const enumVal = fStringPool->getValueForId(enumValId);
                     const XMLCh* localPart = getLocalPart(enumVal);
                     const XMLCh* prefix = getPrefix(enumVal);
-                    const XMLCh* uriStr = (prefix) ? resolvePrefixToURI(prefix) : fTargetNSURIString;
+                    const XMLCh* uriStr = (XMLString::stringLen(prefix)) ? resolvePrefixToURI(prefix) : fTargetNSURIString;
                     unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
                     if (!fNotationRegistry->containsKey(localPart, uriId)) {
@@ -3482,6 +3580,329 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
     return attDef;
 }
 
+/**
+  * <key
+  *   id = ID
+  *   name = NCName
+  *   Content: (annotation?, (selector, field+))
+  * </key>
+  */
+void TraverseSchema::traverseKey(const DOM_Element& icElem,
+                                 SchemaElementDecl* const elemDecl) {
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(icElem, scope, this);
+
+    // -----------------------------------------------------------------------
+    // Create identity constraint
+    // -----------------------------------------------------------------------
+    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
+
+    if (!XMLString::stringLen(name)) {
+        return;
+    }
+
+    if (!fIdentityConstraintNames) {
+        fIdentityConstraintNames = new RefHash2KeysTableOf<IdentityConstraint>(29, false);
+    }
+
+    if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_DuplicateDecl, name);
+        return;
+    }
+
+    IC_Key* icKey = new IC_Key(name, elemDecl->getBaseName());
+    Janitor<IC_Key> janKey(icKey);
+
+    fIdentityConstraintNames->put((void*) name, fTargetNSURI, icKey);
+
+    // -----------------------------------------------------------------------
+    // Get selector and fields
+    // -----------------------------------------------------------------------
+    if (!traverseIdentityConstraint(icKey, icElem)) {
+
+        fIdentityConstraintNames->put((void*) name, fTargetNSURI, 0);
+        return;
+    }
+
+    // -----------------------------------------------------------------------
+    // Add key to element declaration
+    // -----------------------------------------------------------------------
+    elemDecl->addIdentityConstraint(icKey);
+    janKey.orphan();
+}
+
+/**
+  * <unique
+  *   id = ID
+  *   name = NCName
+  *   Content: (annotation?, (selector, field+))
+  * </unique>
+  */
+void TraverseSchema::traverseUnique(const DOM_Element& icElem,
+                                    SchemaElementDecl* const elemDecl) {
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(icElem, scope, this);
+
+    // -----------------------------------------------------------------------
+    // Create identity constraint
+    // -----------------------------------------------------------------------
+    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
+
+    if (!XMLString::stringLen(name)) {
+        return;
+    }
+
+    if (!fIdentityConstraintNames) {
+        fIdentityConstraintNames = new RefHash2KeysTableOf<IdentityConstraint>(29, false);
+    }
+
+    if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {         
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_DuplicateDecl, name);
+        return;
+    }
+
+    IC_Unique* icUnique = new IC_Unique(name, elemDecl->getBaseName());
+    Janitor<IC_Unique> janUnique(icUnique);
+
+    fIdentityConstraintNames->put((void*) name, fTargetNSURI, icUnique);
+
+    // -----------------------------------------------------------------------
+    // Get selector and fields
+    // -----------------------------------------------------------------------
+    if (!traverseIdentityConstraint(icUnique, icElem)) {
+
+        fIdentityConstraintNames->put((void*) name, fTargetNSURI, 0);
+        return;
+    }
+
+    // -----------------------------------------------------------------------
+    // Add identity cosntraints to element declaration
+    // -----------------------------------------------------------------------
+    elemDecl->addIdentityConstraint(icUnique);
+    janUnique.orphan();
+}
+
+/**
+  * <keyref
+  *   id = ID
+  *   name = NCName
+  *   refer = QName
+  *   Content: (annotation?, (selector, field+))
+  * </keyref>
+  */
+void TraverseSchema::traverseKeyRef(const DOM_Element& icElem,
+                                    SchemaElementDecl* const elemDecl,
+                                    const unsigned int namespaceDepth) {
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(icElem, scope, this);
+
+    // -----------------------------------------------------------------------
+    // Verify that key reference "refer" attribute is valid
+    // -----------------------------------------------------------------------
+    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER);
+
+    if (!XMLString::stringLen(name) || !XMLString::stringLen(refer)) {
+        return;
+    }
+
+    const XMLCh* prefix = getPrefix(refer);
+    const XMLCh* localPart = getLocalPart(refer);
+    const XMLCh* uriStr = resolvePrefixToURI(prefix, namespaceDepth);
+    IdentityConstraint* icKey = (fIdentityConstraintNames) 
+        ? fIdentityConstraintNames->get(localPart, fURIStringPool->addOrFind(uriStr)) : 0;
+
+    if (!icKey) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_KeyRefReferNotFound, name, localPart);
+        return;
+    }
+
+    // -----------------------------------------------------------------------
+    // Create identity constraint
+    // -----------------------------------------------------------------------
+    if(fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_DuplicateDecl, name);
+        return;
+    }
+
+    IC_KeyRef* icKeyRef = new IC_KeyRef(name, elemDecl->getBaseName(), icKey);
+    Janitor<IC_KeyRef> janKeyRef(icKeyRef);
+
+    fIdentityConstraintNames->put((void*) name, fTargetNSURI, icKeyRef);
+
+    // -----------------------------------------------------------------------
+    // Get selector and fields
+    // -----------------------------------------------------------------------
+    if (!traverseIdentityConstraint(icKeyRef, icElem)) {
+
+        fIdentityConstraintNames->put((void*) name, fTargetNSURI, 0);
+        return;
+    }
+
+    // -----------------------------------------------------------------------
+    // Add key reference to element decl
+    // -----------------------------------------------------------------------
+    if (icKeyRef->getFieldCount() != icKey->getFieldCount()) {
+
+        fIdentityConstraintNames->put((void*) name, fTargetNSURI, 0);
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_KeyRefCardinality,
+                          name, icKey->getIdentityConstraintName());
+    }
+    else {
+        
+        elemDecl->addIdentityConstraint(icKeyRef);
+        janKeyRef.orphan();
+    }
+}
+
+
+bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
+                                                const DOM_Element& icElem) {
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(icElem, scope, this);
+
+    // ------------------------------------------------------------------
+    // First, handle any ANNOTATION declaration
+    // ------------------------------------------------------------------
+    DOM_Element elem = XUtil::getFirstChildElement(icElem);
+
+    if (elem == 0) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_BadContent);
+        return false;
+    }
+
+    elem = checkContent(icElem, elem, false);
+
+    // ------------------------------------------------------------------
+    // Get selector
+    // ------------------------------------------------------------------
+    if (!elem.getLocalName().equals(SchemaSymbols::fgELT_SELECTOR)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_BadContent);
+        return false;
+    }
+
+    fAttributeCheck->checkAttributes(elem, scope, this);
+    checkContent(icElem, XUtil::getFirstChildElement(elem), true);
+
+    // ------------------------------------------------------------------
+    // Get xpath attribute
+    // ------------------------------------------------------------------
+    const XMLCh* xpathExpr = getElementAttValue(elem, SchemaSymbols::fgATT_XPATH, true);
+
+    if (!xpathExpr || !XMLString::stringLen(xpathExpr)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_XPathExprMissing);
+        return false;
+    }
+
+    if (XMLString::startsWith(xpathExpr, fgForwardSlash)
+        || XMLString::startsWith(xpathExpr, fgDot)) {
+        fBuffer.set(xpathExpr);
+    }
+    else {
+        fBuffer.set(fgDotForwardSlash);
+        fBuffer.append(xpathExpr);
+    }
+
+    // ------------------------------------------------------------------
+    // Parse xpath expression
+    // ------------------------------------------------------------------
+    try {
+
+        XercesXPath* sXPath = new XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI, true);
+        IC_Selector* icSelector = new IC_Selector(sXPath, ic);
+        ic->setSelector(icSelector);
+    }
+    catch (const XPathException& e) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, e.getMessage());
+        return false;
+    }
+
+    // ------------------------------------------------------------------
+    // Get fields
+    // ------------------------------------------------------------------
+    elem = XUtil::getNextSiblingElement(elem);
+
+    if (elem == 0) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_BadContent);
+        return false;
+    }
+
+	while (elem != 0) {
+
+        if (!elem.getLocalName().equals(SchemaSymbols::fgELT_FIELD)) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_BadContent);
+        }
+        else {
+            // General Attribute Checking
+            fAttributeCheck->checkAttributes(elem, scope, this);
+            checkContent(icElem, XUtil::getFirstChildElement(elem), true);
+
+            // xpath expression parsing
+            xpathExpr = getElementAttValue(elem, SchemaSymbols::fgATT_XPATH, true);
+
+            if (!xpathExpr || !XMLString::stringLen(xpathExpr)) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_XPathExprMissing);
+                return false;
+            }
+
+		    if (XMLString::startsWith(xpathExpr, fgForwardSlash)
+			    || XMLString::startsWith(xpathExpr, fgDot)) {
+                fBuffer.set(xpathExpr);
+            }
+            else {
+
+                fBuffer.set(fgDotForwardSlash);
+                fBuffer.append(xpathExpr);
+            }
+
+            try {
+
+                XercesXPath* fieldXPath = new XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI);
+                IC_Field* icField = new IC_Field(fieldXPath, ic);
+                ic->addField(icField);
+            }
+            catch (const XPathException& e) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, e.getMessage());
+                return false;
+            }
+		}
+
+        elem = XUtil::getNextSiblingElement(elem);
+    }
+
+    if (ic->getFieldCount() == 0) {
+        return false;
+    }
+
+    return true;
+}
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Helper methods
 // ---------------------------------------------------------------------------
@@ -3562,6 +3983,15 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
 
         DOMString name = child.getLocalName();
         const XMLCh* typeName = getElementAttValue(child, SchemaSymbols::fgATT_NAME);
+        int fullNameId = 0;
+
+        if (typeName) {
+
+            fBuffer.set(fTargetNSURIString);
+            fBuffer.append(chComma);
+            fBuffer.append(typeName);
+            fullNameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
+        }
 
         if (name.equals(SchemaSymbols::fgELT_ANNOTATION)) {
             traverseAnnotationDecl(child);
@@ -3569,13 +3999,14 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
         else if (name.equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
 
             if (XMLString::stringLen(typeName)) {
-                if (fGlobalTypes->containsKey(typeName, fTargetNSURI)) {
+                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_SIMPLETYPE, fullNameId)
+                    || fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId)) {
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalType,
                                       SchemaSymbols::fgELT_SIMPLETYPE, typeName, SchemaSymbols::fgELT_COMPLEXTYPE);
                     continue;
                 }
                 else {
-                    fGlobalTypes->put((void*) typeName, fTargetNSURI, 0);
+                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_SIMPLETYPE, fullNameId, 0);
                 }
             }
 
@@ -3584,20 +4015,33 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
         else if (name.equals(SchemaSymbols::fgELT_COMPLEXTYPE)) {
 
             if (XMLString::stringLen(typeName)) {
-                if (fGlobalTypes->containsKey(typeName, fTargetNSURI)) {
+                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_SIMPLETYPE, fullNameId)
+                    || fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId)) {
 
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalType,
                                       SchemaSymbols::fgELT_COMPLEXTYPE, typeName, SchemaSymbols::fgELT_SIMPLETYPE);
                     continue;
                 }
                 else {
-                    fGlobalTypes->put((void*) typeName, fTargetNSURI, 0);
+                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId, 0);
                 }
             }
 
             traverseComplexTypeDecl(child);
         }
         else if (name.equals(SchemaSymbols::fgELT_ELEMENT)) {
+
+            if (XMLString::stringLen(typeName)) {
+                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ELEMENT, fullNameId)) {
+
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
+                                      SchemaSymbols::fgELT_ELEMENT, typeName);
+                    continue;
+                }
+                else {
+                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_ELEMENT, fullNameId, 0);
+                }
+            }
 
             bool toDelete = true;
             QName* elmQName = traverseElementDecl(child, toDelete);
@@ -3606,13 +4050,13 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
         else if (name.equals(SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
 
             if (XMLString::stringLen(typeName)) {
-                if (fGlobalAttGroups->containsKey(typeName, fTargetNSURI)) {
+                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ATTRIBUTEGROUP, fullNameId)) {
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
                                       SchemaSymbols::fgELT_ATTRIBUTEGROUP, typeName);
                     continue;
                 }
                 else {
-                    fGlobalAttGroups->put((void*) typeName, fTargetNSURI, 0);
+                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, fullNameId, 0);
                 }
             }
 
@@ -3620,16 +4064,16 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
                 traverseAttributeGroupDecl(child, 0);
             }
         }
-        else if (name.equals(SchemaSymbols::fgELT_ATTRIBUTE ) ) {
+        else if (name.equals(SchemaSymbols::fgELT_ATTRIBUTE)) {
 
             if (XMLString::stringLen(typeName)) {
-                if (fGlobalAttributes->containsKey(typeName, fTargetNSURI)) {
+                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ATTRIBUTE, fullNameId)) {
 
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, typeName);
                     continue;
                 }
                 else {
-                    fGlobalAttributes->put((void*) typeName, fTargetNSURI, 0);
+                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_ATTRIBUTE, fullNameId, 0);
                 }
             }
 
@@ -3640,13 +4084,13 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
         else if (name.equals(SchemaSymbols::fgELT_GROUP)) {
 
             if (XMLString::stringLen(typeName)) {
-                if (fGlobalGroups->containsKey(typeName, fTargetNSURI)) {
+                if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_GROUP, fullNameId)) {
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
                                       SchemaSymbols::fgELT_GROUP, typeName);
                     continue;
                 }
                 else {
-                    fGlobalGroups->put((void*) typeName, fTargetNSURI, 0);
+                    fGlobalDeclarations->put((void*) SchemaSymbols::fgELT_GROUP, fullNameId, 0);
                 }
             }
 
@@ -3824,6 +4268,20 @@ TraverseSchema::findDTValidator(const DOM_Element& rootElem,
 const XMLCh* TraverseSchema::resolvePrefixToURI(const XMLCh* const prefix) {
 
     int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, fSchemaInfo->getNamespaceScopeLevel());
+    const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
+
+    if (!XMLString::stringLen(uriStr) && XMLString::stringLen(prefix)) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnresolvedPrefix, prefix);
+        return XMLUni::fgZeroLenString;
+    }
+
+    return uriStr;
+}
+
+const XMLCh* TraverseSchema::resolvePrefixToURI(const XMLCh* const prefix,
+                                                const unsigned int namespaceDepth) {
+
+    int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, namespaceDepth);
     const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
 
     if (!XMLString::stringLen(uriStr) && XMLString::stringLen(prefix)) {
@@ -4424,7 +4882,7 @@ TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
     const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
     const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
 
-    if (nillable) {
+    if (XMLString::stringLen(nillable)) {
 
         if (!XMLString::compareString(nillable, SchemaSymbols::fgATTVAL_TRUE)
             || !XMLString::compareString(nillable, fgValueOne)) {
@@ -4432,7 +4890,7 @@ TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
         }
     }
 
-    if (abstract) {
+    if (XMLString::stringLen(abstract)) {
 
         if (!XMLString::compareString(abstract, SchemaSymbols::fgATTVAL_TRUE)
             || !XMLString::compareString(abstract, fgValueOne)) {
@@ -5439,10 +5897,9 @@ void TraverseSchema::checkFixedFacet(const DOM_Element& elem,
                                      const DatatypeValidator* const baseDV,
                                      unsigned int& flags)
 {
-    const XMLCh* fixedFacet = 
-                    getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
+    const XMLCh* fixedFacet = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
 
-    if (fixedFacet && 
+    if (XMLString::stringLen(fixedFacet) && 
         (!XMLString::compareString(fixedFacet, SchemaSymbols::fgATTVAL_TRUE)
          || !XMLString::compareString(fixedFacet, fgValueOne))) {
 
@@ -6899,10 +7356,7 @@ void TraverseSchema::init() {
     fAttributeCheck = GeneralAttributeCheck::instance();
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
     fCurrentGroupStack = new ValueVectorOf<unsigned int>(8);
-    fGlobalTypes = new RefHash2KeysTableOf<XMLCh>(29, false);
-    fGlobalAttributes = new RefHash2KeysTableOf<XMLCh>(13, false);
-    fGlobalGroups = new RefHash2KeysTableOf<XMLCh>(13, false);
-    fGlobalAttGroups = new RefHash2KeysTableOf<XMLCh>(13, false);
+    fGlobalDeclarations = new RefHash2KeysTableOf<XMLCh>(29, false);
     fNotationRegistry = new RefHash2KeysTableOf<XMLCh>(13, false);
     fSubstitutionGroups = new RefHash2KeysTableOf<SchemaElementDecl>(29, false);
     fSchemaInfoList = new RefHashTableOf<SchemaInfo>(29);
@@ -6913,15 +7367,16 @@ void TraverseSchema::cleanUp() {
     delete fSchemaInfoList;
     delete fCurrentTypeNameStack;
     delete fCurrentGroupStack;
-    delete fGlobalTypes;
-    delete fGlobalAttributes;
-    delete fGlobalGroups;
-    delete fGlobalAttGroups;
+    delete fGlobalDeclarations;
     delete fNotationRegistry;
     delete fRedefineComponents;
+    delete fIdentityConstraintNames;
     delete fSubstitutionGroups;
     delete fRefElements;
     delete fRefElemScope;
+    delete fIC_ElementsNS;
+    delete fIC_NamespaceDepthNS;
+    delete fIC_NodeListNS;
 }
 
 /**

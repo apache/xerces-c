@@ -88,7 +88,11 @@
 #include <validators/DTD/DocTypeHandler.hpp>
 #include <validators/DTD/DTDScanner.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
-
+#include <validators/schema/identity/FieldActivator.hpp>
+#include <validators/schema/identity/XPathMatcherStack.hpp>
+#include <validators/schema/identity/ValueStoreCache.hpp>
+#include <validators/schema/identity/IC_Selector.hpp>
+#include <validators/schema/identity/ValueStore.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -208,6 +212,9 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fGrammar(0)
     , fEntityDeclPool(0)
     , fURIStringPool(0)
+    , fMatcherStack(0)
+    , fValueStoreCache(0)
+    , fFieldActivator(0)
 {
    commonInit();
 
@@ -266,6 +273,9 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fGrammar(0)
     , fEntityDeclPool(0)
     , fURIStringPool(0)
+    , fMatcherStack(0)
+    , fValueStoreCache(0)
+    , fFieldActivator(0)
 {
    commonInit();
 
@@ -297,6 +307,10 @@ XMLScanner::~XMLScanner()
     delete fGrammarResolver;
 
     delete fURIStringPool;
+
+    delete fFieldActivator;
+    delete fMatcherStack;
+    delete fValueStoreCache;
 }
 
 
@@ -379,6 +393,8 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
         if (fDocHandler)
             fDocHandler->startDocument();
 
+        fValueStoreCache->startDocument();
+
         //
         //  Scan the prolog part, which is everything before the root element
         //  including the DTD subsets.
@@ -416,6 +432,9 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
                     scanMiscellaneous();
             }
         }
+
+        if (fValidate)
+            fValueStoreCache->endDocument();
 
         // If we have a document handler, then call the end document
         if (fDocHandler)
@@ -560,16 +579,18 @@ bool XMLScanner::scanFirst( const   InputSource&    src
     //
     fSequenceId++;
 
-	//
+    //
     // Reset the scanner and its plugged in stuff for a new run.  This
-	// resets all the data structures, creates the initial reader and
-	// pushes it on the stack, and sets up the base document path
-	//
+    // resets all the data structures, creates the initial reader and
+    // pushes it on the stack, and sets up the base document path
+    //
     scanReset(src);
 
-	// If we have a document handler, then call the start document
-	if (fDocHandler)
-		fDocHandler->startDocument();
+    // If we have a document handler, then call the start document
+    if (fDocHandler)
+        fDocHandler->startDocument();
+
+    fValueStoreCache->startDocument();
 
     try
     {
@@ -746,11 +767,15 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
 
             // If we hit the end, then do the miscellaneous part
             if (!gotData)
-			{
+            {
                 scanMiscellaneous();
-				if (fDocHandler)
-					fDocHandler->endDocument();
-			}
+
+                if (fValidate)
+                    fValueStoreCache->endDocument();
+
+                if (fDocHandler)
+                    fDocHandler->endDocument();
+            }
         }
     }
 
@@ -917,6 +942,12 @@ void XMLScanner::commonInit()
     initValidator(fDTDValidator);
     fSchemaValidator = new SchemaValidator();
     initValidator(fSchemaValidator);
+
+    // Create IdentityConstraint info
+    fMatcherStack = new XPathMatcherStack();    
+    fValueStoreCache = new ValueStoreCache();
+    fFieldActivator = new FieldActivator(fValueStoreCache, fMatcherStack);
+    fValueStoreCache->setScanner(this);
 }
 
 
@@ -1738,8 +1769,64 @@ void XMLScanner::scanEndTag(bool& gotData)
         }
 
         // reset xsi:type ComplexTypeInfo
-        if (fGrammarType == Grammar::SchemaGrammarType)
+        if (fGrammarType == Grammar::SchemaGrammarType) {
             ((SchemaElementDecl*)topElem->fThisElement)->setXsiComplexTypeInfo(0);
+
+            // call matchers and de-activate context
+            int oldCount = fMatcherStack->getMatcherCount();
+
+            if (oldCount ||
+                ((SchemaElementDecl*)topElem->fThisElement)->getIdentityConstraintCount()) {
+
+                for (int i = oldCount - 1; i >= 0; i--) {
+
+                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
+                    matcher->endElement(*(topElem->fThisElement));
+                }
+
+                if (fMatcherStack->size() > 0) {
+                    fMatcherStack->popContext();
+                }
+
+                // handle everything *but* keyref's.
+                int newCount = fMatcherStack->getMatcherCount();
+
+                for (int j = oldCount - 1; j >= newCount; j--) {
+
+                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
+                    IdentityConstraint* ic = matcher->getIdentityConstraint();
+
+                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
+
+                        matcher->endDocumentFragment();
+                        fValueStoreCache->transplant(ic);
+                    }
+                    else if (!ic) {
+                        matcher->endDocumentFragment();
+                    }
+                }
+
+                // now handle keyref's...
+                for (int k = oldCount - 1; k >= newCount; k--) {
+
+                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
+                    IdentityConstraint* ic = matcher->getIdentityConstraint();
+
+                    if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
+
+                        ValueStore* values = fValueStoreCache->getValueStoreFor(ic);
+
+                        if (values) { // nothing to do if nothing matched!
+                            values->endDcocumentFragment(fValueStoreCache);
+                        }
+
+                        matcher->endDocumentFragment();
+                    }
+                }
+
+                fValueStoreCache->endElement();
+            }
+        }
     }
 
     // If this was the root, then done with content
@@ -3165,6 +3252,34 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     attCount = buildAttList(*fRawAttrList, attCount, elemDecl, *fAttrList);
 
     //
+    // activate identity constraints
+    //
+    if (fValidate && fGrammar && fGrammarType == Grammar::SchemaGrammarType) {
+
+        unsigned int count = ((SchemaElementDecl*) elemDecl)->getIdentityConstraintCount();
+
+        if (count || fMatcherStack->getMatcherCount()) {
+
+            fValueStoreCache->startElement();
+            fMatcherStack->pushContext();
+            fValueStoreCache->initValueStoresFor((SchemaElementDecl*) elemDecl);
+
+            for (unsigned int i = 0; i < count; i++) {
+                activateSelectorFor(((SchemaElementDecl*) elemDecl)->getIdentityConstraintAt(i));
+            }
+
+            // call all active identity constraints
+            count = fMatcherStack->getMatcherCount();
+
+            for (unsigned int j = 0; j < count; j++) {
+
+                XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
+                matcher->startElement(*elemDecl, *fAttrList, attCount);
+            }
+        }
+    }
+
+    //
     //  If empty, validate content right now if we are validating and then
     //  pop the element stack top. Else, we have to update the current stack
     //  top's namespace mapping elements.
@@ -3188,9 +3303,65 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 );
             }
 
-            // reset xsi:type ComplexTypeInfo
-            if (fGrammarType == Grammar::SchemaGrammarType)
+            if (fGrammarType == Grammar::SchemaGrammarType) {
+
+                // reset xsi:type ComplexTypeInfo
                 ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
+
+                // call matchers and de-activate context
+                int oldCount = fMatcherStack->getMatcherCount();
+
+                if (oldCount || ((SchemaElementDecl*) elemDecl)->getIdentityConstraintCount()) {
+
+                    for (int i = oldCount - 1; i >= 0; i--) {
+
+                        XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
+                        matcher->endElement(*elemDecl);
+                    }
+
+                    if (fMatcherStack->size() > 0) {
+                        fMatcherStack->popContext();
+                    }
+
+                    // handle everything *but* keyref's.
+                    int newCount = fMatcherStack->getMatcherCount();
+
+                    for (int j = oldCount - 1; j >= newCount; j--) {
+
+                        XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
+                        IdentityConstraint* ic = matcher->getIdentityConstraint();
+
+                        if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
+
+                            matcher->endDocumentFragment();
+                            fValueStoreCache->transplant(ic);
+                        }
+                        else if (!ic) {
+                            matcher->endDocumentFragment();
+                        }
+                    }
+
+                    // now handle keyref's...
+                    for (int k = oldCount - 1; k >= newCount; k--) {
+
+                        XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
+                        IdentityConstraint* ic = matcher->getIdentityConstraint();
+
+                        if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
+
+                            ValueStore* values = fValueStoreCache->getValueStoreFor(ic);
+
+                            if (values) { // nothing to do if nothing matched!
+                                values->endDcocumentFragment(fValueStoreCache);
+                            }
+
+                            matcher->endDocumentFragment();
+                        }
+                    }
+
+                    fValueStoreCache->endElement();
+                }
+            }
         }
 
         // If the elem stack is empty, then it was an empty root
@@ -3640,5 +3811,21 @@ void XMLScanner::resizeElemState() {
     delete [] fElemState;
     fElemState = newElemState;
     fElemStateSize = newSize;
+}
+
+// ---------------------------------------------------------------------------
+//  XMLScanner: IC activation methos
+// ---------------------------------------------------------------------------
+void XMLScanner::activateSelectorFor(IdentityConstraint* const ic) {
+
+    IC_Selector* selector = ic->getSelector();
+
+    if (!selector)
+        return;
+
+    XPathMatcher* matcher = selector->createMatcher(fFieldActivator);
+
+    fMatcherStack->addMatcher(matcher);
+    matcher->startDocumentFragment();
 }
 

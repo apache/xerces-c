@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2001/11/02 14:20:14  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.34  2001/10/12 20:52:18  tng
  * Schema: Find the attributes see if they should be (un)qualified.
  *
@@ -207,7 +210,10 @@ class XMLErrorReporter;
 class ErrorHandler;
 class XMLMsgLoader;
 class XMLValidator;
-
+class ValueStoreCache;
+class XPathMatcherStack;
+class FieldActivator;
+class IdentityConstraint;
 
 //
 //  This is the mondo scanner class, which does the vast majority of the
@@ -645,7 +651,10 @@ private :
     // -----------------------------------------------------------------------
     void resizeElemState();
 
-
+    // -----------------------------------------------------------------------
+    //  IdentityConstraints Activation methods
+    // -----------------------------------------------------------------------
+    void activateSelectorFor(IdentityConstraint* const ic);
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -839,6 +848,17 @@ private :
     //      string pool class.  This pool is going to be shared by all Grammar.
     //      Use only if namespace is turned on.
     //
+    //  fMatcherStack
+    //      Stack of active XPath matchers for identity constraints. All
+    //      active XPath matchers are notified of startElement, characters
+    //      and endElement callbacks in order to perform their matches.
+    //
+    //  fValueStoreCache
+    //      Cache of value stores for identity constraint fields.
+    //
+    //  fFieldActivator
+    //      Activates fields within a certain scope when a selector matches
+    //      its xpath.
     // -----------------------------------------------------------------------
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
@@ -890,6 +910,9 @@ private :
     Grammar::GrammarType        fGrammarType;
     NameIdPool<DTDEntityDecl>*  fEntityDeclPool;
     XMLStringPool*              fURIStringPool;
+    XPathMatcherStack*          fMatcherStack;
+    ValueStoreCache*            fValueStoreCache;
+    FieldActivator*             fFieldActivator;
 };
 
 

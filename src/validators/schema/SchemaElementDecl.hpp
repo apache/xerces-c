@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/11/02 14:13:45  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.14  2001/10/11 12:07:39  tng
  * Schema: model type should be based on complextypeinfo if exists.
  *
@@ -111,6 +114,7 @@
 class ContentSpecNode;
 class SchemaAttDefList;
 class DatatypeValidator;
+class IdentityConstraint;
 
 //
 //  This class is a derivative of the basic element decl. This one implements
@@ -223,6 +227,13 @@ public :
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
+    // -----------------------------------------------------------------------
+    //  IC methods
+    // -----------------------------------------------------------------------
+    void addIdentityConstraint(IdentityConstraint* const ic);
+    unsigned int getIdentityConstraintCount() const;
+    IdentityConstraint* getIdentityConstraintAt(unsigned int index) const;
+
 private :
     // -----------------------------------------------------------------------
     //  Private data members
@@ -271,20 +282,24 @@ private :
     //  fXsiComplexTypeInfo
     //      Temporary store the xsi:type ComplexType here for validation
     //      If it presents, then it takes precedence than its own fComplexTypeInfo.
+    //
+    //  fIdentityConstraints
+    //      Store information about an element identity constraints.
     // -----------------------------------------------------------------------
-    ModelTypes                     fModelType;
-    DatatypeValidator*             fDatatypeValidator;
-    int                            fEnclosingScope;
-    int                            fDefinedScope;
-    int                            fFinalSet;
-    int                            fBlockSet;
-    int                            fMiscFlags;
-    XMLCh*                         fDefaultValue;
-    XMLCh*                         fSubstitutionGroupName;
-    XMLCh*                         fTypeFromAnotherSchemaURI;
-    ComplexTypeInfo*               fComplexTypeInfo;
+    ModelTypes                         fModelType;
+    DatatypeValidator*                 fDatatypeValidator;
+    int                                fEnclosingScope;
+    int                                fDefinedScope;
+    int                                fFinalSet;
+    int                                fBlockSet;
+    int                                fMiscFlags;
+    XMLCh*                             fDefaultValue;
+    XMLCh*                             fSubstitutionGroupName;
+    XMLCh*                             fTypeFromAnotherSchemaURI;
+    ComplexTypeInfo*                   fComplexTypeInfo;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
-    ComplexTypeInfo*               fXsiComplexTypeInfo;
+    ComplexTypeInfo*                   fXsiComplexTypeInfo;
+    RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
 };
 
 // ---------------------------------------------------------------------------
@@ -509,6 +524,38 @@ inline void
 SchemaElementDecl::setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo)
 {
     fXsiComplexTypeInfo = typeInfo;
+}
+
+// ---------------------------------------------------------------------------
+//  SchemaElementDecl: IC methods
+// ---------------------------------------------------------------------------
+inline void 
+SchemaElementDecl::addIdentityConstraint(IdentityConstraint* const ic) {
+
+    if (!fIdentityConstraints) {
+        fIdentityConstraints = new RefVectorOf<IdentityConstraint>(16);
+    }
+
+    fIdentityConstraints->addElement(ic);
+}
+
+inline unsigned int SchemaElementDecl::getIdentityConstraintCount() const {
+
+    if (fIdentityConstraints) {
+        return fIdentityConstraints->size();
+    }
+
+    return 0;
+}
+
+inline IdentityConstraint*
+SchemaElementDecl::getIdentityConstraintAt(unsigned int index) const {
+
+    if (fIdentityConstraints) {
+        return fIdentityConstraints->elementAt(index);
+    }
+
+    return 0;
 }
 
 #endif

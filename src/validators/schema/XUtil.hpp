@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/02 14:13:45  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.2  2001/05/11 13:27:39  tng
  * Copyright update.
  *
@@ -115,6 +118,12 @@ public:
                                           , const XMLCh* const attrName
                                           , const XMLCh* const attrValue);
 
+    // Finds and returns the first child node with the given qualifiedname.
+    static DOM_Element getFirstChildElementNS(const DOM_Node     &parent
+                                            , const XMLCh** const elemNames
+                                            , const XMLCh* const uriStr
+                                            , unsigned int        length);
+
     // Finds and returns the last child element node.
     static DOM_Element getLastChildElement(const DOM_Node &parent);
     // Finds and returns the last child element node with the given name.
@@ -147,6 +156,12 @@ public:
 		                                   , const XMLCh* const elemName
                                            , const XMLCh* const attrName
                                            , const XMLCh* const attrValue);
+
+    // Finds and returns the next sibling node with the given qualified name.
+    static DOM_Element getNextSiblingElementNS(const DOM_Node     &node
+                                             , const XMLCh** const elemNames
+                                             , const XMLCh* const uriStr
+                                             , unsigned int        length);
 
 protected:
     // -----------------------------------------------------------------------

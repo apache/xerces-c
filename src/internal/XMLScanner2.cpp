@@ -97,7 +97,7 @@
 #include <validators/schema/SchemaGrammar.hpp>
 #include <validators/schema/TraverseSchema.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
-
+#include <validators/schema/identity/XPathMatcherStack.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -1011,6 +1011,9 @@ void XMLScanner::scanReset(const InputSource& src)
     // Clear out the id reference list
     fIDRefList->removeAll();
 
+    // Reset IdentityConstraints
+    fMatcherStack->clear();
+
     //
     //  Reset the element stack, and give it the latest ids for the special
     //  URIs it has to know about.
@@ -1121,6 +1124,13 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
                         ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
 
+                        // call all active identity constraints
+                        unsigned int count = fMatcherStack->getMatcherCount();
+
+                        for (unsigned int i = 0; i < count; i++) {
+                            fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
+                        }
+
                         fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
                     }
                 }
@@ -1152,6 +1162,13 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
                         ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
 
+                        // call all active identity constraints
+                        unsigned int count = fMatcherStack->getMatcherCount();
+
+                        for (unsigned int i = 0; i < count; i++) {
+                            fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
+                        }
+
                         fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
                     }
                 }
@@ -1164,6 +1181,13 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
     }
      else
     {
+        // call all active identity constraints
+        unsigned int count = fMatcherStack->getMatcherCount();
+
+        for (unsigned int i = 0; i < count; i++) {
+            fMatcherStack->getMatcherAt(i)->docCharacters(toSend.getRawBuffer(), toSend.getLen());
+        }
+
         // Always assume its just char data if not validating
         if (fDocHandler)
             fDocHandler->docCharacters(toSend.getRawBuffer(), toSend.getLen(), false);
@@ -2104,6 +2128,13 @@ void XMLScanner::scanCDSection()
         //
         if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
+            // call all active identity constraints
+            unsigned int count = fMatcherStack->getMatcherCount();
+
+            for (unsigned int i = 0; i < count; i++) {
+                fMatcherStack->getMatcherAt(i)->docCharacters(bbCData.getRawBuffer(), bbCData.getLen());
+            }
+
             // If we have a doc handler, call it
             if (fDocHandler)
             {

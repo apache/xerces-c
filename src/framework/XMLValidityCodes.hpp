@@ -106,11 +106,22 @@ public :
       , NoSubforBlock                      = 93
       , AttributeNotQualified              = 94
       , AttributeNotUnQualified            = 95
-      , E_HighBounds                       = 96
-      , W_LowBounds                        = 97
-      , W_HighBounds                       = 98
-      , F_LowBounds                        = 99
-      , F_HighBounds                       = 100
+      , IC_FieldMultipleMatch              = 96
+      , IC_UnknownField                    = 97
+      , IC_AbsentKeyValue                  = 98
+      , IC_UniqueNotEnoughValues           = 99
+      , IC_KeyNotEnoughValues              = 100
+      , IC_KeyRefNotEnoughValues           = 101
+      , IC_KeyMatchesNillable              = 102
+      , IC_DuplicateUnique                 = 103
+      , IC_DuplicateKey                    = 104
+      , IC_KeyRefOutOfScope                = 105
+      , IC_KeyNotFound                     = 106
+      , E_HighBounds                       = 107
+      , W_LowBounds                        = 108
+      , W_HighBounds                       = 109
+      , F_LowBounds                        = 110
+      , F_HighBounds                       = 111
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

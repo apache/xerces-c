@@ -761,6 +761,13 @@ const XMLCh XMLUni::fgInvalidDatatypeValueException_Name[] =
     ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh XMLUni::fgXPathException_Name[] =
+{
+        chLatin_X, chLatin_P, chLatin_a, chLatin_t, chLatin_h, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
 const XMLCh XMLUni::fgNegINFString[] =
 {
     chDash, chLatin_I, chLatin_N, chLatin_F, chNull

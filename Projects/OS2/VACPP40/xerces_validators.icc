@@ -54,3 +54,17 @@ group xerces_validators =
     BASE_DIR "\\src\\validators\\schema\\XercesElementWildCard.cpp",
     BASE_DIR "\\src\\validators\\schema\\XercesGroupInfo.cpp",
     BASE_DIR "\\src\\validators\\schema\\XUtil.cpp"
+    BASE_DIR "\\src\\validators\\schema\\FieldActivator.cpp"
+    BASE_DIR "\\src\\validators\\schema\\FieldValueMap.cpp"
+    BASE_DIR "\\src\\validators\\schema\\IC_Field.cpp"
+    BASE_DIR "\\src\\validators\\schema\\IC_Key.cpp"
+    BASE_DIR "\\src\\validators\\schema\\IC_KeyRef.cpp"
+    BASE_DIR "\\src\\validators\\schema\\IC_Selector.cpp"
+    BASE_DIR "\\src\\validators\\schema\\IC_Unique.cpp"
+    BASE_DIR "\\src\\validators\\schema\\IdentityConstraint.cpp"
+    BASE_DIR "\\src\\validators\\schema\\ValueStore.cpp"
+    BASE_DIR "\\src\\validators\\schema\\ValueStoreCache.cpp"
+    BASE_DIR "\\src\\validators\\schema\\XercesXPath.cpp"
+    BASE_DIR "\\src\\validators\\schema\\XPathMatcher.cpp"
+    BASE_DIR "\\src\\validators\\schema\\XPathMatcherStack.cpp"
+    BASE_DIR "\\src\\validators\\schema\\XPathSymbols.cpp"

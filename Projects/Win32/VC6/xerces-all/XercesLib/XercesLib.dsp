@@ -1997,6 +1997,126 @@ SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.hpp
 # Begin Group "schema"
 
 # PROP Default_Filter "*.cpp, *.hpp"
+# Begin Group "identity"
+
+# PROP Default_Filter "*.cpp, *.hpp"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldActivator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldActivator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldValueMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldValueMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Field.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Field.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Key.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Key.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_KeyRef.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_KeyRef.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Selector.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Selector.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Unique.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Unique.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IdentityConstraint.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\IdentityConstraint.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStore.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStore.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStoreCache.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStoreCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XercesXPath.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XercesXPath.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcher.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcher.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcherStack.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcherStack.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathSymbols.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathSymbols.hpp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\schema\ComplexTypeInfo.cpp

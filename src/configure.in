@@ -131,6 +131,7 @@ validators/common/Makefile \
 validators/datatype/Makefile \
 validators/DTD/Makefile \
 validators/schema/Makefile \
+validators/schema/identity/Makefile \
 framework/Makefile \
 dom/Makefile \
 idom/Makefile \

@@ -217,7 +217,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         validators/common
         validators/datatype
         validators/DTD
-        validators/schema';
+        validators/schema
+        validators/schema/identity';
 
     foreach $dir (@headerDirectories) {
         $inclDir = "include/$dir";
@@ -499,6 +500,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/include/validators/datatype");
     psystem ("mkdir $targetdir/include/validators/DTD");
     psystem ("mkdir $targetdir/include/validators/schema");
+    psystem ("mkdir $targetdir/include/validators/schema/identity");
     psystem ("mkdir $targetdir/samples");
     psystem ("mkdir $targetdir/samples/data");
     psystem ("mkdir $targetdir/samples/SAXCount");
@@ -665,6 +667,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("cp -Rf $XERCESCROOT/src/validators/datatype/*.hpp $targetdir/include/validators/datatype");
     psystem("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
     psystem("cp -Rf $XERCESCROOT/src/validators/schema/*.hpp $targetdir/include/validators/schema");
+    psystem("cp -Rf $XERCESCROOT/src/validators/schema/identity/*.hpp $targetdir/include/validators/schema/identity");
 
     if (length($ICUROOT) > 0) {
         print "\nICU files are being copied from \'$ICUROOT\'";

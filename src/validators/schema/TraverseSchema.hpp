@@ -71,6 +71,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLUniDefs.hpp>
 #include <dom/DOM_Element.hpp>
+#include <dom/DOM_Attr.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <util/ValueVectorOf.hpp>
@@ -98,6 +99,7 @@ class ErrorHandler;
 class GeneralAttributeCheck;
 class XercesGroupInfo;
 class XercesAttGroupInfo;
+class IdentityConstraint;
 
 
 class VALIDATORS_EXPORT TraverseSchema
@@ -205,6 +207,15 @@ private:
     XercesAttGroupInfo* traverseAttributeGroupDeclNS(const XMLCh* const uriStr,
                                                      const XMLCh* const name);
     SchemaAttDef*       traverseAnyAttribute(const DOM_Element& elem);
+    void                traverseKey(const DOM_Element& icElem,
+                                    SchemaElementDecl* const elemDecl);
+    void                traverseUnique(const DOM_Element& icElem,
+                                       SchemaElementDecl* const elemDecl);
+    void                traverseKeyRef(const DOM_Element& icElem,
+                                       SchemaElementDecl* const elemDecl,
+                                       const unsigned int namespaceDepth);
+    bool                traverseIdentityConstraint(IdentityConstraint* const ic,
+                                                   const DOM_Element& icElem);
 
     // -----------------------------------------------------------------------
     //  Error Reporting methods
@@ -286,6 +297,8 @@ private:
                                        const int baseRefContext);
 
     const XMLCh* resolvePrefixToURI(const XMLCh* const prefix);
+    const XMLCh* resolvePrefixToURI(const XMLCh* const prefix,
+                                    const unsigned int namespaceDepth);
 
     /**
       * Return whether an element is defined as a top level schema component
@@ -643,6 +656,9 @@ private:
       */
     void updateCircularSubstitutionList(SchemaInfo* const aSchemaInfo);
 
+    void processKeyRefFor(SchemaInfo* const aSchemaInfo,
+                          ValueVectorOf<SchemaInfo*>* const infoList);
+
     // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
@@ -669,50 +685,52 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool                                    fFullConstraintChecking;
-    unsigned short                          fElemAttrDefaultQualified;
-    int                                     fTargetNSURI;
-    int                                     fEmptyNamespaceURI;
-    int                                     fCurrentScope;
-    int                                     fFinalDefault;
-    int                                     fBlockDefault;
-    int                                     fScopeCount;
-    unsigned int                            fAnonXSTypeCount;
-    const XMLCh*                            fTargetNSURIString;
-    DatatypeValidatorFactory*               fDatatypeRegistry;
-    GrammarResolver*                        fGrammarResolver;
-    SchemaGrammar*                          fSchemaGrammar;
-    EntityResolver*                         fEntityResolver;
-    ErrorHandler*                           fErrorHandler;
-    XMLStringPool*                          fURIStringPool;
-    XMLStringPool*                          fStringPool;
-    XMLBuffer                               fBuffer;
-    XMLValidator*                           fValidator;
-    XMLScanner*                             fScanner;
-    NamespaceScope*                         fNamespaceScope;
-    RefHashTableOf<XMLAttDef>*              fAttributeDeclRegistry;
-    RefHashTableOf<ComplexTypeInfo>*        fComplexTypeRegistry;
-    RefHashTableOf<XercesGroupInfo>*        fGroupRegistry;
-    RefHashTableOf<XercesAttGroupInfo>*     fAttGroupRegistry;
-    RefHashTableOf<SchemaInfo>*             fSchemaInfoList;
-    SchemaInfo*                             fSchemaInfo;
-    XercesGroupInfo*                        fCurrentGroupInfo;
-    XercesAttGroupInfo*                     fCurrentAttGroupInfo;
-    ComplexTypeInfo*                        fCurrentComplexType;
-    ValueVectorOf<unsigned int>*            fCurrentTypeNameStack;
-    ValueVectorOf<unsigned int>*            fCurrentGroupStack;
-    GeneralAttributeCheck*                  fAttributeCheck;
-    RefHash2KeysTableOf<XMLCh>*             fGlobalTypes;
-    RefHash2KeysTableOf<XMLCh>*             fGlobalAttributes;
-    RefHash2KeysTableOf<XMLCh>*             fGlobalGroups;
-    RefHash2KeysTableOf<XMLCh>*             fGlobalAttGroups;
-    RefHash2KeysTableOf<XMLCh>*             fNotationRegistry;
-    RefHash2KeysTableOf<XMLCh>*             fRedefineComponents;
-    RefHash2KeysTableOf<SchemaElementDecl>* fSubstitutionGroups;
-    RefHash2KeysTableOf<ElemVector>*        fValidSubstitutionGroups;
-    RefHash2KeysTableOf<ElemVector>*        fGrammarSubstitutionGroups;
-    RefVectorOf<QName>*                     fRefElements;
-    ValueVectorOf<int>*                     fRefElemScope;
+    bool                                          fFullConstraintChecking;
+    unsigned short                                fElemAttrDefaultQualified;
+    int                                           fTargetNSURI;
+    int                                           fEmptyNamespaceURI;
+    int                                           fCurrentScope;
+    int                                           fFinalDefault;
+    int                                           fBlockDefault;
+    int                                           fScopeCount;
+    unsigned int                                  fAnonXSTypeCount;
+    const XMLCh*                                  fTargetNSURIString;
+    DatatypeValidatorFactory*                     fDatatypeRegistry;
+    GrammarResolver*                              fGrammarResolver;
+    SchemaGrammar*                                fSchemaGrammar;
+    EntityResolver*                               fEntityResolver;
+    ErrorHandler*                                 fErrorHandler;
+    XMLStringPool*                                fURIStringPool;
+    XMLStringPool*                                fStringPool;
+    XMLBuffer                                     fBuffer;
+    XMLValidator*                                 fValidator;
+    XMLScanner*                                   fScanner;
+    NamespaceScope*                               fNamespaceScope;
+    RefHashTableOf<XMLAttDef>*                    fAttributeDeclRegistry;
+    RefHashTableOf<ComplexTypeInfo>*              fComplexTypeRegistry;
+    RefHashTableOf<XercesGroupInfo>*              fGroupRegistry;
+    RefHashTableOf<XercesAttGroupInfo>*           fAttGroupRegistry;
+    RefHashTableOf<SchemaInfo>*                   fSchemaInfoList;
+    SchemaInfo*                                   fSchemaInfo;
+    XercesGroupInfo*                              fCurrentGroupInfo;
+    XercesAttGroupInfo*                           fCurrentAttGroupInfo;
+    ComplexTypeInfo*                              fCurrentComplexType;
+    ValueVectorOf<unsigned int>*                  fCurrentTypeNameStack;
+    ValueVectorOf<unsigned int>*                  fCurrentGroupStack;
+    ValueVectorOf<unsigned int>*                  fIC_NamespaceDepth;
+    ValueVectorOf<SchemaElementDecl*>*            fIC_Elements;
+    GeneralAttributeCheck*                        fAttributeCheck;
+    RefHash2KeysTableOf<XMLCh>*                   fGlobalDeclarations;
+    RefHash2KeysTableOf<XMLCh>*                   fNotationRegistry;
+    RefHash2KeysTableOf<XMLCh>*                   fRedefineComponents;
+    RefHash2KeysTableOf<IdentityConstraint>*      fIdentityConstraintNames;
+    RefHash2KeysTableOf<SchemaElementDecl>*       fSubstitutionGroups;
+    RefHash2KeysTableOf<ElemVector>*              fValidSubstitutionGroups;
+    RefVectorOf<QName>*                           fRefElements;
+    ValueVectorOf<int>*                           fRefElemScope;
+    RefHashTableOf<ValueVectorOf<DOM_Element> >*  fIC_NodeListNS;
+    RefHashTableOf<ElemVector>*                   fIC_ElementsNS;
+    RefHashTableOf<ValueVectorOf<unsigned int> >* fIC_NamespaceDepthNS;
 
     friend class GeneralAttributeCheck;
 };
@@ -772,7 +790,13 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
                                                 const XMLCh* const attName,
                                                 const bool toTrim) {
 
-    DOMString attValue = elem.getAttribute(attName);
+    DOM_Attr attNode = elem.getAttributeNode(attName);
+
+    if (attNode == 0) {
+        return 0;
+    }
+
+    DOMString attValue = attNode.getValue();
 
     if (attValue.length() > 0) {
 
@@ -788,11 +812,10 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
             }
         }
 
-        unsigned int elemId = fStringPool->addOrFind(bufValue);
-        return fStringPool->getValueForId(elemId);  
+        return fStringPool->getValueForId(fStringPool->addOrFind(bufValue));
     }
 
-    return 0;
+    return XMLUni::fgZeroLenString;
 }
 
 inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/11/02 14:13:45  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.4  2001/05/11 13:27:39  tng
  * Copyright update.
  *
@@ -297,6 +300,33 @@ DOM_Element XUtil::getFirstChildElement(const DOM_Node    &parent
     return DOM_Element();
 }
 
+
+// Finds and returns the first child node with the given qualified name.
+DOM_Element XUtil::getFirstChildElementNS(const DOM_Node     &parent
+                                        , const XMLCh** const elemNames
+                                        , const XMLCh* const uriStr
+									    , unsigned int        length)
+{
+    // search for node
+    DOM_Node child = parent.getFirstChild();
+    while (child != 0)
+	{
+        if (child.getNodeType() == DOM_Node::ELEMENT_NODE)
+		{
+            for (unsigned int i = 0; i < length; i++)
+			{
+                if (child.getNamespaceURI().equals(uriStr) &&
+					XMLString::compareString(child.getNodeName().rawBuffer(), elemNames[i]) ==0)
+                    return (DOM_Element&)child;
+			}
+		}
+        child = child.getNextSibling();
+    }
+
+    // not found
+    return DOM_Element();
+}
+
 // Finds and returns the last child element node.
 DOM_Element XUtil::getLastChildElement(const DOM_Node &parent) {
 
@@ -461,6 +491,32 @@ DOM_Element XUtil::getNextSiblingElement(const DOM_Node    &node
                 (XMLString::compareString(element.getAttribute(attrName).rawBuffer(), attrValue) ==0))
 				return element;
         }
+        sibling = sibling.getNextSibling();
+    }
+
+    // not found
+    return DOM_Element();
+}
+
+// Finds and returns the next sibling element node with the qualified name.
+DOM_Element XUtil::getNextSiblingElementNS(const DOM_Node     &node
+                                         , const XMLCh** const elemNames
+                                         , const XMLCh* const uriStr
+									     , unsigned int        length)
+{
+    // search for node
+    DOM_Node sibling = node.getNextSibling();
+    while (sibling != 0)
+	{
+        if (sibling.getNodeType() == DOM_Node::ELEMENT_NODE)
+		{
+            for (unsigned int i = 0; i < length; i++)
+			{
+                if (sibling.getNamespaceURI().equals(uriStr) &&
+					XMLString::compareString(sibling.getNodeName().rawBuffer(), elemNames[i]) ==0)
+                    return (DOM_Element&)sibling;
+			}
+		}
         sibling = sibling.getNextSibling();
     }
 

@@ -148,6 +148,11 @@
             <Message Id="Redefine_AttGroupRefCount" Text="If an attributeGroup of a &lt;redefine&gt; element contains a reference to itself, such reference must be exactly 1"/>
             <Message Id="Notation_InvalidDecl" Text="The declaration for notation '{0}' is invalid"/>
             <Message Id="Notation_DeclNotFound" Text="The notation declaration '{0}:{1}' is not found"/>
+            <Message Id="IC_DuplicateDecl" Text="More than one identity constraint named '{0}'."/>
+            <Message Id="IC_BadContent" Text="The content of an identity constraint must match (annotation?, selector, field+)"/>
+            <Message Id="IC_KeyRefReferNotFound" Text="Key reference declaration '{0}' refers to unknown key with name '{1}'."/>
+            <Message Id="IC_KeyRefCardinality" Text="Cardinality of fields for keyref '{0}' and key '{1}' must match."/>
+            <Message Id="IC_XPathExprMissing" Text="Xpath expression is either missing or empty"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
@@ -374,6 +379,17 @@
             <Message Id="NoSubforBlock" Text="Element '{0}' has blocking constraint and does not permit substitution"/>
             <Message Id="AttributeNotQualified" Text="Attribute '{0}' should be qualified"/>
             <Message Id="AttributeNotUnQualified" Text="Attribute '{0}' should be un-qualified"/>
+            <Message Id="IC_FieldMultipleMatch" Text="Field matches more than one value within the scope of its selector; fields must match unique values"/>
+            <Message Id="IC_UnknownField" Text="Internal identity constraint error; unknown field."/>
+            <Message Id="IC_AbsentKeyValue" Text="Identity-constraint 4.2.1: element '{0}' has a key with no value."/>
+            <Message Id="IC_UniqueNotEnoughValues" Text="Not enough values specified for &lt;unique&gt; identity constraint for element '{0}'."/>
+            <Message Id="IC_KeyNotEnoughValues" Text="Not enough values specified for &lt;key name={1}&gt; identity constraint for element '{0}'."/>
+            <Message Id="IC_KeyRefNotEnoughValues" Text="Not enough values specified for &lt;keyref name={1}&gt; identity constraint for element '{0}'."/>
+            <Message Id="IC_KeyMatchesNillable" Text="Identity-constraint 4.2.3: element '{0}' has a key that matches an element that has nillable set to true."/>
+            <Message Id="IC_DuplicateUnique" Text="Duplicate unique value declared for identity constraint of element '{0}'."/>
+            <Message Id="IC_DuplicateKey" Text="Duplicate key value declared for identity constraint of element '{0}'."/>
+            <Message Id="IC_KeyRefOutOfScope" Text="The keyref '{0}' refers to a key/unique that is out of scope."/>
+            <Message Id="IC_KeyNotFound" Text="The key for identity constraint of element '{0}' is not found."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -654,6 +670,25 @@
             <Message Id="RethrowError" Text="{0}"/>
             <Message Id="Out_Of_Memory" Text="operator new fails.  Possibly running Of memory"/>
             <Message Id="DV_InvalidOperation" Text="Operation is not allowed"/>
+            <Message Id="XPath_NoAttrSelector" Text="Selectors cannot select attributes"/>
+            <Message Id="XPath_NoUnionAtStart" Text="Not allowed to have '|' at the beginning of an xpath value"/>
+            <Message Id="XPath_NoMultipleUnion" Text="Not allowed to have '||' in an xpath value"/>
+            <Message Id="XPath_MissingAttr" Text="Missing attribute name in xpath"/>
+            <Message Id="XPath_ExpectedToken1" Text="Expected xpah token 'NAMETEST_QNAME' or 'NAMETEST_ANY' or 'NAMETEST_NAMESPACE'"/>
+            <Message Id="XPath_PrefixNoURI" Text="Prefix '{0}' not bound to namespace URI in an xpath value"/>
+            <Message Id="XPath_NoDoubleColon" Text="Not allowed to have double colon in the xpath expression"/>
+            <Message Id="XPath_ExpectedStep1" Text="Expected step following token 'AXISNAME_CHILD::'"/>
+            <Message Id="XPath_ExpectedStep2" Text="Expected step following '//' in xpath"/>
+            <Message Id="XPath_ExpectedStep3" Text="Expected step following '/' in xpath"/>
+            <Message Id="XPath_NoForwardSlash" Text="'/' not allowed after '//' in xpath"/>
+            <Message Id="XPath_NoDoubleForwardSlash" Text="'//' only allowed after '.' at the beginning of an xpath"/>
+            <Message Id="XPath_NoForwardSlashAtStart" Text="Not allowed to have '/' at the beginning of an xpath value"/>
+            <Message Id="XPath_NoSelectionOfRoot" Text="Not allowed to select the root of an xpath"/>
+            <Message Id="XPath_EmptyExpr" Text="Empty xpath expression"/>
+            <Message Id="XPath_NoUnionAtEnd" Text="The xpath expression cannot end with '|'"/>
+            <Message Id="XPath_InvalidChar" Text="Invalid character following '.' in xpath"/>
+            <Message Id="XPath_TokenNotSupported" Text="XPath token not supported"/>
+            <Message Id="XPath_FindSolution" Text="Find a solution!"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">

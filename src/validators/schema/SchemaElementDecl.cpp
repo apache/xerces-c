@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/11/02 14:13:45  knoaman
+ * Add support for identity constraints.
+ *
  * Revision 1.16  2001/10/11 12:07:39  tng
  * Schema: model type should be based on complextypeinfo if exists.
  *
@@ -115,6 +118,7 @@
 #include <util/XMLUni.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
 #include <validators/schema/SchemaElementDecl.hpp>
+#include <validators/schema/identity/IdentityConstraint.hpp>
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Constructors and Destructor
@@ -133,6 +137,7 @@ SchemaElementDecl::SchemaElementDecl() :
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
+    , fIdentityConstraints(0)
 {
 }
 
@@ -154,6 +159,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
+    , fIdentityConstraints(0)
 {
     setElementName(prefix, localPart, uriId);
 }
@@ -174,6 +180,7 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
+    , fIdentityConstraints(0)
 {
     setElementName(elementName);
 }
@@ -184,6 +191,7 @@ SchemaElementDecl::~SchemaElementDecl()
     delete [] fSubstitutionGroupName;
     delete [] fTypeFromAnotherSchemaURI;
     delete fAttDefs;
+    delete fIdentityConstraints;
 }
 
 
