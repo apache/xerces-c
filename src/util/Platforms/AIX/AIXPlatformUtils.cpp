@@ -56,9 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/01 02:55:42  aruna1
+ * Added panic calls and modified makeTransService for  AIX
+ *
  * Revision 1.2  1999/11/23 02:00:34  rahulj
- * Code now works under HPUX 11. Tested inmemory message loader.
-Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+ * Code now works under HPUX 11. Tested inmemory message loader.Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
  *
  * Revision 1.1.1.1  1999/11/09 01:07:11  twl
  * Initial checkin
@@ -77,10 +79,6 @@ Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
 #include    <sys/atomic_op.h>
 #endif
 
-#include    <util/PlatformUtils.hpp>
-#include    <util/RuntimeException.hpp>
-#include    <util/Janitor.hpp>
-#include    <util/XMLString.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <errno.h>
@@ -89,6 +87,11 @@ Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
 #include    <string.h>
 #include    <unistd.h>
 #include 	<sys/ldr.h>
+
+#include    <util/PlatformUtils.hpp>
+#include    <util/RuntimeException.hpp>
+#include    <util/Janitor.hpp>
+#include    <util/XMLString.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>
@@ -160,16 +163,12 @@ void XMLPlatformUtils::platformInit()
     char buf[bufLen];		   // it's in the stack anyway
 
     if (load(libName, L_LIBPATH_EXEC, ".") == NULL) {
-		char errorBuffer[1024];
-        sprintf(errorBuffer, "Could not load library '%s'", libName);
-		perror (errorBuffer);
-        exit(-1);
+		panic( XMLPlatformUtils::Panic_CantFindLib );
     }
 
     int retval = loadquery(L_GETINFO, buf, bufLen);
     if (retval == -1) {
-        fprintf(stderr, "Unable to load library '%s'.\n", libName);
-        exit(-1);
+		panic( XMLPlatformUtils::Panic_CantFindLib );
     }
 
     struct ld_info* oneBufPtr = (struct ld_info*)buf;
@@ -202,7 +201,7 @@ void XMLPlatformUtils::platformInit()
 
     if (XMLPlatformUtils::fgLibLocation == NULL)
     {
-        panic( XMLPlatformUtils::Panic_NoTransService );
+        panic( XMLPlatformUtils::Panic_CantFindLib );
     }
 }
 
@@ -221,9 +220,8 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     //  in the .\Intl subdirectory under this DLL.
     //
 
-    static const char * xml4cIntlDirEnvVar = "ICU_DATA";
-    static const char * sharedLibEnvVar    = "LIBPATH";
-    static char * intlPath = 0;
+    static const char * xml4cIntlDirEnvVar	= "ICU_DATA";
+    char * 				intlPath 			= 0;
 
     char* envVal = getenv(xml4cIntlDirEnvVar);
     //check if environment variable is set
@@ -239,87 +237,26 @@ XMLTransService* XMLPlatformUtils::makeTransService()
             strcat((char *) intlPath, "/");
         }
 		ICUTransService::setICUPath(intlPath);
-        if (intlPath != NULL) delete intlPath;
+        delete intlPath;
 
         return new ICUTransService;
     }
 
-    //
-    //  If we did not find the environment var, so lets try to go the auto
-    //  search route.
-    //
-
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".a");
-
-    char* libEnvVar = getenv(sharedLibEnvVar);
-    char* libPath = NULL;
-
-    if (libEnvVar == NULL)
-    {
-        fprintf(stderr,
-                "Error: Could not locate i18n converter files.\n");
-        fprintf(stderr,
-                "Environment variable '%s' is not defined.\n", sharedLibEnvVar);
-        fprintf(stderr,
-                "Environment variable 'ICU_DATA' is also not defined.\n");
-        exit(-1);
-    }
-
-    //
-    // Its necessary to create a copy because strtok() modifies the
-    // string as it returns tokens. We don't want to modify the string
-    // returned to by getenv().
+ 	//
+    //  If the environment variable ICU_DATA is not set, assume that the
+    //  converter files are stored relative to the Xerces-C library.
     //
 
-    libPath = new char[strlen(libEnvVar) + 1];
-    strcpy(libPath, libEnvVar);
+    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
+                         strlen("/icu/data/") + 1;
+    intlPath = new char[lent];
+    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
+    strcat(intlPath, "/icu/data/");
 
-    //First do the searching process for the first directory listing
-    //
-    char*  allPaths = libPath;
-    char*  libPathName;
-
-    while ((libPathName = strtok(allPaths, ":")) != NULL)
-    {
-        FILE*  dummyFptr = 0;
-        allPaths = 0;
-
-        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        dummyFptr = (FILE *) fopen(libfile, "rb");
-        delete [] libfile;
-        if (dummyFptr != NULL)
-        {
-            fclose(dummyFptr);
-            intlPath =
-              new char[strlen(libPathName)+ strlen("/icu/data/")+1];
-            strcpy((char *) intlPath, libPathName);
-            strcat((char *) intlPath, "/icu/data/");
-            break;
-        }
-
-    } // while
-
-    delete libPath;
 	ICUTransService::setICUPath(intlPath);
-
-    if (intlPath == NULL)
-    {
-        panic( XMLPlatformUtils::Panic_NoTransService );
-    }
-    if (intlPath != NULL) delete intlPath;
+    delete intlPath;
 
     return new ICUTransService;
-}
-#elif defined (XML_USE_ICONV_TRANSCODER)
-{
-    return new IconvTransService;
 }
 #else
 {
@@ -348,7 +285,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
     catch(...)
     {
-        panic( XMLPlatformUtils::Panic_NoDefTranscoder );
+		 panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -358,17 +295,26 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-    //
+//
     //  We just print a message and exit
     //
-    printf("The XML4C system could not be initialized.\n");
-    printf("The most likely reason for this failure is the inability to find\n");
-    printf("the international encoding files. By default, the encoding files\n");
-    printf("have the extension .cnv and exist in a directory icu/data relative\n");
-    printf("to the XML4C shared library. If you have kept the converter files\n");
-    printf("in a different location, you need to set up an environment variable\n");
-    printf("called ICU_DATA which directly points to the directory where the\n");
-    printf("encoding files are kept.\n");
+
+    fprintf(stderr,
+        "The Xerces-C system could not be initialized.\n");
+    fprintf(stderr,
+        "If you are using ICU, then the most likely reason for this failure\n");
+    fprintf(stderr,
+        "is the inability to find the ICU coverter files. The converter files\n");
+    fprintf(stderr,
+        "have the extension .cnv and exist in a directory 'icu/data' relative\n");
+    fprintf(stderr,
+        "to the Xerces-C shared library. If you have installed the converter files\n");
+    fprintf(stderr,
+        "in a different location, you need to set up the environment variable\n");
+    fprintf(stderr,
+        "'ICU_DATA' to point directly to the directory containing the\n");
+    fprintf(stderr,
+        "converter files.\n");
 
     exit(-1);
 }
