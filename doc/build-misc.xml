@@ -78,6 +78,11 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         will build both ICU and &XercesCName;, and copy the files (relevant to the binary
         drop) to the target directory.</p>
 
+        <p>If the parser is built with icu message loader (as mentioned above), or message 
+         catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
+         the directory, $XERCESCROOT/lib, where the message files reside.
+        </p>
+        
         <p>For a description of options available, you can enter:</p>
 <source>perl packageBinaries.pl</source>
         </s3>
@@ -126,7 +131,12 @@ perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCIn
         otherwise, the two-step build, requires set extra environment variable in between the ICU build and 
         the &XercesCName; build.
         </p>
-        
+
+        <p>If the parser is built with icu message loader (as mentioned above), or message 
+         catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
+         the directory, $XERCESCROOT/lib, where the message files reside.
+        </p>
+                
         </s3>
     </s2>
 

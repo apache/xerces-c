@@ -85,7 +85,9 @@
             and <jump
             href="http://oss.software.ibm.com/icu/">
             International Components for Unicode (ICU)</jump> and
-            provides support for over 100 different encodings.</p>
+            provides support for over 100 different encodings.
+            XML4C also uses ICU Resource Bundle to load the messages.
+            </p>
 
             <p>ICU is also an open source project but is licensed
             under the <jump

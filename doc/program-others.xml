@@ -463,7 +463,7 @@ public:
 <source>
 
 ...
-    // Initialize the XML4C system
+    // Initialize the parser system
     try
     {
          XMLPlatformUtils::Initialize("fr_FR");

@@ -32,8 +32,10 @@
 		<p>To set you LIBPATH (on AIX for example), you would type:</p>
 <source>export LIBPATH=&XercesCInstallDir;/lib:$LIBPATH</source>
 
-               <p>On both Windows and UNIX platforms, you may need to set another environment
-               variable, XERCESC_NLS_HOME.              
+               <p>On both Windows and UNIX platforms, if the parser is built with icu message loader
+               (like IBM XML4C binaries), or message catalog loader, then you need to set another environment
+               variable, XERCESC_NLS_HOME to point to the directory, $XERCESCROOT/lib, where the message
+               files reside.              
                </p>
 <source>
 set XERCESC_NLS_HOME=$XERCESCROOT\lib

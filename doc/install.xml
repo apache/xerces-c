@@ -39,7 +39,9 @@
 <source>SET PATH=&lt;full_path_to_&XercesCInstallDir;>\bin;%PATH%</source>
 		<p>or run the <code>SET PATH</code> command in your shell window.</p>
 
-        <p>Besides, you need to create a new environment variable, XERCESC_NLS_HOME.</p>           
+        <p>Besides, if the parser is built with icu message loader (like IBM XML4C binaries),
+        or message catalog loader, then you need to create a new environment variable, XERCESC_NLS_HOME
+        to point to the directory, $XERCESCROOT/lib, where the message files reside.</p>           
 <source>SET XERCESC_NLS_HOME=&lt;full_path_to_&XercesCInstallDir;>\lib</source>
            
         <p>The binary distribution has the built parser library and some samples executables.
@@ -108,7 +110,9 @@ setenv LIBPATH "$XERCESCROOT/lib:$LIBPATH" (on AIX)
 setenv LD_LIBRARY_PATH "$XERCESCROOT/lib:$LD_LIBRARY_PATH" (on Solaris, Linux)
 setenv SHLIB_PATH "$XERCESCROOT/lib:$SHLIB_PATH" (on HP-UX)</source>
 
-        <p>Besides, you need to create a new environment variable, XERCESC_NLS_HOME.</p>           
+        <p>Besides, if the parser is built with icu message loader (like IBM XML4C binaries),
+        or message catalog loader, then you need to create a new environment variable, XERCESC_NLS_HOME
+        to point to the directory, $XERCESCROOT/lib, where the message files reside.</p>                     
 <source>
 export XERCESC_NLS_HOME=$XERCESCROOT/lib
 or
