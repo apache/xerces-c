@@ -133,7 +133,7 @@ public:
     int                               getScopeCount() const;
     unsigned int                      getNamespaceScopeLevel() const;
     unsigned short                    getElemAttrDefaultQualified() const;
-    RefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
+    BaseRefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
     ValueVectorOf<const DOMElement*>* getRecursingAnonTypes() const;
     ValueVectorOf<const XMLCh*>*      getRecursingTypeNames() const;
 
@@ -249,10 +249,10 @@ inline int SchemaInfo::getScopeCount() const {
     return fScopeCount;
 }
 
-inline RefVectorEnumerator<SchemaInfo>
+inline BaseRefVectorEnumerator<SchemaInfo>
 SchemaInfo::getImportingListEnumerator() const {
 
-    return RefVectorEnumerator<SchemaInfo>(fImportingInfoList);
+    return BaseRefVectorEnumerator<SchemaInfo>(fImportingInfoList);
 }
 
 inline ValueVectorOf<const DOMElement*>*

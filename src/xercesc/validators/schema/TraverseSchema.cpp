@@ -2453,7 +2453,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                                 subsElements->addElement(elemDecl);
 
                                 // update related subs. info in case of circular import
-                                RefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
+                                BaseRefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
 
                                 while (importingEnum.hasMoreElements()) {
 
@@ -6247,7 +6247,7 @@ TraverseSchema::buildValidSubstitutionListB(const DOMElement* const elem,
         validSubsElements->addElement(elemDecl);
 
         // update related subs. info in case of circular import
-        RefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
+        BaseRefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
 
         while (importingEnum.hasMoreElements()) {
 

@@ -55,6 +55,10 @@
 #
 #
 # $Log$
+# Revision 1.24  2002/12/17 17:17:58  gareth
+# added abstract base class BaseRefVectorOf from which both RefVectorOf and RefArrayVectorOf inherit
+# the new RefArrayVectorOf has proper destructor for array deletion
+#
 # Revision 1.23  2002/12/12 16:37:09  peiyongz
 # generate message catalog files for all UNIX platform if -miconv specified.
 #
@@ -410,6 +414,7 @@ UTIL_CPP_PUBHEADERS = \
     ArrayIndexOutOfBoundsException.hpp \
     AutoSense.hpp \
     Base64.hpp \
+    BaseRefVectorOf.hpp \
     BinFileInputStream.hpp \
     BinInputStream.hpp \
     BinMemInputStream.hpp \
@@ -441,6 +446,7 @@ UTIL_CPP_PUBHEADERS = \
     PlatformUtils.hpp \
     QName.hpp \
     RefArrayOf.hpp \
+    RefArrayVectorOf.hpp \
     RefHash2KeysTableOf.hpp \
     RefHash3KeysIdPool.hpp \
     RefHashTableOf.hpp \
@@ -497,6 +503,7 @@ UTIL_CPP_PUBHEADERS = \
 UTIL_CPP_PRIVHEADERS =
 
 C_FILES = \
+    BaseRefVectorOf.c \
     CountedPointer.c \
     FlagJanitor.c \
     Janitor.c \
@@ -504,6 +511,7 @@ C_FILES = \
     KeyValuePair.c \
     NameIdPool.c \
     RefArrayOf.c \
+    RefArrayVectorOf.c \
     RefHash2KeysTableOf.c \
     RefHash3KeysIdPool.c \
     RefHashTableOf.c \

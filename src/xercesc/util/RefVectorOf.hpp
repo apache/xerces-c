@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/12/17 17:17:58  gareth
+ * added abstract base class BaseRefVectorOf from which both RefVectorOf and RefArrayVectorOf inherit
+ * the new RefArrayVectorOf has proper destructor for array deletion
+ *
  * Revision 1.5  2002/12/04 02:32:43  knoaman
  * #include cleanup.
  *
@@ -99,103 +103,27 @@
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
+#include <xercesc/util/BaseRefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-template <class TElem> class RefVectorOf
+/** 
+ * Class with implementation for vectors of References - implements from the 
+ * Abstract class Vector
+ */ 
+template <class TElem> class RefVectorOf : public BaseRefVectorOf<TElem>
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors and Destructor
+    //  Constructor
     // -----------------------------------------------------------------------
     RefVectorOf(const unsigned int maxElems, const bool adoptElems = true);
+
+    // -----------------------------------------------------------------------
+    //  Destructor
+    // -----------------------------------------------------------------------
     ~RefVectorOf();
 
-
-    // -----------------------------------------------------------------------
-    //  Element management
-    // -----------------------------------------------------------------------
-    void addElement(TElem* const toAdd);
-    void setElementAt(TElem* const toSet, const unsigned int setAt);
-    void insertElementAt(TElem* const toInsert, const unsigned int insertAt);
-    TElem* orphanElementAt(const unsigned int orphanAt);
-    void removeAllElements();
-    void removeElementAt(const unsigned int removeAt);
-    void removeLastElement();
-    bool containsElement(const TElem* const toCheck);
-    void cleanup();
-    void reinitialize();
-
-
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-    unsigned int curCapacity() const;
-    const TElem* elementAt(const unsigned int getAt) const;
-    TElem* elementAt(const unsigned int getAt);
-    unsigned int size() const;
-
-
-    // -----------------------------------------------------------------------
-    //  Miscellaneous
-    // -----------------------------------------------------------------------
-    void ensureExtraCapacity(const unsigned int length);
-
-
-private:
-    // -----------------------------------------------------------------------
-    //  Data members
-    // -----------------------------------------------------------------------
-    bool            fAdoptedElems;
-    unsigned int    fCurCount;
-    unsigned int    fMaxCount;
-    TElem**         fElemList;
-};
-
-
-//
-//  An enumerator for a reference vector. It derives from the basic enumerator
-//  class, so that value vectors can be generically enumerated.
-//
-template <class TElem> class RefVectorEnumerator : public XMLEnumerator<TElem>
-{
-public :
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    RefVectorEnumerator
-    (
-                RefVectorOf<TElem>* const   toEnum
-        , const bool                        adopt = false
-    );
-    virtual ~RefVectorEnumerator();
-
-
-    // -----------------------------------------------------------------------
-    //  Enum interface
-    // -----------------------------------------------------------------------
-    bool hasMoreElements() const;
-    TElem& nextElement();
-    void Reset();
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Data Members
-    //
-    //  fAdopted
-    //      Indicates whether we have adopted the passed vector. If so then
-    //      we delete the vector when we are destroyed.
-    //
-    //  fCurIndex
-    //      This is the current index into the vector.
-    //
-    //  fToEnum
-    //      The reference vector being enumerated.
-    // -----------------------------------------------------------------------
-    bool                fAdopted;
-    unsigned int        fCurIndex;
-    RefVectorOf<TElem>* fToEnum;
 };
 
 XERCES_CPP_NAMESPACE_END
