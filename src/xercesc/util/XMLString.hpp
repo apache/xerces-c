@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/09/24 19:41:21  tng
+ * New inline function equals that is modified from compareString but simply return true or false.
+ *
  * Revision 1.4  2002/09/23 18:42:18  tng
  * DOM L3: Support baseURI.   Add utility fixURI to transform an absolute path filename to standard URI form.
  *
@@ -587,6 +590,20 @@ public:
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareString
+    (
+        const   XMLCh* const    str1
+        , const XMLCh* const    str2
+    );
+
+    /** compares <code>str1</code> and <code>str2</code>
+      *
+      * @param str1 Null-terminated string to compare
+      * @param str2 Null-terminated string to compare
+      * @return true if two strings are equal, false if not
+      *  If one string is null, while the other is zero-length string,
+      *  it is considered as equal.
+      */
+    static bool equals
     (
         const   XMLCh* const    str1
         , const XMLCh* const    str2
@@ -1315,9 +1332,9 @@ public:
      * 1. Windows: fix 'x:' to 'file:///x:' and convert any backslash to forward slash
      * 2. UNIX: fix '/blah/blahblah' to 'file:///blah/blahblah'
      * @param str    The string that has the absolute path filename
-     * @param toFill The XMLBuffer that will be filled with the URI
+     * @param target The target string pre-allocated to store the fixed uri
      */
-    static void fixURI(const XMLCh* const str, XMLBuffer& toFill);
+    static void fixURI(const XMLCh* const str, XMLCh* const target);
     //@}
 
 
@@ -1434,5 +1451,32 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 
 	return true;
 }
+
+inline bool XMLString::equals(   const   XMLCh* const    str1
+                               , const XMLCh* const    str2)
+{
+    const XMLCh* psz1 = str1;
+    const XMLCh* psz2 = str2;
+
+    if (psz1 == 0 || psz2 == 0) {
+        if ((psz1 != 0 && *psz1) || (psz2 != 0 && *psz2))
+            return false;
+        else
+            return true;
+    }
+
+    while (*psz1 == *psz2)
+    {
+        // If either has ended, then they both ended, so equal
+        if (!*psz1 || !*psz2)
+            return true;
+
+        // Move upwards for the next round
+        psz1++;
+        psz2++;
+    }
+    return false;
+}
+
 
 #endif
