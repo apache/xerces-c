@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/21 16:31:43  knoaman
+ * Remove data/methods from SchemaElementDecl that are not used.
+ *
  * Revision 1.2  2002/02/06 22:30:50  knoaman
  * Added a new attribute to store the wild card information for elements of type 'anyType'.
  *
@@ -142,7 +145,6 @@ SchemaElementDecl::SchemaElementDecl() :
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
-    , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
@@ -165,7 +167,6 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
-    , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
@@ -187,7 +188,6 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
-    , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
@@ -201,7 +201,6 @@ SchemaElementDecl::~SchemaElementDecl()
 {
     delete [] fDefaultValue;
     delete [] fSubstitutionGroupName;
-    delete [] fTypeFromAnotherSchemaURI;
     delete fAttDefs;
     delete fIdentityConstraints;
     delete fAttWildCard;

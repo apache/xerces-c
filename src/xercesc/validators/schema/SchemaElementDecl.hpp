@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/03/21 16:31:43  knoaman
+ * Remove data/methods from SchemaElementDecl that are not used.
+ *
  * Revision 1.3  2002/03/04 15:09:50  knoaman
  * Fix for bug 6834.
  *
@@ -219,7 +222,6 @@ public :
     int getMiscFlags() const;
     XMLCh* getDefaultValue() const;
     XMLCh* getSubstitutionGroupName() const;
-    XMLCh* getTypeFromAnotherSchemaURI() const;
     ComplexTypeInfo* getComplexTypeInfo() const;
 
 
@@ -235,7 +237,6 @@ public :
     void setMiscFlags(const int flags);
     void setDefaultValue(const XMLCh* const value);
     void setSubstitutionGroupName(const XMLCh* const name);
-    void setTypeFromAnotherSchemaURI(const XMLCh* const uriStr);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
     void setAttWildCard(SchemaAttDef* const attWildCard);
@@ -279,9 +280,6 @@ private :
     //  fSubstitutionGroupName
     //      The substitution group full name ("uristring','local")
     //
-    //  fTypeFromAnotherSchemaURI
-    //      The URI of type if it belongs to a different schema
-    //
     //  fComplexTypeInfo
     //      Stores complex type information
     //      (no need to delete - handled by schema grammar)
@@ -312,7 +310,6 @@ private :
     int                                fMiscFlags;
     XMLCh*                             fDefaultValue;
     XMLCh*                             fSubstitutionGroupName;
-    XMLCh*                             fTypeFromAnotherSchemaURI;
     ComplexTypeInfo*                   fComplexTypeInfo;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     ComplexTypeInfo*                   fXsiComplexTypeInfo;
@@ -431,11 +428,6 @@ inline XMLCh* SchemaElementDecl::getSubstitutionGroupName() const
     return fSubstitutionGroupName;
 }
 
-inline XMLCh* SchemaElementDecl::getTypeFromAnotherSchemaURI() const {
-
-    return fTypeFromAnotherSchemaURI;
-}
-
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
 {
     if (fXsiComplexTypeInfo) {
@@ -524,16 +516,6 @@ inline void SchemaElementDecl::setSubstitutionGroupName(const XMLCh* const name)
     }
 
     fSubstitutionGroupName = XMLString::replicate(name);
-}
-
-inline void
-SchemaElementDecl::setTypeFromAnotherSchemaURI(const XMLCh* const uriStr) {
-
-    if (fTypeFromAnotherSchemaURI) {
-        delete [] fTypeFromAnotherSchemaURI;
-    }
-
-    fTypeFromAnotherSchemaURI = XMLString::replicate(uriStr);
 }
 
 inline void
