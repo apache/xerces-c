@@ -815,6 +815,7 @@ void PSVIWriterHandlers::processAnnotation(XSAnnotation* annotation) {
 		processDOMElement(PSVIUni::fgUserInformation, elem, PSVIUni::fgDocumentation);
 		processDOMAttributes(elem->getAttributes());
 		sendUnindentedElement(PSVIUni::fgAnnotation);
+        document->release();
 	}
 }
 
