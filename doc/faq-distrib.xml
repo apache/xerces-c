@@ -206,8 +206,11 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
 			the TreeViewer sample application (written using C++
 			Builder), we have decided to make it available as an
 			independent download from the IBM
-			<jump href="http://www.alphaworks.ibm.com">AlphaWorks</jump> portal. Please
-			note, this is provided on a "as-is, no support" basis.</p>
+			<jump href="http://www.alphaworks.ibm.com/tech/xml4c/">AlphaWorks</jump>
+            portal. The archive to get from the 'Download' page is
+            'DOMSampleTreeViewer.zip'. Please note, this is provided on a
+            "as-is, no support" basis. This sample works with XML4C 2.3.1
+            and we have not verified if it works with XML4C 3.x releases.</p>
 			
 			<p>TreeViewer parses the XML file, using &XercesCProjectName;,
 			and displays the data as a tree.</p>
