@@ -203,7 +203,7 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
         else {
             //this is done in namespace fixup so no need to do it if namespace is on 
             if(attrMap) {
-                for(int i = 0; i < attrMap->getLength(); i++) {
+                for(XMLSize_t i = 0; i < attrMap->getLength(); i++) {
                     attrMap->item(i)->normalize();
                 }
             }
