@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/11/07 18:14:39  andyh
+ * Fix incorrect version number in gXercesMinVersion.
+ * From Pieter Van-Dyck
+ *
  * Revision 1.8  2000/11/02 07:23:27  roddey
  * Just a test of checkin access
  *
@@ -135,8 +139,6 @@
 #if !defined(XERCESDEFS_HPP)
 #define XERCESDEFS_HPP
 
-// Just a check in test, remove me!
-
 // ---------------------------------------------------------------------------
 //  These are the various representations of the current version of Xerces.
 //  These are updated for every build. They must be at the top because they
@@ -146,7 +148,7 @@
 static const char* const    gXercesVersionStr = "1_3";
 static const char* const    gXercesFullVersionStr = "1_3_0";
 static const unsigned int   gXercesMajVersion = 1;
-static const unsigned int   gXercesMinVersion = 2;
+static const unsigned int   gXercesMinVersion = 3;
 static const unsigned int   gXercesRevision   = 0;
 
 
