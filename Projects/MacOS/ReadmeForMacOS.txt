@@ -1,4 +1,10 @@
-State of Xerces Mac OS Port. 7/28/00 by James Berry, Critical Path Software, Inc.
+$Log$
+Revision 1.4  2000/08/03 21:16:57  jberry
+Modify readme file to reflect latest changes: new project files
+
+
+
+State of Xerces Mac OS Port. By James Berry, Critical Path Software, Inc.
 
 This readme attempts to document the state of Mac OS support for Xerces.
 I suspect that this code has been ported to the Mac on a number of occasions.
@@ -21,19 +27,23 @@ Key work in these areas is:
  - Code supports both Carbon and Classic APIs.
 
  - Detection of and support for Codewarrior and Project Builder.
+ 
+ - A project file that builds a static version of the Xerces library for CodeWarrior release 6
+   has been checked in. Individual build targets are for classic, carbon, and debug/non-debug
+   cases.
+   
+ - A project file for the DOMPrint sample that may be used as an example to build additional
+   samples.
 
-Key omissions include:
+Omissions include:
 
- - Neither Codewarrior nor Project Builder project files are yet provided, though I've built
-   both. My Codewarrior projects are built under the new IDE 4.1 which has not yet been
-   publicly released. I'll release Project Builder projects after the Mac OS X public beta
-   is released. If you want them now...just email me.
-
+ - Missing project files for additional sample programs
+ 
 Usage Notes:
 
  - A major hassle in porting this code to the Mac, and in keeping it up to date, is the
    existance of a number of files with file names greater than 31 characters. Xalan is worse.
-   I've written a perl script "ShortenNames.pl" which will (1) copy source to a MacSrc directory
+   I've written a perl script "ShortenNames.pl" that will (1) copy source to a MacSrc directory
    (2) shorten file names using appropriate hints, and (3) update internal usage of these
    names (includes). To use this:
 
@@ -45,8 +55,10 @@ Usage Notes:
      the "src" directory but with names shortened appropriately. This has been
      tested on Mac OS and Mac OS X, but in no other environments. YMMV.
    - The files in MacSrc should be used from the Codewarrior environment, which
-     doesn't support files with long names. ProjectBuilder projects may used
+     doesn't support files with long names. ProjectBuilder projects may/should use
      the unadulterated "src" files with long names.
+   - Note that you should delete any previous MacSrc before running ShortenNames.pl.
+     It doesn't currently cope well with existing directories/files.
 
    Note that I'll ascribe most of the blame for the problem to Apple and other Mac tools
    vendors. HFS+ fully supports long file names: it's too bad that Apple (Finder),
@@ -69,6 +81,17 @@ Usage Notes:
 
  - If you're building this code, make sure you include the MemoryBased messaged loader.
    There is no Mac specific message loader for now.
+   
+ - CodeWarrior projects files have been checked in in an exported XML form. Not only does
+   this show off XML but it also allows for better cvs revision control and tracking of
+   changes to the project files. After checking out a project file, you'll need to "import"
+   it into CodeWarrior. Likewise, only an exported version of the project file should be
+   committed to cvs.
+   
+ - The CodeWarrior project file(s) for the samples currently require that you make a minor
+   modification to your CodeWarrior runtime, in order to support argc/argv on the Mac
+   without modifying the sample files. See the usage notes in
+   XercesSampleSupport/XercesSampleStartupFragment.c.
 
 
 James Berry
