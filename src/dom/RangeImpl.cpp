@@ -58,17 +58,17 @@
  * $Id$
  */
 
+#include <util/RefVectorOf.hpp>
 #include "NodeImpl.hpp"
 #include "RangeImpl.hpp"
 #include "DocumentImpl.hpp"
-#include <dom/DOM_DOMException.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DocumentFragmentImpl.hpp>
-#include <dom/DOM_Document.hpp>
-#include <util/RefVectorOf.hpp>
-#include <dom/DOM_RangeException.hpp>
-#include <dom/DOM_DOMException.hpp>
-#include <dom/DOM_Text.hpp>
+#include "DOM_DOMException.hpp"
+#include "DOM_Document.hpp"
+#include "DocumentFragmentImpl.hpp"
+#include "DOM_Document.hpp"
+#include "DOM_RangeException.hpp"
+#include "DOM_DOMException.hpp"
+#include "DOM_Text.hpp"
 
 
 //---------------------
