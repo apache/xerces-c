@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/23 16:05:11  tng
+ * Schema: NormalizedString fix.  By Pei Yong Zhang.
+ *
  * Revision 1.7  2001/05/23 15:45:25  tng
  * Schema: NormalizedString fix.  By Pei Yong Zhang.
  *
@@ -396,10 +399,12 @@ void StringDatatypeValidator::init(DatatypeValidator*            const baseValid
                 try
                 {
                     for ( ; i < enumLength; i++)
+                    {
                         // ask parent do a complete check
                         pBaseValidator->checkContent(getEnumeration()->elementAt(i), false);
-                        // REVISIT: enum shall pass this->checkContent() as well.
-                        //checkContent(getEnumeration()->elementAt(i), false);
+                        // enum shall pass this->checkContent() as well.
+                        checkContent(getEnumeration()->elementAt(i), false);
+                    }
                 }
 
                 catch ( XMLException& )
@@ -508,7 +513,7 @@ void StringDatatypeValidator::checkContent( const XMLCh* const content, bool asB
     {
         // lazy construction
         if (getRegex() ==0) {
-            try {   
+            try {
                 setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
