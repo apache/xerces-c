@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/31 17:38:16  peiyongz
+ * Fix: memory leak by static (boundry) objects
+ *
  * Revision 1.3  2001/07/31 13:48:29  peiyongz
  * fValue removed
  *
@@ -74,6 +77,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLFloat.hpp>
 #include <util/PlatformUtils.hpp>
+#include <util/XMLDeleterFor.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/NumberFormatException.hpp>
@@ -162,10 +166,10 @@ static const XMLCh FLT_MIN_NEGATIVE[] =
 // They are all "Inclusive value"
 //
 
-static const XMLFloat*  maxNegativeValue;
-static const XMLFloat*  minNegativeValue; 
-static const XMLFloat*  minPositiveValue; 
-static const XMLFloat*  maxPositiveValue;
+static XMLFloat*  maxNegativeValue;
+static XMLFloat*  minNegativeValue; 
+static XMLFloat*  minPositiveValue; 
+static XMLFloat*  maxPositiveValue;
 
 /***
  *   Algo:
@@ -278,9 +282,28 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
         isInitialized = true;  // set first to avoid recursion
 
         maxNegativeValue = new XMLFloat(FLT_MAX_NEGATIVE);        
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLFloat>(maxNegativeValue)
+        );        
+
         minNegativeValue = new XMLFloat(FLT_MIN_NEGATIVE); 
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLFloat>(minNegativeValue)
+        );        
+
         minPositiveValue = new XMLFloat(FLT_MIN_POSITIVE); 
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLFloat>(minPositiveValue)
+        );        
+
         maxPositiveValue = new XMLFloat(FLT_MAX_POSITIVE);
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLFloat>(maxPositiveValue)
+        );        
     }
 
     //

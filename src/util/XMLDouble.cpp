@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/07/31 17:38:16  peiyongz
+ * Fix: memory leak by static (boundry) objects
+ *
  * Revision 1.6  2001/07/31 13:48:29  peiyongz
  * fValue removed
  *
@@ -82,6 +85,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLDouble.hpp>
 #include <util/PlatformUtils.hpp>
+#include <util/XMLDeleterFor.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/NumberFormatException.hpp>
@@ -174,10 +178,10 @@ static const XMLCh DBL_MIN_NEGATIVE[] =
 // They are all "Inclusive value"
 //
 
-static const XMLDouble*  maxNegativeValue;
-static const XMLDouble*  minNegativeValue; 
-static const XMLDouble*  minPositiveValue; 
-static const XMLDouble*  maxPositiveValue;
+static XMLDouble*  maxNegativeValue;
+static XMLDouble*  minNegativeValue; 
+static XMLDouble*  minPositiveValue; 
+static XMLDouble*  maxPositiveValue;
 
 /***
  *   Algo:
@@ -289,10 +293,29 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
     {
         isInitialized = true;  // set first to avoid recursion
 
-        maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);        
+        maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);   
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLDouble>(maxNegativeValue)
+        );        
+
         minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE); 
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLDouble>(minNegativeValue)
+        );        
+
         minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE); 
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLDouble>(minPositiveValue)
+        );        
+
         maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
+        XMLPlatformUtils::registerLazyData
+        (
+            new XMLDeleterFor<XMLDouble>(maxPositiveValue)
+        );        
     }
 
     //
