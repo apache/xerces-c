@@ -36,14 +36,78 @@
 
        <anchor name="interpretation"/>
        <s2 title="Interpretation of Areas that are Unclear or Implementation-Dependent">
-         <ul>
-            <li>We have interpreted the specs as requiring &lt;keyref&gt; Identity Constraints to refer to
+         <s3 title="keyref">
+         <p>
+            We have interpreted the specs as requiring &lt;keyref&gt; Identity Constraints to refer to
                 &lt;key&gt; or &lt;unique&gt; identity constraints within the scope of the elements to which
                 the &lt;keyref&gt; is attached. This interpretation is at variance with the Schema Primer, which
                 contains an example with a &lt;keyref&gt; declared on an element used inside the element of its
                 corresponding &lt;key&gt;.
-            </li>
-         </ul>
+         </p>
+         </s3>
+
+         <s3 title="out-of-bound float values">
+         <p>                                              
+                For float data, the specs does not explicitly specify how to deal with 
+                out-of-bound data. Xerces converts these values as below 
+         </p>
+               <table>
+                   <tr>
+                       <td>Values in range</td>
+                       <td>Values converted</td>
+                   </tr>
+                   <tr>
+                       <td>less than -3.402823466e+38 </td>
+                       <td>-INF</td>
+                   </tr>                
+                   <tr>
+                       <td>greater than -1.175494351e-38 and less than -0 </td>
+                       <td>-0</td>
+                   </tr>                
+                   <tr>
+                       <td>greater than +0 and less than +1.175494351e-38 </td>
+                       <td>+0</td>
+                   </tr>                
+                   <tr>
+                       <td>greater than +3.402823466e+38 </td>
+                       <td>+INF</td>
+                   </tr>                
+                </table>                   
+            <p>
+                The effect of this conversion would invalidate an instance data, for example,
+                "1.1e-39", of a data type derived from float, with minExclusive value '+0',
+                since "1.1e-39" is converted to "+0", which is the same as the minExclusive.
+            </p>                
+
+         </s3>
+
+         <s3 title="out-of-bound double values">
+         <p>                                              
+                Similarly, Xerces converts double values as below 
+         </p>
+               <table>
+                   <tr>
+                       <td>Values in range</td>
+                       <td>Values converted</td>
+                   </tr>
+                   <tr>
+                       <td>less than -1.7976931348623158e+308 </td>
+                       <td>-INF</td>
+                   </tr>                
+                   <tr>
+                       <td>greater than -2.2250738585072014e-308 and less than -0 </td>
+                       <td>-0</td>
+                   </tr>                
+                   <tr>
+                       <td>greater than +0 and less than +2.2250738585072014e-308 </td>
+                       <td>+0</td>
+                   </tr>                
+                   <tr>
+                       <td>greater than +1.7976931348623158e+308 </td>
+                       <td>+INF</td>
+                   </tr>                
+                </table>                                   
+          </s3>
        </s2>
 
        <anchor name="usage"/>
