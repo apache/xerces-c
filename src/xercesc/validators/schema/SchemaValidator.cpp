@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.44  2003/11/24 05:13:20  neilg
+ * expose validator that actually validated attribute.  Clean up union handling
+ *
  * Revision 1.43  2003/11/20 18:12:20  knoaman
  * Use a bitwise operation to check the node type.
  *
@@ -314,6 +317,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fDatatypeBuffer(1023, manager)
     , fNil(false)
     , fTypeStack(0)
+    , fMostRecentAttrValidator(0)
 {
     fTypeStack = new (fMemoryManager) ValueStackOf<ComplexTypeInfo*>(8, fMemoryManager);
 }
@@ -559,6 +563,8 @@ void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)
         , attName->getPrefix()
         , schemaAttDef->getValue()
         , schemaAttDef->getType()
+        , getMostRecentAttrValidator()
+        , true
     );
 }
 
@@ -619,6 +625,8 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         emitError(XMLValid::InvalidEmptyAttValue, attDef->getFullName());
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
         ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+        // accords with original DOMTypeInfo implementation, but this does not feel right.
+        fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
         return;
     }
 
@@ -628,56 +636,11 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         valid = false;
     }
     else {
+        DatatypeValidator::ValidatorType attDefDVType = attDefDV->getType();
+        ValidationContext *context = getScanner()->getValidationContext();
         try {
-            DatatypeValidator::ValidatorType attDefDVType = attDefDV->getType();
 
-            // set up the entitydeclpool in ENTITYDatatypeValidator
-            // and the idreflist in ID/IDREFDatatypeValidator
-
-            // indicate if this attribute is of type ID
-            bool thisIsAnId = false;
-
-            if (attDefDVType == DatatypeValidator::List) {
-                DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
-                DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
-                if (itemDTVType == DatatypeValidator::ID) {
-                    thisIsAnId = true;
-                }
-                else if (itemDTVType == DatatypeValidator::IDREF) {
-                    // if in prevalidatoin, do not add attDef to IDREFList
-                    if (preValidation)
-                        //todo: when to setIdRefList back to non-null
-                        getScanner()->getValidationContext()->toCheckIdRefList(false);
-                }
-            }
-            else if (attDefDVType == DatatypeValidator::Union) {
-                RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDefDV)->getMemberTypeValidators();
-                unsigned int memberTypeNumber = memberDTV->size();
-                for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
-                {
-                    DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
-                    if (memberDTVType == DatatypeValidator::ID) {
-                        thisIsAnId = true;
-                    }
-                    else if (memberDTVType == DatatypeValidator::IDREF) {
-                        // if in prevalidatoin, do not add attDef to IDREFList
-                        if (preValidation)
-                            getScanner()->getValidationContext()->toCheckIdRefList(false);
-
-                    }
-                }
-            }
-            else if (attDefDVType == DatatypeValidator::ID) {
-                thisIsAnId = true;
-            }
-            else if (attDefDVType == DatatypeValidator::IDREF) {
-                // if in prevalidatoin, do not add attDef to IDREFList
-                if (preValidation)
-                    getScanner()->getValidationContext()->toCheckIdRefList(false);
-            }
-
-            // now validate the attribute value
-            // if notation, need to bind URI to notation first
+            // first, if notation, need to bind URI to notation first
             if (attDefDVType == DatatypeValidator::NOTATION)
             {
                 //
@@ -696,24 +659,13 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 notationBuf.append(&attrValue[colonPos + 1]);
 
                 attDefDV->validate(notationBuf.getRawBuffer()
-                                 , getScanner()->getValidationContext());
+                                 , context);
             }
             else {
-                if (thisIsAnId) {
-                    if (fSeenId) {
-                        emitError
-                        (
-                            XMLValid::MultipleIdAttrs
-                            , elemDecl->getFullName()
-                        );
-                        valid = false;
-                    }
-                    else
-                        fSeenId = true;
-                }
                 attDefDV->validate(attrValue
-                                 , getScanner()->getValidationContext());
+                                 , context);
             }
+
         }
         catch (XMLException& idve) {
             valid = false;
@@ -727,15 +679,77 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
             emitError(XMLValid::GenericError);
             ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
             ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+            fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
             throw;
+        } 
+        fMostRecentAttrValidator = attDefDV;
+        // now we can look for ID's, entities, ...
+
+        // set up the entitydeclpool in ENTITYDatatypeValidator
+        // and the idreflist in ID/IDREFDatatypeValidator
+
+        // indicate if this attribute is of type ID
+        bool thisIsAnId = false;
+
+        if (attDefDVType == DatatypeValidator::List) {
+            DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
+            DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
+            if (itemDTVType == DatatypeValidator::ID) {
+                thisIsAnId = true;
+            }
+            else if (itemDTVType == DatatypeValidator::IDREF) {
+                // if in prevalidatoin, do not add attDef to IDREFList
+                if (preValidation)
+                    //todo: when to setIdRefList back to non-null
+                    getScanner()->getValidationContext()->toCheckIdRefList(false);
+            }
         }
+        else if (attDefDVType == DatatypeValidator::Union) {
+            DatatypeValidator *memberDTV = context->getValidatingMemberType();
+            // actual type for DOMTypeInfo is memberDTV
+            fMostRecentAttrValidator = memberDTV;
+            DatatypeValidator::ValidatorType memberDTVType = memberDTV->getType();
+            if (memberDTVType == DatatypeValidator::ID) {
+                thisIsAnId = true;
+            }
+            else if (memberDTVType == DatatypeValidator::IDREF) {
+                // if in prevalidatoin, do not add attDef to IDREFList
+                if (preValidation)
+                    getScanner()->getValidationContext()->toCheckIdRefList(false);
+
+            }
+        }
+        else if (attDefDVType == DatatypeValidator::ID) {
+            thisIsAnId = true;
+        }
+        else if (attDefDVType == DatatypeValidator::IDREF) {
+            // if in prevalidation, do not add attDef to IDREFList
+            if (preValidation)
+                getScanner()->getValidationContext()->toCheckIdRefList(false);
+        }
+        if (thisIsAnId) {
+            if (fSeenId) {
+                emitError
+                (
+                    XMLValid::MultipleIdAttrs
+                    , elemDecl->getFullName()
+                );
+                valid = false;
+            }
+            else
+                fSeenId = true;
+        }
+
     }
 
     if(!valid) {
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
         ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+        fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
     }
     else if(attDefDV && attDefDV->getType() == DatatypeValidator::Union) 
+        // in a thread-safe world, this is entirely bogus;REVISIT and remove 
+        // once the appropriate methods have been removed!
         ((SchemaAttDef *)attDef)->setMembertypeValidator(((UnionDatatypeValidator *)attDefDV)->getMemberTypeValidator());
     fTrailing = false;
 

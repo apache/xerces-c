@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/11/24 05:13:20  neilg
+ * expose validator that actually validated attribute.  Clean up union handling
+ *
  * Revision 1.19  2003/10/05 02:09:37  neilg
  * the validator now keeps track of the current complex and simple type (including if this is an xsi:type).  This allows both the validator and the scanner to know what the current type is, without the need to modify the element declaration each time an xsi:type is seen
  *
@@ -260,6 +263,7 @@ public:
     // -----------------------------------------------------------------------
     ComplexTypeInfo* getCurrentTypeInfo() const;
     DatatypeValidator *getCurrentDatatypeValidator() const;
+    DatatypeValidator *getMostRecentAttrValidator() const;
 
 private:
     // -----------------------------------------------------------------------
@@ -391,6 +395,8 @@ private:
     //
     //  fTypeStack
     //      Stack of complex type declarations.
+    //  fMostRecentAttrValidator
+    //      DatatypeValidator that validated attribute most recently processed
     // -----------------------------------------------------------------------
     MemoryManager*                  fMemoryManager;
     SchemaGrammar*                  fSchemaGrammar;
@@ -404,6 +410,7 @@ private:
     bool                            fSeenId;
     XSDErrorReporter                fSchemaErrorReporter;
     ValueStackOf<ComplexTypeInfo*>* fTypeStack;
+    DatatypeValidator *             fMostRecentAttrValidator;
 };
 
 
@@ -448,6 +455,10 @@ inline ComplexTypeInfo* SchemaValidator::getCurrentTypeInfo() const {
 inline DatatypeValidator * SchemaValidator::getCurrentDatatypeValidator() const 
 {
     return fCurrentDatatypeValidator;
+}
+inline DatatypeValidator *SchemaValidator::getMostRecentAttrValidator() const
+{
+    return fMostRecentAttrValidator;
 }
 
 // ---------------------------------------------------------------------------
