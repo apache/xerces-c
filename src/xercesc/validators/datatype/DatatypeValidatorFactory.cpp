@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/01/29 19:51:48  gareth
+ * type names / uris are now added to DatatypeValidators.
+ *
  * Revision 1.10  2003/01/03 16:39:45  tng
  * Performance: no need to create that many members for fBuiltInRegistry
  *
@@ -209,6 +212,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local const data
@@ -401,7 +405,6 @@ void DatatypeValidatorFactory::reinitRegistry() {
 void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 {
     static XMLRegisterCleanup builtInRegistryCleanup;
-
     // Initialize common Schema/DTD Datatype validator set if not initialized
     if (fBuiltInRegistry == 0) {
         RefHashTableOf<DatatypeValidator>* t = new RefHashTableOf<DatatypeValidator>(29);
@@ -413,49 +416,85 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         {
             builtInRegistryCleanup.registerCleanup(reinitRegistry);
 
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_STRING,
-                       new StringDatatypeValidator());
-            fBuiltInRegistry->put((void*) XMLUni::fgNotationString,
-                       new NOTATIONDatatypeValidator());
+            DatatypeValidator *dv = new StringDatatypeValidator(); 
+            dv->setTypeName(SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_STRING, dv);
+            
+            dv = new NOTATIONDatatypeValidator();
+            dv->setTypeName(XMLUni::fgNotationString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) XMLUni::fgNotationString, dv);
 
+            dv = new AnySimpleTypeDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYSIMPLETYPE, dv);
 
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYSIMPLETYPE,
-                           new AnySimpleTypeDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN,
-                           new BooleanDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,
-                           new DecimalDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY,
-                           new HexBinaryDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,
-                           new Base64BinaryDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,
-                           new DoubleDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,
-                           new FloatDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,
-                           new AnyURIDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME,
-                           new QNameDatatypeValidator());
+            dv = new BooleanDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_BOOLEAN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN, dv);
 
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATETIME,
-                           new DateTimeDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATE,
-                           new DateDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_TIME,
-                           new TimeDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY,
-                           new DayDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_MONTH,
-                           new MonthDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_MONTHDAY,
-                           new MonthDayDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_YEAR,
-                           new YearDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_YEARMONTH,
-                           new YearMonthDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION,
-                           new DurationDatatypeValidator());
+            dv = new DecimalDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_DECIMAL, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL, dv);
+
+            dv = new HexBinaryDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_HEXBINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY, dv);
+
+            dv = new Base64BinaryDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_BASE64BINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY, dv);
+
+            dv = new DoubleDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_DOUBLE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE, dv);
+
+            dv = new FloatDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_FLOAT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_FLOAT, dv);
+
+            dv = new AnyURIDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI, dv);
+
+            dv = new QNameDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_QNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME, dv);
+
+            dv = new DateTimeDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_DATETIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATETIME, dv);
+
+            dv = new DateDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_DATE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATE, dv);
+
+            dv = new TimeDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_TIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_TIME, dv);
+
+            dv = new DayDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_DAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY, dv);
+
+            dv = new MonthDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_MONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_MONTH, dv);
+
+            dv = new MonthDayDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_MONTHDAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_MONTHDAY, dv);
+
+            dv = new YearDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_YEAR, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_YEAR, dv);
+
+            dv = new YearMonthDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_YEARMONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_YEARMONTH, dv);
+
+            dv = new DurationDatatypeValidator();
+            dv->setTypeName(SchemaSymbols::fgDT_DURATION, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION, dv);
 
             // REVISIT
             // We are creating a lot of Hashtables for the facets of the different
@@ -469,8 +508,8 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                         new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_REPLACE));
 
             createDatatypeValidator(SchemaSymbols::fgDT_NORMALIZEDSTRING,
-                        getDatatypeValidator(SchemaSymbols::fgDT_STRING),
-    				    facets, 0, false, 0, false);
+                                    getDatatypeValidator(SchemaSymbols::fgDT_STRING),
+                                    facets, 0, false, 0, false);
 
             // Create 'token' datatype validator
             facets = new RefHashTableOf<KVStringPair>(3);
@@ -481,11 +520,15 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                           getDatatypeValidator(SchemaSymbols::fgDT_NORMALIZEDSTRING),
                           facets, 0, false, 0, false);
 
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NAME,
-                           new NameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_TOKEN), 0, 0, 0));
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,
-                           new NCNameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NAME), 0, 0, 0));
 
+            dv = new NameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_TOKEN), 0, 0, 0);
+            dv->setTypeName(SchemaSymbols::fgDT_NAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NAME, dv);
+
+
+            dv = new NCNameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NAME), 0, 0, 0);
+            dv->setTypeName(SchemaSymbols::fgDT_NCNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME, dv);
 
             // Create 'NMTOKEN' datatype validator
             facets = new RefHashTableOf<KVStringPair>(3);
@@ -660,16 +703,21 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
 
     if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
-        fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
-                           new IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
-        fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
-                           new IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
-        fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
-                           new ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
 
+        DatatypeValidator *dv = new IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv->setTypeName(XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+        fUserDefinedRegistry->put((void*) XMLUni::fgIDString, dv);
+
+        dv = new IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv->setTypeName(XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+        fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString, dv);
+
+        dv = new ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0);
+        dv->setTypeName(XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+        fUserDefinedRegistry->put((void*) XMLUni::fgEntityString, dv);
 
         // Create 'IDREFS' datatype validator
-    	 createDatatypeValidator(XMLUni::fgIDRefsString,
+    	createDatatypeValidator(XMLUni::fgIDRefsString,
                         getDatatypeValidator(XMLUni::fgIDRefString), 0, 0, true, 0, true);
 
         // Create 'ENTITIES' datatype validator
@@ -736,6 +784,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
         else {
             fBuiltInRegistry->put((void *)typeName, datatypeValidator);
         }
+        datatypeValidator->setTypeName(typeName);
     }
 
     return datatypeValidator;
@@ -768,6 +817,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
         else {
             fBuiltInRegistry->put((void *)typeName, datatypeValidator);
         }
+        datatypeValidator->setTypeName(typeName);
     }
 
     return datatypeValidator;

@@ -227,6 +227,12 @@ private:
     // -----------------------------------------------------------------------
     void cleanUp();
 
+    /**
+     * helper method to set the uri to the schema uri and name to tName for the DatatypeValidator 
+     * tName in ref.
+     */
+    void setDatatypeName(RefHashTableOf<DatatypeValidator>* reg, const XMLCh* tName);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -236,28 +242,25 @@ private:
     //  fBuiltInRegistry
     //      This is a hashtable of built-in primitive datatype validators.
     // -----------------------------------------------------------------------
-    RefHashTableOf<DatatypeValidator>*        fUserDefinedRegistry;
-    static RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
+    XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XERCES_CPP_NAMESPACE_QUALIFIER DatatypeValidator>*        fUserDefinedRegistry;
+    static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
+
+    friend class XPath2ContextImpl;
 };
 
-
-// ---------------------------------------------------------------------------
-//  DatatypeValidatorFactory: Getters
-// ---------------------------------------------------------------------------
 inline DatatypeValidator*
 DatatypeValidatorFactory::getDatatypeValidator(const XMLCh* const dvType) const
 {
 	if (dvType) {
-
         if (fBuiltInRegistry && fBuiltInRegistry->containsKey(dvType)) {
 		    return fBuiltInRegistry->get(dvType);
         }
 
         if (fUserDefinedRegistry && fUserDefinedRegistry->containsKey(dvType)) {
 		    return fUserDefinedRegistry->get(dvType);
+
         }
     }
-
 	return 0;
 }
 
