@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/10/29 16:18:05  peiyongz
+ * size() added and Reset() bug fixed
+ *
  * Revision 1.6  2003/06/02 15:18:08  neilg
  * fix for bug #20092; thanks to Berin Lautenbach
  *
@@ -443,14 +446,7 @@ RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool 
     if (!toEnum)
         ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
 
-    //
-    //  Find the next available bucket element in the pool. We use the id
-    //  array since its very easy to enumerator through by just maintaining
-    //  an index. If the id counter is zero, then its empty and we leave the
-    //  current index to zero.
-    //
-    if (toEnum->fIdCounter)
-        fCurIndex = 1;
+    Reset();
 }
 
 template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::~RefHash3KeysIdPoolEnumerator()
@@ -483,7 +479,19 @@ template <class TVal> TVal& RefHash3KeysIdPoolEnumerator<TVal>::nextElement()
 
 template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::Reset()
 {
-    fCurIndex = 0;
+    //
+    //  Find the next available bucket element in the pool. We use the id
+    //  array since its very easy to enumerator through by just maintaining
+    //  an index. If the id counter is zero, then its empty and we leave the
+    //  current index to zero.
+    //
+    fCurIndex = fToEnum->fIdCounter ? 1:0;
+
+}
+
+template <class TVal> int RefHash3KeysIdPoolEnumerator<TVal>::size() const
+{
+    return fToEnum->fIdCounter;
 }
 
 XERCES_CPP_NAMESPACE_END

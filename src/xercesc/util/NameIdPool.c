@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/10/29 16:18:05  peiyongz
+ * size() added and Reset() bug fixed
+ *
  * Revision 1.6  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -374,14 +377,7 @@ NameIdPoolEnumerator(NameIdPool<TElem>* const toEnum) :
     , fCurIndex(0)
     , fToEnum(toEnum)
 {
-    //
-    //  Find the next available bucket element in the pool. We use the id
-    //  array since its very easy to enumerator through by just maintaining
-    //  an index. If the id counter is zero, then its empty and we leave the
-    //  current index to zero.
-    //
-    if (toEnum->fIdCounter)
-        fCurIndex = 1;
+        Reset();
 }
 
 template <class TElem> NameIdPoolEnumerator<TElem>::
@@ -438,7 +434,18 @@ template <class TElem> TElem& NameIdPoolEnumerator<TElem>::nextElement()
 
 template <class TElem> void NameIdPoolEnumerator<TElem>::Reset()
 {
-    fCurIndex = 0;
+    //
+    //  Find the next available bucket element in the pool. We use the id
+    //  array since its very easy to enumerator through by just maintaining
+    //  an index. If the id counter is zero, then its empty and we leave the
+    //  current index to zero.
+    //
+    fCurIndex = fToEnum->fIdCounter ? 1:0;
+}
+
+template <class TElem> int NameIdPoolEnumerator<TElem>::size() const
+{
+    return fToEnum->fIdCounter;
 }
 
 XERCES_CPP_NAMESPACE_END
