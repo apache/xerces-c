@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.57  2004/09/27 20:13:59  knoaman
+ * Reset datatype validator.
+ *
  * Revision 1.56  2004/09/20 15:00:50  amassari
  * Added a setCreateSchemaInfo method to the DOM parsers, to store PSVI informations in element and attribute nodes
  *
@@ -531,6 +534,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     // since it may need to query its contents after this method completes
     fNil = false;
     fTrailing=false;
+    fCurrentDatatypeValidator = 0;
 
     // Went ok, so return success
     return -1;
