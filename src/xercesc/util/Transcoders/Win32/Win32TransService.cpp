@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -989,7 +989,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
     }
      else
     {
-        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh*)); //new XMLCh[1];
+        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
         retVal[0] = 0;
     }
     return retVal;
