@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/06/26 20:30:04  jpolast
+ * check if initialized in Terminate() to stop access violations
+ * submitted by John_Roper@iOra.com
+ *
  * Revision 1.8  2000/05/09 00:22:40  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -196,6 +200,10 @@ void XMLPlatformUtils::Initialize()
 
 void XMLPlatformUtils::Terminate()
 {
+
+	if (!gInitFlag)
+		return;
+
     // Delete any net accessor that got installed
     delete fgNetAccessor;
     fgNetAccessor = 0;
