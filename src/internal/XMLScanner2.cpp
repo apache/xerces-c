@@ -1186,9 +1186,9 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
     }
 
-    SchemaGrammar* grammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
+    Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
-    if ((fGrammar->getGrammarType() == Grammar::DTDGrammarType) || !grammar) {
+    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         DOMParser parser;
         parser.setValidationScheme(DOMParser::Val_Never);
         parser.setDoNamespaces(true);
@@ -1289,7 +1289,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                 fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
 
             grammar = new SchemaGrammar();
-            TraverseSchema traverseSchema(root, fURIStringPool, grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
+            TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
         }
     }
     fGrammar = grammar;
