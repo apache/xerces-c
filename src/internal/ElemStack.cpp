@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/08/29 16:42:27  tng
+ * No need to new the child QName in ElemStack addChild.  Remove it for performance gain.
+ *
  * Revision 1.15  2001/08/07 13:47:47  tng
  * Schema: Fix unmatched end tag for qualified/unqualifed start tag.
  *
@@ -154,10 +157,6 @@ ElemStack::~ElemStack()
         if (!fStack[stackInd])
             break;
 
-        // Delete the row for this entry, then delete the row structure
-        for (unsigned int childIndex = 0; childIndex < fStack[stackInd]->fChildCount; ++childIndex)
-            delete fStack[stackInd]->fChildren[childIndex];
-
         delete [] fStack[stackInd]->fChildren;
         delete [] fStack[stackInd]->fMap;
         delete fStack[stackInd];
@@ -190,8 +189,6 @@ unsigned int ElemStack::addLevel()
     {
         // Cleanup the old element before reuse
         unsigned int childCount = fStack[fStackTop]->fChildCount;
-        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)
-            delete fStack[fStackTop]->fChildren[childIndex];
     }
 
     // Set up the new top row
@@ -231,8 +228,6 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     {
         // Cleanup the old element before reuse
         unsigned int childCount = fStack[fStackTop]->fChildCount;
-        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)
-            delete fStack[fStackTop]->fChildren[childIndex];
     }
 
     // Set up the new top row
@@ -342,7 +337,7 @@ unsigned int ElemStack::addChild(QName* const child, const bool toParent)
     }
 
     // Add this id to the end of the row's child id array and bump the count
-    curRow->fChildren[curRow->fChildCount++] = new QName(child);
+    curRow->fChildren[curRow->fChildCount++] = child;
 
     // Return the level of the index we just filled (before the bump)
     return curRow->fChildCount - 1;
