@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2005/03/20 14:53:35  knoaman
+ * [jira 1381] Memory leak in GrammarResolver - patch by Christian Will.
+ *
  * Revision 1.30  2004/12/03 17:00:13  amassari
  * Avoid throwing an exception when orphaning a cached grammar that has not been used yet
  *
@@ -431,8 +434,7 @@ void GrammarResolver::cacheGrammars()
 void GrammarResolver::cacheGrammarFromParse(const bool aValue)
 {
     reset();
-    fCacheGrammar = aValue;    
-    fGrammarBucket->setAdoptElements(!fCacheGrammar);
+    fCacheGrammar = aValue;
 }
 
 Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
