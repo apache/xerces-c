@@ -551,7 +551,7 @@
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the Grammar, no internal subset is allowed"/>
             <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
-            <Message Id="Parser_Parse1" Text="Wrong character"/>
+            <Message Id="Parser_Parse1" Text="The parser found an illegal character at offset {0} in the regular expression '{1}'."/>
             <Message Id="Parser_Parse2" Text="Invalid reference number"/>
             <Message Id="Parser_Next1" Text="A character is required after \"/>
             <Message Id="Parser_Next2" Text="'?' is not expected.  '(?:' or '(?=' or '(?!' or '(?&lt;' or '(?#' or '(?&gt;'?"/>

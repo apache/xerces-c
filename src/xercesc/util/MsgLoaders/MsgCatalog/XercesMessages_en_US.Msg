@@ -535,7 +535,7 @@ $set 3
 117  The element id was invalid
 118  When reusing the Grammar, no internal subset is allowed
 119  The passed recognizer encoding was not known
-120  Wrong character
+120  The parser found an illegal character at offset {0} in the regular expression '{1}'.
 121  Invalid reference number
 122  A character is required after \
 123  '?' is not expected.  '(?:' or '(?=' or '(?!' or '(?<' or '(?#' or '(?>'?

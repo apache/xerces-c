@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2005/02/20 01:58:17  cargilld
+ * Update error message from regular expressions.
+ *
  * Revision 1.12  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -188,7 +191,9 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
     Token* retTok = parseRegx();
 
 	if (fOffset != fStringLen) {
-        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Parse1, fMemoryManager);
+        XMLCh value1[65];
+        XMLString::binToText(fOffset, value1, 64, 10, fMemoryManager);
+        ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_Parse1, value1, fString, fMemoryManager);
     }
 
     if (fReferences != 0) {

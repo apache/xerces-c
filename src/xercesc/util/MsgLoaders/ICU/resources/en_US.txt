@@ -552,7 +552,7 @@ en_US {
 		"The element id was invalid " ,
 		"When reusing the Grammar, no internal subset is allowed " ,
 		"The passed recognizer encoding was not known " ,
-		"Wrong character " ,
+		"The parser found an illegal character at offset {0} in the regular expression '{1}'. " ,
 		"Invalid reference number " ,
 		"A character is required after \ " ,
 		"'?' is not expected.  '(?:' or '(?=' or '(?!' or '(?<' or '(?#' or '(?>'? " ,
