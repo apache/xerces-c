@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2001/12/10 21:42:55  peiyongz
+ * Memory Leak: fLeafNameTypeVector
+ *
  * Revision 1.28  2001/12/06 17:52:17  tng
  * Performance Enhancement.  The QName that was passed to the CMLeaf
  * constructor was always being copied, even though the CMLeaf objects
@@ -271,6 +274,8 @@ DFAContentModel::~DFAContentModel()
 
     delete [] fElemMapType;
     delete [] fLeafListType;
+
+	delete fLeafNameTypeVector;
 }
 
 
