@@ -243,15 +243,16 @@ IDOM_Node * IDNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
 IDOM_Node * IDNamedNodeMapImpl::setNamedItem(IDOM_Node * arg)
 {
     IDOM_Document *doc = fOwnerNode->getOwnerDocument();
-    if(castToNodeImpl(arg)->getOwnerDocument() != doc)
+    IDNodeImpl *argImpl = castToNodeImpl(arg);
+    if(argImpl->getOwnerDocument() != doc)
         throw IDOM_DOMException(IDOM_DOMException::WRONG_DOCUMENT_ERR,0);
     if (this->readOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    if (castToNodeImpl(arg)->isOwned())
+    if ((arg->getNodeType() == IDOM_Node::ATTRIBUTE_NODE) && argImpl->isOwned() && (argImpl->fOwnerNode != fOwnerNode))
         throw IDOM_DOMException(IDOM_DOMException::INUSE_ATTRIBUTE_ERR,0);
 
-    castToNodeImpl(arg)->fOwnerNode = fOwnerNode;
-    castToNodeImpl(arg)->isOwned(true);
+    argImpl->fOwnerNode = fOwnerNode;
+    argImpl->isOwned(true);
     int i=findNamePoint(arg->getNodeName());
     IDOM_Node * previous=0;
     if(i>=0)
@@ -353,15 +354,16 @@ IDOM_Node *IDNamedNodeMapImpl::getNamedItemNS(const XMLCh *namespaceURI,
 IDOM_Node * IDNamedNodeMapImpl::setNamedItemNS(IDOM_Node *arg)
 {
     IDOM_Document *doc = fOwnerNode->getOwnerDocument();
-    if (castToNodeImpl(arg)->getOwnerDocument() != doc)
+    IDNodeImpl *argImpl = castToNodeImpl(arg);
+    if (argImpl->getOwnerDocument() != doc)
         throw IDOM_DOMException(IDOM_DOMException::WRONG_DOCUMENT_ERR,0);
     if (this->readOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    if (castToNodeImpl(arg)->isOwned())
+    if (argImpl->isOwned())
         throw IDOM_DOMException(IDOM_DOMException::INUSE_ATTRIBUTE_ERR,0);
 
-    castToNodeImpl(arg)->fOwnerNode = fOwnerNode;
-    castToNodeImpl(arg)->isOwned(true);
+    argImpl->fOwnerNode = fOwnerNode;
+    argImpl->isOwned(true);
     int i=findNamePoint(arg->getNamespaceURI(), arg->getLocalName());
     IDOM_Node *previous=0;
     if(i>=0) {

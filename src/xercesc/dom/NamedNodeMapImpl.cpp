@@ -268,7 +268,7 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     if (readOnly)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if (arg->isOwned())
+    if ((arg->getNodeType() == DOM_Node::ATTRIBUTE_NODE) && arg->isOwned() && (arg->ownerNode != ownerNode))
         throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
 
     arg->ownerNode = ownerNode;
