@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/07/07 22:24:35  jpolast
+ * use put(key,value) instead of put(value)
+ *
  * Revision 1.3  2000/03/02 19:55:39  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -128,7 +131,7 @@ XMLAttDef* DTDElementDecl::findAttr(const   XMLCh* const    qName
         // And add a default attribute for this name
         retVal = new DTDAttDef(qName);
         retVal->setElemId(getId());
-        fAttDefs->put(retVal);
+        fAttDefs->put((void*)qName, retVal);
 
         wasAdded = true;
     }
@@ -273,7 +276,7 @@ void DTDElementDecl::addAttDef(DTDAttDef* const toAdd)
     // Tell this guy the element id of its parent (us)
     toAdd->setElemId(getId());
 
-    fAttDefs->put(toAdd);
+    fAttDefs->put((void*)(toAdd->getFullName()), toAdd);
 }
 
 

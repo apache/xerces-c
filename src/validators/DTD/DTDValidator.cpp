@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/07/07 22:24:35  jpolast
+ * use put(key,value) instead of put(value)
+ *
  * Revision 1.7  2000/03/18 00:00:05  roddey
  * Initial updates for two way transcoding support
  *
@@ -717,7 +720,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
                  else
                 {
                     find = new XMLRefInfo(pszTmpVal);
-                    getScanner()->getIDRefList().put(find);
+                    getScanner()->getIDRefList().put((void*)find->getRefName(), find);
                 }
 
                 //
