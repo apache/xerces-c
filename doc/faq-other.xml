@@ -107,4 +107,17 @@
 
     </a>
   </faq>
+
+  <faq title="Where can I get predefined character entity definitions?">
+
+    <q>Where can I get predefined character entity definitions??</q>
+
+    <a>
+
+    <p> Download <jump href="http://www.w3.org/TR/xhtml1/xhtml1.zip">
+      http://www.w3.org/TR/xhtml1/xhtml1.zip. </jump></p>
+
+    </a>
+  </faq>
+
 </faqs>

@@ -14,6 +14,7 @@
             <tr><td>SAX/SAX2</td><td>Items specific to SAX or SAX2</td></tr>
             <tr><td>Non-Validating Parser</td><td>General Parsing Problem</td></tr>
             <tr><td>Validating Parser (DTD)</td><td>DTD related parser issue</td></tr>
+            <tr><td>Validating Parser (Schema)</td><td>Schema related parser issue</td></tr>
             <tr><td>Utilities</td><td>Items related to utilities like MessageLoader, Transcoder, NetAccessors, Platform specific utilities</td></tr>
             <tr><td>Build</td><td>Problem with build, makefile, project files</td></tr>
             <tr><td>Documentation</td><td>Documentation bugs such as FAQ, Programming Guide</td></tr>

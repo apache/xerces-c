@@ -30,6 +30,10 @@
      <entry id="stdinparse"  source="stdinparse.xml"/>
      <entry id="enumval"     source="enumval.xml"/>
      <entry id="createdoc"   source="createdoc.xml"/>
+     <entry id="sax2count"   source="sax2count.xml"/>
+     <entry id="sax2print"   source="sax2print.xml"/>
+     <entry id="idomcount"   source="idomcount.xml"/>
+     <entry id="idomprint"   source="idomprint.xml"/>
   </container>
 
   <document id="schema"      label="Schema"       source="schema.xml"/>
@@ -43,10 +47,12 @@
 
   <document id="program"     label="Programming"  source="program.xml"/>
   <document id="migrate"     label="Migration"    source="migration.xml"/>
+  <hidden id="migrate_archive"                    source="migration_archive.xml"/>
 
   <separator/>
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
+  <hidden id="releases_archive"                   source="releases_archive.xml"/>
   <document id="bug-report"    label="Bug-Reporting"     source="bug-report.xml"/>
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
 

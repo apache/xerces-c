@@ -4,16 +4,15 @@
        <s2 title="Disclaimer">
 		<p>Schema is not fully supported in Xerces-C yet.  But an
                experimental implementation of a subset of the W3C XML
-               Schema language is now available for review in the latest
-               <jump href="http://xml.apache.org/dist/xerces-c/nightly/">
-               nightly build</jump>.  You should not consider this
-               implementation complete or correct.   The limitations of
-               this implementation are detailed below.  Please read this
-               document before using this nightly build package.
+               Schema language is now available for review in Xerces1.5.            
+               You should not consider this implementation complete or 
+			   correct. The limitations of this implementation are 
+			   detailed below.  Please read this document before using 
+			   Xerces 1.5.
                </p>
        </s2>
        <s2 title="Introduction">
-               <p>The nightly build package contains an implementation
+               <p>The Xerces 1.5 contains an implementation
                of a subset of the W3C XML Schema Language as specified
                in the 2 May 2001 Recommendation for <jump
                href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
@@ -31,10 +30,12 @@
                </p>
        </s2>
        <s2 title="Limitations">
-               <p>The XML Schema implementation in the nightly build package is a
+               <p>The XML Schema implementation in the Xerces 1.5 is a
                subset of the features defined in the 2 May 2001 XML Schema Recommendation.
                </p>
        </s2>
+
+       <anchor name="supportedFeature"/>
        <s2 title='Features/Datatypes Supported'>
                <ul>
                        <li>Partial Simple type support </li>
@@ -65,6 +66,7 @@
                        </ul>
                </ul>
 
+
                <p> Additional Experimental Features (not tested and subject to change, use as is)</p>
                <ul>
                        <li>Complex type derivation support (simpleContent and complexContent).</li>
@@ -75,7 +77,7 @@
 
                <p>Other features in the Schema recommendation such as "redefine",
                "identity constraints" and others which are not mentioned above, are not supported
-               yet.  But development is continuing and we target to implement all the
+               yet. But development is continuing and we target to implement all the
                features of the current XML Schema Recommendation before end of this year.
                Please note that the date is tentative and subject to change.
                </p>
@@ -89,6 +91,8 @@
                Recommendation. See the sample provided in the Usage section.
                </p>
        </s2>
+
+       <anchor name="usage"/>
        <s2 title="Usage">
                <p>XML document specifies the XML Schema grammar location in the
                xsi:schemaLocation attribute attached to the root / top-level element.

@@ -15,8 +15,10 @@
         <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM 1.0</jump>,
         <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM 2.0</jump>.
         <jump href="http://www.megginson.com/SAX/SAX1/index.html">SAX 1.0</jump>,
-        <jump href="http://www.megginson.com/SAX/index.html">SAX 2.0</jump>,
-        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>),
+        <jump href="http://www.megginson.com/SAX/index.html">SAX 2.0</jump>, 
+		<jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>).
+        Xerces-C 1.5 also provides an implementation of a subset of the
+        <jump href="http://www.w3.org/TR/xmlschema-0/">Schema</jump>.
         The parser provides high performance, modularity, and scalability.
         Source code, samples and API documentation are provided with the parser. For
         portability, care has been taken to make minimal use of templates,
@@ -44,9 +46,10 @@
             <li>Tracking of latest
             <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM (Level 1.0)</jump>,
             <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM (Level 2.0)</jump>,
-            <jump href="http://www.megginson.com/SAX/index.html">SAX/SAX2</jump> and
+            <jump href="http://www.megginson.com/SAX/index.html">SAX/SAX2</jump>, 
             <jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump> specifications.</li>
-            <li>Source code, samples, and documentation is provided.</li>
+            <li>Experimental <jump href="http://www.w3.org/TR/xmlschema-0/">Schema</jump> subset support</li>
+			<li>Source code, samples, and documentation is provided.</li>
             <li>Programmatic generation and validation of XML</li>
             <li>Pluggable catalogs, validators and encodings</li>
             <li>High performance</li>
@@ -59,7 +62,7 @@
             <li>Win32 using MSVC 6.0 SP3</li>
             <li>Linux (RedHat 6.1) using egcs-2.91.66 and glibc-2.1.2-11</li>
             <li>Solaris 2.6 using Sun Workshop 4.2</li>
-            <li>AIX 4.2.1 using xlC 3.6.4</li>
+            <li>AIX 4.3 using xlC 3.6.4</li>
             <li>HP-UX 11 using aCC A.03.13 with pthreads</li>
         </ul>
     </s2>

@@ -9,8 +9,19 @@
 
     <a>
 
-      <p>See <jump href="http://xml.apache.org/xerces-c/schema.html">
-         http://xml.apache.org/xerces-c/schema.html</jump> for latest status.</p>
+      <p>See <jump href="schema.html">the Schema page. </jump></p>
+
+    </a>
+  </faq>
+
+  <faq title="Why Xerces-C does not support this particular Schema feature?">
+
+    <q> Why Xerces-C does not support this particular Schema feature?</q>
+
+    <a>
+
+      <p> See <jump href="schema.html#supportedFeature">
+         supported schema features in Xerces1.5.</jump></p>
 
     </a>
   </faq>
@@ -591,9 +602,81 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Why does deleting a transcoded string result in assertion on windows?">
     <q>Why does deleting a transcoded string result in assertion on windows?</q>
     <a>
-      <p>You are mixing runtimes in your process. If you build your program with debug, link
-         to the debug version of the parser. If you build your program for release, link to
-         the release version of the parser.</p>
+      <p>Both your application program and the Xerces DLL must use the same *DLL* version of the 
+         runtime library.  If either statically links to the runtime library, the 
+		 problem will still occur.  
+
+         For example, for a Win32/VC6 build, the runtime library build setting MUST 
+		 be "Multithreaded DLL" for release builds and "Debug Multithreaded DLL" for 
+		 debug builds.</p>
+    </a>
+  </faq>
+
+  <faq title="How do I transcode to/from something besides the local code page?">
+    <q>How do I transcode to/from something besides the local code page?</q>
+    <a>
+      <p>XMLString::transcode() will transcode from XMLCh to the local code page, and
+         other APIs which take a char* assume that the source text is in the local
+         code page. If this is not true, you must transcode the text yourself. You
+         can do this using local transcoding support on your OS, such as Iconv on
+         Unix or or IBM's ICU package. However, if your transcoding needs are simple,
+         you can achieve some better portability by using the Xerces parser's
+         transcoder wrappers. You get a transcoder like this:
+       </p>
+       <ul>
+		 <li>
+         1. Call XMLPlatformUtils::fgTransServer->MakeNewTranscoderFor() and provide
+            the name of the encoding you wish to create a transcoder for. This will
+            return a transcoder to you, which you own and must delete when you are
+            through with it.
+
+           NOTE: You must provide a maximum block size that you will pass to the transcoder
+           at one time, and you must blocks of characters of this count or smaller when
+           you do your transcoding. The reason for this is that this is really an
+           internal API and is used by the parser itself to do transcoding. The parser
+           always does transcoding in known block sizes, and this allows transcoders to
+           be much more efficient for internal use since it knows the max size it will
+           ever have to deal with and can set itself up for that internally. In
+           general, you should stick to block sizes in the 4 to 64K range.
+         </li>
+		 <li>
+         2. The returned transcoder is something derived from XMLTranscoder, so they
+            are all returned to you via that interface.
+         </li>
+		 <li>
+         3. This object is really just a wrapper around the underlying transcoding
+            system actually in use by your version of Xerces, and does whatever is
+            necessary to handle differences between the XMLCh representation and the
+            representation uesd by that underying transocding system.
+         </li>
+		 <li>
+         4. The transcoder object has two primary APIs, transcodeFrom() and
+            transcodeTo(). These transcode between the XMLCh format and the encoding you
+            indicated.
+         </li>
+		 <li>
+         5. These APIs will transcode as much of the source data as will fit into the
+            outgoing buffer you provide. They will tell you how much of the source they
+            ate and how much of the target they filled. You can use this information to
+            continue the process until all source is consumed.
+         </li>
+		 <li>
+         6. char* data is always dealt with in terms of bytes, and XMLCh data is
+            always dealt with in terms of characters. Don't mix up which you are dealing
+            with or you will not get the correct results, since many encodings don't
+            have a one to one relationship of characters to bytes.
+         </li>
+		 <li>
+         7. When transcoding from XMLCh to the target encoding, the transcodeTo()
+            method provides an 'unrepresentable flag' parameter, which tells the
+            transcoder how to deal with an XMLCh code point that cannot be converted
+            legally to the target encoding, which can easily happen since XMLCh is
+            Unicode and can represent thousands of code points. The options are to use a
+            default replacement character (which the underlying transcoding service will
+            choose, and which is guaranteed to be legal for the target encoding), or to
+            throw an exception.
+         </li>
+       </ul>
     </a>
   </faq>
 

@@ -1,0 +1,511 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="Migration Archive">
+    <s2 title="Migrating from XML4C 2.x to &XercesCName; &XercesCVersion140;">    
+       <p>This document is a discussion of the technical differences between
+       XML4C 2.x code base and the new &XercesCName; &XercesCVersion140; code base.</p>
+
+       <p>Topics discussed are:</p>
+       <ul>
+        <li><link anchor="GenImprovements">General Improvements</link></li>
+        <ul>
+            <li><link anchor="Compliance">Compliance</link></li>
+            <li><link anchor="BugFixes">Bug Fixes</link></li>
+            <li><link anchor="Speed">Speed</link></li>
+        </ul>
+        <li><link anchor="Summary">Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;</link></li>
+        <li><link anchor="Samples">The Samples</link></li>
+        <li><link anchor="ParserClasses">Parser Classes</link></li>
+        <li><link anchor="DOMLevel2">DOM Level 2 support</link></li>
+        <li><link anchor="Progressive">Progressive Parsing</link></li>
+        <li><link anchor="Namespace">Namespace support</link></li>
+        <li><link anchor="MovedToSrcFramework">Moved Classes to src/framework</link></li>
+        <li><link anchor="LoadableMessageText">Loadable Message Text</link></li>
+        <li><link anchor="PluggableValidators">Pluggable Validators</link></li>
+        <li><link anchor="PluggableTranscoders">Pluggable Transcoders</link></li>
+        <li><link anchor="UtilReorg">Util directory Reorganization</link></li>
+        <ul>
+            <li><link anchor="UtilPlatform">util - The platform independent utility stuff</link></li>
+        </ul>
+       </ul>
+    </s2>
+
+
+    <anchor name="GenImprovements"/>
+    <s2 title="General Improvements">
+
+        <p>The new version is improved in many ways. Some general improvements
+        are: significantly better conformance to the XML spec, cleaner
+        internal architecture, many bug fixes, and faster speed.</p>
+
+        <anchor name="Compliance"/>
+        <s3 title="Compliance">
+            <p>Except for a couple of the very obscure (mostly related to
+            the 'standalone' mode), this version should be quite compliant.
+            We have more than a thousand tests, some collected from various
+            public sources and some IBM generated, which are used to do
+            regression testing. The C++ parser is now passing all but a
+            handful of them.</p>
+        </s3>
+
+        <anchor name="BugFixes"/>
+        <s3 title="Bug Fixes">
+            <p>This version has many bug fixes with regard to XML4C version 2.x.
+            Some of these were reported by users and some were brought up by
+            way of the conformance testing.</p>
+        </s3>
+
+        <anchor name="Speed"/>
+        <s3 title="Speed">
+            <p>Much work was done to speed up this version. Some of the
+            new features, such as namespaces, and conformance checks ended
+            up eating up some of these gains, but overall the new version
+            is significantly faster than previous versions, even while doing
+            more.</p>
+        </s3>
+    </s2>
+
+
+    <anchor name="Summary"/>
+    <s2 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;">
+
+        <p>As mentioned, there are some major architectural changes
+        between the 2.3.x and &XercesCName; &XercesCVersion140; releases
+        of the parser, and as a result the code has undergone
+        significant restructuring. The list below mentions the public
+        api's which existed in 2.3.x and no longer exist in
+        &XercesCName; &XercesCVersion140;. It also mentions the
+        &XercesCName; &XercesCVersion140; api which will give you the
+        same functionality.  Note: This list is not exhaustive. The
+        API docs (and ultimately the header files) supplement this
+        information.</p>
+
+        <ul>
+
+            <li><code>parsers/[Non]Validating[DOM/SAX]parser.hpp</code><br/>
+            These files/classes have all been consolidated in the new
+            version to just two files/classes:
+            <code>[DOM/SAX]Parser.hpp</code>.  Validation is now a
+            property which may be set before invoking the
+            <code>parse</code>. Now, the
+            <code>setDoValidation()</code> method controls the
+            validation processing.</li>
+
+            <li>The <code>framework/XMLDocumentTypeHandler.hpp</code>
+            been replaced with
+            <code>validators/DTD/DocTypeHandler.hpp</code>.</li>
+
+            <li>The following methods now have different set of
+            parameters because the underlying base class methods have
+            changed in the 3.x release. These methods belong to one of
+            <code>XMLDocumentHandler</code>,
+            <code>XMLErrorReporter</code> or
+            <code>DocTypeHandler</code> interfaces.</li>
+            <ul>
+                <li><code>[Non]Validating[DOM/SAX]Parser::docComment</code></li>
+                <li><code>[Non]Validating[DOM/SAX]Parser::doctypePI</code></li>
+                <li><code>[Non]ValidatingSAXParser::elementDecl</code></li>
+                <li><code>[Non]ValidatingSAXParser::endAttList</code></li>
+                <li><code>[Non]ValidatingSAXParser::entityDecl</code></li>
+                <li><code>[Non]ValidatingSAXParser::notationDecl</code></li>
+                <li><code>[Non]ValidatingSAXParser::startAttList</code></li>
+                <li><code>[Non]ValidatingSAXParser::TextDecl</code></li>
+                <li><code>[Non]ValidatingSAXParser::docComment</code></li>
+                <li><code>[Non]ValidatingSAXParser::docPI</code></li>
+                <li><code>[Non]Validating[DOM/SAX]Parser::endElement</code></li>
+                <li><code>[Non]Validating[DOM/SAX]Parser::startElement</code></li>
+                <li><code>[Non]Validating[DOM/SAX]Parser::XMLDecl</code></li>
+                <li><code>[Non]Validating[DOM/SAX]Parser::error</code></li>
+            </ul>
+
+            <li>The following methods/data members changed visibility
+            from <code>protected</code> in 2.3.x to
+            <code>private</code> (with public setters and getters, as
+            appropriate).</li>
+
+            <ul>
+                <li><code>[Non]ValidatingDOMParser::fDocument</code></li>
+                <li><code>[Non]ValidatingDOMParser::fCurrentParent</code></li>
+                <li><code>[Non]ValidatingDOMParser::fCurrentNode</code></li>
+                <li><code>[Non]ValidatingDOMParser::fNodeStack</code></li>
+            </ul>
+
+
+            <li>The following files have moved, possibly requiring
+            changes in the <code>#include</code> statements.</li>
+
+            <ul>
+                <li><code>MemBufInputSource.hpp</code></li>
+                <li><code>StdInInputSource.hpp</code></li>
+                <li><code>URLInputSource.hpp</code></li>
+            </ul>
+
+
+            <li>All the DTD validator code was moved from
+            <code>internal</code> to separate
+            <code>validators/DTD</code> directory.</li>
+
+            <li>The error code definitions which were earlier in
+            <code>internal/ErrorCodes.hpp</code> are now splitup into
+            the following files:</li>
+
+            <ul>
+                <li><code>framework/XMLErrorCodes.hpp   </code> - Core XML errors</li>
+                <li><code>framework/XMLValidityCodes.hpp</code> - DTD validity errors</li>
+                <li><code>util/XMLExceptMsgs.hpp        </code> - C++ specific exception codes.</li>
+            </ul>
+        </ul>
+
+    </s2>
+
+
+
+    <anchor name="Samples"/>
+    <s2 title="The Samples">
+
+        <p>The sample programs no longer use any of the unsupported
+        util/xxx classes. They only existed to allow us to write
+        portable samples. But, since we feel that the wide character
+        APIs are supported on a lot of platforms these days, it was
+        decided to go ahead and just write the samples in terms of
+        these. If your system does not support these APIs, you will
+        not be able to build and run the samples. On some platforms,
+        these APIs might perhaps be optional packages or require
+        runtime updates or some such action.</p>
+
+        <p>More samples have been added as well. These highlight some
+        of the new functionality introduced in the new code base. And
+        the existing ones have been cleaned up as well.</p>
+
+        <p>The new samples are:</p>
+        <ol>
+           <li>PParse - Demonstrates 'progressive parse' (see below)</li>
+           <li>StdInParse - Demonstrates use of the standard in input source</li>
+           <li>EnumVal - Shows how to enumerate the markup decls in a DTD Validator</li>
+        </ol>
+    </s2>
+
+
+    <anchor name="ParserClasses"/>
+    <s2 title="Parser Classes">
+
+        <p>In the XML4C 2.x code base, there were the following parser
+        classes (in the src/parsers/ source directory):
+        NonValidatingSAXParser, ValidatingSAXParser,
+        NonValidatingDOMParser, ValidatingDOMParser.  The
+        non-validating ones were the base classes and the validating
+        ones just derived from them and turned on the validation.
+        This was deemed a little bit overblown, considering the tiny
+        amount of code required to turn on validation and the fact
+        that it makes people use a pointer to the parser in most cases
+        (if they needed to support either validating or non-validating
+        versions.)</p>
+
+        <p>The new code base just has SAXParer and DOMParser
+        classes. These are capable of handling both validating and
+        non-validating modes, according to the state of a flag that
+        you can set on them. For instance, here is a code snippet that
+        shows this in action.</p>
+
+<source>void ParseThis(const  XMLCh* const fileToParse,
+               const bool validate)
+{
+  //
+  // Create a SAXParser. It can now just be
+  // created by value on the stack if we want
+  // to parse something within this scope.
+  //
+  SAXParser myParser;
+
+  // Tell it whether to validate or not
+  myParser.setDoValidation(validate);
+
+  // Parse and catch exceptions...
+  try
+  {
+    myParser.parse(fileToParse);
+  }
+    ...
+};</source>
+
+        <p>We feel that this is a simpler architecture, and that it makes things
+        easier for you. In the above example, for instance, the parser will be
+        cleaned up for you automatically upon exit since you don't have to
+        allocate it anymore.</p>
+
+    </s2>
+
+
+    <anchor name="DOMLevel2"/>
+    <s2 title="DOM Level 2 support">
+
+        <p>Experimental early support for some parts of the DOM level
+        2 specification have been added. These address some of the
+        shortcomings in our DOM implementation,
+        such as a simple, standard mechanism for tree traversal.</p>
+
+    </s2>
+
+
+    <anchor name="Progressive"/>
+    <s2 title="Progressive Parsing">
+
+        <p>The new parser classes support, in addition to the
+        <ref>parse()</ref> method, two new parsing methods,
+        <ref>parseFirst()</ref> and <ref>parseNext()</ref>.  These are
+        designed to support 'progressive parsing', so that you don't
+        have to depend upon throwing an exception to terminate the
+        parsing operation. Calling parseFirst() will cause the DTD (or
+        in the future, Schema) to be parsed (both internal and
+        external subsets) and any pre-content, i.e. everything up to
+        but not including the root element. Subsequent calls to
+        parseNext() will cause one more pieces of markup to be parsed,
+        and spit out from the core scanning code to the parser (and
+        hence either on to you if using SAX or into the DOM tree if
+        using DOM.) You can quit the parse any time by just not
+        calling parseNext() anymore and breaking out of the loop. When
+        you call parseNext() and the end of the root element is the
+        next piece of markup, the parser will continue on to the end
+        of the file and return false, to let you know that the parse
+        is done. So a typical progressive parse loop will look like
+        this:</p>
+
+<source>// Create a progressive scan token
+XMLPScanToken token;
+
+if (!parser.parseFirst(xmlFile, token))
+{
+  cerr &lt;&lt; "scanFirst() failed\n" &lt;&lt; endl;
+  return 1;
+}
+
+//
+// We started ok, so lets call scanNext()
+// until we find what we want or hit the end.
+//
+bool gotMore = true;
+while (gotMore &amp;&amp; !handler.getDone())
+  gotMore = parser.parseNext(token);</source>
+
+        <p>In this case, our event handler object (named 'handler'
+        surprisingly enough) is watching form some criteria and will
+        return a status from its getDone() method. Since the handler
+        sees the SAX events coming out of the SAXParser, it can tell
+        when it finds what it wants. So we loop until we get no more
+        data or our handler indicates that it saw what it wanted to
+        see.</p>
+
+        <p>When doing non-progressive parses, the parser can easily
+        know when the parse is complete and insure that any used
+        resources are cleaned up. Even in the case of a fatal parsing
+        error, it can clean up all per-parse resources. However, when
+        progressive parsing is done, the client code doing the parse
+        loop might choose to stop the parse before the end of the
+        primary file is reached. In such cases, the parser will not
+        know that the parse has ended, so any resources will not be
+        reclaimed until the parser is destroyed or another parse is started.</p>
+
+        <p>This might not seem like such a bad thing; however, in this case,
+        the files and sockets which were opened in order to parse the
+        referenced XML entities will remain open. This could cause
+        serious problems. Therefore, you should destroy the parser instance
+        in such cases, or restart another parse immediately. In a future
+        release, a reset method will be provided to do this more cleanly.</p>
+
+        <p>Also note that you must create a scan token and pass it
+        back in on each call. This insures that things don't get done
+        out of sequence. When you call parseFirst() or parse(), any
+        previous scan tokens are invalidated and will cause an error
+        if used again. This prevents incorrect mixed use of the two
+        different parsing schemes or incorrect calls to
+        parseNext().</p>
+
+    </s2>
+
+
+    <anchor name="Namespace"/>
+    <s2 title="Namespace support">
+
+        <p>The C++ parser now supports namespaces. With current XML
+        interfaces (SAX/DOM) this doesn't mean very much because these
+        APIs are incapable of passing on the namespace information.
+        However, if you are using our internal APIs to write your own
+        parsers, you can make use of this new information. Since the
+        internal event APIs must be able to now support both namespace
+        and non-namespace information, they have more
+        parameters. These allow namespace information to be passed
+        along.</p>
+
+        <p>Most of the samples now have a new command line parameter
+        to turn on namespace support. You turn on namespaces like
+        this:</p>
+
+<source>SAXParser myParser;
+// Tell it whether to do namespace
+myParser.setDoNamespaces(true);</source>
+    </s2>
+
+
+
+    <anchor name="MovedToSrcFramework"/>
+    <s2 title="Moved Classes to src/framework">
+
+        <p>Some of the classes previously in the src/internal/
+        directory have been moved to their more correct location in
+        the src/framework/ directory. These are classes used by the
+        outside world and should have been framework classes to begin
+        with. Also, to avoid name classes in the absense of C++ namespace
+        support, some of these clashes have been renamed to make them
+        more XML specific and less likely to clash. More
+        classes might end up being moved to framework as well.</p>
+
+        <p>So you might have to change a few include statements to
+        find these classes in their new locations. And you might have
+        to rename some of the names of the classes, if you used any of
+        the ones whose names were changed.</p>
+
+    </s2>
+
+
+    <anchor name="LoadableMessageText"/>
+    <s2 title="Loadable Message Text">
+
+        <p>The system now supoprts loadable message text, instead of
+        having it hard coded into the program. The current drop still
+        just supports English, but it can now support other
+        languages. Anyone interested in contributing any translations
+        should contact us. This would be an extremely useful
+        service.</p>
+
+        <p>In order to support the local message loading services, we
+        have created a pretty flexible framework for supporting
+        loadable text. Firstly, there is now an XML file, in the
+        src/NLS/ directory, which contains all of the error messages.
+        There is a simple program, in the Tools/NLSXlat/ directory,
+        which can spit out that text in various formats. It currently
+        supports a simple 'in memory' format (i.e. an array of
+        strings), the Win32 resource format, and the message catalog
+        format.  The 'in memory' format is intended for very simple
+        installations or for use when porting to a new platform (since
+        you can use it until you can get your own local message
+        loading support done.)</p>
+
+        <p>In the src/util/ directory, there is now an XMLMsgLoader
+        class.  This is an abstraction from which any number of
+        message loading services can be derived. Your platform driver
+        file can create whichever type of message loader it wants to
+        use on that platform.  We currently have versions for the in
+        memory format, the Win32 resource format, and the message
+        catalog format. An ICU one is present but not implemented
+        yet. Some of the platforms can support multiple message
+        loaders, in which case a #define token is used to control
+        which one is used. You can set this in your build projects to
+        control the message loader type used.</p>
+
+        <p>Both the Java and C++ parsers emit the same messages for an XML error
+        since they are being taken from the same message file.</p>
+
+    </s2>
+
+
+    <anchor name="PluggableValidators"/>
+    <s2 title="Pluggable Validators">
+
+        <p>In a preliminary move to support Schemas, and to make them
+        first class citizens just like DTDs, the system has been
+        reworked internally to make validators completely pluggable.
+        So now the DTD validator code is under the src/validators/DTD/
+        directory, with a future Schema validator probably going into
+        the src/validators. The core scanner architecture now works
+        completely in terms of the framework/XMLValidator abstract
+        interface and knows almost nothing about DTDs or Schemas. For
+        now, if you don't pass in a validator to the parsers, they
+        will just create a DTDValidator. This means that,
+        theoretically, you could write your own validator. But we
+        would not encourage this for a while, until the semantics of
+        the XMLValidator interface are completely worked out and
+        proven to handle DTD and Schema cleanly.</p>
+
+    </s2>
+
+
+    <anchor name="PluggableTranscoders"/>
+    <s2 title="Pluggable Transcoders">
+
+        <p>Another abstract framework added in the src/util/ directory
+        is to support pluggable transcoding services. The
+        XMLTransService class is an abtract API that can be derived
+        from, to support any desired transcoding
+        service. XMLTranscoder is the abstract API for a particular
+        instance of a transcoder for a particular encoding. The
+        platform driver file decides what specific type of transcoder
+        to use, which allows each platform to use its native
+        transcoding services, or the ICU service if desired.</p>
+
+        <p>Implementations are provided for Win32 native services, ICU
+        services, and the <ref>iconv</ref> services available on many
+        Unix platforms. The Win32 version only provides native code
+        page services, so it can only handle XML code in the intrinsic
+        encodings ASCII, UTF-8, UTF-16 (Big/Small Endian), UCS4
+        (Big/Small Endian), EBCDIC code pages IBM037 and
+        IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. The ICU version
+        provides all of the encodings that ICU supports. The
+        <ref>iconv</ref> version will support the encodings supported
+        by the local system. You can use transcoders we provide or
+        create your own if you feel ours are insufficient in some way,
+        or if your platform requires an implementation that we do not
+        provide.</p>
+
+    </s2>
+
+
+    <anchor name="UtilReorg"/>
+    <s2 title="Util directory Reorganization">
+
+        <p>The src/util directory was becoming somewhat of a dumping
+        ground of platform and compiler stuff. So we reworked that
+        directory to better spread things out. The new scheme is:
+        </p>
+
+        <anchor name="UtilPlatform"/>
+        <s3 title="util - The platform independent utility stuff">
+            <ul>
+                <li>MsgLoaders - Holds the msg loader implementations</li>
+                <ol>
+                    <li>ICU</li>
+                    <li>InMemory</li>
+                    <li>MsgCatalog</li>
+                    <li>Win32</li>
+                </ol>
+                <li>Compilers - All the compiler specific files</li>
+                <li>Transcoders - Holds the transcoder implementations</li>
+                <ol>
+                    <li>Iconv</li>
+                    <li>ICU</li>
+                    <li>Win32</li>
+                </ol>
+                <li>Platforms</li>
+                <ol>
+                    <li>AIX</li>
+                    <li>HP-UX</li>
+                    <li>Linux</li>
+                    <li>Solaris</li>
+                    <li>....</li>
+                    <li>Win32</li>
+                </ol>
+            </ul>
+        </s3>
+
+        <p>This organization makes things much easier to understand.
+        And it makes it easier to find which files you need and which
+        are optional. Note that only per-platform files have any hard
+        coded references to specific message loaders or
+        transcoders. So if you don't include the ICU implementations
+        of these services, you don't need to link in ICU or use any
+        ICU headers. The rest of the system works only in terms of the
+        abstraction APIs.</p>
+
+    </s2>
+
+</s1>

@@ -3,22 +3,85 @@ development and ports of the XML4C source code, which was submitted to
 the Apache Software Foundation.
 
 
-Andy Clark
-Andy Heninger
-Andy Levine 
+Nadav Aharoni
+Curt Arnold
 Anupam Bagchi
+Torbjörn Bäckström
+Matthew Baker
+Devin Barnhart
+James Berry
+David Bertoni
+John Bellardo
 Arundhati Bhowmick
+Edward Bortner
+Sumit Chawla
+Andy Clark
 Chih Hsiang Chou
-Dean Roddey
-Gereon Steffens 
-Glenn Marcy
-John Bellardo 
-Michael Ottati 
-Mike Pogue
-Paul Ferguson 
+Radovan Chytracek
+Hiram Clawson
+Todd Collins
+Michael Crawford
+Murray Cumming
+Helmut Eiken
+Mark Everline
+Simon Fell
+Paul Ferguson
+Pierpaolo Fumagalli
+Gary Gale
+Herny Gongaro
+Susan Hardenbrook
+Jeff Harrell
+Andy Heninger
+William L. Hopper
 Rahul Jain
-Ralf Pfeiffer
-Roger Webster
-Steven Rosenthal
+Tom Jordahl
+Martin Kalen
+Joe Kesselman
+Bob Kline
+Richard Ko
+Paul Kramer
+Volker Krause
+Arnaud LeHors
 Ted Leung
+Andy Levine
+Jeff Lewis
+Matt Lovett
+Sean MacRoibeaird
+Glenn Marcy
+Alberto Massari
+Jordan Naftolin
+Tinny Ng
+David Nickerson
+Khaled Noaman
+Michael Ottati
+Ralf Pfeiffer
+Mike Pogue
+Joe Polastre
+John Ponzo
+Shengkai Qu
+Gareth Reakes
+Jim Reitz
+Dean Roddey
+John Roper
+Steven Rosenthal
+Erik Rydgren
+Bill Schindler
+Erik Schroeder
+Christian Schuhegger
+John Smirl
+Andrei Smirnov
+Gereon Steffens
+Rick J. Stevens
+Roman Sulzhyk
+Linda M. Swan
+Pieter Van-Dyck
+Peter A. Volchek
+Curtis Walker
 Tom Watson
+Roger Webster
+Robert Weir
+Dietrich Wolf
+Kirk Wylie
+Grace Yan
+PeiYong Zhang
+
