@@ -244,18 +244,30 @@ int Iconv390TransService::compareNIString( const   XMLCh* const    comp1
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    while ( (*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars) )
+    while (true && maxChars)
     {
         wint_t wch1 = towupper(*cptr1);
         wint_t wch2 = towupper(*cptr2);
+
         if (wch1 != wch2)
+            return (int) (wch1 - wch2);
+
+        // If either ended, then both ended, so equal
+        if (!*cptr1 || !*cptr2)
             break;
 
         cptr1++;
         cptr2++;
+
+        //  Bump the count of chars done. If it equals the count then we
+        //  are equal for the requested count, so break out and return
+        //  equal.
         n++;
+        if (n == maxChars)
+            break;
     }
-    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
+
+    return 0;
 }
 
 const XMLCh* Iconv390TransService::getId() const
