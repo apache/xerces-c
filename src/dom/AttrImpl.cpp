@@ -86,8 +86,6 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
 
 
 AttrImpl::~AttrImpl() {
-    if (this->idAttr())
-        this->getOwnerDocument()->getNodeIDMap()->remove(this);
 };
 
 

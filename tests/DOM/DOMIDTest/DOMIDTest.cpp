@@ -221,6 +221,40 @@ int main()
         
     }
     TESTEPILOG;
+
+
+    parser->parse(*memBufIS);
+    doc = parser->getDocument();
+    TESTPROLOG;
+    {
+        // This one should get an element
+        DOM_Element elA = doc.getElementById("a001");
+        TASSERT(!elA.isNull());
+
+        elA.setAttribute("id", "a004");
+
+        // This one should NOT get an element
+        elA = doc.getElementById("a001");
+        TASSERT(elA.isNull());
+    };
+
+
+    parser->parse(*memBufIS);
+    doc = parser->getDocument();
+    TESTPROLOG;
+    {
+        // This one should get an element
+        DOM_Element elA = doc.getElementById("a001");
+        TASSERT(!elA.isNull());
+        
+        DOM_Node parent = elA.getParentNode();
+        parent.removeChild(elA);
+        elA = 0;
+        
+        // This one should NOT get an element
+        elA = doc.getElementById("a001");  
+        TASSERT(elA.isNull());
+    }
         
     doc = 0;
     delete parser;

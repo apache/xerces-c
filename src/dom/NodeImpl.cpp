@@ -63,12 +63,14 @@
 // The ParentNode subclass overrides this behavior.
 
 #include "NodeImpl.hpp"
+#include "AttrImpl.hpp"
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
 #include "DOM_DOMImplementation.hpp"
 #include "DOMString.hpp"
 #include "DStringPool.hpp"
 #include "DocumentImpl.hpp"
+#include "NodeIDMap.hpp"
 #include "stdio.h"
 #include "TextImpl.hpp"
 
@@ -176,6 +178,18 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
     //  its parent while retaining siblings.
     //  The target node may have children, in which case they must
     //  be removed from this node before deleting this node.
+
+    // First, if this node is an ID attribute, we need to remove it
+    // from the hashtable of element IDs before removing the Attrs
+    //   children.  This is because the Attr's children Text nodes
+    //   contain the attr's value, which is the hash table key.
+    //
+    if (thisNode->isAttrImpl() && ((AttrImpl *)thisNode->idAttr()))
+    {
+        ((AttrImpl *)thisNode)->getOwnerDocument() ->
+            getNodeIDMap()->remove((AttrImpl *)thisNode);
+    }
+
     thisNode->readOnly(false);   // removeChild requires node not be readonly.
     NodeImpl *theNextChild;
     for (NodeImpl *child = thisNode->getFirstChild(); child != 0;

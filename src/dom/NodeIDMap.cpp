@@ -164,14 +164,6 @@ void NodeIDMap::remove(AttrImpl *attr)
             return;
         }
 
-        if (tableSlot == (AttrImpl *)-1)
-        {
-            // This slot contains an entry for a removed attribute.
-            //  We need to keep looking - the one we are after could
-            //  still show up later on.
-            continue;
-        }
-
         if (tableSlot == attr)
         {
             //  Found the attribute.  Set the slot to -1 to indicate
@@ -209,15 +201,8 @@ AttrImpl *NodeIDMap::find(const DOMString &id)
             return 0;
         }
 
-        if (tableSlot == (AttrImpl *)-1)
-        {
-            // This slot contains an entry for a removed attribute.
-            //  We need to keep looking - the one we are after could
-            //  still show up later on.
-            continue;
-        }
 
-        if (tableSlot->getValue().equals(id))
+        if ((tableSlot != (AttrImpl *)-1) && tableSlot->getValue().equals(id))
             return tableSlot;
 
         currentHash += initalHash;  // rehash
@@ -263,10 +248,13 @@ void NodeIDMap::growTable()
     // Move entries over from the old table to the new one.
     //
     for (i=0; i<oldSize; i++)
-        add(oldTable[i]);
-
+    {
+        if ((oldTable[i] != 0)  &&  (oldTable[i] != (AttrImpl *)-1))
+            add(oldTable[i]);
+    }
+    
     delete [] oldTable;
-
+    
 };
 
 
