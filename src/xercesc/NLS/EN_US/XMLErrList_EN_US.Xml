@@ -168,6 +168,7 @@
             <Message Id="NotAllContent" Text="An 'all' model group that's part of a complex type definition must constitute the entire content type of the definition"/>
             <Message Id="InvalidAnnotationContent" Text="An &lt;annotation&gt; can only contain &lt;appinfo&gt; and &lt;documentation&gt; elements"/>
             <Message Id="InvalidFacetName" Text="Invalid facet name: {0}"/>
+            <Message Id="InvalidXMLSchemaRoot" Text="The root element name of an XML Schema should be 'schema'."/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>

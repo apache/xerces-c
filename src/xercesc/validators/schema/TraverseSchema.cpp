@@ -289,7 +289,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     // Make sure namespace binding is defaulted
     const XMLCh* rootPrefix = schemaRoot->getPrefix();
-
+    
     if (rootPrefix == 0 || XMLString::stringLen(rootPrefix) == 0) {
 
 		const XMLCh* xmlnsStr = schemaRoot->getAttribute(XMLUni::fgXMLNSString);
@@ -382,6 +382,11 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fSchemaInfo = currInfo;
     fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
     fSchemaInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
+
+    if (XMLString::compareString(schemaRoot->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
+        reportSchemaError(schemaRoot, XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
+    }
+
     traverseSchemaHeader(schemaRoot);
 
     // preprocess chidren
