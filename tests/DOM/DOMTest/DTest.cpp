@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/05/15 23:08:59  andyh
+ * Remove entity tests, which failed because entity nodes are (correctly)
+ * read-only.
+ *
  * Revision 1.11  2000/04/19 02:25:18  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -329,11 +333,11 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
 
     EXCEPTIONSTEST(document.appendChild(docBody), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 2);
     EXCEPTIONSTEST(docNode3.appendChild(docNode4), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 3); 
-    EXCEPTIONSTEST(doc.insertBefore(docEntity, docFirstElement), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 4); 
+    // EXCEPTIONSTEST(doc.insertBefore(docEntity, docFirstElement), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 4); 
     EXCEPTIONSTEST(doc.replaceChild(docCDATASection, docFirstElement), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 5); 
     EXCEPTIONSTEST(docFirstElement.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);    
     EXCEPTIONSTEST(docReferenceEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
-    EXCEPTIONSTEST(docEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 8);
+    // EXCEPTIONSTEST(docEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 8);
     EXCEPTIONSTEST(doc.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
     EXCEPTIONSTEST(docDocType.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);
     EXCEPTIONSTEST(docDocFragment.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 11);
@@ -516,9 +520,10 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
          d.appendChild(docDocType);
          
          DOM_Entity docEntity = test.createEntity( d, "ourEntityNode");
-         DOM_Text entityChildText = d.createTextNode("entityChildText information"); // Build a branch for entityReference tests
-         docEntity.appendChild(entityChildText);                      // & for READONLY_ERR tests
-         docDocType.getEntities().setNamedItem(docEntity);
+         //Build a branch for entityReference tests
+         // DOM_Text entityChildText = d.createTextNode("entityChildText information"); // 
+         // docEntity.appendChild(entityChildText);                    
+         // docDocType.getEntities().setNamedItem(docEntity);
          
          test.docBuilder(d, "d");
          
@@ -536,7 +541,7 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
          LEAKTEST(test.testDocumentType(d);); 
          LEAKTEST(test.testDOMImplementation(d););
          LEAKTEST(test.testElement(d););
-         LEAKTEST(test.testEntity(d););
+//       LEAKTEST(test.testEntity(d););      // Can not test entities;  only parser can create them.
          LEAKTEST(test.testEntityReference(d););
          LEAKTEST(test.testNode(d););
          LEAKTEST(test.testNotation(d););  
@@ -635,6 +640,8 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
          DTest::testNotationNode = null;
          
     };
+
+    XMLPlatformUtils::Terminate();
     DomMemDebug().print();
 };
 
@@ -1269,12 +1276,17 @@ void DTest::testDocumentType(DOM_Document document)
     DOM_Node  abc9 = document.getFirstChild();
     docType = (DOM_DocumentType &) abc9;
     compare = "ourEntityNode";
+
+#if 0
+    // Entity tests omitted; can not create entity nodes outside of the Parser.
     docEntityMap = docType.getEntities();
     if (! compare.equals(docEntityMap.item(0).getNodeName()))
     {
         printf("Warning!!! DOM_DocumentType's 'getEntities' failed!\n" );
         OK = false;
     }
+#endif 
+
     docNotationMap = docType.getNotations();
     compare = "ourNotationNode";
     if (! compare.equals(docNotationMap.item(0).getNodeName()))
