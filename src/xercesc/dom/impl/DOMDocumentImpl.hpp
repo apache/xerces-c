@@ -74,8 +74,10 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/KeyRefPair.hpp>
 
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMUserDataHandler.hpp>
 #include "DOMNodeImpl.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMDeepNodeListPool.hpp"
@@ -108,7 +110,8 @@ class DOMStringPool;
 typedef RefVectorOf<DOMNodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<DOMTreeWalkerImpl>   TreeWalkers;
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
-
+typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
+typedef RefHashTableOf<DOMUserDataRecord> DOMNode_UserDataTable;
 
 class CDOM_EXPORT DOMDocumentImpl: public DOMDocument {
 public:
@@ -129,7 +132,6 @@ public:
     TreeWalkers*          fTreeWalkers;
     Ranges*               fRanges;
 
-    RefHashTableOf<void>* fUserData;
     int                   fChanges;
 
     bool                  errorChecking;    // Bypass error checking.
@@ -140,6 +142,8 @@ public:
     bool                  fStandalone;
     XMLCh*                fVersion;
     XMLCh*                fDocumentURI;
+
+    RefHashTableOf<DOMNode_UserDataTable>* fUserDataTable;
 
 
     // Per-Document heap Variables.
@@ -179,54 +183,49 @@ public:
 
 public:
     DOMDocumentImpl();
-    DOMDocumentImpl(const XMLCh      *namespaceURI,	     //DOM Level 2
-                   const XMLCh      *qualifiedName,
-                   DOMDocumentType *doctype);
+    DOMDocumentImpl(const XMLCh*     namespaceURI,     //DOM Level 2
+                    const XMLCh*     qualifiedName,
+                    DOMDocumentType* doctype);
     virtual ~DOMDocumentImpl();
 
     // Add all functions that are pure virutal in DOMNODE
     DOMNODE_FUNCTIONS;
 
     // Add all functions that are pure virutal in DOMDocument
-    virtual DOMAttr             *createAttribute(const XMLCh *name);
-    virtual DOMCDATASection     *createCDATASection(const XMLCh *data);
-    virtual DOMComment          *createComment(const XMLCh *data);
-    virtual DOMDocumentFragment *createDocumentFragment();
-    virtual DOMDocumentType     *createDocumentType(const XMLCh *name);
-    virtual DOMDocumentType     *createDocumentType(const XMLCh *qName,
+    virtual DOMAttr*             createAttribute(const XMLCh *name);
+    virtual DOMCDATASection*     createCDATASection(const XMLCh *data);
+    virtual DOMComment*          createComment(const XMLCh *data);
+    virtual DOMDocumentFragment* createDocumentFragment();
+    virtual DOMDocumentType*     createDocumentType(const XMLCh *name);
+    virtual DOMDocumentType*     createDocumentType(const XMLCh *qName,
                                                     const XMLCh *publicId,
                                                     const XMLCh *systemId);
-    virtual DOMElement          *createElement(const XMLCh * tagName);
-    virtual DOMElement          *createElementNoCheck(const XMLCh *tagName);
-    virtual DOMEntity           *createEntity(const XMLCh * name);
-    virtual DOMEntityReference  *createEntityReference(const XMLCh * name);
-    virtual DOMNotation         *createNotation(const XMLCh * name);
-    virtual DOMProcessingInstruction *createProcessingInstruction(const XMLCh * target, const XMLCh * data);
-    virtual DOMText             *createTextNode(const XMLCh * data);
-    virtual DOMDocumentType     *getDoctype() const;
-    virtual DOMElement          *getDocumentElement() const;
-    virtual DOMNodeList         *getElementsByTagName(const XMLCh * tagname) const;
-    virtual DOMImplementation *getImplementation() const;
-    static  bool                  isXMLName(const XMLCh * s);
-    virtual DOMNodeIterator     *createNodeIterator(DOMNode *root,
-                                                      unsigned long whatToShow,
-                                                      DOMNodeFilter* filter,
-                                                      bool entityReferenceExpansion);
-    virtual DOMTreeWalker       *createTreeWalker(DOMNode *root,
+    virtual DOMElement*          createElement(const XMLCh * tagName);
+    virtual DOMElement*          createElementNoCheck(const XMLCh *tagName);
+    virtual DOMEntity*           createEntity(const XMLCh * name);
+    virtual DOMEntityReference*  createEntityReference(const XMLCh * name);
+    virtual DOMNotation*         createNotation(const XMLCh * name);
+    virtual DOMProcessingInstruction* createProcessingInstruction(const XMLCh * target, const XMLCh * data);
+    virtual DOMText*             createTextNode(const XMLCh * data);
+    virtual DOMDocumentType*     getDoctype() const;
+    virtual DOMElement*          getDocumentElement() const;
+    virtual DOMNodeList*         getElementsByTagName(const XMLCh * tagname) const;
+    virtual DOMImplementation*   getImplementation() const;
+    static  bool                 isXMLName(const XMLCh * s);
+    virtual DOMNodeIterator*     createNodeIterator(DOMNode *root,
                                                     unsigned long whatToShow,
                                                     DOMNodeFilter* filter,
                                                     bool entityReferenceExpansion);
-
-    virtual void*                  getUserData() const;
-    virtual void                   setUserData(void* value);
-    virtual DOMRange            *createRange();
-    virtual Ranges*                getRanges() const;  //non-standard api
-    virtual void                   removeRange(DOMRangeImpl* range); //non-standard api
+    virtual DOMTreeWalker*       createTreeWalker(DOMNode *root,
+                                                  unsigned long whatToShow,
+                                                  DOMNodeFilter* filter,
+                                                  bool entityReferenceExpansion);
 
 
-    // helper functions to prevent storing userdata pointers on every node.
-    virtual void  setUserData(DOMNode* n, void* data);
-    virtual void* getUserData(const DOMNode* n) const;
+    virtual DOMRange*            createRange();
+    virtual Ranges*              getRanges() const;  //non-standard api
+    virtual void                 removeRange(DOMRangeImpl* range); //non-standard api
+
 
     //
     // Functions to keep track of document mutations, so that node list chached
@@ -265,38 +264,49 @@ public:
     }
 
     //Introduced in DOM Level 2
-    virtual DOMNode            *importNode(DOMNode *source, bool deep);
-    virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
-                                                  const XMLCh *qualifiedName);
-    virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
-                                                  const XMLCh *qualifiedName,
-                                                  const XMLSSize_t lineNo,
-                                                  const XMLSSize_t columnNo);
-    virtual DOMAttr            *createAttributeNS(const XMLCh *namespaceURI,
-	                                             const XMLCh *qualifiedName);
-    virtual DOMNodeList        *getElementsByTagNameNS(const XMLCh *namespaceURI,
-	                                              const XMLCh *localName) const;
-    virtual DOMElement         *getElementById(const XMLCh *elementId) const;
+    virtual DOMNode*             importNode(DOMNode *source, bool deep);
+    virtual DOMElement*          createElementNS(const XMLCh *namespaceURI,
+                                                 const XMLCh *qualifiedName);
+    virtual DOMElement*          createElementNS(const XMLCh *namespaceURI,
+                                                 const XMLCh *qualifiedName,
+                                                 const XMLSSize_t lineNo,
+                                                 const XMLSSize_t columnNo);
+    virtual DOMAttr*             createAttributeNS(const XMLCh *namespaceURI,
+                                                   const XMLCh *qualifiedName);
+    virtual DOMNodeList*         getElementsByTagNameNS(const XMLCh *namespaceURI,
+                                                        const XMLCh *localName) const;
+    virtual DOMElement*          getElementById(const XMLCh *elementId) const;
 
     //Introduced in DOM Level 3
-    virtual const XMLCh*           getActualEncoding() const;
-    virtual void                   setActualEncoding(const XMLCh* actualEncoding);
-    virtual const XMLCh*           getEncoding() const;
-    virtual void                   setEncoding(const XMLCh* encoding);
-    virtual bool                   getStandalone() const;
-    virtual void                   setStandalone(bool standalone);
-    virtual const XMLCh*           getVersion() const;
-    virtual void                   setVersion(const XMLCh* version);
-    virtual const XMLCh*           getDocumentURI() const;
-    virtual void                   setDocumentURI(const XMLCh* documentURI);
+    virtual const XMLCh*         getActualEncoding() const;
+    virtual void                 setActualEncoding(const XMLCh* actualEncoding);
+    virtual const XMLCh*         getEncoding() const;
+    virtual void                 setEncoding(const XMLCh* encoding);
+    virtual bool                 getStandalone() const;
+    virtual void                 setStandalone(bool standalone);
+    virtual const XMLCh*         getVersion() const;
+    virtual void                 setVersion(const XMLCh* version);
+    virtual const XMLCh*         getDocumentURI() const;
+    virtual void                 setDocumentURI(const XMLCh* documentURI);
 
+    // helper functions to prevent storing userdata pointers on every node.
+    void*                        setUserData(DOMNodeImpl* n,
+                                            const XMLCh* key,
+                                            void* data,
+                                            DOMUserDataHandler* handler);
+    void*                        getUserData(const DOMNodeImpl* n,
+                                             const XMLCh* key) const;
+    void                         callUserDataHandlers(const DOMNodeImpl* n,
+                                                      DOMUserDataHandler::DOMOperationType operation,
+                                                      const DOMNode* src,
+                                                      const DOMNode* dst) const;
 
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
-    static  int                 indexofQualifiedName(const XMLCh * qName);
-    static  bool                isKidOK(DOMNode *parent, DOMNode *child);
+    static  int                  indexofQualifiedName(const XMLCh * qName);
+    static  bool                 isKidOK(DOMNode *parent, DOMNode *child);
 
-    inline DOMNodeIDMap *          getNodeIDMap() {return fNodeIDMap;};
+    inline DOMNodeIDMap*         getNodeIDMap() {return fNodeIDMap;};
 
 
     //
@@ -305,23 +315,28 @@ public:
     //                               document itself is deleted.
     //
 
-    void        * allocate(size_t amount);
-    XMLCh       * cloneString(const XMLCh *src);
-    const XMLCh * getPooledString(const XMLCh *src);
-    void          deleteHeap();
+    void*                        allocate(size_t amount);
+    XMLCh*                       cloneString(const XMLCh *src);
+    const XMLCh*                 getPooledString(const XMLCh *src);
+    void                         deleteHeap();
 
 
     // Factory methods for getting/creating node lists.
     // Because nothing is ever deleted, the implementation caches and recycles
     //  previously used instances of DOMDeepNodeList
     //
-    DOMNodeList *getDeepNodeList(const DOMNode *rootNode, const XMLCh *tagName);
-    DOMNodeList *getDeepNodeList(const DOMNode *rootNode,	//DOM Level 2
-			                            const XMLCh *namespaceURI,
-                                     const XMLCh *localName);
+    DOMNodeList*                 getDeepNodeList(const DOMNode *rootNode, const XMLCh *tagName);
+    DOMNodeList*                 getDeepNodeList(const DOMNode *rootNode,    //DOM Level 2
+                                                 const XMLCh *namespaceURI,
+                                                 const XMLCh *localName);
 
 private:
-    DOMDeepNodeListPool<DOMDeepNodeListImpl> *fNodeListPool;
+    //Internal helper functions
+    virtual DOMNode*             importNode(DOMNode *source, bool deep, bool cloningNode);
+
+private:
+    DOMDeepNodeListPool<DOMDeepNodeListImpl>* fNodeListPool;
+
 };
 
 //

@@ -100,7 +100,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *qualifiedName,
                                    const XMLCh *pubId,
                                    const XMLCh *sysId)
-	: fNode(ownerDoc),
+    : fNode(ownerDoc),
     fParent(ownerDoc),
     publicId(0),
     systemId(0),
@@ -152,9 +152,9 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
         if (deep)
             fParent.cloneChildren(&other);
         //DOM Level 2
-        publicId		= other.publicId;
-        systemId		= other.systemId;
-        internalSubset	= other.internalSubset;
+        publicId        = other.publicId;
+        systemId        = other.systemId;
+        internalSubset  = other.internalSubset;
     }
     else {
         name = XMLString::replicate(other.name);
@@ -194,10 +194,14 @@ DOMDocumentTypeImpl::~DOMDocumentTypeImpl()
 
 DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
 {
+    DOMNode* newNode = 0;
     if (castToNodeImpl(this)->getOwnerDocument())
-        return new (castToNodeImpl(this)->getOwnerDocument()) DOMDocumentTypeImpl(*this, deep);
+        newNode = new (castToNodeImpl(this)->getOwnerDocument()) DOMDocumentTypeImpl(*this, deep);
+    else
+        newNode = new DOMDocumentTypeImpl(*this, deep);
 
-    return new DOMDocumentTypeImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 }
 
 /**
@@ -375,28 +379,31 @@ void        DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
 // Delegation for functions inherited from Node
 //
 
-           DOMNode          *DOMDocumentTypeImpl::appendChild(DOMNode *newChild)        {return fParent.appendChild (newChild); };
-           DOMNamedNodeMap  *DOMDocumentTypeImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMDocumentTypeImpl::getChildNodes() const 			        {return fParent.getChildNodes (); };
-           DOMNode          *DOMDocumentTypeImpl::getFirstChild() const 			        {return fParent.getFirstChild (); };
-           DOMNode          *DOMDocumentTypeImpl::getLastChild() const 		            {return fParent.getLastChild (); };
-     const XMLCh              *DOMDocumentTypeImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMDocumentTypeImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMDocumentTypeImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh              *DOMDocumentTypeImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument      *DOMDocumentTypeImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMDocumentTypeImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMDocumentTypeImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *DOMDocumentTypeImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                DOMDocumentTypeImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           DOMNode          *DOMDocumentTypeImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                            {return fParent.insertBefore (newChild, refChild); };
-           void                DOMDocumentTypeImpl::normalize()                             {fParent.normalize (); };
-           DOMNode          *DOMDocumentTypeImpl::removeChild(DOMNode *oldChild)        {return fParent.removeChild (oldChild); };
-           DOMNode          *DOMDocumentTypeImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fParent.replaceChild (newChild, oldChild); };
-           bool                DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.isSupported (feature, version); };
-           void                DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMDocumentTypeImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
+           DOMNamedNodeMap* DOMDocumentTypeImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMDocumentTypeImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
+           DOMNode*         DOMDocumentTypeImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
+           DOMNode*         DOMDocumentTypeImpl::getLastChild() const                    {return fParent.getLastChild (); };
+     const XMLCh*           DOMDocumentTypeImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMDocumentTypeImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMDocumentTypeImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           DOMDocumentTypeImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
+           DOMDocument*     DOMDocumentTypeImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMDocumentTypeImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMDocumentTypeImpl::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         DOMDocumentTypeImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             DOMDocumentTypeImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         DOMDocumentTypeImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                         {return fParent.insertBefore (newChild, refChild); };
+           void             DOMDocumentTypeImpl::normalize()                             {fParent.normalize (); };
+           DOMNode*         DOMDocumentTypeImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+           DOMNode*         DOMDocumentTypeImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                         {return fParent.replaceChild (newChild, oldChild); };
+           bool             DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                         {return fNode.isSupported (feature, version); };
+           void             DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMDocumentTypeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                         {return fNode.setUserData(key, data, handler); };
+           void*            DOMDocumentTypeImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 

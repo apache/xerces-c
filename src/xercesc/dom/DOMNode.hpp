@@ -67,6 +67,7 @@
 class DOMDocument;
 class DOMNamedNodeMap;
 class DOMNodeList;
+class DOMUserDataHandler;
 
 /**
  * The <code>DOMNode</code> interface is the primary datatype for the entire
@@ -607,6 +608,50 @@ public:
      * @since DOM Level 2
      */
     virtual bool              hasAttributes() const = 0;
+    //@}
+
+    /** @name Functions introduced in DOM Level 3. */
+    //@{
+    /**
+     * Associate an object to a key on this node. The object can later be
+     * retrieved from this node by calling <code>getUserData</code> with the
+     * same key.
+     *
+     * Deletion of the user data remains the responsibility of the
+     * application program; it will not be automatically deleted when
+     * the nodes themselves are reclaimed.
+     *
+     * Both the parameter <code>data</code> and the returned object are
+     * void pointer, it is applications' responsibility to keep track of
+     * their original type.  Casting them to the wrong type may result
+     * unexpected behavior.
+     *
+     * @param key The key to associate the object to.
+     * @param data The object to associate to the given key, or
+     *   <code>null</code> to remove any existing association to that key.
+     * @param handler The handler to associate to that key, or
+     *   <code>null</code>.
+     * @return Returns the void* object previously associated to
+     *   the given key on this node, or <code>null</code> if there was none.
+     * @see getUserData
+     *
+     * @since DOM Level 3
+     */
+    virtual void*             setUserData(const XMLCh* key,
+                                          void* data,
+                                          DOMUserDataHandler* handler) = 0;
+
+    /**
+     * Retrieves the object associated to a key on a this node. The object
+     * must first have been set to this node by calling
+     * <code>setUserData</code> with the same key.
+     * @param key The key the object is associated to.
+     * @return Returns the <code>DOMObject</code> associated to the given key
+     *   on this node, or <code>null</code> if there was none.
+     * @see setUserData
+     * @since DOM Level 3
+     */
+    virtual void*             getUserData(const XMLCh* key) const = 0;
     //@}
 
 

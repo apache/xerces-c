@@ -117,8 +117,9 @@ DOMElementImpl::~DOMElementImpl()
 
 DOMNode *DOMElementImpl::cloneNode(bool deep) const
 {
-    return new (getOwnerDocument()) DOMElementImpl(*this, deep);
-    return 0;
+    DOMNode* newNode = new (getOwnerDocument()) DOMElementImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 };
 
 
@@ -208,7 +209,7 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 
-    return (DOMAttr *)found;	
+    return (DOMAttr *)found;
 
 };
 
@@ -267,7 +268,7 @@ void DOMElementImpl::setReadOnly(bool readOnl, bool deep)
 
 //Introduced in DOM Level 2
 const XMLCh * DOMElementImpl::getAttributeNS(const XMLCh *fNamespaceURI,
-	const XMLCh *fLocalName) const
+    const XMLCh *fLocalName) const
 {
     DOMAttr * attr=
       (DOMAttr *)(fAttributes->getNamedItemNS(fNamespaceURI, fLocalName));
@@ -276,11 +277,11 @@ const XMLCh * DOMElementImpl::getAttributeNS(const XMLCh *fNamespaceURI,
 
 
 void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
-	const XMLCh *qualifiedName, const XMLCh *fValue)
+    const XMLCh *qualifiedName, const XMLCh *fValue)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-	    DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
     DOMAttr *newAttr =
         this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
@@ -290,7 +291,7 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
 
 
 void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
-	const XMLCh *fLocalName)
+    const XMLCh *fLocalName)
 {
     if (fNode.isReadOnly())
         throw DOMException(
@@ -306,7 +307,7 @@ void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
 
 
 DOMAttr *DOMElementImpl::getAttributeNodeNS(const XMLCh *fNamespaceURI,
-	const XMLCh *fLocalName) const
+    const XMLCh *fLocalName) const
 {
     return (DOMAttr *)fAttributes->getNamedItemNS(fNamespaceURI, fLocalName);
 }
@@ -316,7 +317,7 @@ DOMAttr *DOMElementImpl::setAttributeNodeNS(DOMAttr *newAttr)
 {
     if (fNode.isReadOnly())
         throw DOMException(
-	        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
     if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
         throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
@@ -331,7 +332,7 @@ DOMAttr *DOMElementImpl::setAttributeNodeNS(DOMAttr *newAttr)
 
 
 DOMNodeList *DOMElementImpl::getElementsByTagNameNS(const XMLCh *namespaceURI,
-	const XMLCh *localName) const
+    const XMLCh *localName) const
 {
     DOMDocumentImpl *docImpl = (DOMDocumentImpl *)getOwnerDocument();;
     return docImpl->getDeepNodeList(this, namespaceURI, localName);
@@ -350,7 +351,7 @@ bool DOMElementImpl::hasAttribute(const XMLCh *name) const
 
 
 bool DOMElementImpl::hasAttributeNS(const XMLCh *namespaceURI,
-	const XMLCh *localName) const
+    const XMLCh *localName) const
 {
     return (getAttributeNodeNS(namespaceURI, localName) != 0);
 };
@@ -360,15 +361,15 @@ bool DOMElementImpl::hasAttributeNS(const XMLCh *namespaceURI,
 // returns the default attribute map for this node from the owner document
 DOMAttrMapImpl *DOMElementImpl::getDefaultAttributes()
 {
-	if ((fNode.fOwnerNode == 0) || (getOwnerDocument() == 0))
-		return 0;
+    if ((fNode.fOwnerNode == 0) || (getOwnerDocument() == 0))
+        return 0;
 
-	DOMDocument *tmpdoc = getOwnerDocument();
-	if (tmpdoc->getDoctype() == 0)
-		return 0;
-	
-	DOMNode *eldef = ((DOMDocumentTypeImpl*)tmpdoc->getDoctype())->getElements()->getNamedItem(getNodeName());
-	return (eldef == 0) ? 0 : (DOMAttrMapImpl *)(eldef->getAttributes());
+    DOMDocument *tmpdoc = getOwnerDocument();
+    if (tmpdoc->getDoctype() == 0)
+        return 0;
+
+    DOMNode *eldef = ((DOMDocumentTypeImpl*)tmpdoc->getDoctype())->getElements()->getNamedItem(getNodeName());
+    return (eldef == 0) ? 0 : (DOMAttrMapImpl *)(eldef->getAttributes());
 }
 
 // resets all attributes for this node to their default values
@@ -389,27 +390,30 @@ void DOMElementImpl::setupDefaultAttributes()
 //
 //   Functions inherited from Node
 //
-           DOMNode          *DOMElementImpl::appendChild(DOMNode *newChild)        {return fParent.appendChild (newChild); };
-           DOMNodeList      *DOMElementImpl::getChildNodes() const 			        {return fParent.getChildNodes (); };
-           DOMNode          *DOMElementImpl::getFirstChild() const 			        {return fParent.getFirstChild (); };
-           DOMNode          *DOMElementImpl::getLastChild() const 		            {return fParent.getLastChild (); };
-     const XMLCh              *DOMElementImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMElementImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMElementImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh              *DOMElementImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument      *DOMElementImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMElementImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMElementImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *DOMElementImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                DOMElementImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           DOMNode          *DOMElementImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                            {return fParent.insertBefore (newChild, refChild); };
-           void                DOMElementImpl::normalize()                             {fParent.normalize (); };
-           DOMNode          *DOMElementImpl::removeChild(DOMNode *oldChild)        {return fParent.removeChild (oldChild); };
-           DOMNode          *DOMElementImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fParent.replaceChild (newChild, oldChild); };
-           bool                DOMElementImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.isSupported (feature, version); };
-           void                DOMElementImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           DOMNode*         DOMElementImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
+           DOMNodeList*     DOMElementImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
+           DOMNode*         DOMElementImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
+           DOMNode*         DOMElementImpl::getLastChild() const                    {return fParent.getLastChild (); };
+     const XMLCh*           DOMElementImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMElementImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMElementImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           DOMElementImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
+           DOMDocument*     DOMElementImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMElementImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMElementImpl::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         DOMElementImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             DOMElementImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         DOMElementImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                    {return fParent.insertBefore (newChild, refChild); };
+           void             DOMElementImpl::normalize()                             {fParent.normalize (); };
+           DOMNode*         DOMElementImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+           DOMNode*         DOMElementImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                    {return fParent.replaceChild (newChild, oldChild); };
+           bool             DOMElementImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                    {return fNode.isSupported (feature, version); };
+           void             DOMElementImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           void*            DOMElementImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                    {return fNode.setUserData(key, data, handler); };
+           void*            DOMElementImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 
 

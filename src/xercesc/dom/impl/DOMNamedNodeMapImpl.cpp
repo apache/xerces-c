@@ -284,9 +284,6 @@ void DOMNamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
     // this->fReadOnly=readOnl;
     if(deep && fNodes!=0)
     {
-        //Enumeration e=fNodes->elements();
-        //while(e->hasMoreElements())
-        //      ((NodeImpl)e->nextElement())->setReadOnly(readOnl,deep);
         int sz = fNodes->size();
         for (int i=0; i<sz; ++i) {
             castToNodeImpl(fNodes->elementAt(i))->setReadOnly(readOnl, deep);

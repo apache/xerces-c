@@ -95,8 +95,8 @@ const unsigned short DOMNodeImpl::CHILDNODE    = 0x1<<11;
 static DOMNodeListImpl *gEmptyNodeList;  // make a singleton empty node list
 static void reinitEmptyNodeList()
 {
-	delete gEmptyNodeList;
-	gEmptyNodeList = 0;
+    delete gEmptyNodeList;
+    gEmptyNodeList = 0;
 }
 
 // -----------------------------------------------------------------------
@@ -111,7 +111,8 @@ DOMNodeImpl::DOMNodeImpl(DOMNode *ownerNode)
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
-DOMNodeImpl::DOMNodeImpl(const DOMNodeImpl &other) {
+DOMNodeImpl::DOMNodeImpl(const DOMNodeImpl &other)
+{
     this->flags = other.flags;
     this->isReadOnly(false);
 
@@ -123,13 +124,6 @@ DOMNodeImpl::DOMNodeImpl(const DOMNodeImpl &other) {
 
 
 DOMNodeImpl::~DOMNodeImpl() {
-    //
-    //   Note:  With current memory mgmt, destructors are not called for nodes.
-
-    //	if (hasUserData())
-    //	{
-    //		setUserData(0);
-    //	}
 };
 
 
@@ -149,7 +143,7 @@ DOMNamedNodeMap * DOMNodeImpl::getAttributes() const {
 
 
 DOMNodeList *DOMNodeImpl::getChildNodes() const {
-	static XMLRegisterCleanup emptyNodeListCleanup;
+    static XMLRegisterCleanup emptyNodeListCleanup;
 
     if (gEmptyNodeList == 0)
     {
@@ -233,17 +227,29 @@ DOMNode*  DOMNodeImpl::getPreviousSibling() const
     return 0;                // overridden in ChildNode
 };
 
-
-void *DOMNodeImpl::getUserData() const
+void* DOMNodeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
 {
-    void *userData = 0;
-#ifdef _revisit
-    if (hasUserData()) {
-        userData =  (DOMDocumentImpl *)getOwnerDocument()->getUserData(this);
-    }
-#endif
-  return userData;
-};
+   if (!data && !hasUserData())
+       return 0;
+
+    hasUserData(true);
+    return ((DOMDocumentImpl*)getOwnerDocument())->setUserData(this, key, data, handler);
+}
+
+void* DOMNodeImpl::getUserData(const XMLCh* key) const
+{
+   if (hasUserData())
+       return ((DOMDocumentImpl*)getOwnerDocument())->getUserData(this, key);
+    return 0;
+}
+
+void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
+                                       const DOMNode* src,
+                                       const DOMNode* dst) const
+{
+    ((DOMDocumentImpl*)getOwnerDocument())->callUserDataHandlers(this, operation, src, dst);
+}
+
 
 bool DOMNodeImpl::hasChildNodes() const
 {
@@ -292,19 +298,6 @@ void DOMNodeImpl::setReadOnly(bool readOnl, bool deep)
                 castToNodeImpl(mykid)->setReadOnly(readOnl,true);
     }
 }
-
-
-void DOMNodeImpl::setUserData(void * val)
-{
-	DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
-
-    doc->setUserData(val);
-	if (val)
-		hasUserData(true);
-	else
-		hasUserData(false);
-};
-
 
 
 //Introduced in DOM Level 2
@@ -373,14 +366,14 @@ const XMLCh *DOMNodeImpl::getXmlnsString()    {return s_xmlns;};
 const XMLCh *DOMNodeImpl::getXmlnsURIString() {return s_xmlnsURI;};
 
 //Return a URI mapped from the given prefix and namespaceURI as below
-//	prefix   namespaceURI		output
+//    prefix   namespaceURI    output
 //---------------------------------------------------
-//	"xml"      xmlURI            xmlURI
-//	"xml"	   otherwise         NAMESPACE_ERR
-//	"xmlns"	   xmlnsURI	         xmlnsURI (nType = ATTRIBUTE_NODE only)
-//	"xmlns"	   otherwise         NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
-//   != null   null or ""        NAMESPACE_ERR
-//	else       any			     namesapceURI
+//    "xml"     xmlURI          xmlURI
+//    "xml"     otherwise       NAMESPACE_ERR
+//    "xmlns"   xmlnsURI        xmlnsURI (nType = ATTRIBUTE_NODE only)
+//    "xmlns"   otherwise       NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
+//    != null   null or ""      NAMESPACE_ERR
+//    else      any             namesapceURI
 const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
                                      const XMLCh *namespaceURI, short nType)
 {

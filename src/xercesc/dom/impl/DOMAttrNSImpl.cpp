@@ -129,7 +129,9 @@ DOMAttrImpl(other, deep)
 
 DOMNode * DOMAttrNSImpl::cloneNode(bool deep) const
 {
-    return new (getOwnerDocument()) DOMAttrNSImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument()) DOMAttrNSImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 };
 
 const XMLCh * DOMAttrNSImpl::getNamespaceURI() const

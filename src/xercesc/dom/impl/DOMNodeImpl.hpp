@@ -89,6 +89,7 @@
  **/
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/DOMUserDataHandler.hpp>
 
 class DOMNamedNodeMap;
 class DOMNodeList;
@@ -100,6 +101,7 @@ public:
 
     // data
     DOMNode                *fOwnerNode; // typically the parent but not always!
+
     unsigned short flags;
 
     static const unsigned short READONLY;
@@ -111,7 +113,7 @@ public:
     static const unsigned short IGNORABLEWS;
     static const unsigned short SETVALUE;
     static const unsigned short ID_ATTR;
-	static const unsigned short USERDATA;
+    static const unsigned short USERDATA;
     static const unsigned short LEAFNODETYPE;
     static const unsigned short CHILDNODE;
 
@@ -121,37 +123,43 @@ public:
     DOMNodeImpl(const DOMNodeImpl &other);
     ~DOMNodeImpl();
 
-     DOMNode         *appendChild(DOMNode *newChild);
-     DOMNamedNodeMap * getAttributes() const;
-     DOMNodeList     * getChildNodes() const;
-     DOMNode         * getFirstChild() const;
-     DOMNode         * getLastChild() const;
-     const XMLCh       * getLocalName() const;
-     const XMLCh       * getNamespaceURI() const;
-     DOMNode         * getNextSibling() const;
-     const XMLCh       * getNodeValue() const;
-     DOMDocument     * getOwnerDocument() const;
-     DOMNode         * getParentNode() const;
-     const XMLCh       * getPrefix() const;
-     DOMNode         * getPreviousSibling() const;
-     void              * getUserData() const;
-     bool                hasChildNodes() const;
-     DOMNode         * insertBefore(DOMNode *newChild, DOMNode *refChild);
-     void                normalize();
-     DOMNode         * removeChild(DOMNode *oldChild);
-     DOMNode         * replaceChild(DOMNode *newChild, DOMNode *oldChild);
-     void                setNodeValue(const XMLCh *value);
-     void                setPrefix(const XMLCh *fPrefix);
-     void                setReadOnly(bool readOnly, bool deep);
-     void                setUserData(void *value);
-     bool                isSupported(const XMLCh *feature, const XMLCh *version) const;
-     bool                hasAttributes() const;
+    DOMNode         * appendChild(DOMNode *newChild);
+    DOMNamedNodeMap * getAttributes() const;
+    DOMNodeList     * getChildNodes() const;
+    DOMNode         * getFirstChild() const;
+    DOMNode         * getLastChild() const;
+    const XMLCh     * getLocalName() const;
+    const XMLCh     * getNamespaceURI() const;
+    DOMNode         * getNextSibling() const;
+    const XMLCh     * getNodeValue() const;
+    DOMDocument     * getOwnerDocument() const;
+    DOMNode         * getParentNode() const;
+    const XMLCh     * getPrefix() const;
+    DOMNode         * getPreviousSibling() const;
+    bool              hasChildNodes() const;
+    DOMNode         * insertBefore(DOMNode *newChild, DOMNode *refChild);
+    void              normalize();
+    DOMNode         * removeChild(DOMNode *oldChild);
+    DOMNode         * replaceChild(DOMNode *newChild, DOMNode *oldChild);
+    void              setNodeValue(const XMLCh *value);
+    void              setPrefix(const XMLCh *fPrefix);
+    void              setReadOnly(bool readOnly, bool deep);
+    bool              isSupported(const XMLCh *feature, const XMLCh *version) const;
+    bool              hasAttributes() const;
 
-    static  bool         isKidOK(DOMNode *parent, DOMNode *child);
+    static  bool      isKidOK(DOMNode *parent, DOMNode *child);
+
+    // user data utility
+    void*             setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler);
+    void*             getUserData(const XMLCh* key) const;
+    void              callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
+                                           const DOMNode* src,
+                                           const DOMNode* dst) const;
+
 
     //Utility, not part of DOM Level 2 API
-    static const XMLCh * mapPrefix(const XMLCh *prefix,
-	                                  const XMLCh *namespaceURI, short nType);
+    static const XMLCh *mapPrefix(const XMLCh *prefix,
+                               const XMLCh *namespaceURI, short nType);
 
     static const XMLCh *getXmlnsString();
     static const XMLCh *getXmlnsURIString();
@@ -283,31 +291,33 @@ public: // should really be protected - ALH
 //   accurately get all of the functions declared.
 //
 #define DOMNODE_FUNCTIONS \
-    virtual       DOMNode          *appendChild(DOMNode *newChild) ;\
-    virtual       DOMNode          *cloneNode(bool deep) const ;\
-    virtual       DOMNamedNodeMap  *getAttributes() const ;\
-    virtual       DOMNodeList      *getChildNodes() const ;\
-    virtual       DOMNode          *getFirstChild() const ;\
-    virtual       DOMNode          *getLastChild() const ;\
-    virtual const XMLCh *             getLocalName() const ;\
-    virtual const XMLCh *             getNamespaceURI() const ;\
-    virtual       DOMNode          *getNextSibling() const ;\
-    virtual const XMLCh              *getNodeName() const ;\
-    virtual       short               getNodeType() const ;\
-    virtual const XMLCh              *getNodeValue() const ;\
-    virtual       DOMDocument      *getOwnerDocument() const ;\
-    virtual const XMLCh *             getPrefix() const ;\
-    virtual       DOMNode          *getParentNode() const ;\
-    virtual       DOMNode          *getPreviousSibling() const ;\
-    virtual       bool                hasChildNodes() const ;\
-    virtual       DOMNode          *insertBefore(DOMNode *newChild, DOMNode *refChild) ;\
-    virtual       void                normalize() ;\
-    virtual       DOMNode          *removeChild(DOMNode *oldChild) ;\
-    virtual       DOMNode          *replaceChild(DOMNode *newChild, DOMNode *oldChild) ;\
-    virtual       void                setNodeValue(const XMLCh  *nodeValue) ;\
-    virtual       bool                isSupported(const XMLCh *feature, const XMLCh *version) const ;\
-    virtual       bool                hasAttributes() const ;\
-    virtual       void                setPrefix(const XMLCh * prefix)
+    virtual       DOMNode*         appendChild(DOMNode *newChild) ;\
+    virtual       DOMNode*         cloneNode(bool deep) const ;\
+    virtual       DOMNamedNodeMap* getAttributes() const ;\
+    virtual       DOMNodeList*     getChildNodes() const ;\
+    virtual       DOMNode*         getFirstChild() const ;\
+    virtual       DOMNode*         getLastChild() const ;\
+    virtual const XMLCh*           getLocalName() const ;\
+    virtual const XMLCh*           getNamespaceURI() const ;\
+    virtual       DOMNode*         getNextSibling() const ;\
+    virtual const XMLCh*           getNodeName() const ;\
+    virtual       short            getNodeType() const ;\
+    virtual const XMLCh*           getNodeValue() const ;\
+    virtual       DOMDocument*     getOwnerDocument() const ;\
+    virtual const XMLCh*           getPrefix() const ;\
+    virtual       DOMNode*         getParentNode() const ;\
+    virtual       DOMNode*         getPreviousSibling() const ;\
+    virtual       bool             hasChildNodes() const ;\
+    virtual       DOMNode*         insertBefore(DOMNode *newChild, DOMNode *refChild) ;\
+    virtual       void             normalize() ;\
+    virtual       DOMNode*         removeChild(DOMNode *oldChild) ;\
+    virtual       DOMNode*         replaceChild(DOMNode *newChild, DOMNode *oldChild) ;\
+    virtual       void             setNodeValue(const XMLCh  *nodeValue) ;\
+    virtual       bool             isSupported(const XMLCh *feature, const XMLCh *version) const ;\
+    virtual       bool             hasAttributes() const ;\
+    virtual       void             setPrefix(const XMLCh * prefix) ;\
+    virtual       void*            setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler);\
+    virtual       void*            getUserData(const XMLCh* key) const;
 
 
 /*
@@ -316,30 +326,33 @@ public: // should really be protected - ALH
  *    function to the appropriate implementation.
  *    Functions that must be supplied by every node class are omitted.
  *
-           DOMNode          *xxx::appendChild(DOMNode *newChild)        {return fParent.appendChild (newChild); };
-           DOMNamedNodeMap  *xxx::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *xxx::getChildNodes() const 			        {return fParent.getChildNodes (); };
-           DOMNode          *xxx::getFirstChild() const 			        {return fParent.getFirstChild (); };
-           DOMNode          *xxx::getLastChild() const 		            {return fParent.getLastChild (); };
-     const XMLCh              *xxx::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *xxx::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *xxx::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh              *xxx::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument      *xxx::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *xxx::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *xxx::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *xxx::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                xxx::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           DOMNode          *xxx::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                            {return fParent.insertBefore (newChild, refChild); };
-           void                xxx::normalize()                             {fNode.normalize (); };
-           DOMNode          *xxx::removeChild(DOMNode *oldChild)        {return fParent.removeChild (oldChild); };
-           DOMNode          *xxx::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fParent.replaceChild (newChild, oldChild); };
-           void                xxx::setNodeValue(const XMLCh  *nodeValue)   {fNode.setNodeValue (nodeValue); };
-           bool                xxx::supports(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.supports (feature, version); };
-           void                xxx::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           DOMNode*         xxx::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
+           DOMNamedNodeMap* xxx::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     xxx::getChildNodes() const                   {return fParent.getChildNodes (); };
+           DOMNode*         xxx::getFirstChild() const                   {return fParent.getFirstChild (); };
+           DOMNode*         xxx::getLastChild() const                    {return fParent.getLastChild (); };
+     const XMLCh*           xxx::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           xxx::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         xxx::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           xxx::getNodeValue() const                    {return fNode.getNodeValue (); };
+           DOMDocument*     xxx::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           xxx::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         xxx::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         xxx::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             xxx::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         xxx::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                         {return fParent.insertBefore (newChild, refChild); };
+           void             xxx::normalize()                             {fParent.normalize(); };
+           DOMNode*         xxx::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+           DOMNode*         xxx::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                         {return fParent.replaceChild (newChild, oldChild); };
+           bool             xxx::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                         {return fNode.isSupported (feature, version); };
+           void             xxx::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             xxx::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            xxx::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                         {return fNode.setUserData(key, data, handler); };
+           void*            xxx::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 
 */
 

@@ -94,7 +94,9 @@ DOMProcessingInstructionImpl::~DOMProcessingInstructionImpl()
 
 DOMNode *DOMProcessingInstructionImpl::cloneNode(bool deep) const
 {
-    return new (getOwnerDocument()) DOMProcessingInstructionImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument()) DOMProcessingInstructionImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 };
 
 
@@ -164,26 +166,29 @@ void DOMProcessingInstructionImpl::setData(const XMLCh *arg)
 //
 //    Delegation stubs for inherited functions
 //
-           DOMNode          *DOMProcessingInstructionImpl::appendChild(DOMNode *newChild)        {return fNode.appendChild (newChild); };
-           DOMNamedNodeMap  *DOMProcessingInstructionImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMProcessingInstructionImpl::getChildNodes() const 			        {return fNode.getChildNodes (); };
-           DOMNode          *DOMProcessingInstructionImpl::getFirstChild() const 			        {return fNode.getFirstChild (); };
-           DOMNode          *DOMProcessingInstructionImpl::getLastChild() const 		            {return fNode.getLastChild (); };
-     const XMLCh              *DOMProcessingInstructionImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMProcessingInstructionImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMProcessingInstructionImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-           DOMDocument      *DOMProcessingInstructionImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMProcessingInstructionImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMProcessingInstructionImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *DOMProcessingInstructionImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                DOMProcessingInstructionImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
-           DOMNode          *DOMProcessingInstructionImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                                                    {return fNode.insertBefore (newChild, refChild); };
-           void                DOMProcessingInstructionImpl::normalize()                             {fNode.normalize (); };
-           DOMNode          *DOMProcessingInstructionImpl::removeChild(DOMNode *oldChild)        {return fNode.removeChild (oldChild); };
-           DOMNode          *DOMProcessingInstructionImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                                                    {return fNode.replaceChild (newChild, oldChild); };
-           bool                DOMProcessingInstructionImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                                    {return fNode.isSupported (feature, version); };
-           void                DOMProcessingInstructionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMProcessingInstructionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMProcessingInstructionImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };
+           DOMNamedNodeMap* DOMProcessingInstructionImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMProcessingInstructionImpl::getChildNodes() const                   {return fNode.getChildNodes (); };
+           DOMNode*         DOMProcessingInstructionImpl::getFirstChild() const                   {return fNode.getFirstChild (); };
+           DOMNode*         DOMProcessingInstructionImpl::getLastChild() const                    {return fNode.getLastChild (); };
+     const XMLCh*           DOMProcessingInstructionImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMProcessingInstructionImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMProcessingInstructionImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+           DOMDocument*     DOMProcessingInstructionImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMProcessingInstructionImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMProcessingInstructionImpl::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         DOMProcessingInstructionImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             DOMProcessingInstructionImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
+           DOMNode*         DOMProcessingInstructionImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                                  {return fNode.insertBefore (newChild, refChild); };
+           void             DOMProcessingInstructionImpl::normalize()                             {fNode.normalize (); };
+           DOMNode*         DOMProcessingInstructionImpl::removeChild(DOMNode *oldChild)          {return fNode.removeChild (oldChild); };
+           DOMNode*         DOMProcessingInstructionImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                                  {return fNode.replaceChild (newChild, oldChild); };
+           bool             DOMProcessingInstructionImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                                  {return fNode.isSupported (feature, version); };
+           void             DOMProcessingInstructionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMProcessingInstructionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMProcessingInstructionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                                  {return fNode.setUserData(key, data, handler); };
+           void*            DOMProcessingInstructionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

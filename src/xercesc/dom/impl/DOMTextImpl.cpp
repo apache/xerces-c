@@ -94,7 +94,9 @@ DOMTextImpl::~DOMTextImpl()
 
 DOMNode *DOMTextImpl::cloneNode(bool deep) const
 {
-    return new (getOwnerDocument()) DOMTextImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument()) DOMTextImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 };
 
 
@@ -164,30 +166,33 @@ void DOMTextImpl::setIgnorableWhitespace(bool ignorable)
 //
 //  Delegation functions
 //
-           DOMNode          *DOMTextImpl::appendChild(DOMNode *newChild)        {return fNode.appendChild (newChild); };
-           DOMNamedNodeMap  *DOMTextImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMTextImpl::getChildNodes() const 			        {return fNode.getChildNodes (); };
-           DOMNode          *DOMTextImpl::getFirstChild() const 			        {return fNode.getFirstChild (); };
-           DOMNode          *DOMTextImpl::getLastChild() const 		            {return fNode.getLastChild (); };
-     const XMLCh              *DOMTextImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMTextImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMTextImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh              *DOMTextImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
-           DOMDocument      *DOMTextImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMTextImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMTextImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *DOMTextImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                DOMTextImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
-           DOMNode          *DOMTextImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                                    {return fNode.insertBefore (newChild, refChild); };
-           void                DOMTextImpl::normalize()                             {fNode.normalize (); };
-           DOMNode          *DOMTextImpl::removeChild(DOMNode *oldChild)        {return fNode.removeChild (oldChild); };
-           DOMNode          *DOMTextImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                                    {return fNode.replaceChild (newChild, oldChild); };
-           bool                DOMTextImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                    {return fNode.isSupported (feature, version); };
-           void                DOMTextImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMTextImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMTextImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };
+           DOMNamedNodeMap* DOMTextImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMTextImpl::getChildNodes() const                   {return fNode.getChildNodes (); };
+           DOMNode*         DOMTextImpl::getFirstChild() const                   {return fNode.getFirstChild (); };
+           DOMNode*         DOMTextImpl::getLastChild() const                    {return fNode.getLastChild (); };
+     const XMLCh*           DOMTextImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMTextImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMTextImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           DOMTextImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
+           DOMDocument*     DOMTextImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMTextImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMTextImpl::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         DOMTextImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             DOMTextImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
+           DOMNode*         DOMTextImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                 {return fNode.insertBefore (newChild, refChild); };
+           void             DOMTextImpl::normalize()                             {fNode.normalize (); };
+           DOMNode*         DOMTextImpl::removeChild(DOMNode *oldChild)          {return fNode.removeChild (oldChild); };
+           DOMNode*         DOMTextImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                 {return fNode.replaceChild (newChild, oldChild); };
+           bool             DOMTextImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                 {return fNode.isSupported (feature, version); };
+           void             DOMTextImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMTextImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMTextImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                 {return fNode.setUserData(key, data, handler); };
+           void*            DOMTextImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 
 
 //
@@ -195,17 +200,17 @@ void DOMTextImpl::setIgnorableWhitespace(bool ignorable)
 //
 
 
-     const XMLCh * DOMTextImpl::getData() const                  {return fCharacterData.getData();};
-     XMLSize_t  DOMTextImpl::getLength() const                {return fCharacterData.getLength();};
-     const XMLCh * DOMTextImpl::substringData(XMLSize_t offset, XMLSize_t count) const
-                                                                {return fCharacterData.substringData(this, offset, count);};
-     void          DOMTextImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
-     void          DOMTextImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
-                                                                {fCharacterData.insertData(this, offset, arg);};
-     void          DOMTextImpl::deleteData(XMLSize_t offset, XMLSize_t count)
-                                                                {fCharacterData.deleteData(this, offset, count);};
-     void          DOMTextImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
-                                                                {fCharacterData.replaceData(this, offset, count, arg);};
-     void          DOMTextImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
-     void          DOMTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
+          const XMLCh*      DOMTextImpl::getData() const                         {return fCharacterData.getData();};
+          XMLSize_t         DOMTextImpl::getLength() const                       {return fCharacterData.getLength();};
+          const XMLCh*      DOMTextImpl::substringData(XMLSize_t offset, XMLSize_t count) const
+                                                                                 {return fCharacterData.substringData(this, offset, count);};
+          void              DOMTextImpl::appendData(const XMLCh *arg)            {fCharacterData.appendData(this, arg);};
+          void              DOMTextImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
+                                                                                 {fCharacterData.insertData(this, offset, arg);};
+          void              DOMTextImpl::deleteData(XMLSize_t offset, XMLSize_t count)
+                                                                                 {fCharacterData.deleteData(this, offset, count);};
+          void              DOMTextImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
+                                                                                 {fCharacterData.replaceData(this, offset, count, arg);};
+          void              DOMTextImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);};
+          void              DOMTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
 

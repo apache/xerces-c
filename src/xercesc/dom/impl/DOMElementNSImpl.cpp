@@ -116,7 +116,9 @@ DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
 };
 
 DOMNode * DOMElementNSImpl::cloneNode(bool deep) const {
-    return new (getOwnerDocument()) DOMElementNSImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument()) DOMElementNSImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 }
 
 const XMLCh * DOMElementNSImpl::getNamespaceURI() const

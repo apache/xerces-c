@@ -89,7 +89,9 @@ DOMNotationImpl::~DOMNotationImpl()
 
 DOMNode *DOMNotationImpl::cloneNode(bool deep) const
 {
-    return new (getOwnerDocument()) DOMNotationImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument()) DOMNotationImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 };
 
 
@@ -144,29 +146,32 @@ void DOMNotationImpl::setSystemId(const XMLCh *arg)
 
 
 
-           DOMNode          *DOMNotationImpl::appendChild(DOMNode *newChild)        {return fNode.appendChild (newChild); };
-           DOMNamedNodeMap  *DOMNotationImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMNotationImpl::getChildNodes() const 			        {return fNode.getChildNodes (); };
-           DOMNode          *DOMNotationImpl::getFirstChild() const 			        {return fNode.getFirstChild (); };
-           DOMNode          *DOMNotationImpl::getLastChild() const 		            {return fNode.getLastChild (); };
-     const XMLCh              *DOMNotationImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMNotationImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMNotationImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
-     const XMLCh              *DOMNotationImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument      *DOMNotationImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMNotationImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMNotationImpl::getParentNode() const                   {return fNode.getParentNode (); };
-           DOMNode          *DOMNotationImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
-           bool                DOMNotationImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
-           DOMNode          *DOMNotationImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                            {return fNode.insertBefore (newChild, refChild); };
-           void                DOMNotationImpl::normalize()                             {fNode.normalize (); };
-           DOMNode          *DOMNotationImpl::removeChild(DOMNode *oldChild)        {return fNode.removeChild (oldChild); };
-           DOMNode          *DOMNotationImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fNode.replaceChild (newChild, oldChild); };
-           bool                DOMNotationImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.isSupported (feature, version); };
-           void                DOMNotationImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMNotationImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMNotationImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };
+           DOMNamedNodeMap* DOMNotationImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMNotationImpl::getChildNodes() const                   {return fNode.getChildNodes (); };
+           DOMNode*         DOMNotationImpl::getFirstChild() const                   {return fNode.getFirstChild (); };
+           DOMNode*         DOMNotationImpl::getLastChild() const                    {return fNode.getLastChild (); };
+     const XMLCh*           DOMNotationImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMNotationImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMNotationImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
+     const XMLCh*           DOMNotationImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
+           DOMDocument*     DOMNotationImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMNotationImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMNotationImpl::getParentNode() const                   {return fNode.getParentNode (); };
+           DOMNode*         DOMNotationImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
+           bool             DOMNotationImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
+           DOMNode*         DOMNotationImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                     {return fNode.insertBefore (newChild, refChild); };
+           void             DOMNotationImpl::normalize()                             {fNode.normalize (); };
+           DOMNode*         DOMNotationImpl::removeChild(DOMNode *oldChild)          {return fNode.removeChild (oldChild); };
+           DOMNode*         DOMNotationImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                     {return fNode.replaceChild (newChild, oldChild); };
+           bool             DOMNotationImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                     {return fNode.isSupported (feature, version); };
+           void             DOMNotationImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMNotationImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMNotationImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                     {return fNode.setUserData(key, data, handler); };
+           void*            DOMNotationImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 
 

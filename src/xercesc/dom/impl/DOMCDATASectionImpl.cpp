@@ -90,7 +90,9 @@ DOMCDATASectionImpl::~DOMCDATASectionImpl()
 
 DOMNode  *DOMCDATASectionImpl::cloneNode(bool deep) const
 {
-    return new (this->getOwnerDocument()) DOMCDATASectionImpl(*this, deep);
+    DOMNode* newNode = new (this->getOwnerDocument()) DOMCDATASectionImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 };
 
 
@@ -162,30 +164,33 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 //
 //  Delegation stubs for other DOM_Node inherited functions.
 //
-           DOMNode          *DOMCDATASectionImpl::appendChild(DOMNode *newChild)        {return fParent.appendChild (newChild); };
-           DOMNamedNodeMap  *DOMCDATASectionImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMCDATASectionImpl::getChildNodes() const 			        {return fParent.getChildNodes (); };
-           DOMNode          *DOMCDATASectionImpl::getFirstChild() const 			        {return fParent.getFirstChild (); };
-           DOMNode          *DOMCDATASectionImpl::getLastChild() const 		            {return fParent.getLastChild (); };
-     const XMLCh              *DOMCDATASectionImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMCDATASectionImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMCDATASectionImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh              *DOMCDATASectionImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
-           DOMDocument      *DOMCDATASectionImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMCDATASectionImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMCDATASectionImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *DOMCDATASectionImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                DOMCDATASectionImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           DOMNode          *DOMCDATASectionImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                            {return fParent.insertBefore (newChild, refChild); };
-           void                DOMCDATASectionImpl::normalize()                             {fNode.normalize (); };
-           DOMNode          *DOMCDATASectionImpl::removeChild(DOMNode *oldChild)        {return fParent.removeChild (oldChild); };
-           DOMNode          *DOMCDATASectionImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fParent.replaceChild (newChild, oldChild); };
-           bool                DOMCDATASectionImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.isSupported (feature, version); };
-           void                DOMCDATASectionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMCDATASectionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMCDATASectionImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
+           DOMNamedNodeMap* DOMCDATASectionImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMCDATASectionImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
+           DOMNode*         DOMCDATASectionImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
+           DOMNode*         DOMCDATASectionImpl::getLastChild() const                    {return fParent.getLastChild (); };
+     const XMLCh*           DOMCDATASectionImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMCDATASectionImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMCDATASectionImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           DOMCDATASectionImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
+           DOMDocument*     DOMCDATASectionImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMCDATASectionImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMCDATASectionImpl::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         DOMCDATASectionImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             DOMCDATASectionImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         DOMCDATASectionImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                         {return fParent.insertBefore (newChild, refChild); };
+           void             DOMCDATASectionImpl::normalize()                             {fNode.normalize (); };
+           DOMNode*         DOMCDATASectionImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+           DOMNode*         DOMCDATASectionImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                         {return fParent.replaceChild (newChild, oldChild); };
+           bool             DOMCDATASectionImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                         {return fNode.isSupported (feature, version); };
+           void             DOMCDATASectionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMCDATASectionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMCDATASectionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                         {return fNode.setUserData(key, data, handler); };
+           void*            DOMCDATASectionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 
 
 //
@@ -193,18 +198,18 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 //
 
 
-     const XMLCh * DOMCDATASectionImpl::getData() const                  {return fCharacterData.getData();};
-     XMLSize_t  DOMCDATASectionImpl::getLength() const                {return fCharacterData.getLength();};
-     const XMLCh * DOMCDATASectionImpl::substringData(XMLSize_t offset, XMLSize_t count) const
-                                                                {return fCharacterData.substringData(this, offset, count);};
-     void          DOMCDATASectionImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
-     void          DOMCDATASectionImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
-                                                                {fCharacterData.insertData(this, offset, arg);};
-     void          DOMCDATASectionImpl::deleteData(XMLSize_t offset, XMLSize_t count)
-                                                                {fCharacterData.deleteData(this, offset, count);};
-     void          DOMCDATASectionImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
-                                                                {fCharacterData.replaceData(this, offset, count, arg);};
-     void          DOMCDATASectionImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
-     void          DOMCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
+           const XMLCh*     DOMCDATASectionImpl::getData() const                         {return fCharacterData.getData();};
+           XMLSize_t        DOMCDATASectionImpl::getLength() const                       {return fCharacterData.getLength();};
+           const XMLCh*     DOMCDATASectionImpl::substringData(XMLSize_t offset, XMLSize_t count) const
+                                                                                         {return fCharacterData.substringData(this, offset, count);};
+           void             DOMCDATASectionImpl::appendData(const XMLCh *arg)            {fCharacterData.appendData(this, arg);};
+           void             DOMCDATASectionImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
+                                                                                         {fCharacterData.insertData(this, offset, arg);};
+           void             DOMCDATASectionImpl::deleteData(XMLSize_t offset, XMLSize_t count)
+                                                                                         {fCharacterData.deleteData(this, offset, count);};
+           void             DOMCDATASectionImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
+                                                                                         {fCharacterData.replaceData(this, offset, count, arg);};
+           void             DOMCDATASectionImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);};
+           void             DOMCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
 
 

@@ -122,7 +122,6 @@ DOMDocumentImpl::DOMDocumentImpl()
       fIterators(0L),
       fTreeWalkers(0L),
       fNodeIDMap(0),
-      fUserData(0),
       fRanges(0),
       fChanges(0),
       fNodeListPool(0),
@@ -130,7 +129,8 @@ DOMDocumentImpl::DOMDocumentImpl()
       fEncoding(0),
       fVersion(0),
       fStandalone(false),
-      fDocumentURI(0)
+      fDocumentURI(0),
+      fUserDataTable(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
 };
@@ -151,7 +151,6 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fIterators(0L),
       fTreeWalkers(0L),
       fNodeIDMap(0),
-      fUserData(0),
       fRanges(0),
       fChanges(0),
       fNodeListPool(0),
@@ -159,7 +158,8 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fEncoding(0),
       fVersion(0),
       fStandalone(false),
-      fDocumentURI(0)
+      fDocumentURI(0),
+      fUserDataTable(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
     try {
@@ -174,14 +174,14 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
 
 void DOMDocumentImpl::setDocumentType(DOMDocumentType *doctype)
 {
-	if (!doctype)
-		return;
+    if (!doctype)
+        return;
 
     // New doctypes can be created either with the factory methods on DOMImplementation, in
     //   which case ownerDocument will be 0, or with methods on DocumentImpl, in which case
     //   ownerDocument will be set, but the DocType won't yet be a child of the document.
     if (doctype->getOwnerDocument() != 0 && doctype->getOwnerDocument() != this)
-        throw DOMException(	//one doctype can belong to only one DOMDocumentImpl
+        throw DOMException(    //one doctype can belong to only one DOMDocumentImpl
         DOMException::WRONG_DOCUMENT_ERR, 0);
 
     DOMDocumentTypeImpl* doctypeImpl = (DOMDocumentTypeImpl*) doctype;
@@ -189,9 +189,9 @@ void DOMDocumentImpl::setDocumentType(DOMDocumentType *doctype)
 
     // The doctype can not have any Entities or Notations yet, because they can not
     //   be created except through factory methods on a document.
-				
+
     // revisit.  What if this doctype is already a child of the document?
-	appendChild(doctype);
+    appendChild(doctype);
 
 }
 
@@ -211,6 +211,9 @@ DOMDocumentImpl::~DOMDocumentImpl()
     if (fRanges)
         fRanges->cleanup();
 
+    if (fUserDataTable)
+        fUserDataTable->cleanup();
+
     //  Delete the heap for this document.  This uncerimoniously yanks the storage
     //      out from under all of the nodes in the document.  Destructors are NOT called.
     this->deleteHeap();
@@ -218,9 +221,6 @@ DOMDocumentImpl::~DOMDocumentImpl()
 
 
 DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
-
-    // clone the node itself
-    // revisit  -- this doesn't look right.  What about entities, doctype?
 
     // Note:  the cloned document node goes on the system heap.  All other
     //   nodes added to the new document will go on that document's heap,
@@ -230,8 +230,10 @@ DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
     // then the children by _importing_ them
     if (deep)
         for (DOMNode *n = this->getFirstChild(); n != 0; n = n->getNextSibling()) {
-            newdoc->appendChild(newdoc->importNode(n, true));
-	}
+            newdoc->appendChild(newdoc->importNode(n, true, true));
+    }
+
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newdoc);
     return newdoc;
 };
 
@@ -379,10 +381,10 @@ DOMText *DOMDocumentImpl::createTextNode(const XMLCh *data)
 DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
           DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
-		// Create the node iterator implementation object.
-		//	Add it to the vector of fIterators that must be synchronized when a node is deleted.
-		//	The vector of fIterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
-		//	owner document.
+    // Create the node iterator implementation object.
+    // Add it to the vector of fIterators that must be synchronized when a node is deleted.
+    // The vector of fIterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
+    // owner document.
 
     DOMNodeIteratorImpl* iter = new (this) DOMNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOMDocument* doc = root->getOwnerDocument();
@@ -516,153 +518,15 @@ void DOMDocumentImpl::setNodeValue(const XMLCh *x)
 };
 
 
-
-
 //Introduced in DOM Level 2
-
 DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep)
 {
-    DOMNode *newnode=0;
-    bool oldErrorCheckingFlag = errorChecking;
-
-    switch (source->getNodeType())
-    {
-    case DOMNode::ELEMENT_NODE :
-        {
-            DOMElement *newelement;
-            if (source->getLocalName() == 0)
-                newelement = createElement(source->getNodeName());
-            else
-                newelement = createElementNS(source->getNamespaceURI(),
-                source->getNodeName());
-            DOMNamedNodeMap *srcattr=source->getAttributes();
-            if(srcattr!=0)
-                for(XMLSize_t i=0;i<srcattr->getLength();++i)
-                {
-                    DOMAttr *attr = (DOMAttr *) srcattr->item(i);
-                    if (attr -> getSpecified())	{ // not a default attribute
-                        DOMAttr *nattr = (DOMAttr *) importNode(attr, true);
-                        if (attr -> getLocalName() == 0)
-                            newelement->setAttributeNode(nattr);
-                        else
-                            newelement->setAttributeNodeNS(nattr);
-                    }
-                }
-                newnode=newelement;
-        }
-        break;
-    case DOMNode::ATTRIBUTE_NODE :
-        if (source->getLocalName() == 0)
-            newnode = createAttribute(source->getNodeName());
-        else
-            newnode = createAttributeNS(source->getNamespaceURI(),
-            source->getNodeName());
-        deep = true;
-        // Kids carry value
-        break;
-    case DOMNode::TEXT_NODE :
-        newnode = createTextNode(source->getNodeValue());
-        break;
-    case DOMNode::CDATA_SECTION_NODE :
-        newnode = createCDATASection(source->getNodeValue());
-        break;
-    case DOMNode::ENTITY_REFERENCE_NODE :
-        {
-            DOMEntityReferenceImpl* newentityRef = (DOMEntityReferenceImpl*)createEntityReference(source->getNodeName());
-            newnode=newentityRef;
-            errorChecking = false;
-            newentityRef->setReadOnly(false, true); //allow deep import temporarily
-        }
-        break;
-    case DOMNode::ENTITY_NODE :
-        {
-            DOMEntity *srcentity=(DOMEntity *)source;
-            DOMEntityImpl *newentity = (DOMEntityImpl *)createEntity(source->getNodeName());
-            newentity->setPublicId(srcentity->getPublicId());
-            newentity->setSystemId(srcentity->getSystemId());
-            newentity->setNotationName(srcentity->getNotationName());
-            // Kids carry additional value
-            newnode=newentity;
-            castToNodeImpl(newentity)->setReadOnly(false, true);// allow deep import temporarily
-        }
-        break;
-    case DOMNode::PROCESSING_INSTRUCTION_NODE :
-        newnode = createProcessingInstruction(source->getNodeName(),
-            source->getNodeValue());
-        break;
-    case DOMNode::COMMENT_NODE :
-        newnode = createComment(source->getNodeValue());
-        break;
-    case DOMNode::DOCUMENT_TYPE_NODE :
-        {
-            DOMDocumentType *srcdoctype = (DOMDocumentType *)source;
-            DOMDocumentType *newdoctype = (DOMDocumentType *)
-                createDocumentType(srcdoctype->getNodeName(),
-                srcdoctype->getPublicId(),
-                srcdoctype->getSystemId());
-            // Values are on NamedNodeMaps
-            DOMNamedNodeMap *smap = srcdoctype->getEntities();
-            DOMNamedNodeMap *tmap = newdoctype->getEntities();
-            if(smap != 0) {
-                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
-                    tmap->setNamedItem(importNode(smap->item(i), true));
-                }
-            }
-            smap = srcdoctype->getNotations();
-            tmap = newdoctype->getNotations();
-            if (smap != 0) {
-                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
-                    tmap->setNamedItem(importNode(smap->item(i), true));
-                }
-            }
-            // NOTE: At this time, the DOM definition of DocumentType
-            // doesn't cover Elements and their Attributes. domimpl's
-            // extentions in that area will not be preserved, even if
-            // copying from domimpl to domimpl. We could special-case
-            // that here. Arguably we should. Consider. ?????
-            newnode = newdoctype;
-        }
-        break;
-    case DOMNode::DOCUMENT_FRAGMENT_NODE :
-        newnode = createDocumentFragment();
-        // No name, kids carry value
-        break;
-    case DOMNode::NOTATION_NODE :
-        {
-            DOMNotation *srcnotation=(DOMNotation *)source;
-            DOMNotationImpl *newnotation = (DOMNotationImpl *)createNotation(source->getNodeName());
-            newnotation->setPublicId(srcnotation->getPublicId());
-            newnotation->setSystemId(srcnotation->getSystemId());
-            // Kids carry additional value
-            newnode=newnotation;
-            // No name, no value
-            break;
-        }
-
-    case DOMNode::DOCUMENT_NODE : // Document can't be child of Document
-    default:                       // Unknown node type
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    }
-
-    // If deep, replicate and attach the kids.
-    if (deep)
-        for (DOMNode *srckid = source->getFirstChild();
-        srckid != 0;
-        srckid = srckid->getNextSibling()) {
-            newnode->appendChild(importNode(srckid, true));
-        }
-        if (newnode->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE
-            || newnode->getNodeType() == DOMNode::ENTITY_NODE) {
-            castToNodeImpl(newnode)->setReadOnly(true, true);
-            errorChecking = oldErrorCheckingFlag;
-        }
-
-        return newnode;
+    return importNode(source, deep, false);
 }
 
 
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
-	const XMLCh *qualifiedName)
+    const XMLCh *qualifiedName)
 {
     if(!isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
@@ -683,7 +547,7 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
 
 
 DOMAttr *DOMDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
-	const XMLCh *qualifiedName)
+    const XMLCh *qualifiedName)
 {
     if(!isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
@@ -692,7 +556,7 @@ DOMAttr *DOMDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
 
 
 DOMNodeList *DOMDocumentImpl::getElementsByTagNameNS(const XMLCh *fNamespaceURI,
-	const XMLCh *fLocalName)  const
+    const XMLCh *fLocalName)  const
 {
     // cast off the const of this because we will update the fNodeListPool
     return ((DOMDocumentImpl*)this)->getDeepNodeList(this, fNamespaceURI, fLocalName);
@@ -706,7 +570,7 @@ DOMElement *DOMDocumentImpl::getElementById(const XMLCh *elementId) const
 
     DOMAttr *theAttr = fNodeIDMap->find(elementId);
     if (theAttr == 0)
-	    return 0;
+        return 0;
 
     return theAttr->getOwnerElement();
 }
@@ -721,7 +585,7 @@ int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
     for (int i = 0; i < qNameLen; ++i) {
         if (qName[i] == chColon) {
             index = i;
-            ++count;	//number of ':' found
+            ++count;    //number of ':' found
         }
     }
 
@@ -809,41 +673,6 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
       return (kidOK[p] & 1<<ch) != 0;
 }
 
-void DOMDocumentImpl::setUserData(DOMNode* n, void* data)
-{
-	if (!fUserData && data)
-		fUserData = new (this) RefHashTableOf<void>(29, false, new (this) HashPtr());
-	if (!data && fUserData)
-		fUserData->removeKey((void*)n);
-	else
-		fUserData->put((void*)n,data);
-}
-
-void* DOMDocumentImpl::getUserData(const DOMNode* n) const
-{
-	if (fUserData)
-		return fUserData->get((void*)n);
-	else
-		return 0;
-}
-
-void* DOMDocumentImpl::getUserData() const
-{
-	return (fNode.hasUserData()) ? getUserData(this) : 0;
-}
-
-void DOMDocumentImpl::setUserData(void* val)
-{
-	setUserData(this, val);
-	if (val)
-		fNode.hasUserData(true);
-	else
-		fNode.hasUserData(false);
-};
-
-
-
-
 void            DOMDocumentImpl::changed()
 {
     fChanges++;
@@ -859,26 +688,30 @@ int             DOMDocumentImpl::changes() const{
 //
 //    Delegation for functions inherited from DOMNode
 //
-           DOMNode          *DOMDocumentImpl::appendChild(DOMNode *newChild)        {return insertBefore(newChild, 0); };
-           DOMNamedNodeMap  *DOMDocumentImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMDocumentImpl::getChildNodes() const 			        {return fParent.getChildNodes (); };
-           DOMNode          *DOMDocumentImpl::getFirstChild() const 			        {return fParent.getFirstChild (); };
-           DOMNode          *DOMDocumentImpl::getLastChild() const 		            {return fParent.getLastChild (); };
-     const XMLCh              *DOMDocumentImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMDocumentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMDocumentImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
-     const XMLCh              *DOMDocumentImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-     const XMLCh              *DOMDocumentImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMDocumentImpl::getParentNode() const                   {return fNode.getParentNode (); };
-           DOMNode          *DOMDocumentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
-           bool                DOMDocumentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           void                DOMDocumentImpl::normalize()                             {fParent.normalize (); };
-           DOMNode          *DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fParent.replaceChild (newChild, oldChild); };
-           bool                DOMDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.isSupported (feature, version); };
-           void                DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMDocumentImpl::appendChild(DOMNode *newChild)          {return insertBefore(newChild, 0); };
+           DOMNamedNodeMap* DOMDocumentImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMDocumentImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
+           DOMNode*         DOMDocumentImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
+           DOMNode*         DOMDocumentImpl::getLastChild() const                    {return fParent.getLastChild (); };
+     const XMLCh*           DOMDocumentImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMDocumentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMDocumentImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
+     const XMLCh*           DOMDocumentImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
+     const XMLCh*           DOMDocumentImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMDocumentImpl::getParentNode() const                   {return fNode.getParentNode (); };
+           DOMNode*         DOMDocumentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
+           bool             DOMDocumentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           void             DOMDocumentImpl::normalize()                             {fParent.normalize (); };
+           DOMNode*         DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                     {return fParent.replaceChild (newChild, oldChild); };
+           bool             DOMDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                     {return fNode.isSupported (feature, version); };
+           void             DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                     {return fNode.setUserData(key, data, handler); };
+           void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+
 
 
 //-----------------------------------------------------------------------
@@ -1067,4 +900,246 @@ const XMLCh* DOMDocumentImpl::getDocumentURI() const {
 void DOMDocumentImpl::setDocumentURI(const XMLCh* documentURI){
     fDocumentURI = cloneString(documentURI);
 }
+
+//Introduced in DOM Level 2
+
+DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc)
+{
+    DOMNode *newnode=0;
+    bool oldErrorCheckingFlag = errorChecking;
+
+    switch (source->getNodeType())
+    {
+    case DOMNode::ELEMENT_NODE :
+        {
+            DOMElement *newelement;
+            if (source->getLocalName() == 0)
+                newelement = createElement(source->getNodeName());
+            else
+                newelement = createElementNS(source->getNamespaceURI(),
+                source->getNodeName());
+            DOMNamedNodeMap *srcattr=source->getAttributes();
+            if(srcattr!=0)
+                for(XMLSize_t i=0;i<srcattr->getLength();++i)
+                {
+                    DOMAttr *attr = (DOMAttr *) srcattr->item(i);
+                    if (attr -> getSpecified()) { // not a default attribute
+                        DOMAttr *nattr = (DOMAttr *) importNode(attr, true, false);
+                        if (attr -> getLocalName() == 0)
+                            newelement->setAttributeNode(nattr);
+                        else
+                            newelement->setAttributeNodeNS(nattr);
+                    }
+                }
+                newnode=newelement;
+        }
+        break;
+    case DOMNode::ATTRIBUTE_NODE :
+        if (source->getLocalName() == 0)
+            newnode = createAttribute(source->getNodeName());
+        else
+            newnode = createAttributeNS(source->getNamespaceURI(),
+            source->getNodeName());
+        deep = true;
+        // Kids carry value
+        break;
+    case DOMNode::TEXT_NODE :
+        newnode = createTextNode(source->getNodeValue());
+        break;
+    case DOMNode::CDATA_SECTION_NODE :
+        newnode = createCDATASection(source->getNodeValue());
+        break;
+    case DOMNode::ENTITY_REFERENCE_NODE :
+        {
+            DOMEntityReferenceImpl* newentityRef = (DOMEntityReferenceImpl*)createEntityReference(source->getNodeName());
+            newnode=newentityRef;
+            errorChecking = false;
+            newentityRef->setReadOnly(false, true); //allow deep import temporarily
+        }
+        break;
+    case DOMNode::ENTITY_NODE :
+        {
+            DOMEntity *srcentity=(DOMEntity *)source;
+            DOMEntityImpl *newentity = (DOMEntityImpl *)createEntity(source->getNodeName());
+            newentity->setPublicId(srcentity->getPublicId());
+            newentity->setSystemId(srcentity->getSystemId());
+            newentity->setNotationName(srcentity->getNotationName());
+            // Kids carry additional value
+            newnode=newentity;
+            castToNodeImpl(newentity)->setReadOnly(false, true);// allow deep import temporarily
+        }
+        break;
+    case DOMNode::PROCESSING_INSTRUCTION_NODE :
+        newnode = createProcessingInstruction(source->getNodeName(),
+            source->getNodeValue());
+        break;
+    case DOMNode::COMMENT_NODE :
+        newnode = createComment(source->getNodeValue());
+        break;
+    case DOMNode::DOCUMENT_TYPE_NODE :
+        {
+            // unless this is used as part of cloning a Document
+            // forbid it for the sake of being compliant to the DOM spec
+            if (!cloningDoc)
+                throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+
+            DOMDocumentType *srcdoctype = (DOMDocumentType *)source;
+            DOMDocumentType *newdoctype = (DOMDocumentType *)
+                createDocumentType(srcdoctype->getNodeName(),
+                srcdoctype->getPublicId(),
+                srcdoctype->getSystemId());
+            // Values are on NamedNodeMaps
+            DOMNamedNodeMap *smap = srcdoctype->getEntities();
+            DOMNamedNodeMap *tmap = newdoctype->getEntities();
+            if(smap != 0) {
+                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
+                    tmap->setNamedItem(importNode(smap->item(i), true, false));
+                }
+            }
+            smap = srcdoctype->getNotations();
+            tmap = newdoctype->getNotations();
+            if (smap != 0) {
+                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
+                    tmap->setNamedItem(importNode(smap->item(i), true, false));
+                }
+            }
+            // NOTE: At this time, the DOM definition of DocumentType
+            // doesn't cover Elements and their Attributes. domimpl's
+            // extentions in that area will not be preserved, even if
+            // copying from domimpl to domimpl. We could special-case
+            // that here. Arguably we should. Consider. ?????
+            newnode = newdoctype;
+        }
+        break;
+    case DOMNode::DOCUMENT_FRAGMENT_NODE :
+        newnode = createDocumentFragment();
+        // No name, kids carry value
+        break;
+    case DOMNode::NOTATION_NODE :
+        {
+            DOMNotation *srcnotation=(DOMNotation *)source;
+            DOMNotationImpl *newnotation = (DOMNotationImpl *)createNotation(source->getNodeName());
+            newnotation->setPublicId(srcnotation->getPublicId());
+            newnotation->setSystemId(srcnotation->getSystemId());
+            // Kids carry additional value
+            newnode=newnotation;
+            // No name, no value
+            break;
+        }
+
+    case DOMNode::DOCUMENT_NODE : // Document can't be child of Document
+    default:                       // Unknown node type
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    }
+
+    // If deep, replicate and attach the kids.
+    if (deep)
+        for (DOMNode *srckid = source->getFirstChild();
+             srckid != 0;
+             srckid = srckid->getNextSibling())
+        {
+            newnode->appendChild(importNode(srckid, true, false));
+        }
+
+    if (newnode->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE
+        || newnode->getNodeType() == DOMNode::ENTITY_NODE) {
+        castToNodeImpl(newnode)->setReadOnly(true, true);
+        errorChecking = oldErrorCheckingFlag;
+    }
+
+    if (!cloningDoc)
+        fNode.callUserDataHandlers(DOMUserDataHandler::NODE_IMPORTED, source, newnode);
+
+    return newnode;
+}
+
+// user data utility
+void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data, DOMUserDataHandler* handler)
+{
+    void* oldData = 0;
+    DOMNode_UserDataTable* node_userDataTable = 0;
+
+    if (!fUserDataTable) {
+        // create the table on heap so that it can be cleaned in destructor
+        fUserDataTable = new (this) RefHashTableOf<DOMNode_UserDataTable>(29, true, new HashPtr());
+    }
+    else {
+        node_userDataTable = fUserDataTable->get((void*)n);
+        DOMUserDataRecord* oldDataRecord = 0;
+
+        if (node_userDataTable) {
+            oldDataRecord = node_userDataTable->get((void*)key);
+
+            if (oldDataRecord) {
+                oldData = oldDataRecord->getKey();
+                node_userDataTable->removeKey((void*)key);
+            }
+        }
+    }
+
+    if (data) {
+
+        // create the DOMNode_UserDataTable if not exists
+        // create on the heap and adopted by the hashtable which will delete it upon removal.
+        if (!node_userDataTable) {
+            node_userDataTable  = new RefHashTableOf<DOMUserDataRecord>(29, true);
+            fUserDataTable->put(n, node_userDataTable);
+        }
+
+        // clone the key first, and create the DOMUserDataRecord
+        // create on the heap and adopted by the hashtable which will delete it upon removal.
+        node_userDataTable->put((void*)getPooledString(key), new DOMUserDataRecord(data, handler));
+    }
+    else {
+        if (node_userDataTable->isEmpty())
+            n->hasUserData(false);
+    }
+
+    return oldData;
+}
+
+void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
+{
+    if (fUserDataTable) {
+        DOMNode_UserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
+
+        if (node_userDataTable) {
+            DOMUserDataRecord* dataRecord = node_userDataTable->get((void*)key);
+            if (dataRecord)
+                return dataRecord->getKey();
+        }
+    }
+
+    return 0;
+}
+
+void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHandler::DOMOperationType operation, const DOMNode* src, const DOMNode* dst) const
+{
+    if (fUserDataTable) {
+        DOMNode_UserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
+
+        if (node_userDataTable) {
+            RefHashTableOfEnumerator<DOMUserDataRecord> userDataEnum(node_userDataTable);
+
+            // walk through the entire node_userDataTable table
+            while (userDataEnum.hasMoreElements()) {
+                // get the key
+                XMLCh* key = (XMLCh*) userDataEnum.nextElementKey();
+
+                // get the DOMUserDataRecord
+                DOMUserDataRecord* userDataRecord = node_userDataTable->get((void*)key);
+
+                // get the handler
+                DOMUserDataHandler* handler = userDataRecord->getValue();
+
+                if (handler) {
+                    // get the data
+                    void* data = userDataRecord->getKey();
+                    handler->handle(operation, key, data, src, dst);
+                }
+            }
+        }
+    }
+}
+
 

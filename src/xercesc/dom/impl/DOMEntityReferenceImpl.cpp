@@ -113,7 +113,9 @@ DOMEntityReferenceImpl::~DOMEntityReferenceImpl()
 
 DOMNode *DOMEntityReferenceImpl::cloneNode(bool deep) const
 {
-    return new (getOwnerDocument()) DOMEntityReferenceImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument()) DOMEntityReferenceImpl(*this, deep);
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
+    return newNode;
 }
 
 
@@ -159,27 +161,30 @@ void DOMEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 //
 
 
-           DOMNode          *DOMEntityReferenceImpl::appendChild(DOMNode *newChild)        {return fParent.appendChild (newChild); };
-           DOMNamedNodeMap  *DOMEntityReferenceImpl::getAttributes() const 			        {return fNode.getAttributes (); };
-           DOMNodeList      *DOMEntityReferenceImpl::getChildNodes() const 			        {return fParent.getChildNodes (); };
-           DOMNode          *DOMEntityReferenceImpl::getFirstChild() const 			        {return fParent.getFirstChild (); };
-           DOMNode          *DOMEntityReferenceImpl::getLastChild() const 		            {return fParent.getLastChild (); };
-     const XMLCh              *DOMEntityReferenceImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh              *DOMEntityReferenceImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode          *DOMEntityReferenceImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh              *DOMEntityReferenceImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument      *DOMEntityReferenceImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh              *DOMEntityReferenceImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode          *DOMEntityReferenceImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode          *DOMEntityReferenceImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool                DOMEntityReferenceImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           DOMNode          *DOMEntityReferenceImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                            {return fParent.insertBefore (newChild, refChild); };
-           void                DOMEntityReferenceImpl::normalize()                             {fParent.normalize (); };
-           DOMNode          *DOMEntityReferenceImpl::removeChild(DOMNode *oldChild)        {return fParent.removeChild (oldChild); };
-           DOMNode          *DOMEntityReferenceImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                            {return fParent.replaceChild (newChild, oldChild); };
-           bool                DOMEntityReferenceImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                            {return fNode.isSupported (feature, version); };
-           void                DOMEntityReferenceImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool                DOMEntityReferenceImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           DOMNode*         DOMEntityReferenceImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
+           DOMNamedNodeMap* DOMEntityReferenceImpl::getAttributes() const                   {return fNode.getAttributes (); };
+           DOMNodeList*     DOMEntityReferenceImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
+           DOMNode*         DOMEntityReferenceImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
+           DOMNode*         DOMEntityReferenceImpl::getLastChild() const                    {return fParent.getLastChild (); };
+     const XMLCh*           DOMEntityReferenceImpl::getLocalName() const                    {return fNode.getLocalName (); };
+     const XMLCh*           DOMEntityReferenceImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
+           DOMNode*         DOMEntityReferenceImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
+     const XMLCh*           DOMEntityReferenceImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
+           DOMDocument*     DOMEntityReferenceImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+     const XMLCh*           DOMEntityReferenceImpl::getPrefix() const                       {return fNode.getPrefix (); };
+           DOMNode*         DOMEntityReferenceImpl::getParentNode() const                   {return fChild.getParentNode (this); };
+           DOMNode*         DOMEntityReferenceImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
+           bool             DOMEntityReferenceImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         DOMEntityReferenceImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
+                                                                                            {return fParent.insertBefore (newChild, refChild); };
+           void             DOMEntityReferenceImpl::normalize()                             {fParent.normalize (); };
+           DOMNode*         DOMEntityReferenceImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+           DOMNode*         DOMEntityReferenceImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+                                                                                            {return fParent.replaceChild (newChild, oldChild); };
+           bool             DOMEntityReferenceImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+                                                                                            {return fNode.isSupported (feature, version); };
+           void             DOMEntityReferenceImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMEntityReferenceImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           void*            DOMEntityReferenceImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+                                                                                            {return fNode.setUserData(key, data, handler); };
+           void*            DOMEntityReferenceImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

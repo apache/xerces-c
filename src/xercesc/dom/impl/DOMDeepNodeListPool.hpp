@@ -72,7 +72,6 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/KeyValuePair.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
