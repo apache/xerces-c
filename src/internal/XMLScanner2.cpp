@@ -840,11 +840,6 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
     if (toSend.isEmpty())
         return;
 
-    // Get the raw data we need for the callback
-    const XMLCh* rawBuf = toSend.getRawBuffer();
-    unsigned int len = toSend.getLen();
-    XMLBuffer toFill;
-
     //
     //  We do different things according to whether we are validating or
     //  not. If not, its always just characters; else, it depends on the
@@ -852,8 +847,9 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
     //
     if (fValidate)
     {
-        // See if all the text is whitespace
-        const bool isSpaces = XMLReader::isAllSpaces(rawBuf, len);
+        // Get the raw data we need for the callback
+        const XMLCh* const rawBuf = toSend.getRawBuffer();
+        const unsigned int len = toSend.getLen();
 
         // And see if the current element is a 'Children' style content model
         const ElemStack::StackElem* topElem = fElemStack.topElement();
@@ -866,7 +862,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
         }
-         else if (isSpaces)
+         else if (XMLReader::isAllSpaces(rawBuf, len))
         {
             //
             //  Its all spaces. So, if they can take spaces, then send it
@@ -890,17 +886,26 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
             //
             if (charOpts == XMLElementDecl::AllCharData)
             {
-                if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
-                {
-                    // normalize the character according to schema whitespace facet
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
-                    rawBuf = toFill.getRawBuffer();
-                    len = toFill.getLen();
-                }
-
                 if (fDocHandler)
-                    fDocHandler->docCharacters(rawBuf, len, false);
+                {
+                    if (fGrammar->getGrammarType() != Grammar::SchemaGrammarType)
+                    {
+                        fDocHandler->docCharacters(rawBuf, len, false);
+                    }
+                    else
+                    {
+                        // The normalized data can only be as large as the
+                        // original size, so this will avoid allocating way
+                        // too much or too little memory.
+                        XMLBuffer toFill(toSend.getLen());
+
+                        // normalize the character according to schema whitespace facet
+                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
+
+                        fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
+                    }
+                }
             }
              else
             {
@@ -912,7 +917,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
     {
         // Always assume its just char data if not validating
         if (fDocHandler)
-            fDocHandler->docCharacters(rawBuf, len, false);
+            fDocHandler->docCharacters(toSend.getRawBuffer(), toSend.getLen(), false);
     }
 
     // Reset buffer

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/06/27 20:29:09  tng
+ * [Bug 2365] Huge performance problem with the parser in XMLScanner::sendCharData() .  By David Bertoni.
+ *
  * Revision 1.5  2000/03/02 19:54:24  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -103,11 +106,11 @@ public :
 
     /** @name Constructor */
     //@{
-    XMLBuffer() :
+    XMLBuffer(int capacity = 1023) :
 
         fBuffer(0)
         , fIndex(0)
-        , fCapacity(1023)
+        , fCapacity(capacity)
         , fUsed(false)
     {
         // Buffer is one larger than capacity, to allow for zero term
