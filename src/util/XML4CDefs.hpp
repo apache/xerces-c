@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/03/02 01:51:00  aruna1
+ * Sun CC 5.0 related changes
+ *
  * Revision 1.12  2000/02/24 20:05:26  abagchi
  * Swat for removing Log from API docs
  *
@@ -194,7 +197,7 @@ static const unsigned int   gXML4CRevision   = 0;
 #include    <util/Compilers/BorlandCDefs.hpp>
 #endif
 
-#if defined(XML_SUNCC)
+#if defined(XML_SUNCC) || defined(XML_SUNCC5)
 #include    <util/Compilers/SunCCDefs.hpp>
 #endif
 

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.20  2000/03/02 01:51:15  aruna1
+# Sun CC 5.0 related changes
+#
 # Revision 1.19  2000/03/01 22:30:00  abagchi
 # Object files are now created directly under obj directory
 #
@@ -190,11 +193,11 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -G
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lm -lw -lC -lc -lgen
+        ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
+                  -licu-uc -licudata -lc -lgen -zmuldefs
     else
-        ALLLIBS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -lm -lw -lC -lc -lgen
+        ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
+                  -lc -lgen -zmuldefs
     endif
   endif
   SHLIBSUFFIX=.so

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/02 01:51:00  aruna1
+ * Sun CC 5.0 related changes
+ *
  * Revision 1.9  2000/02/24 20:05:23  abagchi
  * Swat for removing Log from API docs
  *
@@ -167,7 +170,9 @@
 #elif defined(__xlC__)
     #define XML_CSET
 #elif defined(XML_SOLARIS) || defined(XML_UNIXWARE)
-    #if defined(__SUNPRO_CC)
+    #if defined(__SUNPRO_CC) & __SUNPRO_CC >=0x500
+        #define XML_SUNCC5
+	#elif defined(__SUNPRO_CC) & __SUNPRO_CC <0x500
         #define XML_SUNCC
     #elif defined(_EDG_RUNTIME_USES_NAMESPACES)
         #define XML_SOLARIS_KAICC

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2000/03/02 01:51:30  aruna1
+# Sun CC 5.0 related changes
+#
 # Revision 1.12  2000/02/11 01:24:30  abagchi
 # Fixed some AS/400 compiler options
 #
@@ -126,7 +129,7 @@ ifeq (${PLATFORM}, SOLARIS)
 	CC= CC -c -D${PLATFORM} -D_REENTRANT -pic -instances=static
 	LINK =  CC -D${PLATFORM}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
-	EXTRA_LINK_OPTIONS=-lC -lc -lgen
+	EXTRA_LINK_OPTIONS=-lc -lgen -zmuldefs
   endif
   SHLIBSUFFIX=.so
 endif
