@@ -214,6 +214,7 @@ public :
     static const XMLCh fgNaNString[];
     static const XMLCh fgEString[];
     static const XMLCh fgZeroString[];
+    static const XMLCh fgNullString[];
 
 };
 

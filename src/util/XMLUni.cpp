@@ -817,3 +817,8 @@ const XMLCh XMLUni::fgZeroString[] =
     chDigit_0, chNull
 };
 
+const XMLCh XMLUni::fgNullString[] =
+{
+    chLatin_n, chLatin_u, chLatin_l, chLatin_l, chNull
+};
+
