@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/02 23:07:13  aruna1
+ * Solaris Atomic Mutex initailization changed to native calls
+ *
  * Revision 1.2  1999/11/19 23:50:56  aruna1
  * added changes for platformInit and makeTransService functions
  * PR:
@@ -154,7 +157,8 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static XMLMutex atomicOpsMutex;
+
+static mutex_t* gAtomicOpMutex =0 ;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -163,7 +167,13 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    gAtomicOpMutex = new mutex_t;	
+    if (mutex_init(gAtomicOpMutex, NULL, NULL))
+    {
+	printf("atomicOpMutex not created \n");
+	exit(1);
+        //panic( XMLPlatformUtils::Panic_MutexInit ); //to be changed later
+    }
 
     // Here you would also set the fgLibLocation global variable
     // XMLPlatformUtils::fgLibLocation is the variable to be set
@@ -640,13 +650,23 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
     // the below calls are temporarily made till the above functions are part of user library
     // Currently its supported only in the kernel mode
 
-    lockMutex(&atomicOpsMutex);
+    if (mutex_lock( gAtomicOpMutex))
+    {
+	printf("could not lock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
-    unlockMutex(&atomicOpsMutex);
+    if (mutex_unlock( gAtomicOpMutex))
+    {
+	printf("could not unlock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
 
     return retVal;
 }
@@ -654,16 +674,41 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
     //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
-    XMLMutexLock localLock(&atomicOpsMutex);
 
-    return ++location;
+    if (mutex_lock( gAtomicOpMutex))
+    {
+	printf("could not lock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+    int tmp = ++location;
+    if (mutex_unlock( gAtomicOpMutex))
+    {
+	printf("could not unlock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+    return tmp;
 }
 int XMLPlatformUtils::atomicDecrement(int &location)
 {
     //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
-    XMLMutexLock localLock(&atomicOpsMutex);
 
-    return --location;
+    if (mutex_lock( gAtomicOpMutex))
+    {
+	printf("could not lock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+	
+    int tmp = --location;
+    if (mutex_unlock( gAtomicOpMutex))
+    {
+	printf("could not unlock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+    return tmp;
 }
 
 #else // #if !defined (APP_NO_THREADS)
