@@ -104,6 +104,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	XSerializable.hpp \
 	XSerializationException.hpp \
 	XSerializeEngine.hpp \
+	XSObjectFactory.hpp \
 	XTemplateComparator.hpp \
 	XTemplateSerializer.hpp
 				
@@ -132,6 +133,7 @@ INTERNAL_CPP_OBJECTS = \
 	XObjectComparator.$(TO) \
 	XProtoType.$(TO) \
 	XSerializeEngine.$(TO) \
+	XSObjectFactory.$(TO) \
 	XTemplateComparator.$(TO) \
 	XTemplateSerializer.$(TO)
 	
