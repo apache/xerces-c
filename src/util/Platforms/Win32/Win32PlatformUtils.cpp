@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.20  2000/04/18 23:26:01  andyh
+ * Fix problem on NT with conflict between Korean Won Sign (0x20A9)
+ * and backslash in file path names.
+ *
  * Revision 1.19  2000/04/18 17:57:29  roddey
  * Fix signature of ::fileSize() method. Bug #119
  *
@@ -306,21 +310,23 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     {
         //
         //  Ok, this might look stupid but its a semi-expedient way to deal
-        //  with a thorny problem. Shift-JIS and some other asian encodings
+        //  with a thorny problem. Shift-JIS and some other Asian encodings
         //  are fundamentally broken and map both the backslash and the Yen
-        //  sign to the same code point. Transcoders have to pick one orthe
-        //  other to map to Unicode and tend to choose the Yen sign. Since we
+        //  sign to the same code point. Transcoders have to pick one or the
+        //  other to map '\' to Unicode and tend to choose the Yen sign. Since we
         //  never transcode back to the local code page, the Unicode Yen signs
         //  will still be in the path and will fail.
         //
         //  So, we will check this path name for Yen signs and, if they are
-        //  there, we'll replace them with / slashes.
+        //  there, we'll replace them with back slashes.  The Korean Won
+        //  currency symbol has the same problem.
         //
         const XMLCh* srcPtr = fileName;
         while (*srcPtr)
         {
-            if (*srcPtr == chYenSign)
-                break;
+            if (*srcPtr == chYenSign ||
+				*srcPtr == chWonSign)
+                    break;
             srcPtr++;
         }
 
@@ -335,7 +341,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
             XMLCh* srcPtr = tmpName;
             while (*srcPtr)
             {
-                if (*srcPtr == chYenSign)
+                if (*srcPtr == chYenSign ||
+					*srcPtr == chWonSign)
                     *srcPtr = chBackSlash;
                 srcPtr++;
             }

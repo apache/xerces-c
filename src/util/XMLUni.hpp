@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/04/18 23:25:59  andyh
+ * Fix problem on NT with conflict between Korean Won Sign (0x20A9)
+ * and backslash in file path names.
+ *
  * Revision 1.15  2000/04/11 19:10:55  roddey
  * Added constant for Yen sign, which needs to be checked for
  * specially in some new code.
@@ -241,6 +245,7 @@ const XMLCh chLatin_y               = 0x79;
 const XMLCh chLatin_z               = 0x7A;
 
 const XMLCh chYenSign               = 0xA5;
+const XMLCh chWonSign               = 0x20A9;
 
 
 class XMLUTIL_EXPORT XMLUni
