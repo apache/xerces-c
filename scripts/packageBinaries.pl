@@ -301,7 +301,7 @@ if ($platform eq "win64bit" )
     psystem("copy /y $BUILDDIR\\xerces-c_*.lib $targetdir\\lib");
 
     if ($buildmode ne "Debug") {
-        $DEBUGBUILDDIR = "$XERCESCROOT\\Build\\Win32\\VC6\\Debug";
+        $DEBUGBUILDDIR = "$XERCESCROOT\\Build\\Win64\\VC6\\Debug";
         psystem("copy /y $DEBUGBUILDDIR\\xerces-c_*D.lib $targetdir\\lib");
         psystem("copy /y $DEBUGBUILDDIR\\xerces*D.dll $targetdir\\bin");
     }
@@ -309,7 +309,7 @@ if ($platform eq "win64bit" )
 
     # Populate the etc output directory like config.status and the map file
     print ("\n \nCopying misc output to etc ...\n");
-    psystem("copy /y $XERCESCROOT\\Build\\Win32\\VC6\\Release\\obj\\*.map $targetdir\\etc");
+    psystem("copy /y $XERCESCROOT\\Build\\Win64\\VC6\\Release\\obj\\*.map $targetdir\\etc");
 
 
     # Populate the samples directory
