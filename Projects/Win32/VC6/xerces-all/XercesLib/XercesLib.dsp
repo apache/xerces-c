@@ -343,6 +343,14 @@ SOURCE=..\..\..\..\..\src\util\XercesDefs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XML256TableTranscoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XML256TableTranscoder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.cpp
 # End Source File
 # Begin Source File
