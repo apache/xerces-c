@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/08 20:26:11  aruna1
+ * NodeIterator problem solved
+ *
  * Revision 1.7  2000/02/08 01:16:18  aruna1
  * nodeIterator previous tracking problem solved
  *
@@ -248,8 +251,7 @@ DOM_Node NodeIteratorImpl::previousNode () {
     bool accepted = false;
 
     while (!accepted) {
-        // we are going backwards
-        fForward = false;
+        
 
         if (fForward && ! aPreviousNode.isNull()) {
             //repeat last node.
@@ -259,6 +261,8 @@ DOM_Node NodeIteratorImpl::previousNode () {
             aPreviousNode = previousNode(aPreviousNode);
         }
   
+        // we are going backwards
+        fForward = false;
 
         // if the new previous node is null, we're at head or past the root,
         // so return null.
