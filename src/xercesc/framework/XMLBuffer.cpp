@@ -16,8 +16,8 @@
 
 /**
  * $Log$
- * Revision 1.6  2004/09/29 18:59:18  peiyongz
- * [jira1207] --patch from Dan Rosen
+ * Revision 1.7  2004/09/29 20:33:51  peiyongz
+ * resize the internal buffer even the handler can successfully flush the buffer
  *
  * Revision 1.5  2004/09/08 13:55:58  peiyongz
  * Apache License Version 2.0
@@ -91,26 +91,29 @@ void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
     // If a maximum size is set, and double the current buffer size exceeds that
     // maximum, first check if the maximum size will accomodate the extra needed.
     if (fFullHandler && (newCap > fFullSize))
-
+    {
         // If the maximum buffer size accomodates the extra needed, resize to
-        // the maximum if we're not already there.
-        if (fIndex + extraNeeded <= fFullSize) {
-            if (fCapacity == fFullSize)
-                return;
+        // the maximum
+        if (fIndex + extraNeeded <= fFullSize) 
+        {
             newCap = fFullSize;
-}
+        }
 
         // Otherwise, allow the registered full-handler to try to empty the buffer.
-        // If it claims success, and we can accommodate the extra needed, we're done.
+        // If it claims success, and we can accommodate the extra needed in the buffer
+        // to be expanded, resize to the maximum
         // Note the order of evaluation: bufferFull() has the intentional side-effect
         // of modifying fIndex.
         else if (fFullHandler->bufferFull(*this) && (fIndex + extraNeeded <= fFullSize))
-        return;
+        {
+            newCap = fFullSize;
+        }
 
-        // Finally, if the full-handler failed, or the buffer still can't accomodate the
-        // extra needed, we must fail.
+        // Finally, if the full-handler failed, or the buffer (of maximum size) 
+        // still can't accomodate the extra needed, we must fail.
         else
             ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Array_BadNewSize, fMemoryManager);
+    }
 
     // Allocate new buffer
     XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap+1) * sizeof(XMLCh)); //new XMLCh[newCap+1];
