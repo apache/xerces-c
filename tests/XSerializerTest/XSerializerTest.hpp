@@ -57,12 +57,18 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/12/16 17:16:08  peiyongz
+ * . Using BinMemInputStream/BinMemOutputStream
+ * . Using SAX2XMLReader
+ *
  * Revision 1.1  2003/12/12 18:17:25  peiyongz
  * XSerializerTest
  *
  *
  */
 
+#if !defined(XSERIALIZER_TEST_HPP)
+#define XSERIALIZER_TEST_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
@@ -75,8 +81,9 @@
 #else
 #include <iostream.h>
 #endif
-#include <xercesc/parsers/SAXParser.hpp>
-#include <SAXCountHandlers.hpp>
+#include "XSerializerHandlers.hpp"
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -123,3 +130,5 @@ inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& ta
     target << toDump.localForm();
     return target;
 }
+
+#endif

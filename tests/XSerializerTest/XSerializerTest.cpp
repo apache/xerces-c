@@ -57,8 +57,9 @@
 /*
 * $Id$
 * $Log$
-* Revision 1.2  2003/12/13 20:17:18  neilg
-* fix compilation errors under gcc
+* Revision 1.3  2003/12/16 17:16:08  peiyongz
+* . Using BinMemInputStream/BinMemOutputStream
+* . Using SAX2XMLReader
 *
 * Revision 1.1  2003/12/12 18:17:25  peiyongz
 * XSerializerTest
@@ -68,17 +69,12 @@
 
 // ---------------------------------------------------------------------------
 //  Includes
- // ---------------------------------------------------------------------------
-#include <xercesc/framework/XMLGrammarPool.hpp>
+// ---------------------------------------------------------------------------
 #include <xercesc/internal/XMLGrammarPoolImpl.hpp>
-
-#include <xercesc/util/BinFileInputStream.hpp>
-#include <xercesc/internal/BinFileOutputStream.hpp>
-
 #include <xercesc/internal/MemoryManagerImpl.hpp>
 #include <xercesc/internal/XSerializationException.hpp>
-#include <xercesc/internal/XObjectComparator.hpp>
-
+#include <xercesc/internal/BinMemOutputStream.hpp>
+#include <xercesc/util/BinMemInputStream.hpp>
 
 #include "XSerializerTest.hpp"
 
@@ -88,25 +84,34 @@
 #include <fstream.h>
 #endif
 
-static const char*              xmlFile = 0;
-static SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
-static bool                     doNamespaces       = false;
-static bool                     doSchema           = false;
-static bool                     schemaFullChecking = false;
-static bool                     doList             = false;
-static bool                     errorOccurred      = false;
-static bool                     recognizeNEL       = false;
-static bool                     showSerializationError = false;
-static char                     localeStr[64];
+// ---------------------------------------------------------------------------
+//  command line option variables
+// ---------------------------------------------------------------------------
+static const char*                  xmlFile            = 0;
+static SAX2XMLReader::ValSchemes    valScheme          = SAX2XMLReader::Val_Auto;
+static bool                         doNamespaces       = true;
+static bool                         doSchema           = true;
+static bool                         schemaFullChecking = false;
+static bool                         doList             = false;
+static bool                         namespacePrefixes  = false;
+static bool                         errorOccurred      = false;
+static bool                         recognizeNEL       = false;
 
-static SAXParser*               parser      = 0;
+static bool                         showSerializationError = false;
+static char                         localeStr[64];
+
+// ---------------------------------------------------------------------------
+//  parsing components
+// ---------------------------------------------------------------------------
+static SAX2XMLReader*           parser      = 0;
 static MemoryManager*           myMemMgr    = 0;
-static XMLGrammarPoolImpl*      myGramPool  = 0;
-static SAXCountHandlers*        handler     = 0;
+static XMLGrammarPool*          myGramPool  = 0;
+static XSerializerHandlers*     handler     = 0;
+static BinInputStream*          myIn        = 0;
+static BinOutputStream*         myOut       = 0;
 
 static bool                     serializeGrammarOK = true;
-static const char binDataFile[]="d:/XSerializerTest.txt";
-static const char binLog[] = "d:/XseriailzerTest.log";
+static const int                BufSize     = 1024;
 
 /***
 *
@@ -115,7 +120,7 @@ static const char binLog[] = "d:/XseriailzerTest.log";
 *   Whenever a file is served, it parses the file and catch the grammar without
 *   issue any error message with regards to the parsing, and serialize the grammar
 *   and deserialize the grammar, and parse the instance document a second time 
-*   and validate the instance against he serialized grammar if validation is on.
+*   and validate the instance against the serialized grammar if validation is on.
 *
 ***/
 
@@ -126,19 +131,21 @@ void usage()
 {
     XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    XSerializerTest [options] <XML file | List file>\n\n"
-            "This program invokes the SAX Parser, and then prints the\n"
+            "This program invokes the SAX2XMLReader, and then prints the\n"
             "number of elements, attributes, spaces and characters found\n"
-            "in each XML file, using SAX API.\n\n"
+            "in each XML file, using SAX2 API.\n\n"
             "Options:\n"
             "    -l          Indicate the input file is a List File that has a list of xml files.\n"
             "                Default to off (Input file is an XML file).\n"
             "    -v=xxx      Validation scheme [always | never | auto*].\n"
-            "    -n          Enable namespace processing. Defaults to off.\n"
-            "    -s          Enable schema processing. Defaults to off.\n"
-            "    -f          Enable full schema constraint checking. Defaults to off.\n"
+            "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
+            "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
+            "    -n          Disable namespace processing. Defaults to on.\n"
+            "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
+            "    -s          Disable schema processing. Defaults to on.\n"
+            "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
             "    -locale=ll_CC specify the locale, default: en_US.\n"
-            "    -e          Show serialization error. Defaults to off.\n"
-		    "    -?          Show this help.\n\n"
+            "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << XERCES_STD_QUALIFIER endl;
 }
@@ -150,7 +157,7 @@ static void init()
     //  document and error handler.
     //
     if (!handler)
-        handler = new SAXCountHandlers();
+        handler = new XSerializerHandlers();
 
 }
 
@@ -159,31 +166,87 @@ static void cleanUp()
     if (handler)
         delete handler;
 
+    if (myIn)
+        delete myIn;
+
+    if (myOut)
+        delete myOut;
+
+}
+
+static BinOutputStream* getOutputStream()
+{
+    if (!myOut)
+    {
+        myOut = new BinMemOutputStream(BufSize);
+    }
+
+    ((BinMemOutputStream*)myOut)->reset();
+
+    return myOut;
+}
+
+static BinInputStream* getInputStream()
+{
+    if (!myOut)
+    {
+        cerr << "DEserialization has to be done after serialization\n";
+        exit(-1);
+    }
+
+    //BinMemInputStream can not refer to a different data once
+    //it is instantiated, so we delete it and have a new one.
+    if (myIn)
+    {
+        delete myIn;
+        myIn = 0;
+    }
+
+    //make it to refer to the binary data saved in the myOut
+    //but the data still belong to myOut
+    myIn = new BinMemInputStream( ((BinMemOutputStream*)myOut)->getRawBuffer()
+                                , BufSize
+                                , BinMemInputStream::BufOpt_Reference
+                                );
+    return myIn;
 }
 
 static void getParser(bool setHandler)
 {
-    //
-    //  Create a SAX parser object. Then, according to what we were told on
-    //  the command line, set it to validate or not.
-    //
+
     myMemMgr       = new MemoryManagerImpl();
     myGramPool     = new XMLGrammarPoolImpl(myMemMgr);
-    parser         = new SAXParser(0, myMemMgr, myGramPool);
 
-    parser->setValidationScheme(valScheme);
-    parser->setDoNamespaces(doNamespaces);
-    parser->setDoSchema(doSchema);
-    parser->setValidationSchemaFullChecking(schemaFullChecking);
+    parser = XMLReaderFactory::createXMLReader(myMemMgr, myGramPool);
+
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
+    parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
+
+    if (valScheme == SAX2XMLReader::Val_Auto)
+    {
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgXercesDynamic, true);
+    }
+    if (valScheme == SAX2XMLReader::Val_Never)
+    {
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
+    }
+    if (valScheme == SAX2XMLReader::Val_Always)
+    {
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgXercesDynamic, false);
+    }
 
     if (setHandler)
     {
-        parser->setDocumentHandler(handler);
+        parser->setContentHandler(handler);
         parser->setErrorHandler(handler);
     }
     else
     {
-        parser->setDocumentHandler(0);
+        parser->setContentHandler(0);
         parser->setErrorHandler(0);
     }
 }
@@ -203,7 +266,9 @@ static bool getAndSaveGrammar(const char* const xmlFile)
 {
     bool    retVal = true;
     getParser(false);  //don't emit error
-    parser->cacheGrammarFromParse(true);
+
+//    parser->cacheGrammarFromParse(true);
+    parser->setFeature(XMLUni::fgXercesCacheGrammarFromParse, true);
 
     try
     {
@@ -211,27 +276,22 @@ static bool getAndSaveGrammar(const char* const xmlFile)
     }
     catch (...)
     {
-
-        int i = 1;
         //do nothing
         // it could be instance document is invalid
         // but the grammar is fine
     }
 
-    XObjectComparator::dumpContent((XMLGrammarPoolImpl*)myGramPool);
-
     try
     {
-        BinFileOutputStream myOut(binDataFile);
-        myGramPool->serializeGrammars(&myOut);
+        myGramPool->serializeGrammars(getOutputStream());
     }
     catch(const XSerializationException& e)
     {
         //do emit error here so that we know serialization failure
         if (showSerializationError)
         {
-            XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
-             << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+            cerr << "An error occurred during serialization\n   Message: "
+             << StrX(e.getMessage()) << endl;
         }
         retVal = false;
     }
@@ -247,15 +307,14 @@ static bool restoreGrammar()
 
     try
     {
-        BinFileInputStream myIn(binDataFile);
-        myGramPool->deserializeGrammars(&myIn);
+        myGramPool->deserializeGrammars(getInputStream());
     }
     catch(const XSerializationException& e)
     {
         if (showSerializationError)
         {
-            XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
-                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+            cerr << "An error occurred during de-serialization\n   Message: "
+                << StrX(e.getMessage()) << endl;
         }
 
         destroyParser();
@@ -318,7 +377,7 @@ static void parseCase(const char* const xmlFile)
     // restoreGrammar, then parse using the cached Grammar
     if (getAndSaveGrammar(xmlFile) && restoreGrammar())
     {
-        parser->useCachedGrammarInParse(true);
+        parser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse, true);
     }
     else //otherwise, do a normal parsing
     {
@@ -364,11 +423,11 @@ int main(int argC, char* argV[])
             const char* const parm = &argV[argInd][3];
 
             if (!strcmp(parm, "never"))
-                valScheme = SAXParser::Val_Never;
+                valScheme = SAX2XMLReader::Val_Never;
             else if (!strcmp(parm, "auto"))
-                valScheme = SAXParser::Val_Auto;
+                valScheme = SAX2XMLReader::Val_Auto;
             else if (!strcmp(parm, "always"))
-                valScheme = SAXParser::Val_Always;
+                valScheme = SAX2XMLReader::Val_Always;
             else
             {
                 XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
@@ -378,12 +437,12 @@ int main(int argC, char* argV[])
          else if (!strcmp(argV[argInd], "-n")
               ||  !strcmp(argV[argInd], "-N"))
         {
-            doNamespaces = true;
+            doNamespaces = false;
         }
          else if (!strcmp(argV[argInd], "-s")
               ||  !strcmp(argV[argInd], "-S"))
         {
-            doSchema = true;
+            doSchema = false;
         }
          else if (!strcmp(argV[argInd], "-f")
               ||  !strcmp(argV[argInd], "-F"))
@@ -394,6 +453,11 @@ int main(int argC, char* argV[])
               ||  !strcmp(argV[argInd], "-L"))
         {
             doList = true;
+        }
+         else if (!strcmp(argV[argInd], "-p")
+              ||  !strcmp(argV[argInd], "-P"))
+        {
+            namespacePrefixes = true;
         }
          else if (!strcmp(argV[argInd], "-special:nel"))
         {
@@ -407,12 +471,7 @@ int main(int argC, char* argV[])
         {
              // Get out the end of line
              strcpy(localeStr, &(argV[argInd][8]));
-        }
-         else if (!strcmp(argV[argInd], "-e")
-              ||  !strcmp(argV[argInd], "-E"))
-        {
-            showSerializationError = true;
-        }         
+        }			
         else
         {
             XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
