@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/20 13:18:58  tng
+ * bug in ContentSpecNode copy constructor.
+ *
  * Revision 1.9  2001/07/24 18:33:13  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -216,6 +219,14 @@ private :
     //      The type of node. This controls how many of the child node fields
     //      are used.
     //
+    //  fAdoptFirst
+    //      Indicate if this ContentSpecNode adopts the fFirst, and is responsible
+    //      for deleting it.
+    //
+    //  fAdoptSecond
+    //      Indicate if this ContentSpecNode adopts the fSecond, and is responsible
+    //      for deleting it.
+    //
     // -----------------------------------------------------------------------
     QName*              fElement;
     ContentSpecNode*    fFirst;
@@ -277,6 +288,7 @@ inline ContentSpecNode* ContentSpecNode::orphanSecond()
     return retNode;
 }
 
+
 // ---------------------------------------------------------------------------
 //  ContentSpecType: Setter methods
 // ---------------------------------------------------------------------------
@@ -288,13 +300,15 @@ inline void ContentSpecNode::setElement(QName* const element)
 
 inline void ContentSpecNode::setFirst(ContentSpecNode* const toAdopt)
 {
-    delete fFirst;
+    if (fAdoptFirst)
+        delete fFirst;
     fFirst = toAdopt;
 }
 
 inline void ContentSpecNode::setSecond(ContentSpecNode* const toAdopt)
 {
-    delete fSecond;
+    if (fAdoptSecond)
+        delete fSecond;
     fSecond = toAdopt;
 }
 
@@ -357,23 +371,25 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
 {
     const QName* tempElement = toCopy.getElement();
     if (tempElement)
-        fElement = new QName(*tempElement);
+        fElement = new QName(tempElement);
     else
         fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 
     const ContentSpecNode *tmp = toCopy.getFirst();
-    if (!tmp)
+    if (tmp)
         fFirst = new ContentSpecNode(*tmp);
     else
         fFirst = 0;
 
     tmp = toCopy.getSecond();
-    if (!tmp)
+    if (tmp)
         fSecond = new ContentSpecNode(*tmp);
     else
         fSecond = 0;
 
     fType = toCopy.getType();
+    fAdoptFirst = true;
+    fAdoptSecond = true;
 }
 
 inline ContentSpecNode::~ContentSpecNode()
