@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/13 01:39:11  abagchi
+ * Changed unsigned short to wchar_t for XMLCh
+ *
  * Revision 1.3  1999/11/12 20:36:54  rahulj
  * Changed library name to xerces-c.lib.
  *
@@ -84,7 +87,8 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-typedef unsigned short XMLCh;
+// typedef unsigned short XMLCh; // is another option, now considered old
+typedef wchar_t XMLCh;
 
 
 // ---------------------------------------------------------------------------
