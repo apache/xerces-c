@@ -3933,7 +3933,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         if (chOffset == -1)
             break;
 
-        fBuffer.append(xpathExpr + startIndex, chOffset + 1);
+        fBuffer.append(xpathExpr + startIndex, chOffset + 1 - startIndex);
         startIndex = chOffset + 1;    
     }
 
