@@ -231,8 +231,6 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F58B304702DE343B0195DDC8 = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
@@ -241,8 +239,6 @@
 			name = "Development GCC3";
 		};
 		F58B304802DE34410195DDC8 = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 			};
