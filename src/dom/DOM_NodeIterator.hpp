@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.8  2000/02/16 19:39:38  aruna1
+ * API Doc++ changes in
+ *
  * Revision 1.7  2000/02/15 23:17:37  andyh
  * Update Doc++ API comments
  * NameSpace bugfix and update to track W3C
@@ -93,11 +96,12 @@
 class NodeIteratorImpl;
 
 /**
- * NodeIterators are used to step through a set of nodes, e.g. the set of nodes
- * in a NodeList, the document subtree governed by a particular node, the results
- * of a query, or any other set of nodes. The set of nodes to be iterated is
- * determined by the implementation of the NodeIterator. DOM Level 2 specifies a
- * single NodeIterator implementation for document-order traversal of a document
+ * NodeIterators are used to step through a set of nodes
+ * e.g. the set of nodes in a NodeList, the document subtree governed by
+ * a particular node, the results of a query, or any other set of nodes.
+ * The set of nodes to be iterated is determined by the implementation
+ * of the NodeIterator. DOM Level 2 specifies a single NodeIterator
+ * implementation for document-order traversal of a document
  * subtree. Instances of these iterators are created by calling
  * <code>DocumentTraversal.createNodeIterator()</code>.
  */
