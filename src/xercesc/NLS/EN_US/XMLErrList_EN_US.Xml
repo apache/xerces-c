@@ -444,6 +444,7 @@
             <Message Id="File_CouldNotSeekToPos" Text="Could not seek to required position in file"/>
             <Message Id="File_CouldNotDupHandle" Text="Could not duplicate the handle"/>
             <Message Id="File_CouldNotReadFromFile" Text="Could not read data from file"/>
+            <Message Id="File_CouldNotWriteToFile"  Text="Could not write data to file"/>
             <Message Id="File_CouldNotResetFile" Text="Could not reset file to beginning"/>
             <Message Id="File_CouldNotGetSize" Text="Could not ascertain the file size"/>
             <Message Id="File_CouldNotGetBasePathName" Text="Could not determine base pathname of the file"/>
