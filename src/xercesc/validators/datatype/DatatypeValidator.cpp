@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/07 22:39:41  peiyongz
+ * PSVI/schema component model implementation, thanks to David Cargill
+ *
  * Revision 1.15  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -321,6 +324,11 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng<<fFixed;
         serEng<<(int)fType;
 
+        serEng<<(int)fOrdered;
+        serEng<<fFinite;
+        serEng<<fBounded;
+        serEng<<fNumeric;
+
         /***
          * don't serialize the fBaseValidator if it is a built-in
          ***/
@@ -362,6 +370,12 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         int type;
         serEng>>type;
         fType=(ValidatorType)type;
+
+        serEng>>type;
+        fOrdered = (XSSimpleTypeDefinition::ORDERING)type;
+        serEng>>fFinite;
+        serEng>>fBounded;
+        serEng>>fNumeric;
 
         /***
          *
