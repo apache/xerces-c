@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.43  2004/10/12 21:33:05  peiyongz
+ * Change attribute number threshold to 100
+ *
  * Revision 1.42  2004/09/29 21:23:34  peiyongz
  * default implementation provided
  *
@@ -1563,8 +1566,8 @@ inline void XMLScanner::resetValidationContext()
 inline void XMLScanner::setAttrDupChkRegistry(const unsigned int &attrNumber
                                             ,       bool         &toUseHashTable)
 {
-   // once the attribute exceed 20, we use hash table to check duplication
-    if (attrNumber > 20)
+   // once the attribute exceed 100, we use hash table to check duplication
+    if (attrNumber > 100)
    {
         toUseHashTable = true;
 
