@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/08/07 17:01:09  tng
+ * [Bug 2676] IDOM: pure virtual called in IDDeepNodeListImpl::item() .
+ *
  * Revision 1.4  2001/06/04 20:11:52  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
  *
@@ -208,14 +211,12 @@ IDOM_Node *IDDeepNodeListImpl::item(unsigned int index)
     unsigned int currentIndexPlus1 = fCurrentIndexPlus1;
     IDOM_Node *currentNode = fCurrentNode;
 
-// idom_revisit ???? If we know that fRootNode must be an IDDocumentImpl *,
-//                   perhaps we should make it so in getDeepNodeList ????
-    if (((IDDocumentImpl *)fRootNode)->changes() != fChanges)
+    if (castToParentImpl(fRootNode)->changes() != fChanges)
     {
         // Tree changed. Do it all from scratch!
         currentIndexPlus1 = 0;
         currentNode = (IDOM_Node *)fRootNode;
-        fChanges = ((IDDocumentImpl *)fRootNode)->changes();
+        fChanges = castToParentImpl(fRootNode)->changes();
     }
     else if (currentIndexPlus1 > index+1)
     {
