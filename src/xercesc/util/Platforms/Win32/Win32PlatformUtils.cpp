@@ -627,6 +627,10 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
                                 , const void* const newValue
                                 , const void* const toCompare)
 {
+#if defined _WIN64
+    return ::InterlockedCompareExchangePointer(toFill, (void*)newValue, (void*)toCompare);
+#else
+
     //
     //  InterlockedCompareExchange is only supported on Windows 98,
     //  Windows NT 4.0, and newer -- not on Windows 95...
@@ -653,14 +657,13 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
     //  Note we have to cast off the constness of some of these because
     //  the system APIs are not C++ aware in all cases.
     //
-    return (void *) ::InterlockedCompareExchange
-    (
-        (long *)toFill
-        , (long)newValue
-        , (long)toCompare
-    );
+
+    return ::InterlockedCompareExchange(toFill, (void*)newValue, (void*)toCompare);
 
     #endif
+
+#endif
+
 }
 
 
