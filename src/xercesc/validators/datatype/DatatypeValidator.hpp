@@ -400,7 +400,7 @@ protected:
 
 
 	friend class DatatypeValidatorFactory;
-    friend class XSSimpleTypeDefinition;
+    friend class XSObjectFactory;
 
     /**
       * facetDefined

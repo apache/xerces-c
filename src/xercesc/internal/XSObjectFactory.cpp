@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/24 15:45:36  knoaman
+ * PSVI: finish construction of XSSimpleTypeDefinition
+ *
  * Revision 1.4  2003/11/23 16:49:26  knoaman
  * PSVI: create local elements of groups
  *
@@ -91,6 +94,8 @@
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
 #include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
 #include <xercesc/framework/psvi/XSNotationDeclaration.hpp>
+#include <xercesc/framework/psvi/XSFacet.hpp>
+#include <xercesc/framework/psvi/XSMultiValueFacet.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
@@ -101,6 +106,7 @@
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
 #include <xercesc/util/HashPtr.hpp>
+#include <xercesc/util/XMLStringTokenizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -340,7 +346,68 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
 
     if (!xsObj)
     {
-        //REVISIT
+        XSSimpleTypeDefinition* baseType = 0;
+        XSSimpleTypeDefinitionList* memberTypes = 0;
+        XSSimpleTypeDefinition* primitiveOrItemType = 0;
+        XSSimpleTypeDefinition::VARIETY typeVariety = XSSimpleTypeDefinition::VARIETY_ATOMIC;
+
+        // compute fBaseType
+        DatatypeValidator* baseDV = validator->getBaseValidator();
+        if (baseDV)
+            baseType = addOrFind(baseDV, xsModel);
+    
+        //REVISIT: the getFixed method is protected so added friend XSObjectFactory
+        //         to DatatypeValidator class... 
+        DatatypeValidator::ValidatorType dvType = validator->getType();
+        if (dvType == DatatypeValidator::Union)
+        {
+            typeVariety = XSSimpleTypeDefinition::VARIETY_UNION;
+            RefVectorOf<DatatypeValidator>* membersDV = ((UnionDatatypeValidator*)validator)->getMemberTypeValidators();
+            unsigned int size = membersDV->size();
+            if (size)
+            {
+                memberTypes = new (fMemoryManager) RefVectorOf<XSSimpleTypeDefinition>(size, false, fMemoryManager);
+                for (unsigned int i=0; i<size; i++)
+                    memberTypes->addElement(addOrFind(membersDV->elementAt(i), xsModel));
+            }
+        } 
+        else if (dvType == DatatypeValidator::List)
+        {
+            typeVariety = XSSimpleTypeDefinition::VARIETY_LIST;
+
+            while (baseDV->getType() == DatatypeValidator::List)
+            {
+                addOrFind(baseDV, xsModel);
+                baseDV = baseDV->getBaseValidator();
+            }
+            primitiveOrItemType = addOrFind(baseDV, xsModel);
+        }
+        else
+        {
+            // REVISIT: assume ATOMIC but what about VARIETY_ABSENT?
+            while (baseDV)
+            {
+                primitiveOrItemType = addOrFind(baseDV, xsModel);
+                baseDV = baseDV->getBaseValidator();
+            }
+        }
+
+        xsObj = new (fMemoryManager) XSSimpleTypeDefinition
+        (
+            validator
+            , typeVariety
+            , baseType
+            , primitiveOrItemType
+            , memberTypes
+            , getAnnotationFromModel(xsModel, validator)
+            , xsModel
+            , fMemoryManager
+        );
+        putObjectInMap(validator, xsObj, xsModel);
+
+        // process facets
+        if (validator->getFacetsDefined())
+            processFacets(validator, xsModel, xsObj);
     }
 
     return xsObj;
@@ -707,5 +774,146 @@ void XSObjectFactory::putObjectInMap(void* key, XSObject* const object, XSModel*
      fDeleteVector->addElement(object);
 }
 
+
+void XSObjectFactory::processFacets(DatatypeValidator* const dv,
+                                    XSModel* const xsModel,
+                                    XSSimpleTypeDefinition* const xsST)
+{
+    // NOTE: XSMultiValueFacetList is not owned by XSModel!
+    // NOTE: XSFacetList is not owned by XSModel!
+    int definedFacets = 0;
+    int fixedFacets = 0;
+    XSFacetList* xsFacetList = 0;
+    XSMultiValueFacetList* xsMultiFacetList = 0;
+    StringList* patternList = 0;
+    bool isFixed = false;
+    int dvFacetsDefined = dv->getFacetsDefined();
+    int dvFixedFacets = dv->getFixed();
+
+    if ((dvFacetsDefined & DatatypeValidator::FACET_PATTERN)
+        || (dvFacetsDefined & DatatypeValidator::FACET_ENUMERATION))
+        xsMultiFacetList = new (fMemoryManager) RefVectorOf<XSMultiValueFacet>(2, true, fMemoryManager);
+
+    if (dvFacetsDefined & DatatypeValidator::FACET_ENUMERATION)
+    {
+        RefArrayVectorOf<XMLCh>* enumList = (RefArrayVectorOf<XMLCh>*) dv->getEnumString();
+        isFixed = ((dvFixedFacets & DatatypeValidator::FACET_ENUMERATION) != 0);
+
+        // NOTE: Don't need to add multivaluefacet to "ObjectMap -> getObjectFromMap/putObjectInMap);
+        xsMultiFacetList->addElement(
+            new (fMemoryManager) XSMultiValueFacet(
+                XSSimpleTypeDefinition::FACET_ENUMERATION , enumList, isFixed
+                , getAnnotationFromModel(xsModel, enumList)
+                , xsModel, fMemoryManager)
+        );
+        definedFacets |= XSSimpleTypeDefinition::FACET_ENUMERATION;
+        if (isFixed)
+            fixedFacets |= XSSimpleTypeDefinition::FACET_ENUMERATION;
+    }
+
+    RefHashTableOf<KVStringPair>* facets = dv->getFacets();
+    if (facets)
+    {
+        xsFacetList = new (fMemoryManager) RefVectorOf<XSFacet>(10, true, fMemoryManager);
+
+        // NOTE: Don't need to add facet to "ObjectMap -> getObjectFromMap/putObjectInMap);
+        RefHashTableOfEnumerator<KVStringPair> e(facets);
+        while (e.hasMoreElements())
+        {
+            KVStringPair& pair = e.nextElement();
+            XMLCh* key = pair.getKey();
+            XSSimpleTypeDefinition::FACET facetType = XSSimpleTypeDefinition::FACET_NONE;
+            XSAnnotation* annot = getAnnotationFromModel(xsModel, &pair);
+
+            if (XMLString::equals(key, SchemaSymbols::fgELT_MAXINCLUSIVE))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_MAXINCLUSIVE;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_MAXINCLUSIVE) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_MAXEXCLUSIVE))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_MAXEXCLUSIVE) !=0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_MININCLUSIVE))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_MININCLUSIVE;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_MININCLUSIVE) !=0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_MINEXCLUSIVE))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_MINEXCLUSIVE;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_MINEXCLUSIVE) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_LENGTH))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_LENGTH;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_LENGTH) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_MINLENGTH))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_MINLENGTH;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_MINLENGTH) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_MAXLENGTH))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_MAXLENGTH;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_MAXLENGTH) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_TOTALDIGITS))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_TOTALDIGITS;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_TOTALDIGITS) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_FRACTIONDIGITS))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_FRACTIONDIGITS;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_FRACTIONDIGITS) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_WHITESPACE))
+            {
+                facetType = XSSimpleTypeDefinition::FACET_WHITESPACE;
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_WHITESPACE) != 0);
+            }
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
+            {
+                XMLStringTokenizer tokenizer(dv->getPattern(), &chPipe, fMemoryManager);
+                patternList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(tokenizer.countTokens(), true, fMemoryManager);
+                
+                while (tokenizer.hasMoreTokens())
+                    patternList->addElement(XMLString::replicate(tokenizer.nextToken(), fMemoryManager));
+
+                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_PATTERN) != 0);
+                // NOTE: Don't need to add multivaluefacet to "ObjectMap -> getObjectFromMap/putObjectInMap);
+                xsMultiFacetList->addElement(
+                    new (fMemoryManager) XSMultiValueFacet(
+                        XSSimpleTypeDefinition::FACET_PATTERN, patternList
+                        , isFixed, annot, xsModel, fMemoryManager)
+	            );
+                definedFacets |= XSSimpleTypeDefinition::FACET_PATTERN;
+                if (isFixed) 
+                    fixedFacets |= XSSimpleTypeDefinition::FACET_PATTERN;
+                continue;
+            }
+            else
+            {
+                // REVISIT: hmm... what about XSSimpleTypeDefinition::FACET_NONE
+                // don't think I need to create an empty Facet?
+                continue;
+            }
+
+            xsFacetList->addElement(
+                new (fMemoryManager) XSFacet(
+                    facetType, pair.getValue(), isFixed, annot, xsModel, fMemoryManager)
+            );
+
+            definedFacets |= facetType;
+            if (isFixed) 
+                fixedFacets |= facetType;
+        }
+    }
+
+    xsST->setFacetInfo(definedFacets, fixedFacets, xsFacetList, xsMultiFacetList, patternList);
+}
 
 XERCES_CPP_NAMESPACE_END

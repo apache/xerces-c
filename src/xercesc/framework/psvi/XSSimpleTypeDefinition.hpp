@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/24 15:45:36  knoaman
+ * PSVI: finish construction of XSSimpleTypeDefinition
+ *
  * Revision 1.6  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -209,10 +212,14 @@ public:
       */
     XSSimpleTypeDefinition
     (
-        DatatypeValidator* const datatypeValidator
-        , XSAnnotation*          headAnnot
-        , XSModel* const         xsModel
-        , MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager
+        DatatypeValidator* const            datatypeValidator
+        , VARIETY                           stVariety
+        , XSTypeDefinition* const           xsBaseType
+        , XSSimpleTypeDefinition* const     primitiveOrItemType
+        , XSSimpleTypeDefinitionList* const memberTypes
+        , XSAnnotation*                     headAnnot
+        , XSModel* const                    xsModel
+        , MemoryManager* const              manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@};
@@ -257,7 +264,7 @@ public:
      * [facets]: get all facets defined on this type. The value is a bit 
      * combination of FACET_XXX constants of all defined facets. 
      */
-    short getDefinedFacets() const;
+    int getDefinedFacets() const;
 
     /**
      * Convenience method. [Facets]: check whether a facet is defined on this 
@@ -270,7 +277,7 @@ public:
     /**
      * [facets]: get all facets defined and fixed on this type.
      */
-    short getFixedFacets() const;
+    int getFixedFacets() const;
 
     /**
      * Convenience method. [Facets]: check whether a facet is defined and 
@@ -391,10 +398,6 @@ public:
 
     //@{
 
-    /**
-     * Complete the construction of the <code>XSComplexTypeDeclaration</code>.
-     */
-    void construct();
 
     //@}
 
@@ -409,15 +412,24 @@ private:
     /**
       * Helper method for construct
       */
-    void processFacets();
+    void setFacetInfo
+    (
+        int                            definedFacets
+        , int                          fixedFacets
+        , XSFacetList* const           xsFacetList
+        , XSMultiValueFacetList* const xsMultiValueFacetList
+        , StringList* const            patternList
+    );
+
+    friend class XSObjectFactory;
 
 protected:
 
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    short                       fDefinedFacets;
-    short                       fFixedFacets;
+    int                         fDefinedFacets;
+    int                         fFixedFacets;
     VARIETY                     fVariety;
     DatatypeValidator*          fDatatypeValidator;
     XSFacetList*                fXSFacetList;
@@ -454,12 +466,12 @@ inline XSSimpleTypeDefinitionList* XSSimpleTypeDefinition::getMemberTypes() cons
     return fMemberTypes;
 }
 
-inline short XSSimpleTypeDefinition::getDefinedFacets() const
+inline int XSSimpleTypeDefinition::getDefinedFacets() const
 {
     return fDefinedFacets;
 }
 
-inline short XSSimpleTypeDefinition::getFixedFacets() const
+inline int XSSimpleTypeDefinition::getFixedFacets() const
 {
     return fFixedFacets;
 }
