@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:12  peiyongz
- * Initial revision
+ * Revision 1.2  2002/06/12 17:15:12  tng
+ * Remove redundant include header file.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/12/22 01:06:08  jasons
  * Made the destructors virtual for:
@@ -84,7 +87,6 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/KeyValuePair.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
