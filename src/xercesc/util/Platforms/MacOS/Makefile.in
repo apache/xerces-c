@@ -81,9 +81,14 @@ include ../../../Makefile.incl
 
 CPP_PUBHEADERS = \
 	MacOSDefs.hpp \
-	MacOSPlatformUtils.hpp
+	MacOSPlatformUtils.hpp \
+	MacAbstractFile.hpp \
+	MacCarbonFile.hpp \
+	MacPosixFile.hpp
 
 CPP_OBJECTS = \
-	MacOSPlatformUtils.$(TO)
+	MacOSPlatformUtils.$(TO) \
+	MacCarbonFile.$(TO) \
+	MacPosixFile.$(TO)
 
 include ../../Makefile.util.submodule
