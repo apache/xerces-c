@@ -178,5 +178,7 @@ const XMLCh chLatin_z               = 0x7A;
 const XMLCh chYenSign               = 0xA5;
 const XMLCh chWonSign               = 0x20A9;
 
+const XMLCh chLineSeparator			= 0x2028;
+const XMLCh chParagraphSeparator	= 0x2029;
 
 #endif
