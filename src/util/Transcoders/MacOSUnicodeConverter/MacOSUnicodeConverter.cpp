@@ -62,7 +62,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <MacOSUnicodeConverter.hpp>
+#include <util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
