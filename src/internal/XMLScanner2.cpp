@@ -1109,36 +1109,37 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
             //  as ignorable whitespace. If they can handle any char data
             //  send it as characters.
             //
-            if (fDocHandler)
-            {
-                if (charOpts == XMLElementDecl::SpacesOk)
+            if (charOpts == XMLElementDecl::SpacesOk) {
+                if (fDocHandler)
                     fDocHandler->ignorableWhitespace(rawBuf, len, false);
-                else if (charOpts == XMLElementDecl::AllCharData)
+            }
+            else if (charOpts == XMLElementDecl::AllCharData)
+            {
+                if (fGrammarType != Grammar::SchemaGrammarType)
                 {
-                    if (fGrammarType != Grammar::SchemaGrammarType)
-                    {
+                    if (fDocHandler)
                         fDocHandler->docCharacters(rawBuf, len, false);
+                }
+                else
+                {
+                    // The normalized data can only be as large as the
+                    // original size, so this will avoid allocating way
+                    // too much or too little memory.
+                    XMLBuffer toFill(len+1);
+
+                    // normalize the character according to schema whitespace facet
+                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
+
+                    // call all active identity constraints
+                    unsigned int count = fMatcherStack->getMatcherCount();
+
+                    for (unsigned int i = 0; i < count; i++) {
+                        fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
                     }
-                    else
-                    {
-                        // The normalized data can only be as large as the
-                        // original size, so this will avoid allocating way
-                        // too much or too little memory.
-                        XMLBuffer toFill(len+1);
 
-                        // normalize the character according to schema whitespace facet
-                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
-
-                        // call all active identity constraints
-                        unsigned int count = fMatcherStack->getMatcherCount();
-
-                        for (unsigned int i = 0; i < count; i++) {
-                            fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
-                        }
-
+                    if (fDocHandler)
                         fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
-                    }
                 }
             }
         }
@@ -1151,32 +1152,31 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
             //
             if (charOpts == XMLElementDecl::AllCharData)
             {
-                if (fDocHandler)
+                if (fGrammarType != Grammar::SchemaGrammarType)
                 {
-                    if (fGrammarType != Grammar::SchemaGrammarType)
-                    {
+                    if (fDocHandler)
                         fDocHandler->docCharacters(rawBuf, len, false);
+                }
+                else
+                {
+                    // The normalized data can only be as large as the
+                    // original size, so this will avoid allocating way
+                    // too much or too little memory.
+                    XMLBuffer toFill(len+1);
+
+                    // normalize the character according to schema whitespace facet
+                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
+
+                    // call all active identity constraints
+                    unsigned int count = fMatcherStack->getMatcherCount();
+
+                    for (unsigned int i = 0; i < count; i++) {
+                        fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
                     }
-                    else
-                    {
-                        // The normalized data can only be as large as the
-                        // original size, so this will avoid allocating way
-                        // too much or too little memory.
-                        XMLBuffer toFill(len+1);
 
-                        // normalize the character according to schema whitespace facet
-                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
-
-                        // call all active identity constraints
-                        unsigned int count = fMatcherStack->getMatcherCount();
-
-                        for (unsigned int i = 0; i < count; i++) {
-                            fMatcherStack->getMatcherAt(i)->docCharacters(toFill.getRawBuffer(), toFill.getLen());
-                        }
-
+                    if (fDocHandler)
                         fDocHandler->docCharacters(toFill.getRawBuffer(), toFill.getLen(), false);
-                    }
                 }
             }
              else
