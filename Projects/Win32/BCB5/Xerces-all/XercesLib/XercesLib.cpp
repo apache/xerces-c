@@ -243,6 +243,20 @@ USEUNIT("..\..\..\..\..\src\validators\schema\XercesAttGroupInfo.cpp");
 USEUNIT("..\..\..\..\..\src\validators\schema\XercesElementWildcard.cpp");
 USEUNIT("..\..\..\..\..\src\validators\schema\XercesGroupInfo.cpp");
 USEUNIT("..\..\..\..\..\src\validators\schema\XUtil.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\FieldActivator.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\FieldValueMap.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\IC_Field.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\IC_Key.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\IC_KeyRef.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\IC_Selector.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\IC_Unique.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\IdentityConstraint.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\ValueStore.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\ValueStoreCache.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\XercesXPath.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\XPathMatcher.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\XPathMatcherStack.cpp");
+USEUNIT("..\..\..\..\..\src\validators\schema\identity\XPathSymbols.cpp");
 //---------------------------------------------------------------------------
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void*)
 {

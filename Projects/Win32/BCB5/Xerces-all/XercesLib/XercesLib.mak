@@ -201,7 +201,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\NOTATIONDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\QNameDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\NameDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB5\obj\NCNameDatatypeValidator.obj \    
+    ..\..\..\..\..\Build\Win32\BCB5\obj\NCNameDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\StringDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\UnionDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\DateTimeValidator.obj \
@@ -235,7 +235,21 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XercesAttGroupInfo.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XercesElementWildcard.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\XercesGroupInfo.obj \
-    ..\..\..\..\..\Build\Win32\BCB5\obj\XUtil.obj
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XUtil.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\FieldActivator.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\FieldValueMap.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Field.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Key.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\IC_KeyRef.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Selector.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Unique.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\IdentityConstraint.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\ValueStore.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\ValueStoreCache.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XercesXPath.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XPathMatcher.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XPathMatcherStack.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\XPathSymbols.obj
 RESFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\Version.res
 MAINSOURCE = XercesLib.cpp
 RESDEPEN = $(RESFILES)
@@ -247,7 +261,7 @@ PACKAGES = vcl50.bpi vclx50.bpi vcljpg50.bpi
 SPARELIBS = vcl50.lib
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema
+PATHCPP = .;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;..\..\..\..\..\src\util\Platforms\Win32
@@ -255,8 +269,8 @@ DEBUGLIBPATH = $(BCB)\lib\debug
 RELEASELIBPATH = $(BCB)\lib\release
 USERDEFINES = _DEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK
 SYSDEFINES = _RTLDLL;NO_STRICT
-INCLUDEPATH = ..\..\..\..\..\src;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;$(BCB)\include;$(BCB)\include\vcl
-LIBPATH = ..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;$(BCB)\lib\obj;$(BCB)\lib
+INCLUDEPATH = ..\..\..\..\..\src;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity;$(BCB)\include;$(BCB)\include\vcl
+LIBPATH = ..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity;$(BCB)\lib\obj;$(BCB)\lib
 WARNINGS= -w-par
 # ---------------------------------------------------------------------------
 CFLAG1 = -WD -Od -Q -Vx -Ve -X- -r- -a8 -5 -b- -k -y -v -vi- -c -tWM

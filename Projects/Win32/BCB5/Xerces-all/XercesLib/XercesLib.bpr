@@ -225,7 +225,21 @@
       ..\..\..\..\..\Build\Win32\BCB5\obj\XercesAttGroupInfo.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XercesElementWildcard.obj 
       ..\..\..\..\..\Build\Win32\BCB5\obj\XercesGroupInfo.obj 
-      ..\..\..\..\..\Build\Win32\BCB5\obj\XUtil.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB5\obj\XUtil.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\FieldActivator.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\FieldValueMap.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Field.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Key.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\IC_KeyRef.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Selector.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\IC_Unique.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\IdentityConstraint.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\ValueStore.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\ValueStoreCache.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\XercesXPath.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\XPathMatcher.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\XPathMatcherStack.obj 
+      ..\..\..\..\..\Build\Win32\BCB5\obj\XPathSymbols.obj"/>
     <RESFILES value="..\..\..\..\..\Build\Win32\BCB5\obj\Version.res"/>
     <IDLFILES value=""/>
     <DEFFILE value=""/>
@@ -234,7 +248,7 @@
     <LIBRARIES value="vcl50.lib"/>
     <SPARELIBS value="vcl50.lib"/>
     <PACKAGES value="vcl50.bpi vclx50.bpi vcljpg50.bpi"/>
-    <PATHCPP value=".;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema"/>
+    <PATHCPP value=".;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;..\..\..\..\..\src\util\Platforms\Win32"/>
     <PATHASM value=".;"/>
@@ -244,8 +258,8 @@
     <USERDEFINES value="_DEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"/>
     <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
     <MAINSOURCE value="XercesLib.cpp"/>
-    <INCLUDEPATH value="..\..\..\..\..\src;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\..\..\src;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <WARNOPTSTR value=""/>
   </MACROS>
@@ -293,11 +307,11 @@ Comments=
 
 [HistoryLists\hlIncludePath]
 Count=1
-Item0=..\..\..\..\..\src;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;$(BCB)\include;$(BCB)\include\vcl
+Item0=..\..\..\..\..\src;..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity;$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
 Count=1
-Item0=..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;$(BCB)\lib\obj;$(BCB)\lib
+Item0=..\..\..\..\..\src\dom;..\..\..\..\..\src\framework;..\..\..\..\..\src\internal;..\..\..\..\..\src\parsers;..\..\..\..\..\src\sax;..\..\..\..\..\src\sax2;..\..\..\..\..\src\util;..\..\..\..\..\src\util\MsgLoaders\Win32;..\..\..\..\..\src\util\NetAccessors\WinSock;..\..\..\..\..\src\util\Platforms\Win32;..\..\..\..\..\src\util\regx;..\..\..\..\..\src\util\Transcoders\Win32;..\..\..\..\..\src\validators\common;..\..\..\..\..\src\validators\datatype;..\..\..\..\..\src\validators\DTD;..\..\..\..\..\src\validators\schema;..\..\..\..\..\src\validators\schema\identity;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
