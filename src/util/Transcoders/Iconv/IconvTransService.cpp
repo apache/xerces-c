@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/02 20:20:16  rahulj
+ * Fixed incorrect comparision of int with a pointer.
+Got burnt because definition of NULL varies on different platforms,
+though use of NULL was not correct in the first place.
+ *
  * Revision 1.3  1999/11/20 00:28:19  rahulj
  * Added code for case-insensitive wide character string compares
  *
@@ -123,7 +128,7 @@ int IconvTransService::compareIString(  const   XMLCh* const    comp1
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    while ((*cptr1 != NULL) && (*cptr2 != NULL))
+    while ((*cptr1 != 0) && (*cptr2 != 0))
     {
         wint_t  wch1 = towupper(*cptr1);
         wint_t  wch2 = towupper(*cptr2);
@@ -147,7 +152,7 @@ int IconvTransService::compareNIString( const   XMLCh* const    comp1
     const XMLCh* cptr2 = comp2;
 
     unsigned int  n = 0;
-    while ((*cptr1 != NULL) && (*cptr2 != NULL) && (n < maxChars))
+    while ((*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars))
     {
         wint_t  wch1 = towupper(*cptr1);
         wint_t  wch2 = towupper(*cptr2);
