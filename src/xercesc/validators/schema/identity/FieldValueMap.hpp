@@ -199,9 +199,9 @@ inline void FieldValueMap::put(IC_Field* const key,
                                const XMLCh* const value) {
 
     if (!fFields) {
-        fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(4);
-        fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(4);
-        fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4);
+        fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(4, fMemoryManager);
+        fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(4, fMemoryManager);
+        fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
     }
 
     int keyIndex = indexOf(key);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/18 14:02:08  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.9  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -271,7 +274,8 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
             // If no att list exist yet, then create one
             if (!fAttDefs) {
                 // Use a hash modulus of 29 and tell it owns its elements
-                ((SchemaElementDecl*)this)->fAttDefs = new (getMemoryManager()) RefHash2KeysTableOf<SchemaAttDef>(29, true);
+                ((SchemaElementDecl*)this)->fAttDefs =
+                    new (getMemoryManager()) RefHash2KeysTableOf<SchemaAttDef>(29, true, getMemoryManager());
             }
 
             retVal = fAttDefs->get(baseName, uriId);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2003/05/18 14:02:08  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.31  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -275,7 +278,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fNil(false)
     , fTypeStack(0)
 {
-    fTypeStack = new (fMemoryManager) ValueStackOf<ComplexTypeInfo*>(8);
+    fTypeStack = new (fMemoryManager) ValueStackOf<ComplexTypeInfo*>(8, fMemoryManager);
 }
 
 SchemaValidator::~SchemaValidator()
@@ -1374,8 +1377,8 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
 
     ContentSpecNode* curSpecNode = curNode;
     ContentSpecNode* baseSpecNode = baseNode;
-    ValueVectorOf<ContentSpecNode*> curVector(8);
-    ValueVectorOf<ContentSpecNode*> baseVector(8);
+    ValueVectorOf<ContentSpecNode*> curVector(8, fMemoryManager);
+    ValueVectorOf<ContentSpecNode*> baseVector(8, fMemoryManager);
     ContentSpecNode::NodeTypes curNodeType = curSpecNode->getType();
     ContentSpecNode::NodeTypes baseNodeType = baseSpecNode->getType();
 
@@ -1864,11 +1867,11 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
                                        const ComplexTypeInfo* const baseInfo) {
 
     ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
-    ValueVectorOf<ContentSpecNode*> derivedNodes(1);
+    ValueVectorOf<ContentSpecNode*> derivedNodes(1, fMemoryManager);
     bool toLax = false;
 
     //Treat the element as if it were in a group of the same variety as base
-    ContentSpecNode derivedGroupNode(baseType, derivedSpecNode, 0, false);
+    ContentSpecNode derivedGroupNode(baseType, derivedSpecNode, 0, false, true, fMemoryManager);
 
     derivedNodes.addElement(derivedSpecNode);
 

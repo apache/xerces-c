@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.39  2003/05/18 14:02:03  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.38  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -477,7 +480,7 @@ DOMWriterImpl::DOMWriterImpl(MemoryManager* const manager)
 ,fNamespaceStack(0)
 ,fMemoryManager(manager)
 {
-    fNamespaceStack=new (fMemoryManager) RefVectorOf< RefHashTableOf<XMLCh> >(0,true);
+    fNamespaceStack=new (fMemoryManager) RefVectorOf< RefHashTableOf<XMLCh> >(0,true, fMemoryManager);
 
     //
     // set features to default setting
@@ -917,7 +920,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             int nodeLine = fCurrentLine;
 
             // add an entry in the namespace stack
-            RefHashTableOf<XMLCh>* namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12,false);
+            RefHashTableOf<XMLCh>* namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
             fNamespaceStack->addElement(namespaceMap);
 
             if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.8  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -284,7 +287,7 @@ XMLAttDefList& ComplexTypeInfo::getAttDefList() const
         if (!fAttDefs)
             faultInAttDefList();
 
-        ((ComplexTypeInfo*)this)->fAttList = new SchemaAttDefList(fAttDefs);
+        ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs);
     }
 
     // Reset it before we return it
@@ -398,7 +401,7 @@ void ComplexTypeInfo::faultInAttDefList() const
 {
     // Use a hash modulus of 29 and tell it owns its elements
     ((ComplexTypeInfo*)this)->fAttDefs =
-                    new (fMemoryManager) RefHash2KeysTableOf<SchemaAttDef>(29, true);
+        new (fMemoryManager) RefHash2KeysTableOf<SchemaAttDef>(29, true, fMemoryManager);
 }
 
 XMLCh* ComplexTypeInfo::formatContentModel() const
@@ -438,7 +441,7 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
 XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* const specNode)
 {
     if ((specNode || fContentSpec) && !fSpecNodesToDelete) {
-        fSpecNodesToDelete = new (fMemoryManager) RefVectorOf<ContentSpecNode>(8);
+        fSpecNodesToDelete = new (fMemoryManager) RefVectorOf<ContentSpecNode>(8, true, fMemoryManager);
     }
 
     // expand the content spec first
@@ -555,6 +558,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
             , specNode->getElement()
             , 0
             , ContentSpecNode::Leaf
+            , fMemoryManager
         );
     }
      else if ((specType == ContentSpecNode::Choice)
@@ -574,6 +578,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
                 , specNode->getFirst()->getElement()
                 , specNode->getSecond()->getElement()
                 , specType
+                , fMemoryManager
             );
         }
     }
@@ -594,6 +599,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
                 , specNode->getFirst()->getElement()
                 , 0
                 , specType
+                , fMemoryManager
             );
         }
         else if (specNode->getFirst()->getType() == ContentSpecNode::All)
@@ -698,47 +704,114 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
     }
     else if (minOccurs == 0 && maxOccurs == 1) {
 
-        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrOne, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode
+        (
+            ContentSpecNode::ZeroOrOne
+            , retNode
+            , 0
+            , true
+            , true
+            , fMemoryManager
+        );
     }
     else if (minOccurs == 0 && maxOccurs == -1) {
-        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrMore, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode
+        (
+            ContentSpecNode::ZeroOrMore
+            , retNode
+            , 0
+            , true
+            , true
+            , fMemoryManager
+        );
     }
     else if (minOccurs == 1 && maxOccurs == -1) {
-        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode
+        (
+            ContentSpecNode::OneOrMore
+            , retNode
+            , 0
+            , true
+            , true
+            , fMemoryManager
+        );
     }
     else if (maxOccurs == -1) {
 
-        retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::OneOrMore, retNode, 0);
+        retNode = new (fMemoryManager) ContentSpecNode
+        (
+            ContentSpecNode::OneOrMore
+            , retNode
+            , 0
+            , true
+            , true
+            , fMemoryManager
+        );
 
         for (int i=0; i < (int)(minOccurs-1); i++) {
-            retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
-                                          saveNode, retNode, false);
+            retNode = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::Sequence
+                , saveNode
+                , retNode
+                , false
+                , true
+                , fMemoryManager
+            );
         }
     }
     else {
 
         if (minOccurs == 0) {
 
-            ContentSpecNode* optional =
-                new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0);
+            ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::ZeroOrOne
+                , saveNode
+                , 0
+                , true
+                , true
+                , fMemoryManager
+            );
 
             retNode = optional;
 
             for (int i=0; i < (int)(maxOccurs-minOccurs-1); i++) {
-                retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
-                                              retNode, optional, true, false);
+                retNode = new (fMemoryManager) ContentSpecNode
+                (
+                    ContentSpecNode::Sequence
+                    , retNode
+                    , optional
+                    , true
+                    , false
+                    , fMemoryManager
+                );
             }
         }
         else {
 
             if (minOccurs > 1) {
 
-                retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
-                                              retNode, saveNode, true, false);
+                retNode = new (fMemoryManager) ContentSpecNode
+                (
+                    ContentSpecNode::Sequence
+                    , retNode
+                    , saveNode
+                    , true
+                    , false
+                    , fMemoryManager
+                );
 
                 for (int i=1; i < (int)(minOccurs-1); i++) {
-                    retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
-                                                  retNode, saveNode, true, false);
+                    retNode = new (fMemoryManager) ContentSpecNode
+                    (
+                        ContentSpecNode::Sequence
+                        , retNode
+                        , saveNode
+                        , true
+                        , false
+                        , fMemoryManager
+                    );
                 }
             }
 
@@ -746,14 +819,37 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
 
             if (counter > 0) {
 
-                ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
+                ContentSpecNode* optional = new (fMemoryManager) ContentSpecNode
+                (
+                    ContentSpecNode::ZeroOrOne
+                    , saveNode
+                    , 0
+                    , false
+                    , true
+                    , fMemoryManager
+                );
 
-                retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence, retNode, optional);
+                retNode = new (fMemoryManager) ContentSpecNode
+                (
+                    ContentSpecNode::Sequence
+                    , retNode
+                    , optional
+                    , true
+                    , true
+                    , fMemoryManager
+                );
 
                 for (int j=1; j < counter; j++) {
 
-                    retNode = new (fMemoryManager) ContentSpecNode(ContentSpecNode::Sequence,
-					                              retNode, optional, true, false);
+                    retNode = new (fMemoryManager) ContentSpecNode
+                    (
+                        ContentSpecNode::Sequence
+					    , retNode
+                        , optional
+                        , true
+                        , false
+                        , fMemoryManager
+                    );
                 }
             }
         }

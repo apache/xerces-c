@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -113,8 +116,8 @@ AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
     //  99% of the scenarios.
     //
 
-    ValueVectorOf<QName*> children(64);
-    ValueVectorOf<bool> childOptional(64);
+    ValueVectorOf<QName*> children(64, fMemoryManager);
+    ValueVectorOf<bool> childOptional(64, fMemoryManager);
 
     //
     //  Get the parent element's content spec. This is the head of the tree

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -131,8 +134,8 @@ FloatDatatypeValidator::~FloatDatatypeValidator()
 int FloatDatatypeValidator::compare(const XMLCh* const lValue
                                   , const XMLCh* const rValue)
 {
-    XMLFloat lObj(lValue);
-    XMLFloat rObj(rValue);
+    XMLFloat lObj(lValue, fMemoryManager);
+    XMLFloat rObj(rValue, fMemoryManager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -186,22 +189,22 @@ int  FloatDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  FloatDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new (fMemoryManager) XMLFloat(value);
+    fMaxInclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new (fMemoryManager) XMLFloat(value);
+    fMaxExclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new (fMemoryManager) XMLFloat(value);
+    fMinInclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new (fMemoryManager) XMLFloat(value);
+    fMinExclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
 void  FloatDatatypeValidator::setEnumeration()
@@ -244,12 +247,12 @@ void  FloatDatatypeValidator::setEnumeration()
         checkContent(fStrEnumeration->elementAt(i), false);
     }
 
-    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true,  fMemoryManager);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new (fMemoryManager) XMLFloat(fStrEnumeration->elementAt(i)), i);
+        fEnumeration->insertElementAt(new (fMemoryManager) XMLFloat(fStrEnumeration->elementAt(i), fMemoryManager), i);
     }
 }
 
@@ -293,7 +296,7 @@ void FloatDatatypeValidator::checkContent( const XMLCh* const content, bool asBa
         return;
 
     try {
-        XMLFloat theValue(content);
+        XMLFloat theValue(content, fMemoryManager);
         XMLFloat *theData = &theValue;
 
         if (getEnumeration() != 0)

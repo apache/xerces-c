@@ -1087,14 +1087,14 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
         return pointA;
 
     typedef RefVectorOf<DOMNode> VectorNodes;
-    VectorNodes startV(1, false);
+    VectorNodes startV(1, false, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
     DOMNode* node;
 
     for (node=(DOMNode*)pointA; node != 0; node=node->getParentNode())
     {
         startV.addElement(node);
     }
-    VectorNodes endV(1, false);
+    VectorNodes endV(1, false, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
     for (node=(DOMNode*)pointB; node != 0; node=node->getParentNode())
     {
         endV.addElement(node);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.6  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -202,9 +205,18 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ContentSpecNode();
-    ContentSpecNode(QName* const toAdopt);
-    ContentSpecNode(QName* const toAdopt, const bool copyQName);
+    ContentSpecNode(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ContentSpecNode
+    (
+        QName* const toAdopt
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    ContentSpecNode
+    (
+        QName* const toAdopt
+        , const bool copyQName
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     ContentSpecNode
     (
         const   NodeTypes               type
@@ -212,6 +224,7 @@ public :
         ,       ContentSpecNode* const  secondToAdopt
         , const bool                    adoptFirst = true
         , const bool                    adoptSecond = true
+        ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
     ContentSpecNode(const ContentSpecNode&);
 	~ContentSpecNode();
@@ -313,9 +326,9 @@ private :
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Constructors and Destructor
 // ---------------------------------------------------------------------------
-inline ContentSpecNode::ContentSpecNode() :
+inline ContentSpecNode::ContentSpecNode(MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fElement(0)
     , fFirst(0)
     , fSecond(0)
@@ -328,9 +341,10 @@ inline ContentSpecNode::ContentSpecNode() :
 }
 
 inline
-ContentSpecNode::ContentSpecNode(QName* const element) :
+ContentSpecNode::ContentSpecNode(QName* const element,
+                                 MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fElement(0)
     , fFirst(0)
     , fSecond(0)
@@ -345,10 +359,11 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
 }
 
 inline
-ContentSpecNode::ContentSpecNode(QName* const element
-                               , const bool copyQName) :
+ContentSpecNode::ContentSpecNode( QName* const element
+                                , const bool copyQName
+                                , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fElement(0)
     , fFirst(0)
     , fSecond(0)
@@ -370,13 +385,14 @@ ContentSpecNode::ContentSpecNode(QName* const element
 }
 
 inline
-ContentSpecNode::ContentSpecNode(const  NodeTypes               type
-                                ,       ContentSpecNode* const  firstAdopt
-                                ,       ContentSpecNode* const  secondAdopt
-                                , const bool                    adoptFirst
-                                , const bool                    adoptSecond) :
+ContentSpecNode::ContentSpecNode(const  NodeTypes              type
+                                ,       ContentSpecNode* const firstAdopt
+                                ,       ContentSpecNode* const secondAdopt
+                                , const bool                   adoptFirst
+                                , const bool                   adoptSecond
+                                ,       MemoryManager* const   manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fElement(0)
     , fFirst(firstAdopt)
     , fSecond(secondAdopt)

@@ -1174,7 +1174,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //if schema, check if we should lax or skip the validation of this element
     bool parentValidation = fValidate;
     if (cv) {
-        QName element(fPrefixBuf.getRawBuffer(), &qnameRawBuf[prefixColonPos + 1], uriId);
+        QName element(fPrefixBuf.getRawBuffer(), &qnameRawBuf[prefixColonPos + 1], uriId, fMemoryManager);
         // elementDepth will be > 0, as cv is only constructed if element is not
         // root.
         laxThisOne = laxElementValidation(&element, cv, cm, elemDepth - 1);
@@ -1873,7 +1873,7 @@ void SGXMLScanner::commonInit()
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
-    fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32);
+    fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
 
     // Create dummy schema grammar
     fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
@@ -1890,7 +1890,7 @@ void SGXMLScanner::commonInit()
 
     //  Add the default entity entries for the character refs that must always
     //  be present.
-    fEntityTable = new (fMemoryManager) ValueHashTableOf<XMLCh>(11);
+    fEntityTable = new (fMemoryManager) ValueHashTableOf<XMLCh>(11, fMemoryManager);
     fEntityTable->put((void*) XMLUni::fgAmp, chAmpersand);
     fEntityTable->put((void*) XMLUni::fgLT, chOpenAngle);
     fEntityTable->put((void*) XMLUni::fgGT, chCloseAngle);
@@ -2992,7 +2992,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>*
         XMLBufBid bbXsi(&fBufMgr);
         XMLBuffer& fXsiType = bbXsi.getBuffer();
 
-        QName attName;
+        QName attName(fMemoryManager);
 
         for (index = 0; index < attCount; index++)
         {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/16 03:11:22  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -105,7 +108,7 @@ XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
         fDelimeters = XMLString::replicate(fgDelimeters, fMemoryManager);
 
         if (fStringLen > 0) {
-            fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true);
+            fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
         }
     }
     catch(...) {
@@ -127,7 +130,7 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
         fDelimeters = XMLString::replicate(delim, fMemoryManager);
 
         if (fStringLen > 0) {
-            fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true);
+            fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
         }
     }
     catch(...) {

@@ -75,7 +75,6 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/TranscodingException.hpp>
-#include <xercesc/util/ValueArrayOf.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
@@ -96,6 +95,8 @@ static XMLCh                gNullStr[] =
 {
     chOpenCurly, chLatin_n, chLatin_u, chLatin_l, chLatin_l, chCloseCurly, chNull
 };
+
+MemoryManager* XMLString::fgMemoryManager = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -1419,8 +1420,8 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
 
 BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
 {
-    XMLCh* orgText = replicate(tokenizeSrc);
-    ArrayJanitor<XMLCh> janText(orgText);
+    XMLCh* orgText = replicate(tokenizeSrc, fgMemoryManager);
+    ArrayJanitor<XMLCh> janText(orgText, fgMemoryManager);
     XMLCh* tokenizeStr = orgText;
 
     RefArrayVectorOf<XMLCh>* tokenStack = new RefArrayVectorOf<XMLCh>(16, true);
@@ -1451,7 +1452,10 @@ BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc
 
         // these tokens are adopted in the RefVector and will be deleted
         // when the vector is deleted by the caller
-        XMLCh* token = new XMLCh[skip+1-index];
+        XMLCh* token = (XMLCh*) fgMemoryManager->allocate
+        (
+            (skip+1-index) * sizeof(XMLCh)
+        );//new XMLCh[skip+1-index];
 
         XMLString::subString(token, tokenizeStr, index, skip);
         tokenStack->addElement(token);
@@ -1552,7 +1556,10 @@ void XMLString::replaceWS(XMLCh* const toConvert)
     if (strLen == 0)
         return;
 
-    XMLCh* retBuf = new XMLCh[strLen+1];
+    XMLCh* retBuf = (XMLCh*) fgMemoryManager->allocate
+    (
+        (strLen+1) * sizeof(XMLCh)
+    );//new XMLCh[strLen+1];
     XMLCh* retPtr = &(retBuf[0]);
     XMLCh* startPtr = toConvert;
 
@@ -1572,7 +1579,7 @@ void XMLString::replaceWS(XMLCh* const toConvert)
     retBuf[strLen] = chNull;
 
     XMLString::moveChars(toConvert, retBuf, strLen);
-    delete[] retBuf;
+    fgMemoryManager->deallocate(retBuf);//delete[] retBuf;
     return;
 }
 
@@ -1648,7 +1655,10 @@ void XMLString::collapseWS(XMLCh* const toConvert)
     //
     //  Work through what remains and chop continuous spaces
     //
-    XMLCh* retBuf = new XMLCh[endPtr - startPtr + 1];
+    XMLCh* retBuf = (XMLCh*) fgMemoryManager->allocate
+    (
+        (endPtr - startPtr + 1) * sizeof(XMLCh)
+    );//new XMLCh[endPtr - startPtr + 1];
     XMLCh* retPtr = &(retBuf[0]);
     bool  inSpace = false;
     while (startPtr < endPtr)
@@ -1678,7 +1688,7 @@ void XMLString::collapseWS(XMLCh* const toConvert)
 
     *retPtr = chNull;
     XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
-    delete[] retBuf;
+    fgMemoryManager->deallocate(retBuf);//delete[] retBuf;
     return;
 }
 
@@ -1691,7 +1701,10 @@ void XMLString::removeWS(XMLCh* const toConvert)
     if (( !toConvert ) || ( !*toConvert ))
         return;
 
-    XMLCh* retBuf = new XMLCh[ XMLString::stringLen(toConvert) + 1];
+    XMLCh* retBuf = (XMLCh*) fgMemoryManager->allocate
+    (
+        (XMLString::stringLen(toConvert) + 1) * sizeof(XMLCh)
+    );//new XMLCh[ XMLString::stringLen(toConvert) + 1];
     XMLCh* retPtr = &(retBuf[0]);
     XMLCh* startPtr = toConvert;
 
@@ -1711,7 +1724,7 @@ void XMLString::removeWS(XMLCh* const toConvert)
 
     *retPtr = chNull;
     XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
-    delete[] retBuf;
+    fgMemoryManager->deallocate(retBuf);//delete[] retBuf;
     return;
 }
 
@@ -1802,10 +1815,14 @@ void XMLString::release(XMLByte** buf)
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods
 // ---------------------------------------------------------------------------
-void XMLString::initString(XMLLCPTranscoder* const defToUse)
+void XMLString::initString(XMLLCPTranscoder* const defToUse,
+                           MemoryManager* const manager)
 {
     // Store away the default transcoder that we are to use
     gTranscoder = defToUse;
+
+    // Store memory manager
+    fgMemoryManager = manager;
 }
 
 void XMLString::termString()
@@ -1813,6 +1830,9 @@ void XMLString::termString()
     // Just clean up our local code page transcoder
     delete gTranscoder;
     gTranscoder = 0;
+
+    // reset memory manager
+    fgMemoryManager = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -897,14 +897,14 @@ const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Nod
         return pointA;
 
     typedef RefVectorOf<NodeImpl> VectorNodes;
-    VectorNodes* startV= new VectorNodes(1, false);
+    VectorNodes* startV= new (((DocumentImpl*)fDocument.fImpl)->getMemoryManager()) VectorNodes(1, false, ((DocumentImpl*)fDocument.fImpl)->getMemoryManager());
     DOM_Node node;
 
     for (node=fStartContainer; node != null; node=node.getParentNode())
     {
         startV->addElement(node.fImpl);
     }
-    VectorNodes* endV = new VectorNodes(1, false);
+    VectorNodes* endV = new (((DocumentImpl*)fDocument.fImpl)->getMemoryManager()) VectorNodes(1, false, ((DocumentImpl*)fDocument.fImpl)->getMemoryManager());
     for (node=fEndContainer; node != null; node=node.getParentNode())
     {
         endV->addElement(node.fImpl);

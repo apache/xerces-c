@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -219,6 +222,7 @@ inline CMLeaf::CMLeaf(       QName* const         element
               XMLUni::fgZeroLenString
             , XMLUni::fgZeroLenString
             , XMLElementDecl::fgInvalidElemId
+            , fMemoryManager
         );
         // We have to be responsible for this QName - override default fAdopt
         fAdopt = true;
@@ -245,6 +249,7 @@ inline CMLeaf::CMLeaf(       QName* const         element
               XMLUni::fgZeroLenString
             , XMLUni::fgZeroLenString
             , XMLElementDecl::fgInvalidElemId
+            , fMemoryManager
         );
         // We have to be responsible for this QName - override adopt parameter
         fAdopt = true;

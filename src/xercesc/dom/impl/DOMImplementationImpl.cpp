@@ -311,7 +311,7 @@ DOMImplementation* DOMImplementationImpl::getDOMImplementation(const XMLCh* feat
 {
     DOMImplementation* impl = DOMImplementation::getImplementation();
 
-    XMLStringTokenizer tokenizer(features);
+    XMLStringTokenizer tokenizer(features, XMLPlatformUtils::fgMemoryManager);
     const XMLCh* feature = 0;
 
     while (feature || tokenizer.hasMoreTokens()) {

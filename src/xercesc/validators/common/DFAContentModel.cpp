@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.6  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -553,6 +556,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             XMLUni::fgZeroLenString
             , XMLUni::fgZeroLenString
             , XMLContentModel::gEOCFakeId
+            , fMemoryManager
         )
         , ~0
         , true
@@ -645,7 +649,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
     for (unsigned int outIndex = 0; outIndex < fLeafCount; outIndex++)
     {
-        fElemMap[outIndex] = new (fMemoryManager) QName();
+        fElemMap[outIndex] = new (fMemoryManager) QName(fMemoryManager);
 
         if ( (fLeafListType[outIndex] & 0x0f) != ContentSpecNode::Leaf )
             if (!fLeafNameTypeVector)
@@ -796,6 +800,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             curArraySize
             , true
             , new (fMemoryManager) HashCMStateSet()
+            , fMemoryManager
         );
     //stateTable->put((CMStateSet*)setT, new (fMemoryManager) XMLInteger(0));
 
@@ -1232,6 +1237,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
                 XMLUni::fgZeroLenString
                 , XMLUni::fgZeroLenString
                 , ((CMAny*) nodeCur)->getURI()
+                , fMemoryManager
             )
             , ((CMAny*)nodeCur)->getPosition()
             , true

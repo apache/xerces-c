@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -461,7 +464,7 @@ inline void SchemaAttDef::setNamespaceList(const ValueVectorOf<unsigned int>* co
             *fNamespaceList = *toSet;
         }
         else {
-            fNamespaceList = new ValueVectorOf<unsigned int>(*toSet);
+            fNamespaceList = new (getMemoryManager()) ValueVectorOf<unsigned int>(*toSet);
         }
     }
     else  {

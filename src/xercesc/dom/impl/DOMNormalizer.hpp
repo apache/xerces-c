@@ -82,7 +82,7 @@ class DOMElementImpl;
 class DOMAttr;
 class DOMNamedNodeMap;
 
-class DOMNormalizer {
+class DOMNormalizer : public XMemory {
 
     //the following are the data structures maintain the stack of namespace information 
     class InScopeNamespaces {

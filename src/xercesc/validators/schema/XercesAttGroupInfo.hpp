@@ -213,7 +213,7 @@ inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
                                              const bool toClone) {
 
     if (!fAttributes) {
-        fAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(4);
+        fAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(4, true, fMemoryManager);
     }
 
     if (toClone) {
@@ -228,7 +228,7 @@ inline void XercesAttGroupInfo::addAnyAttDef(SchemaAttDef* const toAdd,
                                              const bool toClone) {
 
     if (!fAnyAttributes) {
-        fAnyAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(2);
+        fAnyAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(2, true, fMemoryManager);
     }
 
     if (toClone) {

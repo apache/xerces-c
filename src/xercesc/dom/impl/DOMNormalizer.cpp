@@ -499,8 +499,8 @@ DOMNormalizer::InScopeNamespaces::Scope::~Scope() {
 void DOMNormalizer::InScopeNamespaces::Scope::addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri) {
     //initialize and copy forward now we need to
     if(!fUriHash) {
-        fPrefixHash = new RefHashTableOf<XMLCh>(10, false);
-        fUriHash = new RefHashTableOf<XMLCh>(10, false);
+        fPrefixHash = new RefHashTableOf<XMLCh>(10, (bool) false);
+        fUriHash = new RefHashTableOf<XMLCh>(10, (bool) false);
         
         if(fBaseScopeWithBindings) {
             RefHashTableOfEnumerator<XMLCh> preEnumer(fBaseScopeWithBindings->fPrefixHash);

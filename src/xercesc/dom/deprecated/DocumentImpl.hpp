@@ -207,8 +207,10 @@ public:
     virtual void                referenced();
     virtual NodeImpl            *removeChild(NodeImpl *oldChild);
     virtual void                unreferenced();
-    static  NodeIteratorImpl*   createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
-    static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
+    static  NodeIteratorImpl*   createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion,
+                                                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion,
+                                                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual XMLDeclImpl*        createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone);
     virtual void*				getUserData();
     virtual void				setUserData(void* value);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/18 14:02:09  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.7  2003/05/16 21:43:22  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -236,11 +239,6 @@ bool XercesStep::operator!=(const XercesStep& other) const {
 // ---------------------------------------------------------------------------
 //  XercesLocationPath: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XercesLocationPath::XercesLocationPath()
-    : fSteps(0)
-{
-}
-
 XercesLocationPath::XercesLocationPath(RefVectorOf<XercesStep>* const steps)
     : fSteps(steps)
 {
@@ -363,16 +361,16 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         return;
     }
 
-    ValueVectorOf<int>                tokens(16);
+    ValueVectorOf<int>                tokens(16, fMemoryManager);
     XPathScannerForSchema             scanner(stringPool);
     bool                              success = scanner.scanExpression(fExpression, 0, length, &tokens);
     bool                              firstTokenOfLocationPath=true;
     unsigned int                      tokenCount = tokens.size();
-    RefVectorOf<XercesStep>*          stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16);
+    RefVectorOf<XercesStep>*          stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16, true, fMemoryManager);
     Janitor<RefVectorOf<XercesStep> > janSteps(stepsVector);
 
     if (tokenCount) {
-        fLocationPaths = new (fMemoryManager) RefVectorOf<XercesLocationPath>(8);
+        fLocationPaths = new (fMemoryManager) RefVectorOf<XercesLocationPath>(8, true, fMemoryManager);
     }
 
     for (unsigned int i = 0; i < tokenCount; i++) {
@@ -395,7 +393,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
                 janSteps.orphan();
-                stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16);
+                stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16, true, fMemoryManager);
                 janSteps.reset(stepsVector);
                 firstTokenOfLocationPath = true;
             }
@@ -464,7 +462,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         aToken = tokens.elementAt(++i);
 
                         const XMLCh* localPart = stringPool->getValueForId(aToken);
-                        QName aQName(prefix, localPart, uri);
+                        QName aQName(prefix, localPart, uri, fMemoryManager);
 
                         // build step
                         XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(&aQName);
@@ -535,7 +533,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 aToken = tokens.elementAt(++i);
                 const XMLCh* localPart = stringPool->getValueForId(aToken);
-                QName aQName(prefix, localPart, uri);
+                QName aQName(prefix, localPart, uri, fMemoryManager);
 
                 // build step
                 XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(&aQName);

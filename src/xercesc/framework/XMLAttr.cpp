@@ -79,7 +79,7 @@ XMLAttr::XMLAttr(MemoryManager* const manager) :
     , fAttName(0)
     , fMemoryManager(manager)
 {
-    fAttName = new (fMemoryManager) QName();
+    fAttName = new (fMemoryManager) QName(fMemoryManager);
 }
 
 XMLAttr::XMLAttr(   const   unsigned int        uriId
@@ -103,7 +103,7 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
         //  Just call the local setters to set up everything. Too much
         //  work is required to replicate that functionality here.
         //
-        fAttName = new (fMemoryManager) QName(attrPrefix, attrName, uriId);
+        fAttName = new (fMemoryManager) QName(attrPrefix, attrName, uriId, fMemoryManager);
         setValue(attrValue);
     }
     catch(...)
@@ -130,7 +130,7 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     {
         //  Just call the local setters to set up everything. Too much
         //  work is required to replicate that functionality here.
-        fAttName = new (fMemoryManager) QName(rawName, uriId);
+        fAttName = new (fMemoryManager) QName(rawName, uriId, fMemoryManager);
         setValue(attrValue);
     }
     catch(...)

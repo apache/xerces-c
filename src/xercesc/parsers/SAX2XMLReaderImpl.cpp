@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.20  2003/05/16 21:36:59  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -339,7 +342,7 @@ void SAX2XMLReaderImpl::initialize()
 {
     // Create grammar resolver and string pool that we pass to the scanner
     fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
-    fURIStringPool = new (fMemoryManager) XMLStringPool();
+    fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
@@ -360,8 +363,8 @@ void SAX2XMLReaderImpl::initialize()
 	// default: schema is on
 	setDoSchema(true);
 	
-	fPrefixes    = new (fMemoryManager) RefStackOf<XMLBuffer> (10, false) ;
-	fTempAttrVec  = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false) ;
+	fPrefixes    = new (fMemoryManager) RefStackOf<XMLBuffer> (10, false, fMemoryManager) ;
+	fTempAttrVec  = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
 	fPrefixCounts = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
 }
 

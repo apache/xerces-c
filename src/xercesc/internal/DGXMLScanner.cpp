@@ -1788,7 +1788,7 @@ void DGXMLScanner::commonInit()
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
-    fAttrNSList = new (fMemoryManager) ValueVectorOf<XMLAttr*>(8);
+    fAttrNSList = new (fMemoryManager) ValueVectorOf<XMLAttr*>(8, fMemoryManager);
 
     //  Create the Validator and init them
     fDTDValidator = new (fMemoryManager) DTDValidator();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.8  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -656,7 +659,7 @@ Token* RegxParser::processCondition() {
         fHasBackReferences =  true;
 
         if (fReferences == 0) {
-            this->fReferences = new (fMemoryManager) RefVectorOf<ReferencePosition>(8, true);
+            this->fReferences = new (fMemoryManager) RefVectorOf<ReferencePosition>(8, true, fMemoryManager);
         }
 
         fReferences->addElement(new (fMemoryManager) ReferencePosition(refNo, fOffset));
@@ -848,7 +851,7 @@ Token* RegxParser::processBackReference() {
 
     fHasBackReferences = true;
     if (fReferences == 0) {
-        fReferences = new (fMemoryManager) RefVectorOf<ReferencePosition>(8, true);
+        fReferences = new (fMemoryManager) RefVectorOf<ReferencePosition>(8, true, fMemoryManager);
     }
 
     fReferences->addElement(new (fMemoryManager) ReferencePosition(refNo, fOffset - 2));

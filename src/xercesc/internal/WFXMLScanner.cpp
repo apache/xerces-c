@@ -439,11 +439,11 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
 //  it redundantly in multiple constructors.
 void WFXMLScanner::commonInit()
 {
-    fEntityTable = new (fMemoryManager) ValueHashTableOf<XMLCh>(11);
-    fAttrNameHashList = new (fMemoryManager)ValueVectorOf<unsigned int>(16);
-    fAttrNSList = new (fMemoryManager) ValueVectorOf<XMLAttr*>(8);
-    fElements = new (fMemoryManager) RefVectorOf<XMLElementDecl>(32);
-    fElementLookup = new (fMemoryManager) RefHashTableOf<XMLElementDecl>(109, false);
+    fEntityTable = new (fMemoryManager) ValueHashTableOf<XMLCh>(11, fMemoryManager);
+    fAttrNameHashList = new (fMemoryManager)ValueVectorOf<unsigned int>(16, fMemoryManager);
+    fAttrNSList = new (fMemoryManager) ValueVectorOf<XMLAttr*>(8, fMemoryManager);
+    fElements = new (fMemoryManager) RefVectorOf<XMLElementDecl>(32, true, fMemoryManager);
+    fElementLookup = new (fMemoryManager) RefHashTableOf<XMLElementDecl>(109, false, fMemoryManager);
 
     //  Add the default entity entries for the character refs that must always
     //  be present.

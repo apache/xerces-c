@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -96,6 +99,7 @@ NamespaceScope::NamespaceScope(MemoryManager* const manager) :
     fEmptyNamespaceId(0)
     , fStackCapacity(8)
     , fStackTop(0)
+    , fPrefixPool(109, manager)
     , fStack(0)
     , fMemoryManager(manager)
 {

@@ -150,7 +150,7 @@ void AbstractDOMParser::initialize()
 {
     //  Create grammar resolver and string pool to pass to the scanner
     fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
-    fURIStringPool = new (fMemoryManager) XMLStringPool;
+    fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
@@ -190,7 +190,7 @@ void AbstractDOMParser::reset()
     if (fDocument && !fDocumentAdoptedByUser) {
         if (!fDocumentVector) {
             // allocate the vector if not exists yet
-            fDocumentVector  = new (fMemoryManager) RefVectorOf<DOMDocumentImpl>(10, true) ;
+            fDocumentVector  = new (fMemoryManager) RefVectorOf<DOMDocumentImpl>(10, true, fMemoryManager) ;
         }
         fDocumentVector->addElement(fDocument);
     }
@@ -1334,7 +1334,10 @@ void AbstractDOMParser::endAttList
                         XMLCh temp[1000];
 
                         if (index > 999)
-                            prefix = new XMLCh[index+1];
+                            prefix = (XMLCh*) fMemoryManager->allocate
+                            (
+                                (index + 1) * sizeof(XMLCh)
+                            );//new XMLCh[index+1];
                         else
                             prefix = temp;
 
@@ -1346,7 +1349,7 @@ void AbstractDOMParser::endAttList
                             buf.append(XMLUni::fgXMLURIName);
 
                         if (index > 999)
-                            delete prefix;
+                            fMemoryManager->deallocate(prefix);//delete [] prefix;
                     }
                     else {
                         //   No prefix

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -98,9 +101,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefHash2KeysTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal>
-RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int modulus
-                                              , const bool         adoptElems)
-    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
+                                              , const bool           adoptElems
+                                              , MemoryManager* const manager)
+    : fMemoryManager(manager)
 	, fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -113,10 +117,11 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int modulus
 }
 
 template <class TVal>
-RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int modulus
-                                              , const bool         adoptElems
-                                              , HashBase*          hashBase)
-	: fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
+                                              , const bool           adoptElems
+                                              , HashBase*            hashBase
+                                              , MemoryManager* const manager)
+	: fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -128,8 +133,9 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int modulus
 }
 
 template <class TVal>
-RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus)
-	: fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus,
+                                               MemoryManager* const manager)
+	: fMemoryManager(manager)
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)

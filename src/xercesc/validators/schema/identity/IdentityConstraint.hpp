@@ -199,7 +199,7 @@ inline IC_Selector* IdentityConstraint::getSelector() const {
 inline void IdentityConstraint::addField(IC_Field* const field) {
 
     if (!fFields) {
-        fFields = new (fMemoryManager) RefVectorOf<IC_Field>(4);
+        fFields = new (fMemoryManager) RefVectorOf<IC_Field>(4, true, fMemoryManager);
     }
 
     fFields->addElement(field);

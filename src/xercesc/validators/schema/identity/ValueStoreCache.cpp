@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/18 14:02:09  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.6  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -129,7 +132,13 @@ void ValueStoreCache::startDocument() {
 void ValueStoreCache::startElement() {
 
     fGlobalMapStack->push(fGlobalICMap);
-    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>(13, false, new (fMemoryManager) HashPtr());
+    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>
+    (
+        13
+        , false
+        , new (fMemoryManager) HashPtr()
+        , fMemoryManager
+    );
 }
 
 void ValueStoreCache::endElement() {
@@ -171,10 +180,22 @@ void ValueStoreCache::cleanUp() {
 
 void ValueStoreCache::init() {
 
-    fValueStores = new (fMemoryManager) RefVectorOf<ValueStore>(8);
-    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>(13, false, new (fMemoryManager) HashPtr());
-    fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore>(13, false, new (fMemoryManager) HashPtr());
-    fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore> >(8);
+    fValueStores = new (fMemoryManager) RefVectorOf<ValueStore>(8, true, fMemoryManager);
+    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>
+    (
+        13
+        , false
+        , new (fMemoryManager) HashPtr()
+        , fMemoryManager
+    );
+    fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore>
+    (
+        13
+        , false
+        , new (fMemoryManager) HashPtr()
+        , fMemoryManager
+    );
+    fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore> >(8, true, fMemoryManager);
 }
 
 void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,

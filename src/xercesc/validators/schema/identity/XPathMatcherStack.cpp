@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/18 14:02:09  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.3  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -82,11 +85,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XPathMatcherStack::XPathMatcherStack(MemoryManager* const manager)
     : fMatchersCount(0)
-    , fContextStack(new (manager) ValueStackOf<int>(8))
+    , fContextStack(new (manager) ValueStackOf<int>(8, manager))
     , fMatchers(0)
 {
     try {
-        fMatchers = new (manager) RefVectorOf<XPathMatcher>(8);
+        fMatchers = new (manager) RefVectorOf<XPathMatcher>(8, true, manager);
     }
     catch(...) {
 

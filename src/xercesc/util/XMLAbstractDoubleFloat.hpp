@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.12  2003/05/16 06:01:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -181,7 +184,7 @@ protected:
     //
     // To be used by derived class exclusively
     //
-    XMLAbstractDoubleFloat(MemoryManager* const manager);
+    XMLAbstractDoubleFloat(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     void                  init(const XMLCh* const strValue);
 

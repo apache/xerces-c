@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -137,13 +140,28 @@ public:
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
 	// backwards compatability - default hasher is HashXMLCh
-    RefHash2KeysTableOf(const unsigned int modulus);
+    RefHash2KeysTableOf
+    (
+        const unsigned int modulus
+		, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 	// backwards compatability - default hasher is HashXMLCh
-    RefHash2KeysTableOf(const unsigned int modulus, const bool adoptElems);
+    RefHash2KeysTableOf
+    (
+        const unsigned int modulus
+        , const bool adoptElems
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
 	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
 	// may delete the hasher of a different hashtable if both use the same hasher.
-    RefHash2KeysTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase);
+    RefHash2KeysTableOf
+    (
+        const unsigned int modulus
+        , const bool adoptElems
+        , HashBase* hashBase
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     ~RefHash2KeysTableOf();
 
 

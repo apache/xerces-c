@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -98,7 +101,7 @@ OpFactory::OpFactory(MemoryManager* const manager) :
     fOpVector(0)
     , fMemoryManager(manager)
 {
-    fOpVector = new (fMemoryManager) RefVectorOf<Op>(16, true);
+    fOpVector = new (fMemoryManager) RefVectorOf<Op>(16, true, fMemoryManager);
 }
 
 OpFactory::~OpFactory() {

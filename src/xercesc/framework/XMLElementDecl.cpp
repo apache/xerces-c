@@ -100,7 +100,7 @@ XMLElementDecl::setElementName(const XMLCh* const       prefix
     if (fElementName)
         fElementName->setName(prefix, localPart, uriId);
     else
-        fElementName = new (fMemoryManager) QName(prefix, localPart, uriId);
+        fElementName = new (fMemoryManager) QName(prefix, localPart, uriId, fMemoryManager);
 }
 
 void
@@ -110,7 +110,7 @@ XMLElementDecl::setElementName(const XMLCh* const       rawName
     if (fElementName)
         fElementName->setName(rawName, uriId);
     else
-        fElementName = new (fMemoryManager) QName(rawName, uriId);
+        fElementName = new (fMemoryManager) QName(rawName, uriId, fMemoryManager);
 }
 
 void

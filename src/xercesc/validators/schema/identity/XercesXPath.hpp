@@ -178,7 +178,6 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    XercesLocationPath();
     XercesLocationPath(RefVectorOf<XercesStep>* const steps);
     ~XercesLocationPath() { delete fSteps; }
 
@@ -464,10 +463,6 @@ inline unsigned int XercesLocationPath::getStepSize() const {
 }
 
 inline void XercesLocationPath::addStep(XercesStep* const aStep) {
-
-    if (!fSteps) {
-        fSteps = new RefVectorOf<XercesStep>(16);
-    }
 
     fSteps->addElement(aStep);
 }

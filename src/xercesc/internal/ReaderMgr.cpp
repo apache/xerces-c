@@ -900,11 +900,11 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     //  tell it it does own its elements.
     //
     if (!fReaderStack)
-        fReaderStack = new (fMemoryManager) RefStackOf<XMLReader>(16, true);
+        fReaderStack = new (fMemoryManager) RefStackOf<XMLReader>(16, true, fMemoryManager);
 
     // And the entity stack, which does not own its elements
     if (!fEntityStack)
-        fEntityStack = new (fMemoryManager) RefStackOf<XMLEntityDecl>(16, false);
+        fEntityStack = new (fMemoryManager) RefStackOf<XMLEntityDecl>(16, false, fMemoryManager);
 
     //
     //  Push the current reader and entity onto their respective stacks.

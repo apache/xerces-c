@@ -82,7 +82,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 
 ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy) :
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(toCopy.fMemoryManager)
 {
     const QName* tempElement = toCopy.getElement();
     if (tempElement)

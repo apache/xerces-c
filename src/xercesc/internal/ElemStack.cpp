@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/18 14:02:04  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.6  2003/05/16 21:36:57  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -153,6 +156,7 @@ ElemStack::ElemStack(MemoryManager* const manager) :
 
     fEmptyNamespaceId(0)
     , fGlobalPoolId(0)
+    , fPrefixPool(109, manager)
     , fStack(0)
     , fStackCapacity(32)
     , fStackTop(0)
@@ -571,6 +575,7 @@ WFElemStack::WFElemStack(MemoryManager* const manager) :
     , fMapCapacity(0)
     , fMap(0)
     , fStack(0)
+    , fPrefixPool(109, manager)
     , fMemoryManager(manager)
 {
     // Do an initial allocation of the stack and zero it out

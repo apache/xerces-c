@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2002/11/04 15:17:01  tng
  * C++ Namespace Support.
  *
@@ -174,7 +177,10 @@ void XMLRangeFactory::buildRanges() {
     // Create space ranges
     unsigned int wsTblLen = getTableLen(gWhitespaceChars);
     RangeToken* tok = tokFactory->createRange();
-    XMLInt32* wsRange = new XMLInt32[wsTblLen];
+    XMLInt32* wsRange = (XMLInt32*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        wsTblLen * sizeof(XMLInt32)
+    );//new XMLInt32[wsTblLen];
 
     tok->setRangeValues(wsRange, wsTblLen);
     setupRange(wsRange, gWhitespaceChars, 0);
@@ -183,7 +189,10 @@ void XMLRangeFactory::buildRanges() {
     // Create digits ranges
     tok = tokFactory->createRange();
     unsigned int digitTblLen = getTableLen(gDigitChars);
-    XMLInt32* digitRange = new XMLInt32[digitTblLen];
+    XMLInt32* digitRange = (XMLInt32*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        digitTblLen * sizeof(XMLInt32)
+    );//new XMLInt32[digitTblLen];
 
     tok->setRangeValues(digitRange, digitTblLen);
     setupRange(digitRange, gDigitChars, 0);
@@ -193,8 +202,11 @@ void XMLRangeFactory::buildRanges() {
     unsigned int baseTblLen = getTableLen(gBaseChars);
     unsigned int ideoTblLen = getTableLen(gIdeographicChars);
     unsigned int wordRangeLen = baseTblLen + ideoTblLen + digitTblLen;
-    XMLInt32* wordRange = new XMLInt32[wordRangeLen];
-    ArrayJanitor<XMLInt32> janWordRange(wordRange);
+    XMLInt32* wordRange = (XMLInt32*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        wordRangeLen * sizeof(XMLInt32)
+    );//new XMLInt32[wordRangeLen];
+    ArrayJanitor<XMLInt32> janWordRange(wordRange, XMLPlatformUtils::fgMemoryManager);
 
     setupRange(wordRange, gBaseChars, 0);
     setupRange(wordRange, gIdeographicChars, baseTblLen);
@@ -205,7 +217,10 @@ void XMLRangeFactory::buildRanges() {
     unsigned int combTblLen = getTableLen(gCombiningChars);
     unsigned int extTblLen = getTableLen(gExtenderChars);
     unsigned int nameTblLen = wordRangeLen + combTblLen + extTblLen;
-    XMLInt32* nameRange = new XMLInt32[nameTblLen + 8];
+    XMLInt32* nameRange = (XMLInt32*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        (nameTblLen + 8) * sizeof(XMLInt32)
+    );//new XMLInt32[nameTblLen + 8];
 
     tok->setRangeValues(nameRange, nameTblLen + 8);
     memcpy(nameRange, wordRange, wordRangeLen * sizeof(XMLInt32));
@@ -226,7 +241,10 @@ void XMLRangeFactory::buildRanges() {
     // Create initialNameChar ranges
     tok = tokFactory->createRange();
     unsigned int initialNameTblLen = baseTblLen + ideoTblLen;
-    XMLInt32* initialNameRange = new XMLInt32[initialNameTblLen + 4];
+    XMLInt32* initialNameRange = (XMLInt32*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        (initialNameTblLen + 4) * sizeof(XMLInt32)
+    );//new XMLInt32[initialNameTblLen + 4];
 
     tok->setRangeValues(initialNameRange, initialNameTblLen + 4);
     memcpy(initialNameRange, wordRange, initialNameTblLen * sizeof(XMLInt32));

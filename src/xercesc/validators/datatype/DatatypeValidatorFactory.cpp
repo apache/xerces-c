@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.15  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -725,7 +728,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
     // So instead of storing them in the static fBuiltInRegistry,
     //   store them in local data fUserDefinedRegistry
     if (fUserDefinedRegistry == 0)
-        fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29);
+        fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29, fMemoryManager);
 
     if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
 
@@ -825,7 +828,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         if (isUserDefined) {
 
             if (!fUserDefinedRegistry) {
-                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29);
+                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29, fMemoryManager);
             }
 
             fUserDefinedRegistry->put((void *)typeName, datatypeValidator);
@@ -863,7 +866,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         if (userDefined) {
 
             if (!fUserDefinedRegistry) {
-                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29);
+                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29, fMemoryManager);
             }
 
             fUserDefinedRegistry->put((void *)typeName, datatypeValidator);

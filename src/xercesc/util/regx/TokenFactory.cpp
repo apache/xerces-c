@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.7  2003/05/16 21:37:00  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -126,7 +129,7 @@ bool TokenFactory::fRangeInitialized = false;
 //  TokenFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
 TokenFactory::TokenFactory(MemoryManager* const manager) :
-    fTokens(new (manager) RefVectorOf<Token> (16, true))
+    fTokens(new (manager) RefVectorOf<Token> (16, true, manager))
     , fEmpty(0)
     , fLineBegin(0)
     , fLineBegin2(0)

@@ -513,7 +513,7 @@ ComplexTypeInfo::setBaseComplexTypeInfo(ComplexTypeInfo* const typeInfo) {
 inline void ComplexTypeInfo::addElement(SchemaElementDecl* const elem) {
 
     if (!fElements) {
-        fElements = new (fMemoryManager) RefVectorOf<SchemaElementDecl>(8, false);
+        fElements = new (fMemoryManager) RefVectorOf<SchemaElementDecl>(8, false, fMemoryManager);
     }
     else if (fElements->containsElement(elem)) {
         return;

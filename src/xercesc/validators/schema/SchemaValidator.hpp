@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/05/18 14:02:08  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.16  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -407,7 +410,7 @@ inline void SchemaValidator::setXsiType(const XMLCh* const        prefix
        , const unsigned int        uriId)
 {
     delete fXsiType;
-    fXsiType = new (fMemoryManager) QName(prefix, localPart, uriId);
+    fXsiType = new (fMemoryManager) QName(prefix, localPart, uriId, fMemoryManager);
 }
 
 inline void SchemaValidator::setNillable(bool isNil) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -168,6 +171,7 @@ public :
       , QName* const                      firstChild
       , QName* const                      secondChild
       , const ContentSpecNode::NodeTypes  cmOp
+      , MemoryManager* const              manager
     );
 
     ~SimpleContentModel();
@@ -249,6 +253,7 @@ inline SimpleContentModel::SimpleContentModel
     , QName* const                     firstChild
     , QName* const                     secondChild
     , const ContentSpecNode::NodeTypes cmOp
+     , MemoryManager* const            manager
 )
     : fFirstChild(0)
     , fSecondChild(0)
@@ -256,14 +261,14 @@ inline SimpleContentModel::SimpleContentModel
 	, fDTD(dtd)
 {
     if (firstChild)
-        fFirstChild = new (XMLPlatformUtils::fgMemoryManager) QName(*firstChild);
+        fFirstChild = new (manager) QName(*firstChild);
     else
-        fFirstChild = new (XMLPlatformUtils::fgMemoryManager) QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fFirstChild = new (manager) QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId, manager);
 
     if (secondChild)
-        fSecondChild = new (XMLPlatformUtils::fgMemoryManager) QName(*secondChild);
+        fSecondChild = new (manager) QName(*secondChild);
     else
-        fSecondChild = new (XMLPlatformUtils::fgMemoryManager) QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fSecondChild = new (manager) QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId, manager);
 }
 
 inline SimpleContentModel::~SimpleContentModel()

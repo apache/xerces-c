@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.7  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -108,12 +111,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 GrammarResolver::GrammarResolver(MemoryManager* const manager) :
     fCacheGrammar(false)
     , fUseCachedGrammar(false)
+    , fStringPool(109, manager)
     , fGrammarRegistry(0)
     , fCachedGrammarRegistry(0)
     , fDataTypeReg(0)
     , fMemoryManager(manager)	 
 {
-    fGrammarRegistry = new (manager) RefHashTableOf<Grammar>(29, true);
+    fGrammarRegistry = new (manager) RefHashTableOf<Grammar>(29, true,  manager);
 }
 
 GrammarResolver::~GrammarResolver()
@@ -212,7 +216,7 @@ void GrammarResolver::resetCachedGrammar()
 void GrammarResolver::cacheGrammars()
 {
     RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
-    ValueVectorOf<XMLCh*> keys(8);
+    ValueVectorOf<XMLCh*> keys(8, fMemoryManager);
     unsigned int keyCount = 0;
 
     //Check if a grammar has already been cached.
@@ -229,7 +233,7 @@ void GrammarResolver::cacheGrammars()
     }
 
     if (!fCachedGrammarRegistry)
-        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true);
+        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true, fMemoryManager);
 
     // Cache
     for (unsigned int i=0; i<keyCount; i++) {
@@ -247,7 +251,7 @@ void GrammarResolver::cacheGrammars()
 void GrammarResolver::cacheGrammarFromParse(const bool aValue) {
 
     if (aValue && !fCachedGrammarRegistry) {
-        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true);
+        fCachedGrammarRegistry = new (fMemoryManager) RefHashTableOf<Grammar>(29, true, fMemoryManager);
     }
 
     fCacheGrammar = aValue;

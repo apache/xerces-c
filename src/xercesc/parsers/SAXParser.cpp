@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.18  2003/05/16 21:36:59  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -291,7 +294,7 @@ void SAXParser::initialize()
 {
     // Create grammar resolver and string pool to pass to scanner
     fGrammarResolver = new (fMemoryManager) GrammarResolver(fMemoryManager);
-    fURIStringPool = new (fMemoryManager) XMLStringPool();
+    fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     // Create our scanner and tell it what validator to use
     fScanner = XMLScannerResolver::getDefaultScanner(fValidator,fMemoryManager);

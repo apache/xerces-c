@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/18 14:02:09  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.7  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -162,7 +165,7 @@ void XPathMatcher::init(XercesXPath* const xpath) {
 
         if (fLocationPathSize) {
 
-            fStepIndexes = new (fMemoryManager) RefVectorOf<ValueStackOf<int> >(fLocationPathSize);
+            fStepIndexes = new (fMemoryManager) RefVectorOf<ValueStackOf<int> >(fLocationPathSize, true, fMemoryManager);
             fCurrentStep = (int*) fMemoryManager->allocate
             (
                 fLocationPathSize * sizeof(int)
@@ -177,7 +180,7 @@ void XPathMatcher::init(XercesXPath* const xpath) {
             );//new int[fLocationPathSize];
 
             for(unsigned int i=0; i < fLocationPathSize; i++) {
-                fStepIndexes->addElement(new (fMemoryManager) ValueStackOf<int>(8));
+                fStepIndexes->addElement(new (fMemoryManager) ValueStackOf<int>(8, fMemoryManager));
             }
         }
     }
@@ -262,7 +265,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
             if (nodeTest->getType() == XercesNodeTest::QNAME) {
 
-                QName elemQName(elemPrefix, elemDecl.getElementName()->getLocalPart(), urlId);
+                QName elemQName(elemPrefix, elemDecl.getElementName()->getLocalPart(), urlId, fMemoryManager);
 
 //                if (!(*(nodeTest->getName()) == *(elemDecl.getElementName()))) {
                 if (!(*(nodeTest->getName()) == elemQName)) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:09  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -104,10 +107,10 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
 
             fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(*(other.fFields));
             fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
-            fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(other.fFields->curCapacity());
+            fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(other.fFields->curCapacity(), true, fMemoryManager);
 
             for (unsigned int i=0; i<valuesSize; i++) {
-                fValues->addElement(XMLString::replicate(other.fValues->elementAt(i)));
+                fValues->addElement(XMLString::replicate(other.fValues->elementAt(i), fMemoryManager));
             }
         }
     }

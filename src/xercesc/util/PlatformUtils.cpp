@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.9  2003/04/30 16:54:38  knoaman
  * Initialize xerces with a default memory manager if none is provided.
  *
@@ -306,7 +309,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     XMLLCPTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
     if (!defXCode)
         panic(PanicHandler::Panic_NoDefTranscoder);
-    XMLString::initString(defXCode);
+    XMLString::initString(defXCode, fgMemoryManager);
 
     //
     //  Now lets ask the per-platform code to give us an instance of the type

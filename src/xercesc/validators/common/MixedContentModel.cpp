@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -169,8 +172,8 @@ MixedContentModel::MixedContentModel(const bool             dtd
     //  it an initial capacity of 64 which should be more than enough for
     //  99% of the scenarios.
     //
-    ValueVectorOf<QName*> children(64);
-    ValueVectorOf<ContentSpecNode::NodeTypes> childTypes(64);
+    ValueVectorOf<QName*> children(64, fMemoryManager);
+    ValueVectorOf<ContentSpecNode::NodeTypes> childTypes(64, fMemoryManager);
 
     //
     //  Get the parent element's content spec. This is the head of the tree

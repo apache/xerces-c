@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.16  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -1455,7 +1458,8 @@ private :
     /** @name Initialization */
     //@{
     /** Init/Term methods called from XMLPlatformUtils class */
-    static void initString(XMLLCPTranscoder* const defToUse);
+    static void initString(XMLLCPTranscoder* const defToUse,
+                           MemoryManager* const manager);
     static void termString();
     //@}
 
@@ -1466,6 +1470,8 @@ private :
 	static bool validateRegion(const XMLCh* const str1, const int offset1,
 						const XMLCh* const str2, const int offset2,
 						const unsigned int charCount);
+
+    static MemoryManager* fgMemoryManager;
 
     friend class XMLPlatformUtils;
 };

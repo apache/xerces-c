@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.11  2003/05/16 21:37:00  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -696,7 +699,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
   if (fOperations == 0)
 	  prepare();
 
-  RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true);
+  RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true, fMemoryManager);
 
   Context* context = 0;
   Context* tmpContext = 0;
@@ -869,7 +872,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
 		ThrowXML(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString);
   }
       
-  RefVectorOf<Match> *subEx = new (fMemoryManager) RefVectorOf<Match>(10, true);
+  RefVectorOf<Match> *subEx = new (fMemoryManager) RefVectorOf<Match>(10, true, fMemoryManager);
 	  Janitor<RefVectorOf<Match> > janSubEx(subEx);
 
   //Call to tokenize with Match vector so that we keep track of the locations

@@ -182,7 +182,7 @@ XMLAttDefList& DTDElementDecl::getAttDefList() const
         if (!fAttDefs)
             faultInAttDefList();
 
-        ((DTDElementDecl*)this)->fAttList = new DTDAttDefList(fAttDefs);
+        ((DTDElementDecl*)this)->fAttList = new (getMemoryManager()) DTDAttDefList(fAttDefs);
     }
 
     // Reset it before we return it
@@ -391,6 +391,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
             , specNode->getElement()
             , 0
             , ContentSpecNode::Leaf
+            , getMemoryManager()
         );
     }
      else if ((specNode->getType() == ContentSpecNode::Choice)
@@ -409,6 +410,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
                 , specNode->getFirst()->getElement()
                 , specNode->getSecond()->getElement()
                 , specNode->getType()
+                , getMemoryManager()
             );
         }
     }
@@ -429,6 +431,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
                 , specNode->getFirst()->getElement()
                 , 0
                 , specNode->getType()
+                , getMemoryManager()
             );
         }
     }
@@ -450,7 +453,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
 void DTDElementDecl::faultInAttDefList() const
 {
     // Use a hash modulus of 29 and tell it owns its elements
-    ((DTDElementDecl*)this)->fAttDefs = new (getMemoryManager()) RefHashTableOf<DTDAttDef>(29, true);
+    ((DTDElementDecl*)this)->fAttDefs = new (getMemoryManager()) RefHashTableOf<DTDAttDef>(29, true, getMemoryManager());
 }
 
 XERCES_CPP_NAMESPACE_END

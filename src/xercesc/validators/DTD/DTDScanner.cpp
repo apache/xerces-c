@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.26  2003/05/16 21:43:19  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -264,6 +267,9 @@ static ContentSpecNode* makeRepNode(const XMLCh testCh,
             ContentSpecNode::ZeroOrOne
             , prevNode
             , 0
+            , true
+            , true
+            , manager
         );
     }
      else if (testCh == chPlus)
@@ -273,6 +279,9 @@ static ContentSpecNode* makeRepNode(const XMLCh testCh,
             ContentSpecNode::OneOrMore
             , prevNode
             , 0
+            , true
+            , true
+            , manager
         );
     }
      else if (testCh == chAsterisk)
@@ -282,6 +291,9 @@ static ContentSpecNode* makeRepNode(const XMLCh testCh,
             ContentSpecNode::ZeroOrMore
             , prevNode
             , 0
+            , true
+            , true
+            , manager
         );
     }
 
@@ -306,7 +318,7 @@ DTDScanner::DTDScanner( DTDGrammar*           dtdGrammar
     , fPEntityDeclPool(0)
     , fDocTypeReaderId(0)
 {
-    fPEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
+    fPEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109, 128, fMemoryManager);
 }
 
 DTDScanner::~DTDScanner()
@@ -1280,7 +1292,11 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
             decl->setExternalElemDeclaration(isReadingExternalEntity());
             fDTDGrammar->putElemDecl(decl);
         }
-        curNode = new (fMemoryManager) ContentSpecNode(decl->getElementName());
+        curNode = new (fMemoryManager) ContentSpecNode
+        (
+            decl->getElementName()
+            , fMemoryManager
+        );
 
         // Check for a PE ref here, but don't require spaces
         const bool gotSpaces = checkForPERef(false, false, true);
@@ -1329,13 +1345,29 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     if (opCh == chComma)
     {
         curType = ContentSpecNode::Sequence;
-        headNode = new (fMemoryManager) ContentSpecNode(curType, curNode, 0);
+        headNode = new (fMemoryManager) ContentSpecNode
+        (
+            curType
+            , curNode
+            , 0
+            , true
+            , true
+            , fMemoryManager
+        );
         curNode = headNode;
     }
      else if (opCh == chPipe)
     {
         curType = ContentSpecNode::Choice;
-        headNode = new (fMemoryManager) ContentSpecNode(curType, curNode, 0);
+        headNode = new (fMemoryManager) ContentSpecNode
+        (
+            curType
+            , curNode
+            , 0
+            , true
+            , true
+            , fMemoryManager
+        );
         curNode = headNode;
     }
      else
@@ -1413,11 +1445,14 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
                     // Else patch it in and make it the new current
-                    ContentSpecNode* newCur = new ContentSpecNode
+                    ContentSpecNode* newCur = new (fMemoryManager) ContentSpecNode
                     (
                         curType
                         , subNode
                         , 0
+                        , true
+                        , true
+                        , fMemoryManager
                     );
                     curNode->setSecond(newCur);
                     lastNode = curNode;
@@ -1457,7 +1492,11 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         fDTDGrammar->putElemDecl(decl);
                     }
 
-                    ContentSpecNode* tmpLeaf = new (fMemoryManager) ContentSpecNode(decl->getElementName());
+                    ContentSpecNode* tmpLeaf = new (fMemoryManager) ContentSpecNode
+                    (
+                        decl->getElementName()
+                        , fMemoryManager
+                    );
 
                     // Check for a repetition character after the leaf
                     const XMLCh repCh = fReaderMgr->peekNextChar();
@@ -1476,6 +1515,9 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         curType
                         , tmpLeaf2
                         , 0
+                        , true
+                        , true
+                        , fMemoryManager
                     );
                     curNode->setSecond(newCur);
                     lastNode = curNode;
@@ -3314,11 +3356,18 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
     //  PCDATA element id. This current node pointer will be pushed down the
     //  tree as we go.
     //
-    ContentSpecNode* curNode =
-                 new (fMemoryManager) ContentSpecNode(new (fMemoryManager) QName(XMLUni::fgZeroLenString,
-                                               XMLUni::fgZeroLenString,
-                                               XMLElementDecl::fgPCDataElemId),
-                                     false);
+    ContentSpecNode* curNode = new (fMemoryManager) ContentSpecNode
+    (
+        new (fMemoryManager) QName
+        (
+            XMLUni::fgZeroLenString
+            , XMLUni::fgZeroLenString
+            , XMLElementDecl::fgPCDataElemId
+            , fMemoryManager
+        )
+        , false
+        , fMemoryManager
+    );
 
     //
     //  Set the initial leaf as the temporary head. If we hit the first choice
@@ -3390,6 +3439,9 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                         ContentSpecNode::ZeroOrMore
                         , headNode
                         , 0
+                        , true
+                        , true
+                        , fMemoryManager
                     );
                 }
 
@@ -3447,7 +3499,14 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                 (
                     ContentSpecNode::Choice
                     , curNode
-                    , new (fMemoryManager) ContentSpecNode(decl->getElementName())
+                    , new (fMemoryManager) ContentSpecNode
+                      (
+                          decl->getElementName()
+                          , fMemoryManager
+                      )
+                    , true
+                    , true
+                    , fMemoryManager
                 );
 
                 // Remember the top node
@@ -3462,7 +3521,14 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                     (
                         ContentSpecNode::Choice
                         , oldRight
-                        , new (fMemoryManager) ContentSpecNode(decl->getElementName())
+                        , new (fMemoryManager) ContentSpecNode
+                          (
+                              decl->getElementName()
+                              , fMemoryManager
+                          )
+                        , true
+                        , true
+                        , fMemoryManager
                     )
                 );
 

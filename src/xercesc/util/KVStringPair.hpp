@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -138,7 +141,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    KVStringPair(MemoryManager* const manager);
+    KVStringPair(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     KVStringPair
     (
         const XMLCh* const key

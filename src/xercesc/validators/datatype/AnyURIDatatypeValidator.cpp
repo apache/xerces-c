@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -204,7 +207,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
     try
     {
         if (!fTempURI)
-            fTempURI = new XMLUri(BASE_URI, fMemoryManager);
+            fTempURI = new (fMemoryManager) XMLUri(BASE_URI, fMemoryManager);
 
         // Support for relative URLs
         // According to Java 1.1: URLs may also be specified with a

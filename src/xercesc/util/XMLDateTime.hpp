@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.7  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -132,10 +135,9 @@ public:
     // ctors and dtor
     // -----------------------------------------------------------------------
 
-    XMLDateTime();
-
-    XMLDateTime(const XMLCh* const);
-
+    XMLDateTime(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XMLDateTime(const XMLCh* const,
+                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~XMLDateTime();
 
     inline void           setBuffer(const XMLCh* const);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -147,7 +150,7 @@ XMLStringPool::XMLStringPool(const  unsigned int  modulus,
     , fCurId(1)
 {
     // Create the hash table, passing it the modulus
-    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(modulus);
+    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(modulus, fMemoryManager);
 
     // Do an initial allocation of the id map and zero it all out
     fIdMap = (PoolElem**) fMemoryManager->allocate

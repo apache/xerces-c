@@ -1225,7 +1225,7 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>*
         XMLBufBid bbXsi(&fBufMgr);
         XMLBuffer& fXsiType = bbXsi.getBuffer();
 
-        QName attName;
+        QName attName(fMemoryManager);
 
         for (index = 0; index < attCount; index++)
         {

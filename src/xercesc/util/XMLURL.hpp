@@ -131,7 +131,7 @@ public:
     XMLURL
     (
         const   char* const     urlText
-        , MemoryManager* const manager 
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     XMLURL(const XMLURL& toCopy);
     virtual ~XMLURL();

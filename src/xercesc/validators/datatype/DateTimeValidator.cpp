@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.6  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -348,7 +351,7 @@ void DateTimeValidator::setEnumeration()
         return;
 
     int enumLength = fStrEnumeration->size();
-    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true, fMemoryManager);
     fEnumerationInherited = false;
 
     for ( int i = 0; i < enumLength; i++)

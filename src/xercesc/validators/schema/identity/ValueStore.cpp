@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/18 14:02:09  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.6  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -162,7 +165,7 @@ void ValueStore::addValue(IC_Field* const field,
 
         // store values
         if (!fValueTuples) {
-            fValueTuples = new (fMemoryManager) RefVectorOf<FieldValueMap>(4);
+            fValueTuples = new (fMemoryManager) RefVectorOf<FieldValueMap>(4, true, fMemoryManager);
         }
 
         fValueTuples->addElement(new (fMemoryManager) FieldValueMap(fValues));
@@ -184,7 +187,7 @@ void ValueStore::append(const ValueStore* const other) {
         if (!contains(valueMap)) {
 
             if (!fValueTuples) {
-                fValueTuples = new (fMemoryManager) RefVectorOf<FieldValueMap>(4);
+                fValueTuples = new (fMemoryManager) RefVectorOf<FieldValueMap>(4, true, fMemoryManager);
             }
 
             fValueTuples->addElement(new (fMemoryManager) FieldValueMap(*valueMap));

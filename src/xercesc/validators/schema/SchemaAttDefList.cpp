@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.2  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -113,7 +116,7 @@ bool SchemaAttDefList::isEmpty() const
 XMLAttDef* SchemaAttDefList::findAttDef(const  unsigned long   uriID
                                     , const XMLCh* const    attName)
 {
-   QName tempAtt(attName, uriID);
+   QName tempAtt(attName, uriID, XMLPlatformUtils::fgMemoryManager);
    return fList->get((void*)tempAtt.getLocalPart(), uriID);
 }
 
@@ -122,7 +125,7 @@ const XMLAttDef*
 SchemaAttDefList::findAttDef(  const   unsigned long   uriID
                             , const XMLCh* const    attName) const
 {
-   QName tempAtt(attName, uriID);
+   QName tempAtt(attName, uriID, XMLPlatformUtils::fgMemoryManager);
    return fList->get((void*)tempAtt.getLocalPart(), uriID);
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:08  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/15 18:57:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -99,7 +102,7 @@ XercesGroupInfo::XercesGroupInfo(MemoryManager* const manager)
     , fBaseGroup(0)
     , fLocator(0)
 {
-    fElements = new (manager) RefVectorOf<SchemaElementDecl>(4, false);
+    fElements = new (manager) RefVectorOf<SchemaElementDecl>(4, false, manager);
 }
 
 

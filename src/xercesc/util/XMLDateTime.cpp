@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.10  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -256,8 +259,8 @@ int XMLDateTime::compare(const XMLDateTime* const pDate1
         return EQUAL;
 
     //long comparison algorithm is required
-    XMLDateTime tempA, *pTempA = &tempA;
-    XMLDateTime tempB, *pTempB = &tempB;
+    XMLDateTime tempA(XMLPlatformUtils::fgMemoryManager), *pTempA = &tempA;
+    XMLDateTime tempB(XMLPlatformUtils::fgMemoryManager), *pTempB = &tempB;
 
     addDuration(pTempA, pDate1, 0);
     addDuration(pTempB, pDate2, 0);
@@ -473,16 +476,17 @@ XMLDateTime::~XMLDateTime()
         fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
 }
 
-XMLDateTime::XMLDateTime()
+XMLDateTime::XMLDateTime(MemoryManager* const manager)
 : fBuffer(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     reset();
 }
 
-XMLDateTime::XMLDateTime(const XMLCh* const aString)
+XMLDateTime::XMLDateTime(const XMLCh* const aString,
+                         MemoryManager* const manager)
 : fBuffer(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     setBuffer(aString);
 }

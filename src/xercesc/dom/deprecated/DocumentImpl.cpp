@@ -355,14 +355,18 @@ TextImpl *DocumentImpl::createTextNode(const DOMString &data)
 };
 
 
-NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion)
+NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root,
+                                                    unsigned long whatToShow,
+                                                    DOM_NodeFilter* filter,
+                                                    bool entityReferenceExpansion,
+                                                    MemoryManager* const manager)
 {
 		// Create the node iterator implementation object.
 		//	Add it to the vector of iterators that must be synchronized when a node is deleted.
 		//	The vector of iterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
 		//	owner document.
 
-    NodeIteratorImpl* iter = new (XMLPlatformUtils::fgMemoryManager) NodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
+    NodeIteratorImpl* iter = new (manager) NodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOM_Document doc = root.getOwnerDocument();
     DocumentImpl* impl;
 
@@ -373,7 +377,7 @@ NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, unsigned long
         impl = (DocumentImpl *) root.fImpl;
 
     if (impl->iterators == 0L) {
-        impl->iterators = new (XMLPlatformUtils::fgMemoryManager) NodeIterators(1, false);
+        impl->iterators = new (manager) NodeIterators(1, false, manager);
         impl->iterators->addElement(iter);
     }
 
@@ -381,11 +385,14 @@ NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, unsigned long
 }
 
 
-TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion)
+TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, unsigned long whatToShow,
+                                                DOM_NodeFilter* filter,
+                                                bool entityReferenceExpansion,
+                                                MemoryManager* const manager)
 {
 		// See notes for createNodeIterator...
 
-    TreeWalkerImpl* twi = new (XMLPlatformUtils::fgMemoryManager) TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
+    TreeWalkerImpl* twi = new (manager) TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOM_Document doc = root.getOwnerDocument();
     DocumentImpl* impl;
 
@@ -396,7 +403,7 @@ TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, unsigned long wha
         impl = (DocumentImpl *) root.fImpl;
 
     if (impl->treeWalkers == 0L) {
-        impl->treeWalkers = new (XMLPlatformUtils::fgMemoryManager) TreeWalkers(1, false);
+        impl->treeWalkers = new (manager) TreeWalkers(1, false, manager);
         impl->treeWalkers->addElement(twi);
     }
 
@@ -735,7 +742,7 @@ RangeImpl* DocumentImpl::createRange()
     RangeImpl* range = new (fMemoryManager) RangeImpl(DOM_Document(this));
 
     if (ranges == 0L) {
-        ranges = new (fMemoryManager) RangeImpls(1, false);
+        ranges = new (fMemoryManager) RangeImpls(1, false, fMemoryManager);
     }
     ranges->addElement(range);
     return range;
@@ -812,7 +819,13 @@ bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
 void DocumentImpl::setUserData(NodeImpl* n, void* data)
 {
 	if (!userData && data)
-		userData = new (fMemoryManager) RefHashTableOf<void>(29, false, new (fMemoryManager) HashPtr());
+		userData = new (fMemoryManager) RefHashTableOf<void>
+        (
+            29
+            , false
+            , new (fMemoryManager) HashPtr()
+            , fMemoryManager
+        );
 	if (!data && userData)
 		userData->removeKey((void*)n);
 	else

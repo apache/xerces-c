@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2003/05/18 14:02:05  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.9  2003/05/16 21:36:59  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -140,9 +143,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 template <class TVal>
 RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
-                                    , const bool adoptElems)
+                                    , const bool adoptElems
+                                    , MemoryManager* const manager)
 
-    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    : fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -159,9 +163,10 @@ RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
 template <class TVal>
 RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
                                     , const bool adoptElems
-                                    , HashBase* hashBase)
+                                    , HashBase* hashBase
+                                    , MemoryManager* const manager)
 
-    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    : fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -175,9 +180,10 @@ RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
 }
 
 template <class TVal>
-RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus)
+RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus
+                                     , MemoryManager* const manager)
 
-    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    : fMemoryManager(manager)
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)

@@ -409,7 +409,7 @@ DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
 
     if (fNodeIterators == 0L) {
         //fNodeIterators = new (this) NodeIterators(1, false);
-        fNodeIterators = new NodeIterators(1, false);
+        fNodeIterators = new (fMemoryManager) NodeIterators(1, false, fMemoryManager);
     }
     fNodeIterators->addElement(nodeIterator);
 
@@ -650,7 +650,7 @@ DOMRange* DOMDocumentImpl::createRange()
 
     if (fRanges == 0L) {
         //fRanges = new (this) Ranges(1, false);
-        fRanges = new (fMemoryManager) Ranges(1, false); // XMemory
+        fRanges = new (fMemoryManager) Ranges(1, false, fMemoryManager); // XMemory
     }
     fRanges->addElement(range);
     return range;
@@ -991,7 +991,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* source) {
 void DOMDocumentImpl::normalizeDocument() {
 
     if(!fNormalizer) 
-        fNormalizer = new DOMNormalizer();
+        fNormalizer = new (fMemoryManager) DOMNormalizer();
 
     fNormalizer->normalizeDocument(this);
 }
@@ -1177,7 +1177,13 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
     if (!fUserDataTable) {
         // create the table on heap so that it can be cleaned in destructor
         //fUserDataTable = new (this) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
-        fUserDataTable = new (fMemoryManager) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
+        fUserDataTable = new (fMemoryManager) RefHashTableOf<DOMNodeUserDataTable>
+        (
+            29
+            , true
+            , new HashPtr()
+            , fMemoryManager
+        );
     }
     else {
         node_userDataTable = fUserDataTable->get((void*)n);
@@ -1198,7 +1204,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
         // create the DOMNodeUserDataTable if not exists
         // create on the heap and adopted by the hashtable which will delete it upon removal.
         if (!node_userDataTable) {
-            node_userDataTable  = new (fMemoryManager) RefHashTableOf<DOMUserDataRecord>(29, true);
+            node_userDataTable  = new (fMemoryManager) RefHashTableOf<DOMUserDataRecord>(29, true, fMemoryManager);
             fUserDataTable->put(n, node_userDataTable);
         }
 
@@ -1332,7 +1338,7 @@ void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
         fRecycleNodePtr = new (fMemoryManager) RefArrayOf<DOMNodePtr> (15, fMemoryManager);
 
     if (!fRecycleNodePtr->operator[](type))
-        fRecycleNodePtr->operator[](type) = new (fMemoryManager) RefStackOf<DOMNode> (15, false);
+        fRecycleNodePtr->operator[](type) = new (fMemoryManager) RefStackOf<DOMNode> (15, false, fMemoryManager);
 
     fRecycleNodePtr->operator[](type)->push(object);
 }
@@ -1340,7 +1346,7 @@ void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
 void DOMDocumentImpl::releaseBuffer(DOMBuffer* buffer)
 {
     if (!fRecycleBufferPtr)
-        fRecycleBufferPtr = new (fMemoryManager) RefStackOf<DOMBuffer> (15, false);
+        fRecycleBufferPtr = new (fMemoryManager) RefStackOf<DOMBuffer> (15, false, fMemoryManager);
 
     fRecycleBufferPtr->push(buffer);
 }

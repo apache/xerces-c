@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/15 19:10:23  knoaman
  * Add missing include.
  *
@@ -281,7 +284,7 @@ void RangeTokenMap::initializeRegistry() {
             fTokenFactory = new TokenFactory();
             fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
             fRangeMap = new RefHashTableOf<RangeFactory>(29);
-	        fCategories = new XMLStringPool();
+	        fCategories = new XMLStringPool(109);
 	        fRegistryInitialized = true;
         }
     }

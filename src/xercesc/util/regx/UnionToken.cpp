@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 21:37:00  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -138,7 +141,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
         return;
 
     if (fChildren == 0)
-        fChildren = new (tokFactory->getMemoryManager()) RefVectorOf<Token>(INITIALSIZE, false);
+        fChildren = new (tokFactory->getMemoryManager()) RefVectorOf<Token>(INITIALSIZE, false, tokFactory->getMemoryManager());
 
     if (getTokenType() == T_UNION) {
 

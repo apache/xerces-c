@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.3  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -184,7 +187,7 @@ XMLInt32 CharOp::getData() const {
 // ---------------------------------------------------------------------------
 UnionOp::UnionOp(const short type, const int size, MemoryManager* const manager)
     : Op(type)
-      , fBranches(new (manager) RefVectorOf<Op> (size, false)) {
+      , fBranches(new (manager) RefVectorOf<Op> (size, false, manager)) {
 
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/05/18 14:02:08  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.10  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -900,7 +903,7 @@ inline void
 SchemaElementDecl::addIdentityConstraint(IdentityConstraint* const ic) {
 
     if (!fIdentityConstraints) {
-        fIdentityConstraints = new RefVectorOf<IdentityConstraint>(16);
+        fIdentityConstraints = new (getMemoryManager()) RefVectorOf<IdentityConstraint>(16, true, getMemoryManager());
     }
 
     fIdentityConstraints->addElement(ic);

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.4  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -124,7 +127,7 @@ DatatypeValidator* MonthDayDatatypeValidator::newInstance
 //
 XMLDateTime* MonthDayDatatypeValidator::parse(const XMLCh* const content)
 {
-    XMLDateTime *pRetDate = new (fMemoryManager) XMLDateTime(content);
+    XMLDateTime *pRetDate = new (fMemoryManager) XMLDateTime(content, fMemoryManager);
 
     try
     {

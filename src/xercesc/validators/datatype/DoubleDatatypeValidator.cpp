@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -129,8 +132,8 @@ DoubleDatatypeValidator::~DoubleDatatypeValidator()
 int DoubleDatatypeValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue)
 {
-    XMLDouble lObj(lValue);
-    XMLDouble rObj(rValue);
+    XMLDouble lObj(lValue, fMemoryManager);
+    XMLDouble rObj(rValue, fMemoryManager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -184,22 +187,22 @@ int  DoubleDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  DoubleDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new (fMemoryManager) XMLDouble(value);
+    fMaxInclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new (fMemoryManager) XMLDouble(value);
+    fMaxExclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new (fMemoryManager) XMLDouble(value);
+    fMinInclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new (fMemoryManager) XMLDouble(value);
+    fMinExclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
 void  DoubleDatatypeValidator::setEnumeration()
@@ -242,12 +245,12 @@ void  DoubleDatatypeValidator::setEnumeration()
         checkContent(fStrEnumeration->elementAt(i), false);
     }
 
-    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true);
+    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true, fMemoryManager);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new (fMemoryManager) XMLDouble(fStrEnumeration->elementAt(i)), i);
+        fEnumeration->insertElementAt(new (fMemoryManager) XMLDouble(fStrEnumeration->elementAt(i), fMemoryManager), i);
     }
 }
 
@@ -292,7 +295,7 @@ void DoubleDatatypeValidator::checkContent( const XMLCh* const content, bool asB
         return;
 
     try {
-        XMLDouble theValue(content);
+        XMLDouble theValue(content, fMemoryManager);
         XMLDouble *theData = &theValue;
 
         if (getEnumeration())

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:06  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/15 18:54:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -112,10 +115,10 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     //  <TBD> Investigate what the optimum values would be for the various
     //  pools.
     //
-    fElemDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(109);
-    fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29);
-    fEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109);
-    fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109);
+    fElemDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(109, 128, fMemoryManager);
+    fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
+    fEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109, 128, fMemoryManager);
+    fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
 
     //
     //  Call our own reset method. This lets us have the pool setup stuff

@@ -501,7 +501,7 @@ void IGXMLScanner::commonInit()
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
-    fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32);
+    fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
 
     //  Create the Validator and init them
     fDTDValidator = new (fMemoryManager) DTDValidator();
@@ -2083,7 +2083,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //if schema, check if we should lax or skip the validation of this element
     bool parentValidation = fValidate;
     if (cv) {
-        QName element(fPrefixBuf.getRawBuffer(), &qnameRawBuf[prefixColonPos + 1], uriId);
+        QName element(fPrefixBuf.getRawBuffer(), &qnameRawBuf[prefixColonPos + 1], uriId, fMemoryManager);
         // elementDepth will be > 0, as cv is only constructed if element is not
         // root.
         laxThisOne = laxElementValidation(&element, cv, cm, elemDepth - 1);

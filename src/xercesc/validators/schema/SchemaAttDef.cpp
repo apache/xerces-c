@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/18 14:02:07  knoaman
+ * Memory manager implementation: pass per instance manager.
+ *
  * Revision 1.5  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -133,7 +136,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
 {
-    fAttName = new QName(prefix, localPart, uriId);
+    fAttName = new (manager) QName(prefix, localPart, uriId, manager);
 }
 
 SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
@@ -154,7 +157,7 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)
 {
-    fAttName = new QName(prefix, localPart, uriId);
+    fAttName = new (manager) QName(prefix, localPart, uriId, manager);
 }
 
 SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
@@ -172,11 +175,12 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fValidation(other->fValidation)
 {
     QName* otherName = other->getAttName();
-    fAttName = new QName(otherName->getPrefix(),
-                         otherName->getLocalPart(), otherName->getURI());
+    fAttName = new (getMemoryManager()) QName(otherName->getPrefix(),
+                         otherName->getLocalPart(), otherName->getURI(),
+                         getMemoryManager());
 
     if (other->fNamespaceList && other->fNamespaceList->size()) {
-        fNamespaceList = new ValueVectorOf<unsigned int>(*(other->fNamespaceList));
+        fNamespaceList = new (getMemoryManager()) ValueVectorOf<unsigned int>(*(other->fNamespaceList));
     }
 }
 

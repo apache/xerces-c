@@ -702,11 +702,11 @@ void XMLScanner::commonInit()
     //  Create the attribute list, which is used to store attribute values
     //  during start tag processing. Give it a reasonable initial size that
     //  will serve for most folks, though it will grow as required.
-    fAttrList = new (fMemoryManager) RefVectorOf<XMLAttr>(32);
+    fAttrList = new (fMemoryManager) RefVectorOf<XMLAttr>(32, true, fMemoryManager);
 
     //  Create the id ref list. This is used to enforce XML 1.0 ID ref
     //  semantics, i.e. all id refs must refer to elements that exist
-    fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(109);
+    fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(109, fMemoryManager);
 
     //  Create the GrammarResolver
     //fGrammarResolver = new GrammarResolver();
