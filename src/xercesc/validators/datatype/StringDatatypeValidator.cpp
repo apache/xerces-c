@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/02 19:20:42  peiyongz
+ * fWhiteSpace moved to DatatypeValidator
+ *
  * Revision 1.8  2003/10/01 01:09:35  knoaman
  * Refactoring of some code to improve performance.
  *
@@ -311,9 +314,6 @@ IMPL_XSERIALIZABLE_TOCREATE(StringDatatypeValidator)
 void StringDatatypeValidator::serialize(XSerializeEngine& serEng)
 {
     AbstractStringValidator::serialize(serEng);
-
-    // don't serialize fWhiteSpace, which is set to DatatypeValidator::PRESERVE
-    // by the constructor
 }
 
 XERCES_CPP_NAMESPACE_END
