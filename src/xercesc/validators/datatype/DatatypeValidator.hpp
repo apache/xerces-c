@@ -67,7 +67,6 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
-
 #include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -183,7 +182,7 @@ public:
       * Returns default value (collapse) for whiteSpace facet.
       * This function is overwritten in StringDatatypeValidator.
       */
-    virtual short getWSFacet () const;
+    short getWSFacet () const;
 
     /**
       * Returns the base datatype validator if set.
@@ -379,6 +378,11 @@ protected:
     void setType(ValidatorType);
 
     /**
+      * set fWhiteSpace
+      */
+    void setWhiteSpace(short);
+
+    /**
       * get WSString
       */
     const XMLCh*   getWSstring(const short WSType) const;
@@ -442,6 +446,7 @@ private:
     //
     // -----------------------------------------------------------------------
     bool                          fAnonymous;
+    short                         fWhiteSpace;
     int                           fFinalSet;
     int                           fFacetsDefined;
     int                           fFixed;
@@ -476,7 +481,7 @@ inline DatatypeValidator* DatatypeValidator::getBaseValidator() const {
 
 inline short DatatypeValidator::getWSFacet() const {
 
-    return COLLAPSE;
+    return fWhiteSpace;
 }
 
 inline DatatypeValidator::ValidatorType DatatypeValidator::getType() const
@@ -535,6 +540,11 @@ inline MemoryManager* DatatypeValidator::getMemoryManager() const
 inline void DatatypeValidator::setType(ValidatorType theType)
 {
     fType = theType;
+}
+
+inline void DatatypeValidator::setWhiteSpace(short newValue)
+{
+    fWhiteSpace = newValue;
 }
 
 inline void DatatypeValidator::setFacetsDefined(int facets)

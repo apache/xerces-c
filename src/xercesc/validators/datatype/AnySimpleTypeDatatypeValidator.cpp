@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/01 01:09:35  knoaman
+ * Refactoring of some code to improve performance.
+ *
  * Revision 1.6  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -95,7 +98,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 AnySimpleTypeDatatypeValidator::AnySimpleTypeDatatypeValidator(MemoryManager* const manager)
     : DatatypeValidator(0, 0, SchemaSymbols::XSD_RESTRICTION, DatatypeValidator::AnySimpleType, manager)
 {
-
+    setWhiteSpace(DatatypeValidator::PRESERVE);
 }
 
 AnySimpleTypeDatatypeValidator::~AnySimpleTypeDatatypeValidator()

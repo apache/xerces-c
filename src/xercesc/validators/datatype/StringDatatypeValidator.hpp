@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/10/01 01:09:35  knoaman
+ * Refactoring of some code to improve performance.
+ *
  * Revision 1.5  2003/09/29 21:47:35  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -122,16 +125,6 @@ public:
 
 	//@}
 
-    // -----------------------------------------------------------------------
-    // Getter methods
-    // -----------------------------------------------------------------------
-    /** @name Getter Functions */
-    //@{
-
-    virtual short getWSFacet() const;
-
-    //@}
-
     /**
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
@@ -175,26 +168,7 @@ protected:
     virtual void checkValueSpace(const XMLCh* const content);
 
     virtual int  getLength(const XMLCh* const content) const;
-
-private:
-
-    inline void setWhiteSpace(short);
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    // -----------------------------------------------------------------------
-     short                fWhiteSpace;         //DatatypeValidator::PRESERVE
-
 };
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-inline void StringDatatypeValidator::setWhiteSpace(short newValue)
-{
-    fWhiteSpace = newValue;
-}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/01 01:09:35  knoaman
+ * Refactoring of some code to improve performance.
+ *
  * Revision 1.7  2003/09/30 21:31:37  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -147,8 +150,9 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 StringDatatypeValidator::StringDatatypeValidator(MemoryManager* const manager)
 :AbstractStringValidator(0, 0, 0, DatatypeValidator::String, manager)
-,fWhiteSpace(DatatypeValidator::PRESERVE)
-{}
+{
+    setWhiteSpace(DatatypeValidator::PRESERVE);
+}
 
 StringDatatypeValidator::StringDatatypeValidator(
                           DatatypeValidator*            const baseValidator
@@ -157,8 +161,8 @@ StringDatatypeValidator::StringDatatypeValidator(
                         , const int                           finalSet
                         , MemoryManager* const                manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::String, manager)
-,fWhiteSpace(DatatypeValidator::PRESERVE)
 {
+    setWhiteSpace(DatatypeValidator::PRESERVE);
     init(enums);
 }
 
@@ -183,14 +187,9 @@ StringDatatypeValidator::StringDatatypeValidator(
                         , const ValidatorType                 type
                         , MemoryManager* const                manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, type, manager)
-,fWhiteSpace(DatatypeValidator::PRESERVE)
 {
+    setWhiteSpace(DatatypeValidator::PRESERVE);
     // do not invoke init() here!!!
-}
-
-short StringDatatypeValidator::getWSFacet() const
-{
-    return fWhiteSpace;
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/01 01:09:35  knoaman
+ * Refactoring of some code to improve performance.
+ *
  * Revision 1.9  2003/09/30 21:32:23  peiyongz
  * AnyURI, Base64, HexBin, NOTATION, List and QName
  *
@@ -159,6 +162,7 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
                                      MemoryManager* const manager)
     : fMemoryManager(manager)
     , fAnonymous(false)
+    , fWhiteSpace(COLLAPSE)
     , fFinalSet(finalSet)
     , fFacetsDefined(0)
     , fFixed(0)

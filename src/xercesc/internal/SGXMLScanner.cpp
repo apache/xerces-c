@@ -2228,13 +2228,16 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //  If we found an attdef for this one, then lets validate it.
                 if (fNormalizeData)
                 {
-                    // normalize the attribute according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
                     DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
-                    normBuf.set(tempBuf.getRawBuffer());
+                    if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                    {
+                        // normalize the attribute according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                        normBuf.set(tempBuf.getRawBuffer());
+                    }
                 }
 
                 if (fValidate && !skipThisOne) {
@@ -2268,13 +2271,16 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 {
                     if (fNormalizeData && (fGrammarType == Grammar::SchemaGrammarType))
                     {
-                        // normalize the attribute according to schema whitespace facet
-                        XMLBufBid bbtemp(&fBufMgr);
-                        XMLBuffer& tempBuf = bbtemp.getBuffer();
-
                         DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
-                        normBuf.set(tempBuf.getRawBuffer());
+                        if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                        {
+                            // normalize the attribute according to schema whitespace facet
+                            XMLBufBid bbtemp(&fBufMgr);
+                            XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                            normBuf.set(tempBuf.getRawBuffer());
+                        }
                     }
 
                     if (fValidate && !skipThisOne)
@@ -2844,14 +2850,18 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 XMLBuffer toFill(len+1, fMemoryManager);
                 toFill.set(rawBuf);
 
-                if (fNormalizeData) {
-                    // normalize the character according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
+                if (fNormalizeData)
+                {
                     DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
-                    toFill.set(tempBuf.getRawBuffer());
+                    if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                    {
+                        // normalize the character according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
+                        toFill.set(tempBuf.getRawBuffer());
+                    }
                 }
 
                 // tell the schema validation about the character data for checkContent later
@@ -2878,14 +2888,18 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 XMLBuffer toFill(len+1, fMemoryManager);
                 toFill.set(rawBuf);
 
-                if (fNormalizeData) {
-                    // normalize the character according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
+                if (fNormalizeData)
+                {
                     DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
-                    toFill.set(tempBuf.getRawBuffer());
+                    if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                    {
+                        // normalize the character according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
+                        toFill.set(tempBuf.getRawBuffer());
+                    }
                 }
 
                 // tell the schema validation about the character data for checkContent later
@@ -3629,14 +3643,18 @@ void SGXMLScanner::scanCDSection()
 
             if (fValidate) {
 
-                if (fNormalizeData) {
-                    // normalize the character according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
+                if (fNormalizeData)
+                {
                     DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, bbCData.getRawBuffer(),  tempBuf);
-                    bbCData.set(tempBuf.getRawBuffer());
+                    if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                    {
+                        // normalize the character according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, bbCData.getRawBuffer(),  tempBuf);
+                        bbCData.set(tempBuf.getRawBuffer());
+                    }
                 }
 
                 // tell the schema validation about the character data for checkContent later

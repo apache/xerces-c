@@ -100,12 +100,6 @@ public:
     //@{
 
     /**
-      * Returns default value (collapse) for whiteSpace facet.
-      * This function is overwritten in StringDatatypeValidator.
-      */
-    short getWSFacet () const;
-
-    /**
       * Returns whether the type is atomic or not
       */
     virtual bool isAtomic() const;
@@ -174,11 +168,6 @@ public:
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Getters
 // ---------------------------------------------------------------------------
-inline short AnySimpleTypeDatatypeValidator::getWSFacet() const {
-
-    return DatatypeValidator::PRESERVE;
-}
-
 inline bool AnySimpleTypeDatatypeValidator::isAtomic() const {
 
     return false;

@@ -366,13 +366,16 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //  If we found an attdef for this one, then lets validate it.
                 if (fNormalizeData)
                 {
-                    // normalize the attribute according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
                     DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
-                    normBuf.set(tempBuf.getRawBuffer());
+                    if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                    {
+                        // normalize the attribute according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                        normBuf.set(tempBuf.getRawBuffer());
+                    }
                 }
 
                 if (fValidate && !skipThisOne) {
@@ -408,13 +411,16 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 {
                     if (fNormalizeData && (fGrammarType == Grammar::SchemaGrammarType))
                     {
-                        // normalize the attribute according to schema whitespace facet
-                        XMLBufBid bbtemp(&fBufMgr);
-                        XMLBuffer& tempBuf = bbtemp.getBuffer();
-
                         DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
-                        normBuf.set(tempBuf.getRawBuffer());
+                        if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                        {
+                            // normalize the attribute according to schema whitespace facet
+                            XMLBufBid bbtemp(&fBufMgr);
+                            XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), tempBuf);
+                            normBuf.set(tempBuf.getRawBuffer());
+                        }
                     }
 
                     if (fValidate && !skipThisOne)
@@ -651,7 +657,6 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
 
     // Get the type and name
     const XMLAttDef::AttTypes type = attDef->getType();
-    const XMLCh* const attrName = attDef->getFullName();
 
     // Assume its going to go fine, and empty the target buffer in preperation
     bool retVal = true;
@@ -681,7 +686,7 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
         //  not allowed in attribute values.
         if (!escaped && (*srcPtr == chOpenAngle))
         {
-            emitError(XMLErrs::BracketInAttrValue, attrName);
+            emitError(XMLErrs::BracketInAttrValue, attDef->getFullName());
             retVal = false;
         }
 
@@ -697,7 +702,7 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                     {
                          // Can't have a standalone document declaration of "yes" if  attribute
                          // values are subject to normalisation
-                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attDef->getFullName());
                          if(fGrammarType == Grammar::SchemaGrammarType) {
                              ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
                          }
@@ -739,7 +744,7 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                         {
                             // Can't have a standalone document declaration of "yes" if  attribute
                             // values are subject to normalisation
-                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attDef->getFullName());
                             if(fGrammarType == Grammar::SchemaGrammarType) {
                                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
                             }
@@ -1054,14 +1059,18 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 else
                 {
                     if (fNormalizeData) {
-                        // normalize the character according to schema whitespace facet
-                        XMLBufBid bbtemp(&fBufMgr);
-                        XMLBuffer& tempBuf = bbtemp.getBuffer();
 
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf,  tempBuf);
-                        rawBuf = tempBuf.getRawBuffer();
-                        len = tempBuf.getLen();
+                        if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                        {
+                            // normalize the character according to schema whitespace facet
+                            XMLBufBid bbtemp(&fBufMgr);
+                            XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf,  tempBuf);
+                            rawBuf = tempBuf.getRawBuffer();
+                            len = tempBuf.getLen();
+                        }
                     }
 
                     // tell the schema validation about the character data for checkContent later
@@ -1091,14 +1100,18 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 else
                 {
                     if (fNormalizeData) {
-                        // normalize the character according to schema whitespace facet
-                        XMLBufBid bbtemp(&fBufMgr);
-                        XMLBuffer& tempBuf = bbtemp.getBuffer();
 
                         DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf,  tempBuf);
-                        rawBuf = tempBuf.getRawBuffer();
-                        len = tempBuf.getLen();
+                        if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                        {
+                            // normalize the character according to schema whitespace facet
+                            XMLBufBid bbtemp(&fBufMgr);
+                            XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf,  tempBuf);
+                            rawBuf = tempBuf.getRawBuffer();
+                            len = tempBuf.getLen();
+                        }
                     }
 
                     // tell the schema validation about the character data for checkContent later
@@ -2100,14 +2113,18 @@ void IGXMLScanner::scanCDSection()
 
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
-                if (fNormalizeData) {
-                    // normalize the character according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
+                if (fNormalizeData)
+                {
                     DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, bbCData.getRawBuffer(),  tempBuf);
-                    bbCData.set(tempBuf.getRawBuffer());
+                    if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
+                    {
+                        // normalize the character according to schema whitespace facet
+                        XMLBufBid bbtemp(&fBufMgr);
+                        XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, bbCData.getRawBuffer(),  tempBuf);
+                        bbCData.set(tempBuf.getRawBuffer());
+                    }
                 }
 
                 if (fValidate) {

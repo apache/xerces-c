@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.37  2003/10/01 01:09:35  knoaman
+ * Refactoring of some code to improve performance.
+ *
  * Revision 1.36  2003/08/14 03:01:04  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -626,7 +629,6 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     //
     XMLAttDef::AttTypes            type      = attDef->getType();
     const XMLAttDef::DefAttTypes   defType   = attDef->getDefaultType();
-    const XMLCh* const             fullName  = attDef->getFullName();
     bool valid = true;
 
     //
@@ -641,7 +643,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     {
         const XMLCh* const valueText = attDef->getValue();
         if (!XMLString::equals(attrValue, valueText)) {
-            emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
+            emitError(XMLValid::NotSameAsFixedValue, attDef->getFullName(), attrValue, valueText);
             valid = false;
         }
     }
@@ -649,7 +651,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
     // An empty string cannot be valid for non_CDATA any of the other types
     if (!attrValue[0] && type != XMLAttDef::Simple)
     {
-        emitError(XMLValid::InvalidEmptyAttValue, fullName);
+        emitError(XMLValid::InvalidEmptyAttValue, attDef->getFullName());
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
         ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
         return;
@@ -657,7 +659,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
 
     DatatypeValidator* attDefDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
     if (!attDefDV) {
-        emitError(XMLValid::NoDatatypeValidatorForAttribute, fullName);
+        emitError(XMLValid::NoDatatypeValidatorForAttribute, attDef->getFullName());
         valid = false;
     }
     else {
@@ -1209,15 +1211,13 @@ void SchemaValidator::postParseValidation()
 //
 void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill)
 {
+    short wsFacet = dV->getWSFacet();
+
     toFill.reset();
 
     //empty string
     if (!*value)
         return;
-
-    short fWhiteSpace = DatatypeValidator::PRESERVE;
-    if (dV)
-        fWhiteSpace = dV->getWSFacet();
 
     enum States
     {
@@ -1227,27 +1227,20 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
 
     States curState = InContent;
 
-    //
-    //  Loop through the chars of the source value and normalize it according
-    //  to the whitespace facet
-    //
+    //  Loop through the chars of the source value and normalize it
+    //  according to the whitespace facet
     bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
     XMLReader* fCurReader = getReaderMgr()->getCurrentReader();
 
-    if ((fWhiteSpace==DatatypeValidator::COLLAPSE) && fTrailing)
+    if ((wsFacet==DatatypeValidator::COLLAPSE) && fTrailing)
         toFill.append(chSpace);
 
     while (*srcPtr)
     {
         nextCh = *srcPtr;
-
-        if (fWhiteSpace == DatatypeValidator::PRESERVE)
-        {
-            // do nothing
-        }
-        else if (fWhiteSpace == DatatypeValidator::REPLACE)
+        if (wsFacet == DatatypeValidator::REPLACE)
         {
             if (fCurReader->isWhitespace(nextCh))
                 nextCh = chSpace;
@@ -1263,13 +1256,13 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
                     curState = InContent;
                     firstNonWS = true;
                 }
-                 else
+                else
                 {
                     srcPtr++;
                     continue;
                 }
             }
-             else if (curState == InContent)
+            else if (curState == InContent)
             {
                 if (fCurReader->isWhitespace(nextCh))
                 {
@@ -1286,8 +1279,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         // And move up to the next character in the source
         srcPtr++;
     }
-    srcPtr--;
-    if (fCurReader->isWhitespace(*srcPtr))
+    if (fCurReader->isWhitespace(*(srcPtr-1)))
         fTrailing = true;
 }
 
