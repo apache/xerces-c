@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/10/10 15:11:21  peiyongz
+ * extract/validate URI iff present
+ *
  * Revision 1.9  2001/10/10 14:17:50  peiyongz
  * <URI>:<LocalPart> where <URI> can be optional.
  *
@@ -156,21 +159,24 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
                 , XMLExcepts::VALUE_NOTATION_Invalid
                 , content);
 
-    // Extract URI
-    XMLCh* uriPart = new XMLCh[colonPosition + 1];
-    ArrayJanitor<XMLCh> jan1(uriPart);
-    XMLString::subString(uriPart, content, 0, colonPosition);
+    if (colonPosition > 0)
+    {
+        // Extract URI
+        XMLCh* uriPart = new XMLCh[colonPosition + 1];
+        ArrayJanitor<XMLCh> jan1(uriPart);
+        XMLString::subString(uriPart, content, 0, colonPosition);
 
-    try 
-    {
-        // no relative uri support here
-        XMLUri  newURI(uriPart);   
-    }
-    catch (...) 
-    {
-        ThrowXML1(InvalidDatatypeValueException
-                , XMLExcepts::VALUE_NOTATION_Invalid
-                , content);
+        try 
+        {
+            // no relative uri support here
+            XMLUri  newURI(uriPart);   
+        }
+        catch (...) 
+        {
+            ThrowXML1(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_NOTATION_Invalid
+                    , content);
+        }
     }
 
     // Extract localpart
