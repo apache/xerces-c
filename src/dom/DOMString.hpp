@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/03 00:11:22  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -265,6 +272,9 @@ public:
       * Returns a handle to the raw buffer in the <code>DOMString</code>.
       *
       * @return The pointer inside the <code>DOMString</code> containg the string data.
+      *         Note: the data is not always null terminated.  Do not rely on
+      *         a null being there, and do not add one, as several DOMStrings
+      *         with different lengths may share the same raw buffer.
       */
     XMLCh       *rawBuffer() const;
 
@@ -327,7 +337,7 @@ public:
     /**
       * Compares a DOMString with another.
       *
-      * This strcmp does not match the semantics of the standard C strcmp.  
+      * This compareString does not match the semantics of the standard C strcmp.  
       * All it needs to do is define some less than - equals - greater than 
       * ordering of strings.  How doesn't matter.
       *

@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:48  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:11:22  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:48  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:12  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -106,30 +113,34 @@ DOM_Attr & DOM_Attr::operator = (const DOM_NullPtr *other)
 
 DOMString       DOM_Attr::getName() const
 {
-        return ((AttrImpl *)fImpl)->getName();
+    return ((AttrImpl *)fImpl)->getName().clone();
 };
 
 
-bool            DOM_Attr::getSpecified() const
+bool       DOM_Attr::getSpecified() const
 {
-        return ((AttrImpl *)fImpl)->getSpecified();
+    return ((AttrImpl *)fImpl)->getSpecified();
 };
 
 
-DOMString       DOM_Attr::getValue() const
+DOMString   DOM_Attr::getValue() const
 {
-        return ((AttrImpl *)fImpl)->getValue();
+    // The value of an attribute does not need to be cloned before
+    //  returning, because it is computed dynamically from the
+    //  children of the attribute.
+    //
+    return ((AttrImpl *)fImpl)->getValue();
 };
 
 
-void                    DOM_Attr::setSpecified(bool specified)
+void      DOM_Attr::setSpecified(bool specified)
 {
-        ((AttrImpl *)fImpl)->setSpecified(specified);
+    ((AttrImpl *)fImpl)->setSpecified(specified);
 };
 
 
-void            DOM_Attr::setValue(const DOMString &value) {
-        ((AttrImpl *)fImpl)->setValue(value);
+void     DOM_Attr::setValue(const DOMString &value) {
+    ((AttrImpl *)fImpl)->setValue(value);
 };
 
 
@@ -137,5 +148,5 @@ void            DOM_Attr::setValue(const DOMString &value) {
 
 DOM_Element     DOM_Attr::getOwnerElement() const
 {
-        return DOM_Element(((AttrImpl *)fImpl)->getOwnerElement());
+    return DOM_Element(((AttrImpl *)fImpl)->getOwnerElement());
 }

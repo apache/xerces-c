@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/03 00:11:22  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -802,7 +809,6 @@ XMLCh *DOMString::rawBuffer() const
     if (fHandle)
     {
         retP = fHandle->fDSData->fData;
-        retP[fHandle->fLength] = 0;
     }
     return retP;
 };
@@ -810,19 +816,50 @@ XMLCh *DOMString::rawBuffer() const
 
 char *DOMString::transcode() const
 {
-    if (!fHandle)
+    if (!fHandle || fHandle->fLength == 0)
     {
         char* retP = new char[1];
         *retP = 0;
         return retP;
     }
 
-    // We've got some data, so cap it off first
-    XMLCh* srcP = fHandle->fDSData->fData;
-    srcP[fHandle->fLength] = 0;
+    // We've got some data
+    // DOMStrings are not always null terminated, so we may need to
+    // copy to another buffer first in order to null terminate it for
+    // use as input to the transcoding routines..
+    //
+    XMLCh* DOMStrData = fHandle->fDSData->fData;
+
+    const int localBufLen = 1000;
+    XMLCh localBuf[localBufLen];
+    XMLCh *allocatedBuf = 0;
+    XMLCh *srcP;
+
+    if (DOMStrData[fHandle->fLength] == 0)
+    {
+        // The data in the DOMString itself happens to be null terminated.
+        //  Just use it in place.
+        srcP = DOMStrData;
+    } 
+    else if (fHandle->fLength < localBufLen-1)
+    {
+        // The data is not null terminated, but does fit in the
+        //  local buffer (fast allocation).  Copy it over, and add 
+        //  the null termination,
+        memcpy(localBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
+        srcP = localBuf;
+        srcP[fHandle->fLength] = 0;
+    }
+    else
+    {
+        // The data is too big for the local buffer.  Heap allocate one.
+        allocatedBuf = srcP = new XMLCh[fHandle->fLength + 1];
+        memcpy(allocatedBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
+        srcP[fHandle->fLength] = 0;
+    }
 
     //
-    //  Find out how many chars we need and allocate a buffer big enough
+    //  Find out how many output chars we need and allocate a buffer big enough
     //  for that plus a null.
     //
     const unsigned int charsNeeded = getDomConverter()->calcRequiredSize(srcP);
@@ -832,6 +869,7 @@ char *DOMString::transcode() const
     {
         // <TBD> We should throw something here?
     }
+    delete [] allocatedBuf;   // which will be null if we didn't allocate one.
 
     // Cap it off and return it
     retP[charsNeeded] = 0;

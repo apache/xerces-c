@@ -56,6 +56,13 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/03 00:11:22  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
  * Revision 1.2  1999/11/30 21:16:24  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -133,10 +140,9 @@ void CharacterDataImpl::deleteData(int offset, int count)
 
 
 
-DOMString CharacterDataImpl::getData()
+DOMString &CharacterDataImpl::getData()
 {
-    return value.clone();        // clone here so that subsequent changes to
-    //  our value will not change the returned string.
+    return value; 
 };
 
 

@@ -1,73 +1,80 @@
 /*
- * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
- * reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- * 
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
- * 
- * 4. The names "Xerces" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache\@apache.org.
- * 
- * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
- * 
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- * 
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
- * Business Machines, Inc., http://www.ibm.com .  For more information
- * on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
- */
+* The Apache Software License, Version 1.1
+* 
+* Copyright (c) 1999 The Apache Software Foundation.  All rights 
+* reserved.
+* 
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+* 
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer. 
+* 
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in
+*    the documentation and/or other materials provided with the
+*    distribution.
+* 
+* 3. The end-user documentation included with the redistribution,
+*    if any, must include the following acknowledgment:  
+*       "This product includes software developed by the
+*        Apache Software Foundation (http://www.apache.org/)."
+*    Alternately, this acknowledgment may appear in the software itself,
+*    if and wherever such third-party acknowledgments normally appear.
+* 
+* 4. The names "Xerces" and "Apache Software Foundation" must
+*    not be used to endorse or promote products derived from this
+*    software without prior written permission. For written 
+*    permission, please contact apache\@apache.org.
+* 
+* 5. Products derived from this software may not be called "Apache",
+*    nor may "Apache" appear in their name, without prior written
+*    permission of the Apache Software Foundation.
+* 
+* THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+* ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+* USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+* OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+* ====================================================================
+* 
+* This software consists of voluntary contributions made by many
+* individuals on behalf of the Apache Software Foundation, and was
+* originally based on software copyright (c) 1999, International
+* Business Machines, Inc., http://www.ibm.com .  For more information
+* on the Apache Software Foundation, please see
+* <http://www.apache.org/>.
+*/
 
 /**
- * $Log$
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:13  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:29  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
- */
+* $Log$
+* Revision 1.3  1999/12/03 00:11:23  andyh
+* Added DOMString.clone() to node parameters in and out of the DOM,
+* where they had been missed.
+*
+* DOMString::rawBuffer, removed incorrect assumptions about it
+* being null terminated.
+*
+* Revision 1.2  1999/11/30 21:16:25  roddey
+* Changes to add the transcode() method to DOMString, which returns a transcoded
+* version (to local code page) of the DOM string contents. And I changed all of the
+* exception 'throw by pointer' to 'throw by value' style.
+*
+* Revision 1.1.1.1  1999/11/09 01:09:13  twl
+* Initial checkin
+*
+* Revision 1.3  1999/11/08 20:44:29  rahul
+* Swat for adding in Product name and CVS comment log variable.
+*
+*/
 
 
 #include "NodeImpl.hpp"
@@ -86,12 +93,12 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
     this->namespaceURI=null;	//DOM Level 2
-    this->prefix=null;		//DOM Level 2
-    this->localName=nam;	//DOM Level 2
-    this->name=nam;
+    this->prefix=null;			//DOM Level 2
+    this->localName=null;		//DOM Level 2
+    this->name=nam.clone();
     this->nType=nTyp;
     this->isLeafNode=isLeafNod;
-    this->value=initValue;
+    this->value=initValue.clone();
     
     this->changes = 0;
     this->userData = null;
@@ -111,25 +118,42 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 
 //Introduced in DOM Level 2
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
-	const DOMString &namespaceURI, const DOMString &qualifiedName, short nTyp,
-        bool isLeafNod, const DOMString &initValue)
+                   const DOMString &namespaceURI, const DOMString &qualifiedName, short nTyp,
+                   bool isLeafNod, const DOMString &initValue)
 {
     // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
-    this->namespaceURI=namespaceURI;
-    int index = XMLString::indexOf(qualifiedName.rawBuffer(), chColon);
-    if (index >= 0) {
-	this->prefix = qualifiedName.substringData(0, index);
-	int len = qualifiedName.length() - index - 1;
-	this->localName = qualifiedName.substringData(index+1, len);
-    } else {
-	this->prefix = null;
-	this->localName = qualifiedName;
+    this->name=qualifiedName.clone();
+    
+    this->namespaceURI=namespaceURI.clone();
+
+    // Look in the qualified name parameter for a colon.
+    //  If found, break out the prefix and local name parts.
+    //    (bug:  check for well formed names.)
+    XMLCh  *qNameP   = this->name.rawBuffer();
+    int    qNameLen = this->name.length();
+    int index;
+    for (index=0; index<qNameLen; index++)
+    {
+        if (qNameP[index] == chColon)
+        {
+            this->prefix = this->name.substringData(0, index);
+            int len = this->name.length() - index - 1;
+            this->localName = this->name.substringData(index+1, len);
+            break;
+        }
     }
-    this->name=qualifiedName;
+
+    if (this->prefix == null)
+    {
+        // The search for a colon, above, in the qualified name failed.
+        // the localname is the whole name, and there is no prefix part.
+        this->localName = this->name;
+    }
+
     this->nType=nTyp;
     this->isLeafNode=isLeafNod;
-    this->value=initValue;
+    this->value=initValue.clone();
     
     this->changes = 0;
     this->userData = null;
@@ -150,8 +174,8 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 NodeImpl::NodeImpl(const NodeImpl &other, bool deep) {
     this->nType = other.nType;
     this->namespaceURI = other.namespaceURI.clone();	//DOM Level 2
-    this->prefix = other.prefix.clone();		//DOM Level 2
-    this->localName = other.localName.clone();		//DOM Level 2
+    this->prefix = other.prefix.clone();                //DOM Level 2
+    this->localName = other.localName.clone();          //DOM Level 2
     this->name  = other.name.clone();
     this->value = other.value.clone();
     this->isLeafNode = other.isLeafNode;
@@ -164,7 +188,7 @@ NodeImpl::NodeImpl(const NodeImpl &other, bool deep) {
     this->nodeRefCount = 0;
     NodeImpl::gLiveNodeImpls++; 
     NodeImpl::gTotalNodeImpls++;
-
+    
     
     // Need to break the association w/ original kids
     this->previousSibling = null;
@@ -187,11 +211,11 @@ NodeImpl::NodeImpl(const NodeImpl &other, bool deep) {
 
 int  NodeImpl::gLiveNodeImpls = 0;         // Counters for debug & tuning.
 int  NodeImpl::gTotalNodeImpls= 0;
-    
+
 
 
 NodeImpl::~NodeImpl() {
-     NodeImpl::gLiveNodeImpls--;
+    NodeImpl::gLiveNodeImpls--;
 };
 
 
@@ -508,8 +532,8 @@ tree structure is legal.
   {
       RefCountedImpl::addRef(this->ownerDocument);
   };
-
-
+  
+  
   
   NodeImpl *NodeImpl::removeChild(NodeImpl *oldChild) 
   {
@@ -551,8 +575,8 @@ tree structure is legal.
   {
       DocumentImpl *doc = this->ownerDocument;
       deleteIf(this);       // This gets nodes outside of the document -
-                            //   deleteIf() deletes only if the parent
-                            //   node is null.  
+      //   deleteIf() deletes only if the parent
+      //   node is null.  
       
       // If this was the last external reference within the document,
       //    the entire document will be deleted as well.
@@ -588,7 +612,7 @@ tree structure is legal.
           DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
       
       // Default behavior, overridden in some subclasses
-      this->value = val;
+      this->value = val.clone();
   };
   
   
@@ -622,37 +646,37 @@ tree structure is legal.
       // return getNodeName();
   };    
   
-//Introduced in DOM Level 2
-
-bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
-{
-    return false;   //must be overriden by each subclass
-}
-
-DOMString NodeImpl::getNamespaceURI()
-{
-    return namespaceURI;
-}
-
-DOMString NodeImpl::getPrefix()
-{
-    return prefix;
-}
-
-DOMString NodeImpl::getLocalName()
-{
-    return localName;
-}
-
-void NodeImpl::setPrefix(const DOMString &prefix)
-{
-    if (readOnly)
-	throw DOM_DOMException(
-	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if (isAttrImpl() || isElementImpl()) {
-	name = this -> prefix = prefix;
-	name = name + chColon + localName;    //nodeName is changed too
-	//what to do if namespaceURI is null?
-    }
-
-}
+  //Introduced in DOM Level 2
+  
+  bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
+  {
+      return false;   //must be overriden by each subclass
+  }
+  
+  DOMString NodeImpl::getNamespaceURI()
+  {
+      return namespaceURI;
+  }
+  
+  DOMString NodeImpl::getPrefix()
+  {
+      return prefix;
+  }
+  
+  DOMString NodeImpl::getLocalName()
+  {
+      return localName;
+  }
+  
+  void NodeImpl::setPrefix(const DOMString &prefix)
+  {
+      if (readOnly)
+          throw DOM_DOMException(
+          DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+      if (isAttrImpl() || isElementImpl()) {
+          name = this -> prefix = prefix;
+          name = name + chColon + localName;    //nodeName is changed too
+          //what to do if namespaceURI is null?
+      }
+      
+  }
