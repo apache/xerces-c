@@ -55,6 +55,34 @@
     </tr>
 
     <tr>
+        <td>2001-12-03</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5237] PATH_MAX undefined during build without threading support.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-03</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 5179] Misprint in downcasting description.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-03</td>
+        <td>Max Gotlib</td>
+        <td>Add FreeBSD native transcoder (IconvFBSD).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-30</td>
+        <td>PeiYong Zhang</td>
+        <td>Build all tests on HP-UX 11.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-11-29</td>
         <td>Michael Huedepohl</td>
         <td>Add FreeBSD Support.
