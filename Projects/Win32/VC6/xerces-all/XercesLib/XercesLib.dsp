@@ -3155,6 +3155,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp
 # End Source File
 # Begin Source File

@@ -1856,6 +1856,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp">
 			</File>
 			<File
