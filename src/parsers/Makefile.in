@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2000/03/14 23:49:16  aruna1
+# Include variable changed to incorporate all src headers.
+#
 # Revision 1.7  2000/03/01 22:30:03  abagchi
 # Object files are now created directly under obj directory
 #
@@ -116,6 +119,8 @@ PARSERS_C_FILES =
 PARSERS_CPP_OBJECTS = \
 	DOMParser.$(TO) \
 	SAXParser.$(TO)
+
+XML_INCL := $(XML_INCL) -I$(XERCESCROOT)/src
 
 all::	includes $(PARSERS_CPP_OBJECTS)
 
