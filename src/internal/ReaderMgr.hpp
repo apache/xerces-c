@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/09/09 00:18:18  andyh
+ * Reordered member variables in ThrowEOEJanitor.  Patch submitted
+ * by Kirk Wylie.
+ *
  * Revision 1.11  2000/07/08 00:17:13  andyh
  * Cleanup of yesterday's speedup changes.  Merged new bit into the
  * scanner character properties table.
@@ -420,8 +424,8 @@ public :
     // -----------------------------------------------------------------------
     ThrowEOEJanitor(ReaderMgr* mgrTarget, const bool newValue) :
 
-        fMgr(mgrTarget)
-        , fOld(mgrTarget->getThrowEOE())
+        fOld(mgrTarget->getThrowEOE())
+        , fMgr(mgrTarget)
     {
         mgrTarget->setThrowEOE(newValue);
     }
