@@ -39,13 +39,19 @@
         <th>Contributor</th>
         <th>Description</th>
     </tr>
+
+
+<tr><td>2004-09-29</td><td>Khaled Noaman </td><td>Bug 1209 </td></tr>
+<tr><td>2004-09-29</td><td>David Cargill </td><td>Mark SAXParser as deprecated. </td></tr>
+<tr><td>2004-09-29</td><td>David Cargill </td><td>jira1217 </td></tr>
+<tr><td>2004-09-29</td><td>Dan Rosen </td><td> jira1207 </td></tr>
 <tr><td>2004-09-28</td><td>Khaled Noaman, Anthony O'Dowd </td><td>  Performance: improve src offset calculation. </td></tr>
 <tr><td>2004-09-28</td><td>PeiYong Zhang </td><td>   Optimized duplicated attributes checking for large number of attributes</td></tr>
 <tr><td>2004-09-28</td><td>Alberto Massari </td><td>BCC 511 updates </td></tr>  
 <tr><td>2004-09-27</td><td>David Cargill </td><td>Update sample to use an error handler and only generate xsmodel when a schema document has been loaded successfully. </td></tr>
 <tr><td>2004-09-27</td><td>David Cargill </td><td>  Update documentation to describe new features </td></tr>
-<tr><td>2004-09-27</td><td>Khaled, David Cargill </td><td>Validate annotations </td></tr>  
-<tr><td>2004-09-27</td><td> Khaled  Noaman</td><td>  Reset datatype validator </td></tr>
+<tr><td>2004-09-27</td><td>Khaled Noaman, David Cargill </td><td>Validate annotations </td></tr>  
+<tr><td>2004-09-27</td><td>Khaled  Noaman</td><td>  Reset datatype validator </td></tr>
 <tr><td>2004-09-27</td><td>David Cargill </td><td>XERCESC-1277 </td></tr>
 <tr><td>2004-09-26</td><td>Khaled Noaman </td><td>[Bug 1197] </td></tr>  
 <tr><td>2004-09-25</td><td>Gareth Reakes, Adam Heinz </td><td>  Fix to 1264. All refererences to public headers now use the include files.</td></tr>
@@ -59,7 +65,7 @@
 <tr><td>2004-09-21</td><td>PeiYong Zhang </td><td>Do not build/ship debug version lib on Windows </td></tr>
 <tr><td>2004-09-21</td><td>PeiYong Zhang </td><td>Change lib name on Windows from 2_5_0 to 2_5 </td></tr>
 <tr><td>2004-09-21</td><td>David Cargill </td><td>  Documentation Updates. </td></tr>
-<tr><td>2004-09-21</td><td> PeiYong Zhang</td><td>   Handle partial PSVIElement</td></tr>
+<tr><td>2004-09-21</td><td>PeiYong Zhang</td><td>   Handle partial PSVIElement</td></tr>
 <tr><td>2004-09-20</td><td>James Berry </td><td>Mac updates </td></tr>
 <tr><td>2004-09-20</td><td>Alberto Massari </td><td>Added a setCreateSchemaInfo method to the DOM parsers, to store PSVI informations in element and attribute nodes </td></tr>
 <tr><td>2004-09-20</td><td>Alberto Massari </td><td>  Mark some methods as deprecated </td></tr>

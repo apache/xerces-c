@@ -34,7 +34,7 @@
 
         <p>Listed below are some names (in alphabetical order) of people to whom
         we would like to give special thanks. </p>
-
+        
         <ul>
             <li>Nadav Aharoni</li>
             <li>Curt Arnold</li>
@@ -49,10 +49,13 @@
             <li>David Bertoni</li>
             <li>John Bellardo</li>
             <li>Arundhati Bhowmick</li>
+            <li>Joanne Bogart</li>
+            <li>Michael Boos</li>
             <li>Edward Bortner</li>
             <li>Sean Bright</li>
             <li>Phil Brown</li>
             <li>Robert Buck</li>
+            <li>David Cargill</li>
             <li>Sumit Chawla</li>
             <li>Nick Chiang</li>
             <li>Chih Hsiang Chou</li>
@@ -60,21 +63,36 @@
             <li>Hiram Clawson</li>
             <li>John Clayton</li>
             <li>Todd Collins</li>
+            <li>Nathan Coddin</li>
             <li>Michael Crawford</li>
             <li>Murray Cumming</li>
+            <li>Zeid Derhally</li>
+			<li>James Devries</li>
+			<li>Ailian Ding</li>
+            <li>Steve Dulin</li>
             <li>Helmut Eiken</li>
             <li>Mark Everline</li>
+            <li>Andrew Fang</li>
             <li>Simon Fell</li>
             <li>Paul Ferguson</li>
             <li>Pierpaolo Fumagalli</li>
+            <li>Syam Gadde</li>
+            <li>Guido Gagliardi</li>
             <li>Gary Gale</li>
+            <li>Michael Glavassevich</li>
+			<li>Natalie Gorden</li>
             <li>Max Gotlib</li>
             <li>Petr Gotthard</li>
+            <li>Neil Graham</li>
             <li>Susan Hardenbrook</li>
             <li>Jeff Harrell</li>
+            <li>Andrew Hefford</li>
+            <li>Adam Heinz</li>
             <li>Andy Heninger</li>
+            <li>John Hibbert</li>
             <li>William L. Hopper</li>
             <li>Michael Huedepohl</li>
+            <li>Anders Hybertz</li>
             <li>Rahul Jain</li>
             <li>Tom Jordahl</li>
             <li>Christopher Just</li>
@@ -85,19 +103,26 @@
             <li>Richard Ko</li>
             <li>Paul Kramer</li>
             <li>Volker Krause</li>
+            <li>Berin Lautenbach</li>
             <li>Arnaud LeHors</li>
-            <li>Andy Levine</li>
+            <li>Andy Levine</li>            
             <li>Jeff Lewis</li>
+            <li>James Littlejohn</li>
+            <li>Ray Logel</li>
+            <li>Pedro Lopes</li>
             <li>Matt Lovett</li>
             <li>Sean MacRoibeaird</li>
             <li>Alberto Massari</li>
             <li>Don Mastrovito</li>
             <li>David McCreedy</li>
+            <li>Shin'ya MORINO</li>
+            <li>Urs Muff</li>
             <li>Jordan Naftolin</li>
             <li>Tinny Ng</li>
             <li>David Nickerson</li>
             <li>Khaled Noaman</li>
             <li>Michael Ottati</li>
+            <li>Anthony O'Dowd</li>
             <li>Kevin Philips</li>
             <li>Mike Pogue</li>
             <li>Joe Polastre</li>
@@ -105,8 +130,10 @@
             <li>Shengkai Qu</li>
             <li>Gareth Reakes</li>
             <li>Jim Reitz</li>
+            <li>Caroline Rioux</li>
             <li>Dean Roddey</li>
             <li>John Roper</li>
+            <li>Dan Rosen</li>
             <li>Steven Rosenthal</li>
             <li>Erik Rydgren</li>
             <li>Bill Schindler</li>
@@ -114,11 +141,13 @@
             <li>Christian Schuhegger</li>
             <li>John Smirl</li>
             <li>Andrei Smirnov</li>
+            <li>John Snelson</li>
             <li>Gereon Steffens</li>
             <li>Jason Stewart</li>
             <li>Rick J. Stevens</li>
             <li>Roman Sulzhyk</li>
             <li>Linda M. Swan</li>
+            <li>Vasily Tchekalkin</li>
             <li>Pieter Van-Dyck</li>
             <li>Curtis Walker</li>
             <li>John Warrier</li>
@@ -132,6 +161,7 @@
             <li>Kirk Wylie</li>
             <li>Peter A. Volchek</li>
             <li>Grace Yan</li>
+            <li>Hiramatsu Yoshifumi</li>
             <li>PeiYong Zhang</li>
             <li>Henry Zongaro</li>
         </ul>

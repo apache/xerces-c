@@ -39,8 +39,11 @@
             <li><link anchor="DeprecatedAPI260">Deprecated/Removed Public API</link></li>
             <li>Please note the following source code incompatibility: Rename VALUE_CONSTRAINT enumeration values in XSConstants.hpp due to conflict with system header.  New
               values are VALUE_CONSTRAINT_NONE, VALUE_CONSTRAINT_DEFAULT and VALUE_CONSTRAINT_FIXED.  Old
-              values are VC_NONE, VC_DEFAULT and VC_FIXED.
-              </li>
+              values are VC_NONE, VC_DEFAULT and VC_FIXED.</li>
+            <li>Also note that if you have implemented your own XMLGrammarPool implementation, that
+                the original getXSModel has been marked deprecated and a new method, of the same
+                name, that takes a bool parameter has been added.  This new getXSModel needs
+                to always return an XSModel.</li>
         </ul>
       </ul>
 
@@ -80,6 +83,7 @@
             <ul>
               <li>XSValue</li>            
               <li>IdentityConstraintHandler</li> 
+              <li>XMLBufferFullHandler</li>
               <li>XMLString: removeChar, isValidNOTATION</li>
               <li>XMLUri: normalizeUri</li>
               <li>PSVIHandler: handlePartialElementPSVI</li>
@@ -95,6 +99,7 @@
               <li>PSVIItem: getActualValue</li>
               <li>XSSimpleTypeDefinition: getDatatypeValidator</li>
               <li>RefHash2KeysTableOf: transferElement</li>
+              <li>XMLGrammarPool: getXSModel</li>
             </ul>
         </s4>
 
@@ -115,6 +120,9 @@
      	      <li>SchemaAttDef: setAnyDatatypeValidator</li>
  			  <li>UnionDatatypeValidator: getMemberTypeName, getMemberTypeUri, getMemberTypeAnonymous, getMemberTypeValidator</li>
  			  <li>XMLAttr: getValidatingTypeURI, getValidatingTypeName, setDatatypeValidator, setSchemaValidated</li>                          
+ 			  <li>ComplexTypeInfo: setContentModel</li>
+ 			  <li>XMLGrammarPool: getXSModel</li>
+ 			  <li>SAXParser, mark this class deprecated</li>
             </ul>
         </s4>
 

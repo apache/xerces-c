@@ -112,21 +112,22 @@ purpose of your reporting of the bug.
 </s2>
 '>
 
-<!-- build-winunix.xml supported platforms -->
+<!-- build-winunix.xml & faq-distrib.xml supported platforms -->
 <!ENTITY build-winunix-supported-platforms '
 <table>
 <tr><th><em>Operating System</em></th><th><em>Compiler</em></th></tr>
 <tr><th><em>32-bit binary</em></th><td></td></tr>
-<tr><td>Redhat Linux 7.2</td><td>Intel C++ Compiler v6, icc</td></tr>
-<tr><td>AIX 5.1</td><td>xlC_r 5.0.2</td></tr>
-<tr><td>Solaris 2.7</td><td>Forte C++ Version 6 Update 2</td></tr>
-<tr><td>HP-UX 11.0</td><td>aCC A.03.13 with pthreads</td></tr>
-<tr><td>SuSE Linux 7.2 (S390)</td><td>g++ 2.95</td></tr>
+<tr><td>Windows NT</td><td>MS Visual C++ 6.0 SP3</td></tr>
+<tr><td>AIX 5.1</td><td>xlC_r 6.0.0</td></tr>
+<tr><td>Solaris 2.8</td><td>Forte C++ Version 6 Update 2</td></tr>
+<tr><td>HP-UX 11i</td><td>aCC A.03.52 with pthreads</td></tr>
+<tr><td>Redhat Linux 8.0 (IA32)</td><td>gcc 3.2</td></tr>
+
 <tr><th><em>64-bit binary</em></th><td></td></tr>
-<tr><td>Redhat Linux 7.2, IA64</td><td>Intel C++ Compiler v6, ecc</td></tr>
-<tr><td>AIX 5.1</td><td>xlC_r 5.0.2</td></tr>
-<tr><td>Solaris 2.7</td><td>Forte C++ Version 6 Update 2</td></tr>
-<tr><td>HP-UX 11.0</td><td>aCC A.03.13 with pthreads</td></tr>
+<tr><td>AIX 5.1</td><td>xlC_r 6.0.0</td></tr>
+<tr><td>Solaris 2.8</td><td>Forte C++ Version 6 Update 2</td></tr>
+<tr><td>HP-UX 11i</td><td>aCC A.03.52 with pthreads</td></tr>
+<tr><td>SuSE Linux 8.0 (AMD64)</td><td>gcc 3.2.2</td></tr>
 </table>
 '>
 
@@ -207,10 +208,6 @@ please refer to <jump href="releases_plan.html">Releases Plan</jump>.
 
 <!-- paragraph in releases.xml with table of bugzilla bugs fixed -->
 <!ENTITY releases-fixed-bugs-para '
-<p>Here is the list of <jump href=
-"http&colon;//nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02&percent;2F07&percent;2F03&amp;chfieldto=05&percent;2F23&percent;2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C&percent;2B&percent;2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
-fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &XercesCVersion;.
-</p>
 '>
 
 <!-- feedback info in schema.xml -->

@@ -96,69 +96,8 @@
     </s2>
 
     <s2 title="Platforms with Binaries">
-      <table>
-        <tr>
-          <th><em>Operating System</em></th>
-          <th><em>Compiler</em></th>
-        </tr>
-        <tr>
-          <th><em>32-bit binary</em></th>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Windows NT 4.0 SP5</td>
-          <td>MSVC 6.0 SP3</td>
-        </tr>
-        <tr>
-          <td>Redhat Linux 7.2</td>
-          <td>Intel C++ Compiler v7, icc</td>
-        </tr>
-        <tr>
-          <td>Redhat Linux 8.0</td>
-          <td>gcc Compiler v3.2</td>
-        </tr>
-        <tr>
-          <td>AIX 5.1</td>
-          <td>xlC_r 6.0.0</td>
-        </tr>
-        <tr>
-          <td>Solaris 2.7</td>
-          <td>Forte C++ Version 6 Update 2</td>
-        </tr>
-        <tr>
-          <td>HP-UX 11.0</td>
-          <td>aCC A.03.13 with pthreads</td>
-        </tr>
-        <tr>
-          <td>SuSE Linux 7.2 (S390)</td>
-          <td>g++ 2.95.3</td>
-        </tr>
-        <tr>
-          <th><em>64-bit binary</em></th>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Windows XP, IA64</td>
-          <td>Intel C++ Compiler v7, ecl</td>
-        </tr>
-        <tr>
-          <td>Redhat Linux 7.2, IA64</td>
-          <td>Intel C++ Compiler v7, ecc</td>
-        </tr>
-        <tr>
-          <td>AIX 5.1</td>
-          <td>xlC_r 6.0.0</td>
-        </tr>
-        <tr>
-          <td>Solaris 2.7</td>
-          <td>Forte C++ Version 6 Update 2</td>
-        </tr>
-        <tr>
-          <td>HP-UX 11.0</td>
-          <td>aCC A.03.13 with pthreads</td>
-        </tr>
-      </table>
-    </s2>
+      &build-winunix-supported-platforms;
+	</s2>
 
     <s2 title="Other ports...">
         <ul>
@@ -176,8 +115,8 @@
 
     <s2 title='License Information'>
        <p>The &XercesCName; Version &XercesCVersion; is available in both source distribution and
-          binary distribution.   Both &XercesCName; are made available under the
-          <jump href='http://xml.apache.org/LICENSE'>Apache Software License</jump>.
+          binary distribution.   &XercesCName; is made available under the
+          <jump href='http://www.apache.org/licenses/LICENSE-2.0.html'>Apache Software License, Version 2.0</jump>.
        </p>
     </s2>
 
