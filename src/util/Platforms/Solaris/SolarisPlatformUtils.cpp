@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/25 22:08:27  aruna1
+ * Updated panic calls for synchronization and initialization
+ *
  * Revision 1.7  2000/01/21 20:04:00  abagchi
  * Removed the code for loadAMsgSet() when invoked with ICU
  *
@@ -186,11 +189,7 @@ void XMLPlatformUtils::platformInit()
     gAtomicOpMutex = new pthread_mutex_t;	
 
     if (pthread_mutex_init(gAtomicOpMutex, NULL))
-    {
-	printf("atomicOpMutex not created \n");
-	exit(1);
-        //panic( XMLPlatformUtils::Panic_MutexInit ); //to be changed later
-    }
+        panic( XMLPlatformUtils::Panic_SystemInit );
 }
 
 
@@ -636,22 +635,14 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
     // Currently its supported only in the kernel mode
 
     if (pthread_mutex_lock( gAtomicOpMutex))
-    {
-	printf("could not lock atomicOpMutex\n");
-	exit(1);
-	//call panic instead
-    }
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
     if (pthread_mutex_unlock( gAtomicOpMutex))
-    {
-	printf("could not unlock atomicOpMutex\n");
-	exit(1);
-	//call panic instead
-    }
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
 
     return retVal;
 }
@@ -661,18 +652,13 @@ int XMLPlatformUtils::atomicIncrement(int &location)
     //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
 
     if (pthread_mutex_lock( gAtomicOpMutex))
-    {
-	printf("could not lock atomicOpMutex\n");
-	exit(1);
-	//call panic instead
-    }
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+
     int tmp = ++location;
+
     if (pthread_mutex_unlock( gAtomicOpMutex))
-    {
-	printf("could not unlock atomicOpMutex\n");
-	exit(1);
-	//call panic instead
-    }
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+
     return tmp;
 }
 int XMLPlatformUtils::atomicDecrement(int &location)
@@ -680,19 +666,13 @@ int XMLPlatformUtils::atomicDecrement(int &location)
     //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
 
     if (pthread_mutex_lock( gAtomicOpMutex))
-    {
-	printf("could not lock atomicOpMutex\n");
-	exit(1);
-	//call panic instead
-    }
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
 	
     int tmp = --location;
+
     if (pthread_mutex_unlock( gAtomicOpMutex))
-    {
-	printf("could not unlock atomicOpMutex\n");
-	exit(1);
-	//call panic instead
-    }
+        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+
     return tmp;
 }
 
@@ -785,11 +765,7 @@ void XMLPlatformUtils::platformInit()
     gAtomicOpMutex = new pthread_mutex_t;	
 
     if (pthread_mutex_init(gAtomicOpMutex, NULL))
-    {
-	printf("atomicOpMutex not created \n");
-	exit(1);
-        //panic( XMLPlatformUtils::Panic_MutexInit ); //to be changed later
-    }
+        panic(XMLPlatformUtils::Panic_SystemInit);
 
     // Here you would also set the fgLibLocation global variable
     // XMLPlatformUtils::fgLibLocation is the variable to be set
@@ -808,9 +784,7 @@ void XMLPlatformUtils::platformInit()
     char* libPath = NULL;
 
     if (libEnvVar == NULL)
-    {
         panic( XMLPlatformUtils::Panic_NoTransService );
-    }
 
     //
     // Its necessary to create a copy because strtok() modifies the
@@ -851,9 +825,7 @@ void XMLPlatformUtils::platformInit()
     XMLPlatformUtils::fgLibLocation = libraryPath;
 
     if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
         panic( XMLPlatformUtils::Panic_NoTransService );
-     }
 
 }
 
@@ -902,9 +874,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     char* libPath = NULL;
 
     if (libEnvVar == NULL)
-    {
         panic( XMLPlatformUtils::Panic_NoTransService );
-    }
 
     //
     // Its necessary to create a copy because strtok() modifies the
@@ -947,9 +917,8 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     ICUTransService::setICUPath(intlPath);
 
     if (intlPath == NULL)
-    {
         panic( XMLPlatformUtils::Panic_NoTransService );
-    }
+
     if (intlPath != NULL) delete (char*)intlPath;
 
     return new ICUTransService;
