@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/05 15:47:13  peiyongz
+ * data member changed, reset() added.
+ *
  * Revision 1.1  2002/05/28 22:40:46  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -66,14 +69,11 @@
 #include <xercesc/util/XMLString.hpp>
 
 MemBufFormatTarget::MemBufFormatTarget()
-:fDataBuf(0)
 {
-	fDataBuf = new XMLBuffer();
 }
 
 MemBufFormatTarget::~MemBufFormatTarget()
 {
-	delete fDataBuf;
 }
 
 void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
@@ -83,21 +83,26 @@ void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
 	//
 	// The toWrite may not be null terminated,
 	// so we need to do some extra work here
-	// 
+	//
 	XMLByte  lastChar = toWrite[count];   // preserve the last char
 	XMLByte* tmpBuf   = (XMLByte *)toWrite;
     tmpBuf[count] = 0;
 
 	XMLCh*   transBuf = XMLString::transcode((char *) tmpBuf);
-	fDataBuf->append(transBuf, XMLString::stringLen(transBuf));
-	delete[] transBuf;                       
+	fDataBuf.append(transBuf, XMLString::stringLen(transBuf));
+	delete[] transBuf;
 
 	tmpBuf[count] = lastChar;             // restore the last char
 }
 
 XMLCh* MemBufFormatTarget::getString() const
 {
-	return XMLString::replicate(fDataBuf->getRawBuffer());
+	return XMLString::replicate(fDataBuf.getRawBuffer());
+}
+
+void MemBufFormatTarget::reset()
+{
+    fDataBuf.reset();
 }
 
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/05 15:47:13  peiyongz
+ * data member changed, reset() added.
+ *
  * Revision 1.1  2002/05/28 22:40:46  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -88,21 +91,33 @@ public:
     //  Getter
     // -----------------------------------------------------------------------
     /** @name getString */
-	/**
-	  * caller owns the returned string and is accountable
-	  * for the memory release
-	  */
     //@{
+    /**
+     * Returned the internal string buffer.
+     *
+     * Caller owns the returned string and is accountable
+     * for the memory release
+     */
     XMLCh* getString() const;
+    //@}
+
+    /** @name reset */
+    //@{
+    /**
+     * Reset the internal string buffer.
+     *
+     */
+    void reset();
+    //@}
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented methods.
     // -----------------------------------------------------------------------
-    MemBufFormatTarget(const MemBufFormatTarget& other);
-    void operator=(const MemBufFormatTarget& rhs);
+    MemBufFormatTarget(const MemBufFormatTarget&);
+    MemBufFormatTarget& operator=(const MemBufFormatTarget&);
 
-    XMLBuffer     *fDataBuf;
+    XMLBuffer     fDataBuf;
 
 };
 
