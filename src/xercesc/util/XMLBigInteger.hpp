@@ -108,6 +108,12 @@ public:
                              , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 
+    static int  compareValues(const XMLCh*         const lString
+                            , const int&                 lSign
+                            , const XMLCh*         const rString
+                            , const int&                 rSign
+                            ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
     void        multiply(const unsigned int byteToShift);
 
     void        divide(const unsigned int byteToShift);

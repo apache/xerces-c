@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/08/11 16:48:24  peiyongz
+ * String version compareValue
+ *
  * Revision 1.10  2003/12/23 21:48:14  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0
  *
@@ -353,6 +356,58 @@ int  XMLBigInteger::compareValues(const XMLBigInteger* const lValue
     // we need to convert it to 1, 0, and -1
     //
     int retVal = XMLString::compareString(lValue->fMagnitude, rValue->fMagnitude);
+
+    if ( retVal > 0 )
+    {
+        return ( lSign > 0 ? 1 : -1 );
+    }
+    else if ( retVal < 0 )
+    {
+        return ( lSign > 0 ? -1 : 1 );
+    }
+    else
+        return 0;
+
+}
+
+int XMLBigInteger::compareValues(const XMLCh*         const lString
+                               , const int&                 lSign
+                               , const XMLCh*         const rString
+                               , const int&                 rSign
+                               ,       MemoryManager* const manager)
+{
+    if ((!lString) || (!rString) )
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_null_ptr, manager);
+
+    //
+    // different sign
+    //
+    if (lSign != rSign)
+        return(lSign > rSign ? 1 : -1);
+
+    //
+    // same sign
+    //
+    if (lSign == 0)    // optimization
+        return 0;
+
+    int lStrLen = XMLString::stringLen(lString);
+    int rStrLen = XMLString::stringLen(rString);
+
+    //
+    // different length
+    //
+    if (lStrLen > rStrLen)
+        return ( lSign > 0 ? 1 : -1 );
+    else if (lStrLen < rStrLen)
+        return ( lSign > 0 ? -1 : 1 );
+
+    //
+    // same length
+    // XMLString::compareString() return > 0, 0 and <0
+    // we need to convert it to 1, 0, and -1
+    //
+    int retVal = XMLString::compareString(lString, rString);
 
     if ( retVal > 0 )
     {
