@@ -876,6 +876,14 @@ const XMLCh XMLUni::fgXPathException_Name[] =
     ,   chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh XMLUni::fgXSerializationException_Name[] =
+{
+        chLatin_X, chLatin_S, chLatin_e, chLatin_r, chLatin_i, chLatin_a
+    ,   chLatin_l, chLatin_i, chLatin_z, chLatin_a, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chLatin_E, chLatin_x, chLatin_c, chLatin_e
+    ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
 const XMLCh XMLUni::fgNegINFString[] =
 {
     chDash, chLatin_I, chLatin_N, chLatin_F, chNull

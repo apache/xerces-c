@@ -225,6 +225,7 @@ public :
     static const XMLCh fgInvalidDatatypeValueException_Name[];
     static const XMLCh fgSchemaDateTimeException_Name[];
     static const XMLCh fgXPathException_Name[];
+    static const XMLCh fgXSerializationException_Name[];
 
     // Numerical String
     static const XMLCh fgNegINFString[];
