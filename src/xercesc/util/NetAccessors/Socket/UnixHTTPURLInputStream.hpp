@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/09 13:12:12  tng
+ * Fix compilation error.
+ *
  * Revision 1.3  2002/12/09 09:57:27  gareth
  * Fixed compile error by adding private member. Not very efficient. Should be looked at again.
  *
@@ -130,8 +133,6 @@ private :
     //  fBufferPos, fBufferEnd
     //      Pointers into fBuffer, showing start and end+1 of content
     //      that readBytes must return.
-    //  fURLText
-    //      Full URL text for error reporting
     // -----------------------------------------------------------------------
 
     int                 fSocket;
@@ -139,7 +140,6 @@ private :
     char                fBuffer[4000];
     char *              fBufferEnd;
     char *              fBufferPos;
-    XMLCh *             fURLText;
 
 }; // UnixHTTPURLInputStream
 

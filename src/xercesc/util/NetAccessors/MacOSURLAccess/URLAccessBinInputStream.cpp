@@ -228,7 +228,7 @@ URLAccessBinInputStream::readBytes(XMLByte* const    toFill
 	
 	//	Throw on any error
 	if (status != noErr || state == kURLErrorOccurredState)
-	    ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, mURLReference);
+	    ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
 	
 	//	Return number of bytes delivered
 	return maxToRead - bytesDesired;
