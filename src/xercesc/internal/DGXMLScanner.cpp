@@ -2544,6 +2544,11 @@ void DGXMLScanner::scanCDSection()
     //  characters specially here.
     bool            emittedError = false;
     bool     gotLeadingSurrogate = false;
+
+    // Get the character data opts for the current element
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
+    XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+
     while (true)
     {
         const XMLCh nextCh = fReaderMgr.getNextChar();
@@ -2560,12 +2565,7 @@ void DGXMLScanner::scanCDSection()
             // This document is standalone; this ignorable CDATA whitespace is forbidden.
             // XML 1.0, Section 2.9
             // And see if the current element is a 'Children' style content model
-            const ElemStack::StackElem* topElem = fElemStack.topElement();
-
             if (topElem->fThisElement->isExternal()) {
-
-                // Get the character data opts for the current element
-                XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
 
                 if (charOpts == XMLElementDecl::SpacesOk) // Element Content
                 {
@@ -2580,6 +2580,19 @@ void DGXMLScanner::scanCDSection()
         //  sequence.
         if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
+            //  make sure we were not expecting a trailing surrogate.
+            if (gotLeadingSurrogate)
+                emitError(XMLErrs::Expected2ndSurrogateChar);
+
+            if (fValidate) {
+
+                if (charOpts != XMLElementDecl::AllCharData)
+                {
+                    // They definitely cannot handle any type of char data
+                    fValidator->emitError(XMLValid::NoCharDataInCM);
+                }
+            }
+
             // If we have a doc handler, call it
             if (fDocHandler)
             {
@@ -2645,20 +2658,6 @@ void DGXMLScanner::scanCDSection()
                     }
                 }
                 gotLeadingSurrogate = false;
-            }
-        }
-
-        if (fValidate) {
-            // And see if the current element is a 'Children' style content model
-            const ElemStack::StackElem* topElem = fElemStack.topElement();
-
-            // Get the character data opts for the current element
-            XMLElementDecl::CharDataOpts charOpts = topElem->fThisElement->getCharDataOpts();
-
-            if (charOpts != XMLElementDecl::AllCharData)
-            {
-                // They definitely cannot handle any type of char data
-                fValidator->emitError(XMLValid::NoCharDataInCM);
             }
         }
 
