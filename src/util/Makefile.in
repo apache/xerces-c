@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.41  2001/07/24 20:39:44  peiyongz
+# XMLDouble
+#
 # Revision 1.40  2001/07/06 17:11:58  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
 #
@@ -336,6 +339,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLASCIITranscoder.hpp \
     XMLBigDecimal.hpp \
     XMLBigInteger.hpp \
+    XMLDouble.hpp \
     XMLChTranscoder.hpp \
     XMLIBM1140Transcoder.hpp \
     XMLDeleterFor.hpp \
@@ -397,6 +401,7 @@ UTIL_CPP_OBJECTS = \
     XMLASCIITranscoder.$(TO) \
     XMLBigDecimal.$(TO) \
     XMLBigInteger.$(TO) \
+    XMLDouble.$(TO) \
     XMLChTranscoder.$(TO) \
     XMLIBM1140Transcoder.$(TO) \
     XMLEBCDICTranscoder.$(TO) \
