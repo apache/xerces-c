@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/25 21:18:53  tng
+ * Schema Fix: Ensure no invalid uri index for UPA checking.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.12  2001/11/28 16:46:20  tng
  * Schema fix: Check for invalid URI index first.
@@ -260,7 +263,9 @@ inline void MixedContentModel::checkUniqueParticleAttribution
     unsigned int i = 0;
     for (i = 0; i < fCount; i++) {
         unsigned int orgURIIndex = fChildren[i]->getURI();
-        if (orgURIIndex != XMLContentModel::gEOCFakeId)
+        if ((orgURIIndex != XMLContentModel::gEOCFakeId) &&
+            (orgURIIndex != XMLElementDecl::fgInvalidElemId) &&
+            (orgURIIndex != XMLElementDecl::fgPCDataElemId))
             fChildren[i]->setURI(pContentSpecOrgURI[orgURIIndex]);
     }
 
