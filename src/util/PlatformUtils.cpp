@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/10/25 21:52:28  peiyongz
+ * XMLDeleterFor related functions and data are removed.
+ *
  * Revision 1.15  2001/10/24 19:59:49  peiyongz
  * [Bug 3975] gInitFlag problem
  *
@@ -145,7 +148,6 @@
 //      the static data of the platform utilities class and here locally.
 // ---------------------------------------------------------------------------
 static XMLMutex*                gSyncMutex = 0;
-static RefVectorOf<XMLDeleter>* gLazyData;
 static long                     gInitFlag = 0;
 
 // ---------------------------------------------------------------------------
@@ -214,9 +216,6 @@ void XMLPlatformUtils::Initialize()
 	// Create the mutex for the static data cleanup list
     gXMLCleanupListMutex = new XMLMutex;
 
-    // Create the array for saving lazily allocated objects to be deleted at termination
-    gLazyData= new RefVectorOf<XMLDeleter>(512);
-
     //
     //  Ask the per-platform code to make the desired transcoding service for
     //  us to use. This call cannot throw any exceptions or do anything that
@@ -276,14 +275,6 @@ void XMLPlatformUtils::Terminate()
     fgNetAccessor = 0;
 
     //
-    //  Call the method that cleans up the registered lazy eval objects.
-    //  This is all higher level code which might try to report errors if
-    //  they have problems, so we want to do this before we hose our
-    //  fundamental bits and pieces.
-    //
-    cleanupLazyData();
-
-    //
     //  Call some other internal modules to give them a chance to clean up.
     //  Do the string class last in case something tries to use it during
     //  cleanup.
@@ -332,45 +323,6 @@ XMLMsgLoader* XMLPlatformUtils::loadMsgSet(const XMLCh* const msgDomain)
     //  works or not. That's their decision.
     //
     return loadAMsgSet(msgDomain);
-}
-
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Lazy eval methods
-// ---------------------------------------------------------------------------
-void XMLPlatformUtils::registerLazyData(XMLDeleter* const deleter)
-{
-    // Just add a copy of this object to the vector. MUST be synchronized
-    XMLMutexLock lock(gSyncMutex);
-    gLazyData->addElement(deleter);
-}
-
-
-void XMLPlatformUtils::cleanupLazyData()
-{
-    //
-    //  Loop through the vector and try to delete each object. Use a try
-    //  block so that we don't fall out prematurely if one of them hoses.
-    //  Note that we effectively do them in reverse order of their having
-    //  been registered.
-    //
-    //  Also, note that we don't synchronize here because this is happening
-    //  during shutdown.
-    //
-    while (gLazyData->size())
-    {
-        try
-        {
-            gLazyData->removeLastElement();
-        }
-
-        catch(...)
-        {
-            // We don't try to report errors here, just fall through
-        }
-    }
-    delete gLazyData;
-    gLazyData = 0;
 }
 
 // ---------------------------------------------------------------------------

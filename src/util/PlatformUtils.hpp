@@ -533,16 +533,6 @@ public :
     static bool isNELRecognized();
     //@}
 
-    //
-    //  For internal use only.
-    //
-    //  The parser creates a good bit of static/global data lazily, to
-    //  avoid order of creation issues. Those objects can be registered
-    //  here to be cleaned up during the Terminate() call.
-    ///
-    static void registerLazyData(XMLDeleter* const deleter);
-    static void cleanupLazyData();
-
 
 private :
     /** @name Private static methods */
