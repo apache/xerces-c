@@ -56,8 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/11/07 21:50:28  tng
+ * Fix comment log that lead to error.
+ *
  * Revision 1.21  2001/11/07 21:12:15  tng
- * Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+ * Performance: Create QName in ContentSpecNode only if it is a leaf/Any/PCDataNode.
  *
  * Revision 1.20  2001/10/12 18:08:57  tng
  * make sure the second node exists before calling getType

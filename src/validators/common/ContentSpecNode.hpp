@@ -56,8 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/11/07 21:50:28  tng
+ * Fix comment log that lead to error.
+ *
  * Revision 1.17  2001/11/07 21:12:15  tng
- * Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+ * Performance: Create QName in ContentSpecNode only if it is a leaf/Any/PCDataNode.
  *
  * Revision 1.16  2001/08/28 20:21:08  peiyongz
  * * AIX 4.2, xlC 3 rev.1 compilation error: get*() declared with external linkage

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/11/07 21:50:28  tng
+ * Fix comment log that lead to error.
+ *
  * Revision 1.8  2001/11/07 21:12:15  tng
- * Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+ * Performance: Create QName in ContentSpecNode only if it is a leaf/Any/PCDataNode.
  *
  * Revision 1.7  2001/10/04 15:08:56  knoaman
  * Add support for circular import.
@@ -110,7 +113,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     }
 
     unsigned int uriId = anElement->getURI();
-    if (uriId == XMLContentModel::gEOCFakeId || 
+    if (uriId == XMLContentModel::gEOCFakeId ||
         uriId == XMLContentModel::gEpsilonFakeId ||
         uriId == XMLElementDecl::fgPCDataElemId)
         return false;
