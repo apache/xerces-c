@@ -3,7 +3,7 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.5.0: June 15, 2001">
+<s2 title="Xerces-C Version 1.5.0: June 12, 2001">
 
 <table>
     <tr>
@@ -13,7 +13,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>Tinny Ng</td>
         <td>Schema:<br/>
             Add Schema support in XMLParsers (DOM/SAX/SAX2), XMLScanner. <br/>
@@ -26,24 +26,25 @@
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>Tinny Ng</td>
         <td>Break DTDValidator into DTDGrammar, DTDScanner, and DTDValidator.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>Tinny Ng</td>
         <td>IDOM:<br/>
-            Complete the Range, TreeWalker, NodeIterator, and DeepNodeList.<br/>
+            Complete the Range, TreeWalker, NodeIterator, and other memory fixes.<br/>
+            Support IDOM on UNIX platform.<br/>
             Add samples IDOMPrint, and IDOMCount.<br/>
             Add test cases IRangeTest and ITraversal.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>Khaled Noaman</td>
         <td> Schema:<br/>
              Add Regular Expression. <br/>
@@ -60,7 +61,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>Khaled Noaman</td>
         <td>DatatypeValidator:<br/>
             Add DatatypeValidator and DatatypeValidatorFactory.
@@ -68,7 +69,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>PeiYong Zhang</td>
         <td>Schema:<br/>
             Add Schema support in Content Model. <br/>
@@ -80,7 +81,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-15</td>
+        <td>2001-06-12</td>
         <td>PeiYong Zhang</td>
         <td>DatatypeValidator:<br/>
              Support Base64DatatypeValidator, <br/>
@@ -103,7 +104,14 @@
     <tr>
         <td>2001-06-08</td>
         <td>PeiYong Zhang</td>
-        <td>Documentation update for Xerces 1.5.
+        <td>Documentation and project files update for Xerces 1.5.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-08</td>
+        <td>Khaled Noaman</td>
+        <td>IDOM Documentation.
         </td>
     </tr>
 
@@ -195,6 +203,13 @@
         <td>Check for existance of MacOS Unicode Converter routines prior to instanciating our
 	 transcoder object; Xerces will thus panic, rather than crash, if they don't exist.
 	 Add support to check for existance of MacOS Unicode Converter to avoid calling through NULL pointer.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-05-16</td>
+        <td>Henry Zongaro</td>
+        <td>IDOM: Add DeepNodeList support.
         </td>
     </tr>
 
