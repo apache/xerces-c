@@ -944,6 +944,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem ("mkdir $targetdir/bin");
     psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/lib");
+    psystem ("mkdir $targetdir/lib/msg");    
     psystem ("mkdir $targetdir/include");
     psystem ("mkdir $targetdir/include/xercesc");
     if (length($ICUROOT) > 0) {
@@ -1213,6 +1214,14 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         psystem("ln -s libxerces-c22.so   libxerces-c.so    ");
     }
 
+    # Populate the Message Catalog Files
+    if ( $opt_m =~ m/iconv/i ) {
+        print ("\n\nCopying Message Catalog Files ...\n");
+        pchdir ("$targetdir/lib/msg");
+        psystem("rm -f XMLMessages* ");    	
+        psystem("cp -f $XERCESCROOT/lib/msg/XMLMessages*.cat .");        
+    }    
+    
     #
     # Create symbolic link for those ICU libraries
     #
