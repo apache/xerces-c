@@ -2860,7 +2860,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
           , currentScope
         );
 
-        if (!elemDecl && fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId) {
+        if (!elemDecl && (fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId)) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
             if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
@@ -3078,8 +3078,29 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
 
     if (fGrammarType == Grammar::SchemaGrammarType) {
         ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
-        if (typeinfo)
+        if (typeinfo) {
             currentScope = typeinfo->getScopeDefined();
+
+            // switch grammar if the typeinfo has a different grammar (happens when there is xsi:type)
+            XMLCh* typeName = typeinfo->getTypeName();
+            const XMLCh poundStr[] = {chPound, chNull};
+            if (!XMLString::startsWith(typeName, poundStr)) {
+                const int comma = XMLString::indexOf(typeName, chComma);
+                if (comma != -1) {
+                    XMLBuffer prefixBuf(comma+1);
+                    prefixBuf.append(typeName, comma);
+                    const XMLCh* uriStr = prefixBuf.getRawBuffer();
+                    if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
+                    {
+                        fValidator->emitError
+                        (
+                            XMLValid::GrammarNotFound
+                            , prefixBuf.getRawBuffer()
+                        );
+                    }
+                }
+            }
+        }
         fElemStack.setCurrentScope(currentScope);
 
         // Set element next state
@@ -3088,6 +3109,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         }
 
         fElemState[elemDepth] = 0;
+
     }
 
     fElemStack.setCurrentGrammar(fGrammar);

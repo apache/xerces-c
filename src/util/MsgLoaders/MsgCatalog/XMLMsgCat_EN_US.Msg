@@ -357,6 +357,8 @@ $set 2
  91  Unresolved type '{0}' found in xsi:type handling
  92  Type '{0}' that is used in xsi:type is not derived from the type of element '{1}'
  93  Element '{0}' has blocking constraint and does not permit substitution
+ 94  Attribute '{0}' should be qualified
+ 95  Attribute '{0}' should be un-qualified
 
 
 $set 3

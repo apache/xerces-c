@@ -104,11 +104,13 @@ public :
       , BadXsiType                         = 91
       , NonDerivedXsiType                  = 92
       , NoSubforBlock                      = 93
-      , E_HighBounds                       = 94
-      , W_LowBounds                        = 95
-      , W_HighBounds                       = 96
-      , F_LowBounds                        = 97
-      , F_HighBounds                       = 98
+      , AttributeNotQualified              = 94
+      , AttributeNotUnQualified            = 95
+      , E_HighBounds                       = 96
+      , W_LowBounds                        = 97
+      , W_HighBounds                       = 98
+      , F_LowBounds                        = 99
+      , F_HighBounds                       = 100
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

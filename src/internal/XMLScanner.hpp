@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2001/10/12 20:52:18  tng
+ * Schema: Find the attributes see if they should be (un)qualified.
+ *
  * Revision 1.33  2001/09/10 15:16:04  tng
  * Store the fGrammarType instead of calling getGrammarType all the time for faster performance.
  *
@@ -581,7 +584,7 @@ private :
     void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
-    bool switchGrammar(int newGrammarNameSpaceIndex);
+    bool switchGrammar(unsigned int newGrammarNameSpaceIndex);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,

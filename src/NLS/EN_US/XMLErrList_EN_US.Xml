@@ -370,6 +370,8 @@
             <Message Id="BadXsiType" Text="Unresolved type '{0}' found in xsi:type handling"/>
             <Message Id="NonDerivedXsiType" Text="Type '{0}' that is used in xsi:type is not derived from the type of element '{1}'"/>
             <Message Id="NoSubforBlock" Text="Element '{0}' has blocking constraint and does not permit substitution"/>
+            <Message Id="AttributeNotQualified" Text="Attribute '{0}' should be qualified"/>
+            <Message Id="AttributeNotUnQualified" Text="Attribute '{0}' should be un-qualified"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">

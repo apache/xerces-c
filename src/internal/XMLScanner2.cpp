@@ -226,6 +226,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             XMLAttDef* attDefForWildCard = 0;
 
+            XMLAttDef*  attDef = 0;
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
                 ComplexTypeInfo* typeInfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
@@ -245,6 +246,45 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         }
                     }
                 }
+
+                //retrieve the att def
+                attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, uriId);
+
+                if (!attDef) {
+                    // not find, see if the attDef should be qualified or not
+                    if (uriId == fEmptyNamespaceId) {
+                        attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
+                        if (fValidate
+                            && attDef
+                            && !attDefForWildCard
+                            && !skipThisOne
+                            && !laxThisOne
+                            && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
+                            // the attribute should be qualified
+                            fValidator->emitError
+                            (
+                                XMLValid::AttributeNotQualified
+                                , attDef->getFullName()
+                            );
+                        }
+                    }
+                    else {
+                        attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fEmptyNamespaceId);
+                        if (fValidate
+                            && attDef
+                            && !attDefForWildCard
+                            && !skipThisOne
+                            && !laxThisOne
+                            && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
+                            // the attribute should be qualified
+                            fValidator->emitError
+                            (
+                                XMLValid::AttributeNotUnQualified
+                                , attDef->getFullName()
+                            );
+                        }
+                    }
+                }
             }
 
             //
@@ -253,15 +293,17 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  how the derived validator and its elements store attributes.
             //
             bool wasAdded = false;
-            XMLAttDef*  attDef = elemDecl->findAttr
-            (
-                curPair->getKey()
-                , uriId
-                , suffPtr
-                , prefPtr
-                , XMLElementDecl::AddIfNotFound
-                , wasAdded
-            );
+            if (!attDef) {
+                attDef = elemDecl->findAttr
+                (
+                    curPair->getKey()
+                    , uriId
+                    , suffPtr
+                    , prefPtr
+                    , XMLElementDecl::AddIfNotFound
+                    , wasAdded
+                );
+            }
 
             if (wasAdded)
             {
@@ -353,7 +395,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  was issued, which is all we care about.
             //
 
-            if (attDefForWildCard && (wasAdded || (!wasAdded && attDef->getCreateReason() == XMLAttDef::JustFaultIn))) {
+            if (attDefForWildCard && (wasAdded || (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn))) {
                 normalizeAttValue
                 (
                     attDefForWildCard
@@ -1493,9 +1535,11 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
 
             grammar = new SchemaGrammar();
             TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
-            fGrammar = grammar;
-            fGrammarType = fGrammar->getGrammarType();
-            fValidator->setGrammar(fGrammar);
+            if (fGrammarType == Grammar::DTDGrammarType) {
+                fGrammar = grammar;
+                fGrammarType = Grammar::SchemaGrammarType;
+                fValidator->setGrammar(fGrammar);
+            }
 
             if (!fReuseGrammar && fValidate) {
                 //  validate the Schema scan so far
@@ -1504,9 +1548,11 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
     }
     else {
-        fGrammar = grammar;
-        fGrammarType = fGrammar->getGrammarType();
-        fValidator->setGrammar(fGrammar);
+        if (fGrammarType == Grammar::DTDGrammarType) {
+            fGrammar = grammar;
+            fGrammarType = Grammar::SchemaGrammarType;
+            fValidator->setGrammar(fGrammar);
+        }
     }
 }
 
@@ -2803,7 +2849,7 @@ XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
     return toFill.getLen();
 }
 
-bool XMLScanner::switchGrammar(int newGrammarNameSpaceIndex)
+bool XMLScanner::switchGrammar(unsigned int newGrammarNameSpaceIndex)
 {
     XMLBufBid bbURI(&fBufMgr);
     XMLBuffer& bufURI = bbURI.getBuffer();
