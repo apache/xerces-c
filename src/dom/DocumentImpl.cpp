@@ -491,14 +491,6 @@ NodeImpl *DocumentImpl::removeChild(NodeImpl *oldChild)
 };
 
 
-
-void DocumentImpl::setNodeValue(const DOMString &x)
-{
-    throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-};
-
-
-
 //
 //    unreferenced()  will be called whenever the refernce count on
 //          this document goes from 1 to 0.  In all cases, when this

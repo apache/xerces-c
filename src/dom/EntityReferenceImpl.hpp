@@ -87,7 +87,6 @@ public:
     virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual bool isEntityReference();
-    virtual void setNodeValue(const DOMString &);
     virtual void setReadOnly(bool readOnly,bool deep);
 };
 

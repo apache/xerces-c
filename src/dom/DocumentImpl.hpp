@@ -201,7 +201,6 @@ public:
     static  bool                isXMLName(const DOMString & s);
     virtual void                referenced();
     virtual NodeImpl            *removeChild(NodeImpl *oldChild);
-    virtual void                setNodeValue(const DOMString & x);
     virtual void                unreferenced();
     static  NodeIteratorImpl*   createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
     static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
@@ -269,7 +268,7 @@ public:
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitDocumentImpl();    
+	static void reinitDocumentImpl();
 
 };
 

@@ -855,11 +855,11 @@ Facets:
 Name:			name
 Model Type:		Children
 Create Reason:	Declared
-ContentType:	Sequence
-Content Model:	(family,given)
+ContentType:	All
+Content Model:	
 ComplexType:
 	TypeName:	,C3
-	ContentType:	Sequence
+	ContentType:	All
 --------------------------------------------
 Name:			family
 Model Type:		Simple
@@ -930,9 +930,9 @@ DOM reference counted memory alloction statistics:
     total NamedNodeMaps:    37
 DOM reference counted memory alloction statistics:
     live  string handles:   0
-    total string handles:   243
+    total string handles:   238
     live  string buffers:   0
-    total string buffers:   274
+    total string buffers:   269
     live  nodeImpls:        0
     total nodeImpls:        220
     live  NamedNodeMaps:    0

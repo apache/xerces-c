@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/12/07 01:48:27  tng
+ * [Bug 1959] setNodeValue throws exception when spec specifies NOP.
+ *
  * Revision 1.2  2001/11/23 16:16:52  tng
  * Elimiate compiler warning Warning: String literal converted to char* in initialization.
  *
@@ -396,13 +399,19 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
     //"This shouldn't work!"
     XMLString::transcode("entityReferenceText information", tempStr, 3999);
 
-    EXCEPTIONSTEST(docFirstElement->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);
+    // The following setNodeValue tests are not invalid
+    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
+    // EXCEPTIONSTEST(docFirstElement->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);
+
     EXCEPTIONSTEST(docReferenceEntity->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
+
+    // The following setNodeValue tests are not invalid
+    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
     // EXCEPTIONSTEST(docEntity->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 8);
-    EXCEPTIONSTEST(doc->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
-    EXCEPTIONSTEST(docDocType->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);
-    EXCEPTIONSTEST(docDocFragment->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 11);
-    EXCEPTIONSTEST(docNotation->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 12);
+    // EXCEPTIONSTEST(doc->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
+    // EXCEPTIONSTEST(docDocType->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);
+    // EXCEPTIONSTEST(docDocFragment->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 11);
+    // EXCEPTIONSTEST(docNotation->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 12);
     EXCEPTIONSTEST(docReferenceEntity->appendChild(entityReferenceText2 ), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR , OK, 13);
     EXCEPTIONSTEST(docBodyLevel32->insertBefore(docTextNode11,docBody ), IDOM_DOMException::NOT_FOUND_ERR, OK, 14);
     EXCEPTIONSTEST(docBodyLevel32->removeChild(docFirstElement), IDOM_DOMException::NOT_FOUND_ERR, OK, 15);

@@ -141,7 +141,7 @@ const XMLCh * IDNotationImpl::getSystemId() const
 
 void IDNotationImpl::setNodeValue(const XMLCh *arg)
 {
-    throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    fNode.setNodeValue(arg);
 };
 
 

@@ -173,7 +173,7 @@ short IDEntityReferenceImpl::getNodeType() const {
 */
 void IDEntityReferenceImpl::setNodeValue(const XMLCh *x)
 {
-    throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    fNode.setNodeValue(x);
 }
 
 

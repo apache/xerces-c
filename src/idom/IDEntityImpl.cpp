@@ -128,7 +128,7 @@ const XMLCh * IDEntityImpl::getSystemId() const
 
 void IDEntityImpl::setNodeValue(const XMLCh *arg)
 {
-    throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    fNode.setNodeValue(arg);
 };
 
 

@@ -101,7 +101,6 @@ public:
     virtual AttrImpl * removeAttributeNode(AttrImpl * oldAttr);
     virtual AttrImpl *setAttribute(const DOMString &name, const DOMString &value);
     virtual AttrImpl *setAttributeNode(AttrImpl *newAttr);
-    virtual void setNodeValue(const DOMString &arg);
     virtual void setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
@@ -144,7 +143,7 @@ public:
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitElementImpl();   
+	static void reinitElementImpl();
 };
 
 #endif

@@ -113,7 +113,6 @@ public:
     virtual DOMString          getName();
     virtual NamedNodeMapImpl * getNotations();
 	virtual NamedNodeMapImpl * getElements();
-    virtual void               setNodeValue(const DOMString &arg);
     virtual void               setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2

@@ -175,16 +175,6 @@ bool EntityReferenceImpl::isEntityReference()
 
 
 /**
-* EntityReferences never have a nodeValue.
-* @throws DOMException(NO_MODIFICATION_ALLOWED_ERR)
-*/
-void EntityReferenceImpl::setNodeValue(const DOMString &x)
-{
-    throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-}
-
-
-/**
 * EntityRef is already, and must be, a read-only node. Attempts to change
 * that will throw a NO_MODIFICATION_ALLOWED_ERR DOMException.
 * <P>

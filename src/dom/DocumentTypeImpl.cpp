@@ -192,13 +192,6 @@ bool DocumentTypeImpl::isDocumentTypeImpl()
 };
 
 
-void DocumentTypeImpl::setNodeValue(const DOMString &val)
-{
-    throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-};
-
-
 void DocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
 {
     ParentNode::setReadOnly(readOnl,deep);

@@ -265,8 +265,7 @@ IDOM_NamedNodeMap *IDDocumentTypeImpl::getElements() const
 
 void IDDocumentTypeImpl::setNodeValue(const XMLCh *val)
 {
-    throw IDOM_DOMException(
-        IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    fNode.setNodeValue(val);
 };
 
 

@@ -274,13 +274,6 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
 };
 
 
-void ElementImpl::setNodeValue(const DOMString &x)
-{
-    throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-};
-
-
-
 void ElementImpl::setReadOnly(bool readOnl, bool deep)
 {
     ParentNode::setReadOnly(readOnl,deep);
@@ -511,6 +504,6 @@ void ElementImpl::setupDefaultAttributes()
 void ElementImpl::reinitElementImpl() {
 
     delete gEmptyString;
-    gEmptyString = 0; 
+    gEmptyString = 0;
 
 }

@@ -56,6 +56,13 @@
 
     <tr>
         <td>2001-12-06</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1959] setNodeValue throws exception when spec specifies NOP.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
         <td>Erik Rydgren</td>
         <td>[Bug 2174] Bug in NamedNodeMapImpl.
         </td>

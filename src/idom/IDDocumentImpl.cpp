@@ -482,7 +482,7 @@ IDOM_Node *IDDocumentImpl::removeChild(IDOM_Node *oldChild)
 
 void IDDocumentImpl::setNodeValue(const XMLCh *x)
 {
-    throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    fNode.setNodeValue(x);
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/12/07 01:46:40  tng
+ * [Bug 1959] setNodeValue throws exception when spec specifies NOP.
+ *
  * Revision 1.14  2001/11/23 20:44:10  tng
  * Solaris Forte C++ core dump when handling this long condition check; so break it into smaller check to bypass this compiler problem.
  *
@@ -341,13 +344,21 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
     EXCEPTIONSTEST(docNode3.appendChild(docNode4), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 3);
     // EXCEPTIONSTEST(doc.insertBefore(docEntity, docFirstElement), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 4);
     EXCEPTIONSTEST(doc.replaceChild(docCDATASection, docFirstElement), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 5);
-    EXCEPTIONSTEST(docFirstElement.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);
+
+    // The following setNodeValue tests are not invalid
+    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
+    // EXCEPTIONSTEST(docFirstElement.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);
+
     EXCEPTIONSTEST(docReferenceEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
+
+    // The following setNodeValue tests are not invalid
+    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
     // EXCEPTIONSTEST(docEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 8);
-    EXCEPTIONSTEST(doc.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
-    EXCEPTIONSTEST(docDocType.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);
-    EXCEPTIONSTEST(docDocFragment.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 11);
-    EXCEPTIONSTEST(docNotation.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 12);
+    // EXCEPTIONSTEST(doc.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
+    // EXCEPTIONSTEST(docDocType.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);
+    // EXCEPTIONSTEST(docDocFragment.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 11);
+    // EXCEPTIONSTEST(docNotation.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 12);
+
     EXCEPTIONSTEST(docReferenceEntity.appendChild(entityReferenceText2 ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR , OK, 13);
     EXCEPTIONSTEST(docBodyLevel32.insertBefore(docTextNode11,docBody ), DOM_DOMException::NOT_FOUND_ERR, OK, 14);
     EXCEPTIONSTEST(docBodyLevel32.removeChild(docFirstElement), DOM_DOMException::NOT_FOUND_ERR, OK, 15);
