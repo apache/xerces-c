@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2002/02/05 16:50:04  tng
+ * Terminate the file IDDeepNodeListPool.c with a newline, otherwise Solaris compiler CC will give compilation error.
+ *
  * Revision 1.2  2002/02/04 21:50:38  tng
  * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
  *
@@ -424,3 +427,4 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
     }
     return 0;
 }
+
