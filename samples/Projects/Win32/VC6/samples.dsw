@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "DOMCount"=.\DOMCount\DOMCount.dsp - Package Owner=<4>
+Project: "CreateDOMDocument"=".\CreateDOMDocument\CreateDOMDocument.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -15,7 +15,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "DOMPrint"=.\DOMPrint\DOMPrint.dsp - Package Owner=<4>
+Project: "DOMCount"=".\DOMCount\DOMCount.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -27,7 +27,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "MemParse"=.\MemParse\MemParse.dsp - Package Owner=<4>
+Project: "DOMPrint"=".\DOMPrint\DOMPrint.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -39,7 +39,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "Redirect"=.\Redirect\Redirect.dsp - Package Owner=<4>
+Project: "EnumVal"=".\EnumVal\EnumVal.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -51,7 +51,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SAXCount"=.\SAXCount\SAXCount.dsp - Package Owner=<4>
+Project: "MemParse"=".\MemParse\MemParse.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -63,7 +63,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SAXPrint"=.\SAXPrint\SAXPrint.dsp - Package Owner=<4>
+Project: "PParse"=".\PParse\PParse.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -75,7 +75,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "PParse"=.\PParse\PParse.dsp - Package Owner=<4>
+Project: "Redirect"=".\Redirect\Redirect.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -87,7 +87,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "StdInParse"=.\StdInParse\StdInParse.dsp - Package Owner=<4>
+Project: "SAXCount"=".\SAXCount\SAXCount.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -99,7 +99,19 @@ Package=<4>
 
 ###############################################################################
 
-Project: "EnumVal"=.\EnumVal\EnumVal.dsp - Package Owner=<4>
+Project: "SAXPrint"=".\SAXPrint\SAXPrint.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "StdInParse"=".\StdInParse\StdInParse.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
