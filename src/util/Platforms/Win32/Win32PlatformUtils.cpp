@@ -56,6 +56,14 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/03/17 02:37:55  rahulj
+ * First cut at adding HTTP capability via native sockets.
+ * Still need to add:
+ *   error handling capability, ports other than 80,
+ *   escaped URL's
+ * Will add options in project file only when I am done with these
+ * above changes.
+ *
  * Revision 1.13  2000/03/02 19:55:34  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -159,7 +167,9 @@
 //  one of these values.
 //
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
-    #include <util/NetAccessors/LibWWWNetAccessor.hpp>
+    #include <util/NetAccessors/libWWW/LibWWWNetAccessor.hpp>
+#elif defined (XML_USE_NETACCESSOR_WINSOCK)
+    #include <util/NetAccessors/WinSock/WinSockNetAccessor.hpp>
 #endif
 
 
@@ -658,6 +668,8 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
     return new LibWWWNetAccessor();
+#elif defined (XML_USE_NETACCESSOR_WINSOCK)
+    return new WinSockNetAccessor();
 #else
     return 0;
 #endif
