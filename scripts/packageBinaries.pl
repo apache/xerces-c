@@ -377,7 +377,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 	if ( $platform =~ m/AIX/i ) { $platform = "aix"; }
         if ( $platform =~ m/ptx/i ) { $platform = "ptx"; }
 
-	if (!length($opt_r)) {
+	if (length($opt_r) > 0) {
         	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
 	} else {
         	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t");
