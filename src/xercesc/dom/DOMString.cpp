@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/14 22:09:36  tng
+ * IDOM Fix: Issue IDOM_DOMException::INDEX_SIZE_ERR if count or offset is negative.
+ *
  * Revision 1.2  2002/02/28 21:52:13  tng
  * [Bug 1368] improper DOMStringHandle locking.
  *
@@ -795,7 +798,7 @@ DOMString DOMString::clone() const
 void DOMString::deleteData(unsigned int offset, unsigned int delLength)
 {
     unsigned int stringLen = this->length();
-    if (offset >= stringLen)
+    if (offset >= stringLen || offset < 0 || delLength < 0)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
 
     if (delLength == 0)
@@ -1164,7 +1167,7 @@ DOMString DOMString::substringData(unsigned int offset, unsigned int count) cons
         return DOMString();
 
     unsigned int thisLen = length();
-    if (offset >= thisLen)
+    if (offset >= thisLen || offset < 0 || count < 0)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
 
     // Cap count to the string length to eliminate overflow
