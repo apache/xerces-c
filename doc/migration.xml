@@ -4,23 +4,23 @@
 <s1 title="Migration">
     <s2 title="Migrating from &XercesCName; &XercesCVersion160; to &XercesCName; &XercesCVersion;">
       <p>This document is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion160; code base and the &XercesCName; &XercesCVersion; code base.</p>
+      &XercesCName; &XercesCVersion160; code base and the &XercesCName; &XercesCVersion;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion; code base</link></li>
-        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion; code base</link></li>
+        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion;</link></li>
         <ul>
             <li><link anchor="NewAPI">New Public API</link></li>
             <li><link anchor="ModifiedAPI">Modified Public API</link></li>
             <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
-        <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion; code base</link></li>
+        <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion;</link></li>
       </ul>
     </s2>
 
     <anchor name="NewFeatures"/>
-    <s2 title="New features in &XercesCName; &XercesCVersion; code base">
+    <s2 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
         <li>Added SAX2-ext's DeclHandler.</li>
         <li>Added support for building with new MacOSURLAccessCF NetAccessor.</li>
@@ -30,10 +30,10 @@
     </s2>
 
     <anchor name="API"/>
-    <s2 title="Public API Changes in &XercesCName; &XercesCVersion; code base">
+    <s2 title="Public API Changes in &XercesCName; &XercesCVersion;">
 
         <p>The following lists the public API changes between the &XercesCName;
-           &XercesCVersion; and the &XercesCName; &XercesCVersion; code base releases
+           &XercesCVersion; and the &XercesCName; &XercesCVersion; releases
            of the parser. </p>
 
         <anchor name="NewAPI"/>
@@ -107,7 +107,7 @@
     </s2>
 
     <anchor name="DirChange"/>
-    <s2 title="Directory change in &XercesCName; &XercesCVersion; code base">
+    <s2 title="Directory change in &XercesCName; &XercesCVersion;">
         <ul>
             <li>A new directory, <em>src/xercesc</em> is created to be the new parent directory to
                 all src's direct subdirectories.</li>

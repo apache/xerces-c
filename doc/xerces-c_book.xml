@@ -58,6 +58,7 @@
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
   <hidden id="releases_archive"                   source="releases_archive.xml"/>
+  <hidden id="releases_plan"                      source="releases_plan.xml"/>
 
   <document id="bug-report"  label="Bug-Reporting" source="bug-report.xml"/>
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
