@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2003/04/21 15:48:39  knoaman
+# Include MemoryManger header file.
+#
 # Revision 1.7  2002/09/17 21:23:13  peiyongz
 # RPM for Xerces2.1.0, patch from Thomas Woerner (thomas@linux.de)
 #
@@ -147,6 +150,7 @@ FRAMEWORK_CPP_PUBHEADERS = \
 	LocalFileFormatTarget.hpp \
 	MemBufInputSource.hpp \
 	MemBufFormatTarget.hpp \
+	MemoryManager.hpp \
 	StdInInputSource.hpp \
 	StdOutFormatTarget.hpp \
 	URLInputSource.hpp \
