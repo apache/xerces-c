@@ -657,6 +657,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
                            'CC="xlc_r" ' .
                            'CFLAGS="-w -O2 -qmaxmem=-1" ' .
                            'CXXFLAGS="-w -O2 -qmaxmem=-1" ';
+        psystem ("echo LIBPATH=$ENV{'LIBPATH'}");
     }
     if ($platform eq 'HP-UX') {
         # Find out the operating system version from 'uname -r'
@@ -684,12 +685,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
             $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="-w +O2 +Ofltacc" CFLAGS="-w +O2 +Ofltacc"';
         }
 
+        psystem ("echo SHLIB_PATH=$ENV{'SHLIB_PATH'}");
     }
     if ($platform =~ m/Linux/i) {
         $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
+        psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
     if ($platform =~ m/SunOS/i) {
@@ -697,6 +700,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         $platform = "solaris";
         if ($opt_c eq "") {$opt_c = "cc";}
         if ($opt_x eq "") {$opt_x = "CC";}
+        psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
     if ($platform =~ m/ptx/i) {
