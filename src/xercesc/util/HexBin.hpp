@@ -87,8 +87,31 @@ public :
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLCh**)
+     * @deprecated use decodeToXMLByte instead.
      */
+
     static XMLCh* decode(
+                         const XMLCh*          const    hexData
+                       ,       MemoryManager*  const    manager = XMLPlatformUtils::fgMemoryManager
+                        );
+
+   /**
+     * Decodes HexBinary data into XMLByte
+     *
+     * NOTE: The returned buffer is dynamically allocated and is the
+     * responsibility of the caller to delete it when not longer needed.
+     * You can call XMLString::release to release this returned buffer.
+     *
+     * If a memory manager is provided, ask the memory manager to de-allocate
+     * the returned buffer.
+     *
+     * @param hexData HexBinary data in XMLCh stream.
+     * @param manager client provided memory manager
+     * @return Decoded binary data in XMLByte stream,
+     *      or NULL if input data can not be decoded.
+     * @see   XMLString::release(XMLByte**)
+     */
+    static XMLByte* decodeToXMLByte(
                          const XMLCh*          const    hexData
                        ,       MemoryManager*  const    manager = XMLPlatformUtils::fgMemoryManager
                         );
@@ -126,7 +149,7 @@ private :
     //
     // -----------------------------------------------------------------------
     static bool       isInitialized;
-    static bool       hexNumberTable[];
+    static XMLByte    hexNumberTable[];
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/12/10 10:37:55  cargilld
+ * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
+ *
  * Revision 1.17  2004/11/24 10:18:59  cargilld
  * Fix compilation error on HP for yesterday's commit.
  *
@@ -261,6 +264,7 @@ public:
                          float     f_float;
                          double    f_double;
                          XMLCh*    f_strVal;
+                         XMLByte*  f_byteVal;
 
                 struct decimal {
                                 double           f_dvalue;

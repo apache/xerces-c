@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/12/10 10:37:56  cargilld
+ * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
+ *
  * Revision 1.5  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -54,7 +57,7 @@ static const int BASELENGTH = 255;
 // ---------------------------------------------------------------------------
 //  class data member
 // ---------------------------------------------------------------------------
-bool HexBin::hexNumberTable[BASELENGTH];
+XMLByte HexBin::hexNumberTable[BASELENGTH];
 bool HexBin::isInitialized = false;
 
 int HexBin::getDataLength(const XMLCh* const hexData)
@@ -97,7 +100,6 @@ XMLCh* HexBin::getCanonicalRepresentation(const XMLCh*          const hexData
     return retStr;
 }
 
-
 XMLCh* HexBin::decode(const XMLCh*          const   hexData
                     ,       MemoryManager*  const   manager)
 {
@@ -112,28 +114,60 @@ XMLCh* HexBin::decode(const XMLCh*          const   hexData
         init();
 
     //prepare the return string
-    XMLCh *retVal = (XMLCh*) manager->allocate( (strLen/2 + 1) * sizeof(XMLCh));
+    int decodeLength = strLen/2;
+    XMLCh *retVal = (XMLCh*) manager->allocate( (decodeLength + 1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janFill(retVal, manager);
-
-    for ( int i = 0; i < strLen; )
-    {
-        if( !isHex(hexData[i])  || 
-            !isHex(hexData[i+1])  )
+    
+    XMLByte temp1, temp2;
+    for( int i = 0; i<decodeLength; i++ ) {
+        temp1 = hexNumberTable[hexData[i*2]];
+        if (temp1 == (XMLByte) -1)
             return 0;
-        else
-        {
-            retVal[i/2] = (XMLCh)(
-                                   (((XMLByte) hexData[i]) << 4 ) | 
-                                    ((XMLByte) hexData[i+1])
-                                 );      
-            i+=2;
-        }
+        temp2 = hexNumberTable[hexData[i*2+1]];
+        if (temp2 == (XMLByte) -1)
+            return 0;
+        retVal[i] = (XMLCh)((temp1 << 4) | temp2);
     }
 
     janFill.release();
-    retVal[strLen/2] = 0;
+    retVal[decodeLength] = 0;
     return retVal;
 }
+
+XMLByte* HexBin::decodeToXMLByte(const XMLCh*          const   hexData
+                    ,       MemoryManager*  const   manager)
+{
+    if (( hexData == 0 ) || ( *hexData == 0 )) // zero length
+        return 0;
+
+    int strLen = XMLString::stringLen(hexData);
+    if ( strLen%2 != 0 )
+        return 0;
+
+    if ( !isInitialized )
+        init();
+
+    //prepare the return string
+    int decodeLength = strLen/2;
+    XMLByte *retVal = (XMLByte*) manager->allocate( (decodeLength + 1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> janFill(retVal, manager);
+    
+    XMLByte temp1, temp2;
+    for( int i = 0; i<decodeLength; i++ ) {
+        temp1 = hexNumberTable[hexData[i*2]];
+        if (temp1 == (XMLByte) -1)
+            return 0;
+        temp2 = hexNumberTable[hexData[i*2+1]];
+        if (temp2 == (XMLByte) -1)
+            return 0;
+        retVal[i] = ((temp1 << 4) | temp2);
+    }
+
+    janFill.release();
+    retVal[decodeLength] = 0;
+    return retVal;
+}
+
 
 // -----------------------------------------------------------------------
 //  Helper methods
@@ -144,7 +178,7 @@ bool HexBin::isHex(const XMLCh& octet)
     if ( octet >= BASELENGTH )
         return false;
 
-    return (hexNumberTable[octet]);
+    return (hexNumberTable[octet] != (XMLByte) -1);
 }
 
 void HexBin::init()
@@ -154,16 +188,16 @@ void HexBin::init()
 
     int i;
     for ( i = 0; i < BASELENGTH; i++ )
-        hexNumberTable[i] = false;
+        hexNumberTable[i] = -1;
 
     for ( i = chDigit_9; i >= chDigit_0; i-- )
-        hexNumberTable[i] = true;
+        hexNumberTable[i] = (XMLByte) (i - chDigit_0);
 
     for ( i = chLatin_F; i >= chLatin_A; i-- )
-        hexNumberTable[i] = true;
-
+        hexNumberTable[i] = (XMLByte) (i - chLatin_A + 10);
+ 
     for ( i = chLatin_f; i >= chLatin_a; i-- )
-        hexNumberTable[i] = true;
+        hexNumberTable[i] = (XMLByte) (i - chLatin_a + 10);    
 
     isInitialized = true;
 }

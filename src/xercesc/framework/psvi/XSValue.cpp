@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/12/10 10:37:55  cargilld
+ * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
+ *
  * Revision 1.19  2004/12/01 16:18:47  cargilld
  * Fix for bug xercesc-1304.
  *
@@ -379,7 +382,7 @@ XSValue::XSValue(DataType        const dt
 XSValue::~XSValue()
 {
     if (fMemAllocated)
-        fMemoryManager->deallocate(fData.fValue.f_strVal);
+        fMemoryManager->deallocate(fData.fValue.f_byteVal);
 }
   
 // ---------------------------------------------------------------------------
@@ -1523,7 +1526,7 @@ XSValue::getActValStrings(const XMLCh*         const content
             break;
         case XSValue::dt_hexBinary:
             {
-                XMLCh* decodedData = HexBin::decode(content, manager);
+                XMLByte* decodedData = HexBin::decodeToXMLByte(content, manager);
 
                 if (!decodedData)
                 {
@@ -1532,7 +1535,7 @@ XSValue::getActValStrings(const XMLCh*         const content
                 }
 
                 XSValue* retVal = new (manager) XSValue(dt_hexBinary, manager);
-                retVal->fData.fValue.f_strVal = decodedData;
+                retVal->fData.fValue.f_byteVal = decodedData;
                 retVal->fMemAllocated = true;
                 return retVal;                
                 break;
@@ -1540,7 +1543,7 @@ XSValue::getActValStrings(const XMLCh*         const content
         case XSValue::dt_base64Binary:
             {
                 unsigned int    len = 0;
-                XMLCh* decodedData = Base64::decode(content, &len, manager);
+                XMLByte* decodedData = Base64::decodeToXMLByte(content, &len, manager);
 
                 if (!decodedData)
                 {
@@ -1549,7 +1552,7 @@ XSValue::getActValStrings(const XMLCh*         const content
                 }
 
                 XSValue* retVal = new (manager) XSValue(dt_base64Binary, manager);
-                retVal->fData.fValue.f_strVal = decodedData;
+                retVal->fData.fValue.f_byteVal = decodedData;
                 retVal->fMemAllocated = true;
                 return retVal;
                 break;

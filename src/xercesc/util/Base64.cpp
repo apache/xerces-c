@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/12/10 10:37:56  cargilld
+ * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
+ *
  * Revision 1.15  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -299,7 +302,7 @@ int Base64::getDataLength(const XMLCh*         const inputData
 
 {
     unsigned int    retLen = 0;
-    XMLCh* decodedData = decode(inputData, &retLen, manager, conform);
+    XMLByte* decodedData = decodeToXMLByte(inputData, &retLen, manager, conform);
 
     if ( !decodedData )
         return -1;
@@ -377,6 +380,33 @@ XMLCh* Base64::decode(const XMLCh*         const   inputData
     returnExternalMemory(memMgr, DecodedBuf);
 
     return toRet;
+}
+
+XMLByte* Base64::decodeToXMLByte(const XMLCh*         const   inputData
+                    ,       unsigned int*          decodedLen
+                    ,       MemoryManager* const   memMgr
+                    ,       Conformance            conform )
+{
+	if (!inputData)
+		return 0;
+
+    /***
+     *  Move input data to a XMLByte buffer
+     */
+	unsigned int srcLen = XMLString::stringLen(inputData);
+    XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
+
+    for (unsigned int i = 0; i < srcLen; i++)
+		dataInByte[i] = (XMLByte)inputData[i];
+
+	dataInByte[srcLen] = 0;
+
+    /***
+     * Forward to the actual decoding method to do the decoding
+     */
+	*decodedLen = 0;
+	return decode(dataInByte, decodedLen, memMgr, conform);
 }
 
 /***
