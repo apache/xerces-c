@@ -265,8 +265,8 @@ void DOMEntityImpl::release()
            DOMNamedNodeMap* DOMEntityImpl::getAttributes() const                   {return fNode.getAttributes (); };
      const XMLCh*           DOMEntityImpl::getLocalName() const                    {return fNode.getLocalName (); };
      const XMLCh*           DOMEntityImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode*         DOMEntityImpl::getNextSibling() const                  {cloneEntityRefTree(); return fNode.getNextSibling (); };
-     const XMLCh*           DOMEntityImpl::getNodeValue() const                    {cloneEntityRefTree(); return fNode.getNodeValue (); };
+           DOMNode*         DOMEntityImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
+     const XMLCh*           DOMEntityImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
            DOMDocument*     DOMEntityImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
      const XMLCh*           DOMEntityImpl::getPrefix() const                       {return fNode.getPrefix (); };
            DOMNode*         DOMEntityImpl::getParentNode() const                   {return fNode.getParentNode (); };
@@ -286,12 +286,12 @@ void DOMEntityImpl::release()
            void*            DOMEntityImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                    {return fNode.setUserData(key, data, handler); };
            void*            DOMEntityImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           short            DOMEntityImpl::compareTreePosition(DOMNode* other)     {cloneEntityRefTree(); return fNode.compareTreePosition(other); };
-           const XMLCh*     DOMEntityImpl::getTextContent() const                  {cloneEntityRefTree(); return fNode.getTextContent(); };
-           void             DOMEntityImpl::setTextContent(const XMLCh* textContent){cloneEntityRefTree(); fNode.setTextContent(textContent); };
-           const XMLCh*     DOMEntityImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {cloneEntityRefTree(); return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMEntityImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {cloneEntityRefTree(); return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMEntityImpl::lookupNamespaceURI(const XMLCh* prefix) const  {cloneEntityRefTree(); return fNode.lookupNamespaceURI(prefix); };
+           short            DOMEntityImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     DOMEntityImpl::getTextContent() const                  {return fNode.getTextContent(); };
+           void             DOMEntityImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     DOMEntityImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMEntityImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMEntityImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
            DOMNode*         DOMEntityImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 
