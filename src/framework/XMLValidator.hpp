@@ -56,6 +56,11 @@
 
  /*
   * $Log$
+  * Revision 1.7  2000/08/09 22:09:09  jpolast
+  * added const XMLCh* getURIText()
+  * allows parsers to use const URIs instead of appending
+  * to a XMLBuffer.
+  *
   * Revision 1.6  2000/03/02 19:54:25  roddey
   * This checkin includes many changes done while waiting for the
   * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -477,6 +482,11 @@ public:
     (
         const   unsigned int    uriId
         ,       XMLBuffer&      uriBufToFill
+    )   const = 0;
+
+	virtual const XMLCh* getURIText
+	(   
+	    const   unsigned int    uriId
     )   const = 0;
 
     /**
