@@ -1262,10 +1262,10 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     }
 
 	# Mac OS X
-    if ((-e "$XERCESCROOT/lib/libxerces-c.dylib.22.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.dylib.22.0 .");
-        psystem("ln -s libxerces-c.dylib.22.0 libxerces-c.dylib.22 ");
-        psystem("ln -s libxerces-c.dylib.22   libxerces-c.dylib    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.22.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.22.0.dylib .");
+        psystem("ln -s libxerces-c.22.0.dylib libxerces-c.22.dylib ");
+        psystem("ln -s libxerces-c.22.dylib   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files
