@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/02/18 22:24:18  roddey
+ * Ok... yet still one more tweak for EBCDIC aliases
+ *
  * Revision 1.10  2000/02/18 22:03:31  roddey
  * One more tweak for EBCDIC encoding aliases.
  *
@@ -222,15 +225,10 @@ const XMLCh XMLUni::fgIBM037EncodingString3[] =
 
 const XMLCh XMLUni::fgIBM037EncodingString4[] =
 {
-    chLatin_C, chLatin_P, chDigit_3, chDigit_7, chNull
-};
-
-const XMLCh XMLUni::fgIBM037EncodingString5[] =
-{
     chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
 };
 
-const XMLCh XMLUni::fgIBM037EncodingString6[] =
+const XMLCh XMLUni::fgIBM037EncodingString5[] =
 {
         chLatin_C, chLatin_S, chLatin_I, chLatin_B, chLatin_M, chDigit_0
     ,   chDigit_3, chDigit_7, chNull
