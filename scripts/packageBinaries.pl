@@ -163,7 +163,8 @@ if ($platform eq "win64bit" )
     #
     #REVISIT: icu
     #
-    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {    
+
         print ("Building ICU from $ICUROOT ...\n");
 
         #Clean up all the dependency files, causes problems for nmake
@@ -180,7 +181,19 @@ if ($platform eq "win64bit" )
 	    psystem("type buildlog.txt");
         }
 
-        change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all/XercesLib/XercesLib.mak");
+        $transcoder = 0;
+        if ($opt_t =~ m/icu/i )
+        {
+            $transcoder = 1;
+        }
+        
+        $msgloader = 0;                        
+        if ($opt_m =~ m/icu/i)  
+        {
+            $msgloader = 1;
+        }
+        
+        change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all/XercesLib/XercesLib.mak", $transcoder, $msgloader);
     }
 
     # Clean up all the dependency files, causes problems for nmake
@@ -271,7 +284,7 @@ if ($platform eq "win64bit" )
     psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\*Impl.hpp");
     psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\DS*.hpp");
 
-    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
         psystem("xcopy /s /y $ICUROOT\\include\\* $targetdir\\include");
     }
 
@@ -282,7 +295,8 @@ if ($platform eq "win64bit" )
     psystem("copy /y $BUILDDIR\\*.dll $targetdir\\bin");
     psystem("copy /y $BUILDDIR\\*.exe $targetdir\\bin");
 
-    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
+
         # Copy the ICU dlls and libs
         psystem("copy /y $ICUROOT\\bin\\icuuc22.dll $targetdir\\bin");
         psystem("copy /y $ICUROOT\\bin\\icuuc22d.dll $targetdir\\bin");
@@ -582,7 +596,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("rm  $targetdir/include/xercesc/dom/deprecated/*Impl.hpp");
     psystem ("rm  $targetdir/include/xercesc/dom/deprecated/DS*.hpp");
 
-    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
         psystem("cp -Rfv $ICUROOT/include/* $targetdir/include");
     }
 
@@ -593,7 +607,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem("cp -fv $BUILDDIR/*.dll $targetdir/bin");
     psystem("cp -fv $BUILDDIR/*.exe $targetdir/bin");
 
-    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {    	
         # Copy the ICU dlls and libs
         psystem("cp -fv $ICUROOT/bin/icuuc22.dll $targetdir/bin");
         psystem("cp -fv $ICUROOT/bin/icuuc22d.dll $targetdir/bin");
@@ -872,7 +886,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/doc/html/apiDocs");
 
     # Build ICU if needed
-    if ($opt_t =~ m/icu/i && !(length($opt_j) > 0))
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($opt_j) > 0) {    
     {
         print("\n\nBuild ICU with \'$opt_b\' bit ...\n");
         if(length($ICUROOT) == 0) {
@@ -1266,7 +1280,7 @@ sub change_windows_project_for_ICU() {
 }
 
 sub change_windows_makefile_for_ICU() {
-    my ($thefile) = @_;
+    my ($thefile, $transcoder, $msgloader) = @_;
     print "\nConverting Windows Xerces library makefile ($thefile) for ICU usage...";
     my $thefiledotbak = $thefile . ".bak";
     rename ($thefile, $thefiledotbak);
@@ -1282,14 +1296,22 @@ sub change_windows_makefile_for_ICU() {
         }
 
         $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
-        #$line =~ s[/implib:"\$(OUTDIR)\\xerces-c_2.lib"][/implib:"\$(OUTDIR)\\xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
-        #$line =~ s[/implib:"\$(OUTDIR)\\xerces-c_2D.lib"][/implib:"\$(OUTDIR)\\xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /machine:IA64];
-        $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
         $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
-        $line =~ s/Transcoders\\Win32\\Win32TransService/Transcoders\\ICU\\ICUTransService/g;
-        $line =~ s/Win32TransService/ICUTransService/g;
 
+        if ($transcoder) {
+            $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+            $line =~ s/Transcoders\\Win32\\Win32TransService/Transcoders\\ICU\\ICUTransService/g;
+            $line =~ s/Win32TransService/ICUTransService/g;
+        }
+        
+        if ($msgloader)
+        {
+            $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.cpp/MsgLoaders\\ICU\\ICUMsgLoader.cpp/g;
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.hpp/MsgLoaders\\ICU\\ICUMsgLoader.hpp/g; 
+        }
+                    
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
