@@ -3421,3 +3421,61 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
     return uriId;
 }
 
+bool XMLScanner::checkXMLDecl(bool startWithAngle) {
+    //
+    // [23] XMLDecl     ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+    // [24] VersionInfo ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+    //
+    // [3]  S           ::= (#x20 | #x9 | #xD | #xA)+
+    //
+
+    if (startWithAngle) {
+        if (fReaderMgr.peekString(XMLUni::fgXMLDeclString)) {
+            if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpace)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTab)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLF)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCR))
+            {
+                return true;
+            }
+            else if (fReaderMgr.skippedString(XMLUni::fgXMLDeclStringSpaceU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringHTabU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringLFU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLDeclStringCRU))
+            {
+                //
+                //  Just in case, check for upper case. If found, issue
+                //  an error, but keep going.
+                //
+                emitError(XMLErrs::XMLDeclMustBeLowerCase);
+                return true;
+            }
+        }
+    }
+    else {
+        if (fReaderMgr.peekString(XMLUni::fgXMLString)) {
+            if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpace)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringHTab)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringLF)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringCR))
+            {
+                return true;
+            }
+            else if (fReaderMgr.skippedString(XMLUni::fgXMLStringSpaceU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringHTabU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringLFU)
+               || fReaderMgr.skippedString(XMLUni::fgXMLStringCRU))
+            {
+                //
+                //  Just in case, check for upper case. If found, issue
+                //  an error, but keep going.
+                //
+                emitError(XMLErrs::XMLDeclMustBeLowerCase);
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/07/13 16:57:11  tng
+ * ScanId fix.
+ *
  * Revision 1.17  2001/07/12 20:10:18  tng
  * Partial Markup in Parameter Entity is validity constraint and thus should be just error, not fatal error.
  *
@@ -2889,18 +2892,19 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
     if (whatKind == IDType_Public)
         return true;
 
-    // Else lets get the system id
-    if (!fReaderMgr->skipPastSpaces())
-    {
-        //
-        //  In order to recover best here we need to see if we don't have
-        //  whitespace because the next thing is a quote or because the next
-        //  thing is some non-quote character.
-        //
-        const XMLCh chPeek = fReaderMgr->peekNextChar();
-        const bool bIsQuote =  ((chPeek == chDoubleQuote)
-                               || (chPeek == chSingleQuote));
+    // check if there is any space follows
+    bool hasSpace = fReaderMgr->skipPastSpaces();
 
+    //
+    //  In order to recover best here we need to see if
+    //  the next thing is a quote or not
+    //
+    const XMLCh chPeek = fReaderMgr->peekNextChar();
+    const bool bIsQuote =  ((chPeek == chDoubleQuote)
+                         || (chPeek == chSingleQuote));
+
+    if (!hasSpace)
+    {
         if (whatKind == IDType_External)
         {
             //
@@ -2931,8 +2935,16 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
         }
     }
 
-    if (!scanSystemLiteral(sysIdToFill))
+    if (bIsQuote) {
+        // there is a quote coming, scan the system literal
+        if (!scanSystemLiteral(sysIdToFill))
             return false;
+    }
+    else {
+        // no quote, if expecting exteral id, this is an error
+        if (whatKind == IDType_External)
+            fScanner->emitError(XMLErrs::ExpectedQuotedString);
+    }
 
     return true;
 }
