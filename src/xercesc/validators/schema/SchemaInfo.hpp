@@ -305,6 +305,16 @@ inline void SchemaInfo::setProcessed(const bool aValue) {
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Access methods
 // ---------------------------------------------------------------------------
+inline void SchemaInfo::addImportedNS(const int namespaceURI) {
+
+    if (!fImportedNSList) {
+        fImportedNSList = new ValueVectorOf<int>(4);
+    }
+
+    if (!fImportedNSList->containsElement(namespaceURI))
+        fImportedNSList->addElement(namespaceURI);
+}
+
 inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
                                       const ListType aListType) {
 
@@ -393,16 +403,6 @@ inline void SchemaInfo::addFailedRedefine(const DOMElement* const anElem) {
     }
 
     fFailedRedefineList->addElement(anElem);
-}
-
-inline void SchemaInfo::addImportedNS(const int namespaceURI) {
-
-    if (!fImportedNSList) {
-        fImportedNSList = new ValueVectorOf<int>(4);
-    }
-
-    if (!fImportedNSList->containsElement(namespaceURI))
-        fImportedNSList->addElement(namespaceURI);
 }
 
 inline bool SchemaInfo::isImportingNS(const int namespaceURI) {
