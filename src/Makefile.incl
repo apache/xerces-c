@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.10  2000/01/20 01:57:57  rahulj
+# Reported by marc@ist.de
+# Merged in changes for SGI IRIX platform.
+#
 # Revision 1.9  1999/12/17 01:28:52  rahulj
 # Merged in changes submitted for UnixWare 7 port. Platform
 # specific files are still missing.
@@ -229,13 +233,17 @@ endif
 
 #=============== IRIX SPECIFIC OPTIONS ============================
 ifeq (${PLATFORM}, IRIX)
-PLATFORM_COMPILE_OPTIONS = -mips4 -LANG:pch -LANG:std -O2 \
+PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \
                            -D${PLATFORM} -D_REENTRANT \
                            -I/usr/local/include
-OBJ_OUT=${XML4CROOT}/obj/
+OBJ_OUT=${XERCESCROOT}/obj/
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
-ALLLIBS = -L/usr/lib32 -lC
+ifeq (${TRANSCODER}, ICU)
+    ALLLIBS = ${LIBS} -L/usr/lib32 -lC -licu-uc
+else
+    ALLLIBS = ${LIBS} -L/usr/lib32 -lC
+endif
 SHLIBSUFFIX=.so
 endif
 
