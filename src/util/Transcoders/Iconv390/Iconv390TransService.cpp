@@ -55,39 +55,14 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2000/03/02 19:55:35  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/14 19:32:15  abagchi
- * Reintroduced bug-fix in 1.4
- *
- * Revision 1.5  2000/02/14 17:59:49  abagchi
- * Reused iconv descriptors
- *
- * Revision 1.4  2000/02/11 03:10:20  rahulj
- * Fixed defect in compare[N]IString function. Defect and fix reported
- * by Bill Schindler from developer@bitranch.com.
- * Replaced tabs with appropriate number of spaces.
- *
- * Revision 1.3  2000/02/10 00:23:04  abagchi
- * Eliminated references to ibm-1047
- *
- * Revision 1.2  2000/02/09 01:31:22  abagchi
- * Fixed calcRequiredSize() for OS390BATCH
- *
- * Revision 1.1  2000/02/08 02:14:11  abagchi
- * Initial checkin
- *
- *
+ * $Id$
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include "Iconv390TransService.hpp"
 

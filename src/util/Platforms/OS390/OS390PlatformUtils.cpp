@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/07/25 22:30:24  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.12  2000/03/18 00:00:00  roddey
  * Initial updates for two way transcoding support
  *
@@ -121,6 +124,7 @@
 #include    <unistd.h>
 #include    <limits.h>	
 #include    <util/XMLString.hpp>
+#include    <util/XMLUniDefs.hpp>
 #include    <util/XMLUni.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)

@@ -55,27 +55,14 @@
  */
 
 /**
- * $Log$
- * Revision 1.3  2000/05/11 23:11:32  andyh
- * Add missing validity checks for stand-alone documents, character range
- * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
- * <sean.Macroibeaird@ireland.sun.com>
- *
- * Revision 1.2  2000/02/06 07:47:48  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:31  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:37  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <framework/XMLElementDecl.hpp>
 

@@ -58,6 +58,7 @@
  * $Id$
  */
 
+#include <util/XMLUniDefs.hpp>
 #include "ElementNSImpl.hpp"
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/07/25 22:29:36  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.13  2000/03/24 00:16:00  aruna1
  * Platform initialization taken care for both threaded and non-threaded environment
  *
@@ -138,6 +141,7 @@
 #include    <limits.h>
 #include    <unistd.h>
 #include    <util/XMLString.hpp>
+#include    <util/XMLUniDefs.hpp>
 #include    <util/XMLUni.hpp>
 
 

@@ -63,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XercesDefs.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 
 

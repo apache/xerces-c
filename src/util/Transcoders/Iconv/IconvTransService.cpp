@@ -55,90 +55,14 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2000/06/09 23:45:02  rahulj
- * More PTX port related changes submitted by
- * Sumit Chawla <sumitc@us.ibm.com>.
- *
- * Revision 1.17  2000/03/28 19:43:24  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.16  2000/03/13 21:48:04  abagchi
- * Changed XML_GNUG to XML_GCC
- *
- * Revision 1.15  2000/03/02 19:55:35  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.14  2000/02/16 18:37:03  aruna1
- * Made changes to upperCase function in Transcoding services
- *
- * Revision 1.13  2000/02/11 03:10:19  rahulj
- * Fixed defect in compare[N]IString function. Defect and fix reported
- * by Bill Schindler from developer@bitranch.com.
- * Replaced tabs with appropriate number of spaces.
- *
- * Revision 1.12  2000/02/06 07:48:33  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.11  2000/01/25 22:49:57  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.10  2000/01/25 20:56:51  abagchi
- * Now at least compiles
- *
- * Revision 1.9  2000/01/25 19:19:08  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.8  2000/01/06 01:21:34  aruna1
- * Transcoding services modified.
- *
- * Revision 1.7  2000/01/05 23:30:38  abagchi
- * Fixed the new class IconvLCPTranscoder functions. Tested on Linux only.
- *
- * Revision 1.6  1999/12/18 00:22:32  roddey
- * Changes to support the new, completely orthagonal, transcoder architecture.
- *
- * Revision 1.5  1999/12/14 23:53:35  rahulj
- * Removed the offending Ctrl-M's from the commit message
- * logs which was giving packaging problems.
- *
- * PR:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.4  1999/12/02 20:20:16  rahulj
- * Fixed incorrect comparision of int with a pointer.
- * Got burnt because definition of NULL varies on different platforms,
- * though use of NULL was not correct in the first place.
- *
- * Revision 1.3  1999/11/20 00:28:19  rahulj
- * Added code for case-insensitive wide character string compares
- *
- * Revision 1.2  1999/11/17 21:52:49  abagchi
- * Changed wcscasecmp() to wcscmp() to make it work on Solaris and AIX
- * PR:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.1.1.1  1999/11/09 01:06:10  twl
- * Initial checkin
- *
- * Revision 1.7  1999/11/08 20:45:34  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include "IconvTransService.hpp"
 #include <wchar.h>

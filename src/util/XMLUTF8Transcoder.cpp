@@ -54,12 +54,16 @@
  * <http://www.apache.org/>.
  */
 
+/**
+ * $Id$
+ */
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/TranscodingException.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUTF8Transcoder.hpp>
 #include <util/UTFDataFormatException.hpp>
 

@@ -55,32 +55,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.6  2000/05/15 22:31:12  andyh
- * Replace #include<memory.h> with <string.h> everywhere.
- *
- * Revision 1.5  2000/04/07 01:01:55  roddey
- * Fixed an error message so that it indicated the correct radix for the rep
- * token. Get all of the basic output formatting functionality in place for
- * at least ICU and Win32 transcoders.
- *
- * Revision 1.4  2000/04/06 23:50:38  roddey
- * Now the low level formatter handles doing char refs for
- * unrepresentable chars (in addition to the replacement char style
- * already done.)
- *
- * Revision 1.3  2000/04/06 19:09:21  roddey
- * Some more improvements to output formatting. Now it will correctly
- * handle doing the 'replacement char' style of dealing with chars
- * that are unrepresentable.
- *
- * Revision 1.2  2000/04/05 00:20:16  roddey
- * More updates for the low level formatted output support
- *
- * Revision 1.1  2000/03/28 19:43:17  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
+ * $Id$
  */
 
 
@@ -88,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/PlatformUtils.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLString.hpp>
 #include <util/TransService.hpp>
 #include <util/TranscodingException.hpp>

@@ -71,6 +71,7 @@
 #include <util/XMLUTF8Transcoder.hpp>
 #include <util/XMLUTF16Transcoder.hpp>
 #include <util/XMLWin1252Transcoder.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/TransENameMap.hpp>
 

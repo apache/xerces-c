@@ -66,6 +66,7 @@
 #include <util/TranscodingException.hpp>
 #include <util/XMLException.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/RefHashTableOf.hpp>
 #include "Win32TransService.hpp"

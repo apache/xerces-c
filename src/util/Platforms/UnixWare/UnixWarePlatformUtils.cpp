@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/07/25 22:30:54  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.7  2000/03/24 00:13:34  aruna1
  * Platform initialization taken care for both threaded and non-threaded environment
  *
@@ -107,6 +110,7 @@
 #include    <util/RuntimeException.hpp>
 #include    <util/Mutexes.hpp>
 #include    <util/XMLString.hpp>
+#include    <util/XMLUniDefs.hpp>
 #include    <util/XMLUni.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)

@@ -55,70 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2000/03/24 00:13:18  aruna1
- * Platform initialization taken care for both threaded and non-threaded environment
- *
- * Revision 1.16  2000/03/20 23:48:52  rahulj
- * Added Socket based NetAccessor. This will enable one to
- * use HTTP URL's for system id's. Default build options do
- * not use this NetAccessor. Specify the '-n socket' option
- * to 'runConfigure' to configure Xerces-C to use this new
- * feature. The code works under Solaris 2.6, Linux, AIX
- * and HPUX 11 with aCC.
- * Todo's: enable proper error handling.
- *
- * Revision 1.15  2000/03/18 00:00:02  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.14  2000/03/02 21:10:38  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.13  2000/03/02 20:42:41  abagchi
- * Fixed typo in XMLExcepts
- *
- * Revision 1.12  2000/03/02 19:55:30  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.11  2000/02/10 21:46:48  aruna1
- * getFullPath janitor rectification
- *
- * Revision 1.10  2000/02/06 07:48:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.9  2000/01/25 22:33:05  aruna1
- * Updated panic information
- *
- * Revision 1.7  2000/01/21 20:04:00  abagchi
- * Removed the code for loadAMsgSet() when invoked with ICU
- *
- * Revision 1.6  2000/01/19 18:10:14  abagchi
- * Removed the streaming classes and fgLibLocation
- *
- * Revision 1.5  2000/01/14 02:51:34  aruna1
- * Modified for FullPath, weavePath, openFile
- *
- * Revision 1.4  1999/12/08 23:10:07  aruna1
- * Recursive locking mechanism added
- *
- * Revision 1.3  1999/12/02 23:07:13  aruna1
- * Solaris Atomic Mutex initailization changed to native calls
- *
- * Revision 1.2  1999/11/19 23:50:56  aruna1
- * added changes for platformInit and makeTransService functions
- * PR:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.1.1.1  1999/11/09 01:06:31  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:45:32  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -146,6 +83,7 @@
 #include    <util/RuntimeException.hpp>
 #include    <util/Mutexes.hpp>
 #include    <util/XMLString.hpp>
+#include    <util/XMLUniDefs.hpp>
 #include    <util/XMLUni.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)

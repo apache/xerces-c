@@ -55,59 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2000/03/20 19:12:23  roddey
- * Fixed bug in getLastExtEntityInfo(), to avoid null pointer problem
- * if an error is thrown very early in the parsing process (e.g. before
- * any file can get opened.
- *
- * Revision 1.10  2000/03/02 19:54:28  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.9  2000/02/24 02:12:54  aruna1
- * ReaderMgr:;getReaderDepth() added
- *
- * Revision 1.8  2000/02/22 00:36:50  roddey
- * Added a new 'native XMLCh' transcoder to correctly handle
- * internal entities now that XMLCh isn't always UTF-16.
- *
- * Revision 1.7  2000/02/06 07:47:53  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.6  2000/01/25 01:04:21  roddey
- * Fixes a bogus error about ]]> in char data.
- *
- * Revision 1.5  2000/01/15 01:26:16  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.4  2000/01/13 22:50:29  aruna1
- * For unix made additional check for relative url path
- *
- * Revision 1.3  2000/01/12 00:15:03  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.2  1999/12/18 00:20:00  roddey
- * More changes to support the new, completely orthagonal, support for
- * intrinsic encodings.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:11  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:56:54  droddey
- * If the main xml entity does not exist, we need to get the error handling for that
- * inside the main XMLScanner::scanDocument() try block so that it gets reported
- * in the normal way. We have to add a little extra safety code because, when this
- * happens, there is no reader on the reader stack to get position ino from.
- *
- * Revision 1.3  1999/11/08 20:44:43  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -119,6 +67,7 @@
 #include <util/RuntimeException.hpp>
 #include <util/UnexpectedEOFException.hpp>
 #include <util/XMLURL.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
 #include <framework/LocalFileInputSource.hpp>

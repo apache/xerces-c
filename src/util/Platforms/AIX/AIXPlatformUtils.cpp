@@ -55,67 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.16  2000/03/20 23:48:51  rahulj
- * Added Socket based NetAccessor. This will enable one to
- * use HTTP URL's for system id's. Default build options do
- * not use this NetAccessor. Specify the '-n socket' option
- * to 'runConfigure' to configure Xerces-C to use this new
- * feature. The code works under Solaris 2.6, Linux, AIX
- * and HPUX 11 with aCC.
- * Todo's: enable proper error handling.
- *
- * Revision 1.15  2000/03/17 23:59:59  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.14  2000/03/02 21:10:35  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.13  2000/03/02 19:55:19  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.12  2000/02/10 21:47:00  aruna1
- * getFullPath janitor rectification
- *
- * Revision 1.11  2000/02/06 07:48:26  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.10  2000/01/25 22:32:17  aruna1
- * Updated panic information
- *
- * Revision 1.9  2000/01/20 19:37:36  aruna1
- * fgLibLocation and writeTo functions eliminated
- *
- * Revision 1.8  2000/01/19 18:16:12  abagchi
- * Removed the streaming classes and fgLibLocation
- *
- * Revision 1.7  2000/01/14 02:18:33  aruna1
- * modified absolute path creation on heap
- *
- * Revision 1.6  2000/01/13 22:17:23  aruna1
- * getBasePath changed to getFullPath and now returns the full absolute path
- * WeavePath added
- *
- * Revision 1.5  1999/12/23 00:41:28  aruna1
- * Library search path corrected
- *
- * Revision 1.4  1999/12/03 02:35:22  aruna1
- * mutex recursive attribute introduced in makeMutex
- *
- * Revision 1.3  1999/12/01 02:55:42  aruna1
- * Added panic calls and modified makeTransService for  AIX
- *
- * Revision 1.2  1999/11/23 02:00:34  rahulj
- * Code now works under HPUX 11. Tested inmemory message loader.Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:11  twl
- * Initial checkin
- *
- * Revision 1.6  1999/11/08 20:45:29  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -141,6 +81,7 @@
 #include    <util/RuntimeException.hpp>
 #include    <util/Janitor.hpp>
 #include    <util/XMLString.hpp>
+#include    <util/XMLUniDefs.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>

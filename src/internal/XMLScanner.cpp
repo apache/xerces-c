@@ -55,109 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.21  2000/07/20 18:46:29  jpolast
- * bug fix: call startDocument() at beginning of scan.
- * submitted by Erik Schroeder
- *
- * Revision 1.20  2000/07/17 22:47:40  jpolast
- * switched scanMisc() with endDoc() in scanNext()
- * pointed out by Dean Roddey
- *
- * Revision 1.19  2000/07/17 19:11:20  jpolast
- * fix for uninitialized variable gotData bug and endDocument bug.
- * Submitted by Jim Reitz (jereitz@home.com)
- *
- * Revision 1.18  2000/05/11 23:11:33  andyh
- * Add missing validity checks for stand-alone documents, character range
- * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
- * <sean.Macroibeaird@ireland.sun.com>
- *
- * Revision 1.17  2000/05/09 00:22:36  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.16  2000/05/05 01:44:29  rahulj
- * Fixed defect in progressive parsing 'parseNext()' reported by Tim
- * Johnston <tim@gntsoftware.com>. Fix provided by Dean Roddey.
- *
- * Revision 1.15  2000/04/19 00:04:33  roddey
- * Don't allow spaces before PI target. Bug #42
- *
- * Revision 1.14  2000/04/12 22:58:28  roddey
- * Added support for 'auto validate' mode.
- *
- * Revision 1.13  2000/03/03 22:32:51  roddey
- * Fixed a bug in SimpleContentModel that allowed an <a/> to be taken
- * as valid for a content model of (a,b).
- *
- * Revision 1.12  2000/03/03 01:29:32  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.11  2000/03/02 19:54:30  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.10  2000/02/29 22:54:46  aruna1
- * MultiThreaded problem for solaris with CC compiler resolved in
- * scanXMLDecl() function.
- *
- * Revision 1.9  2000/02/06 07:47:54  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.8  2000/01/19 00:55:45  roddey
- * Changes to get rid of dependence on old utils standard streams classes
- * and a small fix in the progressive parseFirst() call.
- *
- * Revision 1.7  2000/01/15 01:26:16  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.6  2000/01/12 23:52:46  roddey
- * These are trivial changes required to get the C++ and Java versions
- * of error messages more into sync. Mostly it was where the Java version
- * was passing out one or more parameter than the C++ version was. In
- * some cases the change just required an extra parameter to get the
- * needed info to the place where the error was issued.
- *
- * Revision 1.5  2000/01/12 00:15:04  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to
- * deal with the new URL class changes.
- *
- * Revision 1.4  1999/12/08 00:15:06  roddey
- * Some small last minute fixes to get into the 3.0.1 build that is going to
- * be going out anyway for platform fixes.
- *
- * Revision 1.3  1999/12/02 19:02:57  roddey
- * Get rid of a few statically defined XMLMutex objects, and lazy eval them
- * using atomic compare and swap. I somehow let it get by me that we don't
- * want any static/global objects at all.
- *
- * Revision 1.2  1999/11/30 20:23:13  roddey
- * Added changes to handle exceptions thrown from the user's handlers for
- * emitError().
- *
- * Revision 1.1.1.1  1999/11/09 01:08:22  twl
- * Initial checkin
- *
- * Revision 1.7  1999/11/08 20:56:54  droddey
- * If the main xml entity does not exist, we need to get the error handling
- * for that inside the main XMLScanner::scanDocument() try block so that it
- * gets reported in the normal way. We have to add a little extra safety
- * code because, when this happens, there is no reader on the reader stack
- * to get position ino from.
- *
- * Revision 1.6  1999/11/08 20:44:51  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -172,6 +70,7 @@
 #include <util/UnexpectedEOFException.hpp>
 #include <util/XMLDeleterFor.hpp>
 #include <util/XMLMsgLoader.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLURL.hpp>
 #include <sax/InputSource.hpp>

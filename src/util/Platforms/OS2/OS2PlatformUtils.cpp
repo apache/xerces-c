@@ -71,11 +71,13 @@
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
+#include    <util/XercesDefs.hpp>
 #include    <util/PlatformUtils.hpp>
 #include    <util/RuntimeException.hpp>
 #include    <util/Janitor.hpp>
 #include    <util/XMLString.hpp>
-#include    <util/XercesDefs.hpp>
+#include    <util/XMLUniDefs.hpp>
+
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <io.h>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/07/25 22:29:45  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.9  2000/04/03 19:27:19  abagchi
  * Included changes for SGI IRIX 6.5
  *
@@ -114,6 +117,7 @@
 #include    <util/Janitor.hpp>
 #include    <util/Mutexes.hpp>
 #include    <util/XMLString.hpp>
+#include    <util/XMLUniDefs.hpp>
 #include    <util/XMLUni.hpp>
 
 #if defined(XML_USE_ICU_TRANSCODER)

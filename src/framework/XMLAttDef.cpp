@@ -55,21 +55,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.3  2000/03/02 19:54:24  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:26  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:34  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -77,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/ArrayIndexOutOfBoundsException.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <framework/XMLAttDef.hpp>
 

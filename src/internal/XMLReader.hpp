@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/07/25 22:33:05  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.12  2000/07/08 00:17:13  andyh
  * Cleanup of yesterday's speedup changes.  Merged new bit into the
  * scanner character properties table.
@@ -109,6 +112,7 @@
 #if !defined(XMLREADER_HPP)
 #define XMLREADER_HPP
 
+#include <util/XMLUniDefs.hpp>
 #include <framework/XMLRecognizer.hpp>
 #include <framework/XMLBuffer.hpp>
 

@@ -55,19 +55,10 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2000/03/20 23:48:51  rahulj
- * Added Socket based NetAccessor. This will enable one to
- * use HTTP URL's for system id's. Default build options do
- * not use this NetAccessor. Specify the '-n socket' option
- * to 'runConfigure' to configure Xerces-C to use this new
- * feature. The code works under Solaris 2.6, Linux, AIX
- * and HPUX 11 with aCC.
- * Todo's: enable proper error handling.
- *
+ * $Id$
  */
 
-
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLExceptMsgs.hpp>

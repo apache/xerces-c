@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/07/25 22:28:47  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.3  2000/03/02 19:55:17  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -73,6 +76,7 @@
 #include <util/PlatformUtils.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include "MsgLoader.hpp"
 #include "XMLMessages.h"

@@ -55,32 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/05/09 00:22:40  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.4  2000/03/02 19:54:48  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:48:05  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/02 19:02:57  roddey
- * Get rid of a few statically defined XMLMutex objects, and lazy eval them
- * using atomic compare and swap. I somehow let it get by me that we don't
- * want any static/global objects at all.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:39  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:19  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -93,6 +68,7 @@
 #include <util/XMLException.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 
 

@@ -69,6 +69,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <sax/EntityResolver.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <sax/ErrorHandler.hpp>
 #include <sax/SAXParseException.hpp>
 #include <framework/XMLNotationDecl.hpp>

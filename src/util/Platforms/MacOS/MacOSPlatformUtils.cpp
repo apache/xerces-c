@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/07/25 22:30:07  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.6  2000/07/19 18:47:34  andyh
  * More Macintosh port tweaks, submitted by James Berry.
  *
@@ -98,6 +101,7 @@
 #include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
 #include <util/Platforms/MacOS/MacOSDefs.hpp>

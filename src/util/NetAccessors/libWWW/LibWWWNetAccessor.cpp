@@ -55,18 +55,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.1  2000/02/17 22:06:19  rahulj
- * Moved the four LibWWW files to its own sub-directory in the
- * NetAccessor directory.
- *
- *
- * Revision 1.1  2000/01/15 01:08:04  rahulj
- * Added support for HTTP to the parser.
- * Error handling is not very good. Also cannot guarantee that
- * there are no memory leaks.
- * Only tested under NT 4.0 SP 5 using libWWW 5.2.8.
- *
+ * $Id$
  */
 
 

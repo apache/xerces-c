@@ -55,22 +55,14 @@
  */
 
 /**
- * $Log$
- * Revision 1.2  2000/02/06 07:47:48  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:32  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:38  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
 #include <framework/XMLEntityDecl.hpp>

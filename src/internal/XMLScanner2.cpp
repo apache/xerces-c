@@ -55,77 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.15  2000/07/08 00:17:13  andyh
- * Cleanup of yesterday's speedup changes.  Merged new bit into the
- * scanner character properties table.
- *
- * Revision 1.14  2000/07/07 01:08:44  andyh
- * Parser speed up in scan of XML content.
- *
- * Revision 1.13  2000/05/11 23:11:33  andyh
- * Add missing validity checks for stand-alone documents, character range
- * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
- * <sean.Macroibeaird@ireland.sun.com>
- *
- * Revision 1.12  2000/04/12 22:58:28  roddey
- * Added support for 'auto validate' mode.
- *
- * Revision 1.11  2000/03/02 19:54:30  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.10  2000/02/06 07:47:54  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.9  2000/01/28 19:09:19  roddey
- * The API is no in place to allow client code to make sense of start/end entity
- * ref calls from attribute values. So supress them for now.
- *
- * Revision 1.8  2000/01/27 23:20:33  roddey
- * If an entity ends on the last > of some markup, then the end of entity
- * won't be sent because the end of entity is not sensed.
- *
- * Revision 1.7  2000/01/25 01:04:21  roddey
- * Fixes a bogus error about ]]> in char data.
- *
- * Revision 1.6  2000/01/15 01:26:16  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.5  2000/01/12 23:52:46  roddey
- * These are trivial changes required to get the C++ and Java versions
- * of error messages more into sync. Mostly it was where the Java version
- * was passing out one or more parameter than the C++ version was. In
- * some cases the change just required an extra parameter to get the
- * needed info to the place where the error was issued.
- *
- * Revision 1.4  2000/01/12 00:15:04  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.3  1999/12/18 00:20:24  roddey
- * Fixed a small reported memory leak
- *
- * Revision 1.2  1999/12/08 00:15:07  roddey
- * Some small last minute fixes to get into the 3.0.1 build that is going to be
- * going out anyway for platform fixes.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:24  twl
- * Initial checkin
- *
- * Revision 1.6  1999/11/08 20:56:55  droddey
- * If the main xml entity does not exist, we need to get the error handling for that
- * inside the main XMLScanner::scanDocument() try block so that it gets reported
- * in the normal way. We have to add a little extra safety code because, when this
- * happens, there is no reader on the reader stack to get position ino from.
- *
- * Revision 1.5  1999/11/08 20:44:52  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -142,6 +72,7 @@
 #include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/UnexpectedEOFException.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
 #include <framework/XMLErrorReporter.hpp>

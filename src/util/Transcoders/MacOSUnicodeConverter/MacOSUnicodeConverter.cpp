@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/07/25 22:31:26  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.1  2000/07/18 18:26:15  andyh
  * Mac OS update.
  * Contributed by James Berry <jberry@criticalpath.com>
@@ -101,6 +104,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <MacOSUnicodeConverter.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
 #include <util/TranscodingException.hpp>

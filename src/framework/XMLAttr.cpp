@@ -55,38 +55,14 @@
  */
 
 /**
- * $Log$
- * Revision 1.6  2000/04/10 22:42:52  roddey
- * Extended the buffer reuse to the QName field, to further increase
- * performance of attribute heavy applications.
- *
- * Revision 1.5  2000/03/28 19:43:16  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.4  2000/03/02 19:54:24  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/18 00:18:39  roddey
- * Fixed a small reported memory leak in destructor.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:28  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
 #include <framework/XMLAttr.hpp>

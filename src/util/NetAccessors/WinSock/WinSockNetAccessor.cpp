@@ -55,21 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2000/03/22 00:21:10  rahulj
- * Now we throw exceptions when errors occur.
- * Simplified the code, based on the assumption that
- * the calling function will make sure that the buffer into
- * which the data has to be read is large enough.
- *
- * Revision 1.1  2000/03/17 02:37:54  rahulj
- * First cut at adding HTTP capability via native sockets.
- * Still need to add:
- *   error handling capability, ports other than 80,
- *   escaped URL's
- * Will add options in project file only when I am done with these
- * above changes.
- *
+ * $Id$
  */
 
 
@@ -78,6 +64,7 @@
 #include <winsock2.h>
 #include <windows.h>
 
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLExceptMsgs.hpp>

@@ -58,9 +58,11 @@
  * $Id$
  */
 
+#include <util/XMLUniDefs.hpp>
 #include "AttrNSImpl.hpp"
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"
+
 
 AttrNSImpl::AttrNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
     AttrImpl(ownerDoc, name)

@@ -70,6 +70,7 @@
 #include <util/XMLURL.hpp>
 #include <util/XMLNetAccessor.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 
 

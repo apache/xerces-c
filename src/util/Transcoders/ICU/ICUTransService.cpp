@@ -65,6 +65,7 @@
 #include <util/Janitor.hpp>
 #include <util/TranscodingException.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include "ICUTransService.hpp"
 #include <string.h>
 #include <unicode/uloc.h>

@@ -55,108 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.23  2000/05/31 22:56:51  andyh
- * Fixed error check for end of file in Win32 platform utils.
- * Joe Polastre
- *
- * Revision 1.22  2000/05/10 00:39:20  andyh
- * Japanese and Korean Encoding Problems with WIndows
- * file names.  Win98 fix, and relative paths fix.
- *
- * Revision 1.21  2000/05/09 00:22:41  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.20  2000/04/18 23:26:01  andyh
- * Fix problem on NT with conflict between Korean Won Sign (0x20A9)
- * and backslash in file path names.
- *
- * Revision 1.19  2000/04/18 17:57:29  roddey
- * Fix signature of ::fileSize() method. Bug #119
- *
- * Revision 1.18  2000/04/11 19:11:55  roddey
- * Replace Yen signs with backslash in wide char path names
- * under NT. This avoids ambiguous code point in some asian
- * encodings.
- *
- * Revision 1.17  2000/04/05 18:55:36  roddey
- * Delete the critical section handle in closeMutex().
- *
- * Revision 1.16  2000/03/20 23:43:03  rahulj
- * Expanded tabs to spaces.
- *
- * Revision 1.15  2000/03/18 00:00:02  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.14  2000/03/17 02:37:55  rahulj
- * First cut at adding HTTP capability via native sockets.
- * Still need to add:
- *   error handling capability, ports other than 80,
- *   escaped URL's
- * Will add options in project file only when I am done with these
- * above changes.
- *
- * Revision 1.13  2000/03/02 19:55:34  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.12  2000/02/06 07:48:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.11  2000/01/31 23:53:14  roddey
- * Since all synchronization inside the parser is intraprocess, the Win32 mutex
- * implementation was changed to use critical sections for speed.
- *
- * Revision 1.10  2000/01/25 21:34:45  roddey
- * Added support for the two new panic errors.
- *
- * Revision 1.9  2000/01/22 00:03:47  roddey
- * Added a check for a broken pipe error on file read. This allows folks to support
- * a pipe as an input source and not die when the other side drops the sending
- * end of the pipe.
- *
- * Revision 1.8  2000/01/20 20:37:25  andyh
- * Remove DEVENV_VCPP preprocessor variable everywhere.
- * It was obsolete, left over from an earlier configuration system.
- * And it was not set correctly in all projects.
- *
- * Should fix build problem reported by some with use of
- * InterlockedCompareExchange() on Windows with VC6.
- *
- * Revision 1.7  2000/01/19 00:57:26  roddey
- * Changes to get rid of dependence on old utils standard streams and to
- * get rid of the fgLibLocation stuff.
- *
- * Revision 1.6  2000/01/15 01:26:18  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.5  2000/01/14 19:48:34  andyh
- * Update MSVC project files to reflect change in DLL version to 1_1
- * Update dll name in panic message text from XML4C to Xerces
- *
- * Revision 1.4  2000/01/13 20:07:10  roddey
- * Just a trivial fix of a misspelling in one of the panic messages.
- *
- * Revision 1.3  2000/01/12 00:16:47  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.2  1999/11/22 20:41:26  abagchi
- * Changed 'intlFiles/Locales' to 'icu/data'
- *
- * Revision 1.1.1.1  1999/11/09 01:06:21  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:45:33  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -167,6 +66,7 @@
 #include <util/RuntimeException.hpp>
 #include <util/XMLExceptMsgs.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <windows.h>
 

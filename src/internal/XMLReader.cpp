@@ -55,79 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2000/07/08 00:17:13  andyh
- * Cleanup of yesterday's speedup changes.  Merged new bit into the
- * scanner character properties table.
- *
- * Revision 1.17  2000/07/07 01:08:44  andyh
- * Parser speed up in scan of XML content.
- *
- * Revision 1.16  2000/07/06 21:00:51  jpolast
- * inlined getNextCharIfNot() for better performance
- *
- * Revision 1.15  2000/05/15 22:31:15  andyh
- * Replace #include<memory.h> with <string.h> everywhere.
- *
- * Revision 1.14  2000/05/11 23:11:33  andyh
- * Add missing validity checks for stand-alone documents, character range
- * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
- * <sean.Macroibeaird@ireland.sun.com>
- *
- * Revision 1.13  2000/05/11 00:41:48  rahulj
- * Defect reported by SHOGO SAWAKI <shogo_sawaki@mx.nasw.mhi.co.jp>
- *
- * Revision 1.12  2000/03/28 19:43:18  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.11  2000/03/17 23:59:53  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.10  2000/03/02 19:54:29  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.9  2000/02/14 19:27:07  roddey
- * Make an EBCDIC file without an encoding="" string an error.
- *
- * Revision 1.8  2000/02/06 07:47:53  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/01/25 22:49:54  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.6  2000/01/25 01:04:21  roddey
- * Fixes a bogus error about ]]> in char data.
- *
- * Revision 1.5  2000/01/22 00:01:07  roddey
- * Simple change to get rid of two hard coded 'x' type characters, which won't
- * work on EBCDIC systems.
- *
- * Revision 1.4  2000/01/12 23:52:45  roddey
- * These are trivial changes required to get the C++ and Java versions
- * of error messages more into sync. Mostly it was where the Java version
- * was passing out one or more parameter than the C++ version was. In
- * some cases the change just required an extra parameter to get the
- * needed info to the place where the error was issued.
- *
- * Revision 1.3  1999/12/18 00:20:00  roddey
- * More changes to support the new, completely orthagonal, support for
- * intrinsic encodings.
- *
- * Revision 1.2  1999/12/15 19:48:03  roddey
- * Changed to use new split of transcoder interfaces into XML transcoders and
- * LCP transcoders, and implementation of intrinsic transcoders as pluggable
- * transcoders, and addition of Latin1 intrinsic support.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:20  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:44:45  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -142,6 +70,7 @@
 #include <util/UTFDataFormatException.hpp>
 #include <util/XMLEBCDICTranscoder.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
 #include <framework/XMLBuffer.hpp>

@@ -55,48 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2000/06/12 22:36:30  andyh
- * Fixed error in XMLSTring::trim, reported by Michele Laghi
- *
- * Revision 1.9  2000/05/15 22:31:22  andyh
- * Replace #include<memory.h> with <string.h> everywhere.
- *
- * Revision 1.8  2000/03/23 01:02:38  roddey
- * Updates to the XMLURL class to correct a lot of parsing problems
- * and to add support for the port number. Updated the URL tests
- * to test some of this new stuff.
- *
- * Revision 1.7  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/06 07:48:06  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/19 00:56:59  roddey
- * Changes to get rid of dependence on old utils standard streams and to
- * get rid of the fgLibLocation stuff.
- *
- * Revision 1.4  2000/01/12 00:16:23  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.3  1999/12/18 00:18:10  roddey
- * More changes to support the new, completely orthagonal support for
- * intrinsic encodings.
- *
- * Revision 1.2  1999/12/15 19:41:28  roddey
- * Support for the new transcoder system, where even intrinsic encodings are
- * done via the same transcoder abstraction as external ones.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:51  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:20  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -113,6 +72,7 @@
 #include <util/TranscodingException.hpp>
 #include <util/ValueArrayOf.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 
 
