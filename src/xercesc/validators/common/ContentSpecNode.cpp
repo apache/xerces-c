@@ -312,6 +312,7 @@ void ContentSpecNode::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fElement;
+        XMLElementDecl::storeElementDecl(serEng, fElementDecl);
         serEng<<fFirst;
         serEng<<fSecond;
 
@@ -324,6 +325,7 @@ void ContentSpecNode::serialize(XSerializeEngine& serEng)
     else
     {
         serEng>>fElement;
+        fElementDecl = XMLElementDecl::loadElementDecl(serEng);
         serEng>>fFirst;
         serEng>>fSecond;
 
