@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/12/21 18:03:25  tng
+ * [Bug 1833] LexicalHandler::startDTD not called correctly.
+ *
  * Revision 1.20  2001/11/20 18:51:44  tng
  * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
  *
@@ -568,6 +571,10 @@ void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler)
 void SAX2XMLReaderImpl::setLexicalHandler(LexicalHandler* const handler)
 {
     fLexicalHandler = handler;
+    if (fLexicalHandler)
+        fScanner->setDocTypeHandler(this);
+    else
+        fScanner->setDocTypeHandler(0);
 }
 
 
