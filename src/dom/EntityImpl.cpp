@@ -82,7 +82,11 @@ EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     publicId        = other.publicId.clone();
     systemId        = other.systemId.clone();
     notationName    = other.notationName.clone();
+
+    RefCountedImpl::removeRef(refEntity);
     refEntity       = other.refEntity;	
+    RefCountedImpl::addRef(other.refEntity);
+
     isReadOnly(true);
 };
 
@@ -149,7 +153,9 @@ void EntityImpl::setSystemId(const DOMString &arg)
 
 void		EntityImpl::setEntityRef(EntityReferenceImpl* other)
 {
+   RefCountedImpl::removeRef(refEntity);
 	refEntity = other;
+   RefCountedImpl::addRef(other);
 }
 
 EntityReferenceImpl*		EntityImpl::getEntityRef() const
@@ -166,7 +172,9 @@ void	EntityImpl::cloneEntityRefTree()
 	if (!refEntity)
 		return;
 
+   isReadOnly(false);
 	this->cloneChildren(*refEntity);
+   isReadOnly(true);
 }
 
 NodeImpl * EntityImpl::getFirstChild() 
