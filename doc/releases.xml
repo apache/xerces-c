@@ -12,6 +12,55 @@
     </tr>
 
     <tr>
+        <td>2001-12-14</td>
+        <td>Tinny Ng</td>
+        <td>Performance: Do not transcode twice in DOMString constructor.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-14</td>
+        <td>Tinny Ng</td>
+        <td>update BUILDINSTRUCTIONS.TXT to be in sync with build instruction in build*.xml.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-13</td>
+        <td>PeiYong Zhang</td>
+        <td>Fix: Invalid Argument to FreeLibrary (Hint: 0x0000000).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-13</td>
+        <td>Linda Swan</td>
+        <td>iSeries (AS/400) documentation update and other iSeries related fixes.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-13</td>
+        <td>Khaled Noamanc</td>
+        <td>[Bug 5410] non-schema <attribute> attributes cause error.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-12</td>
+        <td>Tinny Ng</td>
+        <td>Fix typos in messages.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-12</td>
+        <td>PeiYong Zhang</td>
+        <td>Memory leak: fRedefineList.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-12-12</td>
         <td>Tinny Ng</td>
         <td>[Bug 5367] Progressive parse does not throw error when file is empty.

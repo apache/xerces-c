@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/12/14 15:16:51  tng
+ * Performance: Do not transcode twice in DOMString constructor.
+ *
  * Revision 1.23  2001/10/22 17:53:05  tng
  * [Bug 3660] Off-by-one error in DOMString.cpp.  And check that memory has been acquired successfully after memory acquistion requests in DOMString.
  *
@@ -527,15 +530,31 @@ DOMString::DOMString(const char *srcString)
         if (srcLen == 0)
             return;
 
-        const unsigned int charsNeeded =
-            uniConverter->calcRequiredSize(srcString);
-
-        fHandle = DOMStringHandle::createNewStringHandle(charsNeeded + 1);
-        fHandle->fLength = charsNeeded;
+        // The charsNeeded normally is same as srcLen.  To enhance performance,
+        // we start with this estimate, and if overflow, then call calcRequiredSize for actual size
+        fHandle = DOMStringHandle::createNewStringHandle(srcLen + 1);
+        fHandle->fLength = srcLen;
         XMLCh *strData = fHandle->fDSData->fData;
-        if (!uniConverter->transcode(srcString, strData, charsNeeded))
+
+        if (!uniConverter->transcode(srcString, strData, srcLen))
         {
-            // <TBD> We should throw something here?
+            // conversion failed, so try again
+            if (fHandle)
+                fHandle->removeRef();
+
+            fHandle = 0;
+
+            const unsigned int charsNeeded =
+                   uniConverter->calcRequiredSize(srcString);
+
+            fHandle = DOMStringHandle::createNewStringHandle(charsNeeded + 1);
+            fHandle->fLength = charsNeeded;
+            XMLCh *strData2 = fHandle->fDSData->fData;
+
+            if (!uniConverter->transcode(srcString, strData2, charsNeeded))
+            {
+                // <TBD> We should throw something here?
+            }
         }
     }
 };
@@ -1063,12 +1082,20 @@ char *DOMString::transcode() const
     //  Find out how many output chars we need and allocate a buffer big enough
     //  for that plus a null.
     //
-    const unsigned int charsNeeded = getDomConverter()->calcRequiredSize(srcP);
+    //  The charsNeeded normally is same as fHandle->fLength.  To enhance performance,
+    //  we start with this estimate, and if overflow, then call calcRequiredSize for actual size
+    const unsigned int charsNeeded = fHandle->fLength;
     char* retP = new char[charsNeeded + 1];
 
     if (!getDomConverter()->transcode(srcP, retP, charsNeeded))
     {
-        // <TBD> We should throw something here?
+        delete [] retP;
+        const unsigned int charsNeeded2 = getDomConverter()->calcRequiredSize(srcP);
+        retP = new char[charsNeeded2 + 1];
+        if (!getDomConverter()->transcode(srcP, retP, charsNeeded2))
+        {
+            // <TBD> We should throw something here?
+        }
     }
     delete [] allocatedBuf;   // which will be null if we didn't allocate one.
 
