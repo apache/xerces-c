@@ -145,7 +145,8 @@ public:
     /**
      * Returns the built in  registry of types
      **/
-    DVHashTable* getBuiltInRegistry() const;
+    static DVHashTable* getBuiltInRegistry();
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -245,6 +246,7 @@ public:
     DECL_XSERIALIZABLE(DatatypeValidatorFactory)
 
 private:
+
     // -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
@@ -288,7 +290,7 @@ DatatypeValidatorFactory::getUserDefinedRegistry() const {
 }
 
 inline DVHashTable*
-DatatypeValidatorFactory::getBuiltInRegistry() const {
+DatatypeValidatorFactory::getBuiltInRegistry() {
     return fBuiltInRegistry;
 }
 // ---------------------------------------------------------------------------
