@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/11 03:01:04  abagchi
+ * Made protected method public to compile, must be fixed later
+ *
  * Revision 1.4  2000/02/11 01:05:11  abagchi
  * Added API docs
  *
@@ -309,11 +312,10 @@ class CDOM_EXPORT DOM_TreeWalker {
         void							detach();
         //@}
 
+        DOM_TreeWalker (TreeWalkerImpl* impl);
     private:
         TreeWalkerImpl*                 fImpl;
 
-    protected:
-        DOM_TreeWalker (TreeWalkerImpl* impl);
 };
 
 
