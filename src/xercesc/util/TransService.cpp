@@ -61,8 +61,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/RefHashTableOf.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XML88591Transcoder.hpp>
 #include <xercesc/util/XMLASCIITranscoder.hpp>
 #include <xercesc/util/XMLChTranscoder.hpp>
@@ -74,43 +72,35 @@
 #include <xercesc/util/XMLWin1252Transcoder.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/TransENameMap.hpp>
 #include <xercesc/util/EncodingValidator.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransENameMap.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local, static data
 //
-//  gMappings
-//      This is a hash table of ENameMap objects. It is created and filled
-//      in when the platform init calls our initTransService() method.
-//
-//  gMappingsRecognizer
-//      This is an array of ENameMap objects, predefined for those
-//      already recognized by XMLRecognizer::Encodings.
-//
 //  gStrictIANAEncoding
 //      A flag to control whether strict IANA encoding names checking should
 //      be done
 //
 // ---------------------------------------------------------------------------
-static RefHashTableOf<ENameMap>*    gMappings = 0;
-static RefVectorOf<ENameMap>*       gMappingsRecognizer = 0;
 static bool gStrictIANAEncoding = false;
+RefHashTableOf<ENameMap>* XMLTransService::gMappings = 0;
+RefVectorOf<ENameMap> * XMLTransService::gMappingsRecognizer = 0;
 
 // -----------------------------------------------------------------------
 //  Notification that lazy data has been deleted
 // -----------------------------------------------------------------------
-static void reinitMappings() {
+void XMLTransService::reinitMappings() {
     delete gMappings;    // The contents of the gMappings hash table are owned by
     gMappings = 0;       //   the it, and so will be deleted by gMapping's destructor.
 }
 
-static void reinitMappingsRecognizer() {
-    delete gMappingsRecognizer;
+void XMLTransService::reinitMappingsRecognizer() {
+    delete XMLTransService::gMappingsRecognizer;
     gMappingsRecognizer = 0;
 }
 

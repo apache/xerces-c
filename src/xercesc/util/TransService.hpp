@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/24 19:52:06  neilg
+ * allow classes derived from XMLTransService to tailor the intrinsic maps to their taste.
+ *
  * Revision 1.9  2003/06/03 18:12:29  knoaman
  * Add default value for memory manager argument.
  *
@@ -148,6 +151,8 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -281,6 +286,25 @@ protected :
         , MemoryManager* const          manager
     ) = 0;
 
+    // -----------------------------------------------------------------------
+    //  Protected init method for platform utils to call
+    // -----------------------------------------------------------------------
+    friend class XMLPlatformUtils;
+    virtual void initTransService();
+
+    // -----------------------------------------------------------------------
+    // protected static members
+    //  gMappings
+    //      This is a hash table of ENameMap objects. It is created and filled
+    //      in when the platform init calls our initTransService() method.
+    //
+    //  gMappingsRecognizer
+    //      This is an array of ENameMap objects, predefined for those
+    //      already recognized by XMLRecognizer::Encodings.
+    //
+
+    static RefHashTableOf<ENameMap>*    gMappings;
+    static RefVectorOf<ENameMap>*       gMappingsRecognizer;
 
 private :
     // -----------------------------------------------------------------------
@@ -295,12 +319,9 @@ private :
     // -----------------------------------------------------------------------
     void strictIANAEncoding(const bool newState);
     bool isStrictIANAEncoding();
+    static void reinitMappings();
+    static void reinitMappingsRecognizer();
 
-    // -----------------------------------------------------------------------
-    //  Hidden init method for platform utils to call
-    // -----------------------------------------------------------------------
-    friend class XMLPlatformUtils;
-    void initTransService();
 };
 
 
@@ -473,7 +494,6 @@ private :
     // -----------------------------------------------------------------------
     XMLTranscoder(const XMLTranscoder&);
     XMLTranscoder& operator=(const XMLTranscoder&);
-
 
     // -----------------------------------------------------------------------
     //  Private data members
