@@ -133,7 +133,7 @@ void IDDocumentFragmentImpl::setNodeValue(const XMLCh *x)
            bool                IDDocumentFragmentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
            IDOM_Node          *IDDocumentFragmentImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild)
                                                                             {return fParent.insertBefore (newChild, refChild); };
-           void                IDDocumentFragmentImpl::normalize()                             {fNode.normalize (); };
+           void                IDDocumentFragmentImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDDocumentFragmentImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDDocumentFragmentImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };

@@ -390,7 +390,7 @@ void        IDDocumentTypeImpl::setInternalSubset(const XMLCh *value)
            bool                IDDocumentTypeImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
            IDOM_Node          *IDDocumentTypeImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild)
                                                                             {return fParent.insertBefore (newChild, refChild); };
-           void                IDDocumentTypeImpl::normalize()                             {fNode.normalize (); };
+           void                IDDocumentTypeImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDDocumentTypeImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDDocumentTypeImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };

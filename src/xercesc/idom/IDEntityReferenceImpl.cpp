@@ -213,7 +213,7 @@ void IDEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
            bool                IDEntityReferenceImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
            IDOM_Node          *IDEntityReferenceImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild)
                                                                             {return fParent.insertBefore (newChild, refChild); };
-           void                IDEntityReferenceImpl::normalize()                             {fNode.normalize (); };
+           void                IDEntityReferenceImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDEntityReferenceImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDEntityReferenceImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };

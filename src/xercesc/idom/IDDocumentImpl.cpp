@@ -845,7 +845,7 @@ int             IDDocumentImpl::changes() const{
            IDOM_Node          *IDDocumentImpl::getParentNode() const                   {return fNode.getParentNode (); };
            IDOM_Node          *IDDocumentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
            bool                IDDocumentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           void                IDDocumentImpl::normalize()                             {fNode.normalize (); };
+           void                IDDocumentImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDDocumentImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };
            bool                IDDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
@@ -865,6 +865,7 @@ int             IDDocumentImpl::changes() const{
 
 XMLCh * IDDocumentImpl::cloneString(const XMLCh *src)
 {
+    if (!src) return 0;
     size_t   len = XMLString::stringLen(src);
     len = (len + 1) * sizeof(XMLCh);
     len = (len % 4) + len;

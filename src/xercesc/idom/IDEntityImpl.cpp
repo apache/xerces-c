@@ -66,7 +66,7 @@
 
 
 IDEntityImpl::IDEntityImpl(IDOM_Document *ownerDoc, const XMLCh *eName)
-   :  fNode(ownerDoc), fParent(ownerDoc)
+   :  fNode(ownerDoc), fParent(ownerDoc), fPublicId(0), fSystemId(0)
 {
     fRefEntity  = 0;
     fName        = ((IDDocumentImpl *)ownerDoc)->getPooledString(eName);
@@ -224,7 +224,7 @@ bool IDEntityImpl::hasChildNodes() const
            IDOM_Node          *IDEntityImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
            IDOM_Node          *IDEntityImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild)
                                                                             {return fParent.insertBefore (newChild, refChild); };
-           void                IDEntityImpl::normalize()                             {fNode.normalize (); };
+           void                IDEntityImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDEntityImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDEntityImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };

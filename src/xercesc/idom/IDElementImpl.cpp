@@ -493,7 +493,7 @@ void IDElementImpl::setupDefaultAttributes()
            bool                IDElementImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
            IDOM_Node          *IDElementImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild)
                                                                             {return fParent.insertBefore (newChild, refChild); };
-           void                IDElementImpl::normalize()                             {fNode.normalize (); };
+           void                IDElementImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDElementImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDElementImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                             {return fParent.replaceChild (newChild, oldChild); };

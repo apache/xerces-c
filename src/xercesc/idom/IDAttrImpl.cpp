@@ -254,7 +254,7 @@ void IDAttrImpl::setOwnerElement(IDOM_Element *ownerElem)
            bool                IDAttrImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
            IDOM_Node          *IDAttrImpl::insertBefore(IDOM_Node *newChild, IDOM_Node *refChild)
                                                                                    {return fParent.insertBefore (newChild, refChild); };
-           void                IDAttrImpl::normalize()                             {fNode.normalize (); };
+           void                IDAttrImpl::normalize()                             {fParent.normalize (); };
            IDOM_Node          *IDAttrImpl::removeChild(IDOM_Node *oldChild)        {return fParent.removeChild (oldChild); };
            IDOM_Node          *IDAttrImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
                                                                                    {return fParent.replaceChild (newChild, oldChild); };
