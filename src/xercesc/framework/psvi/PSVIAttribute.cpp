@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/28 22:41:04  neilg
+ * fix compilation error
+ *
  * Revision 1.4  2003/11/28 20:20:54  neilg
  * make use of canonical representation in PSVIAttribute implementation
  *
@@ -103,7 +106,7 @@ void PSVIAttribute::reset(
     fIsSpecified = isSpecified;
     fMemoryManager->deallocate((void *)fCanonicalValue);
     if(normalizedValue && dv)
-        fCanonicalValue = dv->getCanonicalRepresentation(normalizedValue, fMemoryManager);
+        fCanonicalValue = (XMLCh *)dv->getCanonicalRepresentation(normalizedValue, fMemoryManager);
     else
         fCanonicalValue = 0;
     fAttributeDecl = attrDecl;
