@@ -226,6 +226,7 @@
             <Message Id="Reader_BadUTF8Seq" Text="Invalid second byte of a UTF-8 character sequence"/>
             <Message Id="Reader_BadSurrogateInUTF8" Text="Invalid surrogate character found in UTF-8 data"/>
             <Message Id="Reader_SrcOfsNotSupported" Text="The current transcoding service does not support source offset information"/>
+            <Message Id="Reader_EncodingStrRequired" Text="EBCDIC files must provide an encoding= string"/>
             <Message Id="Scan_CouldNotOpenSource" Text="The primary document entity could not be opened. Id={0}"/>
             <Message Id="Scan_UnbalancedStartEnd" Text="Unbalanced start/end tags found, cannot continue"/>
             <Message Id="Scan_BadPScanToken" Text="The call to scanNext() is illegal at this time"/>
