@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/05/31 18:42:31  rahulj
+ * 'Auto' validation is the default processing mode.
+ *
  * Revision 1.6  2000/03/03 01:29:29  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -96,6 +99,8 @@
 #include <stdlib.h>
 
 
+
+
 // ---------------------------------------------------------------------------
 //  This is a simple program which invokes the DOMParser to build a DOM
 //  tree for the specified input file. It then walks the tree and counts
@@ -104,13 +109,14 @@
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    DOMCount [-v -n] {XML file}\n\n"
-         << "This program invokes the XML4C DOM parser, builds\n"
-         << "the DOM tree, and then prints the number of elements\n"
-         << "found in the input XML file.\n\n"
-         << "Options:\n"
-         << "        -v  Do validation in this parse.\n"
-         << "        -n  Enable namespace processing.\n\n"
+            "    DOMCount [-v -n] {XML file}\n\n"
+            "This program invokes the XML4C DOM parser, builds\n"
+            "the DOM tree, and then prints the number of elements\n"
+            "found in the input XML file.\n\n"
+            "Options:\n"
+            "    -v=xxx      Validation scheme [never | auto*]\n"
+            "    -n          Enable namespace processing. Defaults to off.\n\n"
+            "  * = Default if not provided explicitly\n\n"
          << endl;
 }
 
@@ -118,7 +124,7 @@ void usage()
 int main(int argC, char* argV[])
 {
     // Initialize the XML4C system
-	try
+    try
     {
         XMLPlatformUtils::Initialize();
     }
@@ -137,9 +143,9 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    const char* xmlFile;
-    bool        doValidation    = false;
-    bool        doNamespaces    = false;
+    const char*              xmlFile = 0;
+    DOMParser::ValSchemes    valScheme = DOMParser::Val_Auto;
+    bool                     doNamespaces    = false;
 
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -155,10 +161,20 @@ int main(int argC, char* argV[])
         if (argV[argInd][0] != '-')
             break;
 
-        if (!strcmp(argV[argInd], "-v")
-        ||  !strcmp(argV[argInd], "-V"))
+        if (!strncmp(argV[argInd], "-v=", 3)
+        ||  !strncmp(argV[argInd], "-V=", 3))
         {
-            doValidation = true;
+            const char* const parm = &argV[argInd][3];
+
+            if (!strcmp(parm, "never"))
+                valScheme = DOMParser::Val_Never;
+            else if (!strcmp(parm, "auto"))
+                valScheme = DOMParser::Val_Auto;
+            else
+            {
+                cerr << "Unknown -v= value: " << parm << endl;
+                return 2;
+            }
         }
          else if (!strcmp(argV[argInd], "-n")
               ||  !strcmp(argV[argInd], "-N"))
@@ -185,7 +201,7 @@ int main(int argC, char* argV[])
 
     // Instantiate the DOM parser.
     DOMParser parser;
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
 
     // And create our error handler and install it
@@ -256,8 +272,8 @@ void DOMCount::error(const SAXParseException& e)
 {
     fSawErrors = true;
     cerr << "\nError at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
+         << ", line " << e.getLineNumber()
+         << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
@@ -265,16 +281,16 @@ void DOMCount::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
     cerr << "\nFatal Error at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
+         << ", line " << e.getLineNumber()
+         << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 void DOMCount::warning(const SAXParseException& e)
 {
     cerr << "\nWarning at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
+         << ", line " << e.getLineNumber()
+         << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 

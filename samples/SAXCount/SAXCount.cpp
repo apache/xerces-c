@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.7  2000/05/31 18:39:59  rahulj
+* 'Auto' validation is the default processing mode.
+*
 * Revision 1.6  2000/05/09 00:22:29  andyh
 * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
 * allocated memory; memory leak checking tools will no longer report
@@ -100,12 +103,15 @@
 void usage()
 {
     cout << "\nUsage:\n"
-        << "    SAXCount [-v -n] <XML file>\n\n"
-        << "    -v  Do a validating parse. Defaults to non-validating.\n"
-        << "    -n  Enable namespace processing. Defaults to off.\n\n"
-        << "This program prints the number of elements, attributes,\n"
-        << "white spaces and other non-white space characters in the "
-        << "input file.\n" << endl;
+            "    SAXCount [options] <XML file>\n\n"
+            "Options:\n"
+            "    -v=xxx      Validation scheme [never | auto*]\n"
+            "    -n          Enable namespace processing. Defaults to off.\n\n"
+            "This program prints the number of elements, attributes,\n"
+            "white spaces and other non-white space characters in the "
+            "input file.\n\n"
+            "  * = Default if not provided explicitly\n"
+         << endl;
 }
 
 
@@ -135,9 +141,9 @@ int main(int argC, char* argV[])
         return 1;
     }
     
-    const char* xmlFile;
-    bool        doValidation    = false;
-    bool        doNamespaces    = false;
+    const char*              xmlFile = 0;
+    SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
+    bool                     doNamespaces = false;
     
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -154,13 +160,23 @@ int main(int argC, char* argV[])
         if (argV[argInd][0] != '-')
             break;
         
-        if (!strcmp(argV[argInd], "-v")
-            ||  !strcmp(argV[argInd], "-V"))
+        if (!strncmp(argV[argInd], "-v=", 3)
+        ||  !strncmp(argV[argInd], "-V=", 3))
         {
-            doValidation = true;
+            const char* const parm = &argV[argInd][3];
+
+            if (!strcmp(parm, "never"))
+                valScheme = SAXParser::Val_Never;
+            else if (!strcmp(parm, "auto"))
+                valScheme = SAXParser::Val_Auto;
+            else
+            {
+                cerr << "Unknown -v= value: " << parm << endl;
+                return 2;
+            }
         }
-        else if (!strcmp(argV[argInd], "-n")
-            ||  !strcmp(argV[argInd], "-N"))
+         else if (!strcmp(argV[argInd], "-n")
+              ||  !strcmp(argV[argInd], "-N"))
         {
             doNamespaces = true;
         }
@@ -189,7 +205,7 @@ int main(int argC, char* argV[])
     //
     SAXParser parser;
 
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     
     //
@@ -220,14 +236,14 @@ int main(int argC, char* argV[])
             << "Exception message is:  \n"
             << StrX(e.getMessage()) << "\n" << endl;
         XMLPlatformUtils::Terminate();
-        return -1;
+        return 4;
     }
 
     catch (...)
     {
         cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
         XMLPlatformUtils::Terminate();
-        return -1;
+        return 4;
     }
 
     
