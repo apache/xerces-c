@@ -628,7 +628,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory()
 {
-    char  *tempDir = _getcwd(NULL, 0);
+    char  *tempDir = getcwd(NULL, 0);
     XMLCh *curDir = tempDir ? XMLString::transcode(tempDir) : 0;
     free(tempDir);
     return curDir;
