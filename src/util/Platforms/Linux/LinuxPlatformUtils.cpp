@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/03/24 00:13:03  aruna1
+ * Platform initialization taken care for both threaded and non-threaded environment
+ *
  * Revision 1.15  2000/03/20 23:48:52  rahulj
  * Added Socket based NetAccessor. This will enable one to
  * use HTTP URL's for system id's. Default build options do
@@ -215,22 +218,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 }
 
 
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
-// ---------------------------------------------------------------------------
-
-static XMLMutex atomicOpsMutex;
-
-void XMLPlatformUtils::platformInit()
-{
-    //
-    // The atomicOps mutex needs to be created early.
-    // Normally, mutexes are created on first use, but there is a
-    // circular dependency between compareAndExchange() and
-    // mutex creation that must be broken.
-
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
-}
 
 XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
                                     , const XMLCh* const    relativePath)
@@ -580,6 +567,23 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 #if !defined(APP_NO_THREADS)
 
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Platform init method
+// ---------------------------------------------------------------------------
+
+static XMLMutex atomicOpsMutex;
+
+void XMLPlatformUtils::platformInit()
+{
+    //
+    // The atomicOps mutex needs to be created early.
+    // Normally, mutexes are created on first use, but there is a
+    // circular dependency between compareAndExchange() and
+    // mutex creation that must be broken.
+
+    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+}
+
 void* XMLPlatformUtils::makeMutex()
 {
     pthread_mutex_t* mutex = new pthread_mutex_t;
@@ -669,6 +673,10 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 }
 
 #else // #if !defined (APP_NO_THREADS)
+
+void XMLPlatformUtils::platformInit()
+{
+}
 
 void* XMLPlatformUtils::makeMutex()
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/03/24 00:13:18  aruna1
+ * Platform initialization taken care for both threaded and non-threaded environment
+ *
  * Revision 1.16  2000/03/20 23:48:52  rahulj
  * Added Socket based NetAccessor. This will enable one to
  * use HTTP URL's for system id's. Default build options do
@@ -210,27 +213,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 #endif
 }
 
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
-// ---------------------------------------------------------------------------
-
-static pthread_mutex_t* gAtomicOpMutex =0 ;
-
-void XMLPlatformUtils::platformInit()
-{
-    //
-    // The gAtomicOpMutex mutex needs to be created 
-    // because compareAndSwap and incrementlocation and decrementlocation 
-    // does not have the atomic system calls for usage
-    // Normally, mutexes are created on first use, but there is a
-    // circular dependency between compareAndExchange() and
-    // mutex creation that must be broken.
-
-    gAtomicOpMutex = new pthread_mutex_t;   
-
-    if (pthread_mutex_init(gAtomicOpMutex, NULL))
-        panic( XMLPlatformUtils::Panic_SystemInit );
-}
 
 
 // ---------------------------------------------------------------------------
@@ -583,6 +565,28 @@ XMLCh* XMLPlatformUtils::weavePaths
 
 #if !defined (APP_NO_THREADS)
 
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Platform init method
+// ---------------------------------------------------------------------------
+
+static pthread_mutex_t* gAtomicOpMutex =0 ;
+
+void XMLPlatformUtils::platformInit()
+{
+    //
+    // The gAtomicOpMutex mutex needs to be created 
+    // because compareAndSwap and incrementlocation and decrementlocation 
+    // does not have the atomic system calls for usage
+    // Normally, mutexes are created on first use, but there is a
+    // circular dependency between compareAndExchange() and
+    // mutex creation that must be broken.
+
+    gAtomicOpMutex = new pthread_mutex_t;   
+
+    if (pthread_mutex_init(gAtomicOpMutex, NULL))
+        panic( XMLPlatformUtils::Panic_SystemInit );
+}
+
 class  RecursiveMutex
 {
 public:
@@ -714,6 +718,10 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 }
 
 #else // #if !defined (APP_NO_THREADS)
+
+void XMLPlatformUtils::platformInit()
+{
+}
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
