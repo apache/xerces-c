@@ -1,4 +1,7 @@
 # $Log$
+# Revision 1.4  2000/02/26 05:17:06  rahulj
+# Distinguish between version of OS under HPUX.
+#
 # Revision 1.3  2000/02/18 22:52:07  abagchi
 # Added Traversal
 #
@@ -45,15 +48,20 @@ case "${host}" in
         *-*-linux*)     platform=LINUX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;;
+                        case "${host}" in
+                            *-*-hpux11*)  osver=HPUX11;;
+                            *-*-hpux10*)  osver=HPUX10;;
+                            *)            osver=HPUX11;;
+                        esac;;
         *-*-mvs*)       platform=OS390 ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
+AC_SUBST(osver)
 
 compiler=${CXX}
 AC_SUBST(compiler)
 
-# prefix=${prefix}
 AC_SUBST(prefix)
 
 cxxflags=${CXXFLAGS}
@@ -61,6 +69,10 @@ AC_SUBST(cxxflags)
 
 cflags=${CFLAGS}
 AC_SUBST(cflags)
+
+libs=${LIBS}
+AC_SUBST(libs)
+
 
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
