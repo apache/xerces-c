@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2005/04/04 15:03:14  cargilld
+ * Add support for not creating xsannotations when deserializing a grammar.
+ *
  * Revision 1.16  2005/03/03 08:02:55  dbertoni
  * Removed superfluous const qualifier.
  *
@@ -342,6 +345,19 @@ public :
     virtual void     serializeGrammars(BinOutputStream* const)  = 0; 
     virtual void     deserializeGrammars(BinInputStream* const) = 0;       
 	   
+    /*
+     * Set/get a flag to not create XSAnnotations when deserializing the grammar.
+     * Defaults to false (create XSAnnotations when deserializing the grammar).
+     */
+    inline void setIgnoreSerializedAnnotations(const bool flag)
+    {
+        fIgnoreSerializedAnnotations = flag;
+    };
+    inline bool getIgnoreSerializedAnnotations() const
+    {
+        return fIgnoreSerializedAnnotations;
+    };
+
 protected :
     // -----------------------------------------------------------------------
     /**  Hidden Constructors */
@@ -349,6 +365,7 @@ protected :
     //@{
     XMLGrammarPool(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager)
     :fMemMgr(memMgr)
+    ,fIgnoreSerializedAnnotations(false)
     {
     };
     //@}
@@ -371,6 +388,7 @@ private :
     // -----------------------------------------------------------------------
     
     MemoryManager* const  fMemMgr;
+    bool fIgnoreSerializedAnnotations;
 
 };
 

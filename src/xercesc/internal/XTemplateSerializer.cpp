@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2005/04/04 15:03:14  cargilld
+ * Add support for not creating xsannotations when deserializing a grammar.
+ *
  * Revision 1.12  2005/02/19 22:26:19  cargilld
  * Store key for recreating table instead of using enclosingscope.
  *
@@ -59,6 +62,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
@@ -1883,17 +1887,27 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
         int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {
-            XSerializeEngine::XSerializedObjectId_t keyId = 0;
-
-            serEng>>keyId;
-
-            void* key = serEng.lookupLoadPool(keyId);
-            XSAnnotation*  data;
-            serEng>>data;
-
-            (*objToLoad)->put(key, data);
+        int itemIndex;
+        XSerializeEngine::XSerializedObjectId_t keyId;
+        void* key;
+        XSAnnotation*  data;
+        if (!serEng.fGrammarPool->getIgnoreSerializedAnnotations()) {
+            for (itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                serEng>>keyId;
+                key = serEng.lookupLoadPool(keyId);                
+                serEng>>data;                       
+                (*objToLoad)->put(key, data);                   
+            }
+        }
+        else {
+            for (itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                serEng>>keyId;
+                key = serEng.lookupLoadPool(keyId);                
+                serEng>>data;                            
+                delete data;
+            }
         }
     }
 }
