@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.7  2000/01/19 21:39:19  andyh
+* DOM L2, fix problems with new style createDocument.
+*
 * Revision 1.6  2000/01/08 00:09:28  andyh
 * Correcf failures in DOMTest with entity references and read-only nodes.
 * Correct reference counting problem NamedNodeMap.
@@ -94,6 +97,7 @@
 #include "NodeImpl.hpp"
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
+#include "DOM_DOMImplementation.hpp"
 #include "DOMString.hpp"
 #include "DocumentImpl.hpp"
 #include "stdio.h"
@@ -693,7 +697,7 @@ void NodeImpl::normalize()
 
 bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
 {
-    return false;   //must be overriden by each subclass
+    return DOM_DOMImplementation::getImplementation().hasFeature(feature, version);
 }
 
 DOMString NodeImpl::getNamespaceURI()

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/19 21:39:19  andyh
+ * DOM L2, fix problems with new style createDocument.
+ *
  * Revision 1.4  2000/01/08 00:09:27  andyh
  * Correcf failures in DOMTest with entity references and read-only nodes.
  * Correct reference counting problem NamedNodeMap.
@@ -127,17 +130,18 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
 //DOM Level 2
 DocumentImpl::DocumentImpl(const DOMString &namespaceURI,
 	const DOMString &qualifiedName, DocumentTypeImpl *doctype)
-: NodeImpl(null, namespaceURI, qualifiedName, DOM_Node::DOCUMENT_NODE, false, null)
+: NodeImpl(null, null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, false, null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
 	    DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    docType=doctype;
+    docType=null;
     if (doctype != null) {
 	doctype -> setOwnerDocument(this);
 	appendChild(doctype);
     }
     docElement=null;
+    appendChild(createElementNS(namespaceURI, qualifiedName));  //root element
     namePool = new DStringPool(257);
     iterators = 0L;
     treeWalkers = 0L;

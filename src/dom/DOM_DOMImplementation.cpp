@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/19 21:39:19  andyh
+ * DOM L2, fix problems with new style createDocument.
+ *
  * Revision 1.3  2000/01/05 01:16:07  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -93,6 +96,8 @@ static DOM_DOMImplementation    *gDomimp;   // Points to the singleton instance
 static DOMString                *gXML;      // Points to "XML"
 static DOMString                *gxml;      // Points to "xml"
 static DOMString                *g1_0;      // Points to "1.0"
+static DOMString                *g2_0;      // Points to "2.0"
+static DOMString                *gTrav;     // Points to "Traversal"
 
 
 // Note #1136 - There needs to be a separate implementation class for
@@ -149,9 +154,13 @@ bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMStri
     if(feature.equals(DStringPool::getStaticString("XML", &gXML)) ||
        feature.equals(DStringPool::getStaticString("xml", &gxml)))
     {
-        if(version.equals(DStringPool::getStaticString("1.0", &g1_0)))
+        if(version == null ||
+           version.equals(DStringPool::getStaticString("1.0", &g1_0)) ||
+           version.equals(DStringPool::getStaticString("2.0", &g2_0)) )
             return true;
     }
+    if(feature.equals(DStringPool::getStaticString("Traversal", &gTrav)))
+        return true;
     return false;
 }
 
