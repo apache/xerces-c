@@ -1883,10 +1883,10 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     {
         // N.B.:  this assumes DTD validation.
         XMLAttDefList& attDefList = elemDecl->getAttDefList();
-        while (attDefList.hasMoreElements())
+        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
-            const XMLAttDef& curDef = attDefList.nextElement();
+            const XMLAttDef& curDef = attDefList.getAttDef(i);
             const XMLAttDef::DefAttTypes defType = curDef.getDefaultType();
 
             if (!curDef.getProvided())
@@ -2129,10 +2129,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         if (elemDecl) {
             if (elemDecl->hasAttDefs()) {
                 XMLAttDefList& attDefList = elemDecl->getAttDefList();
-                while (attDefList.hasMoreElements())
+                for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
                 {
                     // Get the current att def, for convenience and its def type
-                    const XMLAttDef& curDef = attDefList.nextElement();
+                    const XMLAttDef& curDef = attDefList.getAttDef(i);
                     const XMLAttDef::DefAttTypes defType = curDef.getDefaultType();
 
                     // update the NSMap if there are any default/fixed xmlns attributes

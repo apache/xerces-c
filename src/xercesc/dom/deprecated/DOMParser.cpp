@@ -1194,9 +1194,9 @@ void DOMParser::endAttList
 		DOM_Element dom_elem = fDocument.createElement(elemDecl.getFullName());
 		ElementImpl* elem = (ElementImpl*)(dom_elem.fImpl);
 
-		while (defAttrs->hasMoreElements())
+        for(unsigned int i=0; i<defAttrs->getAttDefCount(); i++)
         {
-            attr = &defAttrs->nextElement();
+            attr = &defAttrs->getAttDef(i);
             if (attr->getValue() != null)
             {
                 if (fScanner->getDoNamespaces())

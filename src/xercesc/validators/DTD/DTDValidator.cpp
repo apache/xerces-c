@@ -529,9 +529,9 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
         //
         XMLAttDefList& attDefList = curElem.getAttDefList();
         bool seenId = false;
-        while (attDefList.hasMoreElements())
+        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
-            const XMLAttDef& curAttDef = attDefList.nextElement();
+            const XMLAttDef& curAttDef = attDefList.getAttDef(i);
 
             if (curAttDef.getType() == XMLAttDef::ID)
             {

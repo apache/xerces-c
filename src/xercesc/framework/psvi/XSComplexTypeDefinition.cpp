@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/10 21:56:54  neilg
+ * make internal code use the new, stateless, method of traversing attribute lists
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -114,8 +117,9 @@ XSComplexTypeDefinition::XSComplexTypeDefinition(ComplexTypeInfo*       complexT
         // REVISIT: size of vector...
         fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (10, true, manager);
             
-        while (schemaAttDefList.hasMoreElements()) {
-            SchemaAttDef& attDef = (SchemaAttDef&) schemaAttDefList.nextElement();
+        for(unsigned int i=0; i<schemaAttDefList.getAttDefCount(); i++)
+        {
+            SchemaAttDef& attDef = (SchemaAttDef&) schemaAttDefList.getAttDef(i);
             fXSAttributeUseList->addElement(new (manager) XSAttributeUse(&attDef, uriStringPool, manager));
         }
     }

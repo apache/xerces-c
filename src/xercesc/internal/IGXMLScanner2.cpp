@@ -543,10 +543,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         XMLAttDefList &attDefList = getAttDefList(fGrammarType == Grammar::SchemaGrammarType, currType, elemDecl);
 
-        while (attDefList.hasMoreElements())
+        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
-            const XMLAttDef *curDef = &attDefList.nextElement();
+            const XMLAttDef *curDef = &attDefList.getAttDef(i);
             const XMLAttDef::DefAttTypes defType = curDef->getDefaultType();
 
             if (!curDef->getProvided())

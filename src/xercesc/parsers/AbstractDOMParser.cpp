@@ -975,9 +975,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
         DOMAttrImpl * insertAttr = 0;
 
-        while (defAttrs->hasMoreElements())
+        for(unsigned int i=0; i<defAttrs->getAttDefCount(); i++)
         {
-            attr = &defAttrs->nextElement();
+            attr = &defAttrs->getAttDef(i);
 
             const XMLAttDef::DefAttTypes defType = attr->getDefaultType();
             if ((defType == XMLAttDef::Default)
@@ -1352,9 +1352,9 @@ void AbstractDOMParser::endAttList
         DOMElement     *elem  = fDocument->createElement(elemDecl.getFullName());
         DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
 
-		while (defAttrs->hasMoreElements())
+        for(unsigned int i=0; i<defAttrs->getAttDefCount(); i++)
         {
-            attr = &defAttrs->nextElement();
+            attr = &defAttrs->getAttDef(i);
             if (attr->getValue() != 0)
             {
                 if (fScanner->getDoNamespaces())

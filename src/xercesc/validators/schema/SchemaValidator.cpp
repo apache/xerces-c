@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.41  2003/11/10 21:56:54  neilg
+ * make internal code use the new, stateless, method of traversing attribute lists
+ *
  * Revision 1.40  2003/11/07 17:08:12  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -1085,9 +1088,9 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
             if (curElem.hasAttDefs()) {
                 XMLAttDefList& attDefList = curElem.getAttDefList();
                 bool seenId = false;
-                while (attDefList.hasMoreElements())
+                for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
                 {
-                    const XMLAttDef& curAttDef = attDefList.nextElement();
+                    const XMLAttDef& curAttDef = attDefList.getAttDef(i);
 
                     if (curAttDef.getType() == XMLAttDef::ID)
                     {

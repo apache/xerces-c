@@ -1912,10 +1912,10 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
     if (hasDefs)
     {
         XMLAttDefList& attDefList = elemDecl->getAttDefList();
-        while (attDefList.hasMoreElements())
+        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
-            XMLAttDef& curDef = attDefList.nextElement();
+            XMLAttDef& curDef = attDefList.getAttDef(i);
 
             if (!curDef.getProvided() && curDef.getCreateReason() != XMLAttDef::JustFaultIn)
             {
