@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/04 20:31:14  tng
+ * [Bug 2868] AIX 4.3.3 mutex/atomic-operation changes for build.
+ *
  * Revision 1.2  2002/02/27 22:38:34  peiyongz
  * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
  *
@@ -152,6 +155,9 @@
 #if defined(_AIX)
     #define XML_AIX
     #define XML_UNIX
+    #if defined(_AIXVERSION_430)
+        #define XML_AIX43  // for use of POSIX compliant pthread functions
+    #endif
 #elif defined(_SEQUENT_)
     #define XML_PTX
     #define XML_UNIX
