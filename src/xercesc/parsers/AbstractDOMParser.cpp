@@ -721,12 +721,12 @@ void AbstractDOMParser::resetDocument()
     //  from a previous use, in particular the DOM document itself.
     //
     this->reset();
-    fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument();
 }
 
 
 void AbstractDOMParser::startDocument()
 {
+    fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument();
     // Just set the document as the current parent and current node
     fCurrentParent = fDocument;
     fCurrentNode   = fDocument;
