@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.53  2004/03/01 21:06:38  knoaman
+ * Fix for UPA checking
+ *
  * Revision 1.52  2004/01/29 11:52:31  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -1377,6 +1380,22 @@ void SchemaValidator::checkParticleDerivation(SchemaGrammar* const currentGramma
     }
 }
 
+ContentSpecNode* SchemaValidator::getNonUnaryGroup(ContentSpecNode* const pNode) {
+
+    int pNodeType = (pNode->getType() & 0x0f);
+    if (pNodeType == ContentSpecNode::Leaf
+        || pNodeType == ContentSpecNode::Any
+        || pNodeType == ContentSpecNode::Any_Other
+        || pNodeType == ContentSpecNode::Any_NS)
+        return pNode;
+
+    if (pNode->getMinOccurs() == 1 && pNode->getMaxOccurs() == 1
+        && pNode->getFirst() && !pNode->getSecond())
+        return getNonUnaryGroup(pNode->getFirst());
+
+    return pNode;
+}
+
 void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                                                 ContentSpecNode* const curNode,
                                                 const int derivedScope,
@@ -1394,8 +1413,8 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
     if (!curNode)
         return;
 
-    ContentSpecNode* curSpecNode = curNode;
-    ContentSpecNode* baseSpecNode = baseNode;
+    ContentSpecNode* curSpecNode = getNonUnaryGroup(curNode);
+    ContentSpecNode* baseSpecNode = getNonUnaryGroup(baseNode);
     ValueVectorOf<ContentSpecNode*> curVector(8, fMemoryManager);
     ValueVectorOf<ContentSpecNode*> baseVector(8, fMemoryManager);
     ContentSpecNode::NodeTypes curNodeType = curSpecNode->getType();

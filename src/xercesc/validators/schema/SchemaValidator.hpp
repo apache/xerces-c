@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/03/01 21:06:38  knoaman
+ * Fix for UPA checking
+ *
  * Revision 1.25  2004/01/29 11:52:31  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -382,6 +385,7 @@ private:
                         ValueVectorOf<ContentSpecNode*>* const baseNodes,
                         const int baseScope,
                         const ComplexTypeInfo* const baseInfo);
+    ContentSpecNode* getNonUnaryGroup(ContentSpecNode* const pNode);
 
     // -----------------------------------------------------------------------
     //  Private data members
