@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/18 13:23:49  tng
+ * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/17 18:13:47  tng
  * Schema Fix: issue error message when binary data is invalid.
  *
@@ -119,51 +122,57 @@ void HexBinaryDatatypeValidator::init(DatatypeValidator*            const baseVa
             value = pair.getValue();
 
             if (XMLString::compareString(key, SchemaSymbols::fgELT_LENGTH)==0) 
-            {        
+            {      
+                int val;
                 try
                 {
-                    setLength(XMLString::parseInt(value));
+                    val = XMLString::parseInt(value);
                 }
                 catch (NumberFormatException nfe)
                 {
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value);
                 }
 
-                if (getLength() < 0)
+                if ( val < 0 )
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_Len, value);
 
+                setLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_LENGTH);
             } 
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MINLENGTH)==0)
             {
+                int val;
                 try
                 {
-                    setMinLength(XMLString::parseInt(value));
+                    val = XMLString::parseInt(value);
                 }
                 catch (NumberFormatException nfe)
                 {
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_minLen, value);
                 }
 
-                if (getMinLength() < 0)
+                if ( val < 0 )
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_minLen, value);
 
+                setMinLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);            
             } 
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXLENGTH)==0)
             {
+                int val;
                 try
                 {
-                    setMaxLength(XMLString::parseInt(value));
+                    val = XMLString::parseInt(value);
                 }
                 catch (NumberFormatException nfe)
                 {
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_maxLen, value);
                 }
 
-                if (getMaxLength() < 0)
+                if ( val < 0 )
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_maxLen, value);
 
+                setMaxLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);            
             } 
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
@@ -470,9 +479,9 @@ void HexBinaryDatatypeValidator::checkContent( const XMLCh* const content, bool 
     int hexBinLentemp = HexBin::getDataLength(content);
     if (hexBinLentemp <= 0) 
     {
-        ThrowXML(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_Not_Base64, content);
-        // "Value '"+content+"' is not encoded in HexBin" );
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_Not_HexBin
+                , content);
     }
 
     unsigned int hexBinLen = hexBinLentemp;

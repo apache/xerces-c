@@ -453,42 +453,80 @@ $set 3
 148  It is an error for both length and minLength to be members of facets
 149  Value of maxLenght '{0}' must be greater than the value of minLength '{1}'
 150  Only constraining facet in boolean datatype is PATTERN
-151  It is an error for both maxInclusive and maxExclusive to be specified for the same datatype
-152  It is an error for both minInclusive and minExclusive to be specified for the same datatype
-153  maxExclusive value must be > than minExclusive value
-154  maxExclusive value must be > than minInclusive value
-155  maxInclusive value must be > than minExclusive value
-156  maxInclusive value must be > than minInclusive value
-157  Invalid Facet Tag
-158  Value of Length '{0}' must be equal to the base Length '{1}'
-159  Value of minLength '{0}' must be greater than or equal to the base minLength '{1}'
-160  Value of minLength '{0}' must be less than or equal to the base maxLength '{1}'
-161  Value of maxLength '{0}' must be less than or equal to the base maxLength '{1}'
-162  Value of maxLength '{0}' must be greater than or equal to the base minLength '{1}'
-163  Value of enumeration = '{0}' must be from the value space of base
-164  Value of whitespace '{0}' must be one of 'preserve', 'replace', 'collapse'
-165  It is an error if whiteSpace = 'preserve' or 'replace' and base.whiteSpace = 'collapse'.
-166  It is an error if whiteSpace = 'preserve' and base.whiteSpace = 'replace'.
-167  Value '{0}' does not match regular expression facet '{1}'
-168  Value '{0}' is not encoded in Base64 
-169  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
-170  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
-171  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
-172  Value '{0}' is not in enumeration 
-173  A result is not set.
-174  CompactRanges - Internal Error
-175  Merge Ranges - Mismatched type
-176  SubtractRanges - Internal Error
-177  IntersectRanges - Internal Error
-178  ComplementRanges - Argument must be a RangeToken
-179  Invalid category name: {0}
-180  Keyword '{0}' not found
-181  Reference no must be more than zero
-182  Unknown option: {0}
-183  Unknown token type
-184  Failed to get RangeToken for: {0}
-185  Not supported
-186  Invalid child index
-187  Enabling the NEL option can only be called once per process.
+151  Invalid Facet Tag
+152  Value of Length '{0}' must be equal to the base Length '{1}'
+153  Value of minLength '{0}' must be greater than or equal to the base minLength '{1}'
+154  Value of minLength '{0}' must be less than or equal to the base maxLength '{1}'
+155  Value of maxLength '{0}' must be less than or equal to the base maxLength '{1}'
+156  Value of maxLength '{0}' must be greater than or equal to the base minLength '{1}'
+157  Value of enumeration = '{0}' must be from the value space of base
+158  Value of whitespace '{0}' must be one of 'preserve', 'replace', 'collapse'
+159  It is an error if whiteSpace = 'preserve' or 'replace' and base.whiteSpace = 'collapse'.
+160  It is an error if whiteSpace = 'preserve' and base.whiteSpace = 'replace'.
+161  MaxInclusive '{0}' is invalid
+162  MaxExclusive '{0}' is invalid
+163  MinInclusive '{0}' is invalid
+164  MinExclusive '{0}' is invalid
+165  TotalDigit Value '{0}' is invalid
+166  FractionDigit Value '{0}' is invalid
+167  TotalDigit Value '{0}' must be a nonNegativeInteger
+168  FractionDigit Value '{0}' must be a nonNegativeInteger
+169  It is an error for both maxInclusive and maxExclusive to be specified for the same datatype
+170  It is an error for both minInclusive and minExclusive to be specified for the same datatype
+171  maxExclusive value '{0}' must be greater than minExclusive value '{1}'
+172  maxExclusive value '{0}' must be greater than minInclusive value '{1}'
+173  maxInclusive value '{0}' must be greater than minExclusive value '{1}'
+174  maxInclusive value '[0}' must be greater than minInclusive value '{1}'
+175  TotalDigit value '[0}' must be greater than FractionDigit value '{1}'
+176  maxInclusive value '{0}' must be less than base's maxExclusive value '{1}'
+177  maxInclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'
+178  maxInclusive value '{0}' must be greater than or equal to base's minInclusive value '{1}'
+179  maxInclusive value '{0}' must be greater than base's minExclusive value '{1}'
+180  maxExclusive value '{0}' must be less than or equal to base's maxExclusive value '{1}'
+181  maxExclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'
+182  maxExclusive value '{0}' must be greater than base's minInclusive value '{1}'
+183  maxExclusive value '{0}' must be greater than base's minExclusive value '{1}'
+184  minExclusive value '{0}' must be less than base's maxExclusive value '{1}'
+185  minExclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'
+186  minExclusive value '{0}' must be greater than base's minInclusive value '{1}'
+187  minExclusive value '{0}' must be greater than base's minExclusive value '{1}'
+188  minInclusive value '{0}' must be less than base's maxExclusive value '{1}'
+189  minInclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'
+190  minInclusive value '{0}' must be greater than or equal to base's minInclusive value '{1}'
+191  minInclusive value '{0}' must be greater than base's minExclusive value '{1}'
+192  totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'
+193  maxInclusive value '{0}' must be from the base's value space
+194  maxExclusive value '{0}' must be from the base's value space
+195  minInclusive value '{0}' must be from the base's value space
+196  minExclusive value '{0}' must be from the base's value space
+197  Value '{0}' does not match regular expression facet '{1}'
+198  Value '{0}' is not encoded in Base64 
+199  Value '{0}' is not encoded in HexBin 
+200  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
+201  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
+202  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
+203  Value '{0}' is not in enumeration 
+204  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
+205  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
+206  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
+207  Value '{0}' must be less than MaxExclusive '{1}' 
+208  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
+209  Value '{0}' must be greater than MinExclusive '{1}' 
+210  A result is not set.
+211  CompactRanges - Internal Error
+212  Merge Ranges - Mismatched type
+213  SubtractRanges - Internal Error
+214  IntersectRanges - Internal Error
+215  ComplementRanges - Argument must be a RangeToken
+216  Invalid category name: {0}
+217  Keyword '{0}' not found
+218  Reference no must be more than zero
+219  Unknown option: {0}
+220  Unknown token type
+221  Failed to get RangeToken for: {0}
+222  Not supported
+223  Invalid child index
+224  Enabling the NEL option can only be called once per process.
+225  {0}
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/18 13:22:54  tng
+ * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:26:30  tng
  * Copyright update.
  *
@@ -310,4 +313,41 @@ void XMLBigDecimal::dumpData() const
     cout<<"scale="<<"<"<<fScale<<">"<<endl;
     fIntVal->dumpData();
     cout<<endl;
+}
+
+//
+// Add the decimal point as necessary
+// The caller needs to de-allocate the memory allocated by this function
+// Deallocate the memory allocated by XMLBigInteger
+//
+XMLCh*  XMLBigDecimal::toString() const
+{
+    // Retrieve a string (representing the value) from XMLBigInteger
+    // the returned buffer --ALWAYS-- contain a leading sign (+|-)
+    XMLCh* tmpBuf = fIntVal->toString();
+
+    // if no decimal point
+    if ( fScale == 0 )
+        return tmpBuf;
+
+    unsigned int strLen = XMLString::stringLen(tmpBuf);
+
+    //
+    // Sanity check here, internal error
+    // fScale = strLen -> .(+|-)1234 invalid
+    // for now, do not insert decimal point and return
+    //
+    if ( fScale >= strLen )
+        return tmpBuf;
+
+    // Add decimal point as needed
+    XMLCh* retBuf = new XMLCh[strLen+2];
+    XMLString::moveChars(&(retBuf[0]), &(tmpBuf[0]), strLen - fScale);
+    retBuf[strLen-fScale] = chPeriod;
+    XMLString::moveChars(&(retBuf[strLen-fScale+1]), &(tmpBuf[strLen-fScale]), fScale);
+    retBuf[strLen+1] = chNull;
+
+    // De-allocate the memory allocated by XMLBigInteger
+    delete[] tmpBuf;
+    return retBuf;
 }

@@ -113,6 +113,14 @@ public:
     void                  dumpData() const;
 
 	/**
+	 *  Return string representation of the decimal value.
+     *  A decimal point will be included as necessary, 
+     *  the caller of this method is responsible for the 
+     *  de-allocation of the memory.
+	 */
+    XMLCh*                toString() const;
+
+	/**
 	 * Compares this object to the specified object.
 	 * The result is <code>true</code> if and only if the argument is not
 	 * <code>null</code> and is an <code>XMLBigDecimal</code> object that contains

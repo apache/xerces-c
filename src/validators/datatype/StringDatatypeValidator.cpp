@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/18 13:23:51  tng
+ * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.4  2001/05/16 14:33:40  tng
  * Schema Constraint checking fix.
  *
@@ -125,50 +128,56 @@ void StringDatatypeValidator::init(DatatypeValidator*            const baseValid
 
             if (XMLString::compareString(key, SchemaSymbols::fgELT_LENGTH)==0)
             {
+                int val;
                 try
                 {
-                    setLength(XMLString::parseInt(value));
+                    val = XMLString::parseInt(value);
                 }
                 catch (NumberFormatException nfe)
                 {
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value);
                 }
 
-                if (getLength() < 0)
+                if ( val < 0 )
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_Len, value);
 
+                setLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_LENGTH);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MINLENGTH)==0)
             {
+                int val;
                 try
                 {
-                    setMinLength(XMLString::parseInt(value));
+                    val = XMLString::parseInt(value);
                 }
                 catch (NumberFormatException nfe)
                 {
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_minLen, value);
                 }
 
-                if (getMinLength() < 0)
+                if ( val < 0 )
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_minLen, value);
 
+                setMinLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXLENGTH)==0)
             {
+                int val;
                 try
                 {
-                    setMaxLength(XMLString::parseInt(value));
+                    val = XMLString::parseInt(value);
                 }
                 catch (NumberFormatException nfe)
                 {
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_maxLen, value);
                 }
 
-                if (getMaxLength() < 0)
+                if ( val < 0 )
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_maxLen, value);
 
+                setMaxLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)

@@ -93,13 +93,20 @@ public:
                              ,const XMLBigInteger* const rValue);
 
 
-    void multiply(const unsigned int byteToShift);
+    void        multiply(const unsigned int byteToShift);
 
-    void divide(const unsigned int byteToShift);
+    void        divide(const unsigned int byteToShift);
 
-    int  getTotalDigit() const;
+    int         getTotalDigit() const;
 
-    void dumpData() const;
+    void        dumpData() const;
+
+	/**
+	 *  Return a copy of the fMagnitue.
+     *  A leading sign is ALWAYS in place and the caller of this method
+     *  is responsible for the de-allocation of the memory.
+	 */
+    XMLCh*      toString() const;
 
 	/**
 	 * Compares this object to the specified object.

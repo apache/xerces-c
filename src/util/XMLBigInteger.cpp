@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/18 13:23:01  tng
+ * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:26:31  tng
  * Copyright update.
  *
@@ -337,4 +340,30 @@ void XMLBigInteger::dumpData() const
     cout<<endl;
     delete[] p;
 
+}
+
+//
+// The caller needs to de-allocate the memory allocated by this function
+// return buffer ALWAYS has a leading sign
+//
+XMLCh*  XMLBigInteger::toString() const
+{
+
+    if ( fSign == 0 )
+    {
+        XMLCh* retBuf = new XMLCh[3];
+        retBuf[0] = chPlus;
+        retBuf[1] = chDigit_0;
+        retBuf[2] = chNull;
+        return retBuf;
+    }
+ 
+    // Add the leading sign here    
+    int strLen = XMLString::stringLen(fMagnitude);
+    XMLCh* retBuf = new XMLCh[strLen+2];
+    (fSign == 1)? retBuf[0] = chPlus : retBuf[0] = chDash;
+    XMLString::moveChars(&(retBuf[1]), &(fMagnitude[0]), strLen);
+    retBuf[strLen+1] = chNull;
+
+    return retBuf;
 }
