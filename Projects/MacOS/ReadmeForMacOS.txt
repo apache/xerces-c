@@ -1,4 +1,4 @@
-State of Xerces Mac OS Port. 7/14/00 by James Berry, Critical Path Software, Inc.
+State of Xerces Mac OS Port. 7/28/00 by James Berry, Critical Path Software, Inc.
 
 This readme attempts to document the state of Mac OS support for Xerces.
 I suspect that this code has been ported to the Mac on a number of occasions.
@@ -9,6 +9,9 @@ This port aims to bring Xerces to Mac OS, and to use Mac OS services as appropri
 Key work in these areas is:
 
  - Development of a transcoder that relies on Mac OS's Unicode Converter. [MacOSUnicodeConverter].
+
+ - Development of a netaccessor that relies on the Mac OS's URL Access routines.
+   [MacOSURLAccess].
 
  - Near-complete rewrite of Mac OS Platform utilities [MacOSPlatformUtils] to support Mac OS
    constructs and the latest changes in Xerces. All file access is done directly on top of the
@@ -26,11 +29,6 @@ Key omissions include:
    publicly released. I'll release Project Builder projects after the Mac OS X public beta
    is released. If you want them now...just email me.
 
- - There is no NetAccessor support yet for Mac OS. This could/should probably be written
-   atop URL Access, and probably isn't that hard, but I haven't gotten around to it yet.
-   Other possibilities might include using libwww or the existing Xerces NetSocket accessor
-   if you're under Mac OS X.
-
 Usage Notes:
 
  - A major hassle in porting this code to the Mac, and in keeping it up to date, is the
@@ -46,13 +44,17 @@ Usage Notes:
    - This (should) create a new directory called MacSrc which is a duplicate of
      the "src" directory but with names shortened appropriately. This has been
      tested on Mac OS and Mac OS X, but in no other environments. YMMV.
+   - The files in MacSrc should be used from the Codewarrior environment, which
+     doesn't support files with long names. ProjectBuilder projects may used
+     the unadulterated "src" files with long names.
 
    Note that I'll ascribe most of the blame for the problem to Apple and other Mac tools
    vendors. HFS+ fully supports long file names: it's too bad that Apple (Finder),
    Aladdin (StuffIt), Metrowerks (CodeWarrior) and others (MacCVS) haven't chosen to support
    long names within their products. I actually spent several days on the MacCVS end of this
    task before deciding it was too hard given the timeframe with OS X almost here.
-   The situation under Mac OS X is much better.
+   The situation under Mac OS X is much better: both the "finder" and development tools
+   support files with long names.
 
  - The Mac OS Platform utilities expect that pathnames will be in unix-form with '/' separators.
    There is no support for Mac OS style pathnames with colons. Routines are provided to
