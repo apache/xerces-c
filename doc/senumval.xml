@@ -56,6 +56,9 @@ Facets:
         Default Type:   #DEFAULT
         Value:                  false
         Base Datatype:          string
+Enumeration:		
+	    true
+	    false
 
         Name:                   note
         Type:                   CDATA
