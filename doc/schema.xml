@@ -64,9 +64,18 @@
                                 <li>No: xsi:type</li>
                        </ul>
                </ul>
-               <p>Other features in the Schema recommendation such as "include/import",
+
+               <p> Additional Experimental Features (not tested and subject to change, use as is)</p>
+               <ul>
+                       <li>Complex type derivation support (simpleContent and complexContent).</li>
+                       <li>Element and attribute re-use using "ref".</li>
+                       <li>Include support</li>
+                       <li>Import Support</li>
+               </ul>
+
+               <p>Other features in the Schema recommendation such as "redefine",
                "identity constraints" and others which are not mentioned above, are not supported
-               yet.  But development is continue and we target to implement all the
+               yet.  But development is continuing and we target to implement all the
                features of the current XML Schema Recommendation before end of this year.
                Please note that the date is tentative and subject to change.
                </p>
