@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/13 16:17:10  knoaman
+ * Fo sanity, use class name to qualify method
+ *
  * Revision 1.8  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -346,7 +349,7 @@ RangeTokenMap* RangeTokenMap::instance()
         if (!fInstance)
         {
             fInstance = new RangeTokenMap();
-            rangeTokMapInstanceCleanup.registerCleanup(reinitInstance);
+            rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
         }
     }
 

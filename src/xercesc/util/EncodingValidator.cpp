@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/01/13 16:17:10  knoaman
+ * Fo sanity, use class name to qualify method
+ *
  * Revision 1.4  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -170,7 +173,7 @@ EncodingValidator* EncodingValidator::instance()
         if (!fInstance)
         { 
             fInstance = new EncodingValidator();
-            instanceCleanup.registerCleanup(reinitInstance);
+            instanceCleanup.registerCleanup(EncodingValidator::reinitInstance);
         }
     }
 

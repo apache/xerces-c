@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/01/13 16:17:09  knoaman
+ * Fo sanity, use class name to qualify method
+ *
  * Revision 1.14  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -311,7 +314,7 @@ void DTDGrammar::resetEntityDeclPool() {
                 fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
 
                 // register cleanup method
-                entityPoolRegistryCleanup.registerCleanup(reinitDfltEntities);
+                entityPoolRegistryCleanup.registerCleanup(DTDGrammar::reinitDfltEntities);
                 sEntityPoolMutexRegistered = true;
             }
         }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/01/13 16:17:09  knoaman
+ * Fo sanity, use class name to qualify method
+ *
  * Revision 1.25  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -815,7 +818,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                 initCanRepRegistory();
 
                 // register cleanup method
-                builtInRegistryCleanup.registerCleanup(reinitRegistry);
+                builtInRegistryCleanup.registerCleanup(DatatypeValidatorFactory::reinitRegistry);
                 sBuiltInRegistryMutexRegistered = true;
             }
         }

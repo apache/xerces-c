@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/01/13 16:17:09  knoaman
+ * Fo sanity, use class name to qualify method
+ *
  * Revision 1.19  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -287,7 +290,7 @@ void GeneralAttributeCheck::mapElements()
                 mapAttributes();
 
                 // register for cleanup at Termination.
-                sGeneralAttCheckCleanup.registerCleanup(reinitGeneralAttCheck);
+                sGeneralAttCheckCleanup.registerCleanup(GeneralAttributeCheck::reinitGeneralAttCheck);
                 sGeneralAttCheckMutexRegistered = true;
             }
         }

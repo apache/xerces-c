@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/01/13 16:17:09  knoaman
+ * Fo sanity, use class name to qualify method
+ *
  * Revision 1.24  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -327,7 +330,7 @@ ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
                 fAnyType->setAttWildCard(attWildCard);
 
                 // register cleanup method
-                anyTypeCleanup.registerCleanup(reinitAnyType);
+                anyTypeCleanup.registerCleanup(ComplexTypeInfo::reinitAnyType);
                 sAnyTypeMutexRegistered = true;
             }
         }
