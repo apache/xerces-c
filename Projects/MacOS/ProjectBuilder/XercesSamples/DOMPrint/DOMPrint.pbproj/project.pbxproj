@@ -142,9 +142,11 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = DOMPrint;
 				REZ_EXECUTABLE = YES;
 				SECTORDER_FLAGS = "";
+				USE_GCC3_PFE_SUPPORT = YES;
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 			};
 			dependencies = (
@@ -163,6 +165,7 @@
 				F58FFD0D02C4FB8D01A80065,
 			);
 			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08FB77A1FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -173,6 +176,7 @@
 				F58FFD0C02C4FB8D01A80065,
 			);
 			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08FB77A3FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -180,12 +184,14 @@
 				00C89B0FFFA938BB7F000001,
 			);
 			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08FB77A5FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 			);
 			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 //080
 //081
@@ -221,18 +227,20 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
+				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
-			name = Development;
+			name = "Development GCC2";
 		};
 		32D0C9140081428B7F000001 = {
 			buildRules = (
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
-			name = Deployment;
+			name = "Deployment GCC2";
 		};
 //320
 //321

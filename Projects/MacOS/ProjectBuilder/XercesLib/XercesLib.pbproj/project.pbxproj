@@ -2755,11 +2755,12 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = "../../../../src /System/Library/Frameworks/Carbon.framework/Headers";
+				HEADER_SEARCH_PATHS = ../../../../src;
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "-w -DDEBUG -DTARGET_API_MAC_CARBON -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_MACOS_UNICODECONVERTER -DXML_USE_NETACCESSOR_URLACCESSCF";
+				OTHER_CFLAGS = "-w -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_MACOS_UNICODECONVERTER -DXML_USE_NETACCESSOR_URLACCESSCF";
 				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = Xerces;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-reorder -Wno-four-char-constants -Wno-unknown-pragmas";
@@ -2773,8 +2774,8 @@
 			productName = Xerces;
 			productReference = 034768DEFF38A45A11DB9C8B;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">
-<plist version=\"0.9\">
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
@@ -3144,6 +3145,7 @@
 				F59560B702EC620201A80066,
 			);
 			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0867D69EFE84028FC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -3151,6 +3153,7 @@
 				089C1668FE841158C02AAC07,
 			);
 			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0867D69FFE84028FC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -3383,6 +3386,7 @@
 				F59560B602EC620201A80066,
 			);
 			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0867D6A0FE84028FC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -3390,12 +3394,14 @@
 				F5020B810220B42801A80067,
 			);
 			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0867D6A2FE84028FC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 			);
 			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		089C1665FE841158C02AAC07 = {
 			children = (
@@ -3439,7 +3445,6 @@
 		0C26523EFF92762B7F000001 = {
 			children = (
 				02058CF3FF8AF8CD7F000001,
-				F5D026B700BD60F501000001,
 				02058D6FFF8AF8CD7F000001,
 				02058D97FF8AF8CD7F000001,
 				02058DACFF8AF8CD7F000001,
@@ -3469,18 +3474,21 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "\U0001-DDEBUG";
+				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
-			name = Development;
+			name = "Development GCC2";
 		};
 		1A7E46A60080FC837F000001 = {
 			buildRules = (
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
-			name = Deployment;
+			name = "Deployment GCC2";
 		};
 //1A0
 //1A1
@@ -5801,6 +5809,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "\U0001-DDEBUG";
 				USE_GCC3 = YES;
 			};
 			isa = PBXBuildStyle;
@@ -8050,13 +8059,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		F5D026B700BD60F501000001 = {
-			children = (
-			);
-			isa = PBXGroup;
-			path = idom;
-			refType = 4;
 		};
 		F5DCC2690101D29101000001 = {
 			isa = PBXFileReference;

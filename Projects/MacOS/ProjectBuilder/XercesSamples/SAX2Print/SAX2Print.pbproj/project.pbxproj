@@ -11,18 +11,20 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				OPTIMIZATION_CFLAGS = "-O0";
+				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
-			name = Development;
+			name = "Development GCC2";
 		};
 		014CEA470018CE2711CA2923 = {
 			buildRules = (
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				USE_GCC3 = NO;
 			};
 			isa = PBXBuildStyle;
-			name = Deployment;
+			name = "Deployment GCC2";
 		};
 //010
 //011
@@ -74,6 +76,8 @@
 			buildStyles = (
 				014CEA460018CE2711CA2923,
 				014CEA470018CE2711CA2923,
+				F57843050313FA0D01A80065,
+				F57843060313FA1301A80065,
 			);
 			isa = PBXProject;
 			mainGroup = 08FB7794FE84155DC02AAC07;
@@ -119,9 +123,11 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
 				PRODUCT_NAME = SAX2Print;
 				REZ_EXECUTABLE = YES;
 				SECTORDER_FLAGS = "";
+				USE_GCC3_PFE_SUPPORT = YES;
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 			};
 			dependencies = (
@@ -140,6 +146,7 @@
 				F54F8B9000F8F37F01000001,
 			);
 			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08FB77A1FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -148,6 +155,7 @@
 				F54F8B9200F8F37F01000001,
 			);
 			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08FB77A3FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -156,12 +164,14 @@
 				F58FFD7602C67EF401A80065,
 			);
 			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08FB77A5FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 			);
 			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 //080
 //081
@@ -234,6 +244,27 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		F57843050313FA0D01A80065 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+				USE_GCC3 = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Development GCC3";
+		};
+		F57843060313FA1301A80065 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				USE_GCC3 = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Deployment GCC3";
 		};
 		F58FFD7402C67EF401A80065 = {
 			isa = PBXFrameworkReference;
