@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/05 17:57:39  peiyongz
+ * [BUG# 3831]: -1 returned from getIndex() needs to be checked
+ *
  * Revision 1.6  2001/05/11 13:26:16  tng
  * Copyright update.
  *
@@ -207,22 +210,26 @@ int VecAttributesImpl::getIndex(const XMLCh* const qName ) const
 
 const XMLCh* VecAttributesImpl::getType(const XMLCh* const uri, const XMLCh* const localPart ) const
 {
-    return getType(getIndex(uri, localPart)) ;
+    int retVal = getIndex(uri, localPart);
+    return ((retVal < 0) ? 0 : getType(retVal));
 }
 
 const XMLCh* VecAttributesImpl::getType(const XMLCh* const qName) const
 {
-    return getType(getIndex(qName)) ;
+    int retVal = getIndex(qName);
+    return ((retVal < 0) ? 0 : getType(retVal));
 }
 
 const XMLCh* VecAttributesImpl::getValue(const XMLCh* const uri, const XMLCh* const localPart ) const
 {
-    return getValue(getIndex(uri, localPart)) ;
+    int retVal = getIndex(uri, localPart);
+    return ((retVal < 0) ? 0 : getValue(retVal));
 }
 
 const XMLCh* VecAttributesImpl::getValue(const XMLCh* const qName) const
 {
-    return getValue(getIndex(qName)) ;
+    int retVal = getIndex(qName);
+    return ((retVal < 0) ? 0 : getValue(retVal));
 }
 
 // ---------------------------------------------------------------------------
