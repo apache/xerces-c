@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/05/25 21:42:41  knoaman
+ * Allocate/Deallocate Context::xxx only when necessary.
+ *
  * Revision 1.12  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -177,7 +180,9 @@ RegularExpression::Context::Context(MemoryManager* const manager) :
 
 RegularExpression::Context::~Context()
 {
-	fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+	if (fOffsets)
+        fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+
     fMemoryManager->deallocate(fString);//delete [] fString;
 
 	if (fAdoptMatch)
@@ -191,7 +196,9 @@ void RegularExpression::Context::reset(const XMLCh* const string
                                        , const int start, const int limit
                                        , const int noClosures)
 {
-    fMemoryManager->deallocate(fString);//delete [] fString;
+    if (fString)
+        fMemoryManager->deallocate(fString);//delete [] fString;
+
     fString = XMLString::replicate(string, fMemoryManager);
 	fStart = start;
 	fLimit = limit;
@@ -201,7 +208,8 @@ void RegularExpression::Context::reset(const XMLCh* const string
 		delete fMatch;
 	fMatch = 0;
 
-	if (fOffsets == 0 || fSize != noClosures) {
+
+	if (fSize != noClosures) {
 
 		if (fOffsets)
             fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
