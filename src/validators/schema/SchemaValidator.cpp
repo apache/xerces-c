@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/11/20 20:32:52  knoaman
+ * Bypass validating element's simple content if it's empty and element is nillable.
+ *
  * Revision 1.23  2001/11/13 13:25:08  tng
  * Deprecate function XMLValidator::checkRootElement.
  *
@@ -278,9 +281,12 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     }
                     else {
                         // no default value, then check nillable
-                        if (fNil) {
-                            if (XMLString::compareString(value, XMLUni::fgZeroLenString))
-                                emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
+                        if (!XMLString::compareString(value, XMLUni::fgZeroLenString)) {
+                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::NILLABLE) == 0)
+                                fCurrentDV->validate(value);
+                        }
+                        else if (fNil) {
+                            emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
                         }
                         else
                             fCurrentDV->validate(value);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/20 20:32:52  knoaman
+ * Bypass validating element's simple content if it's empty and element is nillable.
+ *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
  *
@@ -244,6 +247,22 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
     // if either validator's null, fall back on string comparison
     if(!dv1 || !dv2) {
         return ((XMLString::compareString(val1, val2)) == 0);
+    }
+
+    unsigned int val1Len = XMLString::stringLen(val1);
+    unsigned int val2Len = XMLString::stringLen(val2);
+
+    if (!val1Len && !val2Len) {
+
+        if (dv1 == dv2) {
+            return true;
+        }
+
+        return false;
+    }
+
+    if (!val1Len || !val2Len) {
+        return false;
     }
 
     // are the validators equal?
