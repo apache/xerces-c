@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/07 23:25:53  roddey
+ * A couple more tweaks of the event handler output.
+ *
  * Revision 1.7  2000/04/06 19:09:51  roddey
  * Some more improvements to output formatting. Now it will correctly
  * handle doing the 'replacement char' style of dealing with chars
@@ -228,24 +231,25 @@ void SAXPrintHandlers::endDocument()
 
 void SAXPrintHandlers::endElement(const XMLCh* const name)
 {
-    fFormatter << gEndElement << name << chCloseAngle;
+    // No escapes are legal here
+    fFormatter << XMLFormatter::NoEscapes << gEndElement << name << chCloseAngle;
 }
 
 
 void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
                                             ,const  unsigned int length)
 {
-    fFormatter.formatBuf(chars, length);
+    fFormatter.formatBuf(chars, length, XMLFormatter::NoEscapes);
 }
 
 
 void SAXPrintHandlers::processingInstruction(const  XMLCh* const target
                                             , const XMLCh* const data)
 {
-    fFormatter << gStartPI << target;
+    fFormatter << XMLFormatter::NoEscapes << gStartPI  << target;
     if (data)
         fFormatter << chSpace << data;
-    fFormatter << gEndPI;
+    fFormatter << XMLFormatter::NoEscapes << gEndPI;
 }
 
 
