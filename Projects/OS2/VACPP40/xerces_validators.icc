@@ -9,6 +9,7 @@ group xerces_validators =
     BASE_DIR "\\src\\validators\\common\\GrammarResolver.cpp",
     BASE_DIR "\\src\\validators\\common\\MixedContentModel.cpp",
     BASE_DIR "\\src\\validators\\common\\SimpleContentModel.cpp",
+    BASE_DIR "\\src\\validators\\datatype\\AbstractStringValidator.cpp",
     BASE_DIR "\\src\\validators\\datatype\\AnySimpleTypeDatatypeValidator.cpp",
     BASE_DIR "\\src\\validators\\datatype\\AnyURIDatatypeValidator.cpp",
     BASE_DIR "\\src\\validators\\datatype\\Base64BinaryDatatypeValidator.cpp",

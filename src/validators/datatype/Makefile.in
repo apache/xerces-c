@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.19  2001/09/18 16:00:54  peiyongz
+# DTV reorganization: AbstractStringValidator
+#
 # Revision 1.18  2001/08/24 17:12:01  knoaman
 # Add support for anySimpleType.
 # Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -154,7 +157,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	FloatDatatypeValidator.hpp \
 	AnyURIDatatypeValidator.hpp \
 	IDREFDatatypeValidator.hpp \
-	AnySimpleTypeDatatypeValidator.hpp
+	AnySimpleTypeDatatypeValidator.hpp \
+	AbstractStringValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
 
@@ -178,7 +182,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	FloatDatatypeValidator.$(TO) \
 	AnyURIDatatypeValidator.$(TO) \
 	IDREFDatatypeValidator.$(TO) \
-	AnySimpleTypeDatatypeValidator.$(TO)
+	AnySimpleTypeDatatypeValidator.$(TO) \
+	AbstractStringValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
 
