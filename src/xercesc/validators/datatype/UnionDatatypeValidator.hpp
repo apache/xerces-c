@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/11/24 05:10:26  neilg
+ * implement method for determining member type of union that validated some value
+ *
  * Revision 1.12  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -462,3 +465,4 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file UnionDatatypeValidator.hpp
   */
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/24 05:10:26  neilg
+ * implement method for determining member type of union that validated some value
+ *
  * Revision 1.1  2003/11/12 20:28:16  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -75,6 +78,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLRefInfo;
 class DTDEntityDecl;
+class DatatypeValidator;
 
 class XMLPARSER_EXPORT ValidationContext : public XMemory
 {
@@ -122,6 +126,14 @@ public :
            
     virtual void                             checkEntity(const XMLCh * const ) const = 0 ;
 
+    /**
+      * Union datatype handling
+      *
+      */
+
+    virtual DatatypeValidator * getValidatingMemberType() const = 0 ;
+    virtual void setValidatingMemberType(DatatypeValidator * validatingMemberType) = 0 ;
+
     //@}
 
    
@@ -158,3 +170,4 @@ private :
 XERCES_CPP_NAMESPACE_END
 
 #endif
+

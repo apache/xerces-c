@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/24 05:10:26  neilg
+ * implement method for determining member type of union that validated some value
+ *
  * Revision 1.1  2003/11/12 20:29:47  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -119,6 +122,15 @@ public :
            
     virtual void                             checkEntity(const XMLCh * const ) const;
 
+
+    /**
+      * Union datatype handling
+      *
+      */
+
+    virtual DatatypeValidator * getValidatingMemberType() const;
+    virtual void setValidatingMemberType(DatatypeValidator * validatingMemberType) ;
+
     //@}
   
 private:
@@ -143,14 +155,34 @@ private:
     //      default entities (such as &gt; &lt; ...) defined by the XML Standard.
     //
     //  fToAddToList
+    //  fValidatingMemberType
+    //      The member type in a union that actually
+    //      validated some text.  Note that the validationContext does not
+    //      own this object, and the value of getValidatingMemberType
+    //      will not be accurate unless the type of the most recently-validated
+    //      element/attribute is in fact a union datatype.
     // -----------------------------------------------------------------------
 
     RefHashTableOf<XMLRefInfo>*         fIdRefList;
     const NameIdPool<DTDEntityDecl>*    fEntityDeclPool;
     bool                                fToCheckIdRefList;
+    DatatypeValidator *                 fValidatingMemberType;
 
 };
+
+
+
+inline DatatypeValidator * ValidationContextImpl::getValidatingMemberType() const
+{
+    return fValidatingMemberType;
+}
+
+inline void ValidationContextImpl::setValidatingMemberType(DatatypeValidator * validatingMemberType) 
+{
+    fValidatingMemberType = validatingMemberType;
+}
 
 XERCES_CPP_NAMESPACE_END
 
 #endif
+

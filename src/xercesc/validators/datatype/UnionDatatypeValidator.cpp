@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2003/11/24 05:10:26  neilg
+ * implement method for determining member type of union that validated some value
+ *
  * Revision 1.17  2003/11/13 23:19:18  peiyongz
  * initSize
  *
@@ -138,9 +141,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-static const int BUF_LEN = 64;
+static const unsigned int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -360,6 +362,9 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
                 //set the validator of the type actually used to validate the content
                 DatatypeValidator *dtv = fMemberTypeValidators->elementAt(i);
                 fValidatedDatatype = dtv;
+                // context will be null during schema construction
+                if(context)
+                    context->setValidatingMemberType(dtv);
             }
             catch (XMLException&)
             {
