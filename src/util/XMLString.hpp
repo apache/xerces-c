@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/06/13 14:07:55  peiyongz
+ * isValidaEncName() to validate an encoding name (EncName)
+ *
  * Revision 1.22  2001/05/23 15:44:51  tng
  * Schema: NormalizedString fix.  By Pei Yong Zhang.
  *
@@ -1024,6 +1027,28 @@ public:
       * @return Returns true if name is NCName valid, otherwise false
       */
     static bool isValidNCName(const XMLCh* const name);
+
+    /**
+      * Checks whether an name is a valid EncName.
+      * @param name The string to check its EncName validity
+      * @return Returns true if name is EncName valid, otherwise false
+      */
+    static bool isValidEncName(const XMLCh* const name);  
+
+    /**
+      * Checks whether a character is within [a-zA-Z].
+      * @param theChar: the character to check 
+      * @return Returns true if within the range, otherwise false
+      */
+    static bool isAlpha(XMLCh const theChar);
+
+    /**
+      * Checks whether a character is within [0-9].
+      * @param theChar: the character to check 
+      * @return Returns true if within the range, otherwise false
+      */
+    static bool isDigit(XMLCh const theChar);
+
     //@}
 
     /** @name Conversion functions */

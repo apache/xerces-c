@@ -636,7 +636,57 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
 
     return true;
 }
+ 
+/**
+  * isValidEncName
+  *
+  * [80] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')* 
+  *
+  */
+bool XMLString::isValidEncName(const XMLCh* const name) 
+{
 
+    if ( ( !name) ||
+         ( XMLString::stringLen(name) == 0 ))
+        return false;
+
+    const XMLCh* tempName = name;
+    XMLCh firstChar = *tempName++;
+
+    if (!isAlpha(firstChar))
+        return false;
+
+    while(*tempName)
+    {
+        if (( !isAlpha(*tempName))       &&
+            ( !isDigit(*tempName))       &&
+            ( *tempName != chPeriod)     &&
+            ( *tempName != chUnderscore) &&
+            ( *tempName != chDash)        )
+            return false;
+
+        tempName++;
+    }
+
+    return true;
+}
+
+bool XMLString::isAlpha(XMLCh const theChar)
+{
+    if ((( theChar >= chLatin_a ) && ( theChar <= chLatin_z )) ||
+        (( theChar >= chLatin_A ) && ( theChar <= chLatin_Z )) )
+        return true;
+
+    return false;
+}
+
+bool XMLString::isDigit(XMLCh const theChar)
+{
+    if (( theChar >= chDigit_0 ) && ( theChar <= chDigit_9 ))
+        return true;
+
+    return false;
+}
 // ---------------------------------------------------------------------------
 //  Wide char versions of most of the string methods
 // ---------------------------------------------------------------------------
