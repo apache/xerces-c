@@ -55,8 +55,8 @@
 #
 #
 # $Log$
-# Revision 1.5  2001/04/04 18:02:04  tng
-# Schema: include failure on Unix for XUtil.cpp.  Fixed by Pei Yong Zhang.
+# Revision 1.6  2001/04/19 17:43:14  knoaman
+# More schema implementation classes.
 #
 # Revision 1.4  2001/03/30 16:06:00  tng
 # Schema: XUtil, added by Pei Yong Zhang
@@ -98,7 +98,9 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SchemaGrammar.hpp \
 	SchemaSymbols.hpp \
 	SchemaValidator.hpp \
-	XUtil.hpp
+	XUtil.hpp \
+	NamespaceScope.hpp \
+	ComplexTypeInfo.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
 
@@ -111,7 +113,9 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SchemaGrammar.$(TO) \
 	SchemaSymbols.$(TO) \
 	SchemaValidator.$(TO) \
-	XUtil.$(TO)
+	XUtil.$(TO) \
+	NamespaceScope.$(TO) \
+	ComplexTypeInfo.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
 

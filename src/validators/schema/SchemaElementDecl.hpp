@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/04/19 17:43:17  knoaman
+ * More schema implementation classes.
+ *
  * Revision 1.3  2001/03/21 21:56:33  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -71,15 +74,12 @@
 #if !defined(SCHEMAELEMENTDECL_HPP)
 #define SCHEMAELEMENTDECL_HPP
 
-#include <util/RefHash2KeysTableOf.hpp>
 #include <util/QName.hpp>
-#include <framework/XMLElementDecl.hpp>
-#include <validators/schema/SchemaAttDef.hpp>
+#include <validators/schema/ComplexTypeInfo.hpp>
 
 class ContentSpecNode;
 class SchemaAttDefList;
 class DatatypeValidator;
-
 
 //
 //  This class is a derivative of the basic element decl. This one implements
@@ -121,6 +121,13 @@ public :
       , const int                enclosingScope = -1
     );
 
+    SchemaElementDecl
+    (
+        QName* const       elementName
+      , const ModelTypes         modelType = Any
+      , const int                enclosingScope = -1
+    );
+
     ~SchemaElementDecl();
 
 
@@ -137,11 +144,7 @@ public :
         ,       bool&           wasAdded
     )   const;
     virtual XMLAttDefList& getAttDefList() const;
-    virtual const XMLCh* getBaseName() const;
-    virtual XMLCh* getBaseName() ;
-    virtual const int getURI() const;
     virtual CharDataOpts getCharDataOpts() const;
-    virtual const XMLCh* getFullName() const;
     virtual bool hasAttDefs() const;
     virtual bool resetDefs();
     virtual const ContentSpecNode* getContentSpec() const;
@@ -154,67 +157,51 @@ public :
     // -----------------------------------------------------------------------
     const SchemaAttDef* getAttDef(const XMLCh* const baseName, const int uriId) const;
     SchemaAttDef* getAttDef(const XMLCh* const baseName, const int uriId);
-    QName* getElementName() const;
     ModelTypes getModelType() const;
     DatatypeValidator* getDatatypeValidator() const;
     int getEnclosingScope() const;
     int getDefinedScope() const;
+    int getFinalSet() const;
+    int getBlockSet() const;
+    int getMiscFlags() const;
+    XMLCh* getDefaultValue() const;
+    XMLCh* getSubstitutionGroupName() const;
+    ComplexTypeInfo* getComplexTypeInfo() const;
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void addAttDef(SchemaAttDef* const toAdd);
-    void setElementName(const XMLCh* const prefix
-                      , const XMLCh* const localPart
-                      , const int          uriId = -1);
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setEnclosingScope(const int enclosingScope);
     void setDefinedScope(const int definedScope);
+    void setFinalSet(const int finalSet);
+    void setBlockSet(const int blockSet);
+    void setMiscFlags(const int flags);
+    void setDefaultValue(const XMLCh* const value);
+    void setSubstitutionGroupName(const XMLCh* const name);
+    void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
 
 protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel(const Grammar* grammar=0) const;
-    virtual XMLCh* formatContentModel
-    (
-        const   Grammar&   grammar
-    )   const;
+    virtual XMLContentModel* makeContentModel() ;
+    virtual XMLCh* formatContentModel()   const;
 
 
 private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel(const Grammar* grammar=0) const;
+    XMLContentModel* createChildModel() ;
     void faultInAttDefList() const;
 
 
     // -----------------------------------------------------------------------
     //  Private data members
-    //
-    //  fAttDefs
-    //      The list of attributes that are defined for this element. Each
-    //      element is its own little 'namespace' for attributes, so each
-    //      element maintains its own list of owned attribute defs. It is
-    //      faulted in when an attribute is actually added.
-    //
-    //  fAttList
-    //      We have to return a view of our att defs via the abstract view
-    //      that the scanner understands. It may or may not ever be asked
-    //      for so we fault it in as needed.
-    //
-    //  fContentSpec
-    //      This is the content spec for the node. It contains the original
-    //      content spec that was read from the Schema, as a tree of nodes. This
-    //      one is always set up, and is used to build the fContentModel
-    //      version if we are validating.
-    //
-    //  fElementName
-    //      This is the name of the element decl.
     //
     //  fModelType
     //      The content model type of this element. This tells us what kind
@@ -228,48 +215,68 @@ private :
     //
     //  fDefinedScope
     //      The Complex Element that this element belongs to.
+    //
+    //  fFinalSet
+    //      The value set of the 'final' attribute.
+    //
+    //  fBlockSet
+    //      The value set of the 'block' attribute.
+    //
+    //  fMiscFlags
+    //      Stores 'abstract/nullable' values
+    //
+    //  fDefaultValue
+    //      The defalut/fixed value
+    //
+    //  fSubstitutionGroupName
+    //      The substitution group full name ("uristring','local")
+    //
+    //  fComplexTypeInfo
+    //      Stores complex type information
+    //      (no need to delete - handled by schema grammar)
     // -----------------------------------------------------------------------
-    RefHash2KeysTableOf<SchemaAttDef>*  fAttDefs;
-    SchemaAttDefList*              fAttList;
-    ContentSpecNode*               fContentSpec;
-    QName*                         fElementName;
     ModelTypes                     fModelType;
     DatatypeValidator*             fDatatypeValidator;
     int                            fEnclosingScope;
     int                            fDefinedScope;
+    int                            fFinalSet;
+    int                            fBlockSet;
+    int                            fMiscFlags;
+    XMLCh*                         fDefaultValue;
+    XMLCh*                         fSubstitutionGroupName;
+    ComplexTypeInfo*               fComplexTypeInfo;
 };
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: XMLElementDecl virtual interface implementation
 // ---------------------------------------------------------------------------
-inline const int SchemaElementDecl::getURI() const
-{
-    return fElementName->getURI();
-}
-
-inline const XMLCh* SchemaElementDecl::getFullName() const
-{
-    return fElementName->getRawName();
-}
-
 inline ContentSpecNode* SchemaElementDecl::getContentSpec()
 {
-    return fContentSpec;
+    if (fComplexTypeInfo != 0) {
+        return fComplexTypeInfo->getContentSpec();
+    }
+
+	return 0;
 }
 
 inline const ContentSpecNode* SchemaElementDecl::getContentSpec() const
 {
-    return fContentSpec;
+    if (fComplexTypeInfo != 0) {
+        return fComplexTypeInfo->getContentSpec();
+    }
+
+	return 0;
+}
+
+inline void
+SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
+{
+    //Handled by complexType
 }
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Getter methods
 // ---------------------------------------------------------------------------
-inline QName* SchemaElementDecl::getElementName() const
-{
-    return fElementName;
-}
-
 inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
 {
     return fModelType;
@@ -290,16 +297,40 @@ inline int SchemaElementDecl::getDefinedScope() const
     return fDefinedScope;
 }
 
+inline int SchemaElementDecl::getFinalSet() const
+{
+    return fFinalSet;
+}
+
+inline int SchemaElementDecl::getBlockSet() const
+{
+    return fBlockSet;
+}
+
+inline int SchemaElementDecl::getMiscFlags() const
+{
+    return fMiscFlags;
+}
+
+inline XMLCh* SchemaElementDecl::getDefaultValue() const
+{
+    return fDefaultValue;
+}
+
+inline XMLCh* SchemaElementDecl::getSubstitutionGroupName() const
+{
+
+    return fSubstitutionGroupName;
+}
+
+inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
+{
+    return fComplexTypeInfo;
+}
+
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaElementDecl::setElementName(const XMLCh* const        prefix
-                            , const XMLCh* const        localPart
-                            , const int                 uriId )
-{
-   fElementName->setName(prefix, localPart, uriId);
-}
-
 inline void
 SchemaElementDecl::setModelType(const SchemaElementDecl::ModelTypes toSet)
 {
@@ -319,6 +350,45 @@ inline void SchemaElementDecl::setEnclosingScope(const int newEnclosingScope)
 inline void SchemaElementDecl::setDefinedScope(const int newDefinedScope)
 {
     fDefinedScope = newDefinedScope;
+}
+
+inline void SchemaElementDecl::setFinalSet(const int finalSet)
+{
+    fFinalSet = finalSet;
+}
+
+inline void SchemaElementDecl::setBlockSet(const int blockSet)
+{
+    fBlockSet = blockSet;
+}
+
+inline void SchemaElementDecl::setMiscFlags(const int flags)
+{
+    fMiscFlags = flags;
+}
+
+inline void SchemaElementDecl::setDefaultValue(const XMLCh* const value)
+{
+    if (fDefaultValue) {
+        delete[] fDefaultValue;
+    }
+
+    fDefaultValue = XMLString::replicate(value);
+}
+
+inline void SchemaElementDecl::setSubstitutionGroupName(const XMLCh* const name)
+{
+    if (fSubstitutionGroupName) {
+        delete [] fSubstitutionGroupName;
+    }
+
+    fSubstitutionGroupName = XMLString::replicate(name);
+}
+
+inline void
+SchemaElementDecl::setComplexTypeInfo(ComplexTypeInfo* const typeInfo)
+{
+    fComplexTypeInfo = typeInfo;
 }
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/04/19 17:43:16  knoaman
+ * More schema implementation classes.
+ *
  * Revision 1.4  2001/03/21 21:56:33  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -79,7 +82,6 @@
 #include <util/XMLUni.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <validators/common/DFAContentModel.hpp>
-#include <validators/common/ContentSpecNode.hpp>
 #include <validators/common/MixedContentModel.hpp>
 #include <validators/common/SimpleContentModel.hpp>
 #include <validators/schema/SchemaAttDefList.hpp>
@@ -90,12 +92,15 @@
 // ---------------------------------------------------------------------------
 SchemaElementDecl::SchemaElementDecl() :
 
-    fAttDefs(0)
-    , fAttList(0)
-    , fContentSpec(0)
-    , fModelType(Any)
+    fModelType(Any)
     , fDatatypeValidator(0)
     , fEnclosingScope(-1)
+    , fBlockSet(0)
+    , fFinalSet(0)
+    , fMiscFlags(0)
+    , fDefaultValue(0)
+    , fSubstitutionGroupName(0)
+    , fComplexTypeInfo(0)
 {
 }
 
@@ -105,22 +110,40 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
                                    , const SchemaElementDecl::ModelTypes type
                                    , const int                           enclosingScope
                                    ) :
-    fAttDefs(0)
-    , fAttList(0)
-    , fContentSpec(0)
-    , fModelType(type)
+    fModelType(type)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
+    , fBlockSet(0)
+    , fFinalSet(0)
+    , fMiscFlags(0)
+    , fDefaultValue(0)
+    , fSubstitutionGroupName(0)
+    , fComplexTypeInfo(0)
 {
-    fElementName = new QName(prefix, localPart, uriId);
+    setElementName(prefix, localPart, uriId);
+}
+
+SchemaElementDecl::SchemaElementDecl(QName* const                  elementName
+                                   , const SchemaElementDecl::ModelTypes type
+                                   , const int                           enclosingScope
+                                   ) :
+    fModelType(type)
+    , fDatatypeValidator(0)
+    , fEnclosingScope(enclosingScope)
+    , fBlockSet(0)
+    , fFinalSet(0)
+    , fMiscFlags(0)
+    , fDefaultValue(0)
+    , fSubstitutionGroupName(0)
+    , fComplexTypeInfo(0)
+{
+    setElementName(elementName);
 }
 
 SchemaElementDecl::~SchemaElementDecl()
 {
-    delete fAttDefs;
-    delete fAttList;
-    delete fContentSpec;
-    delete fElementName;
+    delete [] fDefaultValue;
+    delete [] fSubstitutionGroupName;
 }
 
 
@@ -134,59 +157,21 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
                                      , const LookupOpts      options
                                      , bool&           wasAdded) const
 {
-    SchemaAttDef* retVal = 0;
-
-    // If no att list faulted in yet, then it cannot exist
-    if (fAttDefs)
-        retVal = fAttDefs->get(baseName, uriId);
-
-    // Fault it in if not found and ask to add it
-    if (!retVal && (options == XMLElementDecl::AddIfNotFound))
-    {
-        // Fault in the list itself if not already
-        if (!fAttDefs)
-            faultInAttDefList();
-
-        // And add a default attribute for this name
-        retVal = new SchemaAttDef(prefix, baseName, uriId);
-        retVal->setElemId(getId());
-        fAttDefs->put((void*)baseName, uriId, retVal);
-
-        wasAdded = true;
+    if (fComplexTypeInfo == 0) {
+        return 0;
     }
-     else
-    {
-        wasAdded = false;
-    }
-    return retVal;
+
+    return fComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
 }
 
 
 XMLAttDefList& SchemaElementDecl::getAttDefList() const
 {
-    if (!fAttList)
-    {
-        // If the att def list is not made yet, then fault it in too
-        if (!fAttDefs)
-            faultInAttDefList();
-
-        ((SchemaElementDecl*)this)->fAttList = new SchemaAttDefList(fAttDefs);
+    if (fComplexTypeInfo == 0) {
+        throw; // REVISIT: add proper error message
     }
 
-    // Reset it before we return it
-    fAttList->Reset();
-    return *fAttList;
-}
-
-
-const XMLCh* SchemaElementDecl::getBaseName() const
-{
-    return fElementName->getLocalPart();
-}
-
-XMLCh* SchemaElementDecl::getBaseName()
-{
-    return fElementName->getLocalPart();
+	return fComplexTypeInfo->getAttDefList();
 }
 
 
@@ -214,35 +199,20 @@ XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
 bool SchemaElementDecl::hasAttDefs() const
 {
     // If the collection hasn't been faulted in, then no att defs
-    if (!fAttDefs)
+    if (fComplexTypeInfo == 0)
         return false;
 
-    return !fAttDefs->isEmpty();
+    return fComplexTypeInfo->hasAttDefs();
 }
 
 
 bool SchemaElementDecl::resetDefs()
 {
-    // If the collection hasn't been faulted in, then no att defs
-    if (!fAttDefs)
+    if (fComplexTypeInfo == 0) {
         return false;
+    }
 
-    //
-    //  Ok, run through them and clear the 'provided' flag on each of them.
-    //  This lets the scanner use them to track which has been provided and
-    //  which have not.
-    //
-    RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs);
-    while (enumDefs.hasMoreElements())
-        enumDefs.nextElement().setProvided(false);
-    return true;
-}
-
-void
-SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
-{
-    delete fContentSpec;
-    fContentSpec = toAdopt;
+    return fComplexTypeInfo->resetDefs();
 }
 
 // ---------------------------------------------------------------------------
@@ -250,36 +220,20 @@ SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
 // ---------------------------------------------------------------------------
 const SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const int uriId) const
 {
-    // If no list, then return a null
-    if (!fAttDefs)
+    // If no complex type, then return a null
+    if (fComplexTypeInfo == 0)
         return 0;
 
-    return fAttDefs->get(baseName, uriId);
+    return fComplexTypeInfo->getAttDef(baseName, uriId);
 }
 
 SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const int uriId)
 {
-    // If no list, then return a null
-    if (!fAttDefs)
+    // If no complex type, then return a null
+    if (fComplexTypeInfo == 0)
         return 0;
 
-    return fAttDefs->get(baseName, uriId);
-}
-
-
-// ---------------------------------------------------------------------------
-//  SchemaElementDecl: Implementation of the protected virtual interface
-// ---------------------------------------------------------------------------
-void SchemaElementDecl::addAttDef(SchemaAttDef* const toAdd)
-{
-    // Fault in the att list if required
-    if (!fAttDefs)
-            faultInAttDefList();
-
-    // Tell this guy the element id of its parent (us)
-    toAdd->setElemId(getId());
-
-    fAttDefs->put((void*)(toAdd->getAttName()->getLocalPart()), toAdd->getAttName()->getURI(), toAdd);
+    return fComplexTypeInfo->getAttDef(baseName, uriId);
 }
 
 
@@ -287,7 +241,7 @@ void SchemaElementDecl::addAttDef(SchemaAttDef* const toAdd)
 //  SchemaElementDecl: Implementation of the protected virtual interface
 // ---------------------------------------------------------------------------
 XMLCh*
-SchemaElementDecl::formatContentModel(const Grammar& grammar) const
+SchemaElementDecl::formatContentModel() const
 {
     XMLCh* newValue = 0;
     if (fModelType == Any)
@@ -306,13 +260,13 @@ SchemaElementDecl::formatContentModel(const Grammar& grammar) const
         //  will expand to handle the more pathological ones.
         //
         XMLBuffer bufFmt;
-        fContentSpec->formatSpec(grammar, bufFmt);
+        getContentSpec()->formatSpec(bufFmt);
         newValue = XMLString::replicate(bufFmt.getRawBuffer());
     }
     return newValue;
 }
 
-XMLContentModel* SchemaElementDecl::makeContentModel(const Grammar* grammar) const
+XMLContentModel* SchemaElementDecl::makeContentModel()
 {
     XMLContentModel* cmRet = 0;
     if (fModelType == Simple) {
@@ -324,7 +278,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel(const Grammar* grammar) con
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(*this);
+        cmRet = new MixedContentModel(false, this);
     }
      else if (fModelType == Children)
     {
@@ -335,7 +289,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel(const Grammar* grammar) con
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel(grammar);
+        cmRet = createChildModel();
     }
      else
     {
@@ -349,16 +303,19 @@ XMLContentModel* SchemaElementDecl::makeContentModel(const Grammar* grammar) con
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* SchemaElementDecl::createChildModel(const Grammar* grammar) const
+XMLContentModel* SchemaElementDecl::createChildModel()
 {
     // Get the content spec node of the element
-    const ContentSpecNode* specNode = getContentSpec();
+    ContentSpecNode* specNode = getContentSpec();
+
+    if(!specNode)
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
 
     //
     //  Do a sanity check that the node is does not have a PCDATA id. Since,
     //  if it was, it should have already gotten taken by the Mixed model.
     //
-    if (specNode->getElemId() == XMLElementDecl::fgPCDataElemId)
+    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
         ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
 
     //
@@ -375,8 +332,9 @@ XMLContentModel* SchemaElementDecl::createChildModel(const Grammar* grammar) con
         // Create a simple content model
         return new SimpleContentModel
         (
-            specNode->getElemId()
-            , XMLElementDecl::fgInvalidElemId
+            false
+            , specNode->getElement()
+            , 0
             , ContentSpecNode::Leaf
         );
     }
@@ -392,8 +350,9 @@ XMLContentModel* SchemaElementDecl::createChildModel(const Grammar* grammar) con
         {
             return new SimpleContentModel
             (
-                specNode->getFirst()->getElemId()
-                , specNode->getSecond()->getElemId()
+                false
+                , specNode->getFirst()->getElement()
+                , specNode->getSecond()->getElement()
                 , specNode->getType()
             );
         }
@@ -411,8 +370,9 @@ XMLContentModel* SchemaElementDecl::createChildModel(const Grammar* grammar) con
         {
             return new SimpleContentModel
             (
-                specNode->getFirst()->getElemId()
-                , XMLElementDecl::fgInvalidElemId
+                false
+                , specNode->getFirst()->getElement()
+                , 0
                 , specNode->getType()
             );
         }
@@ -423,12 +383,8 @@ XMLContentModel* SchemaElementDecl::createChildModel(const Grammar* grammar) con
     }
 
     // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(*this);
+    return new DFAContentModel(false, this);
 }
 
 
-void SchemaElementDecl::faultInAttDefList() const
-{
-    // Use a hash modulus of 29 and tell it owns its elements
-    ((SchemaElementDecl*)this)->fAttDefs = new RefHash2KeysTableOf<SchemaAttDef>(29, true);
-}
+

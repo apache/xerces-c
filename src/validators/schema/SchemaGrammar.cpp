@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 17:43:18  knoaman
+ * More schema implementation classes.
+ *
  * Revision 1.1  2001/03/21 21:56:33  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -66,6 +69,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/schema/SchemaGrammar.hpp>
+#include <validators/schema/NamespaceScope.hpp>
+#include <validators/schema/ComplexTypeInfo.hpp>
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Constructors and Destructor
@@ -74,6 +79,10 @@ SchemaGrammar::SchemaGrammar() :
     fElemDeclPool(0)
     , fNotationDeclPool(0)
     , fTargetNamespace(0)
+    , fAttributeDeclRegistry(0)
+    , fComplexTypeRegistry(0)
+    , fDatatypeRegistry(0)
+    , fNamespaceScope(0)
 {
     //
     //  Init all the pool members.
@@ -97,6 +106,9 @@ SchemaGrammar::~SchemaGrammar()
     delete fElemDeclPool;
     delete fNotationDeclPool;
     delete fTargetNamespace;
+    delete fAttributeDeclRegistry;
+    delete fComplexTypeRegistry;
+    delete fNamespaceScope;
 }
 
 // -----------------------------------------------------------------------

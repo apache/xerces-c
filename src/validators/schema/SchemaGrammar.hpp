@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 17:43:19  knoaman
+ * More schema implementation classes.
+ *
  * Revision 1.1  2001/03/21 21:56:33  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -68,7 +71,6 @@
 
 #include <dom/DOM_Document.hpp>
 #include <framework/XMLNotationDecl.hpp>
-#include <framework/XMLEntityDecl.hpp>
 #include <util/RefHash3KeysIdPool.hpp>
 #include <util/NameIdPool.hpp>
 #include <util/StringPool.hpp>
@@ -83,6 +85,14 @@
 //  of the decl. This means that all the URI parameters below are expected
 //  to be null pointers (and anything else will cause an exception.)
 //
+
+// ---------------------------------------------------------------------------
+//  Forward Declarations
+// ---------------------------------------------------------------------------
+class DatatypeValidatorFactory;
+class ComplexTypeInfo;
+class NamespaceScope;
+
 
 class VALIDATORS_EXPORT SchemaGrammar : public Grammar
 {
@@ -142,16 +152,6 @@ public:
         const   unsigned int    elemId
     );
 
-    virtual const XMLEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    )   const;
-
-    virtual XMLEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    );
-
     virtual const XMLNotationDecl* getNotationDecl
     (
         const   XMLCh* const    notName
@@ -167,11 +167,6 @@ public:
         XMLElementDecl* const elemDecl
     )   const;
 
-    virtual unsigned int putEntityDecl
-    (
-        XMLEntityDecl* const entityDecl
-    )   const;
-
     virtual unsigned int putNotationDecl
     (
         XMLNotationDecl* const notationDecl
@@ -182,15 +177,21 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    DOM_Document getGrammarDocument() const;
     const XMLCh* getTargetNamespace() const;
     XMLCh* getTargetNamespace() ;
+    RefHashTableOf<XMLAttDef>* getAttributeDeclRegistry() const;
+    RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
+    DatatypeValidatorFactory* getDatatypeRegistry() const;
+    NamespaceScope* getNamespaceScope() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setGrammarDocument(const DOM_Document grammarDocument);
     void setTargetNamespace(const XMLCh* const targetNamespace);
+    void setAttributeDeclRegistry(RefHashTableOf<XMLAttDef>* const attReg);
+    void setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other);
+    void setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry);
+    void setNamespaceScope(NamespaceScope* const nsScope);
 
 private:
 
@@ -210,23 +211,31 @@ private:
     //  fTargetNamespace
     //      Target name space for this grammar.
     //
-    //  fGrammarDocument
-    //      Grammar stored as DOM Document.
+    //  fAttributeDeclRegistry
+    //      Global attribute declarations
+    //
+    //  fComplexTypeRegistry
+    //      Stores complexType declaration info
+    //
+    //  fDatatypeRegistry
+    //      Datatype validator factory
+    //
+    //  fNamespaceScope
+    //      Prefix to Namespace map
     // -----------------------------------------------------------------------
-    RefHash3KeysIdPool<SchemaElementDecl>*     fElemDeclPool;
-    NameIdPool<XMLNotationDecl>*    fNotationDeclPool;
-    XMLCh* fTargetNamespace;
-    DOM_Document fGrammarDocument;
+    RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+    NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
+    XMLCh*                                 fTargetNamespace;
+    RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
+    RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
+    DatatypeValidatorFactory*              fDatatypeRegistry;
+    NamespaceScope*                        fNamespaceScope;
 };
 
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Getter methods
 // ---------------------------------------------------------------------------
-inline DOM_Document SchemaGrammar::getGrammarDocument() const {
-    return fGrammarDocument;
-}
-
 inline XMLCh* SchemaGrammar::getTargetNamespace() {
     return fTargetNamespace;
 }
@@ -235,15 +244,55 @@ inline const XMLCh* SchemaGrammar::getTargetNamespace() const {
     return fTargetNamespace;
 }
 
+inline RefHashTableOf<XMLAttDef>* SchemaGrammar::getAttributeDeclRegistry() const {
+
+    return fAttributeDeclRegistry;
+}
+
+inline RefHashTableOf<ComplexTypeInfo>* 
+SchemaGrammar::getComplexTypeRegistry() const {
+
+    return fComplexTypeRegistry;
+}
+
+inline DatatypeValidatorFactory* SchemaGrammar::getDatatypeRegistry() const {
+
+    return fDatatypeRegistry;
+}
+
+inline NamespaceScope* SchemaGrammar::getNamespaceScope() const {
+
+    return fNamespaceScope;
+}
+
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
-inline void SchemaGrammar::setGrammarDocument(const DOM_Document grammarDocument) {
-    fGrammarDocument = grammarDocument;
-}
-
 inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace) {
     fTargetNamespace = XMLString::replicate(targetNamespace);
+}
+
+inline void 
+SchemaGrammar::setAttributeDeclRegistry(RefHashTableOf<XMLAttDef>* const attReg) {
+
+    fAttributeDeclRegistry = attReg;
+}
+
+inline void
+SchemaGrammar::setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other) {
+
+    fComplexTypeRegistry = other;
+}
+
+inline void 
+SchemaGrammar::setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry) {
+
+    fDatatypeRegistry = dvRegistry;
+}
+
+inline void SchemaGrammar::setNamespaceScope(NamespaceScope* const nsScope) {
+
+    fNamespaceScope = nsScope;
 }
 
 // ---------------------------------------------------------------------------
@@ -300,25 +349,6 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
 inline unsigned int SchemaGrammar::putElemDecl (XMLElementDecl* const elemDecl)   const
 {
     return fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
-}
-
-// Entity Decl
-inline const XMLEntityDecl* SchemaGrammar::getEntityDecl(const  XMLCh* const    entName) const
-{
-    // No entity pool in Schema
-    return 0;
-}
-
-inline XMLEntityDecl* SchemaGrammar::getEntityDecl(const XMLCh* const entName)
-{
-    // No entity pool in Schema
-    return 0;
-}
-
-inline unsigned int SchemaGrammar::putEntityDecl (XMLEntityDecl* const   entityDecl)   const
-{
-    // No entity pool in Schema
-    return 0;
 }
 
 // Notation Decl
