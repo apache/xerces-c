@@ -1297,7 +1297,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             // before we made grammars stateless:
             elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
         }
-        if (!elemDecl && ( fURIStringPool->getId(original_uriStr) != uriId)) {
+        // this is initialized correctly only if there is
+        // no element decl.  The other uses in this scope will only
+        // be encountered if there continues to be no element decl--which
+        // implies that this will have been initialized correctly.
+        unsigned orgGrammarUri = uriId;
+        if (!elemDecl && ( orgGrammarUri = fURIStringPool->getId(original_uriStr)) != uriId) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
             bool errorCondition = !switchGrammar(uriStr) && fValidate;
@@ -1364,8 +1369,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         if (!elemDecl) {
             // still not found, fault this in and issue error later
-            // switch back to original grammar first
-            switchGrammar(original_uriStr);
+            // switch back to original grammar first (if necessary)
+            if(orgGrammarUri != uriId)
+            {
+                switchGrammar(original_uriStr);
+            }
             elemDecl = new (fMemoryManager) SchemaElementDecl
             (
                 fPrefixBuf.getRawBuffer()
@@ -1480,8 +1488,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         if (!elemDecl) {
             // still not found, fault this in and issue error later
-            // switch back to original grammar first
-            switchGrammar(original_uriStr);
+            // switch back to original grammar first (if necessary)
+            if(orgGrammarUri != fEmptyNamespaceId)
+            {
+                switchGrammar(original_uriStr);
+            }
             elemDecl = new (fMemoryManager) SchemaElementDecl
             (
                 fPrefixBuf.getRawBuffer()
