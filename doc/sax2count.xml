@@ -30,6 +30,7 @@ Options:
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -s          Disable schema processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
+    -locale=ll_CC specify the locale, default: en_US 
     -?          Show this help.
 
   * = Default if not provided explicitly.
