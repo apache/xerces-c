@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.2  2000/02/06 07:47:57  rahulj
  * Year 2K copyright swat.
  *
@@ -98,6 +101,9 @@
   * of this interface, which simply ignores the events.</p>
   *
   * $Log$
+  * Revision 1.3  2000/02/12 01:27:19  aruna1
+  * Documentation updated
+  *
   * Revision 1.2  2000/02/06 07:47:57  rahulj
   * Year 2K copyright swat.
   *
@@ -187,19 +193,26 @@ public:
         , const XMLCh* const    notationName
     ) = 0;
 
+    /**
+    * Reset the DocType object on its reuse
+    *
+    * <p>This method helps in reseting the DTD object implementational
+    * defaults each time the DTD is begun.</p>
+    *
+    */
     virtual void resetDocType() = 0;
 
     //@}
 
 private :
-    /** @name Unimplemented constructors and operators */
-    //@{
-    /** Copy constructor */
+    /* Unimplemented constructors and operators */
+    
+    /* Copy constructor */
     DTDHandler(const DTDHandler&);
 
-    /** Assignment operator */
+    /* Assignment operator */
     void operator=(const DTDHandler&);
-    //@}
+    
 };
 
 #endif

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.2  2000/02/06 07:47:57  rahulj
  * Year 2K copyright swat.
  *
@@ -95,6 +98,9 @@ class AttributeList;
   * <p>Note that the use of this class is optional.</p>
   *
   * $Log$
+  * Revision 1.3  2000/02/12 01:27:19  aruna1
+  * Documentation updated
+  *
   * Revision 1.2  2000/02/06 07:47:57  rahulj
   * Year 2K copyright swat.
   *
@@ -210,6 +216,11 @@ public:
         , const XMLCh* const    data
     );
 
+    /**
+    * Reset the Docuemnt object on its reuse
+    *
+    * @see DocumentHandler#resetDocument
+    */
     virtual void resetDocument();
     //@}
 
@@ -348,6 +359,11 @@ public:
     */
     virtual void warning(const SAXParseException& exception);
 
+    /**
+    * Reset the Error handler object on its reuse
+    *
+    * @see ErrorHandler#resetErrors
+    */
     virtual void resetErrors();
 
     //@}
@@ -376,6 +392,11 @@ public:
         , const XMLCh* const    systemId
     );
 
+    /**
+    * Reset the DTD object on its reuse
+    *
+    * @see DTDHandler#resetDocType
+    */
     virtual void resetDocType();
 
   /**

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.4  2000/02/09 02:12:21  abagchi
  * Added getValue docs
  *
@@ -127,6 +130,9 @@
   * implementation for use by parser or application writers.
   *
   * $Log$
+  * Revision 1.5  2000/02/12 01:27:19  aruna1
+  * Documentation updated
+  *
   * Revision 1.4  2000/02/09 02:12:21  abagchi
   * Added getValue docs
   *
@@ -289,13 +295,12 @@ public:
     //@}
 
 private :
-    /** @name Constructors and operators */
-    //@{
-    /** Copy constructor */
+    /* Constructors and operators */
+    /* Copy constructor */
     AttributeList(const AttributeList&);
-    /** Assignment operator */
+    /* Assignment operator */
     void operator=(const AttributeList&);
-    //@}
+    
 };
 
 #endif

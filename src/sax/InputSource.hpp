@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.4  2000/02/09 02:15:28  abagchi
  * Documented destructor
  *
@@ -111,6 +114,9 @@ class BinInputStream;
   * around beyond the call.</p>
   *
   * $Log$
+  * Revision 1.5  2000/02/12 01:27:19  aruna1
+  * Documentation updated
+  *
   * Revision 1.4  2000/02/09 02:15:28  abagchi
   * Documented destructor
   *
@@ -257,19 +263,45 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
+    /** @name Constructors and Destructor */
+    //@{
+    /** Default constructor */
     InputSource();
+
+    /** Constructor with a system identifier as XMLCh type.
+    * @param systemId The system identifier (URI).
+    */
     InputSource(const XMLCh* const systemId);
+
+    /** Constructor with a system and public identifiers 
+    * @param systemId The system identifier (URI).
+    * @param publicId The public identifier as in the entity definition.
+    */
     InputSource
     (
         const   XMLCh* const    systemId
         , const XMLCh* const    publicId
     );
+    
+    /** Constructor witha system identifier as string 
+    * @param systemId The system identifier (URI).
+    */
     InputSource(const char* const systemId);
+    
+    /** Constructor witha system and public identifiers. Both as string 
+    * @param systemId The system identifier (URI).
+    * @param publicId The public identifier as in the entity definition.
+    */
     InputSource
     (
         const   char* const systemId
         , const char* const publicId
     );
+    
+    //@}
+
+
+    
 
 
 private:

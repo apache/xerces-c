@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.2  2000/02/06 07:47:57  rahulj
  * Year 2K copyright swat.
  *
@@ -100,6 +103,9 @@ class Locator;
   * supplied by the Parser through the setDocumentLocator method.</p>
   *
   * $Log$
+  * Revision 1.3  2000/02/12 01:27:19  aruna1
+  * Documentation updated
+  *
   * Revision 1.2  2000/02/06 07:47:57  rahulj
   * Year 2K copyright swat.
   *
@@ -246,6 +252,13 @@ public:
         , const XMLCh* const    data
     ) = 0;
 
+    /**
+    * Reset the Docuemnt object on its reuse
+    *
+    * <p>This method helps in reseting the document implementational
+    * defaults each time the document is begun.</p>
+    *
+    */
     virtual void resetDocument() = 0;
 
   /**
@@ -319,13 +332,11 @@ public:
     //@}
 
 private :
-    /** @name Unimplemented Constructors and operators */
-    //@{
-    /** Copy constructor */
+    /* Unimplemented Constructors and operators */
+    /* Copy constructor */
     DocumentHandler(const DocumentHandler&);
     /** Assignment operator */
     void operator=(const DocumentHandler&);
-    //@}
 };
 
 #endif

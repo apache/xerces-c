@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.2  2000/02/06 07:47:57  rahulj
  * Year 2K copyright swat.
  *
@@ -127,6 +130,9 @@ class InputSource;
   * that the parser use the default system identifier).</p>
   *
   * $Log$
+  * Revision 1.3  2000/02/12 01:27:19  aruna1
+  * Documentation updated
+  *
   * Revision 1.2  2000/02/06 07:47:57  rahulj
   * Year 2K copyright swat.
   *
@@ -204,17 +210,15 @@ public:
     //@}
 
 private :
-    /** Unimplemented constructors and operators */
+    /* Unimplemented constructors and operators */
 
-    //@{
-
-    /** Copy constructor */
+    
+    /* Copy constructor */
     EntityResolver(const EntityResolver&);
 
-    /** Assignment operator */
+    /* Assignment operator */
     void operator=(const EntityResolver&);
 
-    //@}
 };
 
 #endif

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/12 01:27:19  aruna1
+ * Documentation updated
+ *
  * Revision 1.3  2000/02/09 19:24:49  abagchi
  * Inserted documentation for constructors and destructors
  *
@@ -210,17 +213,17 @@ public:
     //@}
 
 private:
-    /** @name Data Members */
-    //@{
-    /** The column in the source text where the error occured. */
+    /* Data Members */
+    
+    /* The column in the source text where the error occured. */
     unsigned int    fColumnNumber;
-    /** The line in the source text where the error occured. */
+    /* The line in the source text where the error occured. */
     unsigned int    fLineNumber;
-    /** The public id of the file where the error occured. */
+    /* The public id of the file where the error occured. */
     XMLCh*          fPublicId;
-    /** The system id of the file where the error occured. */
+    /* The system id of the file where the error occured. */
     XMLCh*          fSystemId;
-    //@}
+    
 
 };
 
