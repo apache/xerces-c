@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/27 11:46:53  tng
+ * Fix compilation error.  The definition should match declaration.
+ *
  * Revision 1.3  2002/05/24 16:42:20  knoaman
  * Performance fixes: eliminate mulitple calls to addRange and sort.
  *
@@ -150,7 +153,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
 // ---------------------------------------------------------------------------
 //  RangeToken: Setter methods
 // ---------------------------------------------------------------------------
-void RangeToken::setRangeValues(XMLInt32* const rangeValues, unsigned int count)
+void RangeToken::setRangeValues(XMLInt32* const rangeValues, const unsigned int count)
 {
     if (fRanges) {
 
