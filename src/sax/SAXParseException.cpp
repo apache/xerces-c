@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/09/07 23:55:02  andyh
+ * Fix SAXException assignment operator.  Now non-virtual, and
+ * SAXParseException invokes base class operator.
+ *
  * Revision 1.3  2000/03/02 19:54:35  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -135,6 +139,7 @@ SAXParseException::operator=(const SAXParseException& toAssign)
     if (this == &toAssign)
         return *this;
 
+    this->SAXException::operator =(toAssign);
     fColumnNumber = toAssign.fColumnNumber;
     fLineNumber = toAssign.fLineNumber;
 

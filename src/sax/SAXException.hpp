@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/09/07 23:55:02  andyh
+ * Fix SAXException assignment operator.  Now non-virtual, and
+ * SAXParseException invokes base class operator.
+ *
  * Revision 1.7  2000/08/09 22:06:04  jpolast
  * more functionality to SAXException and its children.
  * msgs are now functional for SAXNotSupportedEx and
@@ -174,7 +178,7 @@ public:
       *
       * @param toCopy The object to be copied
       */
-    virtual SAXException& operator=(const SAXException& toCopy)
+    SAXException& operator=(const SAXException& toCopy)
     {
         if (this == &toCopy)
             return *this;
