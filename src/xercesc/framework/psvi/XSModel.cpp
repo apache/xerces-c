@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/01 20:41:47  neilg
+ * do not throw an exception if there is no user-defined registry
+ *
  * Revision 1.10  2003/11/26 16:12:23  knoaman
  * Add a method to return the XSObject mapped to a schema grammar component
  *
@@ -167,20 +170,24 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
         }
     } // end of element loop
 
-    // Now loop through top-level User Defined simple type definitions in the grammar...   
-    RefHashTableOfEnumerator<DatatypeValidator> simpleUserEnum = RefHashTableOfEnumerator<DatatypeValidator> (namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getUserDefinedRegistry());
-    while (simpleUserEnum.hasMoreElements())
+    // Now loop through top-level User Defined simple type definitions in the grammar...
+    DVHashTable* dvHT = namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getUserDefinedRegistry();
+    if (dvHT)
     {
-        DatatypeValidator& curSimple = simpleUserEnum.nextElement();
-        if (!curSimple.getAnonymous())
+        RefHashTableOfEnumerator<DatatypeValidator> simpleUserEnum = RefHashTableOfEnumerator<DatatypeValidator> (dvHT);
+        while (simpleUserEnum.hasMoreElements())
         {
-            XSSimpleTypeDefinition* xsSimple = fObjFactory->addOrFind(&curSimple, this);
-            fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
-            namespaceItem->fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
-            namespaceItem->fHashMap[XSConstants::TYPE_DEFINITION -1]->put((void *) xsSimple->getName(), xsSimple);                
-        }            
+            DatatypeValidator& curSimple = simpleUserEnum.nextElement();
+            if (!curSimple.getAnonymous())
+            {
+                XSSimpleTypeDefinition* xsSimple = fObjFactory->addOrFind(&curSimple, this);
+                fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
+                namespaceItem->fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
+                namespaceItem->fHashMap[XSConstants::TYPE_DEFINITION -1]->put((void *) xsSimple->getName(), xsSimple);                
+            }            
+        }
+        // end of simple User loop
     }
-    // end of simple User loop
 
     // Loop through top-level COMPLEX type definitions in the grammar...        
     RefHashTableOfEnumerator<ComplexTypeInfo> complexEnum = RefHashTableOfEnumerator<ComplexTypeInfo> (namespaceItem->getSchemaGrammar()->getComplexTypeRegistry());      
