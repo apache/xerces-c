@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/08/23 16:05:49  peiyongz
+ * The missing FileHandle
+ *
  * Revision 1.3  2004/08/19 21:24:12  peiyongz
  * Jira[1255], patch from Neil Sharman
  *
@@ -96,6 +99,8 @@
 #else 
   #error : unknown byte order! 
 #endif 
+ 
+typedef int FileHandle;
  
 #ifndef SOLARIS
 #define SOLARIS
