@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:10  twl
- * Initial revision
+ * Revision 1.2  1999/11/17 21:52:49  abagchi
+ * Changed wcscasecmp() to wcscmp() to make it work on Solaris and AIX
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:10  twl
+ * Initial checkin
  *
  * Revision 1.7  1999/11/08 20:45:34  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -128,7 +135,7 @@ int IconvTransService::compareIString(  const   XMLCh* const    comp1
         *target++ = *ptr;
     *target = 0x00;
 
-    int retval = wcscasecmp(tmp1, tmp2);
+    int retval = wcscmp(tmp1, tmp2);
 
     delete [] tmp1;
     delete [] tmp2;
@@ -158,7 +165,7 @@ int IconvTransService::compareNIString( const   XMLCh* const    comp1
         *target++ = *ptr;
     *target = 0x00;
 
-    int retval = wcsncasecmp(tmp1, tmp2, maxChars);
+    int retval = wcsncmp(tmp1, tmp2, maxChars);
 
     delete [] tmp1;
     delete [] tmp2;
