@@ -67,14 +67,11 @@
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-
 XERCES_CPP_NAMESPACE_BEGIN
-
 
 class DatatypeValidator;
 class DatatypeValidatorFactory;
 class XMLGrammarDescription;
-class GrammarEntry;
 
 /**
  * This class embodies the representation of a Grammar pool Resolver.
@@ -118,17 +115,25 @@ public:
     /**
      * Retrieve the grammar that is associated with the specified namespace key
      *
-     * @param  gramDesc   Namespace key into Grammar pool
-     * @return Grammar abstraction associated with the NameSpace key.
+     * @param  gramDesc   grammar description for the grammar
+     * @return Grammar abstraction associated with the grammar description
      */
     Grammar* getGrammar( XMLGrammarDescription* const gramDesc ) ;
+
+    /**
+     * Retrieve the grammar that is associated with the specified namespace key
+     *
+     * @param  namespaceKey   Namespace key into Grammar pool
+     * @return Grammar abstraction associated with the NameSpace key.
+     */
+    Grammar* getGrammar( const XMLCh* const namespaceKey ) ;
 
     /**
      * Get an enumeration of Grammar in the Grammar pool
      *
      * @return enumeration of Grammar in Grammar pool
      */
-    RefHashTableOfEnumerator<GrammarEntry> getGrammarEnumerator() const;
+    RefHashTableOfEnumerator<Grammar> getGrammarEnumerator() const;
 
 
     /**
@@ -175,20 +180,18 @@ public:
      * Add the Grammar with Namespace Key associated to the Grammar Pool.
      * The Grammar will be owned by the Grammar Pool.
      *
-     * @param  gramDesc        Key to associate with Grammar abstraction
      * @param  grammarToAdopt  Grammar abstraction used by validator.
      */
-    void putGrammar(XMLGrammarDescription* const gramDesc
-                  , Grammar* const               grammarToAdopt );
+    void putGrammar(Grammar* const               grammarToAdopt );
 
     /**
      * Returns the Grammar with Namespace Key associated from the Grammar Pool
      * The Key entry is removed from the table (grammar is not deleted if
      * adopted - now owned by caller).
      *
-     * @param  gramDesc    Key to associate with Grammar abstraction
+     * @param  nameSpaceKey    Key to associate with Grammar abstraction
      */
-    Grammar* orphanGrammar(XMLGrammarDescription* const gramDesc);
+    Grammar* orphanGrammar(const XMLCh* const nameSpaceKey);
 
     /**
      * Cache the grammars in fGrammarBucket to fCachedGrammarRegistry.
@@ -207,18 +210,17 @@ public:
 
 private:
 
-    XMLGrammarDescription* getGrammarDescription(const XMLCh* const);
-
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fStringPool            The string pool used by TraverseSchema to store
     //                         element/attribute names and prefixes.
     //
-    //  fGrammarBucket       The parsed Grammar Pool, if no caching option.
+    //  fGrammarBucket         The parsed Grammar Pool, if no caching option.
     //
-    //  fCachedGrammarRegistry The cached Grammar Pool.  It represents a
-    //                         mapping between Namespace and a Grammar
+    //  fGrammarFromPool       Referenced Grammar Set, not owned
+    //
+    //  fGrammarPool           The Grammar Set either plugged or created. 
     //
     //  fDataTypeReg           DatatypeValidatorFactory registery
     //
@@ -229,7 +231,8 @@ private:
     bool                       fUseCachedGrammar;
     bool                       fGrammarPoolFromExternalApplication;
     XMLStringPool              fStringPool;
-    RefHashTableOf<GrammarEntry>*   fGrammarBucket;
+    RefHashTableOf<Grammar>*   fGrammarBucket;
+    RefHashTableOf<Grammar>*   fGrammarFromPool;
     DatatypeValidatorFactory*  fDataTypeReg;
     MemoryManager*             fMemoryManager;
     XMLGrammarPool*            fGrammarPool;

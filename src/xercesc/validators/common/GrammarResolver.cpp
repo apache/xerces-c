@@ -57,6 +57,10 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/07/31 17:08:39  peiyongz
+ * Grammar embed grammar description
+ * fGrammarFromPool introduced
+ *
  * Revision 1.14  2003/06/25 22:38:40  peiyongz
  * remove old getGrammar()
  *
@@ -136,12 +140,18 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
 ,fGrammarPoolFromExternalApplication(true)
 ,fStringPool(109, manager)
 ,fGrammarBucket(0)
+,fGrammarFromPool(0)
 ,fDataTypeReg(0)
 ,fMemoryManager(manager)
 ,fGrammarPool(gramPool)
 {
 
-    fGrammarBucket = new (manager) RefHashTableOf<GrammarEntry>(29, true,  manager);
+    fGrammarBucket = new (manager) RefHashTableOf<Grammar>(29, true,  manager);
+
+    /***
+     * Grammars in this set are not owned
+     */    
+    fGrammarFromPool = new (manager) RefHashTableOf<Grammar>(29, false,  manager);
 
     if (!gramPool)
     {
@@ -159,6 +169,7 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
 GrammarResolver::~GrammarResolver()
 {  
     delete fGrammarBucket;
+    delete fGrammarFromPool;
 
     if (fDataTypeReg)
       delete fDataTypeReg;
@@ -191,9 +202,7 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
     }
     else {
 
-        XMLSchemaDescription* gramDesc = fGrammarPool->createSchemaDescription(uriStr);
-        Janitor<XMLSchemaDescription> janName(gramDesc);
-        Grammar* grammar = getGrammar(gramDesc);
+        Grammar* grammar = getGrammar(uriStr);
 
         if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
 
@@ -210,29 +219,74 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
     return dv;
 }
 
+Grammar* GrammarResolver::getGrammar( const XMLCh* const namespaceKey)
+{
+    if (!namespaceKey)
+        return 0;
+
+    Grammar* grammar = fGrammarBucket->get(namespaceKey);
+
+    if (grammar)
+        return grammar;
+
+    if (fUseCachedGrammar)
+    {
+        grammar = fGrammarFromPool->get(namespaceKey);
+        if (grammar)
+        {
+            return grammar;
+        }
+        else
+        {
+            XMLSchemaDescription* gramDesc = fGrammarPool->createSchemaDescription(namespaceKey);
+            Janitor<XMLGrammarDescription> janName(gramDesc);
+            grammar = fGrammarPool->retrieveGrammar(gramDesc);
+            if (grammar)
+            {
+                fGrammarFromPool->put((void*) grammar->getGrammarDescription()->getGrammarKey(), grammar);
+            }
+            return grammar;
+        }
+    }
+
+    return 0;
+}
+
 Grammar* GrammarResolver::getGrammar( XMLGrammarDescription* const gramDesc)
 {
     if (!gramDesc)
         return 0;
 
-    GrammarEntry* gramEntry = fGrammarBucket->get(gramDesc->getGrammarKey());
+    Grammar* grammar = fGrammarBucket->get(gramDesc->getGrammarKey());
 
-    if (gramEntry)
-        return gramEntry->getGrammar();
+    if (grammar)
+        return grammar;
 
-    /***
-     * if not found locally, try grammarPool if necessary
-     */
     if (fUseCachedGrammar)
-        return fGrammarPool->retrieveGrammar(gramDesc);
+    {
+        grammar = fGrammarFromPool->get(gramDesc->getGrammarKey());
+        if (grammar)
+        {
+            return grammar;
+        }
+        else
+        {
+            grammar = fGrammarPool->retrieveGrammar(gramDesc);
+            if (grammar)
+            {
+                fGrammarFromPool->put((void*) grammar->getGrammarDescription()->getGrammarKey(), grammar);
+            }
+            return grammar;
+        }
+    }
 
     return 0;
 }
 
-RefHashTableOfEnumerator<GrammarEntry>
+RefHashTableOfEnumerator<Grammar>
 GrammarResolver::getGrammarEnumerator() const
 {
-    return RefHashTableOfEnumerator<GrammarEntry>(fGrammarBucket);
+    return RefHashTableOfEnumerator<Grammar>(fGrammarBucket);
 }
 
 bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
@@ -240,25 +294,21 @@ bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
    return fGrammarBucket->containsKey( nameSpaceKey );
 }
 
-void GrammarResolver::putGrammar(XMLGrammarDescription* const gramDesc, Grammar* const grammarToAdopt)
+void GrammarResolver::putGrammar(Grammar* const grammarToAdopt)
 {
-    if (!gramDesc || !grammarToAdopt)
+    if (!grammarToAdopt)
         return;
 
     /***
      * the grammar will be either in the grammarpool, or in the grammarbucket
      */
     if (fCacheGrammar)
-       fGrammarPool->cacheGrammar(gramDesc, grammarToAdopt);
+    {
+       fGrammarPool->cacheGrammar(grammarToAdopt);
+    }
     else
     {
-        /***
-         * The grammarEntry in the GrammarBucket can use the parser's memory,
-         * since itself won't go into the GrammarPool while its contained 
-         * GrammarDescription and Grammar will.
-         */
-        GrammarEntry *theEntry = new (fMemoryManager) GrammarEntry(gramDesc, grammarToAdopt);
-        fGrammarBucket->put( (void*) gramDesc->getGrammarKey(), theEntry );
+        fGrammarBucket->put( (void*) grammarToAdopt->getGrammarDescription()->getGrammarKey(), grammarToAdopt );
     }
 
 }
@@ -279,7 +329,7 @@ void GrammarResolver::resetCachedGrammar()
 void GrammarResolver::cacheGrammars()
 {
 
-    RefHashTableOfEnumerator<GrammarEntry> grammarEnum(fGrammarBucket);
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket);
     ValueVectorOf<XMLCh*> keys(8, fMemoryManager);
     unsigned int keyCount = 0;
 
@@ -295,21 +345,12 @@ void GrammarResolver::cacheGrammars()
     for (unsigned int i = 0; i < keyCount; i++) 
     {
         XMLCh* grammarKey = keys.elementAt(i);    
-        GrammarEntry* theEntry = fGrammarBucket->orphanKey(grammarKey);
-
-        /***
-         * Destroy the grammarEntry but retain the grammar/description
-         */
-        XMLGrammarDescription* description = theEntry->getDescription();
-        Grammar*               grammar     = theEntry->getGrammar();
-        theEntry->nullGrammar();
-        theEntry->nullDescription();
-        delete theEntry;
+        Grammar* grammar = fGrammarBucket->orphanKey(grammarKey);
 
         /***
          * It is up to the GrammarPool implementation to handle duplicated grammar
          */
-        fGrammarPool->cacheGrammar(description, grammar);
+        fGrammarPool->cacheGrammar(grammar);
     }
 
 }
@@ -325,39 +366,17 @@ void GrammarResolver::cacheGrammarFromParse(const bool aValue)
     fGrammarBucket->setAdoptElements(!fCacheGrammar);
 }
 
-Grammar* GrammarResolver::orphanGrammar(XMLGrammarDescription* const gramDesc)
+Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
-    if (!gramDesc)
-        return 0;
-
     if (fCacheGrammar)
     {
-        return fGrammarPool->orphanGrammar(gramDesc);
+        return fGrammarPool->orphanGrammar(nameSpaceKey);
     }
     else
     {
-        GrammarEntry* theEntry = fGrammarBucket->orphanKey(gramDesc->getGrammarKey());
-        if (theEntry)
-        {
-            Grammar* aGrammar = theEntry->getGrammar();
-            theEntry->nullGrammar();
-            delete theEntry;
-            return aGrammar;
-        }
-        else
-        {
-            return 0;
-        }
-
+        return fGrammarBucket->orphanKey(nameSpaceKey);
     }
-}
 
-XMLGrammarDescription* GrammarResolver::getGrammarDescription(const XMLCh* const nameSpaceKey)
-{
-    if (XMLString::equals(XMLUni::fgDTDEntityString, nameSpaceKey))
-        return (XMLGrammarDescription*) fGrammarPool->createDTDDescription(nameSpaceKey);
-    else 
-        return (XMLGrammarDescription*) fGrammarPool->createSchemaDescription(nameSpaceKey);
 }
 
 XERCES_CPP_NAMESPACE_END
