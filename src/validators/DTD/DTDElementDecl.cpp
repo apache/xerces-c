@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/07/14 18:15:08  jpolast
+ * fix for put() with attributes bug in findAttr()
+ *
  * Revision 1.4  2000/07/07 22:24:35  jpolast
  * use put(key,value) instead of put(value)
  *
@@ -131,7 +134,7 @@ XMLAttDef* DTDElementDecl::findAttr(const   XMLCh* const    qName
         // And add a default attribute for this name
         retVal = new DTDAttDef(qName);
         retVal->setElemId(getId());
-        fAttDefs->put((void*)qName, retVal);
+        fAttDefs->put((void*)retVal->getFullName(), retVal);
 
         wasAdded = true;
     }
