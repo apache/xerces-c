@@ -238,7 +238,7 @@ else
     MAKE_SHARED_C = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
 endif
 
-EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map -bnolibpath
 SHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
 LD_SONAME =
@@ -460,7 +460,7 @@ ifeq (${PLATFORM}, MACOSX)
 	SHLIBSUFFIX=.dylib
 endif
 
-#
+###################### SO_NAME ####################################
 #
 #
 ifeq (${PLATFORM}, AIX)
