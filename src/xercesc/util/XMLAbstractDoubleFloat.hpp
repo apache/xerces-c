@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/03/01 18:47:37  peiyongz
+ * fix: more valid lexcial representation forms for "neural zero"
+ *
  * Revision 1.2  2002/02/20 18:17:02  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -175,6 +178,8 @@ private:
     //
     XMLAbstractDoubleFloat(const XMLAbstractDoubleFloat& toCopy);
     XMLAbstractDoubleFloat& operator=(const XMLAbstractDoubleFloat& toAssign);
+
+	void                  normalizeToNeuralZero(XMLCh* const);
 
     inline bool           isSpecialValue() const;
 

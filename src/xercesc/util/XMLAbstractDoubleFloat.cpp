@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:14  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/01 18:47:37  peiyongz
+ * fix: more valid lexcial representation forms for "neural zero"
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/11/22 21:39:00  peiyongz
  * Allow "0.0" to be a valid lexcial representation of ZERO.
@@ -110,6 +113,8 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     XMLCh* tmpStrValue = XMLString::replicate(strValue);
     ArrayJanitor<XMLCh> janTmpName(tmpStrValue);
     XMLString::trim(tmpStrValue);
+
+    normalizeToNeuralZero(tmpStrValue);
 
     if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
     {
@@ -337,4 +342,29 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
         //internal error
         return 0;
     }
+}
+
+//
+// Apply to string
+//    "0.[0]+"  ->     "0"
+//
+
+void XMLAbstractDoubleFloat::normalizeToNeuralZero(XMLCh* const inData)
+{
+	if (!inData || !*inData)
+		return;
+
+    const unsigned int len = XMLString::stringLen(inData);
+
+	// the first two have to be "0."
+	if (len < 3 || inData[0] != chDigit_0 || inData[1] != chPeriod)
+		return;
+
+    unsigned int index;
+    for ( index = 2; (index < len) && (inData[index] == chDigit_0); index++);
+
+	if (index >= len) 
+		XMLString::copyString(inData, XMLUni::fgNeuralZeroString);
+
+	return;
 }
