@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/02/19 15:37:57  peiyongz
+ * Compilation error on Solaris.
+ *
  * Revision 1.12  2003/02/17 19:56:03  peiyongz
  * Re-prioritize search order for error message files.
  *
@@ -187,7 +190,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 
     char locationBuf[1024];
     memset(locationBuf, 0, sizeof locationBuf);
-    const char const *nlsHome = XMLMsgLoader::getNLSHome();
+    const char *nlsHome = XMLMsgLoader::getNLSHome();
 
     if (nlsHome)
     {
