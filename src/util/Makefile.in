@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2000/02/04 23:48:45  abagchi
+# Made sure all targets are appended with :: not single :
+#
 # Revision 1.11  2000/02/01 23:43:25  abagchi
 # AS/400 related change
 #
@@ -237,9 +240,9 @@ UTIL_CPP_OBJECTS = \
 	XMLUTF8Transcoder.$(TO) \
 	XMLUni.$(TO)
 
-all:	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers publish
+all::	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers publish
 
-includes:	pubheaders $(C_FILES)
+includes::	pubheaders $(C_FILES)
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
@@ -276,7 +279,7 @@ publish::
 	$(CP) $(UTIL_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
 
 # this may generate unnecessary dependencies, but it makes life easier
-depend: includes
+depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
@@ -289,7 +292,7 @@ clean::
 
 
 
-distclean:	clean
+distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
 	@for file in $(UTIL_CPP_PUBHEADERS); do \
@@ -308,7 +311,7 @@ distclean:	clean
 	cd Compilers ; $(MAKE) $@ ; cd ..
 
 
-install:
+install::
 	-mkdir -p $(PREFIX)/$(MODULE)
 	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(PREFIX)/$(MODULE)
 	cd Platforms ; $(MAKE) $@ ; cd ..

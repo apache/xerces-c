@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2000/02/04 23:48:21  abagchi
+# Made sure all targets are appended with :: not single :
+#
 # Revision 1.5  2000/02/04 17:44:56  aruna1
 # TreeWalker and NodeIterator changes
 #
@@ -204,27 +207,27 @@ DOM_CPP_OBJECTS = \
 	TreeWalkerImpl.$(TO)
 
 
-all:	includes $(DOM_CPP_OBJECTS) publish
+all::	includes $(DOM_CPP_OBJECTS) publish
 
-includes:	pubheaders $(DOM_C_FILES)
+includes::	pubheaders $(DOM_C_FILES)
 
-pubheaders:
+pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
 	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(XML_INC_DIR)/$(MODULE)
 
-publish:
+publish::
 	-mkdir -p ${ALL_OBJECTS_DIR}
 	$(CP) $(DOM_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
 
 # this may generate unnecessary dependencies, but it makes life easier
-depend: includes
+depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
-clean:
+clean::
 	@echo "Making clean in $(MODULE) ..."
 	$(RM2) $(DOM_CPP_OBJECTS)
 
-distclean:	clean
+distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
 	@for file in $(DOM_CPP_PUBHEADERS); do \
@@ -235,6 +238,6 @@ distclean:	clean
 	$(RM2) $(ALL_OBJECTS_DIR)/$$file; \
 	done
 
-install:
+install::
 	-mkdir -p $(PREFIX)/$(MODULE)
 	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(PREFIX)/$(MODULE)

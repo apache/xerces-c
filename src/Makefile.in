@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2000/02/04 23:48:15  abagchi
+# Made sure all targets are appended with :: not single :
+#
 # Revision 1.12  2000/02/01 23:42:45  abagchi
 # AS/400 related change
 #
@@ -152,11 +155,11 @@ PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
 BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
-all: Prepare Util Sax Internal Framework Parsers Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
+all:: Prepare Util Sax Internal Framework Parsers Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
 
-compile: Prepare Util Sax Internal Framework Parsers Dom Validators
+compile:: Prepare Util Sax Internal Framework Parsers Dom Validators
 
-lib: compile ${THISLIB}${VER}${SHLIBSUFFIX}
+lib:: compile ${THISLIB}${VER}${SHLIBSUFFIX}
 
 Prepare::
 	@echo Preparing the directory structure for a build ...
