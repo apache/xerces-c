@@ -5,9 +5,12 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="..\..\..\..\..\Build\Win32\BCB6\DOMPrint.exe"/>
     <OBJFILES value="..\..\..\..\..\Build\Win32\BCB6\obj\DOMPrint.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeErrorReporter.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeErrorReporter.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMPrintFilter.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMPrintErrorHandler.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value="..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib"/>
@@ -28,6 +31,7 @@
     <LIBPATH value="..\..\..\..\..\samples\DOMPrint;$(BCB)\lib"/>
     <WARNINGS value=""/>
     <WARNOPTSTR value=""/>
+    <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
     <IDLCFLAGS value="-src_suffix cpp -boa"/>
@@ -37,12 +41,24 @@
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zd"/>
     <LFLAGS value="-I..\..\..\..\..\Build\Win32\BCB6\obj -D&quot;&quot; -ap -Tpe -x -Gn -v"/>
+    <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
     <ALLOBJ value="c0x32.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
     <ALLLIB value="$(LIBFILES) import32.lib cw32mti.lib"/>
+    <OTHERFILES value=""/>
   </LINKER>
+  <FILELIST>
+      <FILE FILENAME="DOMPrint.cpp" FORMNAME="" UNITNAME="DOMPrint" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib" FORMNAME="" UNITNAME="XercesLib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\samples\DOMPrint\DOMTreeErrorReporter.cpp" FORMNAME="" UNITNAME="DOMTreeErrorReporter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\samples\DOMPrint\DOMPrintFilter.cpp" FORMNAME="" UNITNAME="DOMPrintFilter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\samples\DOMPrint\DOMPrintErrorHandler.cpp" FORMNAME="" UNITNAME="DOMPrintErrorHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
   <IDEOPTIONS>
 [Version Info]
 IncludeVerInfo=0

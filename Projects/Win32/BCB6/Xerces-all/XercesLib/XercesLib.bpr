@@ -124,6 +124,8 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateSerializer.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XProtoType.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSerializeEngine.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateComparator.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XObjectComparator.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj 
@@ -328,7 +330,7 @@
     <PACKAGES value="vcl.bpi rtl.bpi"/>
     <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
-    <PATHRC value=".;..\..\..\..\..\src\xercesc\util\Platforms\Win32"/>
+    <PATHRC value=".;"/>
     <PATHASM value=".;"/>
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
@@ -484,6 +486,8 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp" FORMNAME="" UNITNAME="XTemplateSerializer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp" FORMNAME="" UNITNAME="XProtoType.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp" FORMNAME="" UNITNAME="XSerializeEngine.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp" FORMNAME="" UNITNAME="XTemplateComparator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp" FORMNAME="" UNITNAME="XObjectComparator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\Dummy.cpp" FORMNAME="" UNITNAME="Dummy" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\InputSource.cpp" FORMNAME="" UNITNAME="InputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\SAXException.cpp" FORMNAME="" UNITNAME="SAXException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
