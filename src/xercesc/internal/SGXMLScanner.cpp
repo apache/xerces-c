@@ -2404,7 +2404,9 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
-        XMLAttDefList& attDefList = ((SchemaValidator*)fValidator)->getCurrentTypeInfo()->getAttDefList();
+        XMLAttDefList& attDefList = (currType)
+                ? currType->getAttDefList()
+                : elemDecl->getAttDefList();
         while (attDefList.hasMoreElements())
         {
             // Get the current att def, for convenience and its def type

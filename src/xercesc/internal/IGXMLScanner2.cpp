@@ -534,8 +534,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
-        XMLAttDefList &attDefList = (fGrammarType == Grammar::SchemaGrammarType)
-                ? (((SchemaValidator*)fValidator)->getCurrentTypeInfo()->getAttDefList())
+        XMLAttDefList &attDefList = (fGrammarType == Grammar::SchemaGrammarType && currType)
+                ? (currType->getAttDefList())
                 : (elemDecl->getAttDefList());
         while (attDefList.hasMoreElements())
         {
