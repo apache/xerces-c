@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/01/12 19:55:14  aruna1
+ * Included header for size_t
+ *
  * Revision 1.1  2000/01/05 22:16:26  robweir
  * Move DOMString implementation class declarations into a new
  * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
@@ -76,6 +79,7 @@
 
 
 #include <util/XML4CDefs.hpp>
+#include <stdio.h>
 
 
 class   DOMStringData
