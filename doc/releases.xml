@@ -101,7 +101,14 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     </tr>
 
     <tr>
-        <td>2003-02-05</td>
+        <td>2003-02-06</td>
+        <td>David Bertoni</td>
+        <td>[Bug 16826] RefVectorOf.c has errors in strict ANSI mode.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-02-06</td>
         <td>Gareth Reakes</td>
         <td>Schema Fix: bug with multiple attributes being validated by the same union type.
         </td>
