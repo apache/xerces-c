@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/04/22 12:53:38  neilg
+ * change const static member to an enum to make MSVC happy
+ *
+ * change ENTITY_EXPANSION_LIMIT from a static const data member to an enum
+ * 
  * Revision 1.1  2003/04/17 21:58:49  neilg
  * Adding a new property,
  * http://apache.org/xml/properties/security-manager, with
@@ -115,7 +120,7 @@ class XMLUTIL_EXPORT SecurityManager
 {
 public:
 
-    static const unsigned int ENTITY_EXPANSION_LIMIT = 50000;
+    enum { ENTITY_EXPANSION_LIMIT = 50000};
 
     /** @name default Constructors */
     //@{
