@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/06/04 13:45:06  tng
+ * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.11  2001/05/29 18:50:24  tng
  * IDOM: call allocate directly for array allocation to avoid overloading operator new[] which leads to compilation error on SUN CC 4.2
  *
@@ -169,13 +172,10 @@ const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
 #endif
 
 // ---------------------------------------------------------------------------
-//  For IDOM: define a dummy delete to get rid of compiler warning C4291:
+//  For IDOM:
+//  Ignore compiler warning:
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
-class IDOM_Document;
-inline void operator delete(void* ptr, IDOM_Document *doc)
-{
-    return;
-}
-
+#pragma warning( push )
+#pragma warning( disable : 4291 )
 

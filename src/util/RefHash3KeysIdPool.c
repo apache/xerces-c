@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2001/06/04 13:45:04  tng
+ * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:26:29  tng
  * Copyright update.
  *
@@ -106,7 +109,7 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
 template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
               const unsigned int modulus
             , const bool adoptElems
-            , HashBase* hash
+            , HashBase* hashBase
             , const unsigned int    initSize) :
 	 fAdoptedElems(adoptElems)
     , fBucketList(0)
@@ -117,7 +120,7 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
 {
     initialize(modulus);
     // set hasher
-    fHash = hash;
+    fHash = hashBase;
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/04 13:45:04  tng
+ * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.8  2000/07/07 22:16:51  jpolast
  * remove old put(value) function.  use put(key,value) instead.
  *
@@ -149,7 +152,7 @@ public:
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
 	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
 	// may delete the hasher of a different hashtable if both use the same hasher.
-    RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hash);
+    RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase);
     ~RefHashTableOf();
 
 

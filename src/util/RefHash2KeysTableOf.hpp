@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 13:45:03  tng
+ * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:26:28  tng
  * Copyright update.
  *
@@ -122,7 +125,7 @@ public:
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
 	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
 	// may delete the hasher of a different hashtable if both use the same hasher.
-    RefHash2KeysTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hash);
+    RefHash2KeysTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase);
     ~RefHash2KeysTableOf();
 
 

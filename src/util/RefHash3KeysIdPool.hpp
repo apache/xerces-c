@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 13:45:04  tng
+ * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:26:29  tng
  * Copyright update.
  *
@@ -147,7 +150,7 @@ public:
     RefHash3KeysIdPool
     (
          const unsigned int modulus
-       , const bool adoptElems, HashBase* hash
+       , const bool adoptElems, HashBase* hashBase
        , const unsigned int initSize = 128
     );
 

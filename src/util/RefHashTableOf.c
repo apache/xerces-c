@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2001/06/04 13:45:04  tng
+ * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.7  2000/09/06 00:24:16  andyh
  * Clean up misc compiler warnings
  *
@@ -110,12 +113,12 @@ template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int mo
 	fHash = new HashXMLCh();
 }
 
-template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hash)
+template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase)
 	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
 {
 	initialize(modulus);
 	// set hasher
-	fHash = hash;
+	fHash = hashBase;
 }
 
 template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus)
