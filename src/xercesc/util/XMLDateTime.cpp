@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/02/22 22:49:09  peiyongz
+ * Schema Errata E2-45 24:00:00 allowed
+ *
  * Revision 1.6  2003/02/02 23:54:43  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -1255,7 +1258,7 @@ void XMLDateTime::validateDateTime() const
 
     //validate hours
     if ((fValue[Hour] < 0)  ||
-        (fValue[Hour] > 23) ||
+        (fValue[Hour] > 24) ||
         ((fValue[Hour] == 24) && ((fValue[Minute] !=0) ||
                                   (fValue[Second] !=0) ||
                                   (fValue[MiliSecond] !=0))))
