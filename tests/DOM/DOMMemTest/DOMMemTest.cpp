@@ -66,6 +66,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/10 18:35:15  andyh
+ * Removed spurious debug output from DOMMemTest.
+ * Udated MSVC project files for Release build of DOMTest and DOMMemTest,
+ *    these weren't set up before.
+ *
  * Revision 1.2  1999/12/03 00:02:25  andyh
  * DOM tests updated to catch DOMException by ref.
  * Added tests of DOMString::transcode() and append()
@@ -745,7 +750,6 @@ void main()
         DOMString greeting("hello");
         greeting.appendData(greeting);
         TASSERT(greeting.equals("hellohello"));
-        greeting.println();
     }
     TESTEPILOG;
 
