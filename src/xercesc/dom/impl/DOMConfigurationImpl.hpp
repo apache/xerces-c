@@ -178,7 +178,7 @@ public:
     // The default values for the boolean parameters
     // from CANONICAL_FORM to WHITESPACE_IN_ELEMENT_CONTENT
     // 10010110010110 = 0x2596
-    static const unsigned short fDEFAULT_VALUES = 0x2596;
+    static const unsigned short fDEFAULT_VALUES;
     
 
 private:

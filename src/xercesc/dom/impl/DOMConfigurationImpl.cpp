@@ -114,7 +114,7 @@ const XMLCh DOMConfigurationImpl::fgSCHEMA_TYPE[] = { chLatin_s, chLatin_c, chLa
 /* schema-location */
 const XMLCh DOMConfigurationImpl::fgSCHEMA_LOCATION[] = { chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chDash, chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull };
 
-//const unsigned short DOMConfigurationImpl::fDEFAULT_VALUES = 0x2596;
+const unsigned short DOMConfigurationImpl::fDEFAULT_VALUES = 0x2596;
 
 DOMConfigurationImpl::DOMConfigurationImpl(): featureValues(fDEFAULT_VALUES), fTrue(new bool(true)), 
                                               fFalse(new bool(false)),
