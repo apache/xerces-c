@@ -580,7 +580,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                actualAttDef = (SchemaAttDef *)attDefForWildCard;
 	            XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
 	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
-	            XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(actualAttDef->getDatatypeValidator());
+                DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
+	            XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	            if(attrValid != PSVIItem::VALIDITY_VALID)
 	            {
 	                toFill->reset(
@@ -592,8 +593,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                    , 0
 	                    , actualAttDef->getValue()
 	                    , false
-	                    , 0
 	                    , attrDecl
+                        , 0
 	                );
 	            }
 	            else
@@ -610,8 +611,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                    , memberType
 	                    , actualAttDef->getValue()
 	                    , false
-	                    , 0
 	                    , attrDecl
+                        , (memberType)?attrValidator:attrDataType
 	                );
 	            }
 	        }
@@ -646,7 +647,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                , 0
                     , false
 	                , 0
-	                , 0
+                    , attrValidator
                 );
             }
         }
@@ -821,8 +822,9 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     {
                         PSVIAttribute *defAttrToFill = fPSVIAttrList->getPSVIAttributeToFill();
                         XSAttributeDeclaration *defAttrDecl = (XSAttributeDeclaration *)fModel->getXSObject((void *)curDef);
+                        DatatypeValidator * attrDataType = ((SchemaAttDef *)curDef)->getDatatypeValidator();
                         XSSimpleTypeDefinition *defAttrType = 
-                            (XSSimpleTypeDefinition*)fModel->getXSObject(((SchemaAttDef *)curDef)->getDatatypeValidator());
+                            (XSSimpleTypeDefinition*)fModel->getXSObject(attrDataType);
                         // would have occurred during validation of default value
                         if(((SchemaValidator *)fValidator)->getErrorOccurred())
                         {
@@ -835,8 +837,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 , 0
                                 , curDef->getValue()
                                 , true 
-                                , 0
                                 , defAttrDecl
+                                , 0
                             );
                         }
                         else
@@ -858,8 +860,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 , defAttrMemberType
                                 , curDef->getValue()
                                 , true
-                                , 0
                                 , defAttrDecl
+                                , (defAttrMemberType)?((SchemaValidator *)fValidator)->getMostRecentAttrValidator():attrDataType
                             );
                         }
                     }

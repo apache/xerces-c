@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/28 20:20:54  neilg
+ * make use of canonical representation in PSVIAttribute implementation
+ *
  * Revision 1.4  2003/11/27 06:10:32  neilg
  * PSVIAttribute implementation
  *
@@ -75,6 +78,7 @@
 
 #include <xercesc/framework/psvi/PSVIItem.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
+#include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -162,8 +166,8 @@ public:
             , XSSimpleTypeDefinition *  memberType
             , const XMLCh * const       defaultValue
             , const bool                isSpecified
-            , const XMLCh * const       canonicalValue
             , XSAttributeDeclaration *  attrDecl
+            , DatatypeValidator *       dv
         );
 
     /**
@@ -190,7 +194,10 @@ private:
     //      attribute declaration component that validated this attribute 
     XSAttributeDeclaration *    fAttributeDecl;
 };
-inline PSVIAttribute::~PSVIAttribute() {}
+inline PSVIAttribute::~PSVIAttribute() 
+{
+    fMemoryManager->deallocate((void *)fCanonicalValue);
+}
 
 inline XSAttributeDeclaration *PSVIAttribute::getAttributeDeclaration() 
 {

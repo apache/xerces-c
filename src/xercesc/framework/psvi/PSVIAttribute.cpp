@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/28 20:20:54  neilg
+ * make use of canonical representation in PSVIAttribute implementation
+ *
  * Revision 1.3  2003/11/27 06:10:32  neilg
  * PSVIAttribute implementation
  *
@@ -86,8 +89,8 @@ void PSVIAttribute::reset(
             , XSSimpleTypeDefinition *  memberType
             , const XMLCh * const       defaultValue
             , const bool                isSpecified
-            , const XMLCh * const       canonicalValue
             , XSAttributeDeclaration *  attrDecl
+            , DatatypeValidator *dv
         )
 {
     fValidationContext = valContext;
@@ -98,7 +101,11 @@ void PSVIAttribute::reset(
     fMemberType = memberType;
     fDefaultValue = defaultValue;
     fIsSpecified = isSpecified;
-    fCanonicalValue = canonicalValue;
+    fMemoryManager->deallocate((void *)fCanonicalValue);
+    if(normalizedValue && dv)
+        fCanonicalValue = dv->getCanonicalRepresentation(normalizedValue, fMemoryManager);
+    else
+        fCanonicalValue = 0;
     fAttributeDecl = attrDecl;
 }
 
