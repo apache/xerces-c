@@ -268,6 +268,7 @@ CLEAN :
 	-@erase "$(INTDIR)\StringPool.obj"
 	-@erase "$(INTDIR)\StringToken.obj"
 	-@erase "$(INTDIR)\SubstitutionGroupComparator.obj"
+	-@erase "$(INTDIR)\SynchronizedStringPool.obj"
 	-@erase "$(INTDIR)\TextImpl.obj"
 	-@erase "$(INTDIR)\TimeDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Token.obj"
@@ -443,6 +444,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\PlatformUtils.obj" \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
+	"$(INTDIR)\SynchronizedStringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
 	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
@@ -968,6 +970,7 @@ CLEAN :
 	-@erase "$(INTDIR)\StringPool.obj"
 	-@erase "$(INTDIR)\StringToken.obj"
 	-@erase "$(INTDIR)\SubstitutionGroupComparator.obj"
+	-@erase "$(INTDIR)\SynchronizedStringPool.obj"
 	-@erase "$(INTDIR)\TextImpl.obj"
 	-@erase "$(INTDIR)\TimeDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Token.obj"
@@ -1145,6 +1148,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\PlatformUtils.obj" \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
+	"$(INTDIR)\SynchronizedStringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
 	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
@@ -1670,6 +1674,7 @@ CLEAN :
 	-@erase "$(INTDIR)\StringPool.obj"
 	-@erase "$(INTDIR)\StringToken.obj"
 	-@erase "$(INTDIR)\SubstitutionGroupComparator.obj"
+	-@erase "$(INTDIR)\SynchronizedStringPool.obj"
 	-@erase "$(INTDIR)\TextImpl.obj"
 	-@erase "$(INTDIR)\TimeDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Token.obj"
@@ -1847,6 +1852,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\PlatformUtils.obj" \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
+	"$(INTDIR)\SynchronizedStringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
 	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
@@ -2372,6 +2378,7 @@ CLEAN :
 	-@erase "$(INTDIR)\StringPool.obj"
 	-@erase "$(INTDIR)\StringToken.obj"
 	-@erase "$(INTDIR)\SubstitutionGroupComparator.obj"
+	-@erase "$(INTDIR)\SynchronizedStringPool.obj"
 	-@erase "$(INTDIR)\TextImpl.obj"
 	-@erase "$(INTDIR)\TimeDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Token.obj"
@@ -2548,6 +2555,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\PlatformUtils.obj" \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
+	"$(INTDIR)\SynchronizedStringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
 	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
@@ -3354,6 +3362,12 @@ SOURCE=..\..\..\..\..\src\xercesc\util\QName.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.cpp
 
 "$(INTDIR)\StringPool.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp
+
+"$(INTDIR)\SynchronizedStringPool.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

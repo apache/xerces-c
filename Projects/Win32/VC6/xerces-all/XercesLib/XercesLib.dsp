@@ -687,6 +687,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\TranscodingException.hpp
 # End Source File
 # Begin Source File
