@@ -55,7 +55,7 @@
  */
 
 #ifndef XMLWIN1252TRANSCODER_HPP
-#define XMLWIN2152TRANSCODER_HPP
+#define XMLWIN1252TRANSCODER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XML256TableTranscoder.hpp>

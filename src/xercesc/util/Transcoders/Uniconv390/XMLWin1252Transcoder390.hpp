@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/08/20 10:16:11  cargilld
+ * Fix Jira bug XERCESC-1257, incorrect header guard.
+ *
  * Revision 1.2  2004/04/22 22:46:46  neilg
  * not all 390 processors support the new transcoding instructions; this patch makes Xerces work there as well.  Thanks to Steve Dulin
  *
@@ -65,7 +68,7 @@
  */
 
 #ifndef XMLWIN1252TRANSCODER390_HPP
-#define XMLWIN2152TRANSCODER390_HPP
+#define XMLWIN1252TRANSCODER390_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/Transcoders/Uniconv390/XML256TableTranscoder390.hpp>
