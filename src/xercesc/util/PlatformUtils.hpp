@@ -804,12 +804,22 @@ MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 //  Calculate alignment required by platform for a new
 //	block allocation. We use this in our custom allocators
 //	to ensure that returned blocks are properly aligned.
-// Note that, although this will take a pointer and return the position
-// at which it should be placed for correct alignment, in our code
-// we normally use size_t parameters to discover what the alignment
-// of header blocks should be.  Thus, if this is to be
-// used for the former purpose, to make compilers happy
-// some casting will be necessary - neilg.
+//  Note that, although this will take a pointer and return the position
+//  at which it should be placed for correct alignment, in our code
+//  we normally use size_t parameters to discover what the alignment
+//  of header blocks should be.  Thus, if this is to be
+//  used for the former purpose, to make compilers happy
+//  some casting will be necessary - neilg.
+//
+//  Note: XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be specified on a
+//        per-architecture basis to dictate the alignment requirements
+//        of the architecture. In the absense of this specification,
+//        this routine guesses at the correct alignment value.
+//
+//        A XML_PLATFORM_NEW_BLOCK_ALIGNMENT value of zero is illegal.
+//        If a platform requires absolutely no alignment, a value
+//        of 1 should be specified ("align pointers on 1 byte boundaries").
+//
 inline size_t
 XMLPlatformUtils::alignPointerForNewBlockAllocation(size_t ptrSize)
 {
