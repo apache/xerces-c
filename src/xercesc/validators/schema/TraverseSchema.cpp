@@ -4030,6 +4030,9 @@ void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot
     if (!seenXMLNS && XMLString::stringLen(fTargetNSURIString) == 0 ) {
         fNamespaceScope->addPrefix(XMLUni::fgZeroLenString, fEmptyNamespaceURI);
     }
+
+    // Add mapping for xml prefix
+    fNamespaceScope->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
 }
 
 void TraverseSchema::processChildren(const DOMElement* const root) {
