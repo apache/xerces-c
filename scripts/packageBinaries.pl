@@ -1326,6 +1326,9 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         if ( $opt_m =~ m/icu/i) {
             psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
 
+            # to be removed once the versioned shared library build is done.
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages*.* $targetdir/lib");
+            
             psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/libXercesMessages23.0.so $targetdir/lib");
             psystem("find . -name 'libXercesMessages23.0.so' -exec ln -s {} libXercesMessages23.so \\;");
             psystem("find . -name 'libXercesMessages23.so    -exec ln -s {} libXercesMessages.so \\;");
