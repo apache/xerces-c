@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/25 16:14:28  neilg
+ * move inlines into PSVIItem.hpp
+ *
  * Revision 1.3  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -100,38 +103,6 @@ void PSVIItem::reset(
     fNormalizedValue = normalizedValue;
     fValidityState = validityState;
     fAssessmentType = assessmentType;
-}
-
-inline const XMLCh *PSVIItem::getValidationContext() 
-{
-    // REVISIT
-    return fValidationContext;
-}
-
-inline const XMLCh* PSVIItem::getSchemaNormalizedValue() 
-{
-    // REVISIT
-    return fNormalizedValue;
-}
-
-inline const XMLCh* PSVIItem::getSchemaDefault() 
-{
-    return fDefaultValue;
-}
-
-inline const XMLCh* PSVIItem::getCanonicalRepresentation() 
-{
-    // REVISIT
-    return 0;
-}
-
-inline PSVIItem::VALIDITY_STATE PSVIItem::getValidity() const
-{
-    return fValidityState;
-}
-inline PSVIItem::ASSESSMENT_TYPE PSVIItem::getValidationAttempted() const
-{
-    return fAssessmentType;
 }
 
 void PSVIItem::setValidationAttempted(PSVIItem::ASSESSMENT_TYPE attemptType)
