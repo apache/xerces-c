@@ -1452,6 +1452,7 @@ DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 EncodingTest/Makefile \
+DOM/RangeTest/Makefile \
 ThreadTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
@@ -1550,6 +1551,7 @@ DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 EncodingTest/Makefile \
+DOM/RangeTest/Makefile \
 ThreadTest/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
