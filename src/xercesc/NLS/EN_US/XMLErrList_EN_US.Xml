@@ -788,7 +788,7 @@
             <Message Id="INVALID_ACCESS_ERR" Text="An attempt is made to use an object that is not, or is no longer, usable"/>
             <Message Id="VALIDATION_ERR" Text="A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar"/>
 <!--The following are DOMRangeException error text, reverse order as DOMRangeException::RangeExceptionCode enum -->
-            <Message Id="INVALID_NODE_TYPE_ERR" Text="The container of a boundary-point of a Range is being set to either a node of an invalid type or a node with an ancestor of an invalid type"/>
+            <Message Id="INVALID_NODE_TYPE_ERR" Text="The container of a Range's boundary-point is set to a node of an invalid type or to a node with an ancestor of an invalid type"/>
             <Message Id="BAD_BOUNDARYPOINTS_ERR" Text="The boundary-points of a Range do not meet specific requirements"/>
         </FatalError>
     </MsgDomain>
