@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/02/27 18:33:55  tng
+ * Schema: Use QName in XMLAttr.
+ *
  * Revision 1.6  2000/04/10 22:42:53  roddey
  * Extended the buffer reuse to the QName field, to further increase
  * performance of attribute heavy applications.
@@ -86,6 +89,7 @@
 #define XMLATTR_HPP
 
 #include <util/XMLString.hpp>
+#include <util/QName.hpp>
 #include <framework/XMLAttDef.hpp>
 
 
@@ -343,24 +347,8 @@ private :
     // -----------------------------------------------------------------------
     //  Private instance variables
     //
-    //  fName
-    //  fNameBufSz
-    //      The base part of the name of the attribute, and the current size
-    //      of the buffer (minus one, where the null is.)
-    //
-    //  fPrefix
-    //  fPrefixBufSz
-    //      The prefix that was applied to this attribute's name, and the
-    //      current size of the buffer (minus one for the null.) Prefixes
-    //      really don't matter technically but it might be required for
-    //      pratical reasons, to recreate the original document for instance.
-    //
-    //  fQName
-    //  fQNameBufSz
-    //      This is the QName form of the name, which is faulted in (from the
-    //      prefix and name) upon request. The size field indicates the
-    //      current size of the buffer (minus one for the null.) It will be
-    //      zero until fauled in.
+    //  fAttName
+    //      The Attribute Name;
     //
     //  fSpecified
     //      True if this attribute appeared in the element; else, false if
@@ -375,20 +363,12 @@ private :
     //      The attribute value that was given in the attribute instance, and
     //      its current buffer size (minus one, where the null is.)
     //
-    //  fURIId
-    //      The id of the URI that this attribute belongs to.
     // -----------------------------------------------------------------------
-    XMLCh*              fName;
-    unsigned int        fNameBufSz;
-    XMLCh*              fPrefix;
-    unsigned int        fPrefixBufSz;
-    XMLCh*              fQName;
-    unsigned int        fQNameBufSz;
     bool                fSpecified;
     XMLAttDef::AttTypes fType;
     XMLCh*              fValue;
     unsigned int        fValueBufSz;
-    unsigned int        fURIId;
+    QName*              fAttName;
 };
 
 // ---------------------------------------------------------------------------
@@ -405,12 +385,12 @@ inline XMLAttr::~XMLAttr()
 // ---------------------------------------------------------------------------
 inline const XMLCh* XMLAttr::getName() const
 {
-    return fName;
+    return fAttName->getLocalPart();
 }
 
 inline const XMLCh* XMLAttr::getPrefix() const
 {
-    return fPrefix;
+    return fAttName->getPrefix();
 }
 
 inline bool XMLAttr::getSpecified() const
@@ -430,7 +410,7 @@ inline const XMLCh* XMLAttr::getValue() const
 
 inline unsigned int XMLAttr::getURIId() const
 {
-    return fURIId;
+    return fAttName->getURI();
 }
 
 
@@ -444,7 +424,7 @@ inline void XMLAttr::set(const  unsigned int        uriId
                         , const XMLAttDef::AttTypes type)
 {
     // Set the name info and the value via their respective calls
-    setName(uriId, attrName, attrPrefix);
+    fAttName->setName(attrPrefix, attrName, uriId);
     setValue(attrValue);
 
     // And store the type
