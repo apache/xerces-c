@@ -20,6 +20,7 @@ Nick Chiang
 Chih Hsiang Chou
 Radovan Chytracek
 Hiram Clawson
+John Clayton
 Todd Collins
 Michael Crawford
 Murray Cumming

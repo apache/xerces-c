@@ -3,7 +3,7 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; Version 1.5.2: October 19, 2001">
+<s2 title="&XercesCName; Version 1.5.2: October 26, 2001">
 <table>
     <tr>
         <td>Date</td>
@@ -12,7 +12,7 @@
     </tr>
 
     <tr>
-        <td>2001-10-19</td>
+        <td>2001-10-26</td>
         <td>Khaled Noaman</td>
         <td> Schema:<br/>
              Support group, <br/>
@@ -31,7 +31,7 @@
     </tr>
 
     <tr>
-        <td>2001-10-19</td>
+        <td>2001-10-26</td>
         <td>PeiYong Zhang</td>
         <td>DatatypeValidator:<br/>
              Support DoubleDatatypeValidator, <br/>
@@ -51,7 +51,7 @@
     </tr>
 
     <tr>
-        <td>2001-10-19</td>
+        <td>2001-10-26</td>
         <td>Tinny Ng</td>
         <td> Schema:<br/>
              Support xsi:type, <br/>
@@ -60,6 +60,207 @@
              Add XercesElementWildCard, <br/>
              AllContentModel, <br/>
              XMLInternalErrorHandler.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
+        <td>Mark Weaver</td>
+        <td>[Bug 4213] BinHTTPURLInputStream initialisation not thread safe.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
+        <td>John Clayton</td>
+        <td>[Bug 4121] BinHTTPUrlInputStream needds to read entire HTTP header.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 4318] Single threaded build fails due to obsolete #define.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2860] gAtomicMutex should be used when APP_NO_THREADS is not defined in both Tru64 and OS400.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-24</td>
+        <td>Pei Yong Zhang</td>
+        <td>[Bug 4342] Memory leak is SAX parser during validation.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-24</td>
+        <td>Pei Yong Zhang</td>
+        <td>[Bug 3975] XMLPlatformUtils::Initialize() leaks memory after thousands of calls.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-24</td>
+        <td>Kevin Philips</td>
+        <td>[Bug 3813] BinHTTPURLInputStream has weak HTTP request capabilities.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-24</td>
+        <td>Peter A. Volchek</td>
+        <td>[Bug 2305] Include <stdlib.h> to BinHTTPURLInputStream.cpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-24</td>
+        <td>Sean Bright</td>
+        <td>[Bug 2456] loadXML gives an exception.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-24</td>
+        <td>Curt Arnold</td>
+        <td>Fixed xml4com.idl which attempts to set the version of the type library to 1.5.2 when
+            only major.minor format is allowed.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-23</td>
+        <td>Mark Weaver</td>
+        <td>[Bug 4060] XMLPlatformUtils leaks a mutex on Solaris, Linux and others.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-23</td>
+        <td>Mark Weaver</td>
+        <td>[Bug 880] XMLPlatformUtils::Terminate cannot be called more than once.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-22</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3660] Off-by-one error in DOMString.cpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-22</td>
+        <td>Tinny Ng</td>
+        <td>Check that memory has been acquired successfully after memory acquistion requests in DOMString.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-22</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3361] "String pool id was not legal" error in Attributes::getURI().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-22</td>
+        <td>Linda Swan</td>
+        <td>castToNodeImpl is inconsistent with other cast routinesin IDCasts.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>James Berry</td>
+        <td>Add new file name shortening hints; chmod +x.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>James Berry</td>
+        <td>Cleanup handling of transcoder failure to transcode a character;
+            implement canTranscodeTo; thanks to Geoff Coffey.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>James Berry</td>
+        <td>Correctly swap / and : in classic environment MacOS pathnames; thanks to Geoff Coffey.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>James Berry</td>
+        <td>Update MacOS projects for CodeWarrior 7 and ProjectBuilder 1.1, new files.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3909] return non-zero an exit code when error was encounted.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>Tinny Ng</td>
+        <td>Modify PParse not to hardcode the number of expected elements as this may vary.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>David McCreedy</td>
+        <td>Fixed the binary search in XML256TableTranscoder.cpp which
+            fails for the last item in whichever table it is searching.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>David McCreedy</td>
+        <td>Added U+0110 to XMLEBCDICTranscoder.cpp's "Unicode to IBM037" translation table.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>David McCreedy</td>
+        <td>Modified DOMPrint and IDOMPrint not to use "endl" method which puts out a newline
+            in the local code page to generate output.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-18</td>
+        <td>Jerry Carter</td>
+        <td>[Bug 3666] Win32MsgLoader unable to retrieve error text if DLL is renamed.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-18</td>
+        <td>Tinny Ng</td>
+        <td>Use opt2 on AIX platform.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-18</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5
+            optimization memory leak problem.
         </td>
     </tr>
 
