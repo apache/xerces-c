@@ -4790,8 +4790,6 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
         , (memberDV) ? (XSSimpleTypeDefinition*) fModel->getXSObject(memberDV) : 0
         , fModel
         , elemDecl->getDefaultValue()
-        , 0
-        , (fPSVIElemContext.fCurrentDV) ? fPSVIElemContext.fCurrentDV->getCanonicalRepresentation() : 0
     );
 
     fPSVIHandler->handleElementPSVI
