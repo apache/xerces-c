@@ -267,10 +267,21 @@ endif
 #================= HP SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, HPUX)
   ifeq (${COMPILER}, aCC)
-    CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
+    ifeq (${CXXVER}, aCC05)
+       CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z -mt
+    else
+       CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
+    endif  
+
     CC = aCC
     LINK =  ${CC} -Wl,+s -Wl,+b,. ${LDFLAGS}
-    PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -lpthread
+    
+    ifeq (${CXXVER}, aCC05)
+       PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -mt
+    else
+       PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -lpthread    
+    endif      
+
     SHLIBSUFFIX=.sl
   else
     ifneq (${DEBUG}, 1)

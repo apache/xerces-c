@@ -68,6 +68,7 @@
 
 PLATFORM = @platform@
 COMPILER = @compiler@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

@@ -66,6 +66,9 @@ AC_SUBST(compiler)
 AC_SUBST(GXX)
 AC_SUBST(GCC)
 
+cxxver=${CXXVER}
+AC_SUBST(cxxver)
+
 # prefix=${prefix}
 AC_SUBST(prefix)
 

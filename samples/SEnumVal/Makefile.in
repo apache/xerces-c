@@ -55,6 +55,9 @@
 #
 # $Id$
 # $Log$
+# Revision 1.8  2004/07/09 15:54:38  peiyongz
+# Build on HP-Itanium, aCC A.05.52
+#
 # Revision 1.7  2003/07/28 20:02:41  neilg
 # fix to permit the samples source to be copied from a non-writable to a writable part of the filesystem, then compiled.  Binaries will also be dropped in a writable directory.  This should make experimentation easier on multi-user systems.  Patch by Steve Dulin
 #
@@ -87,6 +90,7 @@
 
 PLATFORM = @platform@
 COMPILER = @compiler@
+CXXVER = @cxxver@
 GCC = @GCC@
 GXX = @GXX@
 CXXFLAGS = @cxxflags@

@@ -1387,7 +1387,7 @@ esac
 
 compiler=${CXX}
 
-
+cxxver=${CXXVER}
 
 
 # prefix=${prefix}
@@ -1590,6 +1590,7 @@ s%@host_vendor@%$host_vendor%g
 s%@host_os@%$host_os%g
 s%@platform@%$platform%g
 s%@compiler@%$compiler%g
+s%@cxxver@%$cxxver%g
 s%@GXX@%$GXX%g
 s%@GCC@%$GCC%g
 s%@cxxflags@%$cxxflags%g
