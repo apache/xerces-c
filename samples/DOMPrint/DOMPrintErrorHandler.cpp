@@ -57,6 +57,9 @@
 /* 
  * $Id$
  * $Log$
+ * Revision 1.3  2002/06/13 14:55:01  peiyongz
+ * Fix to UNIX compilation failure
+ *
  * Revision 1.2  2002/06/11 19:46:28  peiyongz
  * Display error message received from the serializer.
  *
@@ -69,13 +72,13 @@
 #include "DOMPrintErrorHandler.hpp"
 
 #include <iostream.h>
-#include <xercesc/dom/impl/DOMErrorImpl.hpp>
+#include <xercesc/dom/DOMError.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 bool DOMPrintErrorHandler::handleError(const DOMError &domError)
 {
     // Display whatever error message passed from the serializer
-    char *msg = XMLString::transcode(((DOMErrorImpl&)domError).getMessage());
+    char *msg = XMLString::transcode(domError.getMessage());
     cout<<msg<<endl;
     delete[] msg;
 
