@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/02/20 20:20:11  peiyongz
+ * Allow set user specified error message file location in PlatformUtils::Initialize().
+ *
  * Revision 1.11  2002/12/12 16:46:18  peiyongz
  * MsgCatalog file name changed.
  *
@@ -154,35 +157,45 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     }
 
     // Prepare the path info
-    char catpath[1024];
-    memset(catpath, 0, sizeof catpath);
-    char *nlsHome = getenv("XERCESC_NLS_HOME");
+    char locationBuf[1024];
+    memset(locationBuf, 0, sizeof locationBuf);
+    const char *nlsHome = XMLMsgLoader::getNLSHome();
+    
     if (nlsHome)
     {
-        strcpy(catpath, nlsHome);
-        strcat(catpath, "/");
+    	strcpy(locationBuf, nlsHome);
+        strcat(locationBuf, "/");
     }
     else
     {
-        char *altHome = getenv("XERCESCROOT");
-        if (altHome)
+        nlsHome = getenv("XERCESC_NLS_HOME");
+        if (nlsHome)
         {
-            strcpy(catpath, altHome);
-            strcat(catpath, "/msg/");
+            strcpy(locationBuf, nlsHome);
+            strcat(locationBuf, "/");
         }
+        else
+        {
+            nlsHome = getenv("XERCESCROOT");
+            if (nlsHome)
+            {                       	
+                strcpy(locationBuf, nlsHome);
+                strcat(locationBuf, "/msg/");
+            }
+        }    
     }
-
+    
     // Prepare user-specified locale specific cat file
     char catuser[1024];
     memset(catuser, 0, sizeof catuser);
-    strcpy(catuser, catpath);
+    strcpy(catuser, locationBuf);
     strcat(catuser, "XercesMessages_");
     strcat(catuser, XMLMsgLoader::getLocale());
     strcat(catuser, ".cat");
         
     char catdefault[1024];
     memset(catdefault, 0, sizeof catdefault);
-    strcpy(catdefault, catpath);
+    strcpy(catdefault, locationBuf);
     strcat(catdefault, "XercesMessages_en_US.cat");
 
    /**
