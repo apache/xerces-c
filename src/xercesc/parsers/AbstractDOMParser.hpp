@@ -70,6 +70,7 @@
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
+#include <xercesc/framework/XMLBufferMgr.hpp>
 
 class XMLPScanToken;
 class XMLScanner;
@@ -1261,6 +1262,7 @@ private :
     bool                          fIncludeIgnorableWhitespace;
     bool                          fWithinElement;
     bool                          fParseInProgress;
+    XMLBufferMgr                  fBufMgr;
     XMLScanner*                   fScanner;
     DOMNode*                      fCurrentParent;
     DOMNode*                      fCurrentNode;

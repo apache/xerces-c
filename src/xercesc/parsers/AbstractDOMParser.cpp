@@ -586,7 +586,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     DOMElement     *elem;
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
-        XMLBuffer buf;
+
+        XMLBufBid bbQName(&fBufMgr);
+        XMLBuffer& buf = bbQName.getBuffer();
         XMLCh* namespaceURI = 0;
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
             fScanner->getURIText(urlId, buf);   //get namespaceURI
@@ -748,9 +750,11 @@ void AbstractDOMParser::attDef
 {	
     if (fDocumentType->isIntSubsetReading())
     {
-        XMLBuffer attString;
         if (elemDecl.hasAttDefs())
         {
+            XMLBufBid bbQName(&fBufMgr);
+            XMLBuffer& attString = bbQName.getBuffer();
+
             attString.append(chOpenAngle);
             attString.append(chBang);
             attString.append(XMLUni::fgAttListString);
@@ -808,7 +812,8 @@ void AbstractDOMParser::attDef
                 int length = XMLString::stringLen(enumString);
                 if (length > 0) {
 
-                    XMLBuffer anotherEnumString;
+                    XMLBufBid bbQName(&fBufMgr);
+                    XMLBuffer& anotherEnumString = bbQName.getBuffer();
 
                     anotherEnumString.append(chOpenParen );
                     for(int i=0; i<length; i++) {
@@ -863,8 +868,10 @@ void AbstractDOMParser::doctypeComment
     {
         if (comment != 0)
         {
-            XMLBuffer comString;
-            comString.append(XMLUni::fgCommentString);
+            XMLBufBid bbQName(&fBufMgr);
+            XMLBuffer& comString = bbQName.getBuffer();
+
+            comString.set(XMLUni::fgCommentString);
             comString.append(chSpace);
             comString.append(comment);
             comString.append(chSpace);
@@ -898,7 +905,8 @@ void AbstractDOMParser::doctypePI
     if (fDocumentType->isIntSubsetReading())
 	{
 		//add these chars to internalSubset variable
-        XMLBuffer pi;
+        XMLBufBid bbQName(&fBufMgr);
+        XMLBuffer& pi = bbQName.getBuffer();
         pi.append(chOpenAngle);
         pi.append(chQuestion);
         pi.append(target);
@@ -931,7 +939,8 @@ void AbstractDOMParser::elementDecl
 {
     if (fDocumentType->isIntSubsetReading())
 	{
-        XMLBuffer elemDecl;
+        XMLBufBid bbQName(&fBufMgr);
+        XMLBuffer& elemDecl = bbQName.getBuffer();
 
         elemDecl.append(chOpenAngle);
         elemDecl.append(chBang);
@@ -984,7 +993,8 @@ void AbstractDOMParser::endAttList
                     const XMLCh* qualifiedName = attr->getFullName();
                     int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
 
-                    XMLBuffer buf;
+                    XMLBufBid bbQName(&fBufMgr);
+                    XMLBuffer& buf = bbQName.getBuffer();
                     static const XMLCh XMLNS[] = {
                         chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
 
@@ -1073,7 +1083,8 @@ void AbstractDOMParser::entityDecl
     if (fDocumentType->isIntSubsetReading())
     {
         //add thes chars to internalSubset variable
-        XMLBuffer entityName;
+        XMLBufBid bbQName(&fBufMgr);
+        XMLBuffer& entityName = bbQName.getBuffer();
         entityName.append(chOpenAngle);
         entityName.append(chBang);
         entityName.append(XMLUni::fgEntityString);
