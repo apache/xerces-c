@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/12/11 00:20:02  peiyongz
+ * Doing businesss in value space. Converting out-of-bound value into special values.
+ *
  * Revision 1.3  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -137,11 +140,6 @@ public:
 
     inline static int            compareValues(const XMLDouble* const lValue
                                              , const XMLDouble* const rValue);
-
-    // -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-	static void reinitXMLDouble();
 
 protected:
 

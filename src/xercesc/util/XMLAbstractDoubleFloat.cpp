@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/12/11 00:20:02  peiyongz
+ * Doing businesss in value space. Converting out-of-bound value into special values.
+ *
  * Revision 1.6  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -91,6 +94,7 @@
 #include <xercesc/util/XMLAbstractDoubleFloat.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -105,25 +109,24 @@ static XMLCh value1[BUF_LEN+1];
 //  ctor/dtor
 // ---------------------------------------------------------------------------
 XMLAbstractDoubleFloat::XMLAbstractDoubleFloat()
-:fMantissa(0)
-,fExponent(0)
+:fValue(0)
 ,fType(Normal)
+,fSign(0)
+,fRawData(0)
 {
 }
 
 XMLAbstractDoubleFloat::~XMLAbstractDoubleFloat()
 {
-    if (fMantissa)
-        delete fMantissa;
-
-    if (fExponent)
-        delete fExponent;
+     delete [] fRawData;
 }
 
 void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
 {
     if ((!strValue) || (!*strValue))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+
+    fRawData = XMLString::replicate(strValue);   // preserve the raw data form
 
     XMLCh* tmpStrValue = XMLString::replicate(strValue);
     ArrayJanitor<XMLCh> janTmpName(tmpStrValue);
@@ -134,133 +137,51 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     if (XMLString::equals(tmpStrValue, XMLUni::fgNegINFString) )
     {
         fType = NegINF;
+        fSign = -1;
         return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgNegZeroString) )
     {
         fType = NegZero;
+        fSign = -1;
         return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgPosZeroString) )
     {
         fType = PosZero;
+        fSign = 1;
         return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgPosINFString) )
     {
         fType = PosINF;
+        fSign = 1;
         return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgNaNString) )
     {
         fType = NaN;
+        fSign = 1;
         return;
     }
 
     //
     // Normal case
     //
-    int ePos = 0;
-    int tmpStrLen = XMLString::stringLen(tmpStrValue);
-
-    if ((( ePos = XMLString::indexOf(tmpStrValue, chLatin_E)) != -1 ) ||
-        (( ePos = XMLString::indexOf(tmpStrValue, chLatin_e)) != -1 )  )
-    {
-        XMLCh* tmpMantissa = new XMLCh [ePos+1];
-        XMLString::subString(tmpMantissa, tmpStrValue, 0, ePos);
-        ArrayJanitor<XMLCh> janMantissa(tmpMantissa);
-        fMantissa = new XMLBigDecimal(tmpMantissa);
-
-        //
-        // 1234.56E78
-        //
-        if ( ePos < tmpStrLen - 1)
-        {
-            XMLCh* tmpExponent = new XMLCh [tmpStrLen - ePos];
-            XMLString::subString(tmpExponent, tmpStrValue, ePos + 1, tmpStrLen);
-            ArrayJanitor<XMLCh> janExponent(tmpExponent);
-            fExponent = new XMLBigInteger(tmpExponent);
-        }
-        //
-        // 1234.56E
-        //
-        else
-        {
-            ThrowXML1(NumberFormatException
-                    , XMLExcepts::XMLNUM_DBL_FLT_No_Exponent
-                    , strValue);
-        }
-
-    }
-    else
-    {
-        fMantissa = new XMLBigDecimal(tmpStrValue);
-        fExponent = new XMLBigInteger(XMLUni::fgZeroString);
-    }
-
     checkBoundary(tmpStrValue);
 }
 
 //
-// Add the 'E' as necessary
-// The caller needs to de-allocate the memory allocated by this function
-// Deallocate the memory allocated by XMLBigInteger
+// 
 //
 XMLCh*  XMLAbstractDoubleFloat::toString() const
 {
-    switch (fType)
-    {
-    case NegINF:
-        return XMLString::replicate(XMLUni::fgNegINFString);
-
-    case NegZero:
-        return XMLString::replicate(XMLUni::fgNegZeroString);
-
-    case PosZero:
-        return XMLString::replicate(XMLUni::fgPosZeroString);
-
-    case PosINF:
-        return XMLString::replicate(XMLUni::fgPosINFString);
-
-    case NaN:
-        return XMLString::replicate(XMLUni::fgNaNString);
-
-    case Normal:
-
-        XMLCh *ret_mantissa;
-        ret_mantissa = fMantissa->toString();
-
-        if (fExponent)
-        {
-            XMLCh *ret_exponent = fExponent->toString();
-            XMLCh *ret_val = new XMLCh [ XMLString::stringLen(ret_mantissa) +
-                                         XMLString::stringLen(ret_exponent) + 2];
-            *ret_val = 0;
-            XMLString::catString(ret_val, ret_mantissa);
-            XMLString::catString(ret_val, XMLUni::fgEString);
-            XMLString::catString(ret_val, ret_exponent);
-
-            delete [] ret_mantissa;
-            delete [] ret_exponent;
-            return ret_val;
-        }
-        else
-            return ret_mantissa;
-
-        break;
-    default:
-        XMLString::binToText(fType, value1, 16, 10);
-        ThrowXML1(NumberFormatException
-                , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
-                , value1);
-    };
-
-    return (XMLCh*) 0;
+    return XMLString::replicate(fRawData);
 }
 
 int XMLAbstractDoubleFloat::getSign() const
 {
-    return fMantissa->getSign();
+    return fSign;
 }
 
 //
@@ -276,16 +197,11 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
     if ((!lValue->isSpecialValue()) &&
         (!rValue->isSpecialValue())  )
     {
-        //
-        // if we use fValue to compare two
-        // sequences "12.3456E4" and "1234.56E2",
-        // they are _NOT_ the same. so we ask
-        // BigDecimal to compare.
-        //
-        XMLBigDecimal ldv = XMLBigDecimal(*(lValue->fMantissa), lValue->fExponent->intValue());
-        XMLBigDecimal rdv = XMLBigDecimal(*(rValue->fMantissa), rValue->fExponent->intValue());
+        if (lValue->fValue == rValue->fValue)
+            return 0;
+        else
+            return (lValue->fValue > rValue->fValue) ? 1: -1;
 
-        return XMLBigDecimal::compareValues(&ldv, &rdv);
     }
     //
     // case#2: lValue special
@@ -298,7 +214,7 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
         if (lValue->fType == rValue->fType)
             return 0;
         else
-            return (lValue->fType > rValue->fType ? 1 : -1);
+            return (lValue->fType > rValue->fType) ? 1 : -1;
     }
     //
     // case#3: lValue special
@@ -412,8 +328,15 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 		else
 			XMLString::copyString(inData, XMLUni::fgPosZeroString);
 	}
+    else
+    {
+        // we got to set the sign first, since this string may
+        // eventaully turn out to be beyond the minimum representable 
+        // number and reduced to -0 or +0.
+        fSign = minusSeen ? -1 : 1;
+    }
 
-	return;
+    return;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/12/11 00:20:02  peiyongz
+ * Doing businesss in value space. Converting out-of-bound value into special values.
+ *
  * Revision 1.4  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -122,107 +125,16 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLDouble.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+#include <xercesc/util/Janitor.hpp>
+
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <float.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-//---------
-// TODO:
-//
-//   Double is supposed to hold 64 bit number and currently
-//   we have implemented the checking on boundary values, such
-//   the maximum/minimum positive/negative number.
-//
-//   We also need to do roundup/roundoff for extra bit in the
-//   lexical representation.
-//   In order to do that, we need to store them in a canonical form,
-//   like this.
-//   [-]?[1-9].[0-9]+[E|e][-]?[0-9]+
-//
-//   Then we can impose the limit of length after the '.' before 'E'.
-//
-//---------
-
-// ---------------------------------------------------------------------------
-//  local data member
-// ---------------------------------------------------------------------------
-
-//
-//   2^53 x 2^970 	=   2^1023	=  8.9884656743115795386465259539451e+307
-//                                +
-//                                  8.9884 656743 115795 386465 259539 451
-//                                e+307
-//
-static const XMLCh DBL_MAX_POSITIVE[] =
-{
-    chPlus,
-    chDigit_8, chPeriod,  chDigit_9, chDigit_8, chDigit_8, chDigit_4,
-    chDigit_6, chDigit_5, chDigit_6, chDigit_7, chDigit_4, chDigit_3,
-    chDigit_1, chDigit_1, chDigit_5, chDigit_7, chDigit_9, chDigit_5,
-    chDigit_3, chDigit_8, chDigit_6, chDigit_4, chDigit_6, chDigit_5,
-    chDigit_2, chDigit_5, chDigit_9, chDigit_5, chDigit_3, chDigit_9,
-    chDigit_4, chDigit_5, chDigit_1,
-    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_7, chNull
-};
-
-//
-//   2^0  x 2^-1075 =   2^-1075	=  2.4703282292062327208828439643411e-324
-//                                 +
-//                                  2.4703 282292 062327 208828 439643 411
-//                                 e-324
-//
-static const XMLCh DBL_MIN_POSITIVE[] =
-{
-    chPlus,
-    chDigit_2, chPeriod,  chDigit_4, chDigit_7, chDigit_0, chDigit_3,
-    chDigit_2, chDigit_8, chDigit_2, chDigit_2, chDigit_9, chDigit_2,
-    chDigit_0, chDigit_6, chDigit_2, chDigit_3, chDigit_2, chDigit_7,
-    chDigit_2, chDigit_0, chDigit_8, chDigit_8, chDigit_2, chDigit_8,
-    chDigit_4, chDigit_3, chDigit_9, chDigit_6, chDigit_4, chDigit_3,
-    chDigit_4, chDigit_1, chDigit_1,
-    chLatin_E, chDash,    chDigit_3, chDigit_2, chDigit_4, chNull
-};
-
-static const XMLCh DBL_MAX_NEGATIVE[] =
-{
-    chDash,
-    chDigit_8, chPeriod,  chDigit_9, chDigit_8, chDigit_8, chDigit_4,
-    chDigit_6, chDigit_5, chDigit_6, chDigit_7, chDigit_4, chDigit_3,
-    chDigit_1, chDigit_1, chDigit_5, chDigit_7, chDigit_9, chDigit_5,
-    chDigit_3, chDigit_8, chDigit_6, chDigit_4, chDigit_6, chDigit_5,
-    chDigit_2, chDigit_5, chDigit_9, chDigit_5, chDigit_3, chDigit_9,
-    chDigit_4, chDigit_5, chDigit_1,
-    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_7, chNull
-};
-
-static const XMLCh DBL_MIN_NEGATIVE[] =
-{
-    chDash,
-    chDigit_2, chPeriod,  chDigit_4, chDigit_7, chDigit_0, chDigit_3,
-    chDigit_2, chDigit_8, chDigit_2, chDigit_2, chDigit_9, chDigit_2,
-    chDigit_0, chDigit_6, chDigit_2, chDigit_3, chDigit_2, chDigit_7,
-    chDigit_2, chDigit_0, chDigit_8, chDigit_8, chDigit_2, chDigit_8,
-    chDigit_4, chDigit_3, chDigit_9, chDigit_6, chDigit_4, chDigit_3,
-    chDigit_4, chDigit_1, chDigit_1,
-    chLatin_E, chDash,    chDigit_3, chDigit_2, chDigit_4, chNull
-};
-
-//
-// maxNegativeValue < minNegativeValue < 0 < minPositiveValue < maxPositiveValue
-// They are all "Inclusive value"
-//
-
-static XMLDouble*  maxNegativeValue = 0;
-static XMLDouble*  minNegativeValue = 0;
-static XMLDouble*  minPositiveValue = 0;
-static XMLDouble*  maxPositiveValue = 0;
-
-static XMLMutex* sDoubleMutex = 0;
-static XMLRegisterCleanup XMLDoubleCleanup;
 
 // ---------------------------------------------------------------------------
 //  ctor/dtor
@@ -237,94 +149,38 @@ XMLDouble::~XMLDouble()
 {
 }
 
-//
-//
 void XMLDouble::checkBoundary(const XMLCh* const strValue)
 {
-    if (!sDoubleMutex)
+   	char *nptr = XMLString::transcode(strValue);
+    ArrayJanitor<char> jan1(nptr);
+    int   strLen = strlen(nptr);
+    char *endptr = 0;
+	errno = 0;
+    fValue = strtod(nptr, &endptr);
+
+	// check if all chars are valid char
+	if ( (endptr - nptr) != strLen)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sDoubleMutex, tmpMutex, 0))
+		ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+    }
+
+    // check if overflow/underflow occurs
+    if (errno == ERANGE)
+    {
+        if ( fValue < 0 )
         {
-            // Some other thread beat us to it, so let's clean up ours.
-            delete tmpMutex;
+            fType = NegINF;
         }
-        else
+        else if ( fValue > 0)
         {
-            //
-            // the thread who creates the mutex succesfully, to
-            // initialize the followings
-            //
-            maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);
-            minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE);
-            minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE);
-            maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
-
-            // This is the real mutex.  Register it for cleanup at Termination.
-            XMLDoubleCleanup.registerCleanup(reinitXMLDouble);
+            fType = PosINF;
+        }         
+        else 
+        {
+            fType = (getSign() == 1) ? PosZero : NegZero;
         }
+
     }
-
-    //
-    // by-pass boundary check for boundary value itself
-    //
-    if (( XMLString::equals(strValue, DBL_MAX_NEGATIVE) ) ||
-        ( XMLString::equals(strValue, DBL_MIN_NEGATIVE) ) ||
-        ( XMLString::equals(strValue, DBL_MIN_POSITIVE) ) ||
-        ( XMLString::equals(strValue, DBL_MAX_POSITIVE) )  )
-        return;
-
-    //  error: this < maxNegativeValue
-    if ( compareValues(this, maxNegativeValue) == -1 )
-    {
-        ThrowXML2(NumberFormatException
-                , XMLExcepts::XMLNUM_DBL_FLT_maxNeg
-                , strValue
-                , DBL_MAX_NEGATIVE);
-    }
-
-    //  error: this > maxPositiveValue
-    if ( compareValues(this, maxPositiveValue) ==  1 )
-    {
-        ThrowXML2(NumberFormatException
-                , XMLExcepts::XMLNUM_DBL_FLT_maxPos
-                , strValue
-                , DBL_MAX_POSITIVE);
-    }
-
-    //  minNegativeValue < this < minPositiveValue
-    //  value is not be representable
-    if (( compareValues(this, minNegativeValue) ==  1 ) &&
-         ( compareValues(this, minPositiveValue) == -1 )  )
-    {
-        ThrowXML3(NumberFormatException
-                , XMLExcepts::XMLNUM_DBL_FLT_minNegPos
-                , strValue
-                , DBL_MIN_NEGATIVE
-                , DBL_MIN_POSITIVE);
-    }
-
-}
-
-// -----------------------------------------------------------------------
-//  Notification that lazy data has been deleted
-// -----------------------------------------------------------------------
-void XMLDouble::reinitXMLDouble() {
-
-    delete sDoubleMutex;
-    sDoubleMutex = 0;
-
-    delete maxNegativeValue;
-    maxNegativeValue = 0;
-
-    delete minNegativeValue;
-    minNegativeValue = 0;
-
-    delete minPositiveValue;
-    minPositiveValue = 0;
-
-    delete maxPositiveValue;
-    maxPositiveValue = 0;
 
 }
 

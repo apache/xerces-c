@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/12/11 00:20:02  peiyongz
+ * Doing businesss in value space. Converting out-of-bound value into special values.
+ *
  * Revision 1.5  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -90,9 +93,7 @@
 #ifndef XML_ABSTRACT_DOUBLE_FLOAT_HPP
 #define XML_ABSTRACT_DOUBLE_FLOAT_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLNumber.hpp>
-#include <xercesc/util/XMLBigDecimal.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -193,23 +194,13 @@ private:
     static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue
                                        , const XMLAbstractDoubleFloat* const normalValue);
 
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fMantissa
-    //     the XMLBigDecimal holding the value of mantissa.
-    //
-    //  fExponent
-    //     the XMLBigInteger holding the value of exponent.
-    //
-    //  fType
-    //     the type of the object.
-    //
-    // -----------------------------------------------------------------------
-
-    XMLBigDecimal*          fMantissa;
-	XMLBigInteger*          fExponent;
+protected:
+    double                  fValue;
     LiteralType             fType;
+
+private:
+    int                     fSign;
+    XMLCh*                  fRawData;
 };
 
 inline bool XMLAbstractDoubleFloat::isSpecialValue() const
