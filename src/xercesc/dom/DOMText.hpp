@@ -54,16 +54,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMText() {};
+    DOMText() {}
+    DOMText(const DOMText &other) : DOMCharacterData(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMText(const DOMText &);
     DOMText & operator = (const DOMText &);
     //@}
 

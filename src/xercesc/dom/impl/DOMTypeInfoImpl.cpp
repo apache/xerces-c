@@ -82,6 +82,7 @@ const XMLCh* DOMTypeInfoImpl::getStringProperty(PSVIProperty prop) const {
     case PSVI_Member_Type_Definition_Namespace: return fMemberTypeNamespace;
     case PSVI_Schema_Default:                   return fDefaultValue;
     case PSVI_Schema_Normalized_Value:          return fNormalizedValue;
+    default:                                    assert(false); /* it's not a string property */
     }
     return 0;
 }
@@ -96,6 +97,7 @@ int DOMTypeInfoImpl::getNumericProperty(PSVIProperty prop) const {
     case PSVI_Nil:                              return (fBitFields & (1 << 7))?true:false;
     case PSVI_Member_Type_Definition_Anonymous: return (fBitFields & (1 << 8))?true:false;
     case PSVI_Schema_Specified:                 return (fBitFields & (1 << 9))?true:false;
+    default:                                    assert(false); /* it's not a numeric property */
     }
     return 0;
 }
@@ -109,7 +111,8 @@ void DOMTypeInfoImpl::setStringProperty(PSVIProperty prop, const XMLCh* value) {
     case PSVI_Member_Type_Definition_Namespace: fMemberTypeNamespace=value; break;
     case PSVI_Schema_Default:                   fDefaultValue=value; break;
     case PSVI_Schema_Normalized_Value:          fNormalizedValue=value; break;
-}
+    default:                                    assert(false); /* it's not a string property */
+    }
 }
 
 void DOMTypeInfoImpl::setNumericProperty(PSVIProperty prop, int value) {
@@ -122,6 +125,7 @@ void DOMTypeInfoImpl::setNumericProperty(PSVIProperty prop, int value) {
     case PSVI_Nil:                              fBitFields |= (value!=0)?(1 << 7):0; break;
     case PSVI_Member_Type_Definition_Anonymous: fBitFields |= (value!=0)?(1 << 8):0; break;
     case PSVI_Schema_Specified:                 fBitFields |= (value!=0)?(1 << 9):0; break;
+    default:                                    assert(false); /* it's not a numeric property */
     }
 }
 

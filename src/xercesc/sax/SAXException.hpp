@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/01/07 15:24:57  amassari
+ * Removed warnings
+ *
  * Revision 1.7  2004/09/08 13:56:19  peiyongz
  * Apache License Version 2.0
  *
@@ -152,8 +155,8 @@ public:
     * @param toCopy The exception to be copy constructed
     */
     SAXException(const SAXException& toCopy) :
-
-        fMsg(XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager))
+        XMemory(toCopy)
+        , fMsg(XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager))
         , fMemoryManager(toCopy.fMemoryManager)
     {
     }

@@ -48,16 +48,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMNodeIterator() {};
+    DOMNodeIterator() {}
+    DOMNodeIterator(const DOMNodeIterator &) {}
     //@}
 
 private:    
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMNodeIterator(const DOMNodeIterator &);
     DOMNodeIterator & operator = (const DOMNodeIterator &);
     //@}
 

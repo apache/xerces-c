@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.5  2004/09/08 13:56:51  peiyongz
  * Apache License Version 2.0
  *
@@ -86,7 +89,8 @@ ContentLeafNameTypeVector::ContentLeafNameTypeVector
 (
     const ContentLeafNameTypeVector& toCopy
 )
-: fMemoryManager(toCopy.fMemoryManager)
+: XMemory(toCopy)
+, fMemoryManager(toCopy.fMemoryManager)
 , fLeafNames(0)
 , fLeafTypes(0)
 , fLeafCount(0)

@@ -795,9 +795,9 @@ const XMLCh *  DOMDocumentImpl::getPooledString(const XMLCh *src)
 static const int kHeapAllocSize = 0x10000;    // The chunk size to allocate from the
                                               //   system allocator.
 
-static const int kMaxSubAllocationSize = 4096;   // Any request for more bytes
-                                                 //  than this will be handled by
-                                                 //  allocating directly with system.
+static const size_t kMaxSubAllocationSize = 4096;  // Any request for more bytes
+                                                   //  than this will be handled by
+                                                   //  allocating directly with system.
 
 void *         DOMDocumentImpl::allocate(size_t amount)
 {	

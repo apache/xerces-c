@@ -58,7 +58,8 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 
 
 DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
-    : fNode(other.getOwnerDocument()),
+    : DOMElement(other),
+      fNode(other.getOwnerDocument()),
       fParent(other.getOwnerDocument()),
       fAttributes(0),
       fDefaultAttributes(0)

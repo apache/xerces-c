@@ -45,7 +45,8 @@ DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 
 
 DOMEntityImpl::DOMEntityImpl(const DOMEntityImpl &other, bool deep)
-    : fNode(other.fNode),
+    : DOMEntity(other),
+      fNode(other.fNode),
       fParent(other.fParent),
       fName(other.fName),
       fPublicId(other.fPublicId),

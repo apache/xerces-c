@@ -61,16 +61,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMAttr() {};
+    DOMAttr() {}
+    DOMAttr(const DOMAttr &other) : DOMNode(other) {}
     //@}
 
 private:    
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMAttr(const DOMAttr &);
     DOMAttr & operator = (const DOMAttr &);
     //@}
 

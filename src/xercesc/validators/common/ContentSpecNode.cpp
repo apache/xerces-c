@@ -37,7 +37,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 
 ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy) :
-    fMemoryManager(toCopy.fMemoryManager)
+    XSerializable(toCopy)
+    , XMemory(toCopy)
+    , fMemoryManager(toCopy.fMemoryManager)
     , fElement(0)
     , fElementDecl(toCopy.fElementDecl)
     , fFirst(0)

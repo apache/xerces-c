@@ -53,7 +53,8 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMTreeWalker() {};
+    DOMTreeWalker() {}
+    DOMTreeWalker(const DOMTreeWalker &) {}
     //@}
 
 private:
@@ -62,7 +63,6 @@ private:
     // -----------------------------------------------------------------------
     /** @name Unimplemented constructors and operators */
     //@{
-    DOMTreeWalker(const DOMTreeWalker &);
     DOMTreeWalker & operator = (const DOMTreeWalker &);
     //@}
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.37  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.36  2004/12/14 02:06:40  cargilld
  * More error message updates.
  *
@@ -304,12 +307,12 @@ DTDScanner::DTDScanner( DTDGrammar*           dtdGrammar
     , fInternalSubset(false)
     , fNextAttrId(1)
     , fDTDGrammar(dtdGrammar)
-    , fPEntityDeclPool(0)
-    , fDocTypeReaderId(0)
     , fBufMgr(0)
     , fReaderMgr(0)
     , fScanner(0)
+    , fPEntityDeclPool(0)
     , fEmptyNamespaceId(0)
+    , fDocTypeReaderId(0)
 {
     fPEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109, 128, fMemoryManager);
 }

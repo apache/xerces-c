@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2005/01/07 15:22:47  amassari
+ * Removed warnings
+ *
  * Revision 1.5  2004/11/29 16:20:35  cargilld
  * Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.
  *
@@ -63,13 +66,13 @@ public :
     virtual XProtoType* getProtoType()                 const = 0;
 
 protected:
-    XSerializable(){} ;
+    XSerializable() {}
+    XSerializable(const XSerializable& ) {}             
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented copy ctor and assignment operator
+    //  Unimplemented assignment operator
     // -----------------------------------------------------------------------
-	XSerializable(const XSerializable& );              
 	XSerializable& operator=(const XSerializable&);
 
 };

@@ -45,7 +45,9 @@ DOMTextImpl::DOMTextImpl(DOMDocument *ownerDoc, const XMLCh *dat)
 }
 
 DOMTextImpl::DOMTextImpl(const DOMTextImpl &other, bool)
-    : fNode(other.fNode), fCharacterData(other.fCharacterData)
+    : DOMText(other)
+    , fNode(other.fNode)
+    , fCharacterData(other.fCharacterData)
 {
     fNode.setIsLeafNode(true);
 }
@@ -81,7 +83,7 @@ DOMText *DOMTextImpl::splitText(XMLSize_t offset)
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
-    if (offset > len || offset < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMText *newText =

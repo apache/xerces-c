@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.9  2004/09/08 13:56:59  peiyongz
  * Apache License Version 2.0
  *
@@ -74,7 +77,8 @@ FieldActivator::FieldActivator(ValueStoreCache* const valueStoreCache,
 }
 
 FieldActivator::FieldActivator(const FieldActivator& other)
-    : fValueStoreCache(other.fValueStoreCache)
+    : XMemory(other)
+    , fValueStoreCache(other.fValueStoreCache)
     , fMatcherStack(other.fMatcherStack)
     , fMayMatch(0)
     , fMemoryManager(other.fMemoryManager)

@@ -47,16 +47,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMNotation() {};
+    DOMNotation() {}
+    DOMNotation(const DOMNotation &other) : DOMNode(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMNotation(const DOMNotation &);
     DOMNotation & operator = (const DOMNotation &);
     //@}
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.15  2004/12/28 16:35:57  amassari
  * Store fAxisType as an integer, not as a XMLCh (bug# 1177)
  *
@@ -134,8 +137,10 @@ XercesNodeTest::XercesNodeTest(const XMLCh* const prefix,
 }
 
 XercesNodeTest::XercesNodeTest(const XercesNodeTest& other)
-    : fType(other.fType)
-    , fName(new ((other.fName)->getMemoryManager())QName(*other.fName))
+    : XSerializable(other)
+    , XMemory(other)
+    , fType(other.fType)
+    , fName(new ((other.fName)->getMemoryManager()) QName(*other.fName))
 {
 }
 
@@ -206,7 +211,9 @@ XercesStep::XercesStep(const unsigned short axisType, XercesNodeTest* const node
 }
 
 XercesStep::XercesStep(const XercesStep& other)
-    : fAxisType(other.fAxisType)
+    : XSerializable(other)
+    , XMemory(other)
+    , fAxisType(other.fAxisType)
     , fNodeTest(0)
 {
     fNodeTest = new (other.fNodeTest->getName()->getMemoryManager()) XercesNodeTest(*(other.fNodeTest));

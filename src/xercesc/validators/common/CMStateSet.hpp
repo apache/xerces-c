@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.7  2004/09/08 13:56:51  peiyongz
  * Apache License Version 2.0
  *
@@ -130,7 +133,8 @@ public :
      */
 
     CMStateSet(const CMStateSet& toCopy) :
-        fBitCount(toCopy.fBitCount)
+        XMemory(toCopy)
+      , fBitCount(toCopy.fBitCount)
       , fByteArray(0)
       , fMemoryManager(toCopy.fMemoryManager)
     {

@@ -53,7 +53,8 @@ DOMNodeIteratorImpl::DOMNodeIteratorImpl (DOMDocument* doc,
 
 
 DOMNodeIteratorImpl::DOMNodeIteratorImpl ( const DOMNodeIteratorImpl& toCopy)
-    :   fRoot(toCopy.fRoot),
+    : DOMNodeIterator(toCopy),
+    fRoot(toCopy.fRoot),
     fDocument(toCopy.fDocument),
     fWhatToShow(toCopy.fWhatToShow),
     fNodeFilter(toCopy.fNodeFilter),

@@ -69,16 +69,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMCDATASection() {};
+    DOMCDATASection() {}
+    DOMCDATASection(const DOMCDATASection &other) : DOMText(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMCDATASection(const DOMCDATASection &);
     DOMCDATASection & operator = (const DOMCDATASection &);
     //@}
 

@@ -66,16 +66,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMElement() {};
+    DOMElement() {}
+    DOMElement(const DOMElement &other) : DOMNode(other) {}
     //@}
     
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMElement(const DOMElement &);
     DOMElement & operator = (const DOMElement &);
     //@}
 

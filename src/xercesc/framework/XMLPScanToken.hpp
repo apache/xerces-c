@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2005/01/07 15:22:13  amassari
+ * Removed warnings
+ *
  * Revision 1.4  2004/09/08 13:55:59  peiyongz
  * Apache License Version 2.0
  *
@@ -137,8 +140,8 @@ inline XMLPScanToken::XMLPScanToken() :
 }
 
 inline XMLPScanToken::XMLPScanToken(const XMLPScanToken& toCopy) :
-
-    fScannerId(toCopy.fScannerId)
+    XMemory(toCopy)
+    , fScannerId(toCopy.fScannerId)
     , fSequenceId(toCopy.fSequenceId)
 {
 }

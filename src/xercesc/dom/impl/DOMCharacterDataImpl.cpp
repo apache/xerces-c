@@ -109,7 +109,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     //
 
     XMLSize_t len = this->fDataBuf->getLen();
-    if (offset > len || offset < 0 || count < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
 
@@ -190,7 +190,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     //
 
     XMLSize_t len = fDataBuf->getLen();
-    if (offset > len || offset < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
     XMLSize_t datLen = XMLString::stringLen(dat);
@@ -265,7 +265,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
 
     XMLSize_t len = fDataBuf->getLen();
 
-    if (offset > len || offset < 0 || count < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
 

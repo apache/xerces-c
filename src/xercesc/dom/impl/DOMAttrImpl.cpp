@@ -37,8 +37,12 @@ DOMAttrImpl::DOMAttrImpl(DOMDocument *ownerDoc, const XMLCh *aName)
     fNode.isSpecified(true);
 }
 
-DOMAttrImpl::DOMAttrImpl(const DOMAttrImpl &other, bool)
-    : fNode(other.fNode), fParent (other.fParent), fName(other.fName), fSchemaType(other.fSchemaType)
+DOMAttrImpl::DOMAttrImpl(const DOMAttrImpl &other, bool /*deep*/)
+    : DOMAttr(other)
+    , fNode(other.fNode)
+    , fParent (other.fParent)
+    , fName(other.fName)
+    , fSchemaType(other.fSchemaType)
 {    
     if (other.fNode.isSpecified())
         fNode.isSpecified(true);

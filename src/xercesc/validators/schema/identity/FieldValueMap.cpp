@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.8  2004/09/08 13:56:59  peiyongz
  * Apache License Version 2.0
  *
@@ -65,7 +68,8 @@ FieldValueMap::FieldValueMap(MemoryManager* const manager)
 }
 
 FieldValueMap::FieldValueMap(const FieldValueMap& other)
-    : fFields(0)
+    : XMemory(other)
+    , fFields(0)
     , fValidators(0)
     , fValues(0)
     , fMemoryManager(other.fMemoryManager)

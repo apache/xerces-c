@@ -36,13 +36,14 @@ DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc,
 }
 
 
-DOMCDATASectionImpl::DOMCDATASectionImpl(const DOMCDATASectionImpl &other, bool)
-    : fNode(*castToNodeImpl(&other)),
+DOMCDATASectionImpl::DOMCDATASectionImpl(const DOMCDATASectionImpl &other, bool /*deep*/)
+    : DOMCDATASection(other),
+    fNode(*castToNodeImpl(&other)),
     fParent(*castToParentImpl(&other)),
     fChild(*castToChildImpl(&other)),
     fCharacterData(other.fCharacterData)
 {
-    // revisit.  SOmething nees to make "deep" work.
+    // revisit.  Something nees to make "deep" work.
 }
 
 
@@ -88,7 +89,7 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
-    if (offset > len || offset < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMText *newText =

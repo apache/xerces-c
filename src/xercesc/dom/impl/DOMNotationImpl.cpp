@@ -32,9 +32,13 @@ DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
     fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(nName);
 }
 
-DOMNotationImpl::DOMNotationImpl(const DOMNotationImpl &other, bool)
-    : fNode(other.fNode), fName(other.fName), fPublicId(other.fPublicId),
-      fSystemId(other.fSystemId), fBaseURI(other.fBaseURI)
+DOMNotationImpl::DOMNotationImpl(const DOMNotationImpl &other, bool /*deep*/)
+    : DOMNotation(other), 
+      fNode(other.fNode), 
+      fName(other.fName), 
+      fPublicId(other.fPublicId),
+      fSystemId(other.fSystemId), 
+      fBaseURI(other.fBaseURI)
 {
     fNode.setIsLeafNode(true);
 }

@@ -97,7 +97,7 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
-    if (offset > len || offset < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
     DOMComment *newText =

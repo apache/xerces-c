@@ -49,16 +49,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMCharacterData() {};
+    DOMCharacterData() {}
+    DOMCharacterData(const DOMCharacterData &other) : DOMNode(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMCharacterData(const DOMCharacterData &);
     DOMCharacterData & operator = (const DOMCharacterData &);
     //@}
 

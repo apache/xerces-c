@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.22  2004/10/28 20:21:06  peiyongz
  * Data member reshuffle
  *
@@ -218,7 +221,8 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     XMLElementDecl(manager)
     , fModelType(type)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
     , fEnclosingScope(enclosingScope)
     , fFinalSet(0)
     , fBlockSet(0)    
@@ -231,8 +235,7 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
+    , fDatatypeValidator(0)
     , fSeenValidation(false)
     , fSeenNoValidation(false)
     , fHadContent(false)

@@ -1202,20 +1202,25 @@ void AbstractDOMParser::attDef
                 break;
 
             case XMLAttDef::Enumeration :
-                fInternalSubset.append(chSpace);
-                const XMLCh* enumString = attDef.getEnumeration();
-                int length = XMLString::stringLen(enumString);
-                if (length > 0) {
+                {
+                    fInternalSubset.append(chSpace);
+                    const XMLCh* enumString = attDef.getEnumeration();
+                    int length = XMLString::stringLen(enumString);
+                    if (length > 0) {
 
-                    fInternalSubset.append(chOpenParen );
-                    for(int i=0; i<length; i++) {
-                        if (enumString[i] == chSpace)
-                            fInternalSubset.append(chPipe);
-                        else
-                            fInternalSubset.append(enumString[i]);
+                        fInternalSubset.append(chOpenParen );
+                        for(int i=0; i<length; i++) {
+                            if (enumString[i] == chSpace)
+                                fInternalSubset.append(chPipe);
+                            else
+                                fInternalSubset.append(enumString[i]);
+                        }
+                        fInternalSubset.append(chCloseParen);
                     }
-                    fInternalSubset.append(chCloseParen);
                 }
+                break;
+            default:
+                // remaining types don't belong to a DTD
                 break;
             }
             //get te default types of the attlist
@@ -1233,6 +1238,9 @@ void AbstractDOMParser::attDef
             case XMLAttDef::Fixed :
                 fInternalSubset.append(chSpace);
                 fInternalSubset.append(XMLUni::fgFixedString);
+                break;
+            default:
+                // remaining types don't belong to a DTD
                 break;
             }
 

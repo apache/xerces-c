@@ -56,7 +56,8 @@ DOMRangeImpl::DOMRangeImpl(DOMDocument* doc, MemoryManager* const manager)
 }
 
 DOMRangeImpl::DOMRangeImpl(const DOMRangeImpl& other)
-:   fStartContainer(other.fStartContainer),
+:   DOMRange(other),
+    fStartContainer(other.fStartContainer),
     fStartOffset(other.fStartOffset),
     fEndContainer(other.fEndContainer),
     fEndOffset(other.fEndOffset),
@@ -630,6 +631,9 @@ short DOMRangeImpl::compareBoundaryPoints(DOMRange::CompareHow how, const DOMRan
         offsetB = srcRange->getEndOffset();
         offsetA = fEndOffset;
         break;
+    default:
+        throw DOMException(
+            DOMException::INVALID_STATE_ERR, 0, fMemoryManager);
     }
 
     // case 1: same container
@@ -1080,10 +1084,6 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
 
 void DOMRangeImpl::checkIndex(const DOMNode* node, XMLSize_t offset) const
 {
-    if (offset < 0) {
-        throw DOMException( DOMException::INDEX_SIZE_ERR, 0, fMemoryManager);
-    }
-
     short type = node->getNodeType();
 
     if((type == DOMNode::TEXT_NODE

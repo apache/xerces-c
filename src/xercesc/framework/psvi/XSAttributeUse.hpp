@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/01/07 15:22:13  amassari
+ * Removed warnings
+ *
  * Revision 1.9  2004/09/08 13:56:08  peiyongz
  * Apache License Version 2.0
  *
@@ -175,7 +178,7 @@ inline XSConstants::VALUE_CONSTRAINT XSAttributeUse::getConstraintType() const
     return fConstraintType;
 }
 
-const inline XMLCh *XSAttributeUse::getConstraintValue()
+inline const XMLCh *XSAttributeUse::getConstraintValue()
 {
     return fConstraintValue;
 }

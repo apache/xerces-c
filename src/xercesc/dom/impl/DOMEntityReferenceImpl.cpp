@@ -89,7 +89,12 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
 
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other,
                                          bool deep)
-    : fNode(other.fNode), fParent(other.fParent), fChild(other.fChild), fName(other.fName), fBaseURI(other.fBaseURI)
+    : DOMEntityReference(other), 
+      fNode(other.fNode), 
+      fParent(other.fParent), 
+      fChild(other.fChild), 
+      fName(other.fName), 
+      fBaseURI(other.fBaseURI)
 {    
     if (deep)
         fParent.cloneChildren(&other);

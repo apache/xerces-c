@@ -42,7 +42,8 @@ DOMTreeWalkerImpl::DOMTreeWalkerImpl (
 
 
 DOMTreeWalkerImpl::DOMTreeWalkerImpl (const DOMTreeWalkerImpl& twi)
-:   fWhatToShow(twi.fWhatToShow),
+:   DOMTreeWalker(twi),
+    fWhatToShow(twi.fWhatToShow),
     fNodeFilter(twi.fNodeFilter),
     fCurrentNode(twi.fCurrentNode),
     fRoot(twi.fRoot),    

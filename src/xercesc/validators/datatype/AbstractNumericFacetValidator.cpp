@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2005/01/07 15:28:49  amassari
+ * Removed warnings
+ *
  * Revision 1.20  2004/09/08 13:56:52  peiyongz
  * Apache License Version 2.0
  *
@@ -224,7 +227,6 @@ void AbstractNumericFacetValidator::assignFacet(MemoryManager* const manager)
         return;
 
     XMLCh* key;
-    XMLCh* value;
 
     RefHashTableOfEnumerator<KVStringPair> e(facets, false, manager);
 
@@ -232,7 +234,7 @@ void AbstractNumericFacetValidator::assignFacet(MemoryManager* const manager)
     {
         KVStringPair pair = e.nextElement();
         key = pair.getKey();
-        value = pair.getValue();
+        XMLCh* value = pair.getValue();
 
         if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
         {

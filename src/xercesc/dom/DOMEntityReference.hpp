@@ -61,16 +61,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMEntityReference() {};
+    DOMEntityReference() {}
+    DOMEntityReference(const DOMEntityReference &other) : DOMNode(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMEntityReference(const DOMEntityReference &);
     DOMEntityReference & operator = (const DOMEntityReference &);
     //@}
 

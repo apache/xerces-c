@@ -41,9 +41,13 @@ DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(DOMDocument *ownerDoc
 
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(
                                         const DOMProcessingInstructionImpl &other,
-                                        bool)
-    : fNode(other.fNode), fChild(other.fChild), fCharacterData(other.fCharacterData),
-      fTarget(other.fTarget), fBaseURI(other.fBaseURI)
+                                        bool /*deep*/)
+    : DOMProcessingInstruction(other), 
+      fNode(other.fNode), 
+      fChild(other.fChild), 
+      fCharacterData(other.fCharacterData),
+      fTarget(other.fTarget), 
+      fBaseURI(other.fBaseURI)
 {
     fNode.setIsLeafNode(true);
 }
@@ -124,7 +128,7 @@ DOMProcessingInstruction *DOMProcessingInstructionImpl::splitText(XMLSize_t offs
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     }
     XMLSize_t len = fCharacterData.fDataBuf->getLen();
-    if (offset > len || offset < 0)
+    if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0,  GetDOMNodeMemoryManager);
 
     DOMProcessingInstruction *newText =

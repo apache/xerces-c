@@ -70,16 +70,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMEntity() {};
+    DOMEntity() {}
+    DOMEntity(const DOMEntity &other) : DOMNode(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMEntity(const DOMEntity &);
     DOMEntity & operator = (const DOMEntity &);
     //@}
 

@@ -39,16 +39,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMRange() {};
+    DOMRange() {}
+    DOMRange(const DOMRange &) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMRange(const DOMRange &);
     DOMRange & operator = (const DOMRange &);
     //@}
 

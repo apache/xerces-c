@@ -42,16 +42,16 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMProcessingInstruction() {};
+    DOMProcessingInstruction() {}
+    DOMProcessingInstruction(const DOMProcessingInstruction &other) : DOMNode(other) {}
     //@}
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    /** @name Unimplemented constructors and operators */
+    /** @name Unimplemented operators */
     //@{
-    DOMProcessingInstruction(const DOMProcessingInstruction &);
     DOMProcessingInstruction & operator = (const DOMProcessingInstruction &);
     //@}
 
