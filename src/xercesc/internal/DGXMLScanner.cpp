@@ -72,6 +72,7 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLDTDDescription.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
@@ -974,7 +975,8 @@ void DGXMLScanner::scanDocTypeDecl()
                 unsigned int stringId = fGrammarResolver->getStringPool()->addOrFind(srcUsed->getSystemId());
                 const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(stringId);
 
-                fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
+                XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
+                fGrammarResolver->orphanGrammar(gramDesc);
                 fGrammarResolver->putGrammar(sysIdStr, fGrammar);
             }
 
@@ -1698,7 +1700,8 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
         unsigned int sysId = fGrammarResolver->getStringPool()->addOrFind(src.getSystemId());
         const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(sysId);
 
-        fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
+        XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
+        fGrammarResolver->orphanGrammar(gramDesc);
         fGrammarResolver->putGrammar(sysIdStr, fGrammar);
     }
 
