@@ -55,24 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/04/04 20:31:22  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.3  2000/03/02 19:54:00  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:07  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:25  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "ElementDefinitionImpl.hpp"
@@ -81,14 +64,14 @@
 
 
 ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc, const DOMString &nam):
-      NodeImpl(ownerDoc, nam, (short)-1, null) 
+      NodeImpl(ownerDoc, nam, null) 
 {
      attributes = 0;    
 };
 
 
 ElementDefinitionImpl::ElementDefinitionImpl(const ElementDefinitionImpl& other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
     // NamedNodeMap must be explicitly replicated to avoid sharing
     attributes = 0;
@@ -105,6 +88,11 @@ ElementDefinitionImpl::~ElementDefinitionImpl()
 NodeImpl *ElementDefinitionImpl::cloneNode(bool deep)
 {
     return new ElementDefinitionImpl(*this, deep);
+};
+
+
+short ElementDefinitionImpl::getNodeType() {
+    return (short)-1;
 };
 
 

@@ -54,41 +54,9 @@
  * <http://www.apache.org/>.
  */
 
-/**
-* $Log$
-* Revision 1.7  2000/04/04 20:31:22  lehors
-* got rid of unused isLeafNode attribute
-*
-* Revision 1.6  2000/02/06 07:47:33  rahulj
-* Year 2K copyright swat.
-*
-* Revision 1.5  2000/02/04 01:49:27  aruna1
-* TreeWalker and NodeIterator changes
-*
-* Revision 1.4  2000/01/24 23:35:18  rahulj
-* Fixed the compiler warning generated under Solaris.
-* Matched the api signature in the base class NodeImpl.hpp.
-*
-* Revision 1.3  2000/01/08 00:09:28  andyh
-* Correcf failures in DOMTest with entity references and read-only nodes.
-* Correct reference counting problem NamedNodeMap.
-* Add export methods to NamedNodeMap and DocumentTypeImpl.
-* Redo DocumentImpl::cloneNode
-*
-* (Changes by Chih-Hsiang Chou)
-*
-* Revision 1.2  1999/11/30 21:16:25  roddey
-* Changes to add the transcode() method to DOMString, which returns a transcoded
-* version (to local code page) of the DOM string contents. And I changed all of the
-* exception 'throw by pointer' to 'throw by value' style.
-*
-* Revision 1.1.1.1  1999/11/09 01:09:09  twl
-* Initial checkin
-*
-* Revision 1.2  1999/11/08 20:44:27  rahul
-* Swat for adding in Product name and CVS comment log variable.
-*
-*/
+/*
+ * $Id$
+ */
 
 /**
 * EntityReference models the XML &entityname; syntax, when used for
@@ -155,7 +123,7 @@
 
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc, const DOMString &entityName) :
-NodeImpl(ownerDoc, entityName, DOM_Node::ENTITY_REFERENCE_NODE, null)
+NodeImpl(ownerDoc, entityName, null)
 {
     
     // EntityReference behaves as a read-only node, since its contents
@@ -167,8 +135,10 @@ NodeImpl(ownerDoc, entityName, DOM_Node::ENTITY_REFERENCE_NODE, null)
 
 
 EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
+    if (deep)
+        cloneChildren(other);
     entityChanges = other.entityChanges;
     readOnly = true;
 }
@@ -186,6 +156,11 @@ NodeImpl *EntityReferenceImpl::cloneNode(bool deep)
     synchronize();
     return new EntityReferenceImpl(*this, deep);
 }
+
+
+short EntityReferenceImpl::getNodeType() {
+    return DOM_Node::ENTITY_REFERENCE_NODE;
+};
 
 
 /**

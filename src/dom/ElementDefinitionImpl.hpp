@@ -58,26 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/02/24 20:11:29  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/21 07:47:06  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:09:07  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:26  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -102,6 +83,7 @@ public:
     
     virtual                 ~ElementDefinitionImpl();
     virtual NodeImpl        *cloneNode(bool deep);
+    virtual short getNodeType();
     virtual NamedNodeMapImpl *getAttributes();
 };
 

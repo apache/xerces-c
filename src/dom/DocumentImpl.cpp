@@ -55,60 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.13  2000/04/04 20:31:21  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.12  2000/03/24 21:24:50  abagchi
- * Added getElementById() from patch submitted by Jeff Lewis
- *
- * Revision 1.11  2000/03/02 19:53:59  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.10  2000/02/10 23:35:11  andyh
- * Update DOM_DOMImplementation::CreateDocumentType and
- * DOM_DocumentType to match latest from W3C
- *
- * Revision 1.9  2000/02/09 00:11:19  andyh
- * Fix reference counting problem when creating new Documents
- * with a DocType.
- *
- * Revision 1.8  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/02/04 01:49:30  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.6  2000/01/22 01:38:30  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.5  2000/01/19 21:39:19  andyh
- * DOM L2, fix problems with new style createDocument.
- *
- * Revision 1.4  2000/01/08 00:09:27  andyh
- * Correcf failures in DOMTest with entity references and read-only nodes.
- * Correct reference counting problem NamedNodeMap.
- * Add export methods to NamedNodeMap and DocumentTypeImpl.
- * Redo DocumentImpl::cloneNode
- *
- * (Changes by Chih-Hsiang Chou)
- *
- * Revision 1.3  2000/01/05 01:16:08  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:43  twl
- * Initial checkin
- *
- * Revision 1.5  1999/11/08 20:44:24  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -168,7 +115,6 @@ const XMLCh* DocumentImpl::PoolElem::getKey() const
 
 DocumentImpl::DocumentImpl(): NodeImpl(null,
                                        DStringPool::getStaticString("#document", &nam),
-                                       DOM_Node::DOCUMENT_NODE,
                                        null)
 {
     docType=null;
@@ -183,7 +129,7 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
 //DOM Level 2
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName, DocumentTypeImpl *doctype)
-                           : NodeImpl(null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, null)
+                           : NodeImpl(null, DStringPool::getStaticString("#document", &nam), null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
@@ -244,6 +190,11 @@ NodeImpl *DocumentImpl::cloneNode(bool deep) {
 	}
     return newdoc;
 };
+
+short DocumentImpl::getNodeType() {
+    return DOM_Node::DOCUMENT_NODE;
+};
+
 
 bool DocumentImpl::isDocumentImpl() {
     return true;

@@ -55,21 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/03/02 19:53:51  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:40  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:10  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "CDATASectionImpl.hpp"
@@ -84,7 +70,6 @@ CDATASectionImpl::CDATASectionImpl(DocumentImpl *ownerDoc, const DOMString &data
 
         // Overwrite Text's type information to reflect the subclass:
         name=DStringPool::getStaticString("#cdata-section", &gcdata_section);
-        nType=DOM_Node::CDATA_SECTION_NODE;
 };
 
 
@@ -101,8 +86,13 @@ CDATASectionImpl::~CDATASectionImpl()
 
 NodeImpl  *CDATASectionImpl::cloneNode(bool deep)
 {
-    return new CharacterDataImpl(*this, deep);
+    return new CDATASectionImpl(*this, deep);
 };  
+
+
+short CDATASectionImpl::getNodeType() {
+    return DOM_Node::CDATA_SECTION_NODE;
+};
 
 
 bool CDATASectionImpl::isCDATASectionImpl()

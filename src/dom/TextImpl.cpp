@@ -55,36 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2000/03/28 19:43:14  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.6  2000/03/24 01:30:50  chchou
- * Fix bug #8 to support ignorable whitespace text nodes
- *
- * Revision 1.5  2000/03/02 19:54:05  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/06 07:47:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/02/04 01:49:25  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.2  1999/11/30 21:16:26  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:19  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:33  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "DocumentImpl.hpp"
@@ -98,8 +69,8 @@ static DOMString *gText;   // will be lazily initialized to point to "#text"
 
 
 TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &data) :
-CharacterDataImpl(ownerDoc, DStringPool::getStaticString("#text", &gText), 
-                  DOM_Node::TEXT_NODE, data)
+CharacterDataImpl(ownerDoc, DStringPool::getStaticString("#text", &gText),
+                  data)
 , fIgnorableWhitespace(false)
 {
 };
@@ -123,6 +94,11 @@ bool TextImpl::isTextImpl()
 NodeImpl *TextImpl::cloneNode(bool deep)
 {
     return ownerDocument->createTextNode(value);
+};
+
+
+short TextImpl::getNodeType() {
+    return DOM_Node::TEXT_NODE;
 };
 
 

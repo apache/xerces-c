@@ -54,6 +54,10 @@
  * <http://www.apache.org/>.
  */
 
+/*
+ * $Id$
+ */
+
 #include "NodeImpl.hpp"
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
@@ -70,7 +74,7 @@ static DOMString *s_xmlns = null;
 static DOMString *s_xmlnsURI = null;
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
-                   const DOMString &nam,  short nTyp,
+                   const DOMString &nam,
                    const DOMString &initValue)
 {
     this->ownerDocument=ownerDoc;
@@ -78,7 +82,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     this->prefix=null;			//DOM Level 2
     this->localName=null;		//DOM Level 2
     this->name=nam.clone();
-    this->nType=nTyp;
     this->value=initValue.clone();
     
     this->changes = 0;
@@ -96,58 +99,9 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     NodeImpl::gTotalNodeImpls++;
 };  
 
-
-//Introduced in DOM Level 2
-NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
-                   const DOMString &fNamespaceURI, const DOMString &qualifiedName, short nTyp,
-                   const DOMString &initValue)
-{
-    DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
-    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
-    this->ownerDocument=ownerDoc;
-    this->name = qualifiedName.clone();
-
-    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
-    if (index < 0)
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-    bool xmlnsAlone = false;	//true if attribute name is "xmlns"
-    if (index == 0) {	//qualifiedName contains no ':'
-        if (nTyp == DOM_Node::ATTRIBUTE_NODE && this->name.equals(xmlns)) {
-	    if (!fNamespaceURI.equals(xmlnsURI))
-		throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-	    xmlnsAlone = true;
-	}
-	this -> prefix = null;
-	this -> localName = this -> name;
-    } else {	//0 < index < this->name.length()-1
-	this -> prefix = this->name.substringData(0, index);
-	this -> localName = this->name.substringData(index+1, this->name.length()-index-1);
-    }
-
-    const DOMString& URI = xmlnsAlone ? xmlnsURI : mapPrefix(prefix, fNamespaceURI, nTyp);
-    this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
-
-    this->nType=nTyp;
-    this->value=initValue.clone();
-    
-    this->changes = 0;
-    this->userData = null;
-    this->readOnly = false;
-    this->owned    = false;
-    this->firstChild = null;
-    this->lastChild  = null;
-    this->previousSibling  = null;
-    this->nextSibling  = null;
-    this->parentNode  = null;
-    
-    this->nodeRefCount = 0;
-    NodeImpl::gLiveNodeImpls++; 
-    NodeImpl::gTotalNodeImpls++;
-};  
-
-
-NodeImpl::NodeImpl(const NodeImpl &other, bool deep) {
-    this->nType = other.nType;
+// This only makes a shallow copy, cloneChildren must also be called for a deep
+// clone
+NodeImpl::NodeImpl(const NodeImpl &other) {
     this->namespaceURI = other.namespaceURI.clone();	//DOM Level 2
     this->prefix = other.prefix.clone();                //DOM Level 2
     this->localName = other.localName.clone();          //DOM Level 2
@@ -170,19 +124,17 @@ NodeImpl::NodeImpl(const NodeImpl &other, bool deep) {
     this->parentNode = null;
     this->firstChild = null;
     this->lastChild = null;
-    
-    // Then, if deep, clone the kids too.
-    if (deep)
-    {
-        for (NodeImpl *mykid = other.firstChild; 
-        mykid != null; 
-        mykid = mykid->nextSibling)
-            this->appendChild(mykid->cloneNode(true));
-    }
-    
 };
 
 
+void NodeImpl::cloneChildren(const NodeImpl &other) {    
+    for (NodeImpl *mykid = other.firstChild; 
+         mykid != null; 
+         mykid = mykid->nextSibling) {
+        this->appendChild(mykid->cloneNode(true));
+    }
+}
+    
 int  NodeImpl::gLiveNodeImpls = 0;         // Counters for debug & tuning.
 int  NodeImpl::gTotalNodeImpls= 0;
 
@@ -203,7 +155,6 @@ bool NodeImpl::isElementImpl()           {return false;};
 bool NodeImpl::isEntityReference()       {return false;};
 bool NodeImpl::isTextImpl()              {return false;};
 
-
 NodeImpl * NodeImpl::appendChild(NodeImpl *newChild)      
 {
     return insertBefore(newChild, null);
@@ -216,13 +167,6 @@ void NodeImpl::changed()
     for (NodeImpl *n=this; n != null; n=n->getParentNode())
         ++n->changes;
 };  
-
-
-NodeImpl * NodeImpl::cloneNode(bool deep) {
-    NodeImpl *newnode;
-    newnode = new NodeImpl(*this, deep);
-    return newnode;
-};
 
 
 //  NodeImpl::deleteIf is called when a node's reference count goes
@@ -301,13 +245,6 @@ NodeImpl * NodeImpl::getNextSibling() {
 DOMString NodeImpl::getNodeName() {
     return name;
 };
-
-
-short NodeImpl::getNodeType()
-{
-    return nType;
-};
-
 
 
 DOMString NodeImpl::getNodeValue()
@@ -688,7 +625,7 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
     if(fPrefix != null && !DocumentImpl::isXMLName(fPrefix))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     if (namespaceURI == null || localName == null ||  //if not Element or Attr node
-        nType == DOM_Node::ATTRIBUTE_NODE && name.equals(xmlns))
+        getNodeType() == DOM_Node::ATTRIBUTE_NODE && name.equals(xmlns))
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     if (fPrefix == null || fPrefix.length() == 0) {
@@ -702,12 +639,23 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 	if (*p++ == chColon)	//prefix is malformed
 	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     if (fPrefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-	nType == DOM_Node::ATTRIBUTE_NODE && fPrefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
+	getNodeType() == DOM_Node::ATTRIBUTE_NODE && fPrefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     name = this -> prefix = fPrefix;
     name = name + chColon + localName;    //nodeName is changed too
 }
+
+
+DOMString NodeImpl::getXmlnsString() {
+    return DStringPool::getStaticString("xmlns", &s_xmlns);
+}
+
+DOMString NodeImpl::getXmlnsURIString() {
+    return DStringPool::getStaticString("http://www.w3.org/2000/xmlns/",
+                                        &s_xmlnsURI);
+}
+
 
 //Return a URI mapped from the given prefix and namespaceURI as below
 //	prefix	namespaceURI		output

@@ -55,21 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/03/02 19:53:51  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:41  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:11  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 /**
@@ -89,8 +75,8 @@
 static DOMString *gComment;   // will be lazily initialized to point to "#comment"
 
 CommentImpl::CommentImpl(DocumentImpl *ownerDoc, const DOMString &data) :
-CharacterDataImpl(ownerDoc, DStringPool::getStaticString("#comment", &gComment),
-                  DOM_Node::COMMENT_NODE, data)
+CharacterDataImpl(ownerDoc,
+                  DStringPool::getStaticString("#comment", &gComment), data)
 {
 };
 
@@ -109,4 +95,9 @@ CommentImpl::~CommentImpl() {
 NodeImpl * CommentImpl::cloneNode(bool deep)
 {
         return new CommentImpl(*this, deep);
+};
+
+
+short CommentImpl::getNodeType() {
+    return DOM_Node::COMMENT_NODE;
 };

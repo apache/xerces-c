@@ -55,55 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2000/04/04 20:31:22  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.11  2000/03/31 01:21:20  andyh
- * Element::setAttribute now checks whether the attribute node exists,
- * and uses it if it does.  Change from  Steve Dickson
- *
- * Revision 1.10  2000/03/11 02:17:19  chchou
- * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
- *
- * Revision 1.9  2000/03/02 19:54:00  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/17 19:13:11  aruna1
- * Solaris related conditional statement change
- *
- * Revision 1.7  2000/02/17 17:47:25  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.6  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.5  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/22 01:38:30  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.3  2000/01/05 01:16:08  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:08  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:26  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "DeepNodeListImpl.hpp"
@@ -118,7 +70,7 @@
 
 
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
-NodeImpl(ownerDoc, nam, DOM_Node::ELEMENT_NODE, null)
+NodeImpl(ownerDoc, nam, null)
 {
     
     // If there is an ElementDefintion, set its Attributes up as
@@ -138,9 +90,25 @@ NodeImpl(ownerDoc, nam, DOM_Node::ELEMENT_NODE, null)
 //DOM Level 2
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc,
     const DOMString &fNamespaceURI, const DOMString &qualifiedName) :
-NodeImpl(ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ELEMENT_NODE, null)
+NodeImpl(ownerDoc, qualifiedName, null)
 {
-    
+    DOMString xmlns = getXmlnsString();
+    DOMString xmlnsURI = getXmlnsURIString();
+
+    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    if (index == 0) {	//qualifiedName contains no ':'
+	this -> prefix = null;
+	this -> localName = this -> name;
+    } else {	//0 < index < this->name.length()-1
+	this -> prefix = this->name.substringData(0, index);
+	this -> localName = this->name.substringData(index+1, this->name.length()-index-1);
+    }
+
+    const DOMString& URI = mapPrefix(prefix, fNamespaceURI, getNodeType());
+    this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
+
     // If there is an ElementDefintion, set its Attributes up as
     // shadows behind our own.
     NamedNodeMapImpl *defaultAttrs = null;
@@ -157,8 +125,10 @@ NodeImpl(ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ELEMENT_NODE, null)
 
     
 ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
+    if (deep)
+        cloneChildren(other);
     attributes = other.attributes->cloneMap();
 };
 
@@ -176,6 +146,11 @@ ElementImpl::~ElementImpl()
 NodeImpl *ElementImpl::cloneNode(bool deep)
 {
     return new ElementImpl(*this, deep);
+};
+
+
+short ElementImpl::getNodeType() {
+    return DOM_Node::ELEMENT_NODE;
 };
 
 

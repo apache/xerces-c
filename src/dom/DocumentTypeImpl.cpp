@@ -55,44 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/04/04 20:31:22  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.7  2000/03/02 19:53:59  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/10 23:35:11  andyh
- * Update DOM_DOMImplementation::CreateDocumentType and
- * DOM_DocumentType to match latest from W3C
- *
- * Revision 1.5  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/22 01:38:30  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.3  2000/01/08 00:09:28  andyh
- * Correcf failures in DOMTest with entity references and read-only nodes.
- * Correct reference counting problem NamedNodeMap.
- * Add export methods to NamedNodeMap and DocumentTypeImpl.
- * Redo DocumentImpl::cloneNode
- *
- * (Changes by Chih-Hsiang Chou)
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:44  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:24  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "DocumentTypeImpl.hpp"
@@ -104,7 +67,7 @@
 
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtName) 
-: NodeImpl(ownerDoc,dtName,DOM_Node::DOCUMENT_TYPE_NODE,null),
+: NodeImpl(ownerDoc,dtName,null),
     publicId(null), systemId(null)	//DOM Level 2
 {
     entities = new NamedNodeMapImpl(ownerDoc,null);
@@ -118,7 +81,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtNa
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
-: NodeImpl(null, qualifiedName, DOM_Node::DOCUMENT_TYPE_NODE, null),
+: NodeImpl(null, qualifiedName, null),
     publicId(fPublicId), systemId(fSystemId)
 {
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
@@ -133,8 +96,10 @@ DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
 
 
 DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
+    if (deep)
+        cloneChildren(other);
     entities = other.entities->cloneMap();
     notations= other.notations->cloneMap();
     
@@ -173,6 +138,11 @@ DocumentTypeImpl::~DocumentTypeImpl()
 NodeImpl *DocumentTypeImpl::cloneNode(bool deep)
 {
     return new DocumentTypeImpl(*this, deep);
+};
+
+
+short DocumentTypeImpl::getNodeType() {
+    return DOM_Node::DOCUMENT_TYPE_NODE;
 };
 
 

@@ -55,43 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/04/04 20:31:21  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.7  2000/03/02 19:53:51  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/02/04 05:06:29  andyh
- * Change all DOMString offsets and lengths form signed to unsigned
- * Other misc. cleanups.
- *
- * Revision 1.4  2000/02/04 01:49:30  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  1999/12/03 00:11:22  andyh
- * Added DOMString.clone() to node parameters in and out of the DOM,
- * where they had been missed.
- *
- * DOMString::rawBuffer, removed incorrect assumptions about it
- * being null terminated.
- *
- * Revision 1.2  1999/11/30 21:16:24  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:41  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:11  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "CharacterDataImpl.hpp"
@@ -99,13 +63,13 @@
 
 
 CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc, const DOMString &nam,
-                                     short nTyp, const DOMString &data) :
-NodeImpl(ownerDoc, nam, nTyp, data)
+                                     const DOMString &data) :
+NodeImpl(ownerDoc, nam, data)
 {
 };
 
 CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
 };
 
@@ -122,12 +86,6 @@ void CharacterDataImpl::appendData(const DOMString &data)
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     value.appendData(data);
-};
-
-
-NodeImpl *CharacterDataImpl::cloneNode(bool deep)
-{
-    return new CharacterDataImpl(*this, deep);
 };
 
 

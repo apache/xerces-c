@@ -58,44 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2000/03/24 21:24:50  abagchi
- * Added getElementById() from patch submitted by Jeff Lewis
- *
- * Revision 1.8  2000/03/02 19:53:59  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.7  2000/02/24 20:11:29  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.6  2000/02/10 23:35:11  andyh
- * Update DOM_DOMImplementation::CreateDocumentType and
- * DOM_DocumentType to match latest from W3C
- *
- * Revision 1.5  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/02/04 01:49:30  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  2000/01/05 01:16:08  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/12/21 07:47:06  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:08:44  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:44:24  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -175,6 +138,7 @@ public:
     virtual bool isDocumentImpl();   // RTTI replacement function
 
     virtual NodeImpl            *cloneNode(bool deep);
+    virtual short getNodeType();
     virtual AttrImpl            *createAttribute(const DOMString &name);
     virtual CDATASectionImpl    *createCDATASection(const DOMString &data);
     virtual CommentImpl         *createComment(const DOMString &data);

@@ -55,29 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/04/04 20:31:23  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.4  2000/03/02 19:54:04  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:17  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:31  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "NotationImpl.hpp"
@@ -109,12 +87,12 @@
 */
 
 NotationImpl::NotationImpl(DocumentImpl *ownerDoc, const DOMString &notationName) :
-NodeImpl(ownerDoc, notationName, DOM_Node::NOTATION_NODE, null)
+NodeImpl(ownerDoc, notationName, null)
 {
 };
 
 NotationImpl::NotationImpl(const NotationImpl &other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
 };
 
@@ -127,6 +105,11 @@ NotationImpl::~NotationImpl()
 NodeImpl *NotationImpl::cloneNode(bool deep)
 {
     return new NotationImpl(*this, deep);
+};
+
+
+short NotationImpl::getNodeType() {
+    return DOM_Node::NOTATION_NODE;
 };
 
 

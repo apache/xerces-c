@@ -58,34 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2000/04/04 17:38:16  lehors
- * got rid of ownerElement attribute, use parentNode instead
- *
- * Revision 1.5  2000/03/02 19:53:51  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/24 20:11:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/21 07:47:06  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:08:40  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:10  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -117,6 +90,7 @@ public:
     AttrImpl(const AttrImpl &other, bool deep=false);
     virtual ~AttrImpl();
     virtual NodeImpl *cloneNode(bool deep=false);
+    virtual short getNodeType();
     virtual DOMString getName();
     virtual DOMString getNodeValue();
     virtual NodeImpl * getParentNode();

@@ -58,37 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2000/03/11 02:17:19  chchou
- * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
- *
- * Revision 1.6  2000/03/02 19:54:01  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/24 20:11:30  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/01/05 01:16:08  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/12/21 07:47:07  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:09:08  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:26  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -120,6 +90,7 @@ public:
     
     virtual bool isElementImpl();
     virtual NodeImpl * cloneNode(bool deep);
+    virtual short getNodeType();
     virtual DOMString getAttribute(const DOMString &name);
     virtual AttrImpl *getAttributeNode(const DOMString &name);
     virtual NamedNodeMapImpl * getAttributes();

@@ -55,38 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/04/04 20:31:20  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.7  2000/04/04 17:38:16  lehors
- * got rid of ownerElement attribute, use parentNode instead
- *
- * Revision 1.6  2000/03/02 19:53:51  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/02/03 23:07:27  andyh
- * Add several new functions from Robert Weir to DOMString.
- *
- * Revision 1.3  2000/01/22 01:38:29  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.2  1999/11/30 21:16:24  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:39  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:10  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "AttrImpl.hpp"
@@ -94,12 +63,13 @@
 #include "DocumentImpl.hpp"
 #include "TextImpl.hpp"
 #include "ElementImpl.hpp"
+#include "DStringPool.hpp"
 
 
 #define null 0
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
-:  NodeImpl (ownerDoc, aName, DOM_Node::ATTRIBUTE_NODE, DOMString())
+:  NodeImpl (ownerDoc, aName, DOMString())
 {
     specified = true;
 };
@@ -107,15 +77,40 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
 //DOM Level 2
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
     const DOMString &fNamespaceURI, const DOMString &qualifiedName)
-:  NodeImpl (ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ATTRIBUTE_NODE, DOMString())
+:  NodeImpl (ownerDoc, qualifiedName, DOMString())
 {
+    DOMString xmlns = getXmlnsString();
+    DOMString xmlnsURI = getXmlnsURIString();
+
+    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    bool xmlnsAlone = false;	//true if attribute name is "xmlns"
+    if (index == 0) {	//qualifiedName contains no ':'
+        if (this->name.equals(xmlns)) {
+	    if (!fNamespaceURI.equals(xmlnsURI))
+		throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+	    xmlnsAlone = true;
+	}
+	this -> prefix = null;
+	this -> localName = this -> name;
+    } else {	//0 < index < this->name.length()-1
+	this -> prefix = this->name.substringData(0, index);
+	this -> localName = this->name.substringData(index+1, this->name.length()-index-1);
+    }
+
+    const DOMString& URI = xmlnsAlone ? xmlnsURI : mapPrefix(prefix, fNamespaceURI, getNodeType());
+    this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
+
     specified = true;
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
-: NodeImpl(other, deep)
+: NodeImpl(other)
 {
     specified = false;
+    if (deep)
+      cloneChildren(other);
 };
 
 
@@ -128,6 +123,11 @@ NodeImpl * AttrImpl::cloneNode(bool deep)
     AttrImpl *newnode;
     newnode = new AttrImpl(*this, deep);
     return newnode;
+};
+
+
+short AttrImpl::getNodeType() {
+    return DOM_Node::ATTRIBUTE_NODE;
 };
 
 
@@ -148,7 +148,7 @@ DOMString AttrImpl::getNodeValue()
 // have a parent
 NodeImpl * AttrImpl::getParentNode()
 {
-    return null;
+    return 0;
 };
 
 

@@ -58,43 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2000/04/04 20:31:23  lehors
- * got rid of unused isLeafNode attribute
- *
- * Revision 1.8  2000/03/02 19:54:02  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.7  2000/02/24 20:11:30  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.6  2000/02/06 07:47:33  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/02/04 01:49:26  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.4  2000/01/22 01:38:30  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.3  2000/01/05 01:16:08  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/12/21 07:47:07  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:09:14  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:30  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -129,7 +93,6 @@ const int null = 0;
 
 class CDOM_EXPORT NodeImpl: public NodeListImpl {
 public:
-    short                   nType;                  // Node type (see Node. constants)
     DOMString               name;                   // Name of this node or node type
     DOMString               value;                  // String value (not used in all nodes)
     bool                    readOnly;
@@ -155,12 +118,9 @@ public:
     
 public:
     NodeImpl(DocumentImpl *ownerDocument,
-        const DOMString &name,  short nType,
+        const DOMString &name,
         const DOMString &initValue);
-    NodeImpl(DocumentImpl *ownerDocument,   //Introduced in DOM Level 2
-	const DOMString &namespaceURI, const DOMString &qualifiedName, short nType,
-        const DOMString &initValue);
-    NodeImpl(const NodeImpl &other, bool deep=false);
+    NodeImpl(const NodeImpl &other);
     virtual ~NodeImpl();
     NodeImpl        *clone();
     
@@ -176,7 +136,7 @@ public:
 
     virtual NodeImpl *appendChild(NodeImpl *newChild);
     virtual void changed();
-    virtual NodeImpl * cloneNode(bool deep);
+    virtual NodeImpl * cloneNode(bool deep) = 0;
     static void deleteIf(NodeImpl *thisNode);
     virtual NamedNodeMapImpl * getAttributes();
     virtual NodeListImpl *getChildNodes();
@@ -185,7 +145,7 @@ public:
     virtual unsigned int getLength();
     virtual NodeImpl * getNextSibling();
     virtual DOMString getNodeName();
-    virtual short getNodeType();
+    virtual short getNodeType() = 0;
     virtual DOMString getNodeValue();
     virtual DocumentImpl * getOwnerDocument();
     virtual NodeImpl * getParentNode();
@@ -211,9 +171,14 @@ public:
     virtual DOMString   getPrefix();
     virtual DOMString   getLocalName();
     virtual void        setPrefix(const DOMString &prefix);
+
+protected:
     //Utility, not part of DOM Level 2 API
     static const DOMString&	mapPrefix(const DOMString &prefix,
 	const DOMString &namespaceURI, short nType);
+    DOMString getXmlnsString();
+    DOMString getXmlnsURIString();
+    void cloneChildren(const NodeImpl &other);
 };
 
 

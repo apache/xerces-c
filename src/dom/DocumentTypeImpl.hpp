@@ -58,46 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/03/02 19:54:00  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.7  2000/02/24 20:11:29  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.6  2000/02/10 23:35:11  andyh
- * Update DOM_DOMImplementation::CreateDocumentType and
- * DOM_DocumentType to match latest from W3C
- *
- * Revision 1.5  2000/02/06 07:47:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/22 01:38:30  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.3  2000/01/08 00:09:28  andyh
- * Correcf failures in DOMTest with entity references and read-only nodes.
- * Correct reference counting problem NamedNodeMap.
- * Add export methods to NamedNodeMap and DocumentTypeImpl.
- * Redo DocumentImpl::cloneNode
- *
- * (Changes by Chih-Hsiang Chou)
- *
- * Revision 1.2  1999/12/21 07:47:06  robweir
- * Patches to support Xalan, where we need to create a
- * "special" DOM with subclassed Nodes.
- *
- * 1. Export the NodeImpl-derived classes
- * 2. Ensure that their constructors have at least protected access
- *
- * Revision 1.1.1.1  1999/11/09 01:08:44  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:25  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
@@ -131,6 +92,7 @@ public:
     virtual bool isDocumentTypeImpl();
     
     virtual NodeImpl *         cloneNode(bool deep);
+    virtual short getNodeType();
     virtual NamedNodeMapImpl * getElements();
     virtual NamedNodeMapImpl * getEntities();
     virtual DOMString          getName();
