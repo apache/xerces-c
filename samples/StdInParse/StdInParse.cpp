@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/06/20 02:23:10  rahulj
+ * Help message added by Joe Polastre.
+ *
  * Revision 1.5  2000/03/02 19:53:50  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -110,8 +113,9 @@ void usage()
 {
     cout << "\nUsage:\n"
          << "    StdInParse [options]\n"
-         << "    -v  Do a validating parse. Defaults to non-validating.\n"
-         << "    -n  Enable namespace processing.\n\n"
+         << "    -v  Do a validating parse. [default is off]\n"
+         << "    -n  Enable namespace processing. [default is off]\n"
+		 << "    -?  Show this help\n\n"
          << "This program allows you to redirect a file into the program\n"
          << "to be parsed. It will count the elements, characters, and \n"
          << "spaces and display these stats at the end\n"
@@ -140,6 +144,11 @@ int main(int argC, char* argV[])
     int parmInd;
     for (parmInd = 1; parmInd < argC; parmInd++)
     {
+		if (!strcmp(argV[parmInd], "-?"))
+		{
+			usage();
+			return 1;
+		}
         if (!strcmp(argV[parmInd], "-v")
         ||  !strcmp(argV[parmInd], "-V"))
         {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/06/20 02:23:08  rahulj
+ * Help message added by Joe Polastre.
+ *
  * Revision 1.6  2000/03/03 01:29:31  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -119,10 +122,6 @@
 //  xmlFile
 //      The path to the file to parser. Set via command line.
 //
-//  doEscapes
-//      Indicates whether special chars should be escaped in the output.
-//      Defaults to doing escapes, -NoEscape overrides.
-//
 //  doNamespaces
 //      Indicates whether namespace processing should be done.
 //
@@ -131,7 +130,6 @@
 //      to validate, but -v overrides that.
 // ---------------------------------------------------------------------------
 static char*	xmlFile         = 0;
-static bool     doEscapes       = true;
 static bool     doNamespaces    = false;
 static bool     doValidation    = false;
 
@@ -142,8 +140,17 @@ static bool     doValidation    = false;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout <<  "\nUsage: PParse file\n"
-         <<  "   This program demonstrates progressive parsing\n"
+    cout <<  "\nUsage: PParse [options] <file>\n\n"
+         <<  "This sample program demonstrates the progressive parse capabilities of\n"
+	     <<  "the parser system. It allows you to do a scanFirst() call followed by\n"
+         <<  "a loop which calls scanNext(). You can drop out when you've found what\n"
+         <<  "ever it is you want. In our little test, our event handler looks for\n"
+         <<  "16 new elements then sets a flag to indicate its found what it wants.\n"
+         <<  "At that point, our progressive parse loop exits.\n\n"
+         <<  "Options:\n"
+         <<  "      -v            - Do validation [default is off]\n"
+         <<  "      -n            - Enable namespace processing [default is off]\n"
+         <<  "      -?            - Show this help (must be the only parameter)\n"
          <<  endl;
 }
 
@@ -199,10 +206,6 @@ int main(int argC, char* argV[])
               ||  !strcmp(argV[parmInd], "-N"))
         {
             doNamespaces = true;
-        }
-         else if (!strcmp(argV[parmInd], "-NoEscape"))
-        {
-            doEscapes = false;
         }
          else
         {
