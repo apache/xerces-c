@@ -103,7 +103,7 @@
             were created by the DOMImplementation::createXXXX (e.g. DOMBuilder, DOMWriter, DOMDocument,
             DOMDocumentType).</p>
 
-         <p>Acesss to a released object will lead to unexpected behaviour.</p>
+         <p>Access to a released object will lead to unexpected behaviour.</p>
 
          <note>When a DOMDocument is released, all its associated children AND any objects it owned
             (e.g. DOMRange, DOMTreeWalker, DOMNodeIterator or any orphaned nodes) will also be released.
@@ -120,7 +120,7 @@
          <s4 title="Objects created by DOMDocument::createXXXX">
          <p>Users <em>can</em> call the release() function to indicate the release of any orphaned nodes.
             When an orphaned Node is released, its associated children will also be released.
-            Acesss to a released Node will lead to unexpected behaviour.   These orphaned Nodes will
+            Access to a released Node will lead to unexpected behaviour.   These orphaned Nodes will
             eventually be released, if not already done so, when its owner document is released</p>
 
             <note>DOMException::INVALID_ACCESS_ERR will be raised if releasing a Node that has a parent
@@ -130,7 +130,7 @@
          <s4 title="Objects created by DOMDocumentRange::createRange or DOMDocumentTraversal::createXXXX">
          <p>Users <em>can</em> call release() function when finished using the DOMRange,
             DOMNodeIterator, DOMTreeWalker.
-            Acesss to a released object will lead to unexpected behaviour.   These objects will
+            Access to a released object will lead to unexpected behaviour.   These objects will
             eventually be released, if not already done so, when its owner document is released
          </p>
          </s4>
@@ -349,7 +349,7 @@
         <anchor name="XercesDOMFeatures"/>
         <s3 title="XercesDOMParser Supported Features">
 
-           <p>The behavior of the XercesDOMParser is dependant on the values of the following features.  All
+           <p>The behavior of the XercesDOMParser is dependent on the values of the following features.  All
            of the features below are set using the "setter" methods (e.g. <code>setDoNamespaces</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getDoNamespaces</code>).
            The following only gives you a quick summary of supported features.  Please
@@ -575,11 +575,11 @@
             <anchor name="CalculateSrcOffset"/>
             <table>
                 <tr><th colspan="2"><em>void setCalculateSrcOfs(const bool)</em></th></tr>
-                <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
-                <tr><th><em>false:</em></th><td> Disable src offset calculation. </td></tr>
+                <tr><th><em>true:</em></th><td> Enable source offset calculation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable source offset calculation. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, the user can inquire about
-                the current src offset within the input source. Setting it to false (default)
+                the current source offset within the input source. Setting it to false (default)
                 improves the performance.</td></tr>
             </table>
             <p/>
@@ -649,7 +649,7 @@
 
         <anchor name="XercesDOMProperties"/>
         <s3 title="XercesDOMParser Supported Properties">
-           <p>The behavior of the XercesDOMParser is dependant on the values of the following properties.  All
+           <p>The behavior of the XercesDOMParser is dependent on the values of the following properties.  All
            of the properties below are set using the "setter" methods (e.g. <code>setExternalSchemaLocation</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getExternalSchemaLocation</code>).
            The following only gives you a quick summary of supported features.  Please
@@ -916,7 +916,7 @@
         <anchor name="DOMBuilderFeatures"/>
         <s3 title="DOMBuilder Supported Features">
 
-           <p>The behavior of the DOMBuilder is dependant on the values of the following features.
+           <p>The behavior of the DOMBuilder is dependent on the values of the following features.
            All of the features below can be set using the function <code>DOMBuilder::setFeature(cons XMLCh* const, const bool)</code>.
            And can be queried using the function <code>bool DOMBuilder::getFeature(const XMLCh* const)</code>.
            User can also call <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
@@ -1001,7 +1001,7 @@
                 EntityReference nodes and their child nodes will be read-only. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not create EntityReference nodes in the DOM tree.  No
                 EntityReference nodes will be created, only the nodes corresponding to their fully
-                expanded sustitution text will be created.  </td></tr>
+                expanded substitution text will be created.  </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMEntities </td></tr>                
                 <tr><th><em>note:</em></th><td> This feature only affects the appearance of
@@ -1295,12 +1295,12 @@
             <anchor name="builder-CalculateSrcOffset"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/calculate-src-ofs</em></th></tr>
-                <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
-                <tr><th><em>false:</em></th><td> Disable src offset calculation. </td></tr>
+                <tr><th><em>true:</em></th><td> Enable source offset calculation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable source offset calculation. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesCalculateSrcOfs </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, the user can inquire about
-                the current src offset within the input source. Setting it to false (default)
+                the current source offset within the input source. Setting it to false (default)
                 improves the performance.</td></tr>
             </table>
             <p/>
@@ -1391,7 +1391,7 @@
         <anchor name="DOMBuilderProperties"/>
         <s3 title="DOMBuilder Supported Properties">
 
-           <p>The behavior of the DOMBuilder is dependant on the values of the following properties.
+           <p>The behavior of the DOMBuilder is dependent on the values of the following properties.
            All of the properties below can be set using the function <code>DOMBuilder::setProperty(const XMLCh* const, void*)</code>.
            It takes a void pointer as the property value.  Application is required to initialize this void
            pointer to a correct type.  Please check the column "Value Type" below
@@ -1710,7 +1710,7 @@
         <anchor name="DOMWriterFeatures"/>
         <s3 title="DOMWriter Supported Features">
 
-           <p>The behavior of the DOMWriter is dependant on the values of the following features.
+           <p>The behavior of the DOMWriter is dependent on the values of the following features.
            All of the features below can be set using the function <code>DOMWriter::setFeature(cons XMLCh* const, bool)</code>.
            And can be queried using the function <code>bool DOMWriter::getFeature(const XMLCh* const)</code>.
            User can also call <code>DOMWriter::canSetFeature(const XMLCh* const, bool)</code>
@@ -1744,11 +1744,11 @@
                 <tr><th><em>true:</em></th><td> EntityReference nodes are serialized as an entity
 				 reference of the form "&amp;entityName;" in the output. </td></tr>
                 <tr><th><em>false:</em></th><td> EntityReference nodes are serialized as expanded
-				sustitution text, unless the corresponding entity definition is not found. </td></tr>
+				substitution text, unless the corresponding entity definition is not found. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTEntities </td></tr>
                 <tr><th><em>note:</em></th><td> This feature only affects the output XML stream.
-				The dom tree to be serialized will not be changed. </td></tr>
+				The DOM tree to be serialized will not be changed. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>

@@ -28,7 +28,7 @@
             <p>To build &XercesCName; from the source distribution (using MSVC), you will
             need to open the workspace containing the project. If you are
             building your application, you may want to add the &XercesCName;
-            project inside your applications's workspace.</p>
+            project inside your application's workspace.</p>
             <p>The workspace containing the &XercesCName; project file and
             all other samples is in:</p>
             <p>For MSVC Version 6:</p>
@@ -92,7 +92,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 
     <anchor name="WinBorlandBuilder"/>
     <s2 title="Building &XercesCName; on Windows using Borland C++Builder">
-        <p>&XercesCName; sourec distribution comes with Borland C++Builder6 projects to help you
+        <p>&XercesCName; source distribution comes with Borland C++Builder6 projects to help you
 		build &XercesCName;. The following describes the steps you need to build
 		&XercesCName;.</p>
 
@@ -126,7 +126,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
     
     <anchor name="WinBorlandCC"/>
     <s2 title="Building &XercesCName; on Windows using Borland C++ Compiler">
-        <p>&XercesCName; sourec distribution comes with Borland C++ Compiler make files to help you
+        <p>&XercesCName; source distribution comes with Borland C++ Compiler make files to help you
 		build &XercesCName;. The following describes the steps you need to build
 		&XercesCName;.</p>
 

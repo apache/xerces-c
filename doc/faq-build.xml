@@ -412,7 +412,7 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
  
-  <faq title='Regenerating (API) documention?'>
+  <faq title='Regenerating (API) documentation?'>
     <q>How do I regenerate the (API) documentation?</q>
     <a>
      <p>To use the internal XML based application that creates the

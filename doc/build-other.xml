@@ -346,8 +346,8 @@ gmake </source>
 			the &XercesCName; code contains some files with very long names, and earlier versions
 			of Mac OS, as well as earlier versions of CodeWarrior, did not support file names
 			longer than 32 characters, CodeWarrior 8.0 is required. If you are building &XercesCName; 
-			on a Mac OS 9 system, be extremely carefull in how to unpack and/or transfer the &XercesCName; 
-			files to that system, to ensure that their file names are not trancated in the process.
+			on a Mac OS 9 system, be extremely careful in how to unpack and/or transfer the &XercesCName; 
+			files to that system, to ensure that their file names are not truncated in the process.
 			</p>
 			
 			<p><em>Installing &XercesCName; for use with CodeWarrior:</em>
@@ -532,7 +532,7 @@ make</source>
 				
 				<li>HFS+ APIs. If HFS+ APIs are available, all file access is performed
 				using the HFS+ fork APIs to support long file access, and to support
-				long unicode compliant file names. In the absence of HFS+ APIs, classic
+				long Unicode compliant file names. In the absence of HFS+ APIs, classic
 				HFS APIs are used instead.
 				</li>
 			</ul>	

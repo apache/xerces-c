@@ -159,7 +159,7 @@ rpm -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.0 and older)
 or
 rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat 8)
 </source>
-        <p>The &XercesCName; RPM specificattion can be found in
+        <p>The &XercesCName; RPM specification can be found in
            <br/><code>&XercesCSrcInstallDir;/xerces-c.spec</code>.</p>
         <p>Please refer to the <jump href="http://www.rpm.org/RPM-HOWTO">RPM-HOWTO</jump>,
            for more RPM related information.</p>

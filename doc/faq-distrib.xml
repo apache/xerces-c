@@ -208,7 +208,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
 	    <jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
 
             <p>See <jump href="faq-build.html#faq-18">
-            FAQ: Regenerating (API) documention?</jump></p>
+            FAQ: Regenerating (API) documentation?</jump></p>
 
         </a>
     </faq>

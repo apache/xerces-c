@@ -48,7 +48,7 @@
             have applied your changes to a local copy of the most
             recent xerces source code, do <code>cvs diff -u
             file</code> for each file you&apos;ve changed.
-            Keep in mind the coding quidelines for &XercesCName; as
+            Keep in mind the coding guidelines for &XercesCName; as
             described below.
         </li>
         <li>

@@ -184,7 +184,7 @@ parser.setDoNamespaces(true);
 // Enable grammar caching
 parser.cacheGrammarFromParse(true);
 
-// Let's parse the XML document. The parser will cache any grammars encounterd.
+// Let's parse the XML document. The parser will cache any grammars encountered.
 parser.parse(xmlFile);
 
 // No need to enable re-use by setting useCachedGrammarInParse to true. It is
@@ -558,7 +558,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 
         <p>Application can specify the locale for the message loader in their
         very first invocation to XMLPlatformUtils::Initialize() by supplying
-        a parameter for the target locale intended. The defaul locale is "en_US".
+        a parameter for the target locale intended. The default locale is "en_US".
         </p>
 
 <source>
@@ -760,7 +760,7 @@ XMLPlatformUtils::Terminate();
         attack against a system running the parser.  Initially, the
         SecurityManager only knows about attacks that can result from
         exponential entity expansion; this is the only known attack that
-        involves processing a single XML document.  Other, simlar attacks
+        involves processing a single XML document.  Other, similar attacks
         can be launched if arbitrary schemas may be parsed; there already
         exist means (via use of the EntityResolver interface) by which
         applications can deny processing of untrusted schemas.  In future,
@@ -818,7 +818,7 @@ myParser->setSecurityManager(myManager);
             <p>
             The WFXMLScanner is a non-validating scanner which performs well-formedness check only.
             It does not do any DTD/XMLSchema processing. If the XML document contains a DOCTYPE, it
-            will be silently ignored (i.e. no warning message is issued). Similiarly, any schema
+            will be silently ignored (i.e. no warning message is issued). Similarly, any schema
             specific attributes (e.g. schemaLocation), will be treated as normal element attributes.
             Setting grammar specific features/properties will have no effect on its behavior
             (e.g. setLoadExternalDTD(true) is ignored).
