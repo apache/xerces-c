@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.5  2000/01/06 19:43:25  aruna1
+* Modifed ?: consturct on solaris to assign DOMString objects
+*
 * Revision 1.4  2000/01/05 01:16:08  andyh
 * DOM Level 2 core, namespace support added.
 *
@@ -150,7 +153,7 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     }
 
     const DOMString& URI = mapPrefix(prefix, namespaceURI, nTyp);
-    this -> namespaceURI = URI == null ? null : URI.clone();
+    this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
 
     this->nType=nTyp;
     this->isLeafNode=isLeafNod;

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/06 19:43:25  aruna1
+ * Modifed ?: consturct on solaris to assign DOMString objects
+ *
  * Revision 1.3  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -334,9 +337,11 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 	    if (n->isAttrImpl() && d->isAttrImpl()) {	//DOM Level 2
 		d = d->cloneNode(true); //copy d and ownerElement of n
 		((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
-		d->namespaceURI = n->namespaceURI == null ? null : n->namespaceURI.clone();
-		d->prefix = n->prefix == null ? null : n->prefix.clone();
-		d->localName = n->localName == null ? null : n->localName.clone();
+
+		d->namespaceURI = (n->namespaceURI == null) ? DOMString(null) : n->namespaceURI.clone();
+		d->prefix = (n->prefix == null) ? DOMString(null) : n->prefix.clone();
+		d->localName = (n->localName == null) ? DOMString(null) : n->localName.clone();
+
 	    }
             nodes->setElementAt(d, i);
 	} else
@@ -557,9 +562,9 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
 	if (n->isAttrImpl() && d->isAttrImpl()) {
 	    d = d->cloneNode(true); //copy d and ownerElement of n
 	    ((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
-	    d->namespaceURI = n->namespaceURI == null ? null : n->namespaceURI.clone();
-	    d->prefix = n->prefix == null ? null : n->prefix.clone();
-	    d->localName = n->localName == null ? null : n->localName.clone();
+	    d->namespaceURI = (n->namespaceURI == null) ? DOMString(null) : n->namespaceURI.clone();
+	    d->prefix = n->prefix == null ? DOMString(null) : n->prefix.clone();
+	    d->localName = n->localName == null ? DOMString(null) : n->localName.clone();
 	}
         nodes -> setElementAt(d, i);	//replace n in nodes by d
     } else
