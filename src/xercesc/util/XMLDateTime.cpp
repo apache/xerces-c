@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/03/23 22:54:49  peiyongz
+ * invalid second values
+ *
  * Revision 1.7  2003/02/22 22:49:09  peiyongz
  * Schema Errata E2-45 24:00:00 allowed
  *
@@ -1044,6 +1047,13 @@ void XMLDateTime::getTime()
             fValue[MiliSecond] = parseInt(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
+    else
+    {
+        // seconds has more than 2 digits
+        ThrowXML1(SchemaDateTimeException
+                , XMLExcepts::DateTime_min_invalid
+                , fBuffer);
+    }
 
     //parse UTC time zone (hh:mm)
     if ( sign > 0 ) {
