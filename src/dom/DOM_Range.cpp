@@ -126,55 +126,55 @@ bool       DOM_Range::operator == (const DOM_NullPtr * other) const
 
 //getter functions
 
-DOM_Node& DOM_Range::getStartContainer()
+DOM_Node DOM_Range::getStartContainer() const
 {
     return ((RangeImpl *)fImpl)->getStartContainer();
 }
-unsigned int DOM_Range::getStartOffset()
+unsigned int DOM_Range::getStartOffset() const
 {
     return ((RangeImpl *)fImpl)->getStartOffset();
 }
-DOM_Node& DOM_Range::getEndContainer()
+DOM_Node DOM_Range::getEndContainer() const
 {
         return ((RangeImpl *)fImpl)->getEndContainer();
 }
-unsigned int DOM_Range::getEndOffset()
+unsigned int DOM_Range::getEndOffset() const
 {
         return ((RangeImpl *)fImpl)->getEndOffset();
 }
-const DOM_Node& DOM_Range::getCommonAncestorContainer()
+const DOM_Node DOM_Range::getCommonAncestorContainer() const
 {
         return ((RangeImpl *)fImpl)->getCommonAncestorContainer();
 }
 
 //setter functions    
 
-void DOM_Range::setStart(DOM_Node parent, unsigned int offset)
+void DOM_Range::setStart(const DOM_Node& parent, unsigned int offset)
 {
     this->fImpl->setStart(parent, offset);
 }
 
-void DOM_Range::setEnd(DOM_Node parent, unsigned int offset)
+void DOM_Range::setEnd(const DOM_Node& parent, unsigned int offset)
 {
     this->fImpl->setEnd(parent, offset);
 }
 
-void DOM_Range::setStartBefore(DOM_Node refNode)
+void DOM_Range::setStartBefore(const DOM_Node& refNode)
 {
     this->fImpl->setStartBefore(refNode);
 }
 
-void DOM_Range::setStartAfter(DOM_Node refNode)
+void DOM_Range::setStartAfter(const DOM_Node& refNode)
 {
     this->fImpl->setStartAfter(refNode);
 }
 
-void DOM_Range::setEndBefore(DOM_Node refNode)
+void DOM_Range::setEndBefore(const DOM_Node& refNode)
 {
     this->fImpl->setEndBefore(refNode);
 }
 
-void DOM_Range::setEndAfter(DOM_Node refNode)
+void DOM_Range::setEndAfter(const DOM_Node& refNode)
 {
     this->fImpl->setEndAfter(refNode);
 }
@@ -185,22 +185,22 @@ void DOM_Range::collapse(bool toStart)
     this->fImpl->collapse(toStart);
 }
 
-bool DOM_Range::getCollapsed()
+bool DOM_Range::getCollapsed() const
 {
     return ((RangeImpl *)fImpl)->getCollapsed();
 }
 
-void DOM_Range::selectNode(DOM_Node node)
+void DOM_Range::selectNode(const DOM_Node& node)
 {
   ((RangeImpl *)fImpl)->selectNode(node); 
 }
-void DOM_Range::selectNodeContents(DOM_Node node)
+void DOM_Range::selectNodeContents(const DOM_Node& node)
 {
     ((RangeImpl *)fImpl)->selectNodeContents(node); 
 }
 
 //Functions related to comparing ange Boundrary-Points
-short DOM_Range::compareBoundaryPoints(CompareHow how, const DOM_Range& range)
+short DOM_Range::compareBoundaryPoints(CompareHow how, const DOM_Range& range) const
 {
     return ((RangeImpl *)fImpl)->compareBoundaryPoints(how, range.fImpl);
 }
@@ -215,7 +215,7 @@ DOM_DocumentFragment DOM_Range::extractContents()
     return ((RangeImpl *)fImpl)->extractContents();
 }
 
-DOM_DocumentFragment DOM_Range::cloneContents()
+DOM_DocumentFragment DOM_Range::cloneContents() const
 {
     return ((RangeImpl *)fImpl)->cloneContents();
 }
@@ -226,17 +226,17 @@ void DOM_Range::insertNode(DOM_Node& node)
 }
 
 //Misc functions
-void DOM_Range::surroundContents(DOM_Node node)
+void DOM_Range::surroundContents(DOM_Node& node)
 {
     ((RangeImpl *)fImpl)->surroundContents(node);
 }
 
-DOM_Range DOM_Range::cloneRange()
+DOM_Range DOM_Range::cloneRange() const
 {
     return DOM_Range( ((RangeImpl *)fImpl)->cloneRange() );
 }
 
-DOMString DOM_Range::toString()
+DOMString DOM_Range::toString() const
 {
     return ((RangeImpl *)fImpl)->toString();
 }

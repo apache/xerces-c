@@ -93,37 +93,37 @@ public:
     bool operator == (const DOM_NullPtr * other) const;
 
     //getter functions
-    DOM_Node& getStartContainer();
-    unsigned int getStartOffset();
-    DOM_Node& getEndContainer();
-    unsigned int getEndOffset();
-    bool getCollapsed();
-    const DOM_Node& getCommonAncestorContainer();
+    DOM_Node getStartContainer() const;
+    unsigned int getStartOffset() const;
+    DOM_Node getEndContainer() const;
+    unsigned int getEndOffset() const;
+    bool getCollapsed() const;
+    const DOM_Node getCommonAncestorContainer() const;
 
     //setter functions
-    void setStart(DOM_Node parent, unsigned int offset);
-    void setEnd(DOM_Node parent, unsigned int offset);
+    void setStart(const DOM_Node &parent, unsigned int offset);
+    void setEnd(const DOM_Node &parent, unsigned int offset);
 
-    void setStartBefore(DOM_Node refNode);
-    void setStartAfter(DOM_Node refNode);
-    void setEndBefore(DOM_Node refNode);
-    void setEndAfter(DOM_Node refNode);
+    void setStartBefore(const DOM_Node &refNode);
+    void setStartAfter(const DOM_Node &refNode);
+    void setEndBefore(const DOM_Node &refNode);
+    void setEndAfter(const DOM_Node &refNode);
    
     //misc functions
     void collapse(bool toStart);
-    void selectNode(DOM_Node node);
-    void selectNodeContents(DOM_Node node);
+    void selectNode(const DOM_Node &node);
+    void selectNodeContents(const DOM_Node &node);
 
     //Functions related to comparing range Boundrary-Points
-    short compareBoundaryPoints(CompareHow how, const DOM_Range& range);
+    short compareBoundaryPoints(CompareHow how, const DOM_Range& range) const;
     void deleteContents();
     DOM_DocumentFragment extractContents();
-    DOM_DocumentFragment cloneContents();
+    DOM_DocumentFragment cloneContents() const;
     void insertNode(DOM_Node& node);
     //Misc functions
-    void surroundContents(DOM_Node node);
-    DOM_Range cloneRange();
-    DOMString toString();
+    void surroundContents(DOM_Node &node);
+    DOM_Range cloneRange() const;
+    DOMString toString() const;
     void detach();
 
     

@@ -84,7 +84,6 @@ RangeImpl::RangeImpl(DOM_Document doc)
         fEndOffset(0),
         fDetached(false),
         fCollapsed(true),
-        fCommonAncestorContainer(0),
         fRemoveChild(0)
 {
 }        
@@ -98,7 +97,6 @@ RangeImpl::RangeImpl(const RangeImpl& other)
     fEndOffset = other.fEndOffset;
     fDetached = other.fDetached;
     fCollapsed = other.fCollapsed;
-    fCommonAncestorContainer = other.fCommonAncestorContainer;
     fRemoveChild = other.fRemoveChild;
 }
 
@@ -126,29 +124,29 @@ void RangeImpl::unreferenced()
 //-------------------------------
 
 
-DOM_Node& RangeImpl::getStartContainer()
+DOM_Node RangeImpl::getStartContainer() const
 {
     return fStartContainer;
 }
 
-unsigned int RangeImpl::getStartOffset()
+unsigned int RangeImpl::getStartOffset() const
 {
     return fStartOffset;
 }
 
-DOM_Node& RangeImpl::getEndContainer()
+DOM_Node RangeImpl::getEndContainer() const
 {
     return fEndContainer;
 }
 
-unsigned int RangeImpl::getEndOffset()
+unsigned int RangeImpl::getEndOffset() const
 {
     return fEndOffset;
 }
 
 
 
-bool RangeImpl::getCollapsed()
+bool RangeImpl::getCollapsed() const
 {
     if (fDetached) 
     {
@@ -185,12 +183,7 @@ void RangeImpl::setEndOffset(unsigned int offset)
     fEndOffset = offset;
 }
 
-void RangeImpl::setCommonAncestorContainer(const DOM_Node&  node) 
-{
-    fCommonAncestorContainer = node;
-}
-
-void RangeImpl::setStart(DOM_Node& refNode, unsigned int offset)
+void RangeImpl::setStart(const DOM_Node& refNode, unsigned int offset)
 {
     checkIndex(refNode, offset);
     
@@ -210,7 +203,7 @@ void RangeImpl::setStart(DOM_Node& refNode, unsigned int offset)
         fCollapsed = false;
 }
 
-void RangeImpl::setEnd(DOM_Node& refNode, unsigned int offset)
+void RangeImpl::setEnd(const DOM_Node& refNode, unsigned int offset)
 {
     checkIndex(refNode, offset);
             
@@ -230,7 +223,7 @@ void RangeImpl::setEnd(DOM_Node& refNode, unsigned int offset)
         fCollapsed = false;
 }
 
-void RangeImpl::setStartBefore(DOM_Node& refNode)
+void RangeImpl::setStartBefore(const DOM_Node& refNode)
 {
     validateNode(refNode);
     
@@ -257,7 +250,7 @@ void RangeImpl::setStartBefore(DOM_Node& refNode)
         fCollapsed = false;
 }
 
-void RangeImpl::setStartAfter(DOM_Node& refNode)
+void RangeImpl::setStartAfter(const DOM_Node& refNode)
 {
     validateNode(refNode);
 
@@ -282,7 +275,7 @@ void RangeImpl::setStartAfter(DOM_Node& refNode)
         fCollapsed = false;
 }
 
-void RangeImpl::setEndBefore(DOM_Node& refNode)
+void RangeImpl::setEndBefore(const DOM_Node& refNode)
 {
     validateNode(refNode);
     
@@ -308,7 +301,7 @@ void RangeImpl::setEndBefore(DOM_Node& refNode)
         fCollapsed = false;
 }
 
-void RangeImpl::setEndAfter(DOM_Node& refNode)
+void RangeImpl::setEndAfter(const DOM_Node& refNode)
 {
     validateNode(refNode);
     
@@ -346,8 +339,7 @@ void RangeImpl::detach()
     fEndContainer   = 0;
     fEndOffset      = 0;
     fCollapsed      = true;
-    fCommonAncestorContainer = 0;
-
+    
     fRemoveChild    = 0;
 }
 
@@ -368,7 +360,7 @@ void RangeImpl::collapse(bool toStart)
     fCollapsed = true;
 }
 
-void RangeImpl::selectNode(DOM_Node& refNode)
+void RangeImpl::selectNode(const DOM_Node& refNode)
 {
     validateNode(refNode);
     short type = refNode.getNodeType();
@@ -410,7 +402,7 @@ void RangeImpl::selectNode(DOM_Node& refNode)
     }
 }
 
-void RangeImpl::selectNodeContents(DOM_Node& node)
+void RangeImpl::selectNodeContents(const DOM_Node& node)
 {
     validateNode(node);
      short type = node.getNodeType();
@@ -494,7 +486,7 @@ void RangeImpl::surroundContents(DOM_Node& newParent)
 }
 
 
-short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* srcRange)
+short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* srcRange) const
 {
     if (fDocument != srcRange->fDocument) {
         throw DOM_DOMException(
@@ -763,9 +755,10 @@ DOM_DocumentFragment RangeImpl::extractContents()
     return traverseContents(EXTRACT_CONTENTS);
 }
 
-DOM_DocumentFragment RangeImpl::cloneContents()
+DOM_DocumentFragment RangeImpl::cloneContents() const
 {
-    return traverseContents(CLONE_CONTENTS);
+    // cast off const.
+    return ((RangeImpl *)this)->traverseContents(CLONE_CONTENTS);
 }
 
 
@@ -843,7 +836,7 @@ void RangeImpl::insertNode(DOM_Node& newNode)
 
 }
 
-RangeImpl* RangeImpl::cloneRange()
+RangeImpl* RangeImpl::cloneRange() const
 {
     if( fDetached) {
         throw DOM_DOMException(
@@ -857,7 +850,7 @@ RangeImpl* RangeImpl::cloneRange()
     return range;
 }
 
-DOMString RangeImpl::toString()
+DOMString RangeImpl::toString() const
 {
     if( fDetached) {
         throw DOM_DOMException(
@@ -914,9 +907,9 @@ DOM_Document RangeImpl::getDocument()
     return fDocument;
 }
 
-const DOM_Node& RangeImpl::getCommonAncestorContainer()
+const DOM_Node RangeImpl::getCommonAncestorContainer() const 
 {
-     return fCommonAncestorContainer = commonAncestorOf(fStartContainer, fEndContainer);    
+     return commonAncestorOf(fStartContainer, fEndContainer);    
   
 }
 
@@ -924,7 +917,7 @@ const DOM_Node& RangeImpl::getCommonAncestorContainer()
 //private functions
 //---------------------
 
-bool RangeImpl::isValidAncestorType(DOM_Node& node)
+bool RangeImpl::isValidAncestorType(const DOM_Node& node) const
 {
     for (DOM_Node aNode = node; aNode!=null; aNode = aNode.getParentNode()) {
         short type = aNode.getNodeType();
@@ -943,7 +936,7 @@ bool RangeImpl::isAncestorOf(const DOM_Node& a, const DOM_Node& b) {
     return false;
 }
 
-unsigned short RangeImpl::indexOf(const DOM_Node& child, const DOM_Node& parent)
+unsigned short RangeImpl::indexOf(const DOM_Node& child, const DOM_Node& parent) const
 {
     unsigned short i = 0;
     if (child.getParentNode() != parent) return -1;
@@ -953,7 +946,7 @@ unsigned short RangeImpl::indexOf(const DOM_Node& child, const DOM_Node& parent)
     return i;
 }
 
-void RangeImpl::validateNode(DOM_Node& node)
+void RangeImpl::validateNode(const DOM_Node& node) const
 {
     if( fDetached) {
         throw DOM_DOMException(
@@ -967,7 +960,7 @@ void RangeImpl::validateNode(DOM_Node& node)
 }
 
 
-DOM_Node RangeImpl::commonAncestorOf(DOM_Node& pointA, DOM_Node& pointB) 
+const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Node& pointB) const
 {
     if (fDetached) 
             throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
@@ -1013,7 +1006,7 @@ DOM_Node RangeImpl::commonAncestorOf(DOM_Node& pointA, DOM_Node& pointB)
     return DOM_Node(commonAncestor);
 }
 
-void RangeImpl::checkIndex(DOM_Node& node, unsigned int offset)
+void RangeImpl::checkIndex(const DOM_Node& node, unsigned int offset) const
 {
     validateNode(node);
 
@@ -1043,7 +1036,8 @@ void RangeImpl::checkIndex(DOM_Node& node, unsigned int offset)
     
 }
 
-DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) {
+DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) const
+{
     
     if (node == null) return null;
     

@@ -86,42 +86,42 @@ public:
     
 
     //getter functions
-    DOM_Node&    getStartContainer();
-    unsigned    int getStartOffset();
-    DOM_Node&    getEndContainer();
-    unsigned int getEndOffset();
+    DOM_Node    getStartContainer() const;
+    unsigned    int getStartOffset() const;
+    DOM_Node    getEndContainer() const;
+    unsigned int getEndOffset() const;
     
     
     
     void        collapse(bool toStart);
-    bool        getCollapsed();
+    bool        getCollapsed() const;
 
-    void        setStartBefore(DOM_Node& node);
-    void        setStartAfter(DOM_Node& node);
-    void        setEndBefore(DOM_Node& node);
-    void        setEndAfter(DOM_Node& node);
+    void        setStartBefore(const DOM_Node& node);
+    void        setStartAfter(const DOM_Node& node);
+    void        setEndBefore(const DOM_Node& node);
+    void        setEndAfter(const DOM_Node& node);
 
-    void        setStart(DOM_Node& node, unsigned int offset);
-    void        setEnd(DOM_Node& node, unsigned int offset);
+    void        setStart(const DOM_Node& node, unsigned int offset);
+    void        setEnd(const DOM_Node& node, unsigned int offset);
 
-    void        selectNode(DOM_Node& node);
-    void        selectNodeContents(DOM_Node& node);
+    void        selectNode(const DOM_Node& node);
+    void        selectNodeContents(const DOM_Node& node);
    
-    short       compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* range);
+    short       compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* range) const;
    
     void        detach();
    
     void        deleteContents();
     
-    RangeImpl*  cloneRange();
-    DOMString   toString();    
+    RangeImpl*  cloneRange() const;
+    DOMString   toString() const;    
 
     DOM_Document getDocument();
     void        surroundContents(DOM_Node& node);
     DOM_DocumentFragment extractContents();
-    DOM_DocumentFragment cloneContents();
+    DOM_DocumentFragment cloneContents() const;
     void        insertNode(DOM_Node& newNode);
-    const DOM_Node&    getCommonAncestorContainer();
+    const DOM_Node    getCommonAncestorContainer() const;
 
     // functions to inform all existing valid ranges about a change
     void updateSplitInfo(TextImpl* oldNode, TextImpl* startNode);
@@ -147,18 +147,17 @@ private:
     void        setStartOffset(unsigned int offset) ;
     void        setEndContainer(const DOM_Node& node);
     void        setEndOffset(unsigned int offset) ;
-    void        setCommonAncestorContainer(const DOM_Node& node) ;
 
     //misc functions
-    void        validateNode(DOM_Node& node);
-    bool        isValidAncestorType(DOM_Node& node);
-    void        checkIndex(DOM_Node& node, unsigned int offset);
+    void        validateNode(const DOM_Node& node) const;
+    bool        isValidAncestorType(const DOM_Node& node) const; 
+    void        checkIndex(const DOM_Node& node, unsigned int offset) const;
     static bool isAncestorOf(const DOM_Node& a, const DOM_Node& b);
     
-    unsigned short indexOf(const DOM_Node& child, const DOM_Node& parent);
+    unsigned short indexOf(const DOM_Node& child, const DOM_Node& parent) const;
 
-    DOM_Node    commonAncestorOf(DOM_Node& pointA, DOM_Node& pointB);
-    DOM_Node    nextNode(const DOM_Node& node, bool visitChildren);
+    const DOM_Node    commonAncestorOf(const DOM_Node& pointA, const DOM_Node& pointB) const;
+    DOM_Node    nextNode(const DOM_Node& node, bool visitChildren) const;
     DOM_DocumentFragment traverseContents(TraversalType type);
     void        checkReadOnly(DOM_Node& start, DOM_Node& end, 
                     unsigned int starOffset, unsigned int endOffset);
@@ -172,7 +171,6 @@ private:
     DOM_Node        fEndContainer;
     unsigned int    fEndOffset;
     bool            fCollapsed;
-    DOM_Node        fCommonAncestorContainer;
     DOM_Document    fDocument;
     bool            fDetached;
     
