@@ -79,6 +79,7 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/ElementImpl.hpp>
 #include <dom/AttrImpl.hpp>
+#include <dom/AttrNSImpl.hpp>
 #include <dom/TextImpl.hpp>
 #include <dom/DocumentImpl.hpp>
 #include <dom/DocumentTypeImpl.hpp>
@@ -1003,37 +1004,32 @@ void DOMParser::endAttList
 		static const XMLCh XMLNS[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
 
 		while (defAttrs->hasMoreElements())
-		{
-			attr = &defAttrs->nextElement();
-			if (attr->getValue() != null)
-			{
-				if (fScanner->getDoNamespaces())
-				{
-					// Namespaces is turned on...
-					unsigned int attrURIId = attr->getId();
-					XMLBuffer buf;
-					DOMString namespaceURI = 0;
-					if (!XMLString::compareString(attr->getFullName(), XMLNS))    //for xmlns=...
-						attrURIId = fValidator->getXMLNSNamespaceId();
-					if (attrURIId != fValidator->getGlobalNamespaceId()) {	      //TagName has a prefix
-						fValidator->getURIText(attrURIId, buf);	                  //get namespaceURI
-						namespaceURI = DOMString(buf.getRawBuffer());
-					}
-					insertAttr = elem->setAttributeNS(namespaceURI, attr->getFullName(), attr->getValue());
-					insertAttr->setSpecified(false);
-				}
-				else
-				{
-					// Namespaces is turned off...
-					insertAttr = new AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
-					insertAttr->setValue(attr->getValue());
-					elem->setAttributeNode(insertAttr);
-					insertAttr->setSpecified(false);
-				}
-			}
-		}
-		fDocumentType->getElements()->setNamedItem(elem);
-	}
+        {
+            attr = &defAttrs->nextElement();
+            if (attr->getValue() != null)
+            {
+                if (fScanner->getDoNamespaces())
+                {
+                    // Namespaces is turned on...
+                    //   While scanning the DTD there is no binding defined from
+                    //   name space prefixes to name space URIs.  Just set all the
+                    //   URIs to be null.
+                    insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
+                        DOMString(0),                     // NameSpaceURI
+                        DOMString(attr->getFullName()));   // qualified name
+                }
+                else
+                {
+                    // Namespaces is turned off...
+                    insertAttr = new AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
+                }
+                insertAttr->setValue(attr->getValue());
+                elem->setAttributeNode(insertAttr);
+                insertAttr->setSpecified(false);
+            }
+        }
+        fDocumentType->getElements()->setNamedItem(elem);
+    }
 }
 
 void DOMParser::endIntSubset()
