@@ -51,30 +51,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "IDOMCount"=".\IDOMCount\IDOMCount.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "IDOMPrint"=".\IDOMPrint\IDOMPrint.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
 Project: "MemParse"=".\MemParse\MemParse.dsp" - Package Owner=<4>
 
 Package=<5>
