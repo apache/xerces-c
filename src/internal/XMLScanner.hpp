@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/06/03 19:21:40  jberry
+ * Add support for tracking error count during parse; enables simple parse without requiring error handler.
+ *
  * Revision 1.19  2001/05/28 20:55:02  tng
  * Schema: allocate a fDTDValidator, fSchemaValidator explicitly to avoid wrong cast
  *
@@ -301,6 +304,7 @@ public :
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
+    int getErrorCount();
     const DTDEntityDecl* getEntityDecl
     (
         const   XMLCh* const    entName
@@ -701,6 +705,9 @@ private :
     //      This is the currently set validation scheme. It defaults to
     //      'never', but can be set by the client.
     //
+    //  fErrorCount
+    //		The number of errors we've encountered.
+    //
     //  fDoSchema
     //      This flag indicates whether the client code wants Schema to
     //      be processed or not.
@@ -783,6 +790,7 @@ private :
     SchemaValidator*            fSchemaValidator;
     bool                        fValidatorFromUser;
     ValSchemes                  fValScheme;
+    int                         fErrorCount;
     bool                        fDoSchema;
     bool                        fSeeXsi;
 
@@ -914,6 +922,11 @@ inline XMLValidator* XMLScanner::getValidator()
 inline bool XMLScanner::getDoSchema() const
 {
     return fDoSchema;
+}
+
+inline int XMLScanner::getErrorCount()
+{
+    return fErrorCount;
 }
 
 inline bool XMLScanner::isValidatorFromUser()
