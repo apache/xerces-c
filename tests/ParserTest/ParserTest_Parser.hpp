@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/24 20:38:56  roddey
+ * Fixed some small bugs introduced in the recent move away from the util/* streams.
+ *
  * Revision 1.3  2000/01/21 23:58:06  roddey
  * Initial move away from util streams was bad. Wide char APIs didn't allow enough
  * control to do canonical output, so changed to use std short char APIs.
@@ -383,4 +386,4 @@ inline void TestParser::setShowWarnings(const bool state)
 inline void TestParser::setShowErrLoc(const bool state)
 {
     fShowErrLoc = state;
-
+}
