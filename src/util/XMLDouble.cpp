@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/26 18:21:15  peiyongz
+ * Boundary Checking
+ *
  * Revision 1.3  2001/07/25 19:06:56  peiyongz
  * Fix to Linux compilation error: XMLDouble::LiteralType' is not an aggregate type
  *
@@ -81,18 +84,101 @@
 #include <util/XMLUni.hpp>
 #include <math.h>
 
-// 
-// The special values positive and negative zero, 
-// positive and negative infinity and not-a-number 
-// have lexical representations 0, -0, INF, -INF and NaN, respectively
+//---------
+// TODO:
+//  
+//   Double is supposed to hold 64 bit number and currently
+//   we have implemented the checking on boundary values, such
+//   the maximum/minimum positive/negative number.
 //
+//   We also need to do roundup/roundoff for extra bit in the 
+//   lexical representation.
+//   In order to do that, we need to store them in a canonical form,
+//   like this.
+//   [-]?[1-9].[0-9]+[E|e][-]?[0-9]+
+//   
+//   Then we can impose the limit of length after the '.' before 'E'.
+//   
+//---------
+
+// ---------------------------------------------------------------------------
+//  class data member
+// ---------------------------------------------------------------------------
+bool XMLDouble::isInitialized = false;
+
+// ---------------------------------------------------------------------------
+//  local data member
+// ---------------------------------------------------------------------------
+
+// from <FLOAT.h>
+//
+//DBL_MAX Maximum representable floating-point number
+//1.7976931348623158e+308
+//1.7976 931348 623158 e+308
+//
+static const XMLCh DBL_MAX_POSITIVE[] =
+{
+    chDigit_1, chPeriod,  chDigit_7, chDigit_9, chDigit_7, chDigit_6,
+    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,        
+    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,        
+    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull        
+};
+
+//
+//DBL_MIN Minimum positive value. 
+//2.2250738585072014e-308
+//2.2250 738585 072014 e-308
+//
+static const XMLCh DBL_MIN_POSITIVE[] =
+{
+    chDigit_2, chPeriod,  chDigit_2, chDigit_2, chDigit_5, chDigit_0,
+    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,        
+    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,        
+    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull    
+};
+
+//
+// Deduced from DBL_MAX_POSITIVE
+// -1.7976931348623158e+308
+//
+static const XMLCh DBL_MAX_NEGATIVE[] =
+{
+    chDash,
+    chDigit_1, chPeriod,  chDigit_7, chDigit_9, chDigit_7, chDigit_6,
+    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,        
+    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,        
+    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull    
+};
+
+//
+// Deduced from DBL_MIN_POSITIVE
+// -2.2250738585072014e-308
+//
+static const XMLCh DBL_MIN_NEGATIVE[] = 
+{
+    chDash,
+    chDigit_2, chPeriod,  chDigit_2, chDigit_2, chDigit_5, chDigit_0,
+    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,        
+    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,        
+    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull    
+};
+
+//
+// maxNegativeValue < minNegativeValue < 0 < minPositiveValue < maxPositiveValue
+// They are all "Inclusive value"
+//
+
+static const XMLDouble*  maxNegativeValue;
+static const XMLDouble*  minNegativeValue; 
+static const XMLDouble*  minPositiveValue; 
+static const XMLDouble*  maxPositiveValue;
 
 /***
  *   Algo:
  *
  *   . Check for special cases
- *   . construct fMantissa, fExponent (optional)
- *   . No checking on the value space
+ *   . Construct fMantissa, fExponent (optional)
+ *   .   Checking boundary
  *   .
 ***/
 XMLDouble::XMLDouble(const XMLCh* const strValue)
@@ -101,14 +187,26 @@ XMLDouble::XMLDouble(const XMLCh* const strValue)
 ,fType(Normal)
 ,fValue(0)
 {
+    try
+    {
+        init(strValue);
+    }
+    catch (XMLException&)
+    {
+        cleanUp();
+        throw;
+    }
+
+}
+
+void XMLDouble::init(const XMLCh* const strValue)
+{
     if ((!strValue) || (!*strValue))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
 
-//    char *p1 = XMLString::transcode(strValue);
     XMLCh* tmpStrValue = XMLString::replicate(strValue);
     ArrayJanitor<XMLCh> janTmpName(tmpStrValue);
     XMLString::trim(tmpStrValue);
-//    char *p2 = XMLString::transcode(tmpStrValue);
 
     if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
     {
@@ -175,8 +273,49 @@ XMLDouble::XMLDouble(const XMLCh* const strValue)
         fExponent = new XMLBigInteger(XMLUni::fgZeroString);
     }
 
-
     fValue = fMantissa->doubleValue() * pow(10.0, fExponent->intValue());
+
+    checkBoundary(tmpStrValue);
+}
+
+//
+//
+void XMLDouble::checkBoundary(const XMLCh* const strValue)
+{
+    if (!isInitialized)
+    {
+        isInitialized = true;  // set first to avoid recursion
+
+        maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);        
+        minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE); 
+        minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE); 
+        maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
+    }
+
+    //
+    // by-pass boundary check for boundary value itself
+    //
+    if (( XMLString::compareString(strValue, DBL_MAX_NEGATIVE) == 0 ) ||
+        ( XMLString::compareString(strValue, DBL_MIN_NEGATIVE) == 0 ) ||
+        ( XMLString::compareString(strValue, DBL_MIN_POSITIVE) == 0 ) ||
+        ( XMLString::compareString(strValue, DBL_MAX_POSITIVE) == 0 )  )
+        return;
+
+    //  this < maxNegativeValue 
+    if ( compareValues(this, maxNegativeValue) == -1 )
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        //value shall NOT be less than maxNegativeValue
+
+    //  this > maxPositiveValue
+    if ( compareValues(this, maxPositiveValue) ==  1 )     
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        //value shall NOT be greater than maxPositiveValue
+
+    //  minNegativeValue < this < minPositiveValue
+    if  (( compareValues(this, minNegativeValue) ==  1 ) &&
+         ( compareValues(this, minPositiveValue) == -1 )  )
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        //value is not be representable
 }
 
 XMLDouble::XMLDouble(const XMLDouble& toCopy)

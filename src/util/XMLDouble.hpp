@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/26 18:21:15  peiyongz
+ * Boundary Checking
+ *
  * Revision 1.2  2001/07/24 21:52:27  peiyongz
  * XMLDouble: move fg...String to XMLUni
  *
@@ -108,7 +111,7 @@ public:
         PosINF,
         NaN,
         SpecialTypeNum = 5,
-        Normal,
+        Normal
     };
 
     XMLDouble(const XMLCh* const strValue);
@@ -144,10 +147,18 @@ public:
 
 private:
 
+    void                  init(const XMLCh* const strValue);
+
+    void                  checkBoundary(const XMLCh* const strValue);
+
+    void                  cleanUp();
+
     bool                  isSpecialValue() const;
 
     static int            compareSpecial(const XMLDouble* const specialValue
                                        , const XMLDouble* const normalValue);
+
+    static bool           isInitialized;
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -158,22 +169,23 @@ private:
     //  fExponent
     //     the XMLBigInteger holding the value of exponent.
     //
+    //  fType
+    //     the type of the object.
+    //
+    //  fValue
+    //     the built-in double value of the object.
+    //
     // -----------------------------------------------------------------------
 
     XMLBigDecimal*          fMantissa;
 	XMLBigInteger*          fExponent;   
     LiteralType             fType;
     double                  fValue;
-
 };
 
 inline XMLDouble::~XMLDouble()
 {
-    if (fMantissa)
-        delete fMantissa;
-
-    if (fExponent)
-        delete fExponent;
+    cleanUp();
 }
 
 inline double XMLDouble::doubleValue() const
@@ -189,6 +201,15 @@ inline bool XMLDouble::operator==(const XMLDouble& toCompare) const
 inline bool XMLDouble::isSpecialValue() const
 {
     return (fType < SpecialTypeNum);
+}
+
+inline void XMLDouble::cleanUp()
+{
+    if (fMantissa)
+        delete fMantissa;
+
+    if (fExponent)
+        delete fExponent;
 }
 
 #endif
