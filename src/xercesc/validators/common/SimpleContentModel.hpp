@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/06/03 18:12:29  knoaman
+ * Add default value for memory manager argument.
+ *
  * Revision 1.6  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -171,7 +174,7 @@ public :
       , QName* const                      firstChild
       , QName* const                      secondChild
       , const ContentSpecNode::NodeTypes  cmOp
-      , MemoryManager* const              manager
+      , MemoryManager* const              manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~SimpleContentModel();

@@ -102,7 +102,7 @@ public:
     // -----------------------------------------------------------------------
     XPathMatcher* createMatcher(FieldActivator* const fieldActivator,
                                 const int initialDepth,
-                                MemoryManager* const manager);
+                                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------

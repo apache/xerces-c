@@ -91,7 +91,7 @@ class DOMNormalizer : public XMemory {
             Scope(Scope *baseScopeWithBindings);
             ~Scope();
             void addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
-                                    MemoryManager* const manager);
+                                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
             const XMLCh* getUri(const XMLCh *prefix) const;
             const XMLCh* getPrefix(const XMLCh* uri) const;
             Scope *fBaseScopeWithBindings;
@@ -102,11 +102,11 @@ class DOMNormalizer : public XMemory {
         };
 
     public:    
-        InScopeNamespaces(MemoryManager* const manager);
+        InScopeNamespaces(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
         ~InScopeNamespaces();
         void addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
-                                MemoryManager* const manager);
-        void addScope(MemoryManager* const manager);
+                                MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        void addScope(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
         void removeScope();
         bool isValidBinding(const XMLCh* prefix, const XMLCh* uri) const;
         const XMLCh* getOrDeclarePrefix(const XMLCh* uri);
@@ -120,7 +120,7 @@ class DOMNormalizer : public XMemory {
     };
 
 public:
-    DOMNormalizer(MemoryManager* const manager);
+    DOMNormalizer(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~DOMNormalizer();
 
     /**

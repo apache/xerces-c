@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/06/03 18:12:29  knoaman
+ * Add default value for memory manager argument.
+ *
  * Revision 1.8  2003/05/15 19:07:45  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -201,7 +204,7 @@ public :
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
-        , MemoryManager* const          manager
+        , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
     XMLTranscoder* makeNewTranscoderFor
@@ -209,7 +212,7 @@ public :
         const   char* const             encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
-        , MemoryManager* const          manager
+        , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
     XMLTranscoder* makeNewTranscoderFor
@@ -217,7 +220,7 @@ public :
         XMLRecognizer::Encodings        encodingEnum
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
-        , MemoryManager* const          manager
+        , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/06/03 18:12:29  knoaman
+ * Add default value for memory manager argument.
+ *
  * Revision 1.3  2003/05/16 03:11:22  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -83,6 +86,7 @@
 #define BINFILEINPUTSTREAM_HPP
 
 #include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -100,7 +104,7 @@ public :
     BinFileInputStream
     (
         const   char* const     fileName
-        , MemoryManager* const  manager
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     BinFileInputStream
