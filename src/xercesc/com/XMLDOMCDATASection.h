@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/21 21:21:32  amassari
+ * When the COM object is loaded by a late-binding engine (like WSH, or
+ * Visual Basic when the type library is not preloaded in the editor), the type
+ * library version stored in the resource must match the version specified in the
+ * IDispatchImpl template (defaulted to 1.0), or trying to invoke a method will fail
+ *
  * Revision 1.3  2003/03/14 12:44:49  tng
  * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
  *
@@ -91,7 +97,7 @@ XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMCDATASection :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IXMLDOMTextImpl<IXMLDOMCDATASection, &IID_IXMLDOMCDATASection, &LIBID_Xerces>
+	public IXMLDOMTextImpl<IXMLDOMCDATASection, &IID_IXMLDOMCDATASection, &LIBID_Xerces, 2, 30>
 {
 public:
 	CXMLDOMCDATASection()

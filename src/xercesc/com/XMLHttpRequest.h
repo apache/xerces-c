@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/21 21:21:32  amassari
+ * When the COM object is loaded by a late-binding engine (like WSH, or
+ * Visual Basic when the type library is not preloaded in the editor), the type
+ * library version stored in the resource must match the version specified in the
+ * IDispatchImpl template (defaulted to 1.0), or trying to invoke a method will fail
+ *
  * Revision 1.2  2002/05/21 19:53:53  tng
  * DOM Reorganization: update include path for the old DOM interface in COM files
  *
@@ -82,7 +88,7 @@ class ATL_NO_VTABLE CXMLHttpRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CXMLHttpRequest, &CLSID_XMLHTTPRequest>,
 	public IObjectSafetyImpl<CXMLHttpRequest, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces>,
+	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, 2, 30>,
 	public IObjectWithSiteImpl<CXMLHttpRequest>,
 	public ISupportErrorInfo,
 	public CWindowImpl<CXMLHttpRequest, CWindow, CWinTraits<0,0> >

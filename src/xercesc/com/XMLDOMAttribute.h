@@ -67,7 +67,7 @@ XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMAttribute :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IXMLDOMNodeImpl<IXMLDOMAttribute, &IID_IXMLDOMAttribute, &LIBID_Xerces>
+	public IXMLDOMNodeImpl<IXMLDOMAttribute, &IID_IXMLDOMAttribute, &LIBID_Xerces, 2, 30>
 {
 public:
 	CXMLDOMAttribute()
