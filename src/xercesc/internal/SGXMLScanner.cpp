@@ -954,7 +954,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
                     , topElem->fThisElement->getFormattedContentModel()
                 );
             }
-            
+
         }
 
         // call matchers and de-activate context
@@ -1209,7 +1209,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     ,uriStr
                 );
                 errorBeforeElementFound = true;
-            } 
+            }
             else if(errorCondition)
                 laxBeforeElementFound = true;
 
@@ -1252,7 +1252,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     );
                     errorBeforeElementFound = true;
                 }
-                else if(errorCondition) 
+                else if(errorCondition)
                     laxBeforeElementFound = true;
 
             }
@@ -1297,10 +1297,10 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                   , XMLUni::fgZeroLenString
                 );
                 errorBeforeElementFound = true;
-                
+
             }
             else if(errorCondition)
-                laxBeforeElementFound = true; 
+                laxBeforeElementFound = true;
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -1336,7 +1336,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     errorBeforeElementFound = true;
                 }
                 else if(errorCondition)
-                    laxBeforeElementFound = true; 
+                    laxBeforeElementFound = true;
 
                 elemDecl = fGrammar->getElemDecl
                            (
@@ -1414,9 +1414,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         if (!elemDecl->isDeclared()) {
             if (laxThisOne) {
                 fValidate = false;
-                fElemStack.setValidationFlag(fValidate);                
+                fElemStack.setValidationFlag(fValidate);
             }
-            
+
             if (fValidate)
                 {
                 fValidator->emitError
@@ -2096,7 +2096,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
                 if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);
-                    
+
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
             }
 
@@ -2107,7 +2107,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attDef->setCreateReason(XMLAttDef::JustFaultIn);
             }
 
-            bool errorCondition = fValidate && !attDefForWildCard && 
+            bool errorCondition = fValidate && !attDefForWildCard &&
                 attDef->getCreateReason() == XMLAttDef::JustFaultIn && !attDef->getProvided();
             if (errorCondition && !skipThisOne && !laxThisOne)
             {
@@ -2384,7 +2384,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         XMLValid::ProhibitedAttributePresent
                         , curDef->getFullName()
                     );
-                    ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::INVALID);         
+                    ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::INVALID);
                 }
                 ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
             }
@@ -2463,7 +2463,7 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                          // Can't have a standalone document declaration of "yes" if  attribute
                          // values are subject to normalisation
                          fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                         ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);     
+                         ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
                     }
                     nextCh = chSpace;
                 }
@@ -3489,6 +3489,11 @@ void SGXMLScanner::scanCDSection()
     //  characters specially here.
     bool            emittedError = false;
     bool    gotLeadingSurrogate = false;
+
+    // Get the character data opts for the current element
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
+    XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+
     while (true)
     {
         const XMLCh nextCh = fReaderMgr.getNextChar();
@@ -3505,12 +3510,7 @@ void SGXMLScanner::scanCDSection()
             // This document is standalone; this ignorable CDATA whitespace is forbidden.
             // XML 1.0, Section 2.9
             // And see if the current element is a 'Children' style content model
-            const ElemStack::StackElem* topElem = fElemStack.topElement();
-
             if (topElem->fThisElement->isExternal()) {
-
-                // Get the character data opts for the current element
-                XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
 
                 if (charOpts == XMLElementDecl::SpacesOk) // Element Content
                 {
@@ -3530,15 +3530,32 @@ void SGXMLScanner::scanCDSection()
             if (gotLeadingSurrogate)
                 emitError(XMLErrs::Expected2ndSurrogateChar);
 
+            if (fValidate) {
+
+                if (fNormalizeData) {
+                    // normalize the character according to schema whitespace facet
+                    XMLBufBid bbtemp(&fBufMgr);
+                    XMLBuffer& tempBuf = bbtemp.getBuffer();
+
+                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, bbCData.getRawBuffer(),  tempBuf);
+                    bbCData.set(tempBuf.getRawBuffer());
+                }
+
+                // tell the schema validation about the character data for checkContent later
+                ((SchemaValidator*) fValidator)->setDatatypeBuffer(bbCData.getRawBuffer());
+
+                if (charOpts != XMLElementDecl::AllCharData)
+                {
+                    // They definitely cannot handle any type of char data
+                    fValidator->emitError(XMLValid::NoCharDataInCM);
+                    ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                }
+            }
+
             // call all active identity constraints
             if (fMatcherStack->getMatcherCount())
                 fContent.append(bbCData.getRawBuffer(), bbCData.getLen());
-
-            // tell the schema validation about the character data for checkContent later
-            if (fValidate && fSchemaValidator)
-            {           
-                    fSchemaValidator->setDatatypeBuffer(bbCData.getRawBuffer());
-            }
 
             // If we have a doc handler, call it
             if (fDocHandler)
@@ -3605,21 +3622,6 @@ void SGXMLScanner::scanCDSection()
                     }
                 }
                 gotLeadingSurrogate = false;
-            }
-        }
-
-        if (fValidate) {
-            // And see if the current element is a 'Children' style content model
-            const ElemStack::StackElem* topElem = fElemStack.topElement();
-
-            // Get the character data opts for the current element
-            XMLElementDecl::CharDataOpts charOpts = topElem->fThisElement->getCharDataOpts();
-
-            if (charOpts != XMLElementDecl::AllCharData)
-            {
-                // They definitely cannot handle any type of char data
-                fValidator->emitError(XMLValid::NoCharDataInCM);
-                ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
             }
         }
 
