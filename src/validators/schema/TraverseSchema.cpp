@@ -6070,7 +6070,9 @@ void TraverseSchema::checkAttDerivationOK(const ComplexTypeInfo* const baseTypeI
             }
 
             // Constraint 2.1.2
-            if (!baseAttDef->getDatatypeValidator()->isSubstitutableBy(childAttDef.getDatatypeValidator())) {
+            DatatypeValidator* baseDV = baseAttDef->getDatatypeValidator();
+            DatatypeValidator* childDV = childAttDef.getDatatypeValidator();
+            if (!baseDV || !baseDV->isSubstitutableBy(childDV)) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_3, childLocalPart);
             }
 
