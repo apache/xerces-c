@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/12/03 20:00:27  neilg
+ * PSVI fix:  cannot allow validator to reset its element content buffer before exposing it to the application
+ *
  * Revision 1.23  2003/11/28 21:18:32  knoaman
  * Make use of canonical representation in PSVIElement
  *
@@ -266,6 +269,7 @@ public:
     void setErrorReporter(XMLErrorReporter* const errorReporter);
     void setExitOnFirstFatal(const bool newValue);
     void setDatatypeBuffer(const XMLCh* const value);
+    void clearDatatypeBuffer();
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -459,6 +463,11 @@ inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {
 inline void SchemaValidator::setDatatypeBuffer(const XMLCh* const value)
 {
     fDatatypeBuffer.append(value);
+}
+
+inline void SchemaValidator::clearDatatypeBuffer()
+{
+    fDatatypeBuffer.reset();
 }
 
 // ---------------------------------------------------------------------------

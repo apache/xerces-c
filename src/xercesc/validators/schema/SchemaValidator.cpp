@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.47  2003/12/03 20:00:27  neilg
+ * PSVI fix:  cannot allow validator to reset its element content buffer before exposing it to the application
+ *
  * Revision 1.46  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -541,7 +544,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMType);
     }
 
-    fDatatypeBuffer.reset();
+    // must rely on scanner to clear fDatatypeBuffer
+    // since it may need to query its contents after this method completes
     fNil = false;
     fTrailing=false;
 

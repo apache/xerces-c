@@ -1194,6 +1194,9 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             endElementPSVI(
                 (SchemaElementDecl*)topElem->fThisElement, psviMemberType);
         }
+        // now we can reset the datatype buffer, since the 
+        // application has had a chance to copy the characters somewhere else
+        ((SchemaValidator *)fValidator)->clearDatatypeBuffer();
     }
 
     // If we have a doc handler, tell it about the end tag
