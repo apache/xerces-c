@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/30 05:58:56  neilg
+ * allow schema normalized values to be associated with a PSVIAttribute after it is reset
+ *
  * Revision 1.7  2003/12/02 17:37:03  neilg
  * fix compilation problem
  *
@@ -93,7 +96,6 @@ void PSVIAttribute::reset(
             const XMLCh * const         valContext
             , PSVIItem::VALIDITY_STATE  state
             , PSVIItem::ASSESSMENT_TYPE assessmentType
-            , const XMLCh * const       normalizedValue
             , XSSimpleTypeDefinition *  validatingType
             , XSSimpleTypeDefinition *  memberType
             , const XMLCh * const       defaultValue
@@ -105,17 +107,25 @@ void PSVIAttribute::reset(
     fValidationContext = valContext;
     fValidityState = state;
     fAssessmentType = assessmentType;
-    fNormalizedValue = normalizedValue;
     fType = validatingType;
     fMemberType = memberType;
     fDefaultValue = defaultValue;
     fIsSpecified = isSpecified;
     fMemoryManager->deallocate((void *)fCanonicalValue);
-    if(normalizedValue && dv && fValidityState == PSVIItem::VALIDITY_VALID)
-        fCanonicalValue = (XMLCh *)dv->getCanonicalRepresentation(normalizedValue, fMemoryManager);
-    else
-        fCanonicalValue = 0;
+    fCanonicalValue = 0;
+    fNormalizedValue = 0;
     fAttributeDecl = attrDecl;
+    fDV = dv;
+}
+
+void PSVIAttribute::setValue(const XMLCh * const       normalizedValue)
+{ 
+    if(normalizedValue)
+    {
+        fNormalizedValue = normalizedValue;
+        if(fDV && fValidityState == PSVIItem::VALIDITY_VALID)
+            fCanonicalValue = (XMLCh *)fDV->getCanonicalRepresentation(normalizedValue, fMemoryManager);
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

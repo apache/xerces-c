@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/30 05:58:56  neilg
+ * allow schema normalized values to be associated with a PSVIAttribute after it is reset
+ *
  * Revision 1.5  2003/11/28 20:20:54  neilg
  * make use of canonical representation in PSVIAttribute implementation
  *
@@ -161,7 +164,6 @@ public:
             const XMLCh * const         valContext
             , PSVIItem::VALIDITY_STATE  state
             , PSVIItem::ASSESSMENT_TYPE assessmentType
-            , const XMLCh * const       normalizedValue
             , XSSimpleTypeDefinition *  validatingType
             , XSSimpleTypeDefinition *  memberType
             , const XMLCh * const       defaultValue
@@ -169,6 +171,13 @@ public:
             , XSAttributeDeclaration *  attrDecl
             , DatatypeValidator *       dv
         );
+
+    /**
+      * set the schema normalized value (and
+      * implicitly the canonical value) of this object; intended to be used
+      * by the implementation.
+      */
+    void setValue(const XMLCh * const       normalizedValue);
 
     /**
       * set VALIDITY_STATE to specified value; intended to be
@@ -192,7 +201,10 @@ private:
     // -----------------------------------------------------------------------
     // fAttributeDecl
     //      attribute declaration component that validated this attribute 
+    // fDV
+    //      implementation-specific datatype validator used to validate this attribute
     XSAttributeDeclaration *    fAttributeDecl;
+    DatatypeValidator *         fDV;
 };
 inline PSVIAttribute::~PSVIAttribute() 
 {
