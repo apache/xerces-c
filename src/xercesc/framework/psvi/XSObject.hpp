@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/25 15:10:44  jberry
+ * Eliminate some compiler warnings concerning comments inside of comments
+ *
  * Revision 1.8  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -75,7 +78,8 @@
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
  * Revision 1.3  2003/10/24 10:59:26  gareth
- * changed /* to // to prevent compiler warnings.
+ * changed C comments to C++ comments to prevent compiler warnings.
+ *  (rephrased that message to eliminate compiler warnings on the message--this is recursive!)
  *
  * Revision 1.2  2003/10/10 18:37:51  neilg
  * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components

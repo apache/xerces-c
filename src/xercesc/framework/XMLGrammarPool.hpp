@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/25 15:10:44  jberry
+ * Eliminate some compiler warnings concerning comments inside of comments
+ *
  * Revision 1.10  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -240,7 +243,7 @@ public :
     //@}
 
     // -----------------------------------------------------------------------
-    /** @name  schema component model support
+    /** @name  schema component model support */
     // -----------------------------------------------------------------------                                                        
     //@{
 
@@ -283,7 +286,7 @@ public :
     //@}
 
     // -----------------------------------------------------------------------
-    /** serialization and deserialization support
+    /** serialization and deserialization support */
     // -----------------------------------------------------------------------                                                        
 
     /***
