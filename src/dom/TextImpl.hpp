@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:19  twl
- * Initial revision
+ * Revision 1.2  1999/12/21 07:47:07  robweir
+ * Patches to support Xalan, where we need to create a
+ * "special" DOM with subclassed Nodes.
+ *
+ * 1. Export the NodeImpl-derived classes
+ * 2. Ensure that their constructors have at least protected access
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:19  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:33  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -81,7 +88,7 @@
 #include <util/XML4CDefs.hpp>
 #include "CharacterDataImpl.hpp"
 
-class TextImpl: public CharacterDataImpl {
+class CDOM_EXPORT TextImpl: public CharacterDataImpl {
 public:
     TextImpl(DocumentImpl *ownerDoc, const DOMString &data);
     TextImpl(const TextImpl &other, bool deep=false);

@@ -59,8 +59,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:40  twl
- * Initial revision
+ * Revision 1.2  1999/12/21 07:47:06  robweir
+ * Patches to support Xalan, where we need to create a
+ * "special" DOM with subclassed Nodes.
+ *
+ * 1. Export the NodeImpl-derived classes
+ * 2. Ensure that their constructors have at least protected access
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:40  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:10  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -84,7 +91,7 @@
 
 class ElementImpl;
 
-class AttrImpl: public NodeImpl {
+class CDOM_EXPORT AttrImpl: public NodeImpl {
     
 public:
     bool specified;

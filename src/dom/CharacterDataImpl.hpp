@@ -59,6 +59,13 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/21 07:47:06  robweir
+ * Patches to support Xalan, where we need to create a
+ * "special" DOM with subclassed Nodes.
+ *
+ * 1. Export the NodeImpl-derived classes
+ * 2. Ensure that their constructors have at least protected access
+ *
  * Revision 1.2  1999/12/03 00:11:22  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -88,7 +95,7 @@
 #include "NodeImpl.hpp"
 #include "DOMString.hpp"
 
-class CharacterDataImpl: public NodeImpl
+class CDOM_EXPORT CharacterDataImpl: public NodeImpl
 {
 public:
     CharacterDataImpl(DocumentImpl *ownerDocument, const DOMString &name,

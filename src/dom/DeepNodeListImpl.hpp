@@ -59,8 +59,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:42  twl
- * Initial revision
+ * Revision 1.2  1999/12/21 07:47:06  robweir
+ * Patches to support Xalan, where we need to create a
+ * "special" DOM with subclassed Nodes.
+ *
+ * 1. Export the NodeImpl-derived classes
+ * 2. Ensure that their constructors have at least protected access
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:42  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:23  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -85,7 +92,7 @@ class NodeImpl;
 class NodeVector;
 
 
-class  DeepNodeListImpl: public NodeListImpl {
+class CDOM_EXPORT DeepNodeListImpl: public NodeListImpl {
 private:
     NodeImpl            *rootNode;    
     DOMString           tagName;      
