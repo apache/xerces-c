@@ -234,7 +234,7 @@ EXCLUDE_PATTERNS     = *Impl.hpp Janitor.hpp BitOps.hpp BitSet.hpp ChildNode.hpp
 CountedPointer.hpp DomMemDebug.hpp MemDebug.hpp DStringPool.hpp TransENameMap.hpp \
 FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp \
 KVStringPair.hpp NameIdPool.hpp NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp \
-NodeImpl.hpp CommonParentNode.hpp RefArrayOf.hpp RefHashTableOf.hpp RefStackOf.hpp \
+NodeImpl.hpp CommonParentNode.hpp RefArrayOf.hpp RefHash*.hpp RefStackOf.hpp \
 RefVectorOf.hpp ValueArrayOf.hpp ValueStackOf.hpp ValueVectorOf.hpp \
 XML256TableTranscoder.hpp XML88591Transcoder.hpp XMLASCIITranscoder.hpp \
 XMLBufferMgr.hpp XMLBuffer.hpp XMLChTranscoder.hpp XMLEBCDICTranscoder.hpp \
