@@ -136,18 +136,8 @@ void XMLString::binToText(  const   unsigned long   toFormat
     //  having to check for overflow in the inner loops, and we have to flip
     //  the resulting XMLString anyway.
     //
-    char   tmpBuffer[128];
-    char*  tmpBuf;
-    char*  bigBuf = 0;
-    if (maxChars < 128)
-    {
-        tmpBuf = tmpBuffer;
-    }
-    else
-    {
-        bigBuf = (char*) manager->allocate((maxChars+1)* sizeof(char));
-        tmpBuf = bigBuf;
-    } 
+    char   tmpBuf[128];
+
     //
     //  For each radix, do the optimal thing. For bin and hex, we can special
     //  case them and do shift and mask oriented stuff. For oct and decimal
@@ -184,16 +174,12 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
     else
     {
-        if (bigBuf)
-            manager->deallocate(bigBuf);
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Str_UnknownRadix, manager);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
     {
-        if (bigBuf)
-            manager->deallocate(bigBuf);
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall, manager);
     }
 
@@ -204,8 +190,6 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
     // And cap off the caller's buffer
     toFill[outIndex] = char(0);
-    if (bigBuf)
-        manager->deallocate(bigBuf);
 }
 
 void XMLString::binToText(  const   unsigned int    toFormat
@@ -817,18 +801,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     //  having to check for overflow in the inner loops, and we have to flip
     //  the resulting sring anyway.
     //
-    XMLCh   tmpBuffer[128];
-    XMLCh*  tmpBuf;
-    XMLCh*  bigBuf = 0;
-    if (maxChars < 128)
-    {
-        tmpBuf = tmpBuffer;
-    }
-    else
-    {
-        bigBuf = (XMLCh*) manager->allocate((maxChars+1)* sizeof(XMLCh));
-        tmpBuf = bigBuf;
-    }
+    XMLCh   tmpBuf[128];
 
     //
     //  For each radix, do the optimal thing. For bin and hex, we can special
@@ -866,16 +839,12 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
      else
     {
-        if (bigBuf)
-            manager->deallocate(bigBuf);
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Str_UnknownRadix, manager);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
     {
-        if (bigBuf)
-            manager->deallocate(bigBuf);    
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall, manager);
     }
 
@@ -886,9 +855,6 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
     // And cap off the caller's buffer
     toFill[outIndex] = chNull;
-
-    if (bigBuf)
-        manager->deallocate(bigBuf);
 }
 
 void XMLString::binToText(  const   unsigned int    toFormat
