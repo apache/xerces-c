@@ -113,6 +113,16 @@ public:
     );
     ~RegularExpression();
 
+    RegularExpression
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    void setPattern(const XMLCh* const pattern, const XMLCh* const options=0);
+
     // -----------------------------------------------------------------------
     //  Public Constants
     // -----------------------------------------------------------------------
@@ -218,11 +228,6 @@ private:
     //  Cleanup methods
     // -----------------------------------------------------------------------
     void cleanUp();
-
-    // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setPattern(const XMLCh* const pattern, const XMLCh* const options=0);
 
     // -----------------------------------------------------------------------
     //  Private Helper methods
@@ -341,10 +346,29 @@ private:
   // ---------------------------------------------------------------------------
   inline void RegularExpression::cleanUp() {
 
-      fMemoryManager->deallocate(fPattern);//delete [] fPattern;
-      fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;      
-      delete fBMPattern;
-      delete fTokenFactory;
+      if (fPattern)
+      {
+          fMemoryManager->deallocate(fPattern);//delete [] fPattern;
+          fPattern = 0;
+      }
+
+      if (fFixedString)
+      {
+          fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;      
+          fFixedString = 0;
+      }
+
+      if (fBMPattern)
+      {
+          delete fBMPattern;
+          fBMPattern = 0;
+      }
+
+      if (fTokenFactory)
+      {
+          delete fTokenFactory;
+          fTokenFactory = 0;
+      }
   }
 
   // ---------------------------------------------------------------------------

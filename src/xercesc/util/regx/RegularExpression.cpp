@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/01/06 18:12:31  peiyongz
+ * using ctor/setPattern to avoid exception thrown from ctor
+ *
  * Revision 1.19  2003/12/24 15:24:15  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -299,21 +302,9 @@ RegularExpression::RegularExpression(const char* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
-	try {
-
-		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
-        ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-		setPattern(tmpBuf);
-	}
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...) {
-
-		cleanUp();
-		throw;
-	}
+    XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
+    setPattern(tmpBuf);
 }
 
 RegularExpression::RegularExpression(const char* const pattern,
@@ -335,23 +326,11 @@ RegularExpression::RegularExpression(const char* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
-	try {
-
-		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
-		ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-		XMLCh* tmpOptions = XMLString::transcode(options, fMemoryManager);
-		ArrayJanitor<XMLCh> janOps(tmpOptions, fMemoryManager);
-		setPattern(tmpBuf, tmpOptions);
-	}
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...) {
-
-		cleanUp();
-		throw;
-	}
+    XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
+    XMLCh* tmpOptions = XMLString::transcode(options, fMemoryManager);
+    ArrayJanitor<XMLCh> janOps(tmpOptions, fMemoryManager);
+    setPattern(tmpBuf, tmpOptions);
 }
 
 
@@ -373,19 +352,7 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
-	try {
-
-		setPattern(pattern);
-	}
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...) {
-
-		cleanUp();
-		throw;
-	}
+    setPattern(pattern);
 }
 
 RegularExpression::RegularExpression(const XMLCh* const pattern,
@@ -407,9 +374,68 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
+    setPattern(pattern, options);
+}
+
+RegularExpression::~RegularExpression() {
+
+	cleanUp();
+}
+
+RegularExpression::RegularExpression(MemoryManager* const manager)
+	:fHasBackReferences(false),
+	 fFixedStringOnly(false),
+	 fNoGroups(0),
+	 fMinLength(0),
+	 fNoClosures(0),
+	 fOptions(0),
+	 fBMPattern(0),
+	 fPattern(0),
+	 fFixedString(0),
+	 fOperations(0),
+	 fTokenTree(0),
+	 fFirstChar(0),
+     fOpFactory(manager),
+     fTokenFactory(0),
+     fMemoryManager(manager)
+{
+}
+
+// ---------------------------------------------------------------------------
+//  RegularExpression: Setter methods
+// ---------------------------------------------------------------------------
+void RegularExpression::setPattern(const XMLCh* const pattern,
+								   const XMLCh* const options) {
+
 	try {
 
-		setPattern(pattern, options);
+        fTokenFactory = new (fMemoryManager) TokenFactory(fMemoryManager);
+        fOptions = parseOptions(options);
+        fPattern = XMLString::replicate(pattern, fMemoryManager);
+
+        // the following construct causes an error in an Intel 7.1 32 bit compiler for 
+        // red hat linux 7.2
+        // (when an exception is thrown the wrong object is deleted)
+        //RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
+        //	? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
+        //    : new (fMemoryManager) RegxParser(fMemoryManager);
+
+        RegxParser* regxParser;
+        if (isSet(fOptions, XMLSCHEMA_MODE)) {
+            regxParser = new (fMemoryManager) ParserForXMLSchema(fMemoryManager);
+        }
+        else {
+            regxParser = new (fMemoryManager) RegxParser(fMemoryManager);
+        }
+
+        if (regxParser) {
+            regxParser->setTokenFactory(fTokenFactory);
+        }
+
+        Janitor<RegxParser> janRegxParser(regxParser);
+        fTokenTree = regxParser->parse(fPattern, fOptions);
+        fNoGroups = regxParser->getNoParen();
+        fHasBackReferences = regxParser->hasBackReferences();
 	}
     catch(const OutOfMemoryException&)
     {
@@ -420,45 +446,6 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 		cleanUp();
 		throw;
 	}
-}
-
-RegularExpression::~RegularExpression() {
-
-	cleanUp();
-}
-
-// ---------------------------------------------------------------------------
-//  RegularExpression: Setter methods
-// ---------------------------------------------------------------------------
-void RegularExpression::setPattern(const XMLCh* const pattern,
-								   const XMLCh* const options) {
-
-    fTokenFactory = new (fMemoryManager) TokenFactory(fMemoryManager);
-	fOptions = parseOptions(options);
-	fPattern = XMLString::replicate(pattern, fMemoryManager);
-
-    // the following construct causes an error in an Intel 7.1 32 bit compiler for 
-    // red hat linux 7.2
-    // (when an exception is thrown the wrong object is deleted)
-    //RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
-    //	? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
-    //    : new (fMemoryManager) RegxParser(fMemoryManager);
-    RegxParser* regxParser;
-    if (isSet(fOptions, XMLSCHEMA_MODE)) {
-	    regxParser = new (fMemoryManager) ParserForXMLSchema(fMemoryManager);
-    }
-    else {
-        regxParser = new (fMemoryManager) RegxParser(fMemoryManager);
-    }
-
-    if (regxParser) {
-        regxParser->setTokenFactory(fTokenFactory);
-    }
-
-	Janitor<RegxParser> janRegxParser(regxParser);
-	fTokenTree = regxParser->parse(fPattern, fOptions);
-	fNoGroups = regxParser->getNoParen();
-	fHasBackReferences = regxParser->hasBackReferences();
 }
 
 // ---------------------------------------------------------------------------
