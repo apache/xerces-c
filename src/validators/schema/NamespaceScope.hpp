@@ -123,7 +123,7 @@ public :
 
     unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap) const;
     unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap,
-                                       int depthLevel) const;
+                                       const int depthLevel) const;
 
 
     // -----------------------------------------------------------------------
