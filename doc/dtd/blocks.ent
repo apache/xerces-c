@@ -1,4 +1,4 @@
-<?xml encoding='US-ASCII'?>
+<?xml encoding='ISO-8859-1'?>
 
 <!-- BLOCKS ENTITY -->
 <!ENTITY % blocks "p|note|ul|ol|gloss|table|source|anchor">
