@@ -770,8 +770,7 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
               1 << DOMNode::ELEMENT_NODE |
               1 << DOMNode::PROCESSING_INSTRUCTION_NODE |
               1 << DOMNode::COMMENT_NODE |
-              1 << DOMNode::DOCUMENT_TYPE_NODE |
-              1 << DOMNode::XML_DECL_NODE;
+              1 << DOMNode::DOCUMENT_TYPE_NODE;
 
           kidOK[DOMNode::DOCUMENT_FRAGMENT_NODE] =
               kidOK[DOMNode::ENTITY_NODE] =
@@ -782,8 +781,7 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
               1 << DOMNode::COMMENT_NODE |
               1 << DOMNode::TEXT_NODE |
               1 << DOMNode::CDATA_SECTION_NODE |
-              1 << DOMNode::ENTITY_REFERENCE_NODE |
-              1 << DOMNode::XML_DECL_NODE;
+              1 << DOMNode::ENTITY_REFERENCE_NODE;
 
           kidOK[DOMNode::ATTRIBUTE_NODE] =
               1 << DOMNode::TEXT_NODE |
