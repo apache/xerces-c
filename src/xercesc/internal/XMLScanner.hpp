@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2003/11/24 05:09:38  neilg
+ * implement new, statless, method for detecting duplicate attributes
+ *
  * Revision 1.27  2003/11/13 15:00:44  peiyongz
  * Solve Compilation/Linkage error on AIX/Solaris/HP/Linux
  *
@@ -705,6 +708,9 @@ protected:
     XMLTokens senseNextToken(unsigned int& orgReader);
     void initValidator(XMLValidator* theValidator);
     inline void resetValidationContext();
+    unsigned int *getNewUIntPtr();
+    void resetUIntPool();
+    void recreateUIntPool();
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -714,7 +720,7 @@ protected:
     //      the document handler the attributes found. To make it more
     //      efficient we keep this ref vector of XMLAttr objects around. We
     //      just reuse it over and over, allowing it to grow to meet the
-    //      peek need.
+    //      peak need.
     //
     //  fBufMgr
     //      This is a manager for temporary buffers used during scanning.
@@ -909,6 +915,15 @@ protected:
     //
     //  fXMLVersion
     //      Enum to indicate if the main doc is XML 1.1 or XML 1.0 conformant    
+    //  fUIntPool
+    //      pool of unsigned integers to help with duplicate attribute
+    //      detection and filling in default/fixed attributes
+    //  fUIntPoolRow
+    //      current row in fUIntPool
+    //  fUIntPoolCol
+    //      current column i row
+    //  fUIntPoolRowTotal
+    //      total number of rows in table
     //
     //  fMemoryManager
     //      Pluggable memory manager for dynamic allocation/deallocation.
@@ -937,6 +952,10 @@ protected:
     unsigned int                fXMLNamespaceId;
     unsigned int                fXMLNSNamespaceId;
     unsigned int                fSchemaNamespaceId;
+    unsigned int **             fUIntPool;
+    unsigned int                fUIntPoolRow;
+    unsigned int                fUIntPoolCol;
+    unsigned int                fUIntPoolRowTotal;
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     RefVectorOf<XMLAttr>*       fAttrList;
@@ -1448,3 +1467,4 @@ inline void XMLScanner::resetValidationContext()
 XERCES_CPP_NAMESPACE_END
 
 #endif
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/24 05:09:38  neilg
+ * implement new, statless, method for detecting duplicate attributes
+ *
  * Revision 1.10  2003/10/22 20:22:30  knoaman
  * Prepare for annotation support.
  *
@@ -207,6 +210,7 @@ private :
     bool normalizeAttValue
     (
         const   XMLAttDef* const    attDef
+        , const XMLCh* const        attrName 
         , const XMLCh* const        value
         ,       XMLBuffer&          toFill
     );
@@ -310,6 +314,16 @@ private :
     //      its xpath.
     // fElemNonDeclPool
     //      registry for elements without decls in the grammar
+    // fElemCount
+    //      count of the number of start tags seen so far (starts at 1).
+    //      Used for duplicate attribute detection/processing of required/defaulted attributes
+    // fAttDefRegistry
+    //      mapping from XMLAttDef instances to the count of the last
+    //      start tag where they were utilized.
+    // fUndeclaredAttrRegistryNS
+    //      mapping of namespaceId/localName pairs to the count of the last
+    //      start tag in which they occurred.
+    //
     //
     // -----------------------------------------------------------------------
     bool                        fSeeXsi;
@@ -325,6 +339,9 @@ private :
     ValueStoreCache*            fValueStoreCache;
     FieldActivator*             fFieldActivator;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
+    unsigned int                            fElemCount;
+    RefHashTableOf<unsigned int>*           fAttDefRegistry;
+    RefHash2KeysTableOf<unsigned int>*      fUndeclaredAttrRegistryNS;
 };
 
 inline const XMLCh* SGXMLScanner::getName() const

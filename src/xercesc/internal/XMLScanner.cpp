@@ -224,6 +224,10 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fPrefixBuf(1023, manager)
     , fURIBuf(1023, manager)
     , fElemStack(manager)
+    , fUIntPool(0)
+    , fUIntPoolRow(0)
+    , fUIntPoolCol(0)
+    , fUIntPoolRowTotal(2)
 {
    commonInit();
 
@@ -295,6 +299,10 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fPrefixBuf(1023, manager)
     , fURIBuf(1023, manager)
     , fElemStack(manager)
+    , fUIntPool(0)
+    , fUIntPoolRow(0)
+    , fUIntPoolCol(0)
+    , fUIntPoolRowTotal(2)
 {
    commonInit();
 
@@ -311,6 +319,12 @@ XMLScanner::~XMLScanner()
     fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
     fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
     fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
+    // delete fUIntPool
+    for (unsigned int i=0; i<=fUIntPoolRow; i++)
+    {
+        fMemoryManager->deallocate(fUIntPool[i]);
+    }
+    fMemoryManager->deallocate(fUIntPool);
 }
 
 
@@ -710,6 +724,8 @@ void XMLScanner::setParseSettings(XMLScanner* const refScanner)
     setExternalSchemaLocation(refScanner->getExternalSchemaLocation());
     setExternalNoNamespaceSchemaLocation(refScanner->getExternalNoNamespaceSchemaLocation());
     setValidationScheme(refScanner->getValidationScheme());
+    setSecurityManager(refScanner->getSecurityManager());
+    setPSVIHandler(refScanner->getPSVIHandler());
 }
 
 // ---------------------------------------------------------------------------
@@ -740,6 +756,12 @@ void XMLScanner::commonInit()
 
     //  Create the GrammarResolver
     //fGrammarResolver = new GrammarResolver();
+
+    // create initial, 64-element, fUIntPool
+    fUIntPool = (unsigned int **)fMemoryManager->allocate(sizeof(unsigned int *) *fUIntPoolRowTotal);
+    fUIntPool[0] = (unsigned int *)fMemoryManager->allocate(sizeof(unsigned int) << 6);
+    memset(fUIntPool[0], 0, sizeof(unsigned int) << 6);
+    fUIntPool[1] = 0;
 }
 
 
@@ -2126,6 +2148,65 @@ XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
 {
     fReaderMgr.getUpToCharOrWS(toFill, chEndChar);
     return toFill.getLen();
+}
+
+unsigned int *XMLScanner::getNewUIntPtr()
+{
+    // this method hands back a new pointer initialized to 0
+    unsigned int *retVal;
+    if(fUIntPoolCol < 64)
+    {
+        retVal = fUIntPool[fUIntPoolRow]+fUIntPoolCol;
+        fUIntPoolCol++;
+        return retVal;
+    }
+    // time to grow the pool...
+    if(fUIntPoolRow+1 == fUIntPoolRowTotal)
+    {
+        // and time to add some space for new rows:
+        fUIntPoolRowTotal <<= 1;
+        unsigned int **newArray = (unsigned int **)fMemoryManager->allocate(sizeof(unsigned int *) * fUIntPoolRowTotal );
+        memcpy(newArray, fUIntPool, (fUIntPoolRow+1) * sizeof(unsigned int *));
+        fMemoryManager->deallocate(fUIntPool);
+        fUIntPool = newArray;
+        // need to 0 out new elements we won't need:
+        for (unsigned int i=fUIntPoolRow+2; i<fUIntPoolRowTotal; i++)
+            fUIntPool[i] = 0;
+    }
+    // now to add a new row; we just made sure we have space
+    fUIntPoolRow++;
+    fUIntPool[fUIntPoolRow] = (unsigned int *)fMemoryManager->allocate(sizeof(unsigned int) << 6);
+    memset(fUIntPool[fUIntPoolRow], 0, sizeof(unsigned int) << 6);
+    // point to next element
+    fUIntPoolCol = 1; 
+    return fUIntPool[fUIntPoolRow];
+}
+
+void XMLScanner::resetUIntPool()
+{
+    // to reuse the unsigned int pool--and the hashtables that use it--
+    // simply reinitialize everything to 0's
+    for(unsigned int i = 0; i<= fUIntPoolRow; i++)
+        memset(fUIntPool[i], 0, sizeof(unsigned int) << 6);
+}
+
+void XMLScanner::recreateUIntPool()
+{
+    // this allows a bloated unsigned int pool to be dispensed with
+
+    // first, delete old fUIntPool
+    for (unsigned int i=0; i<=fUIntPoolRow; i++)
+    {
+        fMemoryManager->deallocate(fUIntPool[i]);
+    }
+    fMemoryManager->deallocate(fUIntPool);
+
+    fUIntPoolRow = fUIntPoolCol = 0;
+    fUIntPoolRowTotal = 2;
+    fUIntPool = (unsigned int **)fMemoryManager->allocate(sizeof(unsigned int *) * fUIntPoolRowTotal);
+    fUIntPool[0] = (unsigned int *)fMemoryManager->allocate(sizeof(unsigned int) << 6);
+    memset(fUIntPool[fUIntPoolRow], 0, sizeof(unsigned int) << 6);
+    fUIntPool[1] = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/24 05:09:39  neilg
+ * implement new, statless, method for detecting duplicate attributes
+ *
  * Revision 1.10  2003/10/22 20:22:30  knoaman
  * Prepare for annotation support.
  *
@@ -210,6 +213,7 @@ private :
     bool scanAttValue
     (
         const   XMLAttDef* const    attDef
+        , const XMLCh *const        attrName
         ,       XMLBuffer&          toFill
     );
     bool scanContent(const bool extEntity);
@@ -240,12 +244,23 @@ private :
     //
     // fDTDElemNonDeclPool
     //     registry of "faulted-in" DTD element decls
+    // fElemCount
+    //      count of the number of start tags seen so far (starts at 1).
+    //      Used for duplicate attribute detection/processing of required/defaulted attributes
+    // fAttDefRegistry
+    //      mapping from XMLAttDef instances to the count of the last
+    //      start tag where they were utilized.
+    // fUndeclaredAttrRegistry
+    //      mapping of attr QNames to the count of the last start tag in which they occurred
     //
     // -----------------------------------------------------------------------
     ValueVectorOf<XMLAttr*>*    fAttrNSList;
     DTDValidator*               fDTDValidator;
     DTDGrammar*                 fDTDGrammar;
     NameIdPool<DTDElementDecl>* fDTDElemNonDeclPool;
+    unsigned int                fElemCount;
+    RefHashTableOf<unsigned int>* fAttDefRegistry;
+    RefHashTableOf<unsigned int>* fUndeclaredAttrRegistry;
 };
 
 inline const XMLCh* DGXMLScanner::getName() const

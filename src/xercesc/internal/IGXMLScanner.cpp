@@ -64,6 +64,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/IGXMLScanner.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/util/UnexpectedEOFException.hpp>
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
@@ -108,6 +109,10 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fFieldActivator(0)
     , fDTDElemNonDeclPool(0)
     , fSchemaElemNonDeclPool(0)
+    , fElemCount(0)
+    , fAttDefRegistry(0)
+    , fUndeclaredAttrRegistry(0)
+    , fUndeclaredAttrRegistryNS(0)
 {
     try
     {
@@ -150,6 +155,10 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fFieldActivator(0)
     , fDTDElemNonDeclPool(0)
     , fSchemaElemNonDeclPool(0)
+    , fElemCount(0)
+    , fAttDefRegistry(0)
+    , fUndeclaredAttrRegistry(0)
+    , fUndeclaredAttrRegistryNS(0)
 {
     try
     {	
@@ -554,7 +563,19 @@ void IGXMLScanner::commonInit()
     fLocationPairs = new (fMemoryManager) ValueVectorOf<XMLCh*>(8, fMemoryManager);
     // create pools for undeclared elements
     fDTDElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
-    fSchemaElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
+    fSchemaElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager); 
+    fAttDefRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashPtr(), fMemoryManager
+    );
+    fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+    );
+    fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+    );
 }
 
 void IGXMLScanner::cleanUp()
@@ -569,6 +590,9 @@ void IGXMLScanner::cleanUp()
     delete fLocationPairs;
     delete fDTDElemNonDeclPool;
     delete fSchemaElemNonDeclPool;
+    delete fAttDefRegistry;
+    delete fUndeclaredAttrRegistry;
+    delete fUndeclaredAttrRegistryNS;
 }
 
 // ---------------------------------------------------------------------------

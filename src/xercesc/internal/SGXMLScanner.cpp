@@ -86,6 +86,7 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -110,6 +111,9 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fValueStoreCache(0)
     , fFieldActivator(0)
     , fElemNonDeclPool(0)
+    , fElemCount(0)
+    , fAttDefRegistry(0)
+    , fUndeclaredAttrRegistryNS(0)
 {
     try
     {
@@ -156,6 +160,9 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fValueStoreCache(0)
     , fFieldActivator(0)
     , fElemNonDeclPool(0)
+    , fElemCount(0)
+    , fAttDefRegistry(0)
+    , fUndeclaredAttrRegistryNS(0)
 {
     try
     {	
@@ -2015,6 +2022,14 @@ void SGXMLScanner::commonInit()
     fEntityTable->put((void*) XMLUni::fgQuot, chDoubleQuote);
     fEntityTable->put((void*) XMLUni::fgApos, chSingleQuote);
     fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
+    fAttDefRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashPtr(), fMemoryManager
+    );
+    fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+    );
 }
 
 void SGXMLScanner::cleanUp()
@@ -2028,6 +2043,8 @@ void SGXMLScanner::cleanUp()
     delete fMatcherStack;
     delete fValueStoreCache;
     delete fElemNonDeclPool;
+    delete fAttDefRegistry;
+    delete fUndeclaredAttrRegistryNS;
 }
 
 void SGXMLScanner::resizeElemState() {
@@ -2071,6 +2088,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     const bool hasDefs = (currType && fValidate) 
             ? currType->resetDefs()
             : elemDecl->resetDefs();
+
+    fElemCount++;
 
     //  If there are no expliclitily provided attributes and there are no
     //  defined attributes for the element, the we don't have anything to do.
@@ -2149,6 +2168,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  If its not a special case namespace attr of some sort, then we
         //  do normal checking and processing.
         XMLAttDef::AttTypes attType;
+        DatatypeValidator *attrValidator = 0;
         if (!isNSAttr)
         {
             // Some checking for attribute wild card first (for schema)
@@ -2233,20 +2253,54 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  Find this attribute within the parent element. We pass both
             //  the uriID/name and the raw QName buffer, since we don't know
             //  how the derived validator and its elements store attributes.
-            bool wasAdded = false;
             if (!attDef) {
-                attDef = elemDecl->findAttr
-                (
-                    curPair->getKey()
-                    , uriId
-                    , suffPtr
-                    , prefPtr
-                    , XMLElementDecl::AddIfNotFound
-                    , wasAdded
-                );
+                attDef = ((SchemaElementDecl *)elemDecl)->getAttDef(suffPtr, uriId);
             }
 
-            if(!skipThisOne && fGrammarType == Grammar::SchemaGrammarType) {
+            // now need to prepare for duplicate detection
+            if(attDef)
+            {
+                unsigned int *curCountPtr = fAttDefRegistry->get(attDef);
+                if(!curCountPtr)
+                {
+                    curCountPtr = getNewUIntPtr();
+                    *curCountPtr = fElemCount;
+                    fAttDefRegistry->put(attDef, curCountPtr);
+                }
+                else if(*curCountPtr < fElemCount)
+                    *curCountPtr = fElemCount;
+                else
+                {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , attDef->getFullName()
+                        , elemDecl->getFullName()
+                    );
+                }
+            }
+            else
+            {
+                unsigned int *curCountPtr = fUndeclaredAttrRegistryNS->get(suffPtr, uriId);
+                if(!curCountPtr)
+                {
+                    curCountPtr = getNewUIntPtr();
+                    *curCountPtr = fElemCount;
+                    fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, curCountPtr);
+                }
+                else if(*curCountPtr < fElemCount)
+                    *curCountPtr = fElemCount;
+                else
+                {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , namePtr
+                        , elemDecl->getFullName()
+                    );
+                }
+            }
+            if(!skipThisOne && fGrammarType == Grammar::SchemaGrammarType && attDef) {
                 //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
                 if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)
                 {
@@ -2266,15 +2320,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
             }
 
-            if (wasAdded)
-            {
-                // This is to tell the Validator that this attribute was
-                // faulted-in, was not an attribute in the attdef originally
-                attDef->setCreateReason(XMLAttDef::JustFaultIn);
-            }
-
-            bool errorCondition = fValidate && !attDefForWildCard && 
-                attDef->getCreateReason() == XMLAttDef::JustFaultIn && !attDef->getProvided();
+            bool errorCondition = fValidate && !attDefForWildCard && !attDef;
             if (errorCondition && !skipThisOne && !laxThisOne)
             {
                 //
@@ -2300,14 +2346,15 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     , bufMsg.getRawBuffer()
                     , elemDecl->getFullName()
                 );
-                ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                if(attDef)
+                    ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
                 if (getPSVIHandler())
                 {
                     // REVISIT:                
                     // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
                 }
             }
-            else if(errorCondition && laxThisOne) {
+            else if(errorCondition && laxThisOne && attDef) {
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::NONE);
                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::UNKNOWN);
                 if (getPSVIHandler())
@@ -2319,6 +2366,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
 
 
+            /**** REVISIT:  excise this dead code
             //  If its already provided, then there are more than one of
             //  this attribute in this start tag, so emit an error.
             if (attDef->getProvided())
@@ -2341,15 +2389,18 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 attDef->setProvided(true);
             }
+            *******/
 
             //  Now normalize the raw value since we have the attribute type. We
             //  don't care about the return status here. If it failed, an error
             //  was issued, which is all we care about.
             if (attDefForWildCard) {
-                ((SchemaAttDef*)attDef)->setAnyDatatypeValidator(((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator());
+                if(attDef)
+                    ((SchemaAttDef*)attDef)->setAnyDatatypeValidator(((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator());
                 normalizeAttValue
                 (
                     attDefForWildCard
+                    , namePtr
                     , curPair->getValue()
                     , normBuf
                 );
@@ -2377,26 +2428,32 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , false
                         , elemDecl
                     );
+                    attrValidator = ((SchemaValidator *)fValidator)->getMostRecentAttrValidator();
                 }
+                else // no decl; default DOMTypeInfo to anySimpleType
+                    attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
+
                 // Save the type for later use
                 attType = attDefForWildCard->getType();
 
-                ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
+                if(attDef)
+                    ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
 
                 DatatypeValidator* tempDV = ((SchemaAttDef*) attDefForWildCard)->getDatatypeValidator();
-                if(tempDV && tempDV->getType() == DatatypeValidator::Union)
-                    ((SchemaAttDef*)attDef)->setMembertypeValidator(((UnionDatatypeValidator *)tempDV)->getMemberTypeValidator());
+                if(tempDV && tempDV->getType() == DatatypeValidator::Union && attDef)
+                    ((SchemaAttDef*)attDef)->setMembertypeValidator(attrValidator);
             }
             else {
                 normalizeAttValue
                 (
                     attDef
+                    , namePtr
                     , curPair->getValue()
                     , normBuf
                 );
 
                 //  If we found an attdef for this one, then lets validate it.
-                if (attDef->getCreateReason() != XMLAttDef::JustFaultIn)
+                if (attDef)
                 {
                     if (fNormalizeData && (fGrammarType == Grammar::SchemaGrammarType))
                     {
@@ -2421,12 +2478,20 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , false
                             , elemDecl
                         );
+                        attrValidator = ((SchemaValidator *)fValidator)->getMostRecentAttrValidator();
                     }
+                    else
+                        attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
                 }
+                else 
+                    attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
 
                 // Save the type for later use
-                attType = attDef->getType();
-                ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
+                attType = (attDef)?attDef->getType():XMLAttDef::CData;
+                if(attDef)
+                {
+                    ((SchemaElementDecl *)(elemDecl))->updateValidityFromAttribute((SchemaAttDef *)attDef);
+                } 
             }
         }
         else
@@ -2435,10 +2500,13 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             attType = XMLAttDef::CData;
             normalizeAttRawValue
             (
-                curPair->getKey()
+                namePtr
                 , curPair->getValue()
                 , normBuf
             );
+            if((uriId == fXMLNSNamespaceId)
+                  || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI))
+                attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
         }
 
 
@@ -2457,6 +2525,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , attType
                 , true
                 , fMemoryManager
+                , attrValidator
+                , true
             );
             toFill.addElement(curAttr);
         }
@@ -2470,6 +2540,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 , prefPtr
                 , normBuf.getRawBuffer()
                 , attType
+                , attrValidator
+                , true
             );
             curAttr->setSpecified(true);
         }
@@ -2496,8 +2568,9 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             XMLAttDef *curDef = &attDefList.getAttDef(i);            
             const XMLAttDef::DefAttTypes defType = curDef->getDefaultType();
 
-            if (!curDef->getProvided())
-            {
+            unsigned int *attCountPtr = fAttDefRegistry->get(curDef);
+            if (!attCountPtr || *attCountPtr < fElemCount)
+            { // did not occur
                 ((SchemaAttDef *)curDef)->setValidationAttempted(PSVIDefs::FULL);
                 ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::VALID);
                 if (getPSVIHandler())
@@ -2507,7 +2580,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     // PSVIAttribute->setValidity(PSVIItem::VALIDITY_VALID);
                 }
 
-                //the attributes is not provided
+                //the attribute is not provided
                 if (fValidate)
                 {
                     // If we are validating and its required, then an error
@@ -2546,9 +2619,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
 
                 //  Fault in the value if needed, and bump the att count.
-                //  We have to
                 if ((defType == XMLAttDef::Default)
-                ||  (defType == XMLAttDef::Fixed))
+                    ||  (defType == XMLAttDef::Fixed))
                 {
                     // Let the validator pass judgement on the attribute value
                     if (fValidate)
@@ -2582,7 +2654,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                 ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
             }
-            else
+            else if (attCountPtr)
             {
                 //attribute is provided
                 // (schema) report error for PROHIBITED attrs that are present (V_TAGc)
@@ -2617,6 +2689,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 //  are legal if escaped only. And some escape chars are not subject to
 //  normalization rules.
 bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
+                                      , const XMLCh* const        attrName
                                       , const XMLCh* const        value
                                       ,       XMLBuffer&          toFill)
 {
@@ -2628,15 +2701,18 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
     };
 
     // Get the type and name
-    const XMLAttDef::AttTypes type = attDef->getType();
-    const XMLCh* const attrName = attDef->getFullName();
+    const XMLAttDef::AttTypes type = (attDef)
+                            ?attDef->getType()
+                            :XMLAttDef::CData;
 
     // Assume its going to go fine, and empty the target buffer in preperation
     bool retVal = true;
     toFill.reset();
 
     // Get attribute def - to check to see if it's declared externally or not
-    bool  isAttExternal = attDef->isExternal();
+    bool  isAttExternal = (attDef)
+                        ?attDef->isExternal()
+                        :false;
 
     //  Loop through the chars of the source value and normalize it according
     //  to the type.
@@ -2676,7 +2752,8 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                         // Can't have a standalone document declaration of "yes" if  attribute
                         // values are subject to normalisation
                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                        ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);     
+                        if(attDef)
+                            ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);     
                         if (getPSVIHandler())
                         {
                             // REVISIT:               
@@ -2720,7 +2797,8 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                             // Can't have a standalone document declaration of "yes" if  attribute
                             // values are subject to normalisation
                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                            ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                            if(attDef)
+                                ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
                             if (getPSVIHandler())
                             {
                                 // REVISIT:                
@@ -2741,7 +2819,8 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
         srcPtr++;
     }
 
-    ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromAttribute((SchemaAttDef *)attDef);
+    if(attDef)
+        ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromAttribute((SchemaAttDef *)attDef);
 
     return retVal;
 }
@@ -2957,6 +3036,20 @@ void SGXMLScanner::scanReset(const InputSource& src)
         fEntityExpansionLimit = fSecurityManager->getEntityExpansionLimit();
         fEntityExpansionCount = 0;
     }
+    fElemCount = 0;
+    if(fUIntPoolRowTotal >= 32) 
+    { // 8 KB tied up with validating attributes...
+        fAttDefRegistry->removeAll();
+        fUndeclaredAttrRegistryNS->removeAll();
+        recreateUIntPool();
+    }
+    else
+    {
+        // note that this will implicitly reset the values of the hashtables,
+        // though their buckets will still be tied up
+        resetUIntPool();
+    }
+    
 }
 
 

@@ -80,6 +80,7 @@
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -95,6 +96,9 @@ DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt
     , fDTDValidator(0)
     , fDTDGrammar(0)
     , fDTDElemNonDeclPool(0)
+    , fElemCount(0)
+    , fAttDefRegistry(0)
+    , fUndeclaredAttrRegistry(0)
 {
     try
     {
@@ -134,6 +138,9 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
     , fDTDValidator(0)
     , fDTDGrammar(0)
     , fDTDElemNonDeclPool(0)
+    , fElemCount(0)
+    , fAttDefRegistry(0)
+    , fUndeclaredAttrRegistry(0)
 {
     try
     {	
@@ -1169,6 +1176,9 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
     //  pairs until we get there.
     unsigned int    attCount = 0;
     unsigned int    curAttListSize = fAttrList->size();
+    wasAdded = false;
+    fElemCount++;
+
     while (true)
     {
         // And get the next non-space character
@@ -1253,68 +1263,71 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             //  See if this attribute is declared for this element. If we are
             //  not validating of course it will not be at first, but we will
             //  fault it into the pool (to avoid lots of redundant errors.)
-            wasAdded = false;
-            XMLAttDef* attDef = elemDecl->findAttr
-            (
-                fAttNameBuf.getRawBuffer()
-                , 0
-                , 0
-                , 0
-                , XMLElementDecl::AddIfNotFound
-                , wasAdded
-            );
+            XMLAttDef* attDef = ((DTDElementDecl *)elemDecl)->getAttDef ( fAttNameBuf.getRawBuffer());
 
-            if (fValidate)
+            // now need to prepare for duplicate detection
+            if(attDef)
             {
-                if (wasAdded)
+                unsigned int *curCountPtr = fAttDefRegistry->get(attDef);
+                if(!curCountPtr)
                 {
-                    // This is to tell the Validator that this attribute was
-                    // faulted-in, was not an attribute in the attdef originally
-                    attDef->setCreateReason(XMLAttDef::JustFaultIn);
-
-                    fValidator->emitError
-                    (
-                        XMLValid::AttNotDefinedForElement
-                        , fAttNameBuf.getRawBuffer()
-                        , qnameRawBuf
+                    curCountPtr = getNewUIntPtr();
+                    *curCountPtr = fElemCount;
+                    fAttDefRegistry->put(attDef, curCountPtr);
+                }
+                else if(*curCountPtr < fElemCount)
+                    *curCountPtr = fElemCount;
+                else
+                {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , attDef->getFullName()
+                        , elemDecl->getFullName()
                     );
                 }
-                // If this attribute was faulted-in and first occurence,
-                // then emit an error
-                else if (attDef->getCreateReason() == XMLAttDef::JustFaultIn
-                         && !attDef->getProvided())
-                {
-                    fValidator->emitError
-                    (
-                        XMLValid::AttNotDefinedForElement
-                        , fAttNameBuf.getRawBuffer()
-                        , qnameRawBuf
-                    );
-                }
-            }
-
-            //  If its already provided, then there are more than one of
-            //  this attribute in this start tag, so emit an error.
-            if (attDef->getProvided())
-            {
-                emitError
-                (
-                    XMLErrs::AttrAlreadyUsedInSTag
-                    , attDef->getFullName()
-                    , qnameRawBuf
-                );
             }
             else
             {
-                // Mark this one as already seen
-                attDef->setProvided(true);
+                XMLCh * namePtr = fAttNameBuf.getRawBuffer();
+                unsigned int *curCountPtr = fUndeclaredAttrRegistry->get(namePtr);
+                if(!curCountPtr)
+                {
+                    curCountPtr = getNewUIntPtr();
+                     *curCountPtr = fElemCount;
+                    fUndeclaredAttrRegistry->put((void *)namePtr, curCountPtr);
+                }
+                else if(*curCountPtr < fElemCount)
+                    *curCountPtr = fElemCount;
+                else
+                {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , namePtr
+                        , elemDecl->getFullName()
+                    );
+                }
+            }
+            if (fValidate)
+            {
+                if (!attDef)
+                {
+
+                    fValidator->emitError
+                    (
+                        XMLValid::AttNotDefinedForElement
+                        , fAttNameBuf.getRawBuffer()
+                        , qnameRawBuf
+                    );
+                }
             }
 
             //  Skip any whitespace before the value and then scan the att
             //  value. This will come back normalized with entity refs and
             //  char refs expanded.
             fReaderMgr.skipPastSpaces();
-            if (!scanAttValue(attDef, fAttValueBuf))
+            if (!scanAttValue(attDef, fAttNameBuf.getRawBuffer(), fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -1352,7 +1365,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             //  determine if it has a valid value. It will output any needed
             //  errors, but we just keep going. We only need to do this if
             //  we are validating.
-            if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
+            if (attDef)
             {
                 // Let the validator pass judgement on the attribute value
                 if (fValidate)
@@ -1403,7 +1416,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                         fEmptyNamespaceId
                         , fAttNameBuf.getRawBuffer()
                         , fAttValueBuf.getRawBuffer()
-                        , attDef->getType()
+                        , (attDef)?attDef->getType():XMLAttDef::CData
                         , true
                         , fMemoryManager
                     );
@@ -1416,7 +1429,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                         , fAttNameBuf.getRawBuffer()
                         , XMLUni::fgZeroLenString
                         , fAttValueBuf.getRawBuffer()
-                        , attDef->getType()
+                        , (attDef)?attDef->getType():XMLAttDef::CData
                         , true
                         , fMemoryManager
                     );
@@ -1434,7 +1447,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                         fEmptyNamespaceId
                         , fAttNameBuf.getRawBuffer()
                         , fAttValueBuf.getRawBuffer()
-                        , attDef->getType()
+                        , (attDef)?attDef->getType():XMLAttDef::CData
                     );
                 }
                 else
@@ -1445,7 +1458,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                         , fAttNameBuf.getRawBuffer()
                         , XMLUni::fgZeroLenString
                         , fAttValueBuf.getRawBuffer()
-                        , attDef->getType()
+                        , (attDef)?attDef->getType():XMLAttDef::CData
                     );
                 }
                 curAtt->setSpecified(true);
@@ -1870,6 +1883,14 @@ void DGXMLScanner::commonInit()
     fDTDValidator = new (fMemoryManager) DTDValidator();
     initValidator(fDTDValidator);
     fDTDElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
+    fAttDefRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashPtr(), fMemoryManager
+    );
+    fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
+    (
+        509, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+    );
 }
 
 void DGXMLScanner::cleanUp()
@@ -1877,6 +1898,8 @@ void DGXMLScanner::cleanUp()
     delete fAttrNSList;
     delete fDTDValidator;
     delete fDTDElemNonDeclPool;
+    delete fAttDefRegistry;
+    delete fUndeclaredAttrRegistry;
 }
 
 
@@ -1921,8 +1944,9 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
             // Get the current att def, for convenience and its def type
             XMLAttDef& curDef = attDefList.getAttDef(i);
 
-            if (!curDef.getProvided() && curDef.getCreateReason() != XMLAttDef::JustFaultIn)
-            {
+            unsigned int *attCountPtr = fAttDefRegistry->get(&curDef);
+            if (!attCountPtr || *attCountPtr < fElemCount)
+            { // did not occur
                 const XMLAttDef::DefAttTypes defType = curDef.getDefaultType();
 
                 if (fValidate)
@@ -2038,9 +2062,6 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
 
                     retCount++;
                 }
-            }
-            else {
-                curDef.setProvided(false);
             }
         }
     }
@@ -2181,6 +2202,18 @@ void DGXMLScanner::scanReset(const InputSource& src)
     {
         fEntityExpansionLimit = fSecurityManager->getEntityExpansionLimit();
         fEntityExpansionCount = 0;
+    }
+    if(fUIntPoolRowTotal >= 32) 
+    { // 8 KB tied up with validating attributes...
+        fAttDefRegistry->removeAll();
+        fUndeclaredAttrRegistry->removeAll();
+        recreateUIntPool();
+    }
+    else
+    {
+        // note that this will implicitly reset the values of the hashtables,
+        // though their buckets will still be tied up
+        resetUIntPool();
     }
 }
 
@@ -2440,6 +2473,7 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
 //  DGXMLScanner: Private parsing methods
 // ---------------------------------------------------------------------------
 bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
+                                  , const XMLCh *const attrName
                                   ,       XMLBuffer&          toFill)
 {
     enum States
@@ -2449,8 +2483,9 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     };
 
     // Get the type and name
-    const XMLAttDef::AttTypes type = attDef->getType();
-    const XMLCh* const attrName = attDef->getFullName();
+    const XMLAttDef::AttTypes type = (attDef)
+                        ?attDef->getType()
+                        :XMLAttDef::CData;
 
     // Reset the target buffer
     toFill.reset();
@@ -2465,7 +2500,9 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
 
     // Get attribute def - to check to see if it's declared externally or not
-    bool  isAttExternal = attDef->isExternal();
+    bool  isAttExternal = (attDef)
+                        ?attDef->isExternal()
+                        :false;
 
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
