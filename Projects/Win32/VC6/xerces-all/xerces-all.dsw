@@ -303,7 +303,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "xml4com"=".\XML4COM\xml4com.dsp" - Package Owner=<4>
+Project: "xml4com"=".\xerces-com\xerces-com.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
