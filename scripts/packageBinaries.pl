@@ -615,15 +615,13 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
                 }	
                 psystem("type buildlog.txt");
             } elsif ($DevStudioVer eq "7.0") {
-                pchdir ("$ICUROOT/as_is/win32");
-                psystem("unzip msvc7.zip");
-                pchdir ("$ICUROOT/as_is/win32/vc7");
+                pchdir ("$ICUROOT/source/allinone");
 
-                psystem("devenv /rebuild Release /out buildlog.txt /project all allinone.sln");
-                psystem("type buildlog.txt");
+                psystem("devenv /rebuild Release /out buildlog_release.txt /project all allinone.sln");
+                psystem("type buildlog_release.txt");
 
-                psystem("devenv /rebuild debug /out buildlog.txt /project all allinone.sln");
-                psystem("type buildlog.txt");
+                psystem("devenv /rebuild debug /out buildlog_debug.txt /project all allinone.sln");
+                psystem("type buildlog_debug.txt");                            	
             }
         }
 
