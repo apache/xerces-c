@@ -243,6 +243,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fPreprocessedNodes(0)
     , fLocator(0)
     , fMemoryManager(manager)
+    , fGrammarPoolMemoryManager(fGrammarResolver->getGrammarPoolMemoryManager())
     , fAttributeCheck(manager)
 {
 
@@ -254,6 +255,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
             preprocessSchema(schemaRoot, schemaURL);
             doTraverseSchema(schemaRoot);
         }
+
     }
     catch(...) {
 
@@ -324,7 +326,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (fComplexTypeRegistry == 0 ) {
 
-        fComplexTypeRegistry = new (fMemoryManager) RefHashTableOf<ComplexTypeInfo>(29, fMemoryManager);
+        fComplexTypeRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<ComplexTypeInfo>(29, fGrammarPoolMemoryManager);
         fSchemaGrammar->setComplexTypeRegistry(fComplexTypeRegistry);
     }
 
@@ -332,7 +334,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (fGroupRegistry == 0 ) {
 
-        fGroupRegistry = new (fMemoryManager) RefHashTableOf<XercesGroupInfo>(13, fMemoryManager);
+        fGroupRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XercesGroupInfo>(13, fGrammarPoolMemoryManager);
         fSchemaGrammar->setGroupInfoRegistry(fGroupRegistry);
     }
 
@@ -340,7 +342,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (fAttGroupRegistry == 0 ) {
 
-        fAttGroupRegistry = new (fMemoryManager) RefHashTableOf<XercesAttGroupInfo>(13, fMemoryManager);
+        fAttGroupRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XercesAttGroupInfo>(13, fGrammarPoolMemoryManager);
         fSchemaGrammar->setAttGroupInfoRegistry(fAttGroupRegistry);
     }
 
@@ -348,7 +350,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (fAttributeDeclRegistry == 0) {
 
-        fAttributeDeclRegistry = new (fMemoryManager) RefHashTableOf<XMLAttDef>(29, fMemoryManager);
+        fAttributeDeclRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XMLAttDef>(29, fGrammarPoolMemoryManager);
         fSchemaGrammar->setAttributeDeclRegistry(fAttributeDeclRegistry);
     }
 
@@ -356,7 +358,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (fNamespaceScope == 0) {
 
-        fNamespaceScope = new (fMemoryManager) NamespaceScope(fMemoryManager);
+        fNamespaceScope = new (fGrammarPoolMemoryManager) NamespaceScope(fGrammarPoolMemoryManager);
         fNamespaceScope->reset(fEmptyNamespaceURI);
         fSchemaGrammar->setNamespaceScope(fNamespaceScope);
     }
@@ -365,7 +367,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     if (!fValidSubstitutionGroups) {
 
-        fValidSubstitutionGroups = new (fMemoryManager) RefHash2KeysTableOf<ElemVector>(29, fMemoryManager);
+        fValidSubstitutionGroups = new (fGrammarPoolMemoryManager) RefHash2KeysTableOf<ElemVector>(29, fGrammarPoolMemoryManager);
         fSchemaGrammar->setValidSubstitutionGroups(fValidSubstitutionGroups);
     }
 
@@ -383,11 +385,11 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
 
     // Save current schema info
-    SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
+    SchemaInfo* currInfo = new (fGrammarPoolMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                           fNamespaceScope->increaseDepth(),
-                                          XMLString::replicate(schemaURL, fMemoryManager),
+                                          XMLString::replicate(schemaURL, fGrammarPoolMemoryManager),
                                           fTargetNSURIString, schemaRoot,
-                                          fMemoryManager);
+                                          fGrammarPoolMemoryManager);
 
     if (fSchemaInfo) {
         fSchemaInfo->addSchemaInfo(currInfo, SchemaInfo::IMPORT);
@@ -522,7 +524,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // Parse input source
     // ------------------------------------------------------------------
     if (!fParser)
-        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager, 0);
+        fParser = new (fGrammarPoolMemoryManager) XSDDOMParser(0, fGrammarPoolMemoryManager, 0);
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
@@ -574,11 +576,11 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
             // --------------------------------------------------------
             SchemaInfo* saveInfo = fSchemaInfo;
 
-            fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
+            fSchemaInfo = new (fGrammarPoolMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                          fNamespaceScope->increaseDepth(),
-                                         XMLString::replicate(includeURL, fMemoryManager),
+                                         XMLString::replicate(includeURL, fGrammarPoolMemoryManager),
                                          fTargetNSURIString, root,
-                                         fMemoryManager);
+                                         fGrammarPoolMemoryManager);
 
             fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(),
                                  fSchemaInfo->getTargetNSURI(), fSchemaInfo);
@@ -709,7 +711,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // Parse input source
     // ------------------------------------------------------------------
     if (!fParser)
-        fParser = new (fMemoryManager) XSDDOMParser(0, fMemoryManager, 0);
+        fParser = new (fGrammarPoolMemoryManager) XSDDOMParser(0, fGrammarPoolMemoryManager, 0);
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
@@ -752,9 +754,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             // --------------------------------------------------------
             // Preprocess new schema
             // --------------------------------------------------------
-            SchemaInfo* saveInfo = fSchemaInfo;
-            //fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();
-            fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            SchemaInfo* saveInfo = fSchemaInfo;            
+            fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
             preprocessSchema(root, importURL);
             fPreprocessedNodes->put((void*) elem, fSchemaInfo);
 
@@ -901,11 +902,11 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
                 continue;
             }
 
-            contentSpecNode = new (fMemoryManager) ContentSpecNode
+            contentSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
                 eltQName
                 , false
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
             seeParticle = true;
         }
@@ -929,7 +930,7 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
                 continue;
             }
 
-            contentSpecNode = new (fMemoryManager) ContentSpecNode(*contentSpecNode);
+            contentSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode(*contentSpecNode);
             seeParticle = true;
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
@@ -966,28 +967,28 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
             right = contentSpecNode;
         }
         else {
-            left = new (fMemoryManager) ContentSpecNode
+            left = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
                 (ContentSpecNode::NodeTypes) modelGroupType
                 , left
                 , right
                 , true
                 , true
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
             right = contentSpecNode;
         }
     }
 
     if (hadContent) {
-        left = new (fMemoryManager) ContentSpecNode
+        left = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
             (ContentSpecNode::NodeTypes) modelGroupType
             , left
             , right
             , true
             , true
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
     }
 
@@ -1203,7 +1204,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
         // ------------------------------------------------------------------
         // Register the type
         // ------------------------------------------------------------------
-        typeInfo = new (fMemoryManager) ComplexTypeInfo(fMemoryManager);
+        typeInfo = new (fGrammarPoolMemoryManager) ComplexTypeInfo(fGrammarPoolMemoryManager);
         if(isAnonymous) {
             typeInfo->setAnonymous();
         }
@@ -1215,7 +1216,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
 
         if (fFullConstraintChecking) {
 
-            XSDLocator* aLocator = new (fMemoryManager) XSDLocator();
+            XSDLocator* aLocator = new (fGrammarPoolMemoryManager) XSDLocator();
             aLocator->setValues(fStringPool->getValueForId(fStringPool->addOrFind(fSchemaInfo->getCurrentSchemaURL())),
                                 0, ((XSDElementNSImpl*) elem)->getLineNo(),
                                 ((XSDElementNSImpl*) elem)->getColumnNo());
@@ -1406,7 +1407,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     ContentSpecNode* specNode = 0;
     XercesGroupInfo* saveGroupInfo = fCurrentGroupInfo;
 
-    groupInfo = new (fMemoryManager) XercesGroupInfo(fMemoryManager);
+    groupInfo = new (fGrammarPoolMemoryManager) XercesGroupInfo(fGrammarPoolMemoryManager);
     fCurrentGroupStack->addElement(nameIndex);
     fCurrentGroupInfo = groupInfo;
 
@@ -1463,7 +1464,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
     if (fFullConstraintChecking) {
 
-        XSDLocator* aLocator = new (fMemoryManager) XSDLocator();
+        XSDLocator* aLocator = new (fGrammarPoolMemoryManager) XSDLocator();
 
         groupInfo->setLocator(aLocator);
         aLocator->setValues(fStringPool->getValueForId(fStringPool->addOrFind(fSchemaInfo->getCurrentSchemaURL())),
@@ -1552,7 +1553,7 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     // Process contents of global attributeGroups
     // ------------------------------------------------------------------
     XercesAttGroupInfo* saveAttGroupInfo = fCurrentAttGroupInfo;
-    XercesAttGroupInfo* attGroupInfo = new (fMemoryManager) XercesAttGroupInfo(fMemoryManager);
+    XercesAttGroupInfo* attGroupInfo = new (fGrammarPoolMemoryManager) XercesAttGroupInfo(fGrammarPoolMemoryManager);
 
     fDeclStack->addElement(elem);
     fCurrentAttGroupInfo = attGroupInfo;
@@ -1713,38 +1714,38 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
 
     if ((!nameSpace || !*nameSpace)
         || XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
-        retSpecNode = new (fMemoryManager) ContentSpecNode
+        retSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
-            new (fMemoryManager) QName
+            new (fGrammarPoolMemoryManager) QName
             (
                 XMLUni::fgZeroLenString
                 , XMLUni::fgZeroLenString
                 , fEmptyNamespaceURI
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             )
             , false
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         retSpecNode->setType(anyType);
     }
     else if (XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER)) {
-        retSpecNode = new (fMemoryManager) ContentSpecNode
+        retSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
-            new (fMemoryManager) QName
+            new (fGrammarPoolMemoryManager) QName
             (
                 XMLUni::fgZeroLenString
                 , XMLUni::fgZeroLenString
-                , fTargetNSURI, fMemoryManager
+                , fTargetNSURI, fGrammarPoolMemoryManager
             )
             , false
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         retSpecNode->setType(anyOtherType);
     }
     else {
 
         BaseRefVectorOf<XMLCh>* nameSpaceTokens = XMLString::tokenizeString(nameSpace);
-        ValueVectorOf<unsigned int> uriList(8, fMemoryManager);
+        ValueVectorOf<unsigned int> uriList(8, fGrammarPoolMemoryManager);
         ContentSpecNode* firstNode = 0;
         ContentSpecNode* secondNode = 0;
         unsigned int tokensSize = nameSpaceTokens->size();
@@ -1777,16 +1778,16 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
 
             uriList.addElement(uriIndex);
 
-            firstNode = new (fMemoryManager) ContentSpecNode
+            firstNode = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
-                new (fMemoryManager) QName
+                new (fGrammarPoolMemoryManager) QName
                 (
                     XMLUni::fgZeroLenString
                     , XMLUni::fgZeroLenString
-                    , uriIndex, fMemoryManager
+                    , uriIndex, fGrammarPoolMemoryManager
                 )
                 , false
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
             firstNode->setType(anyLocalType);
 
@@ -1794,14 +1795,14 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                 secondNode = firstNode;
             }
             else {
-                secondNode = new (fMemoryManager) ContentSpecNode
+                secondNode = new (fGrammarPoolMemoryManager) ContentSpecNode
                 (
                     ContentSpecNode::Choice
                     , secondNode
                     , firstNode
                     , true
                     , true
-                    , fMemoryManager
+                    , fGrammarPoolMemoryManager
                 );
             }
         }
@@ -1859,11 +1860,11 @@ TraverseSchema::traverseAll(const DOMElement* const elem) {
                 continue;
             }
 
-            contentSpecNode = new (fMemoryManager) ContentSpecNode
+            contentSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
                 eltQName
                 , false
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
             checkMinMax(contentSpecNode, child, All_Element);
         }
@@ -1882,28 +1883,28 @@ TraverseSchema::traverseAll(const DOMElement* const elem) {
             right = contentSpecNode;
         }
         else {
-            left = new (fMemoryManager) ContentSpecNode
+            left = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
                 ContentSpecNode::All
                 , left
                 , right
                 , true
                 , true
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
             right = contentSpecNode;
         }
     }
 
     if (hadContent) {
-        left = new (fMemoryManager) ContentSpecNode
+        left = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
             ContentSpecNode::All
             , left
             , right
             , true
             , true
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
     }
 
@@ -2207,14 +2208,14 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     }
 
     // create SchemaAttDef
-    SchemaAttDef* attDef = new (fMemoryManager) SchemaAttDef
+    SchemaAttDef* attDef = new (fGrammarPoolMemoryManager) SchemaAttDef
     (
         XMLUni::fgZeroLenString
         , name
         , uriIndex
         , attType
         , XMLAttDef::Implied
-        , fMemoryManager
+        , fGrammarPoolMemoryManager
     );
 
     attDef->setDatatypeValidator(dv);
@@ -2310,7 +2311,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     if (topLevel) {
 
         if (fSchemaGrammar->getElemDecl(fTargetNSURI, name, 0, Grammar::TOP_LEVEL_SCOPE) != 0) {
-            return new (fMemoryManager) QName(name, fTargetNSURI, fMemoryManager);
+            return new (fGrammarPoolMemoryManager) QName(name, fTargetNSURI, fGrammarPoolMemoryManager);
         }
     }
 
@@ -2552,20 +2553,20 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                                     subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
 
                                     if (subsElements) {
-                                        subsElements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(*subsElements);
+                                        subsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(*subsElements);
                                         fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
                                     }
                                     else if (fSchemaInfo->circularImportExist(subsElemURI)) {
 
                                         aGrammar->getValidSubstitutionGroups()->put(
-                                        subsElemBaseName, subsElemURI, new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fMemoryManager));
+                                        subsElemBaseName, subsElemURI, new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fGrammarPoolMemoryManager));
                                     }
                                 }
                             }
 
                             if (!subsElements) {
 
-                                subsElements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fMemoryManager);
+                                subsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fGrammarPoolMemoryManager);
                                 fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
                             }
 
@@ -2688,11 +2689,11 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         elemDecl->setContentSpec(contentSpecNode);
 
         if (isAnyType) {
-            elemDecl->setAttWildCard(new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
+            elemDecl->setAttWildCard(new (fGrammarPoolMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
                                                       XMLUni::fgZeroLenString,
                                                       fEmptyNamespaceURI, XMLAttDef::Any_Any,
                                                       XMLAttDef::ProcessContents_Lax,
-                                                      fMemoryManager));
+                                                      fGrammarPoolMemoryManager));
         }
 
         // key/keyref/unique processing
@@ -2711,7 +2712,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             else {
 
                 if (!icNodes) {
-                    icNodes = new (fMemoryManager) ValueVectorOf<DOMElement*>(8, fMemoryManager);
+                    icNodes = new (fGrammarPoolMemoryManager) ValueVectorOf<DOMElement*>(8, fGrammarPoolMemoryManager);
                 }
 
                 icNodes->addElement(ic);
@@ -2750,7 +2751,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         }
     }
 
-    return new (fMemoryManager) QName(*elemDecl->getElementName());
+    return new (fGrammarPoolMemoryManager) QName(*elemDecl->getElementName());
 }
 
 const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) {
@@ -2984,7 +2985,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         // Get facets if any existing
         RefHashTableOf<KVStringPair>* facets = 0;
         RefArrayVectorOf<XMLCh>*      enums = 0;
-        XMLBuffer                     pattern(128, fMemoryManager);
+        XMLBuffer                     pattern(128, fGrammarPoolMemoryManager);
         XMLCh                         fixedFlagStr[16];
         unsigned int                  fixedFlag = 0;
         unsigned short                scope = 0;
@@ -3010,7 +3011,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                 fAttributeCheck.checkAttributes(content, scope, this);
 
                 if (facets == 0) {
-                    facets = new (fMemoryManager) RefHashTableOf<KVStringPair>(29, true, fMemoryManager);
+                    facets = new (fGrammarPoolMemoryManager) RefHashTableOf<KVStringPair>(29, true, fGrammarPoolMemoryManager);
                 }
 
                 if (XMLString::equals(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
@@ -3020,7 +3021,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                     // to get the qualified name first before adding it to the
                     // enum buffer
                     if (!enums) {
-                        enums = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
+                        enums = new (fGrammarPoolMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fGrammarPoolMemoryManager);
                     }
 
                     if (baseValidator->getType() == DatatypeValidator::NOTATION) {
@@ -3037,10 +3038,10 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                         fBuffer.set(uriStr);
                         fBuffer.append(chColon);
                         fBuffer.append(localPart);
-                        enums->addElement(XMLString::replicate(fBuffer.getRawBuffer(), fMemoryManager));
+                        enums->addElement(XMLString::replicate(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager));
                     }
                     else {
-                        enums->addElement(XMLString::replicate(attValue, fMemoryManager));
+                        enums->addElement(XMLString::replicate(attValue, fGrammarPoolMemoryManager));
                     }
                 }
                 else if (XMLString::equals(facetName, SchemaSymbols::fgELT_PATTERN)) {
@@ -3071,7 +3072,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                         else {
 
                             const XMLCh* facetStr = fStringPool->getValueForId(fStringPool->addOrFind(facetName));
-                            facets->put((void*) facetStr, new (fMemoryManager) KVStringPair(facetStr, attValue, fMemoryManager));
+                            facets->put((void*) facetStr, new (fGrammarPoolMemoryManager) KVStringPair(facetStr, attValue, fGrammarPoolMemoryManager));
                             checkFixedFacet(content, facetStr, baseValidator, fixedFlag);
                         }
                     }
@@ -3088,14 +3089,14 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
         if (!pattern.isEmpty()) {
             facets->put((void*) SchemaSymbols::fgELT_PATTERN,
-                        new (fMemoryManager) KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer(), fMemoryManager));
+                        new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer(), fGrammarPoolMemoryManager));
         }
 
         if (fixedFlag) {
 
             XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
             facets->put((void*) SchemaSymbols::fgATT_FIXED,
-                        new (fMemoryManager) KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr, fMemoryManager));
+                        new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr, fGrammarPoolMemoryManager));
         }
 
         try {
@@ -3132,13 +3133,13 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     int                             size = 1;
     const XMLCh*                    baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_MEMBERTYPES);
     DatatypeValidator*              baseValidator = 0;
-    RefVectorOf<DatatypeValidator>* validators = new (fMemoryManager) RefVectorOf<DatatypeValidator>(4, false, fMemoryManager);
+    RefVectorOf<DatatypeValidator>* validators = new (fGrammarPoolMemoryManager) RefVectorOf<DatatypeValidator>(4, false, fGrammarPoolMemoryManager);
     Janitor<DVRefVector>            janValidators(validators);
     DOMElement*                     content = 0;
 
     if (baseTypeName && *baseTypeName) { //base was provided - get proper validator.
 
-        XMLStringTokenizer unionMembers(baseTypeName, fMemoryManager);
+        XMLStringTokenizer unionMembers(baseTypeName, fGrammarPoolMemoryManager);
         int             tokCount = unionMembers.countTokens();
 
         for (int i = 0; i < tokCount; i++) {
@@ -3424,7 +3425,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // ---------------------------------------------------------------
             RefHashTableOf<KVStringPair>*  facets = 0;
             RefArrayVectorOf<XMLCh>*       enums = 0;
-            XMLBuffer                      pattern(128, fMemoryManager);
+            XMLBuffer                      pattern(128, fGrammarPoolMemoryManager);
             XMLCh                          fixedFlagStr[16];
             unsigned int                   fixedFlag = 0;
             unsigned short                 scope = 0;
@@ -3449,16 +3450,16 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     const XMLCh* attValue = content->getAttribute(SchemaSymbols::fgATT_VALUE);
 
                     if (facets == 0) {
-                        facets = new (fMemoryManager) RefHashTableOf<KVStringPair>(29, true, fMemoryManager);
+                        facets = new (fGrammarPoolMemoryManager) RefHashTableOf<KVStringPair>(29, true, fGrammarPoolMemoryManager);
                     }
 
                     if (XMLString::equals(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
 
                         if (!enums) {
-                            enums = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
+                            enums = new (fGrammarPoolMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fGrammarPoolMemoryManager);
                         }
 
-                        enums->addElement(XMLString::replicate(attValue, fMemoryManager));
+                        enums->addElement(XMLString::replicate(attValue, fGrammarPoolMemoryManager));
                     }
                     else if (XMLString::equals(facetName, SchemaSymbols::fgELT_PATTERN)) {
 
@@ -3483,7 +3484,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                             const XMLCh* facetNameStr =
                                 fStringPool->getValueForId(fStringPool->addOrFind(facetName));
 
-                            facets->put((void*) facetNameStr, new (fMemoryManager) KVStringPair(facetNameStr, attValue, fMemoryManager));
+                            facets->put((void*) facetNameStr, new (fGrammarPoolMemoryManager) KVStringPair(facetNameStr, attValue, fGrammarPoolMemoryManager));
                             checkFixedFacet(content, facetNameStr, typeInfo->getBaseDatatypeValidator(), fixedFlag);
                         }
                     }
@@ -3498,7 +3499,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     facets->put
                     (
                         (void*) SchemaSymbols::fgELT_PATTERN,
-                        new (fMemoryManager) KVStringPair
+                        new (fGrammarPoolMemoryManager) KVStringPair
                             (
                                 SchemaSymbols::fgELT_PATTERN,
                                 pattern.getRawBuffer()
@@ -3510,7 +3511,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
                     XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
                     facets->put((void*) SchemaSymbols::fgATT_FIXED,
-                        new (fMemoryManager) KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr, fMemoryManager));
+                        new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr, fGrammarPoolMemoryManager));
                 }
 
                 try {
@@ -3763,7 +3764,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     // ------------------------------------------------------------------
     int uriIndex = fEmptyNamespaceURI;
     XMLAttDef::AttTypes attType = XMLAttDef::Any_Any;
-    ValueVectorOf<unsigned int> namespaceList(8, fMemoryManager);
+    ValueVectorOf<unsigned int> namespaceList(8, fGrammarPoolMemoryManager);
 
     if ((!nameSpace || !*nameSpace)
         || XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
@@ -3776,7 +3777,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     }
     else {
 
-        XMLStringTokenizer tokenizer(nameSpace, fMemoryManager);
+        XMLStringTokenizer tokenizer(nameSpace, fGrammarPoolMemoryManager);
         DatatypeValidator* anyURIDV = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
 
         attType = XMLAttDef::Any_List;
@@ -3813,10 +3814,10 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     // ------------------------------------------------------------------
     // Create wildcard attribute
     // ------------------------------------------------------------------
-    SchemaAttDef* attDef = new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
+    SchemaAttDef* attDef = new (fGrammarPoolMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
                                             XMLUni::fgZeroLenString,
                                             uriIndex, attType, attDefType,
-                                            fMemoryManager);
+                                            fGrammarPoolMemoryManager);
 
 
     if (namespaceList.size()) {
@@ -3867,7 +3868,7 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
         return;
     }
 
-    IC_Key* icKey = new (fMemoryManager) IC_Key(name, elemDecl->getBaseName(), fMemoryManager);
+    IC_Key* icKey = new (fGrammarPoolMemoryManager) IC_Key(name, elemDecl->getBaseName(), fGrammarPoolMemoryManager);
     Janitor<IC_Key> janKey(icKey);
 
     fIdentityConstraintNames->put((void*) name, fTargetNSURI, icKey);
@@ -3919,7 +3920,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     }
 
     if (!fIdentityConstraintNames) {
-        fIdentityConstraintNames = new (fMemoryManager) RefHash2KeysTableOf<IdentityConstraint>(29, (bool) false, fMemoryManager);
+        fIdentityConstraintNames = new (fGrammarPoolMemoryManager) RefHash2KeysTableOf<IdentityConstraint>(29, (bool) false, fGrammarPoolMemoryManager);
     }
 
     if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
@@ -3928,7 +3929,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
         return;
     }
 
-    IC_Unique* icUnique = new (fMemoryManager) IC_Unique(name, elemDecl->getBaseName(), fMemoryManager);
+    IC_Unique* icUnique = new (fGrammarPoolMemoryManager) IC_Unique(name, elemDecl->getBaseName(), fGrammarPoolMemoryManager);
     Janitor<IC_Unique> janUnique(icUnique);
 
     fIdentityConstraintNames->put((void*) name, fTargetNSURI, icUnique);
@@ -4002,7 +4003,7 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
         return;
     }
 
-    IC_KeyRef* icKeyRef = new (fMemoryManager) IC_KeyRef(name, elemDecl->getBaseName(), icKey, fMemoryManager);
+    IC_KeyRef* icKeyRef = new (fGrammarPoolMemoryManager) IC_KeyRef(name, elemDecl->getBaseName(), icKey, fGrammarPoolMemoryManager);
     Janitor<IC_KeyRef> janKeyRef(icKeyRef);
 
     fIdentityConstraintNames->put((void*) name, fTargetNSURI, icKeyRef);
@@ -4099,8 +4100,8 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     // ------------------------------------------------------------------
     try {
 
-        XercesXPath* sXPath = new (fMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI, true, fMemoryManager);
-        IC_Selector* icSelector = new (fMemoryManager) IC_Selector(sXPath, ic);
+        XercesXPath* sXPath = new (fGrammarPoolMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI, true, fGrammarPoolMemoryManager);
+        IC_Selector* icSelector = new (fGrammarPoolMemoryManager) IC_Selector(sXPath, ic);
         ic->setSelector(icSelector);
     }
     catch (const XPathException& e) {
@@ -4151,16 +4152,16 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
 
             try {
 
-                XercesXPath* fieldXPath = new (fMemoryManager) XercesXPath
+                XercesXPath* fieldXPath = new (fGrammarPoolMemoryManager) XercesXPath
                 (
                     fBuffer.getRawBuffer()
                     , fStringPool
                     , fNamespaceScope
                     , fEmptyNamespaceURI
                     , false
-                    , fMemoryManager
+                    , fGrammarPoolMemoryManager
                 );
-                IC_Field* icField = new (fMemoryManager) IC_Field(fieldXPath, ic);
+                IC_Field* icField = new (fGrammarPoolMemoryManager) IC_Field(fieldXPath, ic);
                 ic->addField(icField);
             }
             catch (const XPathException& e) {
@@ -4614,9 +4615,9 @@ QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
     const XMLCh* prefix = getPrefix(refName);
     const XMLCh* localPart = getLocalPart(refName);
     const XMLCh* uriStr = resolvePrefixToURI(elem, prefix);
-    QName*       eltName = new (fMemoryManager) QName(prefix , localPart, uriStr != 0
+    QName*       eltName = new (fGrammarPoolMemoryManager) QName(prefix , localPart, uriStr != 0
                                        ? fURIStringPool->addOrFind(uriStr)
-                                       : fEmptyNamespaceURI, fMemoryManager);
+                                       : fEmptyNamespaceURI, fGrammarPoolMemoryManager);
 
     //if from another schema, just return the element QName
     if (!XMLString::equals(uriStr, fTargetNSURIString)) {
@@ -4682,7 +4683,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
         return blockSet;
     }
 
-    XMLStringTokenizer tokenizer(blockVal, fMemoryManager);
+    XMLStringTokenizer tokenizer(blockVal, fGrammarPoolMemoryManager);
 
     while (tokenizer.hasMoreTokens()) {
 
@@ -4743,7 +4744,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         return finalSet;
     }
 
-    XMLStringTokenizer tokenizer(finalVal, fMemoryManager);
+    XMLStringTokenizer tokenizer(finalVal, fGrammarPoolMemoryManager);
 
     while (tokenizer.hasMoreTokens()) {
 
@@ -5318,14 +5319,14 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
     }
 
     const XMLCh* prefix = getPrefix(name);
-    SchemaElementDecl* elemDecl = new (fMemoryManager) SchemaElementDecl
+    SchemaElementDecl* elemDecl = new (fGrammarPoolMemoryManager) SchemaElementDecl
     (
         prefix
         , name
         , uriIndex
         , (SchemaElementDecl::ModelTypes) elemType
         , enclosingScope
-        , fMemoryManager
+        , fGrammarPoolMemoryManager
     );
 
     elemDecl->setFinalSet(finalSet);
@@ -5480,13 +5481,13 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
     bool required = XMLString::equals(useAttr,SchemaSymbols::fgATTVAL_REQUIRED);
     bool prohibited = XMLString::equals(useAttr,SchemaSymbols::fgATTVAL_PROHIBITED);
     QName* attQName = refAttDef->getAttName();
-    SchemaAttDef* attDef = new (fMemoryManager) SchemaAttDef(attQName->getPrefix(),
+    SchemaAttDef* attDef = new (fGrammarPoolMemoryManager) SchemaAttDef(attQName->getPrefix(),
                                             attQName->getLocalPart(),
                                             attQName->getURI(),
                                             refAttValue,
                                             refAttDef->getType(),
                                             refAttDefType,
-                                            0, fMemoryManager);
+                                            0, fGrammarPoolMemoryManager);
 
     if (refAttDefType == XMLAttDef::Fixed) {
         if (required && !invalidAttUse) {
@@ -5727,7 +5728,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
 
                     int contentContext = specNode->hasAllContent() ? Group_Ref_With_All : Not_All_Context;
 
-                    specNode = new (fMemoryManager) ContentSpecNode(*specNode);
+                    specNode = new (fGrammarPoolMemoryManager) ContentSpecNode(*specNode);
                     checkMinMax(specNode, childElem, contentContext);
                 }
             }
@@ -5794,7 +5795,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             if (!specNode) {
 
                 if (baseSpecNode) {
-                    specNode = new (fMemoryManager) ContentSpecNode(*baseSpecNode);
+                    specNode = new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode);
                     typeInfo->setContentSpec(specNode);
                     typeInfo->setAdoptContentSpec(true);
                 }
@@ -5818,14 +5819,14 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                 typeInfo->setAdoptContentSpec(false);
                 typeInfo->setContentSpec
                 (
-                    new (fMemoryManager) ContentSpecNode
+                    new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::Sequence
-                        , new (fMemoryManager) ContentSpecNode(*baseSpecNode)
+                        , new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode)
                         , specNode
                         , true
                         , true
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     )
                 );
                 typeInfo->setAdoptContentSpec(true);
@@ -5841,16 +5842,16 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
     // -------------------------------------------------------------
     if (isBaseAnyType && typeDerivedBy == SchemaSymbols::XSD_EXTENSION) {
 
-        ContentSpecNode* anySpecNode = new (fMemoryManager) ContentSpecNode
+        ContentSpecNode* anySpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
-            new (fMemoryManager) QName
+            new (fGrammarPoolMemoryManager) QName
             (
                 XMLUni::fgZeroLenString
                 , XMLUni::fgZeroLenString
-                , fEmptyNamespaceURI, fMemoryManager
+                , fEmptyNamespaceURI, fGrammarPoolMemoryManager
             )
             , false
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
 
         anySpecNode->setType(ContentSpecNode::Any_Lax);
@@ -5866,14 +5867,14 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             typeInfo->setAdoptContentSpec(false);
             typeInfo->setContentSpec
             (
-                new (fMemoryManager) ContentSpecNode
+                new (fGrammarPoolMemoryManager) ContentSpecNode
                 (
                     ContentSpecNode::Sequence
                     , anySpecNode
                     , specNode
                     , true
                     , true
-                    , fMemoryManager
+                    , fGrammarPoolMemoryManager
                 )
             );
             typeInfo->setAdoptContentSpec(true);
@@ -5894,17 +5895,17 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         }
         else {
             // add #PCDATA leaf and set its minOccurs to 0
-            ContentSpecNode* pcdataNode = new (fMemoryManager) ContentSpecNode
+            ContentSpecNode* pcdataNode = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
-                new (fMemoryManager) QName
+                new (fGrammarPoolMemoryManager) QName
                 (
                     XMLUni::fgZeroLenString
                     , XMLUni::fgZeroLenString
                     , XMLElementDecl::fgPCDataElemId
-                    , fMemoryManager
+                    , fGrammarPoolMemoryManager
                 )
                 , false
-                , fMemoryManager
+                , fGrammarPoolMemoryManager
             );
 
             pcdataNode->setMinOccurs(0);
@@ -6128,7 +6129,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
     SchemaAttDef* attWildCard = 0;
     Janitor<SchemaAttDef> janAttWildCard(0);
     XercesAttGroupInfo* attGroupInfo = 0;
-    ValueVectorOf<XercesAttGroupInfo*> attGroupList(4, fMemoryManager);
+    ValueVectorOf<XercesAttGroupInfo*> attGroupList(4, fGrammarPoolMemoryManager);
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
@@ -6184,7 +6185,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
                 if (!attGroupWildCard) {
 
-                    attGroupWildCard = new (fMemoryManager) SchemaAttDef(attGroupInfo->anyAttributeAt(0));
+                    attGroupWildCard = new (fGrammarPoolMemoryManager) SchemaAttDef(attGroupInfo->anyAttributeAt(0));
 
                     for (unsigned int i= 1; i < anyAttCount; i++) {
                         attWildCardIntersection(attGroupWildCard, attGroupInfo->anyAttributeAt(i));
@@ -6197,7 +6198,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
                     attWildCardIntersection(completeWildCard, attGroupWildCard);
                 }
                 else {
-                    completeWildCard = new (fMemoryManager) SchemaAttDef(attGroupWildCard);
+                    completeWildCard = new (fGrammarPoolMemoryManager) SchemaAttDef(attGroupWildCard);
                     janCompleteWildCard.reset(completeWildCard);
                 }
             }
@@ -6227,11 +6228,11 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
         if (isBaseAnyType) {
 
-            baseAttWildCard = new (fMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
+            baseAttWildCard = new (fGrammarPoolMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
                                                XMLUni::fgZeroLenString,
                                                fEmptyNamespaceURI, XMLAttDef::Any_Any,
                                                XMLAttDef::ProcessContents_Lax,
-                                               fMemoryManager);
+                                               fGrammarPoolMemoryManager);
             janBaseAttWildCard.reset(baseAttWildCard);
         }
 		
@@ -6264,7 +6265,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
         }
         else {
 
-            SchemaAttDef* newWildCard = new (fMemoryManager) SchemaAttDef(baseAttWildCard);
+            SchemaAttDef* newWildCard = new (fGrammarPoolMemoryManager) SchemaAttDef(baseAttWildCard);
             typeInfo->setAttWildCard(newWildCard);
         }
     }
@@ -6311,14 +6312,14 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
             if (attDef.getDefaultType() != XMLAttDef::Prohibited) {
 
-                SchemaAttDef* newAttDef = new (fMemoryManager) SchemaAttDef(attName->getPrefix(),
+                SchemaAttDef* newAttDef = new (fGrammarPoolMemoryManager) SchemaAttDef(attName->getPrefix(),
                                                            attName->getLocalPart(),
                                                            attName->getURI(),
                                                            attDef.getValue(),
                                                            attDef.getType(),
                                                            attDef.getDefaultType(),
                                                            attDef.getEnumeration(),
-                                                           fMemoryManager);
+                                                           fGrammarPoolMemoryManager);
 
                 newAttDef->setDatatypeValidator(attDef.getDatatypeValidator());
                 typeInfo->addAttDef(newAttDef);
@@ -6508,7 +6509,7 @@ TraverseSchema::buildValidSubstitutionListB(const DOMElement* const elem,
                 break;
             }
 			
-            validSubsElements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(*validSubsElements);
+            validSubsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(*validSubsElements);
             fValidSubstitutionGroups->put((void*) chainElemName, chainElemURI, validSubsElements);
         }
 
@@ -6575,7 +6576,7 @@ TraverseSchema::buildValidSubstitutionListF(const DOMElement* const elem,
                 return;
             }
 			
-            validSubs = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(*validSubs);
+            validSubs = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(*validSubs);
             fValidSubstitutionGroups->put((void*) subsElemName, subsElemURI, validSubs);
         }
 
@@ -6953,7 +6954,7 @@ void TraverseSchema::copyAttGroupAttributes(const DOMElement* const elem,
                 typeInfo->setAttWithTypeId(true);
             }
 
-            typeInfo->addAttDef(new (fMemoryManager) SchemaAttDef(attDef));
+            typeInfo->addAttDef(new (fGrammarPoolMemoryManager) SchemaAttDef(attDef));
 
             if (toAttGroup) {
                 toAttGroup->addAttDef(attDef, true);
@@ -7035,7 +7036,7 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
         if (listSize) {
 
             bool                        found = false;
-            ValueVectorOf<unsigned int> tmpURIList(listSize, fMemoryManager);
+            ValueVectorOf<unsigned int> tmpURIList(listSize, fGrammarPoolMemoryManager);
 
             for (unsigned int i=0; i < listSize; i++) {
 
@@ -7072,7 +7073,7 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
 
         if (listSize) {
 
-            ValueVectorOf<unsigned int> tmpURIList(listSize, fMemoryManager);
+            ValueVectorOf<unsigned int> tmpURIList(listSize, fGrammarPoolMemoryManager);
 
             for (unsigned int i=0; i < listSize; i++) {
 
@@ -7567,7 +7568,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // Parse input source
     // ------------------------------------------------------------------
     if (!fParser)
-        fParser = new (fMemoryManager) XSDDOMParser(0,fMemoryManager, 0);
+        fParser = new (fGrammarPoolMemoryManager) XSDDOMParser(0,fGrammarPoolMemoryManager, 0);
 
     fParser->setValidationScheme(XercesDOMParser::Val_Never);
     fParser->setDoNamespaces(true);
@@ -7623,11 +7624,11 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         // Update schema information with redefined schema
         // --------------------------------------------------------
         redefSchemaInfo = fSchemaInfo;
-        fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
+        fSchemaInfo = new (fGrammarPoolMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                      fNamespaceScope->increaseDepth(),
-                                     XMLString::replicate(includeURL, fMemoryManager),
+                                     XMLString::replicate(includeURL, fGrammarPoolMemoryManager),
                                      fTargetNSURIString, root,
-                                     fMemoryManager);
+                                     fGrammarPoolMemoryManager);
 
         traverseSchemaHeader(root);
         fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);

@@ -778,6 +778,7 @@ private:
     XSDErrorReporter                               fXSDErrorReporter;
     XSDLocator*                                    fLocator;
     MemoryManager*                                 fMemoryManager;
+    MemoryManager*                                 fGrammarPoolMemoryManager;
     GeneralAttributeCheck                          fAttributeCheck;
 
     friend class GeneralAttributeCheck;
