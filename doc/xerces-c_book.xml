@@ -11,17 +11,18 @@
 
   <separator/>
   <document id="api"         label="API Docs"     source="apidocs.xml"    />
-  <document id="samples"     label="Samples"      source="samples.xml"    />
-            <hidden id="saxcount"   source="saxcount.xml"/>
-            <hidden id="saxprint"   source="saxprint.xml"/>
-            <hidden id="domcount"   source="domcount.xml"/>
-            <hidden id="domprint"   source="domprint.xml"/>
-            <hidden id="memparse"   source="memparse.xml"/>
-            <hidden id="redirect"   source="redirect.xml"/>
-            <hidden id="pparse"     source="pparse.xml"/>
-            <hidden id="stdinparse" source="stdinparse.xml"/>
-            <hidden id="enumval"    source="enumval.xml"/>
-            <hidden id="createdoc"  source="createdoc.xml"/>
+  <container id="samples"    label="Samples"      source="samples.xml">
+            <entry id="saxcount"   source="saxcount.xml"/>
+            <entry id="saxprint"   source="saxprint.xml"/>
+            <entry id="domcount"   source="domcount.xml"/>
+            <entry id="domprint"   source="domprint.xml"/>
+            <entry id="memparse"   source="memparse.xml"/>
+            <entry id="redirect"   source="redirect.xml"/>
+            <entry id="pparse"     source="pparse.xml"/>
+            <entry id="stdinparse" source="stdinparse.xml"/>
+            <entry id="enumval"    source="enumval.xml"/>
+            <entry id="createdoc"  source="createdoc.xml"/>
+  </container>
 
   <document id="program"     label="Programming"  source="program.xml"    />
   <document id="migrate"     label="Migration"    source="migration.xml"  />
