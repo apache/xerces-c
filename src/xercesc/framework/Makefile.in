@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2003/09/18 20:32:02  peiyongz
+# BinOutputStream
+#
 # Revision 1.10  2003/09/16 14:33:35  neilg
 # PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
 #
@@ -152,6 +155,7 @@ include ../Makefile.incl
 MODULE = framework
 
 FRAMEWORK_CPP_PUBHEADERS = \
+	BinOutputStream.hpp \
 	LocalFileInputSource.hpp \
 	LocalFileFormatTarget.hpp \
 	MemBufInputSource.hpp \
@@ -191,6 +195,7 @@ FRAMEWORK_CPP_PRIVHEADERS =
 FRAMEWORK_C_FILES =
 
 FRAMEWORK_CPP_OBJECTS = \
+	BinOutputStream.$(TO) \
 	LocalFileInputSource.$(TO) \
 	LocalFileFormatTarget.$(TO) \
 	MemBufInputSource.$(TO) \
