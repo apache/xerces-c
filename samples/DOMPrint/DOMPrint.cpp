@@ -256,7 +256,7 @@ XMLFormatter& operator<< (XMLFormatter& strm, const DOMString& s);
 void usage()
 {
     cout << "\nUsage: DOMPrint [options] file\n\n"
-            "This program invokes the XML4C DOM parser and builds the DOM\n"
+            "This program invokes the Xerces-C DOM parser and builds the DOM\n"
             "tree. It then traverses the DOM tree and prints the contents \n"
             "of the tree. Options are NOT case sensitive.\n\n"
             "Options:\n"
