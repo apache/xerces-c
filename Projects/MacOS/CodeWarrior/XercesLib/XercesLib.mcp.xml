@@ -604,7 +604,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652mjhn6567jgi6525t4n6527v526525t4n6527u826525j92657p48i653rccn&#191;&#255;&#208;&#172;9&#136;a&amp;&#160;&#134; |&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan&#191;&#255;&#208;&#172;Y&#136;&#190;&#202;&#144;\&#166;d&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -4529,6 +4529,153 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -7076,6 +7223,111 @@
                     <PATH>XMLStringTokenizer.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -7633,7 +7885,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652mjhn6567jgi6525t4n6527v526525t4n6527u826525j92657p48i653rccn&#191;&#255;&#208;&#172;9&#136;a&#231;&#160;&#134;2&#172;&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>965ikjfn65n6jei65i4t2n65i6v3265i4t2n65i6u6265i4j7265pn46i65jqcan&#191;&#255;&#208;&#172;Y&#136;[&#240;j&#218;&#196;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -10915,6 +11167,213 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:sax:SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAXParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:DOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -13141,6 +13600,167 @@
                     <PATH>:util:XMLStringTokenizer.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:sax:SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAXParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:DOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -13698,7 +14318,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652mjhn6567jgi6525t4n6527v526525t4n6527u826525j92657p48i653rccn&#191;&#255;&#208;&#172;9&#136;^&#234;p&#133;&#242; &#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964kkjfn64q6jei64k4t2n64k6v3264k4t2n64k6u6264k4j7264rn46i64mqcan&#191;&#255;&#208;&#172;Y&#136;}&#187;&#128;&#174;s&#252;&#191;&#255;&#209;H</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -17623,6 +18243,153 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -20170,6 +20937,111 @@
                     <PATH>XMLStringTokenizer.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -20727,7 +21599,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652vjhn656fjgi652dt4n652fv52652dt4n652fu82652dj92657x48i653zccn&#191;&#255;&#208;&#172;9&#136;&#252;r&#144;l+@&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954ujxn58ejwi54ctin54evj254ctin54eun254cjp259w4ni55ycsnX\&#145;&#152;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -24009,6 +24881,213 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:sax:SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAXParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:DOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -26235,6 +27314,167 @@
                     <PATH>:util:XMLStringTokenizer.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:sax:SAXException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAX2XMLReaderImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:IDOMParser.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:internal:VecAttributesImpl.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_RangeException.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:dom:DOM_Range.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:SAXParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:parsers:DOMParser.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:QNameDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:NOTATIONDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDREFDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:IDDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>:::::MacSrc:</ACCESSPATH>
+                    <PATH>:validators:datatype:ENTITYDatatypeValidator.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -26508,7 +27748,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9652vjhn656fjgi652dt4n652fv52652dt4n652fu82652dj92657x48i653zccn&#191;&#255;&#208;&#172;9&#136;Q&#128;&#139;&#149;&#220;&#191;&#255;&#209;H</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954ujxn58ejwi54ctin54evj254ctin54eun254cjp259w4ni55ycsnX\&#145;&#152;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -27587,6 +28827,30 @@
                         <PATH>XMLDeclImpl.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_RangeException.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_RangeException.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_Range.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>DOM_Range.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                 </GROUP>
                 <GROUP><NAME>framework</NAME>
                     <FILEREF>
@@ -28376,6 +29640,18 @@
                     <FILEREF>
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
+                        <PATH>VecAttributesImpl.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>VecAttributesImpl.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
                         <PATH>VecAttrListImpl.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
@@ -28445,6 +29721,30 @@
                         <PATH>SAXParser.hpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>SAX2XMLReaderImpl.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>SAX2XMLReaderImpl.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>IDOMParser.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>IDOMParser.cpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
                 </GROUP>
                 <GROUP><NAME>sax</NAME>
                     <FILEREF>
@@ -28511,6 +29811,12 @@
                         <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                         <PATHTYPE>Name</PATHTYPE>
                         <PATH>Parser.hpp</PATH>
+                        <PATHFORMAT>MacOS</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>Name</PATHTYPE>
+                        <PATH>SAXException.cpp</PATH>
                         <PATHFORMAT>MacOS</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
@@ -29527,6 +30833,384 @@
                     </FILEREF>
                 </GROUP>
                 <GROUP><NAME>validators</NAME>
+                    <GROUP><NAME>datatype</NAME>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>Base64BinaryDat_peValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>Base64BinaryDat_peValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>BooleanDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>BooleanDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidatorFactory.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DatatypeValidatorFactory.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DecimalDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DecimalDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ENTITYDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ENTITYDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>HexBinaryDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>HexBinaryDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>InvalidDatatypeFacetExcept.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>InvalidDatatypeValueExcept.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>StringDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>StringDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>QNameDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>QNameDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDREFDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>IDREFDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NOTATIONDatatypeValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>NOTATIONDatatypeValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                    </GROUP>
+                    <GROUP><NAME>DTD</NAME>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DocTypeHandler.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDef.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDef.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDefList.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDAttDefList.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDElementDecl.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDElementDecl.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDEntityDecl.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDGrammar.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDGrammar.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDScanner.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDScanner.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDValidator.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DTDValidator.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                    </GROUP>
+                    <GROUP><NAME>common</NAME>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMAny.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMAny.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMBinaryOp.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMBinaryOp.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMLeaf.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMNode.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMStateSet.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMUnaryOp.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>CMUnaryOp.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ContentLeafNameTypeVector.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ContentLeafNameTypeVector.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ContentSpecNode.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>ContentSpecNode.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DFAContentModel.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>DFAContentModel.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>Grammar.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>GrammarResolver.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>GrammarResolver.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>MixedContentModel.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>MixedContentModel.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>SimpleContentModel.cpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                        <FILEREF>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                            <PATHTYPE>Name</PATHTYPE>
+                            <PATH>SimpleContentModel.hpp</PATH>
+                            <PATHFORMAT>MacOS</PATHFORMAT>
+                        </FILEREF>
+                    </GROUP>
                     <GROUP><NAME>schema</NAME>
                         <FILEREF>
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
@@ -29682,324 +31366,6 @@
                             <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>Name</PATHTYPE>
                             <PATH>XUtil.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                    </GROUP>
-                    <GROUP><NAME>DTD</NAME>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DocTypeHandler.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDef.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDef.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDefList.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDAttDefList.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDElementDecl.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDElementDecl.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDEntityDecl.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDGrammar.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDGrammar.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDScanner.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDScanner.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DTDValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                    </GROUP>
-                    <GROUP><NAME>datatype</NAME>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>Base64BinaryDat_peValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>Base64BinaryDat_peValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>BooleanDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>BooleanDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidatorFactory.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DatatypeValidatorFactory.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DecimalDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DecimalDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>HexBinaryDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>HexBinaryDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>InvalidDatatypeFacetExcept.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>InvalidDatatypeValueExcept.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>StringDatatypeValidator.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>StringDatatypeValidator.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                    </GROUP>
-                    <GROUP><NAME>common</NAME>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMAny.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMAny.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMBinaryOp.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMBinaryOp.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMLeaf.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMNode.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMStateSet.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMUnaryOp.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>CMUnaryOp.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ContentLeafNameTypeVector.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ContentLeafNameTypeVector.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ContentSpecNode.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>ContentSpecNode.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DFAContentModel.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>DFAContentModel.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>Grammar.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>GrammarResolver.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>GrammarResolver.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>MixedContentModel.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>MixedContentModel.hpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>SimpleContentModel.cpp</PATH>
-                            <PATHFORMAT>MacOS</PATHFORMAT>
-                        </FILEREF>
-                        <FILEREF>
-                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
-                            <PATHTYPE>Name</PATHTYPE>
-                            <PATH>SimpleContentModel.hpp</PATH>
                             <PATHFORMAT>MacOS</PATHFORMAT>
                         </FILEREF>
                     </GROUP>
