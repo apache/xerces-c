@@ -11,6 +11,68 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
+			Name="Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				ImproveFloatingPointConsistency="TRUE"
+				OptimizeForProcessor="2"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="NDEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="TRUE"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/XercesLib.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="ws2_32.lib"
+				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_0_0.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2_0_0.pdb"
+				GenerateMapFile="TRUE"
+				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-c_2_0_0.map"
+				SubSystem="2"
+				BaseAddress="0x12000000"
+				ImportLibrary="..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/XercesLib.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
 			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj"
@@ -71,69 +133,6 @@
 			<Tool
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
-			<Tool
-				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="2"
-				ImproveFloatingPointConsistency="TRUE"
-				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
-				StringPooling="TRUE"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
-				DisableLanguageExtensions="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
-				BrowseInformation="1"
-				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
-				CompileAs="0"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="ws2_32.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_0_0.dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2_0_0.pdb"
-				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-c_2_0_0.map"
-				SubSystem="2"
-				BaseAddress="0x12000000"
-				ImportLibrary="..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2.lib"/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7\Release/XercesLib.tlb"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-		</Configuration>
 	</Configurations>
 	<Files>
 		<Filter
@@ -183,6 +182,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\EmptyStackException.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\EncodingValidator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp">
@@ -505,13 +510,13 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32PlatformUtils.cpp">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Release|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32">
+						Name="Debug|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
@@ -533,13 +538,13 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Release|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32">
+						Name="Debug|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
@@ -555,13 +560,13 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Release|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32">
+						Name="Debug|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
@@ -577,13 +582,13 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Release|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32">
+						Name="Debug|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
@@ -595,13 +600,13 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Release|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32">
+						Name="Debug|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
@@ -940,6 +945,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\EndOfEntityException.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\IANAEncodings.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp">
@@ -1636,9 +1644,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMBuilder.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMBuilderFilter.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMCDATASection.hpp">
 			</File>
 			<File
@@ -2328,13 +2333,13 @@
 		<File
 			RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc">
 			<FileConfiguration
-				Name="Debug|Win32">
+				Name="Release|Win32">
 				<Tool
 					Name="VCResourceCompilerTool"
 					AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32">
+				Name="Debug|Win32">
 				<Tool
 					Name="VCResourceCompilerTool"
 					AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
