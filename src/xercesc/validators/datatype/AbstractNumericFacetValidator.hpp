@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/11/22 20:23:20  peiyongz
  * _declspec(dllimport) and inline warning C4273
@@ -91,6 +94,8 @@ public:
     virtual ~AbstractNumericFacetValidator();
 
 	//@}
+
+	virtual const RefVectorOf<XMLCh>* getEnumString() const;
 
 protected:
 

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
@@ -385,6 +388,10 @@ int UnionDatatypeValidator::compare(const XMLCh* const lValue
     return -1;        
 }
 
+const RefVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
+{
+	return getEnumeration();
+}
 /**
   * End of file UnionDatatypeValidator.cpp
   */

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/02/14 15:14:58  peiyongz
+ * getEnumString()
+ *
  * Revision 1.6  2002/02/01 22:41:28  peiyongz
  * sane_include
  *
@@ -485,6 +488,19 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
         }
     }
 
+	// Enumerations
+	const RefVectorOf<XMLCh>*  enums = dtValidator->getEnumString();
+	if (enums)
+	{
+		cout << "Enumeration:\t\t\n";
+
+        int enumLength = enums->size();
+        for ( int i = 0; i < enumLength; i++)
+        {
+            cout << "\t" << StrX( enums->elementAt(i)) << "\n";
+        }
+
+	}
 }
 
 void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )

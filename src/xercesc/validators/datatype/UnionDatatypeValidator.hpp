@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:43  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/14 15:17:31  peiyongz
+ * getEnumString()
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/12/13 16:48:29  peiyongz
  * Avoid dangling pointer
@@ -131,6 +134,8 @@ public:
     virtual ~UnionDatatypeValidator();
 
 	//@}
+
+	virtual const RefVectorOf<XMLCh>* getEnumString() const;
 
     // -----------------------------------------------------------------------
     // Getter methods
