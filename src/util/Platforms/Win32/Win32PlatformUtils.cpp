@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.23  2000/05/31 22:56:51  andyh
+ * Fixed error check for end of file in Win32 platform utils.
+ * Joe Polastre
+ *
  * Revision 1.22  2000/05/10 00:39:20  andyh
  * Japanese and Korean Encoding Problems with WIndows
  * file names.  Win98 fix, and relative paths fix.
@@ -312,7 +316,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 
     // Seek to the end and save that value for return
     const unsigned int retVal = ::SetFilePointer(theFile, 0, 0, FILE_END);
-    if (curPos == 0xFFFFFFFF)
+    if (retVal == 0xFFFFFFFF)
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     // And put the pointer back
