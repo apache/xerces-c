@@ -629,6 +629,15 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         //  first.
         //
         scanProlog();
+
+        //
+        //  If we got to the end of input, then its not a valid XML file.
+        //  Else, go on to scan the content.
+        //
+        if (fReaderMgr.atEOF())
+        {
+            emitError(XMLErrs::EmptyMainEntity);
+        }
     }
 
     //
