@@ -578,6 +578,11 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
                                  fSchemaInfo->getTargetNSURI(), fSchemaInfo);
             fPreprocessedNodes->put((void*) elem, fSchemaInfo);
             saveInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
+
+            if (!XMLString::equals(root->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
+                reportSchemaError(root,  XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
+            }
+
             traverseSchemaHeader(root);
             preprocessChildren(root);
             fSchemaInfo = saveInfo;
