@@ -113,9 +113,9 @@ public:
     </a>
   </faq>
 
-  <faq title="Why does my application gives unresolved linking errors?">
+  <faq title="Why does my application give unresolved linking errors?">
 
-    <q>Why does my application gives unresolved linking errors?</q>
+    <q>Why does my application give unresolved linking errors?</q>
 
     <a>
 
@@ -417,5 +417,42 @@ catch (const XMLException&amp; toCatch) {
       </p>            
     </a>
   </faq>
+ 
+  <faq title='Regenerating (API) documention?'>
+    <q>How do I regenerate the (API) documentation?</q>
+    <a>
+     <p>To use the internal XML based application that creates the
+        documentation, you must have a Java Virtual machine installed
+        on your system. The application itself, written in Java, is
+        part of Xerces.</p>
+
+     <p>To regenerate the documentation, go to directory <code>$XERCESCROOT</code>
+        and start <code>createDocs.sh</code> (for Unix) or
+        <code>createdocs.bat</code> (for Windows). The result can be
+        found in directory <code>$XERCESCROOT/doc/html</code>.</p>
+
+     <p>
+      To regenerate the API documentation, you need to have at least
+      <jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump>
+      installed on your system.</p>
+
+      <p>If you want the API documentation to
+      contain dependency graphs, you also need to have <jump
+      href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump> installed on
+      your system. (Note that some people object to the 
+      <jump
+      href="http://www.research.att.com/sw/tools/graphviz/license/index.html">GraphViz
+      license</jump>, so there are Linux distributions that do not
+      include it.)</p>
+
+      <p>If you do not have GraphViz, or do not want to use it, you
+      have to edit file <code>$XERCESCROOT/doc/Doxyfile</code> and change <code>HAVE_DOT =
+      YES</code> into <code>HAVE_DOT = NO</code>.</p>
+
+      <p>To actually regenerate the API documentation, go to directory
+      <code>$XERCESCROOT/doc/</code> and start Doxygen. The result can be
+        found in directory <code>$XERCESCROOT/doc/html/apiDocs</code>.</p>
+    </a>
+   </faq>
 
 </faqs>

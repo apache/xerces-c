@@ -199,7 +199,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
 
     <faq title="I do not see binaries for my platform. When will they be available?">
 
-        <q>I do not see binaries for my platform. When will they be available?"></q>
+        <q>I do not see binaries for my platform. When will they be available?"</q>
 
         <a>
             <p>The reason why you see binaries only for some specific
@@ -261,9 +261,12 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             <jump href="http://xml.apache.org/">Apache</jump> open source website as
             <jump href="http://xml.apache.org/cocoon/index.html">Cocoon</jump>.</p>
 
-	    <p>The API documentation is automatically generated using
-		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
-		<jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
+	    <p>The API documentation is generated using
+            <jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
+	    <jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
+
+            <p>See <jump href="faq-build.html#faq-18">
+            FAQ: Regenerating (API) documention?</jump></p>
 
         </a>
     </faq>
