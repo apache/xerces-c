@@ -444,7 +444,7 @@ XMLUTF8Transcoder390::transcodeTo( const   XMLCh* const    srcData
             {
                 XMLCh tmpBuf[17];
                 XMLString::binToText(curVal, tmpBuf, 16, 16, getMemoryManager());
-                ThrowXML2
+                ThrowXMLwithMemMgr2
                 (
                     TranscodingException
                     , XMLExcepts::Trans_Unrepresentable

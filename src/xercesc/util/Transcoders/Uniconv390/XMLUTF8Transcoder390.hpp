@@ -54,6 +54,13 @@
  * <http://www.apache.org/>.
  */
 
+/*
+ * $Log$
+ * Revision 1.2  2004/02/06 18:18:09  cargilld
+ * Misc 390 changes.
+ *
+ */
+
 #ifndef XMLUTF8TRANSCODER_HPP
 #define XMLUTF8TRANSCODER_HPP
 
