@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/06/27 18:48:04  tng
+ * API Documentation Update and move getScanner as protected
+ *
  * Revision 1.10  2002/06/17 15:41:44  tng
  * Update API Documentation
  *
@@ -207,6 +210,14 @@ public :
     // -----------------------------------------------------------------------
     //  Class types
     // -----------------------------------------------------------------------
+    /** ValScheme enum used in setValidationScheme
+      *    Val_Never:  Do not report validation errors.
+      *    Val_Always: The parser will always report validation errors.
+      *    Val_Auto:   The parser will report validation errors only if a grammar is specified.
+      *
+      * @see #setValidationScheme
+      */
+
     enum ValSchemes
     {
         Val_Never
@@ -218,7 +229,6 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-
     /** @name Constructors and Destructor */
     //@{
     /** Constructor with an instance of validator class to use for
@@ -235,6 +245,9 @@ public :
     //@}
 
 
+    // -----------------------------------------------------------------------
+    //  Getter Methods
+    // -----------------------------------------------------------------------
     /** @name Getter methods */
     //@{
     /**
@@ -284,14 +297,6 @@ public :
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
-
-    /**
-      * This method returns a reference to the underlying scanner object.
-      * It allows read only access to data maintained in the scanner.
-      *
-      * @return A const reference to the underlying scanner object.
-      */
-    const XMLScanner& getScanner() const;
 
     /**
       * This method returns a reference to the parser's installed
@@ -666,102 +671,6 @@ public :
 
 
     // -----------------------------------------------------------------------
-    //  Implementation of the SAXParser interface
-    // -----------------------------------------------------------------------
-
-    /** @name Implementation of SAX 1.0 interface's. */
-    //@{
-    /**
-      * This method invokes the parsing process on the XML file specified
-      * by the InputSource parameter.
-      *
-      * @param source A const reference to the InputSource object which
-      *               points to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
-      *
-      * @see Parser#parse(InputSource)
-      */
-    virtual void parse(const InputSource& source, const bool reuseGrammar = false);
-
-    /**
-      * This method invokes the parsing process on the XML file specified by
-      * the Unicode string parameter 'systemId'.
-      *
-      * @param systemId A const XMLCh pointer to the Unicode string which
-      *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
-      *
-      * @see Parser#parse(XMLCh*)
-      */
-    virtual void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
-
-    /**
-      * This method invokes the parsing process on the XML file specified by
-      * the native char* string parameter 'systemId'.
-      *
-      * @param systemId A const char pointer to a native string which
-      *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
-      */
-    virtual void parse(const char* const systemId, const bool reuseGrammar = false);
-
-    /**
-      * This method installs the user specified SAX Document Handler
-      * callback function on parser.
-      *
-      * @param handler A pointer to the document handler to be called
-      *                when the parser comes across 'document' events
-      *                as per the SAX specification.
-      *
-      * @see Parser#parse(char*)
-      */
-    virtual void setDocumentHandler(DocumentHandler* const handler);
-
-    /**
-      * This method installs the user specified DTD handler on the parser.
-      *
-      * @param handler A pointer to the DTD handler to be called
-      *                when the parser comes across 'DTD' events
-      *                as per the SAX specification.
-      *
-      * @see Parser#setDTDHandler
-      */
-    virtual void setDTDHandler(DTDHandler* const handler);
-
-    /**
-      * This method installs the user specified error handler on
-      * the parser.
-      *
-      * @param handler A pointer to the error handler to be called
-      *                when the parser comes across 'error' events
-      *                as per the SAX specification.
-      *
-      * @see Parser#setErrorHandler
-      */
-    virtual void setErrorHandler(ErrorHandler* const handler);
-
-    /**
-      * This method installs the user specified entity resolver on the
-      * parser. It allows applications to trap and redirect calls to
-      * external entities.
-      *
-      * @param resolver A pointer to the entity resolver to be called
-      *                 when the parser comes across references to
-      *                 entities in the XML file.
-      *
-      * @see Parser#setEntityResolver
-      */
-    virtual void setEntityResolver(EntityResolver* const resolver);
-    //@}
-
-
-    // -----------------------------------------------------------------------
     //  Progressive scan methods
     // -----------------------------------------------------------------------
 
@@ -931,250 +840,99 @@ public :
     //@}
 
 
-
     // -----------------------------------------------------------------------
-    //  Implementation of the DocTypeHandler Interface
+    //  Implementation of the SAX Parser interface
     // -----------------------------------------------------------------------
 
-    /** @name Implementation of the DocTypeHandler Interface */
+    /** @name Implementation of SAX 1.0 Parser interface's. */
     //@{
     /**
-      * This method is used to report an attribute definition.
+      * This method invokes the parsing process on the XML file specified
+      * by the InputSource parameter.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX
-      * driver implementation.</font></b>
+      * @param source A const reference to the InputSource object which
+      *               points to the XML file to be parsed.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
-      * @param elemDecl A const reference to the object containing information
-      *                 about the element whose attribute definition was just
-      *                 parsed.
-      * @param attDef   A const reference to the object containing information
-      *                 attribute definition.
-      * @param ignore   The flag indicating whether this attribute definition
-      *                 was ignored by the parser or not.
+      * @see Parser#parse(InputSource)
       */
-    virtual void attDef
-    (
-        const   DTDElementDecl& elemDecl
-        , const DTDAttDef&      attDef
-        , const bool            ignore
-    );
+    virtual void parse(const InputSource& source, const bool reuseGrammar = false);
 
     /**
-      * This method is used to report a comment occurring within the DTD.
+      * This method invokes the parsing process on the XML file specified by
+      * the Unicode string parameter 'systemId'.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * @param systemId A const XMLCh pointer to the Unicode string which
+      *                 contains the path to the XML file to be parsed.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
-      * @param comment  A const pointer to a Unicode string representing the
-      *                 text of the comment just parsed.
+      * @see Parser#parse(XMLCh*)
       */
-    virtual void doctypeComment
-    (
-        const   XMLCh* const    comment
-    );
+    virtual void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
 
     /**
-      * This method is used to report the DOCTYPE declaration.
+      * This method invokes the parsing process on the XML file specified by
+      * the native char* string parameter 'systemId'.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      *
-      * @param elemDecl A const reference to the object containing information
-      *                 about the root element definition declaration of the
-      *                 XML document being parsed.
-      * @param publicId A const pointer to a Unicode string representing the
-      *                 public id of the DTD file.
-      * @param systemId A const pointer to a Unicode string representing the
-      *                 system id of the DTD file.
-      * @param hasIntSubset A flag indicating if this XML file contains any
-      *                     internal subset.
+      * @param systemId A const char pointer to a native string which
+      *                 contains the path to the XML file to be parsed.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       */
-    virtual void doctypeDecl
-    (
-        const   DTDElementDecl& elemDecl
-        , const XMLCh* const    publicId
-        , const XMLCh* const    systemId
-        , const bool            hasIntSubset
-    );
+    virtual void parse(const char* const systemId, const bool reuseGrammar = false);
 
     /**
-      * This method is used to report any PI declarations
-      * occurring inside the DTD definition block.
+      * This method installs the user specified SAX Document Handler
+      * callback function on parser.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * @param handler A pointer to the document handler to be called
+      *                when the parser comes across 'document' events
+      *                as per the SAX specification.
       *
-      * @param target A const pointer to a Unicode string representing the
-      *               target of the PI declaration.
-      * @param data   A const pointer to a Unicode string representing the
-      *               data of the PI declaration. See the PI production rule
-      *               in the XML specification for details.
+      * @see Parser#parse(char*)
       */
-    virtual void doctypePI
-    (
-        const   XMLCh* const    target
-        , const XMLCh* const    data
-    );
+    virtual void setDocumentHandler(DocumentHandler* const handler);
 
     /**
-      * This method is used to report any whitespaces
-      * occurring inside the DTD definition block.
+      * This method installs the user specified DTD handler on the parser.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * @param handler A pointer to the DTD handler to be called
+      *                when the parser comes across 'DTD' events
+      *                as per the SAX specification.
       *
-      * @param chars  A const pointer to a Unicode string representing the
-      *               whitespace characters.
-      * @param length The length of the whitespace Unicode string.
+      * @see Parser#setDTDHandler
       */
-    virtual void doctypeWhitespace
-    (
-        const   XMLCh* const    chars
-        , const unsigned int    length
-    );
+    virtual void setDTDHandler(DTDHandler* const handler);
 
     /**
-      * This method is used to report an element declarations
-      * successfully scanned by the parser.
+      * This method installs the user specified error handler on
+      * the parser.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * @param handler A pointer to the error handler to be called
+      *                when the parser comes across 'error' events
+      *                as per the SAX specification.
       *
-      * @param decl   A const reference to the object containing element
-      *               declaration information.
-      * @param isIgnored The flag indicating whether this definition was
-      *                  ignored by the parser or not.
+      * @see Parser#setErrorHandler
       */
-    virtual void elementDecl
-    (
-        const   DTDElementDecl& decl
-        , const bool            isIgnored
-    );
+    virtual void setErrorHandler(ErrorHandler* const handler);
 
     /**
-      * This method is used to report the end of an attribute
-      * list declaration for an element.
+      * This method installs the user specified entity resolver on the
+      * parser. It allows applications to trap and redirect calls to
+      * external entities.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * @param resolver A pointer to the entity resolver to be called
+      *                 when the parser comes across references to
+      *                 entities in the XML file.
       *
-      * @param elemDecl A const reference to the object containing element
-      *                 declaration information.
+      * @see Parser#setEntityResolver
       */
-    virtual void endAttList
-    (
-        const   DTDElementDecl& elemDecl
-    );
-
-    /**
-      * This method is used to report the end of the internal subset.
-      *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      */
-    virtual void endIntSubset();
-
-    /**
-      * This method is used to report the end of the external subset.
-      *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      */
-    virtual void endExtSubset();
-
-    /**
-      * This method is used to report any entity declarations.
-      * For unparsed entities, this driver will invoke the
-      * SAX DTDHandler::unparsedEntityDecl callback.
-      *
-      * @param entityDecl A const reference to the object containing
-      *                   the entity declaration information.
-      * @param isPEDecl  The flag indicating whether this was a
-      *                  parameter entity declaration or not.
-      * @param isIgnored The flag indicating whether this definition
-      *                  was ignored by the parser or not.
-      *
-      * @see DTDHandler#unparsedEntityDecl
-      */
-    virtual void entityDecl
-    (
-        const   DTDEntityDecl&  entityDecl
-        , const bool            isPEDecl
-        , const bool            isIgnored
-    );
-
-    /**
-      * This method allows the user installed DTD handler to
-      * reset itself.
-      */
-    virtual void resetDocType();
-
-    /**
-      * This method is used to report any notation declarations.
-      * If there is a user installed DTDHandler, then the driver will
-      * invoke the SAX DTDHandler::notationDecl callback.
-      *
-      * @param notDecl A const reference to the object containing the notation
-      *                declaration information.
-      * @param isIgnored The flag indicating whether this definition was ignored
-      *                  by the parser or not.
-      *
-      * @see DTDHandler#notationDecl
-      */
-    virtual void notationDecl
-    (
-        const   XMLNotationDecl&    notDecl
-        , const bool                isIgnored
-    );
-
-    /**
-      * This method is used to indicate the start of an element's attribute
-      * list declaration.
-      *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      *
-      * @param elemDecl A const reference to the object containing element
-      *                 declaration information.
-      */
-    virtual void startAttList
-    (
-        const   DTDElementDecl& elemDecl
-    );
-
-    /**
-      * This method is used indicate the start of the internal subset.
-      *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      */
-    virtual void startIntSubset();
-
-    /**
-      * This method is used indicate the start of the external subset.
-      *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      */
-    virtual void startExtSubset();
-
-    /**
-      * This method is used to report the TextDecl. Refer to the XML
-      * specification for the syntax of a TextDecl.
-      *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
-      *
-      * @param versionStr A const pointer to a Unicode string representing
-      *                   the version number of the 'version' clause.
-      * @param encodingStr A const pointer to a Unicode string representing
-      *                    the encoding name of the 'encoding' clause.
-      */
-    virtual void TextDecl
-    (
-        const   XMLCh* const    versionStr
-        , const XMLCh* const    encodingStr
-    );
+    virtual void setEntityResolver(EntityResolver* const resolver);
     //@}
 
 
@@ -1565,6 +1323,254 @@ public :
     //@}
 
 
+    // -----------------------------------------------------------------------
+    //  Implementation of the Deprecated DocTypeHandler Interface
+    // -----------------------------------------------------------------------
+    /** @name Implementation of the deprecated DocTypeHandler Interface */
+    //@{
+    /**
+      * This method is used to report an attribute definition.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX
+      * driver implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing information
+      *                 about the element whose attribute definition was just
+      *                 parsed.
+      * @param attDef   A const reference to the object containing information
+      *                 attribute definition.
+      * @param ignore   The flag indicating whether this attribute definition
+      *                 was ignored by the parser or not.
+      */
+    virtual void attDef
+    (
+        const   DTDElementDecl& elemDecl
+        , const DTDAttDef&      attDef
+        , const bool            ignore
+    );
+
+    /**
+      * This method is used to report a comment occurring within the DTD.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param comment  A const pointer to a Unicode string representing the
+      *                 text of the comment just parsed.
+      */
+    virtual void doctypeComment
+    (
+        const   XMLCh* const    comment
+    );
+
+    /**
+      * This method is used to report the DOCTYPE declaration.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing information
+      *                 about the root element definition declaration of the
+      *                 XML document being parsed.
+      * @param publicId A const pointer to a Unicode string representing the
+      *                 public id of the DTD file.
+      * @param systemId A const pointer to a Unicode string representing the
+      *                 system id of the DTD file.
+      * @param hasIntSubset A flag indicating if this XML file contains any
+      *                     internal subset.
+      */
+    virtual void doctypeDecl
+    (
+        const   DTDElementDecl& elemDecl
+        , const XMLCh* const    publicId
+        , const XMLCh* const    systemId
+        , const bool            hasIntSubset
+    );
+
+    /**
+      * This method is used to report any PI declarations
+      * occurring inside the DTD definition block.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param target A const pointer to a Unicode string representing the
+      *               target of the PI declaration.
+      * @param data   A const pointer to a Unicode string representing the
+      *               data of the PI declaration. See the PI production rule
+      *               in the XML specification for details.
+      */
+    virtual void doctypePI
+    (
+        const   XMLCh* const    target
+        , const XMLCh* const    data
+    );
+
+    /**
+      * This method is used to report any whitespaces
+      * occurring inside the DTD definition block.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param chars  A const pointer to a Unicode string representing the
+      *               whitespace characters.
+      * @param length The length of the whitespace Unicode string.
+      */
+    virtual void doctypeWhitespace
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    length
+    );
+
+    /**
+      * This method is used to report an element declarations
+      * successfully scanned by the parser.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param decl   A const reference to the object containing element
+      *               declaration information.
+      * @param isIgnored The flag indicating whether this definition was
+      *                  ignored by the parser or not.
+      */
+    virtual void elementDecl
+    (
+        const   DTDElementDecl& decl
+        , const bool            isIgnored
+    );
+
+    /**
+      * This method is used to report the end of an attribute
+      * list declaration for an element.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      */
+    virtual void endAttList
+    (
+        const   DTDElementDecl& elemDecl
+    );
+
+    /**
+      * This method is used to report the end of the internal subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void endIntSubset();
+
+    /**
+      * This method is used to report the end of the external subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void endExtSubset();
+
+    /**
+      * This method is used to report any entity declarations.
+      * For unparsed entities, this driver will invoke the
+      * SAX DTDHandler::unparsedEntityDecl callback.
+      *
+      * @param entityDecl A const reference to the object containing
+      *                   the entity declaration information.
+      * @param isPEDecl  The flag indicating whether this was a
+      *                  parameter entity declaration or not.
+      * @param isIgnored The flag indicating whether this definition
+      *                  was ignored by the parser or not.
+      *
+      * @see DTDHandler#unparsedEntityDecl
+      */
+    virtual void entityDecl
+    (
+        const   DTDEntityDecl&  entityDecl
+        , const bool            isPEDecl
+        , const bool            isIgnored
+    );
+
+    /**
+      * This method allows the user installed DTD handler to
+      * reset itself.
+      */
+    virtual void resetDocType();
+
+    /**
+      * This method is used to report any notation declarations.
+      * If there is a user installed DTDHandler, then the driver will
+      * invoke the SAX DTDHandler::notationDecl callback.
+      *
+      * @param notDecl A const reference to the object containing the notation
+      *                declaration information.
+      * @param isIgnored The flag indicating whether this definition was ignored
+      *                  by the parser or not.
+      *
+      * @see DTDHandler#notationDecl
+      */
+    virtual void notationDecl
+    (
+        const   XMLNotationDecl&    notDecl
+        , const bool                isIgnored
+    );
+
+    /**
+      * This method is used to indicate the start of an element's attribute
+      * list declaration.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      */
+    virtual void startAttList
+    (
+        const   DTDElementDecl& elemDecl
+    );
+
+    /**
+      * This method is used indicate the start of the internal subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void startIntSubset();
+
+    /**
+      * This method is used indicate the start of the external subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void startExtSubset();
+
+    /**
+      * This method is used to report the TextDecl. Refer to the XML
+      * specification for the syntax of a TextDecl.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param versionStr A const pointer to a Unicode string representing
+      *                   the version number of the 'version' clause.
+      * @param encodingStr A const pointer to a Unicode string representing
+      *                    the encoding name of the 'encoding' clause.
+      */
+    virtual void TextDecl
+    (
+        const   XMLCh* const    versionStr
+        , const XMLCh* const    encodingStr
+    );
+    //@}
+
+
+    // -----------------------------------------------------------------------
+    //  Deprecated Methods
+    // -----------------------------------------------------------------------
     /** @name Deprecated Methods */
     //@{
     /**
@@ -1597,6 +1603,19 @@ public :
 
 
 protected :
+    // -----------------------------------------------------------------------
+    //  Protected Methods
+    // -----------------------------------------------------------------------
+    /**
+      * This method returns a reference to the underlying scanner object.
+      * It allows read only access to data maintained in the scanner.
+      *
+      * @return A const reference to the underlying scanner object.
+      */
+    const XMLScanner& getScanner() const;
+
+
+private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
