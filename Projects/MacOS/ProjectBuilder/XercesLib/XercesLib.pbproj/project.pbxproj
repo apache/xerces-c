@@ -5204,7 +5204,7 @@
 			);
 			isa = PBXGroup;
 			name = Sources;
-			path = src;
+			path = src/xercesc;
 			refType = 4;
 		};
 //0C0
