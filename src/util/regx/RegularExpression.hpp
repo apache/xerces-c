@@ -88,7 +88,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RegularExpression(const char* const pattern);
+    RegularExpression(const char* const pattern);
     RegularExpression(const char* const pattern, const char* const options);
     RegularExpression(const XMLCh* const pattern);
     RegularExpression(const XMLCh* const pattern, const XMLCh* const options);
@@ -125,11 +125,11 @@ public:
     // -----------------------------------------------------------------------
     //  Matching methods
     // -----------------------------------------------------------------------
-	bool matches(const char* const matchString);
-	bool matches(const char* const matchString, const int start,
+    bool matches(const char* const matchString);
+    bool matches(const char* const matchString, const int start,
                  const int end);
-	bool matches(const char* const matchString, Match* const pMatch);
-	bool matches(const char* const matchString, const int start,
+    bool matches(const char* const matchString, Match* const pMatch);
+    bool matches(const char* const matchString, const int start,
                  const int end, Match* const pMatch);
 
     bool matches(const XMLCh* const matchString);
@@ -155,13 +155,13 @@ private:
             bool nextCh(XMLInt32& ch, int& offset, const short direction);
 
             bool      fInUse;
-			bool      fAdoptMatch;
+            bool      fAdoptMatch;
             int       fStart;
             int       fLimit;
             int       fLength;
             int       fSize;
             int*      fOffsets;
-			Match*    fMatch;
+            Match*    fMatch;
             XMLCh*    fString;
 
             friend class Janitor<Context>;
@@ -262,9 +262,9 @@ private:
     Op*                fOperations;
     Token*             fTokenTree;
     RangeToken*        fFirstChar;
-	static RangeToken* fWordRange;
-	OpFactory          fOpFactory;
-	XMLMutex           fMutex;
+    static RangeToken* fWordRange;
+    OpFactory          fOpFactory;
+    XMLMutex           fMutex;
     TokenFactory*      fTokenFactory;
 };
 
@@ -510,15 +510,18 @@ inline int RegularExpression::matchUnion(Context* const context,
                                          const Op* const op, int offset,
                                          const short direction)
 {
-    for (int i=0; i<op->getSize(); i++) {
+    unsigned int opSize = op->getSize();
+    int ret = -1;
 
-        int ret = match(context, op->elementAt(i), offset, direction);
+    for (unsigned int i=0; i < opSize; i++) {
 
-        if (ret >= 0)
-            return ret;
+        ret = match(context, op->elementAt(i), offset, direction);
+
+        if (ret > 0)
+            break;
     }
 
-    return -1;
+    return ret;
 }
 
 inline int RegularExpression::matchModifier(Context* const context,

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/05 14:50:32  knoaman
+ * Fixes to regular expression.
+ *
  * Revision 1.3  2001/05/11 13:26:52  tng
  * Copyright update.
  *
@@ -120,84 +123,87 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     if (fChildren == 0)
         fChildren = new RefVectorOf<Token>(INITIALSIZE, false);
 
-    unsigned short childType = child->getTokenType();
-
-    if (childType == UNION) {
+    if (getTokenType() == UNION) {
 
         fChildren->addElement(child);
         return;
     }
+
+    unsigned short childType = child->getTokenType();
+    unsigned int   childSize = child->size();
 
     if (childType == CONCAT) {
 
-        for (int i = 0; i < child->size(); i++) {
-            fChildren->addElement(child->getChild(i));
+        for (unsigned int i = 0; i < childSize; i++) {
+
+            addChild(child->getChild(i), tokFactory);
         }
+
         return;
     }
 
-	unsigned int childSize = fChildren->size();
-	if (childSize == 0) {
+    unsigned int childrenSize = fChildren->size();
+    if (childrenSize == 0) {
 
         fChildren->addElement(child);
         return;
     }
 
-	Token* previousTok = fChildren->elementAt(childSize - 1);
-	unsigned short previousType = previousTok->getTokenType();
+    Token* previousTok = fChildren->elementAt(childrenSize - 1);
+    unsigned short previousType = previousTok->getTokenType();
 
-	if (!((previousType == CHAR || previousType == STRING)
+    if (!((previousType == CHAR || previousType == STRING)
           && (childType == CHAR || childType == STRING))) {
 
         fChildren->addElement(child);
         return;
     }
 
-	// Continue
-	XMLBuffer stringBuf;
+    // Continue
+    XMLBuffer stringBuf;
 
-	if (previousType == CHAR) {
+    if (previousType == CHAR) {
 
-		XMLInt32 ch = previousTok->getChar();
+        XMLInt32 ch = previousTok->getChar();
 
-		if (ch >= 0x10000) {
+        if (ch >= 0x10000) {
 
-			XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch);
-			stringBuf.append(chSurrogate);
-			delete [] chSurrogate;
-		}
-		else {
-			stringBuf.append((XMLCh) ch);
-		}
+            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch);
+            stringBuf.append(chSurrogate);
+            delete [] chSurrogate;
+        }
+        else {
+            stringBuf.append((XMLCh) ch);
+        }
 
-		previousTok = tokFactory->createString(0);
-		fChildren->setElementAt(previousTok, childSize - 1);
-	}
-	else {
-		stringBuf.append(previousTok->getString());
-	}
+        previousTok = tokFactory->createString(0);
+        fChildren->setElementAt(previousTok, childrenSize - 1);
+    }
+    else {
+        stringBuf.append(previousTok->getString());
+    }
 
-	if (childType == CHAR) {
+    if (childType == CHAR) {
 
-		XMLInt32 ch = child->getChar();
+        XMLInt32 ch = child->getChar();
 
-		if (ch >= 0x10000) {
+        if (ch >= 0x10000) {
 
-			XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch);
-			stringBuf.append(chSurrogate);
-			delete [] chSurrogate;
-		}
-		else {
-			stringBuf.append((XMLCh) ch);
-		}
-	}
-	else {
-		stringBuf.append(child->getString());
-	}
+            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch);
+            stringBuf.append(chSurrogate);
+            delete [] chSurrogate;
+        }
+        else {
+            stringBuf.append((XMLCh) ch);
+        }
+    }
+    else {
+        stringBuf.append(child->getString());
+    }
 
-	((StringToken*) previousTok)->setString(stringBuf.getRawBuffer());
+    ((StringToken*) previousTok)->setString(stringBuf.getRawBuffer());
 }
 
 /**
-  *	End of file UnionToken.cpp
+  * End of file UnionToken.cpp
   */
