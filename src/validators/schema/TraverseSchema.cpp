@@ -3516,12 +3516,16 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     const XMLCh* prefix = getPrefix(baseName);
     const XMLCh* localPart = getLocalPart(baseName);
     const XMLCh* uri = resolvePrefixToURI(prefix);
+    bool  isBaseAnyType = false;
 
     // -------------------------------------------------------------
     // check if the base is "anyType"
     // -------------------------------------------------------------
-    if (!(XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0
-          && XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE) == 0)) {
+    if (XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0 &&
+        XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE) == 0) {
+        isBaseAnyType = true;
+    }
+    else {
 
         processBaseTypeInfo(baseName, localPart, uri, typeInfo);
 
@@ -3542,7 +3546,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
                             XUtil::getFirstChildElement(complexContent), true);
 
     processComplexContent(typeName, content, typeInfo, baseName, localPart,
-                          uri, mixedContent);
+                          uri, mixedContent, isBaseAnyType);
 
     if (XUtil::getNextSiblingElement(complexContent) != 0) {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidChildInComplexContent);
@@ -5306,7 +5310,8 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
                                            const XMLCh* const baseRawName,
                                            const XMLCh* const baseLocalPart,
                                            const XMLCh* const baseURI,
-                                           const bool isMixed) {
+                                           const bool isMixed,
+                                           const bool isBaseAnyType) {
 
     ContentSpecNode* specNode = 0;
     DOM_Element      attrNode;
@@ -5451,7 +5456,8 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
             if (!specNode) {
 
                 if (baseSpecNode) {
-                    typeInfo->setContentSpec(new ContentSpecNode(*baseSpecNode));
+                    specNode = new ContentSpecNode(*baseSpecNode);
+                    typeInfo->setContentSpec(specNode);
                     typeInfo->setAdoptContentSpec(true);
                 }
             }
@@ -5467,6 +5473,18 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
         }
     }
     else {
+
+        if (isBaseAnyType) {
+
+            QName elemName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, fEmptyNamespaceURI);
+            specNode = new ContentSpecNode(&elemName);
+            specNode->setType(ContentSpecNode::Any);
+            specNode->setMinOccurs(0);
+            specNode->setMaxOccurs(SchemaSymbols::UNBOUNDED);
+            typeInfo->setContentSpec(specNode);
+            typeInfo->setContentType(SchemaElementDecl::Mixed_Complex);
+        }
+
         typeInfo->setDerivedBy(0);
     }
 

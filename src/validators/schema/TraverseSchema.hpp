@@ -438,7 +438,8 @@ private:
                                const XMLCh* const baseRawName,
                                const XMLCh* const baseLocalPart,
                                const XMLCh* const baseURI,
-                               const bool isMixed);
+                               const bool isMixed,
+                               const bool isBaseAnyType = false);
 
     /**
       * Process "base" information for a complexType
