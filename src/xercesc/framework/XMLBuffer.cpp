@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2004/09/29 18:59:18  peiyongz
+ * [jira1207] --patch from Dan Rosen
+ *
  * Revision 1.5  2004/09/08 13:55:58  peiyongz
  * Apache License Version 2.0
  *
@@ -59,6 +62,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/RuntimeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -75,45 +79,40 @@ void XMLBuffer::append(const XMLCh* const chars, const unsigned int count)
     fIndex += actualCount;
 }
 
-void XMLBuffer::set(const XMLCh* const chars, const unsigned int count)
-{
-    unsigned int actualCount = count;
-    if (!count)
-        actualCount = XMLString::stringLen(chars);
-    fIndex = 0;
-    insureCapacity(actualCount);
-    memcpy(fBuffer, chars, actualCount * sizeof(XMLCh));
-    fIndex = actualCount;
-}
-
-
-// ---------------------------------------------------------------------------
-//  XMLBuffer: Private helper methods
-// ---------------------------------------------------------------------------
-void XMLBuffer::expand()
-{
-    unsigned int newCap = (unsigned int)(fCapacity * 1.5);
-
-    // Allocate the new buffer
-    XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap + 1) * sizeof(XMLCh)); //new XMLCh[newCap + 1];
-
-    // Copy over the old stuff
-    memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
-
-    // Clean up old buffer and store new stuff
-    fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
-    fBuffer = newBuf;
-    fCapacity = newCap;
-}
-
 void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
 {
     // If we can handle it, do nothing yet
     if (fIndex + extraNeeded < fCapacity)
         return;
 
-    // Oops, not enough room. Calc new capacity and allocate new buffer
-    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
+    // If we can't handle it, try doubling the buffer size.
+    unsigned int newCap = (fIndex + extraNeeded) * 2;
+
+    // If a maximum size is set, and double the current buffer size exceeds that
+    // maximum, first check if the maximum size will accomodate the extra needed.
+    if (fFullHandler && (newCap > fFullSize))
+
+        // If the maximum buffer size accomodates the extra needed, resize to
+        // the maximum if we're not already there.
+        if (fIndex + extraNeeded <= fFullSize) {
+            if (fCapacity == fFullSize)
+                return;
+            newCap = fFullSize;
+}
+
+        // Otherwise, allow the registered full-handler to try to empty the buffer.
+        // If it claims success, and we can accommodate the extra needed, we're done.
+        // Note the order of evaluation: bufferFull() has the intentional side-effect
+        // of modifying fIndex.
+        else if (fFullHandler->bufferFull(*this) && (fIndex + extraNeeded <= fFullSize))
+        return;
+
+        // Finally, if the full-handler failed, or the buffer still can't accomodate the
+        // extra needed, we must fail.
+        else
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Array_BadNewSize, fMemoryManager);
+
+    // Allocate new buffer
     XMLCh* newBuf = (XMLCh*) fMemoryManager->allocate((newCap+1) * sizeof(XMLCh)); //new XMLCh[newCap+1];
 
     // Copy over the old stuff

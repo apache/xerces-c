@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2004/09/29 19:00:29  peiyongz
+ * [jira1207] --patch from Dan Rosen
+ *
  * Revision 1.35  2004/09/28 02:14:14  cargilld
  * Add support for validating annotations.
  *
@@ -696,6 +699,10 @@ void SAXParser::useScanner(const XMLCh* const scannerName)
     }
 }
 
+void SAXParser::setInputBufferSize(const size_t bufferSize)
+{
+    fScanner->setInputBufferSize(bufferSize);
+}
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Overrides of the SAX Parser interface

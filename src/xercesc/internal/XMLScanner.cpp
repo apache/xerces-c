@@ -123,7 +123,8 @@ static XMLMsgLoader& gScannerMsgLoader()
 XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
                        GrammarResolver* const grammarResolver,
                        MemoryManager* const manager)
-    : fStandardUriConformant(false)
+    : fBufferSize(1024 * 1024)
+    , fStandardUriConformant(false)
     , fCalculateSrcOfs(false)
     , fDoNamespaces(false)
     , fExitOnFirstFatal(true)
@@ -714,6 +715,9 @@ void XMLScanner::commonInit()
     fUIntPool[0] = (unsigned int *)fMemoryManager->allocate(sizeof(unsigned int) << 6);
     memset(fUIntPool[0], 0, sizeof(unsigned int) << 6);
     fUIntPool[1] = 0;
+
+    // Register self as handler for XMLBufferFull events on the CDATA buffer
+    fCDataBuf.setFullHandler(this, fBufferSize);
 }
 
 

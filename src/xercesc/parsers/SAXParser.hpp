@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2004/09/29 19:00:29  peiyongz
+ * [jira1207] --patch from Dan Rosen
+ *
  * Revision 1.34  2004/09/28 02:14:14  cargilld
  * Add support for validating annotations.
  *
@@ -985,6 +988,18 @@ public :
       * @param scannerName The name of the desired scanner
       */
     void useScanner(const XMLCh* const scannerName);
+
+    /** Set maximum input buffer size
+      *
+      * This method allows users to limit the size of buffers used in parsing
+      * XML character data. The effect of setting this size is to limit the
+      * size of a ContentHandler::characters() call.
+      *
+      * The parser's default input buffer size is 1 megabyte.
+      *
+      * @param bufferSize The maximum input buffer size
+      */
+    void setInputBufferSize(const size_t bufferSize);
 
     //@}
 

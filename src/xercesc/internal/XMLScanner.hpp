@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.41  2004/09/29 19:00:02  peiyongz
+ * [jira1207] --patch from Dan Rosen
+ *
  * Revision 1.40  2004/09/28 21:27:38  peiyongz
  * Optimized duplicated attributes checking for large number of attributes
  *
@@ -332,7 +335,7 @@ struct PSVIElemContext
 //  This is the mondo scanner class, which does the vast majority of the
 //  work of parsing. It handles reading in input and spitting out events
 //  to installed handlers.
-class XMLPARSER_EXPORT XMLScanner : public XMemory
+class XMLPARSER_EXPORT XMLScanner : public XMemory, public XMLBufferFullHandler
 {
 public :
     // -----------------------------------------------------------------------
@@ -434,6 +437,16 @@ public :
         , const char* const         text3 = 0
         , const char* const         text4 = 0
     );
+
+    // -----------------------------------------------------------------------
+    //  Implementation of XMLBufferFullHandler interface
+    // -----------------------------------------------------------------------
+
+    virtual bool bufferFull(XMLBuffer& toSend)
+    {
+        sendCharData(toSend);
+        return true;
+    }
 
     // -----------------------------------------------------------------------
     //  Public pure virtual methods
@@ -617,6 +630,7 @@ public :
     void setCalculateSrcOfs(const bool newValue);
     void setParseSettings(XMLScanner* const refScanner);
     void setStandardUriConformant(const bool newValue);
+    void setInputBufferSize(const size_t bufferSize);
 
     void setGenerateSyntheticAnnotations(const bool newValue);
     void setValidateAnnotations(const bool newValue);
@@ -743,6 +757,9 @@ protected:
 
     // -----------------------------------------------------------------------
     //  Data members
+    //
+    //  fBufferSize
+    //      Maximum input buffer size
     //
     //  fAttrList
     //      Every time we get a new element start tag, we have to pass to
@@ -961,7 +978,9 @@ protected:
     //
     //  fMemoryManager
     //      Pluggable memory manager for dynamic allocation/deallocation.
+    //
     // -----------------------------------------------------------------------
+    size_t                      fBufferSize;
     bool                        fStandardUriConformant;
     bool                        fCalculateSrcOfs;
     bool                        fDoNamespaces;
@@ -1498,6 +1517,12 @@ inline void XMLScanner::setGenerateSyntheticAnnotations(const bool newValue)
 inline void XMLScanner::setValidateAnnotations(const bool newValue)
 {
     fValidateAnnotations = newValue;
+}
+
+inline void XMLScanner::setInputBufferSize(const size_t bufferSize)
+{
+    fBufferSize = bufferSize;
+    fCDataBuf.setFullHandler(this, fBufferSize);
 }
 
 // ---------------------------------------------------------------------------

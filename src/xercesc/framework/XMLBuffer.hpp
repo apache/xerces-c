@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/09/29 18:59:18  peiyongz
+ * [jira1207] --patch from Dan Rosen
+ *
  * Revision 1.7  2004/09/08 13:55:58  peiyongz
  * Apache License Version 2.0
  *
@@ -72,6 +75,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class XMLBufferFullHandler;
+
 /**
  *  XMLBuffer is a lightweight, expandable Unicode text buffer. Since XML is
  *  inherently theoretically unbounded in terms of the sizes of things, we
@@ -91,13 +96,15 @@ public :
 
     /** @name Constructor */
     //@{
-    XMLBuffer(int capacity = 1023
+    XMLBuffer(const unsigned int capacity = 1023
               , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
         fUsed(false)
         , fIndex(0)
         , fCapacity(capacity)
         , fMemoryManager(manager)
+        , fFullHandler(0)
+        , fFullSize(0)
         , fBuffer(0)
     {
         // Buffer is one larger than capacity, to allow for zero term
@@ -117,22 +124,32 @@ public :
     //@}
 
     // -----------------------------------------------------------------------
+    //  Buffer Full Handler Management
+    // -----------------------------------------------------------------------
+    void setFullHandler(XMLBufferFullHandler* handler, const unsigned int fullSize)
+    {
+        fFullHandler = handler;
+        fFullSize = fullSize;
+    }
+
+    // -----------------------------------------------------------------------
     //  Buffer Management
     // -----------------------------------------------------------------------
     void append(const XMLCh toAppend)
     {
-        if (fIndex == fCapacity)
-            expand();
-
         // Put in char and bump the index
+        if (fIndex == fCapacity)
+            insureCapacity(1);
         fBuffer[fIndex++] = toAppend;
     }
 
-    void append
-    (
-        const   XMLCh* const    chars
-        , const unsigned int    count = 0
-    );
+    void append (const XMLCh* const chars, const unsigned int count = 0);
+
+    void set (const XMLCh* const chars, const unsigned int count = 0)
+    {
+        fIndex = 0;
+        append(chars, count);
+    }
 
     const XMLCh* getRawBuffer() const
     {
@@ -152,13 +169,6 @@ public :
         fBuffer[0] = 0;
     }
 
-    void set
-    (
-        const   XMLCh* const    chars
-        , const unsigned int    count = 0
-    );
-
-
     // -----------------------------------------------------------------------
     //  Getters
     // -----------------------------------------------------------------------
@@ -177,7 +187,6 @@ public :
         return (fIndex == 0);
     }
 
-
     // -----------------------------------------------------------------------
     //  Setters
     // -----------------------------------------------------------------------
@@ -185,7 +194,6 @@ public :
     {
         fUsed = newValue;
     }
-
 
 private :
     // -----------------------------------------------------------------------
@@ -199,11 +207,9 @@ private :
     // -----------------------------------------------------------------------
     friend class XMLBufBid;
 
-
     // -----------------------------------------------------------------------
     //  Private helpers
     // -----------------------------------------------------------------------
-    void expand();
     void insureCapacity(const unsigned int extraNeeded);
 
 
@@ -224,12 +230,41 @@ private :
     //
     //  fUsed
     //      Indicates whether this buffer is in use or not.
+    //
+    //  fFullHandler, fFullSize
+    //      If fFullHandler is non-null, the buffer has a maximum size
+    //      indicated by fFullSize. If writing to the buffer would exceed the
+    //      buffer's maximum size, fFullHandler's bufferFull callback is
+    //      invoked, to empty the buffer.
     // -----------------------------------------------------------------------
     bool            fUsed;
     unsigned int    fIndex;
     unsigned int    fCapacity;
-    MemoryManager*  fMemoryManager;
+    MemoryManager* const        fMemoryManager;
+    XMLBufferFullHandler*       fFullHandler;
+    unsigned int                fFullSize;
     XMLCh*          fBuffer;
+};
+
+/**
+ *  XMLBufferFullHandler is a callback interface for clients of
+ *  XMLBuffers that impose a size restriction (e.g. XMLScanner).
+ *  Note that this is intended solely as a mix-in for internal
+ *  use, and therefore does not derive from XMemory (to avoid
+ *  the ambiguous base class problem).
+ */
+class XMLPARSER_EXPORT XMLBufferFullHandler
+{
+public :
+
+    /**
+     * Callback method, intended to allow clients of an XMLBuffer which has
+     * become full to empty it appropriately.
+     * @return true if the handler was able to empty the buffer (either
+     * partially or completely), otherwise false to indicate an error.
+     */
+    virtual bool bufferFull(XMLBuffer&) = 0;
+
 };
 
 XERCES_CPP_NAMESPACE_END
