@@ -122,7 +122,9 @@ if ($platform =~ m/Windows/) {
 	    chdir ("$ICUROOT/source/allinone");
 	    print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
 	    system("msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
-	}
+
+	    change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+        }
 
         # Clean up all the dependency files, causes problems for nmake
 	# Also clean up all MSVC-generated project files that just cache the IDE state
@@ -480,6 +482,36 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         # Finally compress the files
         print ("Compressing $platformzipname ...\n");
         system ("gzip $platformzipname");
+}
+
+
+sub change_windows_project_for_ICU()
+{
+        my ($thefile) = @_;
+        print "\nConverting Windows Xerces library project ($thefile) for ICU usage...";
+        my $thefiledotbak = $thefile . ".bak";
+        rename ($thefile, $thefiledotbak);
+
+        open (FIZZLE, $thefiledotbak);
+        open (FIZZLEOUT, ">$thefile");
+        while ($line = <FIZZLE>) {
+		if ($line =~ m/Transcoders\\Win32\\Win32TransService\.cpp/g) {
+			while ($line = <FIZZLE>) { # read the next line
+				last if ($line =~ m/^SOURCE/g);
+			}
+		}
+
+                $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
+                $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+		$line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release"/g;
+		$line =~ s/Debug\/xerces-c_1.lib"/Debug\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Debug"/g;
+                $line =~ s/user32\.lib/user32\.lib icuuc\.lib/g;
+                $line =~ s/Transcoders\\Win32\\Win32TransService2\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
+                print FIZZLEOUT $line;
+        }
+        close (FIZZLEOUT);
+        close (FIZZLE);
+        unlink ($thefiledotbak);
 }
 
 

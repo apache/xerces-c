@@ -28,17 +28,16 @@ if (!length($XERCESCROOT) || !length($OUTPUTDIR)) {
 
 # We need ICUROOT only if we intend to use ICU for transcoding or message loading
 # As of Version 3, this is not mandatory any more.
-# if (!length($ICUROOT)) {
-#        print "You have not defined your International directory.\n You must set an environment variable called ICUROOT to proceed.\n";
-#        exit (-1);
-# }
+if (length($ICUROOT) > 0) {
+       print "Using $ICUROOT as the ICU root directory.\n";
+}
 
 #Fix the backslashes on the Windows platform
 $XERCESCROOT =~ s/\\/\//g;
 $ICUROOT =~ s/\\/\//g;
 
-# Read the target version from the file $XERCESCROOT/src/util/XML4CDefs.hpp
-$versionfile = "$XERCESCROOT/src/util/XML4CDefs.hpp";
+# Read the target version from the file $XERCESCROOT/src/util/XercesDefs.hpp
+$versionfile = "$XERCESCROOT/src/util/XercesDefs.hpp";
 $openresult = open (VERSIONFILE, "<$versionfile");
 
 if ($openresult == 0) {
@@ -126,6 +125,9 @@ $docppfilelist = $docppfilelist . " $XERCESCROOT/src/parsers/SAXParser.hpp";
 system ("doc++ -d $XERCESCROOT/doc/html/apiDocs -B $XERCESCROOT/doc/html/apiDocs/tail.html -a -G -k -H -S $docppfilelist");
 
 # Now create the User documentation from the XML sources
+if (length($ICUROOT) > 0) {
+	change_documentation_entities("$XERCESCROOT/doc/entities.ent");
+}
 chdir ("$XERCESCROOT");
 system("createdocs.bat");  # You must have Xerces-Java and Stylebook installed in addition to JDK1.2.2
 
@@ -303,3 +305,30 @@ sub deleteCVSdirs {
 		}
 	}
 }
+
+sub change_documentation_entities()
+{
+        my ($thefile) = @_;
+        print "\nConverting documentation entities ($thefile) for ICU usage...";
+        my $thefiledotbak = $thefile . ".bak";
+        rename ($thefile, $thefiledotbak);
+
+        open (FIZZLE, $thefiledotbak);
+        open (FIZZLEOUT, ">$thefile");
+        while ($line = <FIZZLE>) {
+                $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
+                $line =~ s/"Xerces-C"/"XML4C"/g;
+                $line =~ s/"1\.1\.0"/"3\.1\.0"/g;
+                $line =~ s/"Xerces"/"XML4C"/g;
+                $line =~ s/"xerces-c-1_1_0"/"xml4c-3_1_0"/g;
+                $line =~ s/"xerces-c-src-1_1_0"/"xml4c-src-3_1_0"/g;
+                $line =~ s/"xerces-c_1"/"xerces-c_1"/g;
+                $line =~ s/xerces-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
+                $line =~ s/xml\.apache\.org\/dist/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
+                print FIZZLEOUT $line;
+        }
+        close (FIZZLEOUT);
+        close (FIZZLE);
+        unlink ($thefiledotbak);
+}
+
