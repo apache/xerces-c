@@ -443,7 +443,6 @@ public:
 
      friend class DOM_Document;
      friend class DOM_Attr;
-     friend class TraverseSchema;
 };
 
 XERCES_CPP_NAMESPACE_END
