@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2003/09/10 14:56:31  neilg
+ * fix compiler warnings on ISeries; add Apache copyright notice
+ *
  * Revision 1.10  2003/05/30 16:11:45  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -139,7 +142,7 @@ template <class TElem> RefVectorOf<TElem>::~RefVectorOf()
        for (unsigned int index = 0; index < this->fCurCount; index++)
         delete this->fElemList[index];
     }
-      BaseRefVectorOf<TElem>::fMemoryManager->deallocate(this->fElemList);//delete [] this->fElemList;
+    this->fMemoryManager->deallocate(this->fElemList);//delete [] this->fElemList;
 }
 
 
