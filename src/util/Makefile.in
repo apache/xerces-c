@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.24  2000/06/27 22:11:41  jpolast
+# added HashBase, HashXMLCh, HashPtr
+#
 # Revision 1.23  2000/05/02 19:22:55  aruna1
 # Unix related changes in.
 #
@@ -206,6 +209,9 @@ UTIL_CPP_PUBHEADERS = \
     CountedPointer.hpp \
     EmptyStackException.hpp \
     FlagJanitor.hpp \
+    HashBase.hpp \
+    HashXMLCh.hpp \
+    HashPtr.hpp \
     IOException.hpp \
     IllegalArgumentException.hpp \
     InvalidCastException.hpp \
@@ -277,6 +283,8 @@ UTIL_CPP_OBJECTS = \
     BinInputStream.$(TO) \
     BinMemInputStream.$(TO) \
     BitSet.$(TO) \
+    HashXMLCh.$(TO) \
+    HashPtr.$(TO) \
     HeaderDummy.$(TO) \
     KVStringPair.$(TO) \
     Mutexes.$(TO) \
