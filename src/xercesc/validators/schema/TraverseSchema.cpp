@@ -6759,7 +6759,8 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
 
                 unsigned int nameURI = nameURIList->elementAt(i);
 
-                if (nameURI != compareURI) {
+                if (nameURI != compareURI && 
+                    nameURI != (unsigned int) fEmptyNamespaceURI) {
                     tmpURIList.addElement(nameURI);
                 }
                 else {
@@ -6809,16 +6810,23 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
         return;
     }
 
-    // If the two are negations of different namespace names, then the
-    // intersection is not expressible.
+    // If the two are negations of different namespace names, then:
+    //  if one is a negation of absent, then result is negation of namespace
+    //  else intersection is not expressible.
     if (typeR == XMLAttDef::Any_Other && typeC == XMLAttDef::Any_Other) {
 
         QName* qnameR = resultWildCard->getAttName();
 
         if (qnameR->getURI() != compareWildCard->getAttName()->getURI()) {
 
-            qnameR->setURI(fEmptyNamespaceURI);
-            resultWildCard->setType(XMLAttDef::AttTypes_Unknown);
+            if (qnameR->getURI() == (unsigned int)fEmptyNamespaceURI) {
+			    qnameR->setURI(compareWildCard->getAttName()->getURI());
+            }
+			else if (compareWildCard->getAttName()->getURI() != (unsigned int)fEmptyNamespaceURI) {
+
+                qnameR->setURI(fEmptyNamespaceURI);
+                resultWildCard->setType(XMLAttDef::AttTypes_Unknown);
+            }
         }
     }
 }
@@ -6878,8 +6886,8 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
         return;
     }
 
-    // If the two are negations of different namespace names, then any must
-    // be the value
+    // If the two are negations of different namespace names, then not and
+    // absent must be the value
     if (typeR == XMLAttDef::Any_Other && typeC == XMLAttDef::Any_Other) {
 
         QName* qnameR = resultWildCard->getAttName();
@@ -6887,15 +6895,27 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
         if (qnameR->getURI() != compareWildCard->getAttName()->getURI()) {
 
             qnameR->setURI(fEmptyNamespaceURI);
-            resultWildCard->setType(XMLAttDef::Any_Any);
+            resultWildCard->setType(XMLAttDef::Any_Other);
         }
     }
 
-    // If either O1 or O2 is a pair of not and a namespace name and the other
-    // is a set, then:
-    //   1. If the set includes the negated namespace name, then any must be the value.
-    //   2. If the set does not include the negated namespace name, then whichever of O1 or O2 is a
-    //      pair of not and a namespace name must be the value.
+    // 5. If either O1 or O2 is a pair of not and a namespace name and the
+    //    other is a set, then:
+    //    1. If the set includes both the negated namespace name and absent
+    //       then any must be the value.
+    //    2. If the set includes the negated namespace name but not absent,
+    //       then a pair of not and absent must be the value.
+    //    3. If the set includes absent but not the negated namespace name,
+    //       then the union is not expressible.
+    //    4. If the set does not include either the negated namespace or
+    //       absent, then whichever of O1 or O2 is a pair of not and a
+    //       namespace name.
+    //
+    // 6. If either O1 or O2 is a pair of not and absent and the other is a
+    //    set, then:
+    //    1. If the set includes absent then any must be the value.
+    //    2. If the set does not include absent, then a pair of not and 
+    //       absent.
     if ((typeC == XMLAttDef::Any_Other && typeR == XMLAttDef::Any_List) ||
 		(typeR == XMLAttDef::Any_Other && typeC == XMLAttDef::Any_List)) {
 
@@ -6912,16 +6932,70 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
             compareURI = compareWildCard->getAttName()->getURI();
         }
 
+        // 6. not and absent
+        if (compareURI == (unsigned int) fEmptyNamespaceURI) {
 
-        if (nameURIList && nameURIList->containsElement(compareURI)) {
+            if (nameURIList) {
 
-            resultWildCard->setType(XMLAttDef::Any_Any);
-            attNameR->setURI(fEmptyNamespaceURI);
+                // 6.1 result is any 
+                if (nameURIList->containsElement(compareURI)) {
+
+                    resultWildCard->setType(XMLAttDef::Any_Any);
+                    attNameR->setURI(fEmptyNamespaceURI);
+                }
+                // 6.2 result is not and absent
+                else if (typeR == XMLAttDef::Any_List){
+
+                    resultWildCard->setType(XMLAttDef::Any_Other);
+                    attNameR->setURI(fEmptyNamespaceURI);
+                }
+            }
+            // 6.2 result is not and absent
+            else if (typeR == XMLAttDef::Any_List) {
+
+                resultWildCard->setType(XMLAttDef::Any_Other);
+                attNameR->setURI(fEmptyNamespaceURI);
+            }
         }
-        else if (typeR == XMLAttDef::Any_List) {
+        // 5. not and namespace
+        else {
+        
+            // 5.3 result is not expressible
+            if (!nameURIList) {
+                resultWildCard->setType(XMLAttDef::AttTypes_Unknown);
+                attNameR->setURI(fEmptyNamespaceURI);
+            }
+            else {
+                bool containsAbsent = 
+                    nameURIList->containsElement(fEmptyNamespaceURI);
+                bool containsNamespace = 
+                    nameURIList->containsElement(compareURI);
 
-            resultWildCard->setType(XMLAttDef::Any_Other);
-            attNameR->setURI(compareURI);
+                // 5.1 result is any 
+                if (containsAbsent && containsNamespace) {
+
+                    resultWildCard->setType(XMLAttDef::Any_Any);
+                    attNameR->setURI(fEmptyNamespaceURI);
+                }
+                // 5.2 result is not and absent
+                else if (containsNamespace) {
+
+                    resultWildCard->setType(XMLAttDef::Any_Other);
+                    attNameR->setURI(fEmptyNamespaceURI);
+                }
+                // 5.3 result is not expressible
+                else if (containsAbsent) {
+
+                    resultWildCard->setType(XMLAttDef::AttTypes_Unknown);
+                    attNameR->setURI(fEmptyNamespaceURI);
+                }
+                // 5.4. whichever is not and namespace
+                else if (typeR == XMLAttDef::Any_List) {
+
+                    resultWildCard->setType(XMLAttDef::Any_Other);
+                    attNameR->setURI(compareURI);
+                }
+            }
         }
 
         resultWildCard->resetNamespaceList();
