@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2002/02/20 20:30:11  peiyongz
+ * Make the code compilable on Solaris 2.6's CC
+ *
  * Revision 1.7  2002/02/14 15:14:58  peiyongz
  * getEnumString()
  *
@@ -489,7 +492,7 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
     }
 
 	// Enumerations
-	const RefVectorOf<XMLCh>*  enums = dtValidator->getEnumString();
+	RefVectorOf<XMLCh>* enums = (RefVectorOf<XMLCh>*) dtValidator->getEnumString();
 	if (enums)
 	{
 		cout << "Enumeration:\t\t\n";
