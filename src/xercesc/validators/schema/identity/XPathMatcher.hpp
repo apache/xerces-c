@@ -103,6 +103,7 @@ public:
       * Returns true if XPath has been matched.
       */
     bool isMatched();
+    virtual int getInitialDepth() const;
 
     // -----------------------------------------------------------------------
     //  XMLDocumentHandler methods

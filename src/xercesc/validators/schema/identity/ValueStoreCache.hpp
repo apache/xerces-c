@@ -84,6 +84,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/util/RefStackOf.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
@@ -121,14 +122,14 @@ public:
 	// -----------------------------------------------------------------------
     //  Initialization methods
     // -----------------------------------------------------------------------
-    void initValueStoresFor(SchemaElementDecl* const elemDecl);
+    void initValueStoresFor(SchemaElementDecl* const elemDecl, const int initialDepth);
 
 
 	// -----------------------------------------------------------------------
     //  Access methods
     // -----------------------------------------------------------------------
-    ValueStore* getValueStoreFor(const IC_Field* const field);
-    ValueStore* getValueStoreFor(const IdentityConstraint* const ic);
+    ValueStore* getValueStoreFor(const IC_Field* const field, const initialDepth);
+    ValueStore* getValueStoreFor(const IdentityConstraint* const ic, const int intialDepth);
     ValueStore* getGlobalValueStoreFor(const IdentityConstraint* const ic);
 
 	// -----------------------------------------------------------------------
@@ -138,7 +139,7 @@ public:
       * with ic and moves them into the global hashtable, if ic is a <unique>
       * or a <key>. If it's a <keyRef>, then we leave it for later.
       */
-    void transplant(IdentityConstraint* const ic);
+    void transplant(IdentityConstraint* const ic, const int initialDepth);
 
 private:
     // -----------------------------------------------------------------------
@@ -158,7 +159,7 @@ private:
     // -----------------------------------------------------------------------
     RefVectorOf<ValueStore>*                 fValueStores;
     RefHashTableOf<ValueStore>*              fGlobalICMap;
-    RefHashTableOf<ValueStore>*              fIC2ValueStoreMap;
+    RefHash2KeysTableOf<ValueStore>*         fIC2ValueStoreMap;
     RefStackOf<RefHashTableOf<ValueStore> >* fGlobalMapStack;
     XMLScanner*                              fScanner;
 };
@@ -175,15 +176,15 @@ inline void ValueStoreCache::setScanner(XMLScanner* const scanner) {
 //  ValueStoreCache: Access methods
 // ---------------------------------------------------------------------------
 inline ValueStore*
-ValueStoreCache::getValueStoreFor(const IC_Field* const field) {
+ValueStoreCache::getValueStoreFor(const IC_Field* const field, const int initialDepth) {
 
-    return fIC2ValueStoreMap->get(field->getIdentityConstraint());
+    return fIC2ValueStoreMap->get(field->getIdentityConstraint(), initialDepth);
 }
 
 inline ValueStore*
-ValueStoreCache::getValueStoreFor(const IdentityConstraint* const ic) {
+ValueStoreCache::getValueStoreFor(const IdentityConstraint* const ic, const int initialDepth) {
 
-    return fIC2ValueStoreMap->get(ic);
+    return fIC2ValueStoreMap->get(ic, initialDepth);
 }
 
 inline ValueStore*

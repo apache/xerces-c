@@ -98,7 +98,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Factory methods
     // -----------------------------------------------------------------------
-    XPathMatcher* createMatcher(FieldActivator* const fieldActivator);
+    XPathMatcher* createMatcher(FieldActivator* const fieldActivator, const int initialDepth);
 
 private:
     // -----------------------------------------------------------------------
@@ -123,6 +123,8 @@ public:
     // -----------------------------------------------------------------------
     ~SelectorMatcher() {}
 
+    int getInitialDepth() const { return fInitialDepth; }
+
     // -----------------------------------------------------------------------
     //  XMLDocumentHandler methods
     // -----------------------------------------------------------------------
@@ -139,7 +141,7 @@ private:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     SelectorMatcher(XercesXPath* const anXPath, IC_Selector* const selector,
-                    FieldActivator* const fieldActivator);
+                    FieldActivator* const fieldActivator, const int initialDepth);
 
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators
@@ -155,6 +157,7 @@ private:
     // -----------------------------------------------------------------------
     //  Data members
     // -----------------------------------------------------------------------
+    int             fInitialDepth;
     int             fElementDepth;
     int             fMatchedDepth;
     IC_Selector*    fSelector;

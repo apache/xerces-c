@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/27 05:56:19  knoaman
+ * Identity Constraint: handle case of recursive elements.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/11/23 18:35:33  tng
  * Eliminate Warning from AIX xlC 3.6:1540-399: (W) "XMLAttr" is undefined.  The delete operator will not call a destructor.
@@ -84,8 +87,10 @@
 // ---------------------------------------------------------------------------
 SelectorMatcher::SelectorMatcher(XercesXPath* const xpath,
                                  IC_Selector* const selector,
-                                 FieldActivator* const fieldActivator)
+                                 FieldActivator* const fieldActivator,
+                                 const int initialDepth)
     : XPathMatcher(xpath, false, selector->getIdentityConstraint())
+    , fInitialDepth(initialDepth)
     , fElementDepth(0)
     , fMatchedDepth(-1)
     , fSelector(selector)
@@ -119,12 +124,12 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
         int count = ic->getFieldCount();
 
         fMatchedDepth = fElementDepth;
-        fFieldActivator->startValueScopeFor(ic);
+        fFieldActivator->startValueScopeFor(ic, fInitialDepth);
 
         for (int i = 0; i < count; i++) {
 
             IC_Field* field = ic->getFieldAt(i);
-            XPathMatcher* matcher = fFieldActivator->activateField(field);
+            XPathMatcher* matcher = fFieldActivator->activateField(field, fInitialDepth);
 
             matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
         }
@@ -138,7 +143,7 @@ void SelectorMatcher::endElement(const XMLElementDecl& elemDecl) {
     if (fElementDepth-- == fMatchedDepth) {
 
         fMatchedDepth = -1;
-        fFieldActivator->endValueScopeFor(fSelector->getIdentityConstraint());
+        fFieldActivator->endValueScopeFor(fSelector->getIdentityConstraint(), fInitialDepth);
     }
 }
 
@@ -174,9 +179,9 @@ bool IC_Selector::operator !=(const IC_Selector& other) const {
 // ---------------------------------------------------------------------------
 //  IC_Selector: Factory methods
 // ---------------------------------------------------------------------------
-XPathMatcher* IC_Selector::createMatcher(FieldActivator* const fieldActivator) {
+XPathMatcher* IC_Selector::createMatcher(FieldActivator* const fieldActivator, const int initialDepth) {
 
-    return new SelectorMatcher(fXPath, this, fieldActivator);
+    return new SelectorMatcher(fXPath, this, fieldActivator, initialDepth);
 }
 
 /**

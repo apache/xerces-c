@@ -111,18 +111,18 @@ public:
       * method is called when the selector matches in order to initialize 
       * the value store.
       */
-    void startValueScopeFor(const IdentityConstraint* const ic);
+    void startValueScopeFor(const IdentityConstraint* const ic, const int initialDepth);
 
     /** 
       * Request to activate the specified field. This method returns the
       * matcher for the field.
       */
-    XPathMatcher* activateField(IC_Field* const field);
+    XPathMatcher* activateField(IC_Field* const field, const int initialDepth);
 
     /**
       * Ends the value scope for the specified identity constraint.
       */
-    void endValueScopeFor(const IdentityConstraint* const ic);
+    void endValueScopeFor(const IdentityConstraint* const ic, const int initialDepth);
 
 private:
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/27 05:56:19  knoaman
+ * Identity Constraint: handle case of recursive elements.
+ *
  * Revision 1.2  2002/02/18 06:26:50  jberry
  * Quiet codewarrior compiler warnings
  *
@@ -78,6 +81,7 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/RuntimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Constructors and Destructor
@@ -406,6 +410,15 @@ void XPathMatcher::matched(const XMLCh* const content,
     return;
 }
 
+
+// ---------------------------------------------------------------------------
+//  XPathMatcher: Match methods
+// ---------------------------------------------------------------------------
+int XPathMatcher::getInitialDepth() const
+{
+    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    return 0; // to make some compilers happy
+}
 
 /**
   * End of file XPathMatcher.cpp

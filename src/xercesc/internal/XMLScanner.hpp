@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/08/27 05:56:39  knoaman
+ * Identity Constraint: handle case of recursive elements.
+ *
  * Revision 1.10  2002/08/16 15:46:17  knoaman
  * Bug 7698 : filenames with embedded spaces in schemaLocation strings not handled properly.
  *
@@ -736,7 +739,7 @@ private :
     // -----------------------------------------------------------------------
     //  IdentityConstraints Activation methods
     // -----------------------------------------------------------------------
-    void activateSelectorFor(IdentityConstraint* const ic);
+    void activateSelectorFor(IdentityConstraint* const ic, const int initialDepth);
 
     // -----------------------------------------------------------------------
     //  Grammar preparsing methods

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/27 05:56:19  knoaman
+ * Identity Constraint: handle case of recursive elements.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/11/02 14:08:40  knoaman
  * Add support for identity constraints.
@@ -110,9 +113,9 @@ FieldActivator& FieldActivator::operator =(const FieldActivator& other) {
 // ---------------------------------------------------------------------------
 //  FieldActivator: Operator methods
 // ---------------------------------------------------------------------------
-XPathMatcher* FieldActivator::activateField(IC_Field* const field) {
+XPathMatcher* FieldActivator::activateField(IC_Field* const field, const int initialDepth) {
 
-    ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field);
+    ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field, initialDepth);
     XPathMatcher* matcher = field->createMatcher(valueStore);
 
     field->setMayMatch(true);
@@ -122,22 +125,23 @@ XPathMatcher* FieldActivator::activateField(IC_Field* const field) {
     return matcher;
 }
 
-void FieldActivator::startValueScopeFor(const IdentityConstraint* const ic) {
+void FieldActivator::startValueScopeFor(const IdentityConstraint* const ic,
+                                        const int initialDepth) {
 
     unsigned int fieldCount = ic->getFieldCount();
 
     for(unsigned int i=0; i<fieldCount; i++) {
 
         const IC_Field* field = ic->getFieldAt(i);
-        ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field);
+        ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field, initialDepth);
 
         valueStore->startValueScope();
     }
 }
 
-void FieldActivator::endValueScopeFor(const IdentityConstraint* const ic) {
+void FieldActivator::endValueScopeFor(const IdentityConstraint* const ic, const int initialDepth) {
 
-    ValueStore* valueStore = fValueStoreCache->getValueStoreFor(ic);
+    ValueStore* valueStore = fValueStoreCache->getValueStoreFor(ic, initialDepth);
 
     valueStore->endValueScope();
 }

@@ -1893,7 +1893,7 @@ void XMLScanner::scanEndTag(bool& gotData)
                     if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
 
                         matcher->endDocumentFragment();
-                        fValueStoreCache->transplant(ic);
+                        fValueStoreCache->transplant(ic, matcher->getInitialDepth());
                     }
                     else if (!ic) {
                         matcher->endDocumentFragment();
@@ -1908,7 +1908,7 @@ void XMLScanner::scanEndTag(bool& gotData)
 
                     if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
 
-                        ValueStore* values = fValueStoreCache->getValueStoreFor(ic);
+                        ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
 
                         if (values) { // nothing to do if nothing matched!
                             values->endDcocumentFragment(fValueStoreCache);
@@ -3688,10 +3688,10 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
 
             fValueStoreCache->startElement();
             fMatcherStack->pushContext();
-            fValueStoreCache->initValueStoresFor((SchemaElementDecl*) elemDecl);
+            fValueStoreCache->initValueStoresFor((SchemaElementDecl*) elemDecl, (int) elemDepth);
 
             for (unsigned int i = 0; i < count; i++) {
-                activateSelectorFor(((SchemaElementDecl*) elemDecl)->getIdentityConstraintAt(i));
+                activateSelectorFor(((SchemaElementDecl*) elemDecl)->getIdentityConstraintAt(i), (int) elemDepth);
             }
 
             // call all active identity constraints
@@ -3776,7 +3776,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                         if (ic  && (ic->getType() != IdentityConstraint::KEYREF)) {
 
                             matcher->endDocumentFragment();
-                            fValueStoreCache->transplant(ic);
+                            fValueStoreCache->transplant(ic, matcher->getInitialDepth());
                         }
                         else if (!ic) {
                             matcher->endDocumentFragment();
@@ -3791,7 +3791,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
 
                         if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
 
-                            ValueStore* values = fValueStoreCache->getValueStoreFor(ic);
+                            ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
 
                             if (values) { // nothing to do if nothing matched!
                                 values->endDcocumentFragment(fValueStoreCache);
@@ -4259,14 +4259,14 @@ void XMLScanner::resizeElemState() {
 // ---------------------------------------------------------------------------
 //  XMLScanner: IC activation methos
 // ---------------------------------------------------------------------------
-void XMLScanner::activateSelectorFor(IdentityConstraint* const ic) {
+void XMLScanner::activateSelectorFor(IdentityConstraint* const ic, const int initialDepth) {
 
     IC_Selector* selector = ic->getSelector();
 
     if (!selector)
         return;
 
-    XPathMatcher* matcher = selector->createMatcher(fFieldActivator);
+    XPathMatcher* matcher = selector->createMatcher(fFieldActivator, initialDepth);
 
     fMatcherStack->addMatcher(matcher);
     matcher->startDocumentFragment();

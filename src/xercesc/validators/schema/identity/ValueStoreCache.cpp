@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/27 05:56:19  knoaman
+ * Identity Constraint: handle case of recursive elements.
+ *
  * Revision 1.2  2002/08/26 23:48:09  knoaman
  * Fix for ValueStore's null pointer.
  *
@@ -157,11 +160,12 @@ void ValueStoreCache::init() {
 
     fValueStores = new RefVectorOf<ValueStore>(8);
     fGlobalICMap = new RefHashTableOf<ValueStore>(13, false, new HashPtr());
-    fIC2ValueStoreMap = new RefHashTableOf<ValueStore>(13, false, new HashPtr());
+    fIC2ValueStoreMap = new RefHash2KeysTableOf<ValueStore>(13, false, new HashPtr());
     fGlobalMapStack = new RefStackOf<RefHashTableOf<ValueStore> >(8);
 }
 
-void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl) {
+void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
+                                         const int initialDepth) {
 
     // initialize value stores for unique fields
     unsigned int icCount = elemDecl->getIdentityConstraintCount();
@@ -169,38 +173,29 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl) {
     for (unsigned int i=0; i<icCount; i++) {
 
         IdentityConstraint* ic = elemDecl->getIdentityConstraintAt(i);
-        ValueStore* valueStore = fIC2ValueStoreMap->get(ic);
-
-        if (valueStore && ic->getType() != IdentityConstraint::KEYREF) {
-            continue;
-        }
-
-        valueStore = new ValueStore(ic, fScanner);
+        ValueStore* valueStore = valueStore = new ValueStore(ic, fScanner);
         fValueStores->addElement(valueStore);
-        fIC2ValueStoreMap->put(ic, valueStore);
+        fIC2ValueStoreMap->put(ic, initialDepth, valueStore);
     }
 }
 
-void ValueStoreCache::transplant(IdentityConstraint* const ic) {
+void ValueStoreCache::transplant(IdentityConstraint* const ic, const initialDepth) {
 
     if (ic->getType() == IdentityConstraint::KEYREF) {
         return;
     }
 
-    ValueStore* newVals = fIC2ValueStoreMap->get(ic);
+    ValueStore* newVals = fIC2ValueStoreMap->get(ic, initialDepth);
     ValueStore* currVals = fGlobalICMap->get(ic);
-
-    fIC2ValueStoreMap->removeKey(ic);
 
     if (currVals) {
         currVals->append(newVals);
     } else {
-        fGlobalICMap->put(ic, newVals);
+        ValueStore* valueStore = new ValueStore(ic, fScanner);
+        fValueStores->addElement(valueStore);
+        valueStore->append(newVals);
+        fGlobalICMap->put(ic, valueStore);
     }
-
-    ValueStore* valueStore = new ValueStore(ic, fScanner);
-    fValueStores->addElement(valueStore);
-    fIC2ValueStoreMap->put(ic, valueStore);
 }
 
 /**
