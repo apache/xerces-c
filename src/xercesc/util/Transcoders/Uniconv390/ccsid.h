@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,7 +101,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP037", 37}, 
 {"CP1006", 1006}, 
 {"CP1008", 5104}, 
-{"CP1025", 1154}, 
+{"CP1025", 1025}, 
 {"CP1027", 5123}, 
 {"CP1046", 9238}, 
 {"CP1089", 1089}, 
@@ -111,9 +111,9 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP1122", 1122}, 
 {"CP1123", 1123}, 
 {"CP1124", 1124}, 
-{"CP1125", 848}, 
+{"CP1125", 1125}, 
 {"CP1130", 1164}, 
-{"CP1131", 849}, 
+{"CP1131", 1131}, 
 {"CP1140", 1140}, 
 {"CP1141", 1141}, 
 {"CP1142", 1142}, 
@@ -188,7 +188,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP921", 921}, 
 {"CP922", 902}, 
 {"CP923", 923}, 
-{"CP932", 943}, 
+{"CP932", 942}, 
 {"CP933", 933}, 
 {"CP935", 935}, 
 {"CP936", 1386}, 
