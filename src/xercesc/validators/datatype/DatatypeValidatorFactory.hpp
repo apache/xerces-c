@@ -131,6 +131,16 @@ public:
      */
     DatatypeValidator* getDatatypeValidator(const XMLCh* const dvType) const;
 
+    /**
+     * Returns the user defined registry of types
+     **/
+    DVHashTable* getUserDefinedRegistry() const;
+
+
+    /**
+     * Returns the built in  registry of types
+     **/
+    DVHashTable* getBuiltInRegistry() const;
     //@}
 
     // -----------------------------------------------------------------------
@@ -251,6 +261,15 @@ DatatypeValidatorFactory::getDatatypeValidator(const XMLCh* const dvType) const
 	return 0;
 }
 
+inline DVHashTable*
+DatatypeValidatorFactory::getUserDefinedRegistry() const {
+    return fUserDefinedRegistry;
+}
+
+inline DVHashTable*
+DatatypeValidatorFactory::getBuiltInRegistry() const {
+    return fBuiltInRegistry;
+}
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: CleanUp methods
 // ---------------------------------------------------------------------------
