@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/06/21 19:33:12  peiyongz
+ * support for feature split_cdata_section and entities revised.
+ *
  * Revision 1.5  2002/06/17 19:45:58  peiyongz
  * optimization on fFeatures and featureId introduced
  *
@@ -294,9 +297,8 @@
 #ifndef DOMWriterImpl_HEADER_GUARD_
 #define DOMWriterImpl_HEADER_GUARD_
 
+#include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
 
 class CDOM_EXPORT DOMWriterImpl:public DOMWriter {
 
@@ -361,6 +363,16 @@ private:
     bool                          checkFeature(const XMLCh* const featName
                                              , bool               state
                                              , int&               featureId) const;
+
+    bool                          reportError(const DOMNode* const    errorNode
+                                            , DOMError::ErrorSeverity errorType
+                                            , const XMLCh*   const    errorMsg);
+
+    void                          procCdataSection(const XMLCh*   const nodeValue
+                                                 , const DOMNode* const nodeToWrite);
+
+    void                          procUnrepCharInCdataSection(const XMLCh*   const nodeValue
+                                                            , const DOMNode* const nodeToWrite);
 
     inline bool                   canSetFeature(const int featureId
                                               , bool      val)     const;

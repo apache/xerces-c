@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2002/06/21 19:33:12  peiyongz
+ * support for feature split_cdata_section and entities revised.
+ *
  * Revision 1.10  2002/06/18 15:35:25  peiyongz
  * Bug#9950: Compilation error on MSVC5, patch from PeterV@ti.com.od.ua (Peter A. Volchek)
  *
@@ -91,15 +94,16 @@
  */
 
 #include "DOMWriterImpl.hpp"
-
-#include <xercesc/dom/DOM.hpp>
 #include "DOMErrorImpl.hpp"
 #include "DOMLocatorImpl.hpp"
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
+
+#include <xercesc/util/TransService.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -179,7 +183,7 @@ static const XMLCh  gXMLDecl_VersionInfo[] =
 {
 	chOpenAngle, chQuestion, chLatin_x,     chLatin_m,  chLatin_l,  chSpace,
 	chLatin_v,   chLatin_e,  chLatin_r,     chLatin_s,  chLatin_i,  chLatin_o,
-	chLatin_n,   chDoubleQuote, chEqual,    chNull
+	chLatin_n,   chEqual,    chDoubleQuote, chNull
 };
 
 static const XMLCh gXMLDecl_ver10[] =
@@ -224,7 +228,8 @@ static const XMLCh  gStartCDATA[] =
 //]]>
 static const XMLCh  gEndCDATA[] =
 {
-    chCloseSquare, chCloseSquare, chCloseAngle, chNull
+    chCloseSquare, chCloseAngle, chCloseAngle, chNull  // test only: ]>>
+//  chCloseSquare, chCloseSquare, chCloseAngle, chNull
 };
 
 //<!--
@@ -283,6 +288,49 @@ static const XMLCh  gUnrecognizedNodeType[] =
 	chLatin_T, chLatin_y, chLatin_p, chLatin_e, chNull
 };
 
+// nested cdata
+static const XMLCh  gNestedCdata[] =
+{
+	chLatin_N, chLatin_e, chLatin_s, chLatin_t, chLatin_e, chLatin_d,
+    chLatin_C, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chNull
+};
+
+// Unrepresentable char 
+static const XMLCh  gUnrepresentableChar[] =
+{
+	chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_p, chLatin_r,
+    chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a,
+	chLatin_b, chLatin_l, chLatin_e, chSpace,   chLatin_C, chLatin_h,
+	chLatin_a, chLatin_r, chNull
+};
+
+//Feature 
+static const XMLCh  gFeature[] =
+{
+	chLatin_F, chLatin_e, chLatin_a, chLatin_t, chLatin_u, chLatin_r,
+    chLatin_e, chSpace,   chNull
+};
+
+// Can not be set to 
+static const XMLCh  gCantSet[] =
+{
+	chSpace,   chLatin_C, chLatin_a, chLatin_n, chSpace, chLatin_n, chLatin_o,
+    chLatin_t, chSpace,   chLatin_b, chLatin_e, chSpace, chLatin_s,
+    chLatin_e, chLatin_t, chSpace,   chLatin_t, chLatin_o, chSpace, chNull
+};
+
+static const XMLCh  gTrue[] =
+{
+	chSingleQuote, chLatin_t, chLatin_r, chLatin_u, chLatin_e, 
+    chSingleQuote, chLF,      chNull
+};
+
+static const XMLCh  gFalse[] =
+{
+	chSingleQuote, chLatin_f, chLatin_a, chLatin_l, chLatin_s, 
+    chLatin_e,     chSingleQuote, chLF, chNull
+};
+
 //
 // Notification of the error though error handler
 //
@@ -298,35 +346,19 @@ static const XMLCh  gUnrecognizedNodeType[] =
 // along its way going back to writeNode(). So far we don't come up with a
 // "short-cut" to go "directly" back.
 //
-#define  TRY_CATCH_THROW(action, forceToRethrow)                 \
-fFormatter->setUnRepFlags(XMLFormatter::UnRep_Fail);             \
-try                                                              \
-{                                                                \
-     action;                                                     \
-}                                                                \
-catch(TranscodingException const &e)                             \
-{                                                                \
-    DOMLocatorImpl  locator(0                                    \
-                          , 0                                    \
-                          , (DOMNode* const)nodeToWrite          \
-                          , 0                                    \
-                          , 0);                                  \
-                                                                 \
-    DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR  \
-                           , e.getMessage()                      \
-                           , &locator);                          \
-                                                                 \
-    bool            retVal = false;                              \
-                                                                 \
-    if (fErrorHandler)                                           \
-    {                                                            \
-        retVal = fErrorHandler->handleError(domError);           \
-    }                                                            \
-                                                                 \
-    if (forceToRethrow || !retVal)                               \
-        throw;                                                   \
-    else                                                         \
-        fErrorCount++;                                           \
+#define  TRY_CATCH_THROW(action, forceToRethrow)                     \
+fFormatter->setUnRepFlags(XMLFormatter::UnRep_Fail);                 \
+try                                                                  \
+{                                                                    \
+     action;                                                         \
+}                                                                 \
+catch(TranscodingException const &e)                                 \
+{                                                                    \
+    if ( !reportError(nodeToWrite                                    \
+                    , DOMError::DOM_SEVERITY_FATAL_ERROR             \
+                    , e.getMessage())                       ||       \
+         forceToRethrow                                      )       \
+        throw;                                                       \
 }
 
 DOMWriterImpl::~DOMWriterImpl()
@@ -375,8 +407,14 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
     checkFeature(featName, true, featureId);
 
 	if (!canSetFeature(featureId, state))
-		throw DOMException(DOMException::NOT_SUPPORTED_ERR, featName);
-        //DOMException.NOT_SUPPORTED_ERR,"Feature "+featName+" cannot be set as "+state);
+    {
+        XMLCh  tmpbuf[256];
+        XMLString::copyString(tmpbuf, gFeature);
+        XMLString::catString(tmpbuf, featName);
+        XMLString::catString(tmpbuf, gCantSet);
+        XMLString::catString(tmpbuf, state? gTrue : gFalse);
+		throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf);
+    }
     else
         setFeature(featureId, state);
 
@@ -462,14 +500,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     }
     catch (const TranscodingException& e)
     {
-        if (fErrorHandler)
-        {
-            DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR 
-                                    ,e.getMessage()
-                                    ,0);
-            fErrorHandler->handleError(domError);
-        }
-
+        reportError(&nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, e.getMessage());
         return false;
     }
 
@@ -862,50 +893,64 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			}
 			else
 			{
-				DOMNode *child;
-				for (child = nodeToWrite->getFirstChild();
-				child != 0;
-				child = child->getNextSibling())
-				{
-                    processNode(child);
-				}
+                // check if the referenced entity is defined or not
+                if (nodeToWrite->getOwnerDocument()->getDoctype()->getEntities()->getNamedItem(nodeName))
+                {
+                    DOMNode *child;
+                    for (child = nodeToWrite->getFirstChild();
+                    child != 0;
+                    child = child->getNextSibling())
+                    {
+                        processNode(child);
+                    }
+                }
+                else
+                {
+                    TRY_CATCH_THROW
+                   (
+                        *fFormatter<<XMLFormatter::NoEscapes<<chAmpersand<<nodeName<<chSemiColon;
+                        , true
+				    )
+                }
 			}
 			break;
 		}
 
+        //
+        //  feature:split_cdata_sections     occurence of ]]>   unrep-char
+        //  ===============================================================
+        //          true                        split            split
+        //          false                       fails            fails
+        //
 	case DOMNode::CDATA_SECTION_NODE:
 		{
 			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
 				break;
 
-			TRY_CATCH_THROW
-			(
-    			*fFormatter << XMLFormatter::NoEscapes << gStartCDATA;
-			    , true
-			)
-
 			if (getFeature(SPLIT_CDATA_SECTIONS_ID))
 			{
-				setURCharRef();
-				*fFormatter << nodeValue;
+                // it is fairly complicated and we process this
+                // in a separate function.
+                procCdataSection(nodeValue, nodeToWrite);
 			}
 			else
 			{
-				TRY_CATCH_THROW
-				(
-    				*fFormatter << nodeValue;
-				    , true
-	            )
-			}
+                // search for "]]>"
+                if (XMLString::patternMatch((XMLCh* const) nodeValue, gEndCDATA) != -1)
+                {
+                    reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gNestedCdata);
+                    throw DOMException(DOMException::SYNTAX_ERR, gNestedCdata);
+                }
 
-			TRY_CATCH_THROW
-            (
-                 *fFormatter << gEndCDATA;
-			    , true
-			)
+                TRY_CATCH_THROW
+                (
+                    // transcoder throws exception for unrep chars           
+                    *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << nodeValue << gEndCDATA;
+                   , true
+			    )
+            }
 
-		break;
-
+            break;
 		}
 
 	case DOMNode::COMMENT_NODE:
@@ -951,12 +996,8 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 						// [75] ExternalID ::= 'SYSTEM' S SystemLiteral
 						//                   | 'PUBLIC' S PubidLiteral S SystemLiteral
 						//
-						DOMLocatorImpl  locator(0, 0, (DOMNode* const)nodeToWrite, 0, 0);
-						DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR
-                                 			   , gUnrecognizedNodeType
-		                                       , &locator);
-						fErrorHandler->handleError(domError);
-						throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+                        reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gUnrecognizedNodeType);
+                        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 						// systemLiteral not found
 					}
 				}
@@ -1018,12 +1059,8 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			once unrecognized node type encountered.
 	     ***/
         {
-			DOMLocatorImpl  locator(0, 0, (DOMNode* const)nodeToWrite, 0, 0);
-			DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR
-                      			   , gUnrecognizedNodeType
-			                       , &locator);
-			fErrorHandler->handleError(domError);
-			throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gUnrecognizedNodeType);
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 			// UnreognizedNodeType;
 		}
 
@@ -1093,10 +1130,164 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     return true;
 }
 
+bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
+                              , DOMError::ErrorSeverity errorType
+                              , const XMLCh*   const    errorMsg)
+{
+    bool toContinueProcess = true;   // default value for no error handler
+
+    if (fErrorHandler)
+    {
+        DOMLocatorImpl  locator(0, 0, (DOMNode* const) errorNode, 0, 0);
+        DOMErrorImpl    domError(errorType , errorMsg, &locator);
+        toContinueProcess = fErrorHandler->handleError(domError);
+    }
+
+    fErrorCount++;
+    return toContinueProcess;
+}
+
+//
+// 
+//
+void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
+                                   , const DOMNode* const nodeToWrite)
+{
+    XMLCh* curPtr  = (XMLCh*) nodeValue;
+    XMLCh* nextPtr = 0;
+    int    endTagPos = -1;
+    int    offset = XMLString::stringLen(gEndCDATA);
+    bool   endTagFound = true;
+
+    while (endTagFound)
+    {
+        endTagPos = XMLString::patternMatch(curPtr, gEndCDATA); 
+        if (endTagPos != -1)
+        {
+            nextPtr = curPtr + endTagPos + offset;  // skip the ']]>'
+            *(curPtr + endTagPos) = chNull;         //nullify the first ']'
+
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, gNestedCdata);
+        }
+        else
+        {
+            endTagFound = false;
+        }
+
+        procUnrepCharInCdataSection(curPtr, nodeToWrite); 
+
+        if (endTagFound)
+        {
+            *(nextPtr - offset) = chCloseSquare;   //restore the first ']'
+            curPtr = nextPtr;
+        }
+    }
+
+    return;
+}
+
+//
+// 
+//
+void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
+                                              , const DOMNode* const nodeToWrite)
+{
+    //
+    //  We have to check each character and see if it could be represented.
+    //  As long as it can, we just keep up with where we started and how
+    //  many chars we've checked. When we hit an unrepresentable one, we
+    //  stop, transcode everything we've collected, then start handling
+    //  the unrepresentables via char refs. We repeat this until we get all
+    //  the chars done.
+    //
+    const XMLCh*    srcPtr = nodeValue;
+    const XMLCh*    endPtr = nodeValue +  XMLString::stringLen(nodeValue);;
+
+    // Set up the common part of the buffer that we build char refs into
+    XMLCh tmpBuf[32];
+    tmpBuf[0] = chAmpersand;
+    tmpBuf[1] = chPound;
+    tmpBuf[2] = chLatin_x;
+
+    while (srcPtr < endPtr)
+    {
+        const XMLCh* tmpPtr = srcPtr;
+        while (tmpPtr < endPtr)
+        {
+            if (fFormatter->getTranscoder()->canTranscodeTo(*tmpPtr))
+                tmpPtr++;
+            else
+                break;
+        }
+
+        if (tmpPtr > srcPtr)
+        {
+
+            TRY_CATCH_THROW
+           (
+                *fFormatter << XMLFormatter::NoEscapes << gStartCDATA;
+                , true
+            )
+
+            // We got at least some chars that can be done normally
+            fFormatter->formatBuf
+            (
+                srcPtr
+                , tmpPtr - srcPtr
+                , XMLFormatter::CharEscapes
+                , XMLFormatter::UnRep_Fail
+            );
+
+            TRY_CATCH_THROW
+            (
+                *fFormatter << XMLFormatter::NoEscapes << gEndCDATA;
+                , true
+            )
+
+            // Update the source pointer to our new spot
+            srcPtr = tmpPtr;
+        }
+         else
+        {
+             //
+             //  We hit something unrepresentable. So continue forward doing
+             //  char refs until we hit something representable again or the
+             //  end of input.
+             //
+
+             // one warning for consective unrep chars
+             reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, gUnrepresentableChar);
+
+            while (srcPtr < endPtr)
+            {
+                // Build a char ref for the current char
+                XMLString::binToText(*srcPtr, &tmpBuf[3], 8, 16);
+                const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+                tmpBuf[bufLen] = chSemiColon;
+                tmpBuf[bufLen+1] = chNull;
+
+                // And now call recursively back to our caller to format this
+                fFormatter->formatBuf
+                (
+                    tmpBuf
+                    , bufLen + 1
+                    , XMLFormatter::NoEscapes
+                    , XMLFormatter::UnRep_Fail
+                );
+
+                // Move up the source pointer and break out if needed
+                srcPtr++;
+                if (fFormatter->getTranscoder()->canTranscodeTo(*srcPtr))
+                    break;
+            }
+        }
+    }
+}
+
 inline bool DOMWriterImpl::canSetFeature(const int featureId
                                        , bool      val) const
 {
-    return featuresSupported[featureId + (val? 0: 1)];
+    return featuresSupported[2*featureId + (val? 0: 1)];
 }
 
 inline void DOMWriterImpl::printNewLine() const
