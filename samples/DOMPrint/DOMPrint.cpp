@@ -94,6 +94,7 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_NamedNodeMap.hpp>
+#include <dom/DomMemDebug.hpp>
 #include "DOMTreeErrorReporter.hpp"
 #include <string.h>
 #include <stdlib.h>

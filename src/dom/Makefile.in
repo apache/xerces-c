@@ -89,6 +89,7 @@ DOM_CPP_PUBHEADERS = \
 	DOM_Element.hpp \
 	DOM_Entity.hpp \
 	DOM_EntityReference.hpp \
+	DomMemDebug.hpp \
 	DOM_NamedNodeMap.hpp \
 	DOM_Node.hpp \
 	DOM_NodeFilter.hpp \
@@ -113,7 +114,6 @@ DOM_CPP_PRIVHEADERS =  \
 	DocumentFragmentImpl.hpp \
 	DocumentImpl.hpp \
 	DocumentTypeImpl.hpp \
-	DomMemDebug.hpp \
 	ElementDefinitionImpl.hpp \
 	ElementImpl.hpp \
 	ElementNSImpl.hpp \

@@ -54,23 +54,7 @@
 # <http://www.apache.org/>.
 # 
 #
-# $Log$
-# Revision 1.4  2000/02/26 07:20:19  rahulj
-#  - The threading tests now work on HPUX.
-#  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
-#    It crashes the compiler.
-#  - One could not write more worse makefiles than what exists for the
-#    tests. Hopefully, I will get bugged enough to fix them oneday.
-#
-# Revision 1.3  2000/02/21 19:06:09  abagchi
-# Fixed the target binary path
-#
-# Revision 1.2  2000/02/06 07:48:35  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.1  2000/01/31 22:22:20  aruna1
-# initial checkin
-#
+# $Id$
 #
 #
 
@@ -103,7 +87,7 @@ EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/DOMMemTest.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 HEADER_FILES=
-INCLUDE = ${INCLUDES} -I${XERCESCROOT}/src
+INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
