@@ -66,6 +66,10 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/03/11 03:19:57  chchou
+ * Fix bug # 19, add const keyword to API.
+ * As a result, update test case.
+ *
  * Revision 1.1  2000/02/18 23:01:01  abagchi
  * Initial checkin
  *
@@ -124,7 +128,7 @@ class  MyFilter : public DOM_NodeFilter {
 public:
     
   MyFilter(short nodeType, bool reject=false) : DOM_NodeFilter(), fNodeType(nodeType), fReject(reject) {};
-  virtual short acceptNode(DOM_Node node);
+  virtual short acceptNode(const DOM_Node &node) const;
 private:
     short fNodeType;
     bool fReject;
@@ -144,7 +148,7 @@ private:
         DOCUMENT_FRAGMENT_NODE = 11,
         NOTATION_NODE        = 12
 */
-short  MyFilter::acceptNode(DOM_Node node) {
+short  MyFilter::acceptNode(const DOM_Node &node) const {
     if (fNodeType == 0)
         return  DOM_NodeFilter::FILTER_ACCEPT;
 	if (node.getNodeType() ==  fNodeType) {
