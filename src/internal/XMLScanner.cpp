@@ -502,6 +502,28 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         //  first.
         //
         scanProlog();
+
+        //
+        //  At this point, we know which type of validation we are going to
+        //  use (if the plugged in validator handles either DTD or Schemas)
+        //  since we will have seen the DOCTYPE or PI that set it up.  So lets
+        //  ask the validator whether it requires namespaces or not.  If it
+        //  does, we have to override the namespace enablement flag.
+        //
+        if (fValidator->requiresNamespaces() && !fDoNamespaces)
+            fDoNamespaces = true;
+
+        //
+        //  Set our validation flag at this point. If the validation
+        //  scheme is not auto, then take that. Else see if we saw any
+        //  subset.
+        //
+        if (fValScheme == Val_Never)
+            fValidate = false;
+        else if (fValScheme == Val_Always)
+            fValidate = true;
+        else
+            fValidate = fHaveSubset;
     }
 
     //
