@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/03/11 12:58:36  tng
+ * Fix compilation error on AIX.
+ *
  * Revision 1.9  2003/03/07 21:42:37  tng
  * [Bug 17589] Refactoring ... .  Patch from Jacques Legare.
  *
@@ -409,7 +412,7 @@ private :
                               const XMLCh *  stdRef);  
  
    unsigned int handleUnEscapedChars(const XMLCh *                  srcPtr, 
-                                     unsigned int                   count, 
+                                     const unsigned int             count, 
                                      const UnRepFlags               unrepFlags);
 
     void specialFormat
