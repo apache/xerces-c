@@ -1304,6 +1304,7 @@ case "${host}" in
         *-*-linux*)     platform=LINUX ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
+        *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;
@@ -1481,6 +1482,7 @@ util/Platforms/HPUX/Makefile \
 util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \
 util/Platforms/IRIX/Makefile \
+util/Platforms/PTX/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Compilers/Makefile \
@@ -1608,6 +1610,7 @@ util/Platforms/HPUX/Makefile \
 util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \
 util/Platforms/IRIX/Makefile \
+util/Platforms/PTX/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Compilers/Makefile \
