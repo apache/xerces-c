@@ -371,7 +371,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         if ($opt_m eq "") {
             $opt_m = "inmem";
         }
-        $opt_r = 'dce' if ($opt_r eq ''); # By default, use dce threads if not specified
         
         if ($opt_x eq 'CC') {
             $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"';
