@@ -75,6 +75,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "PSVIWriter"=".\PSVIWriter\PSVIWriter.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "Redirect"=".\Redirect\Redirect.dsp" - Package Owner=<4>
 
 Package=<5>
