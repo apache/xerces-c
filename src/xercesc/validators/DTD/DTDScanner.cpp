@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/07/11 18:39:48  knoaman
+ * Access entities through the DTDGrammar instead of the scanner.
+ *
  * Revision 1.6  2002/06/06 20:36:33  tng
  * Fix: Valid encoding name is not checked in scanning Text Decl
  *
@@ -221,7 +224,7 @@ makeRepNode(const XMLCh testCh, ContentSpecNode* const prevNode)
 // ---------------------------------------------------------------------------
 //  DTDValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, NameIdPool<DTDEntityDecl>* entityDeclPool, DocTypeHandler* const    docTypeHandler) :
+DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, DocTypeHandler* const docTypeHandler) :
     fDocTypeHandler(docTypeHandler)
     , fDumAttDef(0)
     , fDumElemDecl(0)
@@ -230,7 +233,6 @@ DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, NameIdPool<DTDEntityDecl>* entity
     , fNextAttrId(1)
     , fDTDGrammar(dtdGrammar)
     , fPEntityDeclPool(0)
-    , fEntityDeclPool(entityDeclPool)
     , fDocTypeReaderId(0)
 {
     fPEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
@@ -1783,7 +1785,7 @@ void DTDScanner::scanEntityDecl()
     if (isPEDecl)
         entityDecl = fPEntityDeclPool->getByKey(bbName.getRawBuffer());
     else
-        entityDecl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
+        entityDecl = fDTDGrammar->getEntityDecl(bbName.getRawBuffer());
 
     if (entityDecl)
     {
@@ -1808,7 +1810,7 @@ void DTDScanner::scanEntityDecl()
         if (isPEDecl)
             fPEntityDeclPool->put(entityDecl);
          else
-            fEntityDeclPool->put(entityDecl);
+            fDTDGrammar->putEntityDecl(entityDecl);
     }
 
     // Set a flag that indicates whether we are ignoring this one
@@ -1927,7 +1929,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         fScanner->emitError(XMLErrs::PartialMarkupInEntity);
 
     // Look it up the name the general entity pool
-    XMLEntityDecl* decl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
+    XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(bbName.getRawBuffer());
 
     // If it does not exist, then obviously an error
     if (!decl)

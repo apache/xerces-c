@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/11 18:39:48  knoaman
+ * Access entities through the DTDGrammar instead of the scanner.
+ *
  * Revision 1.2  2002/05/30 16:17:19  tng
  * Add feature to optionally ignore external DTD.
  *
@@ -121,7 +124,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDScanner(DTDGrammar* dtdGrammar, NameIdPool<DTDEntityDecl>* entityDeclPool, DocTypeHandler* const    docTypeHandler);
+    DTDScanner(DTDGrammar* dtdGrammar, DocTypeHandler* const docTypeHandler);
     virtual ~DTDScanner();
 
     // -----------------------------------------------------------------------
@@ -262,12 +265,6 @@ private:
     //      This is a pool of EntityDecl objects, which contains all of the
     //      parameter entities that are declared in the DTD subsets.
     //
-    //  fEntityDeclPool
-    //      This is a pool of EntityDecl objects, which contains all of the
-    //      general entities that are declared in the DTD subsets.  It is
-    //      owned by the Scanner as Schema Grammar may also need access to
-    //      this pool for entity reference.
-    //
     //  fEmptyNamespaceId
     //      The uri for all DTD decls
     //
@@ -287,7 +284,6 @@ private:
     ReaderMgr*                      fReaderMgr;
     XMLScanner*                     fScanner;
     NameIdPool<DTDEntityDecl>*      fPEntityDeclPool;
-    NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
     unsigned int                    fEmptyNamespaceId;
     unsigned int                    fDocTypeReaderId;
 };
@@ -314,6 +310,7 @@ inline void DTDScanner::setDocTypeHandler(DocTypeHandler* const handlerToSet)
 {
     fDocTypeHandler = handlerToSet;
 }
+
 
 // -----------------------------------------------------------------------
 //  Setter methods
