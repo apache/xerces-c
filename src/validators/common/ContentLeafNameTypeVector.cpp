@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 18:17:28  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.1  2001/02/27 14:48:49  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -79,9 +82,9 @@ ContentLeafNameTypeVector::ContentLeafNameTypeVector()
 }
 
 ContentLeafNameTypeVector::ContentLeafNameTypeVector
-       (    const unsigned int* const                names
-           ,const ContentSpecNode::NodeTypes* const  types
-           ,const unsigned int                       count
+       (    QName** const                      names
+          , ContentSpecNode::NodeTypes* const  types
+          , const unsigned int                       count
        )
 : fLeafNames(0)
 , fLeafTypes(0)
@@ -99,14 +102,14 @@ ContentLeafNameTypeVector::ContentLeafNameTypeVector
 	  ,fLeafTypes(0)
 	  ,fLeafCount(0)
 {
-	fLeafCount=toCopy.getLeafCount();
+    fLeafCount=toCopy.getLeafCount();
     init(fLeafCount);
 
-	for (unsigned int i=0; i<this->fLeafCount; i++)
-	{
-		*(fLeafNames+i)=toCopy.getLeafNameAt(i);
-		*(fLeafTypes+i)=toCopy.getLeafTypeAt(i);
-	}
+    for (unsigned int i=0; i<this->fLeafCount; i++)
+    {
+        fLeafNames[i] = toCopy.getLeafNameAt(i);
+        fLeafTypes[i] = toCopy.getLeafTypeAt(i);
+    }
 }
 
 ContentLeafNameTypeVector::~ContentLeafNameTypeVector()
@@ -119,34 +122,30 @@ ContentLeafNameTypeVector::~ContentLeafNameTypeVector()
 // ---------------------------------------------------------------------------
 void ContentLeafNameTypeVector::setValues
     (
-         const unsigned int* const                names
-        ,const ContentSpecNode::NodeTypes* const  types
-        ,const unsigned int                       count
+         QName** const                      names
+       , ContentSpecNode::NodeTypes* const  types
+       , const unsigned int                 count
     )
 {
     cleanUp();
     init(count);
 
-	const unsigned int *tmpNames = names;
-	const ContentSpecNode::NodeTypes *tmpTypes = types;
-
-	for (unsigned int i=0; i<count; i++)
-	{
-        *(fLeafNames+i)=(*tmpNames++);
-		*(fLeafTypes+i)=(*tmpTypes++);
-	}
+    for (unsigned int i=0; i<count; i++)
+    {
+        fLeafNames[i] = names[i];
+        fLeafTypes[i] = types[i];
+    }
 }
 
 // ---------------------------------------------------------------------------
 //  ContentLeafNameTypeVector: Getter methods
 // ---------------------------------------------------------------------------
-const unsigned int ContentLeafNameTypeVector::getLeafNameAt
-       (const unsigned int pos) const
+QName* ContentLeafNameTypeVector::getLeafNameAt(const unsigned int pos) const
 {
     if (pos >= fLeafCount)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
-    return *(fLeafNames+pos);
+    return fLeafNames[pos];
 }
 
 const ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
@@ -155,11 +154,10 @@ const ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
     if (pos >= fLeafCount)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
 
-	return *(fLeafTypes+pos);
+	return fLeafTypes[pos];
 }
 
 const unsigned int ContentLeafNameTypeVector::getLeafCount() const
 {
 	return fLeafCount;
 }
-

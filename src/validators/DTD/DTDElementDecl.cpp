@@ -74,18 +74,44 @@
 #include <validators/DTD/DTDElementDecl.hpp>
 
 
+// ---------------------------------------------------------------------------
+//  DTDElementDecl: Constructors and Destructor
+// ---------------------------------------------------------------------------
+DTDElementDecl::DTDElementDecl() :
 
-// ---------------------------------------------------------------------------
-//  DTDElementDecl: Destructor is out of line to prevent having to expose
-//  the ContentSpecNode header.
-// ---------------------------------------------------------------------------
+    fAttDefs(0)
+    , fAttList(0)
+    , fContentSpec(0)
+    , fModelType(Any)
+{
+}
+
+DTDElementDecl::DTDElementDecl( const   XMLCh* const              elemRawName
+                              , const   unsigned int              uriId
+                              , const DTDElementDecl::ModelTypes  type) :
+    fAttDefs(0)
+    , fAttList(0)
+    , fContentSpec(0)
+    , fModelType(type)
+{
+    setElementName(elemRawName, uriId);
+}
+
+DTDElementDecl::DTDElementDecl( QName* const                elementName
+                              , const DTDElementDecl::ModelTypes  type) :
+    fAttDefs(0)
+    , fAttList(0)
+    , fContentSpec(0)
+    , fModelType(type)
+{
+    setElementName(elementName);
+}
+
 DTDElementDecl::~DTDElementDecl()
 {
     delete fAttDefs;
     delete fAttList;
     delete fContentSpec;
-    delete [] fBaseName;
-    delete [] fQName;
 }
 
 
@@ -145,49 +171,6 @@ XMLAttDefList& DTDElementDecl::getAttDefList() const
 }
 
 
-const XMLCh* DTDElementDecl::getBaseName() const
-{
-    //
-    //  If the base name nas not been extraced, then do it now. Since we are
-    //  faulting it in from a const method, we have to cast off the constness.
-    //
-    if (!fBaseName)
-    {
-        //
-        //  Search for the first colon in the name. Note that, if its not
-        //  found, then it will be -1, which will still make the replicate
-        //  logic work correctly.
-        //
-        int colonPos = XMLString::indexOf(fQName, chColon);
-        ((DTDElementDecl*)this)->fBaseName = XMLString::replicate(&fQName[colonPos + 1]);
-    }
-
-    // Just return our QName
-    return fBaseName;
-}
-
-XMLCh* DTDElementDecl::getBaseName()
-{
-    //
-    //  If the base name nas not been extraced, then do it now. Since we are
-    //  faulting it in from a const method, we have to cast off the constness.
-    //
-    if (!fBaseName)
-    {
-        //
-        //  Search for the first colon in the name. Note that, if its not
-        //  found, then it will be -1, which will still make the replicate
-        //  logic work correctly.
-        //
-        int colonPos = XMLString::indexOf(fQName, chColon);
-        ((DTDElementDecl*)this)->fBaseName = XMLString::replicate(&fQName[colonPos + 1]);
-    }
-
-    // Just return our QName
-    return fBaseName;
-}
-
-
 XMLElementDecl::CharDataOpts DTDElementDecl::getCharDataOpts() const
 {
     XMLElementDecl::CharDataOpts retVal;
@@ -243,7 +226,6 @@ DTDElementDecl::setContentSpec(ContentSpecNode* toAdopt)
     fContentSpec = toAdopt;
 }
 
-
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Getter methods
 // ---------------------------------------------------------------------------
@@ -287,7 +269,7 @@ void DTDElementDecl::addAttDef(DTDAttDef* const toAdd)
 //  DTDElementDecl: Implementation of the protected virtual interface
 // ---------------------------------------------------------------------------
 XMLCh*
-DTDElementDecl::formatContentModel(const Grammar& grammar) const
+DTDElementDecl::formatContentModel() const
 {
     XMLCh* newValue = 0;
     if (fModelType == Any)
@@ -306,13 +288,13 @@ DTDElementDecl::formatContentModel(const Grammar& grammar) const
         //  will expand to handle the more pathological ones.
         //
         XMLBuffer bufFmt;
-        fContentSpec->formatSpec(grammar, bufFmt);
+        getContentSpec()->formatSpec(bufFmt);
         newValue = XMLString::replicate(bufFmt.getRawBuffer());
     }
     return newValue;
 }
 
-XMLContentModel* DTDElementDecl::makeContentModel(const Grammar* grammar) const
+XMLContentModel* DTDElementDecl::makeContentModel()
 {
     XMLContentModel* cmRet = 0;
     if (fModelType == Mixed)
@@ -321,7 +303,7 @@ XMLContentModel* DTDElementDecl::makeContentModel(const Grammar* grammar) const
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(*this);
+        cmRet = new MixedContentModel(true, this);
     }
      else if (fModelType == Children)
     {
@@ -332,7 +314,7 @@ XMLContentModel* DTDElementDecl::makeContentModel(const Grammar* grammar) const
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel(grammar);
+        cmRet = createChildModel();
     }
      else
     {
@@ -346,10 +328,10 @@ XMLContentModel* DTDElementDecl::makeContentModel(const Grammar* grammar) const
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
+XMLContentModel* DTDElementDecl::createChildModel()
 {
     // Get the content spec node of the element
-    const ContentSpecNode* specNode = getContentSpec();
+    ContentSpecNode* specNode = getContentSpec();
 
     if(!specNode)
         ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
@@ -358,7 +340,7 @@ XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
     //  Do a sanity check that the node is does not have a PCDATA id. Since,
     //  if it was, it should have already gotten taken by the Mixed model.
     //
-    if (specNode->getElemId() == XMLElementDecl::fgPCDataElemId)
+    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
         ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
 
     //
@@ -370,8 +352,9 @@ XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
         // Create a simple content model
         return new SimpleContentModel
         (
-            specNode->getElemId()
-            , XMLElementDecl::fgInvalidElemId
+            true
+            , specNode->getElement()
+            , 0
             , ContentSpecNode::Leaf
         );
     }
@@ -387,8 +370,9 @@ XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
         {
             return new SimpleContentModel
             (
-                specNode->getFirst()->getElemId()
-                , specNode->getSecond()->getElemId()
+                true
+                , specNode->getFirst()->getElement()
+                , specNode->getSecond()->getElement()
                 , specNode->getType()
             );
         }
@@ -406,8 +390,9 @@ XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
         {
             return new SimpleContentModel
             (
-                specNode->getFirst()->getElemId()
-                , XMLElementDecl::fgInvalidElemId
+                true
+                , specNode->getFirst()->getElement()
+                , 0
                 , specNode->getType()
             );
         }
@@ -418,7 +403,7 @@ XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
     }
 
     // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(*this);
+    return new DFAContentModel(true, this);
 }
 
 

@@ -69,8 +69,8 @@
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Public, static data
 // ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId  = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId   = 0xFFFFFFFF;
+const unsigned int  XMLElementDecl::fgInvalidElemId    = 0xFFFFFFFE;
+const unsigned int  XMLElementDecl::fgPCDataElemId     = 0xFFFFFFFF;
 const XMLCh         XMLElementDecl::fgPCDataElemName[] =
 {
         chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
@@ -84,6 +84,7 @@ const XMLCh         XMLElementDecl::fgPCDataElemName[] =
 // ---------------------------------------------------------------------------
 XMLElementDecl::~XMLElementDecl()
 {
+    delete fElementName;
     delete fContentModel;
     delete [] fFormattedModel;
 }
@@ -92,7 +93,7 @@ XMLElementDecl::~XMLElementDecl()
 //  XMLElementDecl: Miscellaneous
 // ---------------------------------------------------------------------------
 const XMLCh*
-XMLElementDecl::getFormattedContentModel(const Grammar& grammar) const
+XMLElementDecl::getFormattedContentModel() const
 {
     //
     //  If its not already built, then call the protected virtual method
@@ -103,18 +104,45 @@ XMLElementDecl::getFormattedContentModel(const Grammar& grammar) const
     //  cast off the const-ness.
     //
     if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel(grammar);
+        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel();
 
     return fFormattedModel;
 }
 
+// ---------------------------------------------------------------------------
+//  XMLElementDecl: Setter Methods
+// ---------------------------------------------------------------------------
+void
+XMLElementDecl::setElementName(const XMLCh* const       prefix
+                            , const XMLCh* const        localPart
+                            , const int                 uriId )
+{
+   delete fElementName;
+   fElementName = new QName(prefix, localPart, uriId);
+}
+
+void
+XMLElementDecl::setElementName(const XMLCh* const       rawName
+                            , const int                 uriId )
+{
+   delete fElementName;
+   fElementName = new QName(rawName, uriId);
+}
+
+void
+XMLElementDecl::setElementName(QName* const    elementName)
+{
+   delete fElementName;
+   fElementName = new QName(elementName);
+}
 
 // ---------------------------------------------------------------------------
 //  ElementDecl: Hidden constructors
 // ---------------------------------------------------------------------------
 XMLElementDecl::XMLElementDecl() :
 
-    fContentModel(0)
+    fElementName(0)
+    , fContentModel(0)
     , fCreateReason(XMLElementDecl::NoReason)
     , fFormattedModel(0)
     , fId(XMLElementDecl::fgInvalidElemId)

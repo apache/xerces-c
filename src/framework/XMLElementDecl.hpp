@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/04/19 18:16:52  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.12  2001/03/21 21:56:02  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -109,7 +112,6 @@
 #include <framework/XMLContentModel.hpp>
 
 class ContentSpecNode;
-class Grammar;
 
 /**
  *  This class defines the core information of an element declaration. Each
@@ -255,25 +257,6 @@ class XMLPARSER_EXPORT XMLElementDecl
       */
     virtual XMLAttDefList& getAttDefList() const = 0;
 
-    /** Get the base name of this element type.
-      *
-      * The derived class should return the base name part of the element's
-      * name. This is the same regardless of whether namespaces are enabled or
-      * not.
-      *
-      * @return A const pointer to the base name of the element decl.
-      */
-    virtual const XMLCh* getBaseName() const = 0;
-    virtual XMLCh* getBaseName() = 0;
-
-    /** Get the URI id of this element type.
-      *
-      * The derived class should return the URI Id of this element.
-      *
-      * @return The URI Id of the element decl, -1 is not applicable.
-      */
-    virtual const int getURI() const = 0;
-
     /** The character data options for this element type
       *
       * The derived class should return an appropriate character data opts value
@@ -282,16 +265,6 @@ class XMLPARSER_EXPORT XMLElementDecl
       * validation of character data.
       */
     virtual CharDataOpts getCharDataOpts() const = 0;
-
-    /** Get the full name of this element type.
-      *
-      * The derived class should reutrn the full name of the element. If namespaces
-      * are not enabled, then this is the qName. Else it is the {uri}baseName
-      * form. For those validators that always require namespace processing, it
-      * will always be in the latter form because namespace processing will always
-      * be on.
-      */
-    virtual const XMLCh* getFullName() const = 0;
 
     /** Indicate whether this element type defined any attributes
       *
@@ -309,7 +282,6 @@ class XMLPARSER_EXPORT XMLElementDecl
       * one as declared yet or not.
       */
     virtual bool resetDefs() = 0;
-
 
     /** Get a pointer to the content spec node
       *
@@ -348,6 +320,44 @@ class XMLPARSER_EXPORT XMLElementDecl
     /** @name Getter methods */
     //@{
 
+    /** Get the base name of this element type.
+      *
+      * Return the base name part of the element's name. This is the
+      * same regardless of whether namespaces are enabled or not.
+      *
+      * @return A const pointer to the base name of the element decl.
+      */
+    const XMLCh* getBaseName() const;
+    XMLCh* getBaseName();
+
+    /** Get the URI id of this element type.
+      *
+      * Return the URI Id of this element.
+      *
+      * @return The URI Id of the element decl, or the emptyNamespaceId if not applicable.
+      */
+    const int getURI() const;
+
+    /** Get the QName of this element type.
+      *
+      * Return the QName part of the element's name.  This is the
+      * same regardless of whether namespaces are enabled or not.
+      *
+      * @return A const pointer to the QName of the element decl.
+      */
+    const QName* getElementName() const;
+    QName* getElementName();
+
+    /** Get the full name of this element type.
+      *
+      * Return the full name of the element. If namespaces
+      * are not enabled, then this is the qName. Else it is the {uri}baseName
+      * form. For those validators that always require namespace processing, it
+      * will always be in the latter form because namespace processing will always
+      * be on.
+      */
+    const XMLCh* getFullName() const;
+
     /** Get a pointer to the abstract content model
       *
       * This method will return a const pointer to the content model object
@@ -359,14 +369,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return A const pointer to the element's content model, via the basic
       * abstract content model type.
       */
-    const XMLContentModel* getContentModel(const Grammar* grammar=0) const;
-
-    /** Get a pointer to the abstract content model
-      *
-      * This method is identical to the previous one, except that it is non
-      * const.
-      */
-    XMLContentModel* getContentModel(const Grammar* grammar=0);
+    XMLContentModel* getContentModel();
 
     /** Get the create reason for this element type
       *
@@ -422,6 +425,42 @@ class XMLPARSER_EXPORT XMLElementDecl
 
     /** @name Setter methods */
     //@{
+
+    /** Set the element name object for this element type
+      *
+      * This method will adopt the based content spec node object. This is called
+      * by the actual validator which is parsing its DTD or Schema or whatever
+      * and store it on the element decl object via this method.
+      *
+      * @param  prefix       Prefix of the element
+      * @param  localPart    Base Name of the element
+      * @param  uriId        The uriId of the element
+      */
+      void setElementName(const XMLCh* const       prefix
+                        , const XMLCh* const       localPart
+                        , const int                uriId );
+
+    /** Set the element name object for this element type
+      *
+      * This method will adopt the based content spec node object. This is called
+      * by the actual validator which is parsing its DTD or Schema or whatever
+      * and store it on the element decl object via this method.
+      *
+      * @param  rawName      Full Name of the element
+      * @param  uriId        The uriId of the element
+      */
+      void setElementName(const XMLCh* const    rawName
+                        , const int             uriId );
+
+    /** Set the element name object for this element type
+      *
+      * This method will adopt the based content spec node object. This is called
+      * by the actual validator which is parsing its DTD or Schema or whatever
+      * and store it on the element decl object via this method.
+      *
+      * @param  elementName  QName of the element
+      */
+      void setElementName(QName* const    elementName);
 
     /** Set the content model object for this element type
       *
@@ -480,21 +519,11 @@ class XMLPARSER_EXPORT XMLElementDecl
       * or reformatting may occur. But, it will be a technically accurate
       * representation of the original content model.
       *
-      * The format depends upon the grammar, since content models are
-      * expressed differently in different structural description languages.
-      *
-      * @param  grammar   The grammar which owns this object, and which
-      *                   therefore has the information required to format
-      *                   the content model.
-      *
       * @return A pointer to an internal buffer which contains the formatted
       *         content model. The caller does not own this buffer and should
       *         copy it if it needs to be kept around.
       */
-    const XMLCh* getFormattedContentModel
-    (
-        const   Grammar& grammar
-    )   const;
+    const XMLCh* getFormattedContentModel ()   const;
 
     //@}
 
@@ -509,11 +538,8 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel(const Grammar* grammar=0) const = 0;
-    virtual XMLCh* formatContentModel
-    (
-        const   Grammar&   grammar
-    )   const = 0;
+    virtual XMLContentModel* makeContentModel() = 0;
+    virtual XMLCh* formatContentModel ()   const = 0;
 
 
 private :
@@ -526,6 +552,9 @@ private :
 
     // -----------------------------------------------------------------------
     //  Data members
+    //
+    //  fElementName
+    //      This is the name of the element decl.
     //
     //  fContentModel
     //      The content model object for this element. It is stored here via
@@ -553,6 +582,7 @@ private :
     //  fExternalElement
     //      This flag indicates whether or the element was declared externally.
     // -----------------------------------------------------------------------
+    QName*              fElementName;
     XMLContentModel*    fContentModel;
     CreateReasons       fCreateReason;
     XMLCh*              fFormattedModel;
@@ -564,18 +594,40 @@ private :
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Getter methods
 // ---------------------------------------------------------------------------
-inline XMLContentModel* XMLElementDecl::getContentModel(const Grammar* grammar)
+inline const XMLCh* XMLElementDecl::getBaseName() const
 {
-    if (!fContentModel)
-        fContentModel = makeContentModel(grammar);
-    return fContentModel;
+    return fElementName->getLocalPart();
 }
 
-inline const XMLContentModel* XMLElementDecl::getContentModel(const Grammar* grammar) const
+inline XMLCh* XMLElementDecl::getBaseName()
 {
-    // Fault in the content model (which requires a cast off of const)
+    return fElementName->getLocalPart();
+}
+
+inline const int XMLElementDecl::getURI() const
+{
+    return fElementName->getURI();
+}
+
+inline const QName* XMLElementDecl::getElementName() const
+{
+    return fElementName;
+}
+
+inline QName* XMLElementDecl::getElementName()
+{
+    return fElementName;
+}
+
+inline const XMLCh* XMLElementDecl::getFullName() const
+{
+    return fElementName->getRawName();
+}
+
+inline XMLContentModel* XMLElementDecl::getContentModel()
+{
     if (!fContentModel)
-        ((XMLElementDecl*)this)->fContentModel = makeContentModel(grammar);
+        fContentModel = makeContentModel();
     return fContentModel;
 }
 

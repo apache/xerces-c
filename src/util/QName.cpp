@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/04/19 18:17:08  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.4  2001/03/21 21:56:11  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -89,7 +92,7 @@ QName::QName() :
 
 QName::QName(const XMLCh* const        prefix
            , const XMLCh* const        localPart
-           , const int                 uriId
+           , const unsigned int        uriId
             ) :
       fPrefix(0)
     , fPrefixBufSz(0)
@@ -115,7 +118,7 @@ QName::QName(const XMLCh* const        prefix
 }
 
 QName::QName(const XMLCh* const        rawName
-           , const int                 uriId
+           , const unsigned int        uriId
             ) :
       fPrefix(0)
     , fPrefixBufSz(0)
@@ -148,23 +151,28 @@ QName::~QName()
 // ---------------------------------------------------------------------------
 //  QName: Copy Constructors
 // ---------------------------------------------------------------------------
-QName::QName(const QName& qname)
+QName::QName(QName* const qname) :
+      fPrefix(0)
+    , fPrefixBufSz(0)
+    , fLocalPart(0)
+    , fLocalPartBufSz(0)
+    , fRawName(0)
+    , fRawNameBufSz(0)
+    , fURIId(0)
 {
     unsigned int newLen;
 
-    newLen = XMLString::stringLen(qname.getLocalPart());
+    newLen = XMLString::stringLen(qname->getLocalPart());
     fLocalPartBufSz = newLen + 8;
     fLocalPart = new XMLCh[fLocalPartBufSz + 1];
-    XMLString::moveChars(fLocalPart, qname.getLocalPart(), newLen + 1);
+    XMLString::moveChars(fLocalPart, qname->getLocalPart(), newLen + 1);
 
-    newLen = XMLString::stringLen(qname.getPrefix());
+    newLen = XMLString::stringLen(qname->getPrefix());
     fPrefixBufSz = newLen + 8;
     fPrefix = new XMLCh[fPrefixBufSz + 1];
-    XMLString::moveChars(fPrefix, qname.getPrefix(), newLen + 1);
+    XMLString::moveChars(fPrefix, qname->getPrefix(), newLen + 1);
 
-    *fRawName = 0;
-
-    fURIId = qname.getURI();
+    fURIId = qname->getURI();
 }
 
 // ---------------------------------------------------------------------------
@@ -277,7 +285,7 @@ XMLCh* QName::getRawName()
 // ---------------------------------------------------------------------------
 void QName::setName(const XMLCh* const    prefix
                   , const XMLCh* const    localPart
-						, const int             uriId)
+						, const unsigned int    uriId)
 {
     setPrefix(prefix);
     setLocalPart(localPart);
@@ -291,7 +299,7 @@ void QName::setName(const XMLCh* const    prefix
 }
 
 void QName::setName(const XMLCh* const    rawName
-						, const int             uriId)
+						, const unsigned int    uriId)
 {
     //set the rawName
     unsigned int newLen;
@@ -369,6 +377,13 @@ void QName::setLocalPart(const XMLCh* localPart)
         fLocalPart = new XMLCh[fLocalPartBufSz + 1];
     }
     XMLString::moveChars(fLocalPart, localPart, newLen + 1);
+}
+
+void QName::setValues(const QName& qname)
+{
+    setPrefix(qname.getPrefix());
+    setLocalPart(qname.getLocalPart());
+    setURI(qname.getURI());
 }
 
 // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/04/19 18:16:57  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.8  2001/02/16 17:58:02  tng
  * use EmptyNamespaceId for attribute, GlobalNamespaceId for element.
  *
@@ -105,7 +108,6 @@
 ElemStack::ElemStack() :
 
     fEmptyNamespaceId(0)
-    , fGlobalNamespaceId(0)
     , fGlobalPoolId(0)
     , fStack(0)
     , fStackCapacity(32)
@@ -134,7 +136,7 @@ ElemStack::~ElemStack()
             break;
 
         // Delete the row for this entry, then delete the row structure
-        delete [] fStack[stackInd]->fChildIds;
+        delete [] fStack[stackInd]->fChildren;
         delete [] fStack[stackInd]->fMap;
         delete fStack[stackInd];
     }
@@ -158,7 +160,7 @@ unsigned int ElemStack::addLevel()
     {
         fStack[fStackTop] = new StackElem;
         fStack[fStackTop]->fChildCapacity = 0;
-        fStack[fStackTop]->fChildIds = 0;
+        fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
@@ -188,7 +190,7 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     {
         fStack[fStackTop] = new StackElem;
         fStack[fStackTop]->fChildCapacity = 0;
-        fStack[fStackTop]->fChildIds = 0;
+        fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
@@ -248,7 +250,7 @@ ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
 // ---------------------------------------------------------------------------
 //  ElemStack: Stack top access
 // ---------------------------------------------------------------------------
-unsigned int ElemStack::addChild(const unsigned int childId, const bool toParent)
+unsigned int ElemStack::addChild(QName* const child, const bool toParent)
 {
     if (!fStackTop)
         ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
@@ -271,7 +273,7 @@ unsigned int ElemStack::addChild(const unsigned int childId, const bool toParent
         const unsigned int newCapacity = curRow->fChildCapacity ?
                                          (unsigned int)(curRow->fChildCapacity * 1.25) :
                                          32;
-        unsigned int* newRow = new unsigned int[newCapacity];
+        QName** newRow = new QName*[newCapacity];
 
         //
         //  Copy over the old contents. We don't have to initialize the new
@@ -284,22 +286,19 @@ unsigned int ElemStack::addChild(const unsigned int childId, const bool toParent
         //
         if (curRow->fChildCount)
         {
-            memcpy
-            (
-                newRow
-                , curRow->fChildIds
-                , curRow->fChildCapacity * sizeof(unsigned int)
-            );
+             unsigned int index = 0;
+             for (; index < curRow->fChildCount; index++)
+                 newRow[index] = curRow->fChildren[index];
         }
 
         // Clean up the old children and store the new info
-        delete [] curRow->fChildIds;
-        curRow->fChildIds = newRow;
+        delete [] curRow->fChildren;
+        curRow->fChildren = newRow;
         curRow->fChildCapacity = newCapacity;
     }
 
     // Add this id to the end of the row's child id array and bump the count
-    curRow->fChildIds[curRow->fChildCount++] = childId;
+    curRow->fChildren[curRow->fChildCount++] = new QName(child);
 
     // Return the level of the index we just filled (before the bump)
     return curRow->fChildCount - 1;
@@ -342,7 +341,7 @@ void ElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
     //
     curRow->fMap[curRow->fMapCount].fPrefId = prefId;
     if ((prefId == fGlobalPoolId) && (uriId == fEmptyNamespaceId))
-        curRow->fMap[curRow->fMapCount].fURIId = fGlobalNamespaceId;
+        curRow->fMap[curRow->fMapCount].fURIId = fEmptyNamespaceId;
     else
         curRow->fMap[curRow->fMapCount].fURIId = uriId;
 
@@ -414,7 +413,7 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
     //  would have not gotten here.
     //
     if (!*prefixToMap)
-        return fGlobalNamespaceId;
+        return fEmptyNamespaceId;
 
     // Oh well, don't have a clue so return the unknown id
     unknown = true;
@@ -426,7 +425,6 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
 //  ElemStack: Miscellaneous methods
 // ---------------------------------------------------------------------------
 void ElemStack::reset(  const   unsigned int    emptyId
-                        , const unsigned int    globalId
                         , const unsigned int    unknownId
                         , const unsigned int    xmlId
                         , const unsigned int    xmlNSId)
@@ -442,7 +440,6 @@ void ElemStack::reset(  const   unsigned int    emptyId
 
     // And store the new special URI ids
     fEmptyNamespaceId = emptyId;
-    fGlobalNamespaceId = globalId;
     fUnknownNamespaceId = unknownId;
     fXMLNamespaceId = xmlId;
     fXMLNSNamespaceId = xmlNSId;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/04/19 18:17:27  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.2  2001/02/16 14:58:57  tng
  * Schema: Update Makefile, configure files, project files, and include path in
  * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
@@ -98,7 +101,7 @@
 
 //
 //  This class represents a leaf in the content spec node tree of an
-//  element's content model. It just has an element id and a position value,
+//  element's content model. It just has an element qname and a position value,
 //  the latter of which is used during the building of a DFA.
 //
 class CMLeaf : public CMNode
@@ -109,7 +112,7 @@ public :
     // -----------------------------------------------------------------------
     CMLeaf
     (
-        const   unsigned int    elemId
+          QName* const          element
         , const unsigned int    position = ~0
     );
     ~CMLeaf();
@@ -118,7 +121,8 @@ public :
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getId() const;
+    QName* getElement();
+    const QName* getElement() const;
     unsigned int getPosition() const;
 
 
@@ -146,15 +150,15 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fElemId
-    //      This is the element id of the element that this leaf represents.
+    //  fElement
+    //      This is the element that this leaf represents.
     //
     //  fPosition
     //      Part of the algorithm to convert a regex directly to a DFA
     //      numbers each leaf sequentially. If its -1, that means its an
     //      epsilon node. All others are non-epsilon positions.
     // -----------------------------------------------------------------------
-    unsigned int    fElemId;
+    QName*          fElement;
     unsigned int    fPosition;
 };
 
@@ -162,25 +166,35 @@ private :
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
-inline CMLeaf::CMLeaf(  const   unsigned int    elemId
+inline CMLeaf::CMLeaf(    QName* const          element
                         , const unsigned int    position) :
     CMNode(ContentSpecNode::Leaf)
-    , fElemId(elemId)
+    , fElement(0)
     , fPosition(position)
 {
+    if (!element)
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    else
+        fElement = new QName(element);
 }
 
 inline CMLeaf::~CMLeaf()
 {
+    delete fElement;
 }
 
 
 // ---------------------------------------------------------------------------
 //  Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int CMLeaf::getId() const
+inline QName* CMLeaf::getElement()
 {
-    return fElemId;
+    return fElement;
+}
+
+inline const QName* CMLeaf::getElement() const
+{
+    return fElement;
 }
 
 inline unsigned int CMLeaf::getPosition() const

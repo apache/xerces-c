@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/04/19 18:17:30  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.5  2001/03/21 21:56:27  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -122,29 +125,26 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DFAContentModel(const XMLElementDecl&  elemDecl
-                  , Grammar*         grammar =0
-                  , bool                   dtd = true);
+    DFAContentModel(const bool             dtd
+                  , XMLElementDecl* const  elemDecl);
     virtual ~DFAContentModel();
 
 
     // -----------------------------------------------------------------------
     //  Implementation of the virtual content model interface
     // -----------------------------------------------------------------------
-    virtual bool getIsAmbiguous() const;
-
     virtual int validateContent
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     ) const;
 
     virtual int validateContentSpecial
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
@@ -164,10 +164,9 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    void buildDFA();
-    CMNode* buildSyntaxTree(const ContentSpecNode* const curNode);
+    void buildDFA(ContentSpecNode* const curNode);
+    CMNode* buildSyntaxTree(ContentSpecNode* const curNode);
     void calcFollowList(CMNode* const curNode);
-    bool isAmbiguous() const;
     unsigned int* makeDefStateList() const;
     int postTreeBuildInit
     (
@@ -179,11 +178,6 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fElemDecl
-    //      The element decl object of the element that this is the content
-    //      model for. Its just stored here to avoid passing it around all
-    //      over the place while building up the DFA.
-    //
     //  fElemMap
     //  fElemMapSize
     //      This is the map of unique input symbol elements to indices into
@@ -191,7 +185,7 @@ private :
     //      of the built DFA information that must be kept around to do the
     //      actual validation.
     //
-	//  fElemMapType
+    //  fElemMapType
     //      This is a map of whether the element map contains information
     //      related to ANY models.
     //
@@ -223,11 +217,6 @@ private :
     //      does not have to be passed all around.) Once the DFA is built,
     //      this is no longer required so its deleted.
     //
-    //  fIsAmbiguous
-    //      This flag is set during construction if the content model is
-    //      ambiguous. This will be used by the scanner to report an error
-    //      and is available for later perusal if required.
-    //
     //  fLeafCount
     //      The count of leaf nodes. This is an important number that set some
     //      limits on the sizes of data structures in the DFA process.
@@ -238,13 +227,8 @@ private :
     //      pointed to by fHeadNode, so we don't have to clean them up, just
     //      the actually leaf list array itself needs cleanup.
     //
-	//  fLeafListType
+    //  fLeafListType
     //      Array mapping ANY types to the leaf list.
-	//
-    //  fSpecNode
-    //      The content spec node for the element that this object represents
-    //      the content of. This info is needed a good bit so we get it once
-    //      and keep it. We don't own it, we just reference it.
     //
     //  fTransTable
     //  fTransTableSize
@@ -262,15 +246,11 @@ private :
     //      fTransTableSize is the number of valid entries in the transition
     //      table, and in the other related tables such as fFinalStateFlags.
     //
-    //  fDTD;
+    //  fDTD
     //      Boolean to allow DTDs to validate even with namespace support.
     //
-    //  fGrammar
-    //      A pointer to the Grammar
-    //
     // -----------------------------------------------------------------------
-    const XMLElementDecl&   fElemDecl;
-    unsigned int*           fElemMap;
+    QName**                 fElemMap;
     ContentSpecNode::NodeTypes  *fElemMapType;
     unsigned int            fElemMapSize;
     bool                    fEmptyOk;
@@ -278,22 +258,13 @@ private :
     bool*                   fFinalStateFlags;
     CMStateSet**            fFollowList;
     CMNode*                 fHeadNode;
-    bool                    fIsAmbiguous;
     unsigned int            fLeafCount;
     CMLeaf**                fLeafList;
     ContentSpecNode::NodeTypes  *fLeafListType;
-    const ContentSpecNode*  fSpecNode;
     unsigned int**          fTransTable;
     unsigned int            fTransTableSize;
     bool                    fDTD;
     ContentLeafNameTypeVector *fLeafNameTypeVector;
-    Grammar*                fGrammar;
 };
-
-
-inline bool DFAContentModel::getIsAmbiguous() const
-{
-    return fIsAmbiguous;
-}
 
 #endif

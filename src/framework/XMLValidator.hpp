@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.11  2001/04/19 18:16:53  tng
+  * Schema: SchemaValidator update, and use QName in Content Model
+  *
   * Revision 1.10  2001/03/21 21:56:03  tng
   * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
   *
@@ -169,7 +172,7 @@ public:
       * @param  elemId      The pool id of the element whose content is to be
       *                     checked.
       *
-      * @param  childIds    An array of element ids which represent the elements
+      * @param  children    An array of element QName which represent the elements
       *                     found within the parent element, i.e. the content
       *                     to be validated.
       *
@@ -179,7 +182,7 @@ public:
     virtual int checkContent
     (
         const   unsigned int    elemId
-        , const unsigned int*   childIds
+        , QName** const         children
         , const unsigned int    childCount
     ) = 0;
 
@@ -255,8 +258,12 @@ public:
     /**
       * Retrieve the Grammar used
       */
-    virtual Grammar* getGrammar(const XMLCh* uri=0) =0;
-    virtual Grammar* getGrammar(const char* uri) =0;
+    virtual Grammar* getGrammar() =0;
+
+    /**
+      * Set the Grammar
+      */
+    virtual void setGrammar(Grammar* aGrammar) =0;
 
 
     //@}

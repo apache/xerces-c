@@ -136,27 +136,6 @@
             <Message Id="SysException" Text="A system exception occured during processing"/>
             <Message Id="XMLException" Text="An exception occured! Type:{0}, Message:{1}"/>
             <Message Id="UnexpectedEOF" Text="Unexpected end of file exception. Message: {0}"/>
-            <Message Id="NoValidatorFor" Text="No validator for datatype {0}"/>
-            <Message Id="IncorrectDatatype" Text="Incorrect datatype: {0}"/>
-            <Message Id="NotADatatype" Text="{0} is not a datatype."/>
-            <Message Id="TextOnlyContentWithType" Text="The content attribute must be 'textOnly' if you specify a type attribute."/>
-            <Message Id="FeatureUnsupported" Text="{0} is unsupported"/>
-            <Message Id="NestedOnlyInElemOnly" Text="Nested Element decls only allowed in elementOnly content"/>
-            <Message Id="EltRefOnlyInMixedElemOnly" Text="Element references only allowed in mixed or elementOnly content"/>
-            <Message Id="OnlyInEltContent" Text="{0} only allowed in elementOnly content."/>
-            <Message Id="OrderIsAll" Text="{0} not allowed if the order is all."/>
-            <Message Id="DatatypeWithType" Text="Datatype qualifiers can only be used if you specify a type attribute."/>
-            <Message Id="DatatypeQualUnsupported" Text="The datatype qualifier {0} is not supported."/>
-            <Message Id="GroupContentRestricted" Text="Error: {0} content must be one of element, group, modelGroupRef. Saw {1}"/>
-            <Message Id="UnknownBaseDatatype" Text="Unknown base type {0} for type {1}."/>
-            <Message Id="OneOfTypeRefArchRef" Text="Can only have one of type and ref attributes."/>
-            <Message Id="NoContentForRef" Text="Cannot have child content for an element declaration that has a ref attribute"/>
-            <Message Id="IncorrectDefaultType" Text="Incorrect type for {0}'s default value: {1}"/>
-            <Message Id="IllegalAttContent" Text="Illegal content {0} in attribute group"/>
-            <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/>
-            <Message Id="DatatypeError" Text="Datatype error: {0}."/>
-            <Message Id="TypeAlreadySet" Text="The type of the element has already been declared."/>
-            <Message Id="GenericError" Text="Schema error during parsing"/>
             <Message Id="UnexpectedError" Text="UnexpectedError"/>
             <Message Id="BadSchemaLocation" Text="The schemaLocation attribute does not contain pairs of values."/>
         </Error>
@@ -188,6 +167,28 @@
             <Message Id="NoMultipleValues" Text="Attribute '{0}' does not support multiple values"/>
             <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'"/>
             <Message Id="RepElemInMixed" Text="Element types cannot be duplicated in Mixed content models"/>
+            <Message Id="NoValidatorFor" Text="No validator for datatype {0}"/>
+            <Message Id="IncorrectDatatype" Text="Incorrect datatype: {0}"/>
+            <Message Id="NotADatatype" Text="{0} is not a datatype."/>
+            <Message Id="TextOnlyContentWithType" Text="The content attribute must be 'textOnly' if you specify a type attribute."/>
+            <Message Id="FeatureUnsupported" Text="{0} is unsupported"/>
+            <Message Id="NestedOnlyInElemOnly" Text="Nested Element decls only allowed in elementOnly content"/>
+            <Message Id="EltRefOnlyInMixedElemOnly" Text="Element references only allowed in mixed or elementOnly content"/>
+            <Message Id="OnlyInEltContent" Text="{0} only allowed in elementOnly content."/>
+            <Message Id="OrderIsAll" Text="{0} not allowed if the order is all."/>
+            <Message Id="DatatypeWithType" Text="Datatype qualifiers can only be used if you specify a type attribute."/>
+            <Message Id="DatatypeQualUnsupported" Text="The datatype qualifier {0} is not supported."/>
+            <Message Id="GroupContentRestricted" Text="Error: {0} content must be one of element, group, modelGroupRef. Saw {1}"/>
+            <Message Id="UnknownBaseDatatype" Text="Unknown base type {0} for type {1}."/>
+            <Message Id="OneOfTypeRefArchRef" Text="Can only have one of type and ref attributes."/>
+            <Message Id="NoContentForRef" Text="Cannot have child content for an element declaration that has a ref attribute"/>
+            <Message Id="IncorrectDefaultType" Text="Incorrect type for {0}'s default value: {1}"/>
+            <Message Id="IllegalAttContent" Text="Illegal content {0} in attribute group"/>
+            <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/>
+            <Message Id="DatatypeError" Text="Datatype error: Type:{0}, Message:{1}."/>
+            <Message Id="SchemaError" Text="Schema error: Type:{0}, Message:{1}"/>
+            <Message Id="TypeAlreadySet" Text="The type of the element has already been declared."/>
+            <Message Id="ProhibitedAttributePresent" Text="Prohibited Attribute is found."/>
             <Message Id="IllegalXMLSpace" Text="Illegal xml:space declaration."/>
             <Message Id="NotBoolean" Text="{0} is not a boolean."/>
             <Message Id="NotDecimal" Text="{0} is not a decimal."/>
@@ -208,7 +209,9 @@
             <Message Id="NotFloat" Text="{0} is not a float."/>
             <Message Id="SchemaRootError" Text="Can't get back Schema document's root element {0}."/>
             <Message Id="WrongTargetNamespace" Text="Schema in {0} has a different target namespace from the one specified in the instance document {1}."/>
-
+            <Message Id="SimpleTypeHasChild" Text="In element {0}: Can not have element children within a simple type content."/>
+            <Message Id="NoDatatypeValidatorForSimpleType" Text="This element {0} has a simpletype but no datatypevalidator was found."/>
+            <Message Id="GrammarNotFound" Text="There is no Grammar for uri: {0}."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -313,7 +316,7 @@
             <Message Id="URL_BadPortField" Text="The port field must be a 16 bit decimal number"/>
             <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
-            <Message Id="Val_CantHaveIntSS" Text="When reusing the validator, no internal subset is allowed"/>
+            <Message Id="Val_CantHaveIntSS" Text="When reusing the Grammar, no internal subset is allowed"/>
             <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
             <Message Id="Parser_Parse1" Text="Wrong character"/>
             <Message Id="Parser_Parse2" Text="Invalid reference number"/>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/04/19 18:17:39  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.2  2001/03/30 16:35:19  tng
  * Schema: Whitespace normalization.
  *
@@ -68,9 +71,10 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/KVStringPair.hpp>
-#include <validators/schema/SchemaValidator.hpp>
-#include <framework/XMLBuffer.hpp>
 #include <internal/XMLReader.hpp>
+#include <internal/XMLScanner.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
+#include <validators/schema/SchemaValidator.hpp>
 
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Constructors and Destructor
@@ -79,6 +83,8 @@ SchemaValidator::SchemaValidator(XMLErrorReporter* const errReporter) :
 
     XMLValidator(errReporter)
     , fGrammarResolver(0)
+    , fTrailing(false)
+    , fBufferDatatype(0)
 {
 }
 
@@ -89,11 +95,91 @@ SchemaValidator::~SchemaValidator()
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-int SchemaValidator::checkContent (const   unsigned int    elemId
-                                 , const unsigned int*   childIds
+int SchemaValidator::checkContent (const   unsigned int  elemId
+                                 , QName** const         children
                                  , const unsigned int    childCount)
 {
-	return 0;
+    //
+    //  Look up the element id in our element decl pool. This will get us
+    //  the element decl in our own way of looking at them.
+    //
+    SchemaElementDecl* elemDecl = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(elemId);
+    if (!elemDecl)
+        ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
+
+    //
+    //  Get the content spec type of this element. This will tell us what
+    //  to do to validate it.
+    //
+    const SchemaElementDecl::ModelTypes modelType = elemDecl->getModelType();
+
+    if (modelType == SchemaElementDecl::Empty)
+    {
+        //
+        //  We can do this one here. It cannot have any children. If it does
+        //  we return 0 as the index of the first bad child.
+        //
+        if (childCount)
+            return 0;
+    }
+     else if (modelType == SchemaElementDecl::Any)
+    {
+        // We pass no judgement on this one, anything goes
+    }
+     else if ((modelType == SchemaElementDecl::Mixed)
+          ||  (modelType == SchemaElementDecl::Children))
+    {
+        // Get the element's content model or fault it in
+        const XMLContentModel* elemCM = elemDecl->getContentModel();
+
+        // Ask it to validate and return its return
+        int result = elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId());
+        if (result != -1) {
+//            SubstitutionGroupComparator comparator(fGrammarResolver, fStringPool);
+//            elemCM->setSubstitutionGroupComparator(comparator);
+            result = elemCM->validateContentSpecial(children, childCount, getScanner()->getEmptyNamespaceId());
+        }
+        return result;
+    }
+     else if (modelType == SchemaElementDecl::Simple)
+    {
+         if (childCount > 0) {
+             emitError(XMLValid::SimpleTypeHasChild, elemDecl->getFullName());
+         } else {
+             try {
+                 if (!fCurrentDV) {
+                     //no character data
+                     fCurrentDV = elemDecl->getDatatypeValidator();
+                 }
+
+                 // If there is xsi:type validator, substitute it.
+                if (!fXsiTypeValidator) {
+                   fCurrentDV = fXsiTypeValidator;
+                   fXsiTypeValidator = 0;
+                }
+                if (!fCurrentDV) {
+                    emitError(XMLValid::NoDatatypeValidatorForSimpleType, elemDecl->getFullName());
+                } else {
+                    XMLCh* value =fDatatypeBuffer.getRawBuffer();
+                    fCurrentDV->validate(value);
+                }
+            } catch (InvalidDatatypeValueException idve) {
+                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+            }
+            fCurrentDV = 0;
+            fBufferDatatype=false;
+            fDatatypeBuffer.reset();
+         }
+    }
+     else
+    {
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMType);
+    }
+
+    fTrailing=false;
+
+    // Went ok, so return success
+    return -1;
 }
 
 bool SchemaValidator::checkRootElement (const   unsigned int    elemId)
@@ -141,7 +227,9 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef& attDef
 void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill)
 {
     fCurrentDV = dV;
-    short fWhiteSpace = fCurrentDV->getWSFacet();
+    short fWhiteSpace = DatatypeValidator::PRESERVE;
+    if (fCurrentDV)
+        fWhiteSpace = fCurrentDV->getWSFacet();
 
     enum States
     {
@@ -160,6 +248,9 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
 
+    if ((fWhiteSpace==DatatypeValidator::COLLAPSE) && fTrailing)
+        toFill.append(chSpace);
+
     while (*srcPtr)
     {
         nextCh = *srcPtr;
@@ -167,6 +258,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         if (fWhiteSpace == DatatypeValidator::PRESERVE)
         {
             // do nothing
+            break;
         }
         else if (fWhiteSpace == DatatypeValidator::REPLACE)
         {
@@ -204,7 +296,15 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         // Add this char to the target buffer
         toFill.append(nextCh);
 
+        // stored the content if we are in simple type element string content
+        if (fBufferDatatype)
+            fDatatypeBuffer.append(nextCh);
+
         // And move up to the next character in the source
         srcPtr++;
     }
+    srcPtr--;
+    nextCh = *srcPtr;
+    if (XMLReader::isWhitespace(nextCh))
+        fTrailing = true;
 }

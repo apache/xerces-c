@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/04/19 18:17:34  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.5  2001/03/21 21:56:29  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -117,7 +120,7 @@
 //  DFA for such a simple check.
 //
 //  NOTE:   Pass the XMLElementDecl::fgPCDataElemId value to represent a
-//          PCData node. Pass XMLElementDecl::fgInvalidElemId for unused ids.
+//          PCData node. Pass XMLElementDecl::fgInvalidElemId for unused element
 //
 class SimpleContentModel : public XMLContentModel
 {
@@ -127,10 +130,10 @@ public :
     // -----------------------------------------------------------------------
     SimpleContentModel
     (
-        const   unsigned int                firstChildId
-        , const unsigned int                secondChildId
-        , const ContentSpecNode::NodeTypes  cmOp
-		, const bool                        dtd=true
+        const bool                        dtd
+      , QName* const                      firstChild
+      , QName* const                      secondChild
+      , const ContentSpecNode::NodeTypes  cmOp
     );
 
     ~SimpleContentModel();
@@ -139,20 +142,18 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the ContentModel virtual interface
     // -----------------------------------------------------------------------
-    virtual bool getIsAmbiguous() const;
-
 	virtual int validateContent
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     ) const;
 
 	virtual int validateContentSpecial
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     ) const;
 
     virtual ContentLeafNameTypeVector *getContentLeafNameTypeVector() const;
@@ -176,7 +177,7 @@ private :
     //
     //  fFirstChild
     //  fSecondChild
-    //      The element idsof the first (and optional second) child node. The
+    //      The first (and optional second) child node. The
     //      operation code tells us whether the second child is used or not.
     //
     //  fOp
@@ -185,16 +186,16 @@ private :
     //      involved (i.e. the children of the operation are always one or
     //      two leafs.)
     //
-	//  fDTD
+    //  fDTD
     //      Boolean to allow DTDs to validate even with namespace support. */
     //
     //  fComparator
     //      this is the EquivClassComparator object */
     // -----------------------------------------------------------------------
-    unsigned int                fFirstChild;
-    unsigned int                fSecondChild;
-    ContentSpecNode::NodeTypes  fOp;
-	bool                        fDTD;
+    QName*                     fFirstChild;
+    QName*                     fSecondChild;
+    ContentSpecNode::NodeTypes fOp;
+    bool                        fDTD;
 #ifdef _feat_1526
     EquivClassComparator       fComparator;
 #endif
@@ -205,20 +206,31 @@ private :
 //  SimpleContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
 inline
-SimpleContentModel::SimpleContentModel( const   unsigned int                firstChildId
-                                        , const unsigned int                secondChildId
-                                        , const ContentSpecNode::NodeTypes  cmOp
-										, const bool                        dtd) :
+SimpleContentModel::SimpleContentModel( const bool                        dtd
+                                      , QName* const                      firstChild
+                                      , QName* const                      secondChild
+                                      , const ContentSpecNode::NodeTypes  cmOp) :
 
-    fFirstChild(firstChildId)
-    , fSecondChild(secondChildId)
+    fFirstChild(0)
+    , fSecondChild(0)
     , fOp(cmOp)
 	, fDTD(dtd)
 {
+    if (firstChild)
+        fFirstChild = new QName(firstChild);
+    else
+        fFirstChild = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+
+    if (secondChild)
+        fSecondChild = new QName(secondChild);
+    else
+        fSecondChild = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline SimpleContentModel::~SimpleContentModel()
 {
+    delete fFirstChild;
+    delete fSecondChild;
 }
 
 #endif

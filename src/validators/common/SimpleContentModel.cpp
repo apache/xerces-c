@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/04/19 18:17:33  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.5  2001/03/21 21:56:29  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -104,29 +107,15 @@
 // ---------------------------------------------------------------------------
 //  SimpleContentModel: Implementation of the ContentModel virtual interface
 // ---------------------------------------------------------------------------
-
-//
-//  For this content model, the only way it can be ambiguous is if it is a
-//  choice and both sides are the same.
-//
-bool SimpleContentModel::getIsAmbiguous() const
-{
-    if (fOp != ContentSpecNode::Choice)
-        return false;
-
-    return fFirstChild == fSecondChild;
-}
-
-
 //
 //  This method is called to validate our content. For this one, its just a
 //  pretty simple 'bull your way through it' test according to what kind of
 //  operation it is for.
 //
 int
-SimpleContentModel::validateContent( const unsigned int*   childIds
-                                  , const unsigned int    childCount
-                                  , const Grammar*        grammar) const
+SimpleContentModel::validateContent(QName** const       children
+                                  , const unsigned int  childCount
+                                  , const unsigned int  emptyNamespaceId) const
 {
     //
     //  According to the type of operation, we do the correct type of
@@ -143,8 +132,18 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
             if (!childCount)
                 return 0;
 
-            if (childIds[0] != fFirstChild)
-                return 0;
+            // If the 0th child is not the right kind, report an error at 0
+            if (fDTD) {
+                if (XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())) {
+                    return 0;
+                }
+            }
+            else {
+                if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                    (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart()))) {
+                    return 0;
+                }
+            }
 
             if (childCount > 1)
                 return 1;
@@ -156,8 +155,20 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
             //  bad. Otherwise, if its one, then the one child must be
             //  of the type we stored.
             //
-            if ((childCount == 1) && (childIds[0] != fFirstChild))
-                return 0;
+            if (childCount == 1) {
+                if (fDTD) {
+                    if (XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())) {
+                            return 0;
+                    }
+                }
+                else {
+                    if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                        (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart()))) {
+                        return 0;
+                    }
+                }
+            }
+
 
             if (childCount > 1)
                 return 1;
@@ -171,10 +182,20 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
             //
             if (childCount > 0)
             {
-                for (index = 0; index < childCount; index++)
-                {
-                    if (childIds[index] != fFirstChild)
-                        return index;
+                if (fDTD) {
+                    for (index = 0; index < childCount; index++) {
+                        if (XMLString::compareString(children[index]->getRawName(), fFirstChild->getRawName())) {
+                            return index;
+                        }
+                    }
+                }
+                else {
+                    for (index = 0; index < childCount; index++) {
+                        if ((children[index]->getURI() != fFirstChild->getURI()) ||
+                            (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart()))) {
+                            return index;
+                        }
+                    }
                 }
             }
             break;
@@ -188,10 +209,20 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
             if (childCount == 0)
                 return 0;
 
-            for (index = 0; index < childCount; index++)
-            {
-                if (childIds[index] != fFirstChild)
-                    return index;
+            if (fDTD) {
+                for (index = 0; index < childCount; index++) {
+                    if (XMLString::compareString(children[index]->getRawName(), fFirstChild->getRawName())) {
+                        return index;
+                    }
+                }
+            }
+            else {
+                for (index = 0; index < childCount; index++) {
+                    if ((children[index]->getURI() != fFirstChild->getURI()) ||
+                        (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart()))) {
+                        return index;
+                    }
+                }
             }
             break;
 
@@ -203,8 +234,20 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
             if (!childCount)
                 return 0;
 
-            if ((childIds[0] != fFirstChild) && (childIds[0] != fSecondChild))
-                return 0;
+            if (fDTD) {
+                if ((XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())) &&
+                    (XMLString::compareString(children[0]->getRawName(), fSecondChild->getRawName()))) {
+                    return 0;
+                }
+            }
+            else {
+                if (((children[0]->getURI() != fFirstChild->getURI()) ||
+                     (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart()))) &&
+                    ((children[0]->getURI() != fSecondChild->getURI()) ||
+                     (XMLString::compareString(children[0]->getLocalPart(), fSecondChild->getLocalPart())))) {
+                    return 0;
+                }
+            }
 
             if (childCount > 1)
                 return 1;
@@ -220,22 +263,34 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
             if (!childCount)
                 return 0;
 
-            // If we have at least one child, its got to match our first
-            if ((childCount >= 1) && (childIds[0] != fFirstChild))
-                return 0;
+            if (childCount == 2) {
+                if (fDTD) {
+                    if (XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())) {
+                        return 0;
+                    }
+                    if (XMLString::compareString(children[1]->getRawName(), fSecondChild->getRawName())) {
+                        return 1;
+                    }
+                }
+                else {
+                    if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                        (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart()))) {
+                        return 0;
+                    }
 
-            // If we hvae at least two children, its got to match our second
-            if ((childCount >= 2) && (childIds[1] != fSecondChild))
-                return 1;
+                    if ((children[1]->getURI() != fSecondChild->getURI()) ||
+                        (XMLString::compareString(children[1]->getLocalPart(), fSecondChild->getLocalPart()))) {
+                        return 1;
+                    }
+                }
+            }
+            else {
+                if (childCount > 2) {
+                    return 2;
+                }
 
-            // If we only had one (and it was valid), then too few children
-            if (childCount == 1)
-                return 1;
-
-            // And finally check for too many children
-            if (childCount > 2)
-                return 2;
-
+                return childCount;
+            }
             break;
 
         default :
@@ -246,19 +301,20 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
 }
 
 int
-SimpleContentModel::validateContentSpecial( const unsigned int*   childIds
-                                          , const unsigned int    childCount
-                                          , const Grammar*        grammar) const
+SimpleContentModel::validateContentSpecial( QName** const       children
+                                          , const unsigned int  childCount
+                                          , const unsigned int  emptyNamespaceId) const
 {
 	return 0;
 }
 
 #ifdef _feat_1526
-int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childIds
-                                            , const unsigned int    childCount) const
+int SimpleContentModel::validateContentSpecial(QName** const        children
+                                            , const unsigned int    childCount
+                                            , const unsigned int    emptyNamespaceId) const
 {
      if (fComparator==0) {
-        return validateContent(childIds, childCout);
+        return validateContent(children, childCout, emptyNamespaceId);
      }
     //
     //  According to the type of operation, we do the correct type of
@@ -275,9 +331,11 @@ int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childId
             if (!childCount)
                 return 0;
 
-            if (childIds[0] != fFirstChild)
-				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild))
-                return 0;
+            if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
+                if (!fComparator.isEquivalentTo(children[0], fFirstChild))
+                   return 0;
+            }
 
             if (childCount > 1)
                 return 1;
@@ -289,9 +347,12 @@ int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childId
             //  bad. Otherwise, if its one, then the one child must be
             //  of the type we stored.
             //
-            if ((childCount == 1) && (childIds[0] != fFirstChild))
-				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild))
-                return 0;
+            if ((childCount == 1) &&
+               ((children[0]->getURI() != fFirstChild->getURI()) ||
+                (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
+                if(!fComparator.isEquivalentTo(children[0], fFirstChild))
+                    return 0;
+            }
 
             if (childCount > 1)
                 return 1;
@@ -307,9 +368,11 @@ int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childId
             {
                 for (index = 0; index < childCount; index++)
                 {
-                    if (childIds[index] != fFirstChild)
-				        if (!fComparator.isEquivalentTo(childIds[index], fFirstChild))
-                        return index;
+                    if ((children[index]->getURI() != fFirstChild->getURI()) ||
+                        (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart())) {
+    				        if (!fComparator.isEquivalentTo(children[index], fFirstChild))
+                            return index;
+                    }
                 }
             }
             break;
@@ -325,9 +388,11 @@ int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childId
 
             for (index = 0; index < childCount; index++)
             {
-                if (childIds[index] != fFirstChild)
-				    if (!fComparator.isEquivalentTo(childIds[index], fFirstChild))
-                    return index;
+                if ((children[index]->getURI() != fFirstChild->getURI()) ||
+                    (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart())) {
+    				    if (!fComparator.isEquivalentTo(children[index], fFirstChild))
+                        return index;
+                }
             }
             break;
 
@@ -339,10 +404,15 @@ int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childId
             if (!childCount)
                 return 0;
 
-            if ((childIds[0] != fFirstChild) && (childIds[0] != fSecondChild))
-				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild) &&
-			        !fComparator.isEquivalentTo(childIds[0], fSecondChild) )
-					return 0;
+            if (((children[0]->getURI() != fFirstChild->getURI()) ||
+                 (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart()))) &&
+                ((children[0]->getURI() != fSecondChild->getURI()) ||
+                 (XMLString::compareString(children[0]->getLocalPart(), fSecondChild->getLocalPart())))) {
+
+                 if (!fComparator.isEquivalentTo(children[0], fFirstChild) &&
+                     !fComparator.isEquivalentTo(children[0], fSecondChild) )
+                     return 0;
+            }
 
             if (childCount > 1)
                 return 1;
@@ -358,24 +428,26 @@ int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childId
             if (!childCount)
                 return 0;
 
-            // If we have at least one child, its got to match our first
-            if ((childCount >= 1) && (childIds[0] != fFirstChild))
-				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild))
-                return 0;
+            if (length == 2) {
+                if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                    (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
+                    if(!fComparator.isEquivalentTo(children[0], fFirstChild))
+                        return 0;
+                }
 
-            // If we hvae at least two children, its got to match our second
-            if ((childCount >= 2) && (childIds[1] != fSecondChild))
-				if (!fComparator.isEquivalentTo(childIds[1], fSecondChild))
-                return 1;
+                if ((children[1]->getURI() != fSecondChild->getURI()) ||
+                    (XMLString::compareString(children[1]->getLocalPart(), fSecondChild->getLocalPart())) {
+                    if (!fComparator.isEquivalentTo(children[1], fSecondChild))
+                        return 1;
+                }
+            }
+            else {
+                if (length > 2) {
+                    return 2;
+                }
 
-            // If we only had one (and it was valid), then too few children
-            if (childCount == 1)
-                return 1;
-
-            // And finally check for too many children
-            if (childCount > 2)
-                return 2;
-
+                return length;
+            }
             break;
 
         default :

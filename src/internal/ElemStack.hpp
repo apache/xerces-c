@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/04/19 18:16:58  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.5  2000/04/18 23:54:29  roddey
  * Got rid of some foward references to no longer used classes.
  *
@@ -83,6 +86,7 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/StringPool.hpp>
+#include <util/QName.hpp>
 class XMLElementDecl;
 
 //
@@ -157,7 +161,7 @@ public :
 
         unsigned int        fChildCapacity;
         unsigned int        fChildCount;
-        unsigned int*       fChildIds;
+        QName**             fChildren;
 
         PrefMapElem*        fMap;
         unsigned int        fMapCapacity;
@@ -191,7 +195,7 @@ public :
     // -----------------------------------------------------------------------
     //  Stack top access
     // -----------------------------------------------------------------------
-    unsigned int addChild(const unsigned int childId, const bool toParent);
+    unsigned int addChild(QName* const child, const bool toParent);
     const StackElem* topElement() const;
     void setElement(XMLElementDecl* const toSet, const unsigned int readerNum);
 
@@ -219,7 +223,6 @@ public :
     void reset
     (
         const   unsigned int    emptyId
-        , const unsigned int    globalId
         , const unsigned int    unknownId
         , const unsigned int    xmlId
         , const unsigned int    xmlNSId
@@ -248,7 +251,6 @@ private :
     //      This is the special URI id for the "" namespace, which is magic
     //      because of the xmlns="" operation.
     //
-    //  fGlobalNamespaceId
     //  fGlobalPoolId
     //      This is a special URI id that is returned when the namespace
     //      prefix is "" and no one has explicitly mapped that prefix to an
@@ -282,7 +284,6 @@ private :
     //      which is stored here for fast access.
     // -----------------------------------------------------------------------
     unsigned int    fEmptyNamespaceId;
-    unsigned int    fGlobalNamespaceId;
     unsigned int    fGlobalPoolId;
     XMLStringPool   fPrefixPool;
     StackElem**     fStack;

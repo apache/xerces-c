@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/04/19 18:17:21  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.2  2001/03/30 16:35:17  tng
  * Schema: Whitespace normalization.
  *
@@ -130,7 +133,7 @@ makeRepNode(const XMLCh testCh, ContentSpecNode* const prevNode)
 // ---------------------------------------------------------------------------
 //  DTDValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, DocTypeHandler* const    docTypeHandler) :
+DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, NameIdPool<DTDEntityDecl>* entityDeclPool, DocTypeHandler* const    docTypeHandler) :
     fDocTypeHandler(docTypeHandler)
     , fDumAttDef(0)
     , fDumElemDecl(0)
@@ -139,6 +142,7 @@ DTDScanner::DTDScanner(DTDGrammar* dtdGrammar, DocTypeHandler* const    docTypeH
     , fNextAttrId(1)
     , fDTDGrammar(dtdGrammar)
     , fPEntityDeclPool(0)
+    , fEntityDeclPool(entityDeclPool)
 {
     fPEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
 }
@@ -590,7 +594,7 @@ void DTDScanner::scanAttListDecl()
     //  Find this element's declaration. If it has not been declared yet,
     //  we will force one into the list, but not mark it as declared.
     //
-    DTDElementDecl* elemDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(0, 0, bbName.getRawBuffer(), 0);
+    DTDElementDecl* elemDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbName.getRawBuffer(), 0);
     if (!elemDecl)
     {
         //
@@ -598,7 +602,7 @@ void DTDScanner::scanAttListDecl()
         //  it having been created because of an attlist. Later, if its
         //  declared, this will be updated.
         //
-        elemDecl = new DTDElementDecl(bbName.getRawBuffer());
+        elemDecl = new DTDElementDecl(bbName.getRawBuffer(), fEmptyNamespaceId);
         elemDecl->setCreateReason(XMLElementDecl::AttList);
         fDTDGrammar->putElemDecl((XMLElementDecl*) elemDecl);
     }
@@ -1042,14 +1046,14 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         //  this element, then use it. Else, we have to fault in an element
         //  decl, marked as created because of being in a content model.
         //
-        unsigned int elemId = fDTDGrammar->getElemId(0, 0, bufToUse.getRawBuffer(), 0);
-        if (elemId == XMLElementDecl::fgInvalidElemId)
+        XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), 0);
+        if (!decl)
         {
-            DTDElementDecl* decl = new DTDElementDecl(bufToUse.getRawBuffer());
+            decl = new DTDElementDecl(bufToUse.getRawBuffer(), fEmptyNamespaceId);
             decl->setCreateReason(XMLElementDecl::InContentModel);
-            elemId = fDTDGrammar->putElemDecl(decl);
+            fDTDGrammar->putElemDecl(decl);
         }
-        curNode = new ContentSpecNode(elemId);
+        curNode = new ContentSpecNode(decl->getElementName());
 
         // Check for a PE ref here, but don't require spaces
         const bool gotSpaces = checkForPERef(false, false, true);
@@ -1211,14 +1215,14 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     //  fault in an element decl, marked as created because
                     //  of being in a content model.
                     //
-                    unsigned int elemId = fDTDGrammar->getElemId(0, 0, bufToUse.getRawBuffer(), 0);
-                    if (elemId == XMLElementDecl::fgInvalidElemId)
+                    XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), 0);
+                    if (!decl)
                     {
-                        DTDElementDecl* decl = new DTDElementDecl(bufToUse.getRawBuffer());
+                        decl = new DTDElementDecl(bufToUse.getRawBuffer(), fEmptyNamespaceId);
                         decl->setCreateReason(XMLElementDecl::InContentModel);
-                        elemId = fDTDGrammar->putElemDecl(decl);
+                        fDTDGrammar->putElemDecl(decl);
                     }
-                    ContentSpecNode* tmpLeaf = new ContentSpecNode(elemId);
+                    ContentSpecNode* tmpLeaf = new ContentSpecNode(decl->getElementName());
 
                     // Check for a repetition character after the leaf
                     const XMLCh repCh = fReaderMgr->peekNextChar();
@@ -1507,6 +1511,7 @@ void DTDScanner::scanDefaultDecl(DTDAttDef& toFill)
 //  When we get here the '<!DOCTYPE' part has already been scanned, which is
 //  what told us that we had a doc type decl to parse.
 //
+
 void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
 {
     // There must be some space after DOCTYPE
@@ -1546,7 +1551,7 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     DTDElementDecl* rootDecl;
     if (reuseGrammar)
     {
-        rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(0, 0, bbRootName.getRawBuffer(), 0);
+        rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), 0);
         if (fScanner->getDoValidation())
         {
             if (!rootDecl)
@@ -1559,7 +1564,7 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     }
      else
     {
-        rootDecl = new DTDElementDecl(bbRootName.getRawBuffer());
+        rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
         rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
         fDTDGrammar->setRootElemId(fDTDGrammar->putElemDecl(rootDecl));
     }
@@ -1572,8 +1577,43 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     //  required to have an internal or external subset, though why you
     //  would not escapes me.
     //
-    if (fReaderMgr->skippedChar(chCloseAngle))
+    if (fReaderMgr->skippedChar(chCloseAngle)) {
+        //
+        //  If we have a doc type handler and advanced callbacks are enabled,
+        //  call the doctype event.
+        //
+        if (fDocTypeHandler)
+            fDocTypeHandler->doctypeDecl(*rootDecl, 0, 0, false);
         return;
+    }
+
+    // either internal/external subset
+    if(!reuseGrammar) {
+        if (fScanner->getValidationScheme() == XMLScanner::Val_Auto)
+            fScanner->setDoValidation(true);
+
+        // set up the Validator if validating
+        if(fScanner->getDoValidation()) {
+            if (fScanner->getValidator()) {
+                if (!fScanner->getValidator()->handlesDTD())
+                {
+                    // the fValidator is from user
+                    if (fScanner->isValidatorFromUser())
+                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                    else {
+                        // the fValidator is created by the Scanner, replace it with proper Validator
+                        fScanner->setValidator( new DTDValidator() );
+                        fScanner->getValidator()->setGrammar(fDTDGrammar);
+                    }
+                }
+            }
+            else {
+                fScanner->setValidator( new DTDValidator() );
+                fScanner->getValidator()->setGrammar(fDTDGrammar);
+            }
+        }
+    }
+
 
     bool    hasIntSubset = false;
     bool    hasExtSubset = false;
@@ -1765,7 +1805,7 @@ void DTDScanner::scanElementDecl()
     }
 
     // Look this guy up in the element decl pool
-    DTDElementDecl* decl = (DTDElementDecl*) fDTDGrammar->getElemDecl(0, 0, bbName.getRawBuffer(), 0);
+    DTDElementDecl* decl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbName.getRawBuffer(), 0);
 
     //
     //  If it does not exist, then we need to create it. If it does and
@@ -1781,9 +1821,9 @@ void DTDScanner::scanElementDecl()
                 fScanner->getValidator()->emitError(XMLValid::ElementAlreadyExists, bbName.getRawBuffer());
 
             if (!fDumElemDecl)
-                fDumElemDecl = new DTDElementDecl(bbName.getRawBuffer());
+                fDumElemDecl = new DTDElementDecl(bbName.getRawBuffer(), fEmptyNamespaceId);
             else
-                fDumElemDecl->setName(bbName.getRawBuffer());
+                fDumElemDecl->setElementName(bbName.getRawBuffer(),fEmptyNamespaceId);
         }
     }
      else
@@ -1792,7 +1832,7 @@ void DTDScanner::scanElementDecl()
         //  Create the new empty declaration to fill in and put it into
         //  the decl pool.
         //
-        decl = new DTDElementDecl(bbName.getRawBuffer());
+        decl = new DTDElementDecl(bbName.getRawBuffer(), fEmptyNamespaceId);
         fDTDGrammar->putElemDecl(decl);
     }
 
@@ -1893,7 +1933,7 @@ void DTDScanner::scanEntityDecl()
     if (isPEDecl)
         entityDecl = fPEntityDeclPool->getByKey(bbName.getRawBuffer());
     else
-        entityDecl = (DTDEntityDecl*) fDTDGrammar->getEntityDecl(bbName.getRawBuffer());
+        entityDecl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
 
     if (entityDecl)
     {
@@ -1918,7 +1958,7 @@ void DTDScanner::scanEntityDecl()
         if (isPEDecl)
             fPEntityDeclPool->put(entityDecl);
          else
-            fDTDGrammar->putEntityDecl(entityDecl);
+            fEntityDeclPool->put(entityDecl);
     }
 
     // Set a flag that indicates whether we are ignoring this one
@@ -2029,7 +2069,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         fScanner->emitError(XMLErrs::PartialMarkupInEntity);
 
     // Look it up the name the general entity pool
-    XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(bbName.getRawBuffer());
+    XMLEntityDecl* decl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
 
     // If it does not exist, then obviously an error
     if (!decl)
@@ -3179,7 +3219,9 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
     //  PCDATA element id. This current node pointer will be pushed down the
     //  tree as we go.
     //
-    ContentSpecNode* curNode = new ContentSpecNode(XMLElementDecl::fgPCDataElemId);
+    QName* tmpName = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgPCDataElemId);
+    ContentSpecNode* curNode = new ContentSpecNode(tmpName);
+    delete tmpName;
 
     //
     //  Set the initial leaf as the temporary head. If we hit the first choice
@@ -3270,12 +3312,12 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             //  this element, then use it. Else, we have to fault in an element
             //  decl, marked as created because of being in a content model.
             //
-            unsigned int elemId = fDTDGrammar->getElemId(0, 0, nameBuf.getRawBuffer(), 0);
-            if (elemId == XMLElementDecl::fgInvalidElemId)
+            XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, nameBuf.getRawBuffer(), 0);
+            if (!decl)
             {
-                DTDElementDecl* decl = new DTDElementDecl(nameBuf.getRawBuffer());
+                decl = new DTDElementDecl(nameBuf.getRawBuffer(), fEmptyNamespaceId);
                 decl->setCreateReason(XMLElementDecl::InContentModel);
-                elemId = fDTDGrammar->putElemDecl(decl);
+                fDTDGrammar->putElemDecl(decl);
             }
 
             //
@@ -3293,7 +3335,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                 (
                     ContentSpecNode::Choice
                     , curNode
-                    , new ContentSpecNode(elemId)
+                    , new ContentSpecNode(decl->getElementName())
                 );
 
                 // Remember the top node
@@ -3308,7 +3350,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                     (
                         ContentSpecNode::Choice
                         , oldRight
-                        , new ContentSpecNode(elemId)
+                        , new ContentSpecNode(decl->getElementName())
                     )
                 );
 

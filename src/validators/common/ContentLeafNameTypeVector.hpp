@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 18:17:28  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.1  2001/02/27 14:48:49  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -83,9 +86,9 @@ public :
     ContentLeafNameTypeVector();
     ContentLeafNameTypeVector
     (
-         const unsigned int* const                qName
-        ,const ContentSpecNode::NodeTypes* const  types
-        ,const unsigned int                       count
+        QName** const                      qName
+      , ContentSpecNode::NodeTypes* const  types
+      , const unsigned int                       count
     );
 
     ~ContentLeafNameTypeVector();
@@ -95,22 +98,19 @@ public :
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    const unsigned int getLeafNameAt
-       (const unsigned int pos) const;
+    QName* getLeafNameAt(const unsigned int pos) const;
 
-    const ContentSpecNode::NodeTypes getLeafTypeAt
-       (const unsigned int pos) const;
-
-	const unsigned int getLeafCount() const;
+    const ContentSpecNode::NodeTypes getLeafTypeAt(const unsigned int pos) const;
+    const unsigned int getLeafCount() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setValues
     (
-         const unsigned int* const                qName
-        ,const ContentSpecNode::NodeTypes* const  types
-        ,const unsigned int                       count
+        QName** const                      qName
+      , ContentSpecNode::NodeTypes* const  types
+      , const unsigned int                       count
     );
 
     // -----------------------------------------------------------------------
@@ -133,7 +133,7 @@ private :
     //  Private Data Members
     //
     // -----------------------------------------------------------------------
-    unsigned int                 *fLeafNames;
+    QName**                       fLeafNames;
     ContentSpecNode::NodeTypes   *fLeafTypes;
     unsigned int                  fLeafCount;
 };
@@ -146,7 +146,7 @@ inline void ContentLeafNameTypeVector::cleanUp()
 
 inline void ContentLeafNameTypeVector::init(const unsigned int size)
 {
-	fLeafNames = new unsigned int [size];
+	fLeafNames = new QName*[size];
 	fLeafTypes = new ContentSpecNode::NodeTypes [size];
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/04/19 18:16:46  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.10  2001/03/21 21:55:57  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -255,7 +258,7 @@ int main(int argC, char* argV[])
             cout << "  Name: " << StrX(curElem.getFullName()) << "\n";
 
             cout << "  Content Model: "
-                 << StrX(curElem.getFormattedContentModel(*grammar))
+                 << StrX(curElem.getFormattedContentModel())
                  << "\n";
 
             // Get an enumerator for this guy's attributes if any

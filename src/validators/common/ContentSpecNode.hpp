@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/04/19 18:17:29  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.3  2001/03/21 21:56:26  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -128,7 +131,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     ContentSpecNode();
-    ContentSpecNode(const unsigned int elemId);
+    ContentSpecNode(QName* const toAdopt);
     ContentSpecNode
     (
         const   NodeTypes               type
@@ -138,42 +141,33 @@ public :
     ContentSpecNode(const ContentSpecNode&);
 	~ContentSpecNode();
 
-    ContentSpecNode& operator=(const ContentSpecNode&);
-    bool operator==(const ContentSpecNode&);
-
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getElemId() const;
+    QName* getElement();
+    const QName* getElement() const;
     ContentSpecNode* getFirst();
     const ContentSpecNode* getFirst() const;
     ContentSpecNode* getSecond();
     const ContentSpecNode* getSecond() const;
     NodeTypes getType() const;
-    bool isPCData() const;
     ContentSpecNode* orphanFirst();
     ContentSpecNode* orphanSecond();
-    int getURI() const;
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setElemId(const unsigned int elemId);
+    void setElement(QName* const toAdopt);
     void setFirst(ContentSpecNode* const toAdopt);
     void setSecond(ContentSpecNode* const toAdopt);
     void setType(const NodeTypes type);
-    void setURI(const int URIId);
 
 
     // -----------------------------------------------------------------------
     //  Miscellaneous
     // -----------------------------------------------------------------------
-    void formatSpec
-    (
-        const   Grammar&        grammar
-        ,       XMLBuffer&      bufToFill
-    )   const;
+    void formatSpec (XMLBuffer&      bufToFill)   const;
 
 
 private :
@@ -186,9 +180,9 @@ private :
     // -----------------------------------------------------------------------
     //  Private Data Members
     //
-    //  fElemId
-    //      If the type is Leaf, then this is the id of the element. If its
-    //      fgPCDataElemId, then its a PCData node.
+    //  fElement
+    //      If the type is Leaf, then this is the qName of the element. If the URI
+    //      is fgPCDataElemId, then its a PCData node.
     //
     //  fFirst
     //  fSecond
@@ -204,14 +198,11 @@ private :
     //      The type of node. This controls how many of the child node fields
     //      are used.
     //
-    //  fURI
-    //      When type == Any* case, we need to store the URI id attribute
     // -----------------------------------------------------------------------
-    unsigned int        fElemId;
+    QName*              fElement;
     ContentSpecNode*    fFirst;
     ContentSpecNode*    fSecond;
     NodeTypes           fType;
-    int                 fURI;
 };
 
 
@@ -220,58 +211,63 @@ private :
 // ---------------------------------------------------------------------------
 inline ContentSpecNode::ContentSpecNode() :
 
-    fElemId(XMLElementDecl::fgInvalidElemId)
+    fElement(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
-    , fURI(-1)
 {
+    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline
-ContentSpecNode::ContentSpecNode(const unsigned int elemId) :
+ContentSpecNode::ContentSpecNode(QName* const element) :
 
-    fElemId(elemId)
+    fElement(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
-    , fURI(-1)
 {
+    if (!element)
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    else
+        fElement = new QName(element);
 }
 
 inline
 ContentSpecNode::ContentSpecNode(const  NodeTypes               type
-                                ,       ContentSpecNode* const  firstToAdopt
-                                ,       ContentSpecNode* const  secondToAdopt) :
+                                ,       ContentSpecNode* const  firstAdopt
+                                ,       ContentSpecNode* const  secondAdopt) :
 
-    fElemId(XMLElementDecl::fgInvalidElemId)
-    , fFirst(firstToAdopt)
-    , fSecond(secondToAdopt)
+    fElement(0)
+    , fFirst(firstAdopt)
+    , fSecond(secondAdopt)
     , fType(type)
-    , fURI(-1)
 {
+    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline
 ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
 {
-    fElemId = toCopy.getElemId();
+    const QName* tempElement = toCopy.getElement();
+    if (tempElement)
+        fElement = new QName(*tempElement);
+    else
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 
-	const ContentSpecNode *tmp;
-	tmp = toCopy.getFirst();
-	if (!tmp)
-		fFirst = new ContentSpecNode(*tmp);
+    const ContentSpecNode *tmp = toCopy.getFirst();
+    if (!tmp)
+        fFirst = new ContentSpecNode(*tmp);
     else
         fFirst = 0;
 
-	tmp = toCopy.getSecond();
-	if (!tmp)
-		fSecond = new ContentSpecNode(*tmp);
+    tmp = toCopy.getSecond();
+    if (!tmp)
+        fSecond = new ContentSpecNode(*tmp);
     else
         fSecond = 0;
 
     fType = toCopy.getType();
-    fURI = toCopy.getURI();
 }
 
 inline ContentSpecNode::~ContentSpecNode()
@@ -279,79 +275,20 @@ inline ContentSpecNode::~ContentSpecNode()
     // Delete our children, which cause recursive cleanup
     delete fFirst;
     delete fSecond;
-}
-
-/***
-    To map the SetValues(XMLContentSpec)
-***/
-inline ContentSpecNode& ContentSpecNode::operator=(const ContentSpecNode& toAssign)
-{
-	if (this == &toAssign)
-		return *this;
-
-    fElemId = toAssign.getElemId();
-
-	delete fFirst;
-	const ContentSpecNode *tmp;
-	tmp = toAssign.getFirst();
-	if (!tmp)
-		fFirst = new ContentSpecNode(*tmp);
-    else
-        fFirst = 0;
-
-	delete fSecond;
-	tmp = toAssign.getSecond();
-	if (!tmp)
-		fSecond = new ContentSpecNode(*tmp);
-    else
-        fSecond = 0;
-
-    fType = toAssign.getType();
-    fURI = toAssign.getURI();
-
-	return *this;
-}
-
-/***
-    To map the equals(XMLContentSpec)
-   To map
-***/
-inline bool ContentSpecNode::operator==(const ContentSpecNode& toCompare)
-{
-	if (this==&toCompare)
-		return true;
-/***
-	return ((fElemId == toCompare.getElemId()) &&
-			(*fFirst == *(toCompare.getFirst())) &&
-			(*fSecond == *(toCompare.getSecond())) &&
-		    (fType == toCompare.getType()));
-***/
-
-	if (fElemId != toCompare.getElemId())
-		return false;
-
-	if (fType != toCompare.getType())
-		return false;
-
-	if (((fFirst != 0) && (toCompare.getFirst() ==0)) ||
-	    ((fFirst == 0) && (toCompare.getFirst() !=0)) ||
-	    (((fFirst != 0) && (toCompare.getFirst() !=0)) && (*fFirst == *(toCompare.getFirst()))))
-		return false;
-
-	if (((fSecond != 0) && (toCompare.getSecond() ==0)) ||
-	    ((fSecond == 0) && (toCompare.getSecond() !=0)) ||
-	    (((fSecond != 0) && (toCompare.getSecond() !=0)) && (*fSecond == *(toCompare.getSecond()))))
-		return false;
-
-	return true;
+    delete fElement;
 }
 
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int ContentSpecNode::getElemId() const
+inline QName* ContentSpecNode::getElement()
 {
-    return fElemId;
+    return fElement;
+}
+
+inline const QName* ContentSpecNode::getElement() const
+{
+    return fElement;
 }
 
 inline ContentSpecNode* ContentSpecNode::getFirst()
@@ -379,11 +316,6 @@ inline ContentSpecNode::NodeTypes ContentSpecNode::getType() const
     return fType;
 }
 
-inline bool ContentSpecNode::isPCData() const
-{
-    return ((fType == Leaf) && (fElemId == XMLElementDecl::fgPCDataElemId));
-}
-
 inline ContentSpecNode* ContentSpecNode::orphanFirst()
 {
     ContentSpecNode* retNode = fFirst;
@@ -398,18 +330,13 @@ inline ContentSpecNode* ContentSpecNode::orphanSecond()
     return retNode;
 }
 
-inline int ContentSpecNode::getURI() const
-{
-    return fURI;
-}
-
-
 // ---------------------------------------------------------------------------
 //  ContentSpecType: Setter methods
 // ---------------------------------------------------------------------------
-inline void ContentSpecNode::setElemId(const unsigned int newId)
+inline void ContentSpecNode::setElement(QName* const element)
 {
-    fElemId = newId;
+    delete fElement;
+    fElement = new QName(element);
 }
 
 inline void ContentSpecNode::setFirst(ContentSpecNode* const toAdopt)
@@ -427,11 +354,6 @@ inline void ContentSpecNode::setSecond(ContentSpecNode* const toAdopt)
 inline void ContentSpecNode::setType(const NodeTypes type)
 {
     fType = type;
-}
-
-inline void ContentSpecNode::setURI(const int URIId)
-{
-    fURI = URIId;
 }
 
 #endif

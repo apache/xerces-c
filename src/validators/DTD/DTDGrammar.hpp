@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 18:17:21  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.1  2001/03/21 21:56:20  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -71,7 +74,6 @@
 #include <util/StringPool.hpp>
 #include <validators/common/Grammar.hpp>
 #include <validators/DTD/DTDElementDecl.hpp>
-#include <validators/DTD/DTDEntityDecl.hpp>
 
 //
 // This class stores the DTD information
@@ -88,7 +90,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDGrammar(NameIdPool<DTDEntityDecl>* entityDeclPool);
+    DTDGrammar();
     virtual ~DTDGrammar();
 
 
@@ -141,16 +143,6 @@ public:
         const   unsigned int    elemId
     );
 
-    virtual const XMLEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    )   const;
-
-    virtual XMLEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    );
-
     virtual const XMLNotationDecl* getNotationDecl
     (
         const   XMLCh* const    notName
@@ -166,11 +158,6 @@ public:
         XMLElementDecl* const elemDecl
     )   const;
 
-    virtual unsigned int putEntityDecl
-    (
-        XMLEntityDecl* const entityDecl
-    )   const;
-
     virtual unsigned int putNotationDecl
     (
         XMLNotationDecl* const notationDecl
@@ -183,7 +170,6 @@ public:
     // -----------------------------------------------------------------------
     unsigned int getRootElemId();
     NameIdPoolEnumerator<DTDElementDecl> getElemEnumerator() const;
-    NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
     NameIdPoolEnumerator<XMLNotationDecl> getNotationEnumerator() const;
 
     // -----------------------------------------------------------------------
@@ -202,12 +188,6 @@ private:
     //      non-validating mode, its just populated as new elements are seen
     //      and they are given default characteristics.
     //
-    //  fEntityDeclPool
-    //      This is a pool of EntityDecl objects, which contains all of the
-    //      general entities that are declared in the DTD subsets.  It is
-    //      owned by the Scanner as Schema Grammar may also need access to
-    //      this pool for entity reference.
-    //
     //  fNotationDeclPool
     //      This is a pool of NotationDecl objects, which contains all of the
     //      notations declared in the DTD subsets.
@@ -218,7 +198,6 @@ private:
     //      invalid unless we have a DOCTYPE.
     // -----------------------------------------------------------------------
     NameIdPool<DTDElementDecl>*     fElemDeclPool;
-    NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
     NameIdPool<XMLNotationDecl>*    fNotationDeclPool;
     unsigned int                    fRootElemId;
 };
@@ -239,12 +218,6 @@ inline NameIdPoolEnumerator<DTDElementDecl>
 DTDGrammar::getElemEnumerator() const
 {
     return NameIdPoolEnumerator<DTDElementDecl>(fElemDeclPool);
-}
-
-inline NameIdPoolEnumerator<DTDEntityDecl>
-DTDGrammar::getEntityEnumerator() const
-{
-    return NameIdPoolEnumerator<DTDEntityDecl>(fEntityDeclPool);
 }
 
 inline NameIdPoolEnumerator<XMLNotationDecl>
@@ -314,22 +287,6 @@ inline XMLElementDecl* DTDGrammar::getElemDecl(const unsigned int elemId)
 inline unsigned int DTDGrammar::putElemDecl (XMLElementDecl* const elemDecl)   const
 {
     return fElemDeclPool->put((DTDElementDecl*) elemDecl);
-}
-
-// Entity Decl
-inline const XMLEntityDecl* DTDGrammar::getEntityDecl(const  XMLCh* const    entName) const
-{
-    return fEntityDeclPool->getByKey(entName);
-}
-
-inline XMLEntityDecl* DTDGrammar::getEntityDecl(const XMLCh* const entName)
-{
-    return fEntityDeclPool->getByKey(entName);
-}
-
-inline unsigned int DTDGrammar::putEntityDecl (XMLEntityDecl* const   entityDecl)   const
-{
-    return fEntityDeclPool->put((DTDEntityDecl*) entityDecl);
 }
 
 // Notation Decl

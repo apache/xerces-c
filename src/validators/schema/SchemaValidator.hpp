@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/04/19 18:17:40  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.2  2001/03/30 16:35:20  tng
  * Schema: Whitespace normalization.
  *
@@ -69,11 +72,13 @@
 #if !defined(SCHEMAVALIDATOR_HPP)
 #define SCHEMAVALIDATOR_HPP
 
+#include <framework/XMLBuffer.hpp>
 #include <framework/XMLValidator.hpp>
 #include <util/RefVectorOf.hpp>
 #include <validators/common/GrammarResolver.hpp>
 #include <validators/datatype/DatatypeValidator.hpp>
 #include <validators/schema/SchemaElementDecl.hpp>
+#include <validators/schema/SchemaGrammar.hpp>
 
 //
 //  This is a derivative of the abstract validator interface. This class
@@ -102,7 +107,7 @@ public:
     virtual int checkContent
     (
         const   unsigned int    elemId
-        , const unsigned int*   childIds
+        , QName** const         children
         , const unsigned int    childCount
     );
 
@@ -131,8 +136,8 @@ public:
         , const XMLCh* const                attrValue
     );
 
-    virtual Grammar* getGrammar(const XMLCh* uri=0);
-    virtual Grammar* getGrammar(const char* uri);
+    virtual Grammar* getGrammar();
+    virtual void setGrammar(Grammar* aGrammar);
 
     // -----------------------------------------------------------------------
     //  Virtual DTD handler interface.
@@ -153,18 +158,47 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fXsiTypeAttValue
-    //      Store the Schema Type Attribute Value if schema type is specified
+    // -----------------------------------------------------------------------
+    //  The following comes from the Scanner
+    //  fSchemaGrammar
+    //      The current schema grammar used by the validator
     //
     //  fGrammarResolver
     //      All the schema grammar stored
     //
+    //  fXsiTypeAttValue
+    //      Store the Schema Type Attribute Value if schema type is specified
+    //
+    // -----------------------------------------------------------------------
+    //  The following used internally in the validator
+    //
+    //  fXsiTypeValidator
+    //      The validator used for xsi type validation
+    //
     //  fCurrentDV
     //      Current DataTypeValidator used by the validator
+    //
+    //  fDatatypeBuffer
+    //      Buffer for simple type element string content
+    //
+    //  fBufferDatatype
+    //      Indicate a simple type element is being scanned, and its
+    //      string content should be stored in fDatatypeBuffer
+    //
+    //  fTrailing
+    //      Previous chunk had a trailing space
     // -----------------------------------------------------------------------
-    const XMLCh* fXsiTypeAttValue;
+    SchemaGrammar* fSchemaGrammar;
     GrammarResolver* fGrammarResolver;
+    const XMLCh* fXsiTypeAttValue;
+
+    DatatypeValidator* fXsiTypeValidator;
     DatatypeValidator* fCurrentDV;
+
+    bool fBufferDatatype;
+    XMLBuffer fDatatypeBuffer;
+    bool fFirstChunk;
+    bool fTrailing;
 };
 
 
@@ -182,15 +216,12 @@ inline void SchemaValidator::setGrammarResolver(GrammarResolver* grammarResolver
 // ---------------------------------------------------------------------------
 //  Virtual interface
 // ---------------------------------------------------------------------------
-inline Grammar* SchemaValidator::getGrammar(const XMLCh* uri) {
-    return fGrammarResolver->getGrammar(uri);
+inline Grammar* SchemaValidator::getGrammar() {
+    return fSchemaGrammar;
 }
 
-inline Grammar* SchemaValidator::getGrammar(const char* uri) {
-    XMLCh* tempURI = XMLString::transcode(uri);
-    Grammar* tempGrammar = fGrammarResolver->getGrammar(tempURI);
-    delete tempURI;
-    return tempGrammar;
+inline void SchemaValidator::setGrammar(Grammar* aGrammar) {
+    fSchemaGrammar = (SchemaGrammar*) aGrammar;
 }
 
 // ---------------------------------------------------------------------------

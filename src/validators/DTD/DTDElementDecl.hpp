@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/04/19 18:17:20  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.8  2001/03/21 21:56:19  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -90,6 +93,7 @@
 #define DTDELEMENTDECL_HPP
 
 #include <util/RefHashTableOf.hpp>
+#include <util/QName.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <validators/DTD/DTDAttDef.hpp>
 
@@ -132,8 +136,15 @@ public :
 
     DTDElementDecl
     (
-        const   XMLCh* const    elemQName
-        , const ModelTypes      modelType = Any
+        const XMLCh* const    elemRawName
+      , const unsigned int    uriId
+      , const ModelTypes      modelType = Any
+    );
+
+    DTDElementDecl
+    (
+        QName* const    elementName
+      , const ModelTypes      modelType = Any
     );
 
     ~DTDElementDecl();
@@ -152,11 +163,7 @@ public :
         ,       bool&           wasAdded
     )   const;
     virtual XMLAttDefList& getAttDefList() const;
-    virtual const XMLCh* getBaseName() const;
-    virtual XMLCh* getBaseName() ;
-    virtual const int getURI() const;
     virtual CharDataOpts getCharDataOpts() const;
-    virtual const XMLCh* getFullName() const;
     virtual bool hasAttDefs() const;
     virtual bool resetDefs();
     virtual const ContentSpecNode* getContentSpec() const;
@@ -185,25 +192,21 @@ public :
     // -----------------------------------------------------------------------
     void addAttDef(DTDAttDef* const toAdd);
     void setModelType(const DTDElementDecl::ModelTypes toSet);
-    void setName(const XMLCh* const newName);
 
 
 protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel(const Grammar* grammar=0) const;
-    virtual XMLCh* formatContentModel
-    (
-        const   Grammar&   grammar
-    )   const;
+    virtual XMLContentModel* makeContentModel() ;
+    virtual XMLCh* formatContentModel () const ;
 
 
 private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel(const Grammar* grammar=0) const;
+    XMLContentModel* createChildModel() ;
     void faultInAttDefList() const;
 
 
@@ -221,20 +224,11 @@ private :
     //      that the scanner understands. It may or may not ever be asked
     //      for so we fault it in as needed.
     //
-    //  fBaseName
-    //      This is faulted in upon demand from the fQName field.
-    //
     //  fContentSpec
     //      This is the content spec for the node. It contains the original
     //      content spec that was read from the DTD, as a tree of nodes. This
     //      one is always set up, and is used to build the fContentModel
     //      version if we are validating.
-    //
-    //  fQName
-    //      This is the name of the element decl. Its just a QName that may
-    //      or may not have a prefix: part. We don't care if it does or not.
-    //      DTDs have no means of assigning namespaces to decls, so we don't
-    //      have any concerns about that stuff at all.
     //
     //  fModelType
     //      The content model type of this element. This tells us what kind
@@ -242,54 +236,13 @@ private :
     // -----------------------------------------------------------------------
     RefHashTableOf<DTDAttDef>*  fAttDefs;
     DTDAttDefList*              fAttList;
-    XMLCh*                      fBaseName;
-    XMLCh*                      fQName;
     ContentSpecNode*            fContentSpec;
     ModelTypes                  fModelType;
 };
 
-
-// ---------------------------------------------------------------------------
-//  DTDElementDecl: Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline DTDElementDecl::DTDElementDecl() :
-
-    fAttDefs(0)
-    , fAttList(0)
-    , fBaseName(0)
-    , fContentSpec(0)
-    , fQName(0)
-    , fModelType(Any)
-{
-}
-
-inline
-DTDElementDecl::DTDElementDecl( const   XMLCh* const                elemName
-                                , const DTDElementDecl::ModelTypes  type) :
-    fAttDefs(0)
-    , fAttList(0)
-    , fBaseName(0)
-    , fContentSpec(0)
-    , fQName(XMLString::replicate(elemName))
-    , fModelType(type)
-{
-}
-
-
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: XMLElementDecl virtual interface implementation
 // ---------------------------------------------------------------------------
-inline const int DTDElementDecl::getURI() const
-{
-   return -1;
-}
-
-inline const XMLCh* DTDElementDecl::getFullName() const
-{
-    // Just return our QName
-    return fQName;
-}
-
 inline ContentSpecNode* DTDElementDecl::getContentSpec()
 {
     return fContentSpec;
@@ -324,12 +277,6 @@ inline void
 DTDElementDecl::setModelType(const DTDElementDecl::ModelTypes toSet)
 {
     fModelType = toSet;
-}
-
-inline void DTDElementDecl::setName(const XMLCh* const newName)
-{
-    delete [] fQName;
-    fQName = XMLString::replicate(newName);
 }
 
 #endif

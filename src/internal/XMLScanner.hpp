@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/04/19 18:16:59  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.13  2001/03/30 16:46:56  tng
  * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
  *
@@ -128,6 +131,7 @@
 #include <framework/XMLPScanToken.hpp>
 #include <internal/ElemStack.hpp>
 #include <internal/ReaderMgr.hpp>
+#include <validators/DTD/DTDEntityDecl.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 #include <validators/schema/SchemaValidator.hpp>
 
@@ -279,8 +283,16 @@ public :
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
-    const Grammar* getCurrentGrammar() const;
-    Grammar* getCurrentGrammar();
+    const DTDEntityDecl* getEntityDecl
+    (
+        const   XMLCh* const    entName
+    )   const;
+
+    DTDEntityDecl* getEntityDecl
+    (
+        const   XMLCh* const    entName
+    );
+    NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -346,6 +358,9 @@ public :
     )   const;
 
     const XMLCh* getURIText(const   unsigned int    uriId) const;
+
+    /* tell if the validator comes from user */
+    bool isValidatorFromUser();
 
 
     // -----------------------------------------------------------------------
@@ -506,7 +521,8 @@ private :
     void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
-
+    bool switchGrammar(int newGrammarNameSpaceIndex);
+    bool switchGrammar(const XMLCh* const newGrammarNameSpace);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods
@@ -543,21 +559,11 @@ private :
         ,       bool&   escaped
     );
     bool scanEq();
-    bool scanId
-    (
-                XMLBuffer&  pubIdToFill
-        ,       XMLBuffer&  sysIdToFill
-        , const IDTypes     whatKind
-    );
-    void scanIgnoredSection();
-    bool scanInternalSubset();
     void scanMiscellaneous();
     void scanPI();
     void scanProlog();
-    bool scanPublicLiteral(XMLBuffer& toFill);
     bool scanStartTag(bool& gotData);
     bool scanStartTagNS(bool& gotData);
-    bool scanSystemLiteral(XMLBuffer& toFill);
     void scanXMLDecl(const DeclTypes type);
     unsigned int scanUpToWSOr
     (
@@ -693,11 +699,6 @@ private :
     //      because of the xmlns="" type of deal. We have to quickly sense
     //      that its the empty namespace.
     //
-    //  fGlobalNamespaceId
-    //      This is the id of the namespace URI which is assigned to the
-    //      global namespace. Its for debug purposes only, since there is no
-    //      real global namespace URI. Its set by the derived class.
-    //
     //  fUnknownNamespaceId
     //      This is the id of the namespace URI which is assigned to the
     //      global namespace. Its for debug purposes only, since there is no
@@ -761,7 +762,6 @@ private :
     XMLBuffer                   fURIBuf;
 
     unsigned int                fEmptyNamespaceId;
-    unsigned int                fGlobalNamespaceId;
     unsigned int                fUnknownNamespaceId;
     unsigned int                fXMLNamespaceId;
     unsigned int                fXMLNSNamespaceId;
@@ -872,32 +872,19 @@ inline XMLValidator* XMLScanner::getValidator()
     return fValidator;
 }
 
-inline const Grammar* XMLScanner::getCurrentGrammar() const
-{
-    return fGrammar;
-}
-
-inline Grammar* XMLScanner::getCurrentGrammar()
-{
-    return fGrammar;
-}
-
 inline bool XMLScanner::getDoSchema() const
 {
     return fDoSchema;
 }
 
-// ---------------------------------------------------------------------------
-//  XMLValidator: Getter methods
-// ---------------------------------------------------------------------------
+inline bool XMLScanner::isValidatorFromUser()
+{
+    return fValidatorFromUser;
+}
+
 inline unsigned int XMLScanner::getEmptyNamespaceId() const
 {
     return fEmptyNamespaceId;
-}
-
-inline unsigned int XMLScanner::getGlobalNamespaceId() const
-{
-    return fGlobalNamespaceId;
 }
 
 inline unsigned int XMLScanner::getUnknownNamespaceId() const
@@ -915,6 +902,21 @@ inline unsigned int XMLScanner::getXMLNSNamespaceId() const
     return fXMLNSNamespaceId;
 }
 
+inline NameIdPoolEnumerator<DTDEntityDecl>
+XMLScanner::getEntityEnumerator() const
+{
+    return NameIdPoolEnumerator<DTDEntityDecl>(fEntityDeclPool);
+}
+
+inline const DTDEntityDecl* XMLScanner::getEntityDecl(const  XMLCh* const    entName) const
+{
+    return fEntityDeclPool->getByKey(entName);
+}
+
+inline DTDEntityDecl* XMLScanner::getEntityDecl(const XMLCh* const entName)
+{
+    return fEntityDeclPool->getByKey(entName);
+}
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -981,6 +983,7 @@ inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
 {
     delete fValidator;
     fValidator = valToAdopt;
+    initValidator();
 }
 
 inline void XMLScanner::setDoSchema(const bool doSchema)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/04/19 18:17:23  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.8  2001/03/21 21:56:21  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -120,17 +123,12 @@ public:
     virtual ~DTDValidator();
 
     // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setDTDGrammar(DTDGrammar* dtdGrammar);
-
-    // -----------------------------------------------------------------------
     //  Implementation of the XMLValidator interface
     // -----------------------------------------------------------------------
     virtual int checkContent
     (
         const   unsigned int    elemId
-        , const unsigned int*   childIds
+        , QName** const         children
         , const unsigned int    childCount
     );
 
@@ -158,9 +156,8 @@ public:
         const   XMLAttDef&                  attDef
         , const XMLCh* const                attrValue
     );
-    virtual Grammar* getGrammar(const XMLCh* uri=0);
-    virtual Grammar* getGrammar(const char* uri);
-
+    virtual Grammar* getGrammar();
+    virtual void setGrammar(Grammar* aGrammar);
 
     // -----------------------------------------------------------------------
     //  Virtual DTD handler interface.
@@ -184,22 +181,15 @@ private:
     DTDGrammar*                     fDTDGrammar;
 };
 
-// -----------------------------------------------------------------------
-//  Setter methods
-// -----------------------------------------------------------------------
-inline void DTDValidator::setDTDGrammar(DTDGrammar* dtdGrammar) {
-    fDTDGrammar = dtdGrammar;
-}
-
 // ---------------------------------------------------------------------------
 //  Virtual interface
 // ---------------------------------------------------------------------------
-inline Grammar* DTDValidator::getGrammar(const XMLCh* uri) {
+inline Grammar* DTDValidator::getGrammar() {
     return fDTDGrammar;
 }
 
-inline Grammar* DTDValidator::getGrammar(const char* uri) {
-    return fDTDGrammar;
+inline void DTDValidator::setGrammar(Grammar* aGrammar) {
+    fDTDGrammar = (DTDGrammar*) aGrammar;
 }
 
 // ---------------------------------------------------------------------------

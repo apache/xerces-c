@@ -98,7 +98,7 @@
 // ---------------------------------------------------------------------------
 
 //
-//  This method is called from scanStartTag() to build up the list of
+//  This method is called from scanStartTagNS() to build up the list of
 //  XMLAttr objects that will be passed out in the start tag callout. We
 //  get the key/value pairs from the raw scan of explicitly provided attrs,
 //  which have not been normalized. And we get the element declaration from
@@ -402,8 +402,15 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  and fault in any fixed ones and defaulted ones that are not provided
     //  literally.
     //
-    if (hasDefs)
+    if (hasDefs && fValidate)
     {
+        //
+        // Check after all specified attrs are scanned
+        // (1) report error for REQUIRED attrs that are missing (V_TAGc)
+        // (2) check that FIXED attrs have matching value (V_TAGd)
+        // (3) add default attrs (FIXED and NOT_FIXED)
+        // (4) (schema) report error for PROHIBITED attrs that are present (V_TAGc)
+        //
         XMLAttDefList& attDefList = elemDecl.getAttDefList();
         while (attDefList.hasMoreElements())
         {
@@ -416,7 +423,9 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if (fValidate)
                 {
                     // If we are validating and its required, then an error
-                    if (defType == XMLAttDef::Required)
+                    if ((defType == XMLAttDef::Required) ||
+                        (defType == XMLAttDef::Required_And_Fixed)  )
+
                     {
                         fValidator->emitError
                         (
@@ -424,19 +433,18 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , curDef.getFullName()
                         );
                     }
-		            else if ((defType == XMLAttDef::Default) ||
-		                     (defType == XMLAttDef::Fixed)  )
-					{
-		                if (fStandalone)
-		                {
-			                //
-			                // XML 1.0 Section 2.9
-			                // Document is standalone, so attributes must not be defaulted.
-			                //
-			                emitError(XMLErrs::BadStandalone, elemDecl.getFullName());
-
-		                 }
-		             }
+                    else if ((defType == XMLAttDef::Default) ||
+                             (defType == XMLAttDef::Fixed)  )
+                    {
+                        if (fStandalone)
+                        {
+                            //
+                            // XML 1.0 Section 2.9
+                            // Document is standalone, so attributes must not be defaulted.
+                            //
+                            emitError(XMLErrs::BadStandalone, elemDecl.getFullName());
+                        }
+                    }
                 }
 
                 //
@@ -475,7 +483,6 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
         }
     }
-
     return retCount;
 }
 
@@ -776,29 +783,54 @@ void XMLScanner::scanReset(const InputSource& src)
     if (!fReuseGrammar) {
         fGrammarResolver->reset();
 
-        //  Create a default Grammar first
-        fGrammar = new DTDGrammar(fEntityDeclPool);
+        resetEntityDeclPool();
+        if (fDoNamespaces)
+            resetURIPool();
+
+        // create a default validator
+        if (fValidate) {
+            if (!fValidator)
+                setValidator(new DTDValidator());
+        }
+
+        // create a default grammar first
+        fGrammar = new DTDGrammar();
         fGrammarResolver->putGrammar(XMLUni::fgZeroLenString, fGrammar);
 
-        resetEntityDeclPool();
+        if (fValidator)
+            fValidator->setGrammar(fGrammar);
 
-        if (fDoNamespaces) {
-            if (!fURIStringPool)
-                fURIStringPool = new XMLStringPool();
-            resetURIPool();
+    }
+    else {
+        // reusing grammar, thus the fGrammar must pre-exist already
+        // if validating, make sure the validator handles this reuse grammar type
+        if (fValidate) {
+            if (fValidator) {
+                if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+                    if (fValidatorFromUser)
+                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                    else
+                        setValidator(new SchemaValidator());
+                }
+                else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+                    if (fValidatorFromUser)
+                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                    else
+                        setValidator(new DTDValidator());
+                }
+            }
+            else {
+                if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+                    setValidator(new SchemaValidator());
+                else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType)
+                    setValidator(new DTDValidator());
+            }
+
+            if (!fValidator->getGrammar())
+                fValidator->setGrammar(fGrammar);
         }
     }
 
-    if (fValidate && !fValidator) {
-        // create a default validator
-        fValidator = new DTDValidator();
-        initValidator();
-    }
-
-    if (fValidator) {
-        if (fValidator->handlesDTD() && !fValidator->getGrammar())
-            ((DTDValidator*) fValidator)->setDTDGrammar((DTDGrammar*)fGrammar);
-    }
 
     //
     //  And for all installed handlers, send reset events. This gives them
@@ -821,7 +853,6 @@ void XMLScanner::scanReset(const InputSource& src)
     fElemStack.reset
     (
         fEmptyNamespaceId
-        , fGlobalNamespaceId
         , fUnknownNamespaceId
         , fXMLNamespaceId
         , fXMLNSNamespaceId
@@ -1112,7 +1143,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
         const XMLCh* valuePtr = curPair->getValue();
         const XMLCh* rawPtr = curPair->getKey();
 
-        QName attName(rawPtr);
+        QName attName(rawPtr, fEmptyNamespaceId);
         const XMLCh* suffPtr = attName.getLocalPart();
 
         //  If either the key begins with "xmlns:" or its just plain
@@ -1132,7 +1163,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
     }
 
     // walk through the list again to deal with "xsi:...."
-    if (fDoSchema && seeXsi)
+    if (fDoSchema && seeXsi && !fReuseGrammar)
     {
         for (index = 0; index < attCount; index++)
         {
@@ -1141,7 +1172,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
             const XMLCh* valuePtr = curPair->getValue();
             const XMLCh* rawPtr = curPair->getKey();
 
-            QName attName(rawPtr);
+            QName attName(rawPtr, fEmptyNamespaceId);
             const XMLCh* prefPtr = attName.getPrefix();
             const XMLCh* suffPtr = attName.getLocalPart();
 
@@ -1198,32 +1229,18 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                     ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
                 else {
                     // the fValidator is created by the Scanner, replace it with a SchemaValidator
-                    delete fValidator;
-                    fValidator = new SchemaValidator();
-                    initValidator();
+                    setValidator(new SchemaValidator());
                 }
             }
         }
         else {
-            fValidator = new SchemaValidator();
-            initValidator();
+            setValidator(new SchemaValidator());
         }
-
-        //
-        //  At this point, we know which type of validation we are going to
-        //  use (if the plugged in validator handles either DTD or Schemas)
-        //  since we will have seen the DOCTYPE or PI that set it up. So lets
-        //  ask the validator whether it requires namespaces or not. If it
-        //  does, we have to override the namespace enablement flag.
-        //
-        if (fValidator->requiresNamespaces() && !fDoNamespaces)
-            fDoNamespaces = true;
-
     }
 
     SchemaGrammar* grammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
 
-    if (!grammar) {
+    if ((fGrammar->getGrammarType() == Grammar::DTDGrammarType) || !grammar) {
         DOMParser parser;
         parser.setValidationScheme(DOMParser::Val_Never);
         parser.setDoNamespaces(true);
@@ -1233,9 +1250,18 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         try {
             parser.parse( loc );
         }
+        catch (const XMLException& e)
+        {
+            emitError (XMLErrs::XMLException, e.getType(), e.getMessage());
+        }
+        catch (const DOM_DOMException& e)
+        {
+            throw e;
+        }
         catch (...)
         {
-            emitError(XMLErrs::GenericError);
+            emitError(XMLErrs::UnexpectedError);
+            throw;
         }
 
         DOM_Document  document = parser.getDocument(); //Our Grammar
@@ -1246,11 +1272,10 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
         else
         {
-            if (!uri || root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).equals(uri))
+            if (fValidate && (!uri || !root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).equals(uri)))
                 fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
 
             grammar = new SchemaGrammar();
-            grammar->setGrammarDocument(document);
             grammar->setTargetNamespace(root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).rawBuffer());
 
             // pass parser's entity resolver (local Resolver), which also has reference to user's
@@ -1261,6 +1286,8 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
     }
     fGrammar = grammar;
+    if (fValidate)
+        fValidator->setGrammar(fGrammar);
 }
 
 // ---------------------------------------------------------------------------
@@ -2360,7 +2387,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         emitError(XMLErrs::PartialMarkupInEntity);
 
     // Look up the name in the general entity pool
-    XMLEntityDecl* decl = fGrammar->getEntityDecl(bbName.getRawBuffer());
+    XMLEntityDecl* decl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
 
     // If it does not exist, then obviously an error
     if (!decl)
@@ -2489,210 +2516,41 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
 }
 
 
-//
-//  This method will scan for an id, either public or external. It can look
-//  for either and tell the caller what it found, or it can be told to look
-//  for a particular type.
-//
-bool XMLScanner::scanId(        XMLBuffer&  pubIdToFill
-                        ,       XMLBuffer&  sysIdToFill
-                        , const IDTypes     whatKind)
-{
-    // Clean out both return buffers
-    pubIdToFill.reset();
-    sysIdToFill.reset();
-
-    //
-    //  Check first for the system id first. If we find it, and system id
-    //  is one of the legal values, then lets try to scan it.
-    //
-    if (fReaderMgr.skippedString(XMLUni::fgSysIDString))
-    {
-        // If they were looking for a public id, then we failed
-        if (whatKind == IDType_Public)
-        {
-            emitError(XMLErrs::ExpectedPublicId);
-            return false;
-        }
-
-        // We must skip spaces
-        if (!fReaderMgr.skipPastSpaces())
-        {
-            emitError(XMLErrs::ExpectedWhitespace);
-            return false;
-        }
-
-        // Get the system literal value
-        return scanSystemLiteral(sysIdToFill);
-    }
-
-    // See if we have a public id string. If not, we are done and found nothing
-    if (!fReaderMgr.skippedString(XMLUni::fgPubIDString))
-        return false;
-
-    //
-    //  So following this we must have whitespace, a public literal, whitespace,
-    //  and a system literal.
-    //
-    if (!fReaderMgr.skipPastSpaces())
-    {
-        emitError(XMLErrs::ExpectedWhitespace);
-
-        //
-        //  Just in case, if they just forgot the whitespace but the next char
-        //  is a single or double quote, then keep going.
-        //
-        const XMLCh chPeek = fReaderMgr.peekNextChar();
-        if ((chPeek != chDoubleQuote) && (chPeek != chSingleQuote))
-            return false;
-    }
-
-    if (!scanPublicLiteral(pubIdToFill))
-    {
-        emitError(XMLErrs::ExpectedPublicId);
-        return false;
-    }
-
-    // If they wanted a public id, then this is all
-    if (whatKind == IDType_Public)
-        return true;
-
-    // Else lets get the system id
-    if (!fReaderMgr.skipPastSpaces())
-    {
-        //
-        //  In order to recover best here we need to see if we don't have
-        //  whitespace because the next thing is a quote or because the next
-        //  thing is some non-quote character.
-        //
-        const XMLCh chPeek = fReaderMgr.peekNextChar();
-        const bool bIsQuote =  ((chPeek == chDoubleQuote)
-                               || (chPeek == chSingleQuote));
-
-        if (whatKind == IDType_External)
-        {
-            //
-            //  If its an external Id, then we need to see the system id.
-            //  So, emit the error. But, if the next char is a quote, don't
-            //  give up since its probably going to work. The user just
-            //  missed the separating space. Otherwise, fail.
-            //
-            emitError(XMLErrs::ExpectedWhitespace);
-            if (!bIsQuote)
-                return false;
-        }
-         else
-        {
-            //
-            //  We can legally return here. But, if the next char is a quote,
-            //  then that's probably not what was desired, since its probably
-            //  just that space was forgotten and there really is a system
-            //  id to follow.
-            //
-            //  So treat it like missing whitespace if so and keep going.
-            //  Else, just return success.
-            //
-            if (bIsQuote)
-                emitError(XMLErrs::ExpectedWhitespace);
-             else
-                return true;
-        }
-    }
-
-    if (!scanSystemLiteral(sysIdToFill))
-    {
-        emitError(XMLErrs::ExpectedSystemId);
-        return false;
-    }
-
-    return true;
-}
-
-
-//
-//  This method scans a public literal. It must be quoted and all of its
-//  characters must be valid public id characters. The quotes are discarded
-//  and the results are returned.
-//
-bool XMLScanner::scanPublicLiteral(XMLBuffer& toFill)
-{
-    toFill.reset();
-
-    // Get the next char which must be a single or double quote
-    XMLCh quoteCh;
-    if (!fReaderMgr.skipIfQuote(quoteCh))
-        return false;
-
-    while (true)
-    {
-        const XMLCh nextCh = fReaderMgr.getNextChar();
-
-        // Watch for EOF
-        if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
-
-        if (nextCh == quoteCh)
-            break;
-
-        //
-        //  If its not a valid public id char, then report it but keep going
-        //  since that's the best recovery scheme.
-        //
-        if (!XMLReader::isPublicIdChar(nextCh))
-        {
-            XMLCh tmpBuf[9];
-            XMLString::binToText
-            (
-                nextCh
-                , tmpBuf
-                , 8
-                , 16
-            );
-            emitError(XMLErrs::InvalidPublicIdChar, tmpBuf);
-        }
-
-        toFill.append(nextCh);
-    }
-    return true;
-}
-
-
-//
-//  This method handles scanning in a quoted system literal. It expects to
-//  start on the open quote and returns after eating the ending quote. There
-//  are not really any restrictions on the contents of system literals.
-//
-bool XMLScanner::scanSystemLiteral(XMLBuffer& toFill)
-{
-    toFill.reset();
-
-    // Get the next char which must be a single or double quote
-    XMLCh quoteCh;
-    if (!fReaderMgr.skipIfQuote(quoteCh))
-        return false;
-
-    bool retVal = true;
-    while (retVal)
-    {
-        const XMLCh nextCh = fReaderMgr.getNextChar();
-
-        // Watch for EOF
-        if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
-
-        // Break out on terminating quote
-        if (nextCh == quoteCh)
-            break;
-
-        toFill.append(nextCh);
-    }
-    return retVal;
-}
-
-
 unsigned int
 XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
 {
     fReaderMgr.getUpToCharOrWS(toFill, chEndChar);
     return toFill.getLen();
+}
+
+bool XMLScanner::switchGrammar(int newGrammarNameSpaceIndex)
+{
+    XMLBuffer bufURI;
+    getURIText(newGrammarNameSpaceIndex, bufURI);
+    Grammar* tempGrammar = fGrammarResolver->getGrammar(bufURI.getRawBuffer());
+    if (!tempGrammar) {
+        // This is a case where namespaces is on with a DTD grammar.
+        tempGrammar = fGrammarResolver->getGrammar(XMLUni::fgZeroLenString);
+    }
+    if (!tempGrammar)
+        return false;
+    else {
+        fGrammar = tempGrammar;
+        return true;
+    }
+}
+
+bool XMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
+{
+    Grammar* tempGrammar = fGrammarResolver->getGrammar(newGrammarNameSpace);
+    if (!tempGrammar) {
+        // This is a case where namespaces is on with a DTD grammar.
+        tempGrammar = fGrammarResolver->getGrammar(XMLUni::fgZeroLenString);
+    }
+    if (!tempGrammar)
+        return false;
+    else {
+        fGrammar = tempGrammar;
+        return true;
+    }
 }

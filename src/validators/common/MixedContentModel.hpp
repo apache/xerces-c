@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/04/19 18:17:33  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.5  2001/03/21 21:56:28  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -119,9 +122,9 @@ public :
     // -----------------------------------------------------------------------
     MixedContentModel
     (
-        const   XMLElementDecl& parentElem
-		,const bool             ordered = false
-		,const bool             dtd = true
+        const bool             dtd
+      , XMLElementDecl* const  parentElem
+		, const bool             ordered = false
     );
 
     ~MixedContentModel();
@@ -132,25 +135,22 @@ public :
     // -----------------------------------------------------------------------
     bool hasDups() const;
 
-
     // -----------------------------------------------------------------------
     //  Implementation of the ContentModel virtual interface
     // -----------------------------------------------------------------------
-    virtual bool getIsAmbiguous() const;
-	
-	virtual int validateContent
+    virtual int validateContent
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     )   const;
 
-	virtual int validateContentSpecial
+    virtual int validateContentSpecial
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
-	) const;
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
+    ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
@@ -163,10 +163,10 @@ private :
     // -----------------------------------------------------------------------
     void buildChildList
     (
-        const   ContentSpecNode&                           curNode
-        ,       ValueVectorOf<unsigned int>&               toFill
-		,       ValueVectorOf<ContentSpecNode::NodeTypes>& toType
-	);
+        ContentSpecNode* const                     curNode
+      , ValueVectorOf<QName*>&                     toFill
+      , ValueVectorOf<ContentSpecNode::NodeTypes>& toType
+    );
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -180,32 +180,32 @@ private :
     //  Private data members
     //
     //  fCount
-    //      The count of possible children in the fChildIds member.
+    //      The count of possible children in the fChildren member.
     //
-    //  fChildIds
+    //  fChildren
     //      The list of possible children that we have to accept. This array
     //      is allocated as large as needed in the constructor.
     //
-	//  fChildTypes
-	//      The type of the children to support ANY.
+    //  fChildTypes
+    //      The type of the children to support ANY.
     //
-	//  fOrdered
-	//      True if mixed content model is ordered. DTD mixed content models
-	//      are <em>always</em> unordered.
-	//
-	//  fDTD
+    //  fOrdered
+    //      True if mixed content model is ordered. DTD mixed content models
+    //      are <em>always</em> unordered.
+    //
+    //  fDTD
     //      Boolean to allow DTDs to validate even with namespace support.
     //
     //  fComparator
-    //      this is the EquivClassComparator object
+    //      this is the SubstitionGroup object
     // -----------------------------------------------------------------------
     unsigned int    fCount;
-    unsigned int   *fChildIds;
-	ContentSpecNode::NodeTypes  *fChildTypes;
+    QName**         fChildren;
+    ContentSpecNode::NodeTypes*  fChildTypes;
     bool            fOrdered;
     bool            fDTD;
 #ifdef _feat_1530
-	EquivClassComparator        comparator;
+	EquivClassComparator        fComparator;
 #endif
 };
 

@@ -163,9 +163,9 @@ DTDValidator::~DTDValidator()
 // ---------------------------------------------------------------------------
 //  DTDValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-int DTDValidator::checkContent( const   unsigned int    elemId
-                                , const unsigned int*   childIds
-                                , const unsigned int    childCount)
+int DTDValidator::checkContent( const unsigned int  elemId
+                              , QName** const       children
+                              , const unsigned int  childCount)
 {
     //
     //  Look up the element id in our element decl pool. This will get us
@@ -201,7 +201,7 @@ int DTDValidator::checkContent( const   unsigned int    elemId
         const XMLContentModel* elemCM = elemDecl->getContentModel();
 
         // Ask it to validate and return its return
-        return elemCM->validateContent(childIds, childCount);
+        return elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId());
     }
      else
     {
@@ -475,7 +475,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
             //  general entity pool. If not there, then its an error. If its
             //  not an external unparsed entity, then its an error.
             //
-            const XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(pszTmpVal);
+            const XMLEntityDecl* decl = getScanner()->getEntityDecl(pszTmpVal);
             if (decl)
             {
                 if (!decl->isUnparsed())
@@ -673,7 +673,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar)
     //  And enumerate all of the general entities. If any of them
     //  reference a notation, then make sure the notation exists.
     //
-    NameIdPoolEnumerator<DTDEntityDecl> entEnum = fDTDGrammar->getEntityEnumerator();
+    NameIdPoolEnumerator<DTDEntityDecl> entEnum = getScanner()->getEntityEnumerator();
     while (entEnum.hasMoreElements())
     {
         const DTDEntityDecl& curEntity = entEnum.nextElement();

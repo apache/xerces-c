@@ -126,29 +126,8 @@ $set 1
 127  A system exception occured during processing
 128  An exception occured! Type:{0}, Message:{1}
 129  Unexpected end of file exception. Message: {0}
-130  No validator for datatype {0}
-131  Incorrect datatype: {0}
-132  {0} is not a datatype.
-133  The content attribute must be 'textOnly' if you specify a type attribute.
-134  {0} is unsupported
-135  Nested Element decls only allowed in elementOnly content
-136  Element references only allowed in mixed or elementOnly content
-137  {0} only allowed in elementOnly content.
-138  {0} not allowed if the order is all.
-139  Datatype qualifiers can only be used if you specify a type attribute.
-140  The datatype qualifier {0} is not supported.
-141  Error: {0} content must be one of element, group, modelGroupRef. Saw {1}
-142  Unknown base type {0} for type {1}.
-143  Can only have one of type and ref attributes.
-144  Cannot have child content for an element declaration that has a ref attribute
-145  Incorrect type for {0}'s default value: {1}
-146  Illegal content {0} in attribute group
-147  Value of {0} is not an integer.
-148  Datatype error: {0}.
-149  The type of the element has already been declared.
-150  Schema error during parsing
-151  UnexpectedError
-152  The schemaLocation attribute does not contain pairs of values.
+130  UnexpectedError
+131  The schemaLocation attribute does not contain pairs of values.
 
 
 $set 2
@@ -177,26 +156,51 @@ $set 2
  24  Attribute '{0}' does not support multiple values
  25  Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'
  26  Element types cannot be duplicated in Mixed content models
- 27  Illegal xml:space declaration.
- 28  {0} is not a boolean.
- 29  {0} is not a decimal.
- 30  Facets are inconsistent with base type.
- 31  Illegal value {0} for facet {1}.
- 32  Illegal Facet for decimal type.
- 33  Unknown Facet: {0}.
- 34  Invalid value for Enum constant: {0}.
- 35  {0} is out of bounds:[ {1} {3} X  {4} {2} ].
- 36  {0} is not one of the specified enum values.
- 37  {0} is not an integer.
- 38  Illegal Facet for Integer type.
- 39  {0} is not a double.
- 40  Illegal Facet for Real type.
- 41  Scale Facet must be less than or equal to Precision Facet
- 42  {0} has exceeded the precision Facet {1}
- 43  {0} has execeed the scale Facet {1}
- 44  {0} is not a float.
- 45  Can't get back Schema document's root element {0}.
- 46  Schema in {0} has a different target namespace from the one specified in the instance document {1}.
+ 27  No validator for datatype {0}
+ 28  Incorrect datatype: {0}
+ 29  {0} is not a datatype.
+ 30  The content attribute must be 'textOnly' if you specify a type attribute.
+ 31  {0} is unsupported
+ 32  Nested Element decls only allowed in elementOnly content
+ 33  Element references only allowed in mixed or elementOnly content
+ 34  {0} only allowed in elementOnly content.
+ 35  {0} not allowed if the order is all.
+ 36  Datatype qualifiers can only be used if you specify a type attribute.
+ 37  The datatype qualifier {0} is not supported.
+ 38  Error: {0} content must be one of element, group, modelGroupRef. Saw {1}
+ 39  Unknown base type {0} for type {1}.
+ 40  Can only have one of type and ref attributes.
+ 41  Cannot have child content for an element declaration that has a ref attribute
+ 42  Incorrect type for {0}'s default value: {1}
+ 43  Illegal content {0} in attribute group
+ 44  Value of {0} is not an integer.
+ 45  Datatype error: Type:{0}, Message:{1}.
+ 46  Schema error: Type:{0}, Message:{1}
+ 47  The type of the element has already been declared.
+ 48  Prohibited Attribute is found.
+ 49  Illegal xml:space declaration.
+ 50  {0} is not a boolean.
+ 51  {0} is not a decimal.
+ 52  Facets are inconsistent with base type.
+ 53  Illegal value {0} for facet {1}.
+ 54  Illegal Facet for decimal type.
+ 55  Unknown Facet: {0}.
+ 56  Invalid value for Enum constant: {0}.
+ 57  {0} is out of bounds:[ {1} {3} X  {4} {2} ].
+ 58  {0} is not one of the specified enum values.
+ 59  {0} is not an integer.
+ 60  Illegal Facet for Integer type.
+ 61  {0} is not a double.
+ 62  Illegal Facet for Real type.
+ 63  Scale Facet must be less than or equal to Precision Facet
+ 64  {0} has exceeded the precision Facet {1}
+ 65  {0} has execeed the scale Facet {1}
+ 66  {0} is not a float.
+ 67  Can't get back Schema document's root element {0}.
+ 68  Schema in {0} has a different target namespace from the one specified in the instance document {1}.
+ 69  In element {0}: Can not have element children within a simple type content.
+ 70  This element {0} has a simpletype but no datatypevalidator was found.
+ 71  There is no Grammar for uri: {0}.
 
 
 $set 3
@@ -300,7 +304,7 @@ $set 3
  99  The port field must be a 16 bit decimal number
 100  The passed index is past the end of the vector
 101  The element id was invalid
-102  When reusing the validator, no internal subset is allowed
+102  When reusing the Grammar, no internal subset is allowed
 103  The passed recognizer encoding was not known
 104  Wrong character
 105  Invalid reference number

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/04/19 18:16:50  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.7  2001/03/21 21:56:01  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -90,9 +93,9 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/RefVectorOf.hpp>
+#include <util/QName.hpp>
 
 class ContentLeafNameTypeVector;
-class Grammar;
 
 /**
  *  This class defines the abstract interface for all content models. All
@@ -120,20 +123,18 @@ public:
     // -----------------------------------------------------------------------
     //  The virtual content model interface provided by derived classes
     // -----------------------------------------------------------------------
-    virtual bool getIsAmbiguous() const = 0;
-
 	virtual int validateContent
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     ) const = 0;
 
 	virtual int validateContentSpecial
     (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-        , const Grammar*        grammar = 0
+        QName** const         children
+      , const unsigned int    childCount
+      , const unsigned int    emptyNamespaceId
     ) const = 0;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 18:17:20  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.1  2001/03/21 21:56:20  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -72,9 +75,8 @@
 //---------------------------------------------------------------------------
 //  DTDGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDGrammar::DTDGrammar(NameIdPool<DTDEntityDecl>* entityDeclPool) :
+DTDGrammar::DTDGrammar() :
     fElemDeclPool(0)
-    , fEntityDeclPool(entityDeclPool)
     , fNotationDeclPool(0)
 {
     //
@@ -116,7 +118,7 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
     // if not, then add this in
     if (!retVal)
     {
-        retVal = new DTDElementDecl(qName, DTDElementDecl::Any);
+        retVal = new DTDElementDecl(qName, uriId, DTDElementDecl::Any);
         const unsigned int elemId = fElemDeclPool->put(retVal);
         retVal->setId(elemId);
         wasAdded = true;

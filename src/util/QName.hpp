@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/04/19 18:17:10  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.4  2001/03/21 21:56:12  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -89,18 +92,18 @@ public :
     /** Constructs a specified qname using prefix, and localpart. */
     QName
     (   const XMLCh* const        prefix
-       ,const XMLCh* const        localPart
-	   ,const int                 uriId = -1
+      , const XMLCh* const        localPart
+	   , const unsigned int        uriId
     );
 
     /** Constructs a specified qname using rawName. */
     QName
     (   const XMLCh* const        rawName
-	   ,const int                 uriId = -1
+	   , const unsigned int        uriId
     );
 
     /** Copy constructor. */
-    QName(const QName& qname);
+    QName(QName* const qname);
 
     ~QName();
 
@@ -113,8 +116,8 @@ public :
     const XMLCh* getLocalPart() const;
     XMLCh* getLocalPart();
 
-    const int getURI() const;
-    int getURI();
+    const unsigned int getURI() const;
+    unsigned int getURI();
 
     const XMLCh* getRawName() const;
     XMLCh* getRawName();
@@ -125,31 +128,31 @@ public :
     void setName
     (
         const XMLCh* const        prefix
-       ,const XMLCh* const        localPart
-	   ,const int                 uriId = -1
+      , const XMLCh* const        localPart
+	   , const unsigned int        uriId
     );
 
     void setName
     (
         const XMLCh* const        rawName
-	   ,const int                 uriId = -1
+	   , const unsigned int        uriId
     );
 
-   void setPrefix(const XMLCh*) ;
+    void setPrefix(const XMLCh*) ;
+    void setLocalPart(const XMLCh*) ;
+    void setURI(const unsigned int) ;
 
-	void setLocalPart(const XMLCh*) ;
-
-	void setURI(const int) ;
+    void setValues(const QName& qname);
 
     // -----------------------------------------------------------------------
     //  comparison
     // -----------------------------------------------------------------------
-	bool operator==(const QName&);
+    bool operator==(const QName&);
 
     // -----------------------------------------------------------------------
     //  Misc
     // -----------------------------------------------------------------------
-	void cleanUp();
+    void cleanUp();
 
 private :
 
@@ -157,7 +160,7 @@ private :
     //  Private instance variables
     //
     //  We copy the followings from XMLAttr.hpp, but stick to Java version's
-	//  naming convention
+    //  naming convention
     //
     //  fPrefix
     //  fPrefixBufSz
@@ -165,7 +168,7 @@ private :
     //      current size of the buffer (minus one for the null.) Prefixes
     //      really don't matter technically but it might be required for
     //      pratical reasons, to recreate the original document for instance.
-	//
+    //
     //  fLocalPart
     //  fLocalPartBufSz
     //      The base part of the name of the attribute, and the current size
@@ -187,7 +190,7 @@ private :
     unsigned int        fLocalPartBufSz;
     XMLCh*              fRawName;
     unsigned int        fRawNameBufSz;
-    int                 fURIId;
+    unsigned int        fURIId;
 
 };
 
@@ -214,12 +217,12 @@ inline XMLCh* QName::getLocalPart()
 	return fLocalPart;
 }
 
-inline const int QName::getURI() const
+inline const unsigned int QName::getURI() const
 {
 	return fURIId;
 }
 
-inline int QName::getURI()
+inline unsigned int QName::getURI()
 {
 	return fURIId;
 }
@@ -227,7 +230,7 @@ inline int QName::getURI()
 // ---------------------------------------------------------------------------
 //  QName: Setter methods
 // ---------------------------------------------------------------------------
-inline void QName::setURI(const int uriId)
+inline void QName::setURI(const unsigned int uriId)
 {
     fURIId = uriId;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 18:17:22  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.1  2001/03/21 21:56:20  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -67,6 +70,7 @@
 #define DTDSCANNER_HPP
 
 #include <validators/DTD/DTDGrammar.hpp>
+#include <validators/DTD/DTDEntityDecl.hpp>
 
 /*
  * Default implementation of an XML DTD scanner.
@@ -97,7 +101,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DTDScanner(DTDGrammar* dtdGrammar, DocTypeHandler* const    docTypeHandler);
+    DTDScanner(DTDGrammar* dtdGrammar, NameIdPool<DTDEntityDecl>* entityDeclPool, DocTypeHandler* const    docTypeHandler);
     virtual ~DTDScanner();
 
     // -----------------------------------------------------------------------
@@ -248,6 +252,15 @@ private:
     //  fPEntityDeclPool
     //      This is a pool of EntityDecl objects, which contains all of the
     //      parameter entities that are declared in the DTD subsets.
+    //
+    //  fEntityDeclPool
+    //      This is a pool of EntityDecl objects, which contains all of the
+    //      general entities that are declared in the DTD subsets.  It is
+    //      owned by the Scanner as Schema Grammar may also need access to
+    //      this pool for entity reference.
+    //
+    //  fEmptyNamespaceId
+    //      The uri for all DTD decls
     // -----------------------------------------------------------------------
     DocTypeHandler*                 fDocTypeHandler;
     DTDAttDef*                      fDumAttDef;
@@ -260,6 +273,8 @@ private:
     ReaderMgr*                      fReaderMgr;
     XMLScanner*                     fScanner;
     NameIdPool<DTDEntityDecl>*      fPEntityDeclPool;
+    NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
+    unsigned int                    fEmptyNamespaceId;
 };
 
 
@@ -296,5 +311,11 @@ inline void DTDScanner::setScannerInfo(XMLScanner* const      owningScanner
     fScanner = owningScanner;
     fReaderMgr = readerMgr;
     fBufMgr = bufMgr;
+
+    if (fScanner->getDoNamespaces())
+        fEmptyNamespaceId = fScanner->getEmptyNamespaceId();
+    else
+        fEmptyNamespaceId = 0;
+
 }
 #endif

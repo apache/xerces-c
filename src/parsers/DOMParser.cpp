@@ -590,7 +590,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         XMLBuffer buf;
         DOMString namespaceURI = 0;
-        if (urlId != fScanner->getGlobalNamespaceId()) {  //TagName has a prefix
+        if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
             fScanner->getURIText(urlId, buf);   //get namespaceURI
             namespaceURI = DOMString(buf.getRawBuffer());
         }
@@ -945,7 +945,7 @@ void DOMParser::elementDecl
         elemDecl.appendData(decl.getFullName());
 
         //get the ContentSpec information
-        const XMLCh* contentModel = decl.getFormattedContentModel(*fScanner->getCurrentGrammar());
+        const XMLCh* contentModel = decl.getFormattedContentModel();
         if (contentModel != 0) {
             elemDecl.appendData(chSpace);
             elemDecl.appendData(contentModel);

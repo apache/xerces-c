@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/19 18:17:31  tng
+ * Schema: SchemaValidator update, and use QName in Content Model
+ *
  * Revision 1.1  2001/03/21 21:56:27  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -137,17 +140,6 @@ public:
         const   unsigned int    elemId
     ) = 0;
 
-    // Entity Decl
-    virtual const XMLEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    )   const=0;
-
-    virtual XMLEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    )=0;
-
     // Notation
     virtual const XMLNotationDecl* getNotationDecl
     (
@@ -165,11 +157,6 @@ public:
     virtual unsigned int putElemDecl
     (
         XMLElementDecl* const elemDecl
-    )   const = 0;
-
-    virtual unsigned int putEntityDecl
-    (
-        XMLEntityDecl* const entityDecl
     )   const = 0;
 
     virtual unsigned int putNotationDecl
