@@ -2,9 +2,10 @@
 #pragma hdrstop
 #include <condefs.h>
 
+
 //---------------------------------------------------------------------------
 USELIB("..\..\..\..\Build\Win32\BCB4\XercesLib.lib");
-USEUNIT("..\..\..\..\samples\DOMPrint\DOMTreeErrorReporter.cpp");
+USEUNIT("..\..\..\..\samples\SAX2Count\SAX2CountHandlers.cpp");
 
 //---------------------------------------------------------------------------
 
@@ -17,4 +18,5 @@ int main(int argc, char* argv[])
 #endif
 
 // The real entry point is in the Samples folder
-#include <DOMPrint.cpp>
+#include <SAX2Count.cpp>
+

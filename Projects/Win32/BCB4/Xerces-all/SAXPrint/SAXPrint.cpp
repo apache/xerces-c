@@ -4,12 +4,13 @@
 
 //---------------------------------------------------------------------------
 USELIB("..\..\..\..\Build\Win32\BCB4\XercesLib.lib");
-USEUNIT("..\..\..\..\samples\DOMPrint\DOMTreeErrorReporter.cpp");
+USEUNIT("..\..\..\..\samples\SAXPrint\SAXPrintHandlers.cpp");
 
 //---------------------------------------------------------------------------
 
 #ifdef NEVER_COMPILE
 // Dummy entry point to satisfy the BCB IDE
+#pragma ARGS_USED
 int main(int argc, char* argv[])
 {
 	return 0;
@@ -17,4 +18,4 @@ int main(int argc, char* argv[])
 #endif
 
 // The real entry point is in the Samples folder
-#include <DOMPrint.cpp>
+#include <SAXPrint.cpp>

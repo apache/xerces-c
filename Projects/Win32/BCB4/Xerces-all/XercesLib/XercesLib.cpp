@@ -2,129 +2,232 @@
 #include <vcl.h>
 #pragma hdrstop
 //---------------------------------------------------------------------------
-//  Wichtiger Hinweis zur DLL-Speicherverwaltung, wenn Ihre DLL die
-//  statische Version der Laufzeitbibliothek verwendet:
+//   Important note about DLL memory management when your DLL uses the
+//   static version of the RunTime Library:
 //
-//  Wenn Ihre DLL Funktionen exportiert, die String-Objekte (oder struct/class,
-//  die verschachtelte Strings enthalten) als Parameter oder Funktionsergebnisse übergeben,
-//  müssen Sie die Bibliothek MEMMGR.LIB zum DLL-Projekt und
-//  auch zu anderen Projekten, die diese DLL benutzen, hinzufügen. Sie müssen auch
-//  MEMMGR.LIB verwenden, wenn andere Projekte, die die DLL benutzen, new- oder delete-Operation auf
-//  Klassen durchführen, die nicht von TObject abstammen und von der DLL exportiert werden.
-//  Durch das Hinzufügen von MEMMGR.LIB werden die DLL und die aufrufenden EXEs
-//  dazu veranlasst, BORLNDMM.DLL als Speicher-Manager zu verwenden. In diesen Fällen
-//  muß die Datei BORLNDMM.DLL mit der DLL weitergegeben werden.
+//   If your DLL exports any functions that pass String objects (or structs/
+//   classes containing nested Strings) as parameter or function results,
+//   you will need to add the library MEMMGR.LIB to both the DLL project and
+//   any other projects that use the DLL.  You will also need to use MEMMGR.LIB
+//   if any other projects which use the DLL will be perfomring new or delete
+//   operations on any non-TObject-derived classes which are exported from the
+//   DLL. Adding MEMMGR.LIB to your project will change the DLL and its calling
+//   EXE's to use the BORLNDMM.DLL as their memory manager.  In these cases,
+//   the file BORLNDMM.DLL should be deployed along with your DLL.
 //
-//  Um die Verwendung von BORLNDMM.DLL zu vermeiden, sollten String-Informationen
-//  als "char *" oder ShortString übergeben werden.
+//   To avoid using BORLNDMM.DLL, pass string information using "char *" or
+//   ShortString parameters.
 //
-//  Wenn Ihre DLL die dynamische Version der RTL verwendet, müssen Sie
-//  MEMMGR.LIB nicht explizit hinzufügen, da dies implizit geschieht.
+//   If your DLL uses the dynamic version of the RTL, you do not need to
+//   explicitly add MEMMGR.LIB as this will be done implicitly for you
 //---------------------------------------------------------------------------
-USEUNIT("..\..\..\..\..\src\dom\TreeWalkerImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\CDATASectionImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\CharacterDataImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\CommentImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DeepNodeListImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DocumentFragmentImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DocumentImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DocumentTypeImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Attr.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_CDATASection.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_CharacterData.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Comment.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Document.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_DocumentFragment.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_DocumentType.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_DOMException.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_DOMImplementation.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Element.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Entity.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_EntityReference.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_NamedNodeMap.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Node.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_NodeFilter.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_NodeIterator.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_NodeList.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Notation.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_ProcessingInstruction.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_Text.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOM_TreeWalker.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DomMemDebug.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DOMString.cpp");
-USEUNIT("..\..\..\..\..\src\dom\DStringPool.cpp");
-USEUNIT("..\..\..\..\..\src\dom\ElementDefinitionImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\ElementImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\EntityImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\EntityReferenceImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NamedNodeMapImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NodeFilterImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NodeImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NodeIteratorImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NodeListImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NodeVector.cpp");
-USEUNIT("..\..\..\..\..\src\dom\NotationImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\ProcessingInstructionImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\RefCountedImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\TextImpl.cpp");
-USEUNIT("..\..\..\..\..\src\dom\AttrImpl.cpp");
-USEUNIT("..\..\..\..\..\src\util\Platforms\Win32\Win32PlatformUtils.cpp");
-USEUNIT("..\..\..\..\..\src\util\XMLUni.cpp");
-USEUNIT("..\..\..\..\..\src\util\BinInputStream.cpp");
-USEUNIT("..\..\..\..\..\src\util\BinMemInputStream.cpp");
-USEUNIT("..\..\..\..\..\src\util\BitSet.cpp");
-USEUNIT("..\..\..\..\..\src\util\HeaderDummy.cpp");
-USEUNIT("..\..\..\..\..\src\util\KVStringPair.cpp");
-USEUNIT("..\..\..\..\..\src\util\Mutexes.cpp");
-USEUNIT("..\..\..\..\..\src\util\PlatformUtils.cpp");
-USEUNIT("..\..\..\..\..\src\util\StdOut.cpp");
-USEUNIT("..\..\..\..\..\src\util\StringPool.cpp");
-USEUNIT("..\..\..\..\..\src\util\TextOutputStream.cpp");
-USEUNIT("..\..\..\..\..\src\util\URL.cpp");
-USEUNIT("..\..\..\..\..\src\util\XMLException.cpp");
-USEUNIT("..\..\..\..\..\src\util\XMLString.cpp");
-USEUNIT("..\..\..\..\..\src\util\BinFileInputStream.cpp");
-USEFILE("..\..\..\..\..\src\util\Compilers\BorlandCDefs.hpp");
-USEUNIT("..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.cpp");
-USEUNIT("..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLValidator.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLAttr.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLBuffer.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLBufferMgr.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLContentModel.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLElementDecl.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLEntityDecl.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLNotationDecl.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLRecognizer.cpp");
-USEUNIT("..\..\..\..\..\src\framework\XMLAttDef.cpp");
-USEUNIT("..\..\..\..\..\src\internal\XMLScanner2.cpp");
-USEUNIT("..\..\..\..\..\src\internal\MemBufInputSource.cpp");
-USEUNIT("..\..\..\..\..\src\internal\ReaderMgr.cpp");
-USEUNIT("..\..\..\..\..\src\internal\StdInInputSource.cpp");
-USEUNIT("..\..\..\..\..\src\internal\URLInputSource.cpp");
-USEUNIT("..\..\..\..\..\src\internal\VecAttrListImpl.cpp");
-USEUNIT("..\..\..\..\..\src\internal\XMLReader.cpp");
-USEUNIT("..\..\..\..\..\src\internal\XMLScanner.cpp");
-USEUNIT("..\..\..\..\..\src\internal\ElemStack.cpp");
-USEUNIT("..\..\..\..\..\src\parsers\SAXParser.cpp");
-USEUNIT("..\..\..\..\..\src\parsers\DOMParser.cpp");
-USEUNIT("..\..\..\..\..\src\sax\SAXParseException.cpp");
-USEUNIT("..\..\..\..\..\src\sax\InputSource.cpp");
-USEUNIT("..\..\..\..\..\src\sax\Dummy.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\SimpleContentModel.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\CMUnaryOp.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\ContentSpecNode.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\DFAContentModel.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\DTDAttDef.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\DTDAttDefList.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\DTDElementDecl.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\DTDValidator.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\DTDValidator2.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\MixedContentModel.cpp");
-USEUNIT("..\..\..\..\..\src\validators\DTD\CMBinaryOp.cpp");
+USEUNIT("..\..\..\..\src\dom\AttrImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\AttrMapImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\AttrNSImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\CDATASectionImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\CharacterDataImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\ChildAndParentNode.cpp");
+USEUNIT("..\..\..\..\src\dom\ChildNode.cpp");
+USEUNIT("..\..\..\..\src\dom\CommentImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\DeepNodeListImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\DocumentFragmentImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\DocumentImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\DocumentTypeImpl.cpp");
+USEFILE("..\..\..\..\src\dom\DOM.hpp");
+USEUNIT("..\..\..\..\src\dom\DomMemDebug.cpp");
+USEUNIT("..\..\..\..\src\dom\DOMString.cpp");
+USEFILE("..\..\..\..\src\dom\DOMStringImpl.hpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Attr.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_CDATASection.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_CharacterData.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Comment.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Document.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_DocumentFragment.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_DocumentType.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_DOMException.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_DOMImplementation.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Element.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Entity.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_EntityReference.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_NamedNodeMap.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Node.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_NodeFilter.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_NodeIterator.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_NodeList.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Notation.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_ProcessingInstruction.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Range.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_RangeException.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_Text.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_TreeWalker.cpp");
+USEUNIT("..\..\..\..\src\dom\DOM_XMLDecl.cpp");
+USEUNIT("..\..\..\..\src\dom\DStringPool.cpp");
+USEUNIT("..\..\..\..\src\dom\ElementDefinitionImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\ElementImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\ElementNSImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\EntityImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\EntityReferenceImpl.cpp");
+USEFILE("..\..\..\..\src\dom\MemDebug.hpp");
+USEUNIT("..\..\..\..\src\dom\NamedNodeMapImpl.cpp");
+USEFILE("..\..\..\..\src\dom\NameNodeFilter.hpp");
+USEUNIT("..\..\..\..\src\dom\NodeIDMap.cpp");
+USEUNIT("..\..\..\..\src\dom\NodeImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\NodeIteratorImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\NodeListImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\NodeVector.cpp");
+USEUNIT("..\..\..\..\src\dom\NotationImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\ParentNode.cpp");
+USEUNIT("..\..\..\..\src\dom\ProcessingInstructionImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\RangeImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\RefCountedImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\TextImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\TreeWalkerImpl.cpp");
+USEUNIT("..\..\..\..\src\dom\XMLDeclImpl.cpp");
+USEUNIT("..\..\..\..\src\framework\LocalFileInputSource.cpp");
+USEUNIT("..\..\..\..\src\framework\MemBufInputSource.cpp");
+USEUNIT("..\..\..\..\src\framework\StdInInputSource.cpp");
+USEUNIT("..\..\..\..\src\framework\URLInputSource.cpp");
+USEUNIT("..\..\..\..\src\framework\XMLAttDef.cpp");
+USEFILE("..\..\..\..\src\framework\XMLAttDefList.hpp");
+USEUNIT("..\..\..\..\src\framework\XMLAttr.cpp");
+USEUNIT("..\..\..\..\src\framework\XMLBuffer.cpp");
+USEUNIT("..\..\..\..\src\framework\XMLBufferMgr.cpp");
+USEUNIT("..\..\..\..\src\framework\XMLContentModel.cpp");
+USEFILE("..\..\..\..\src\framework\XMLDocumentHandler.hpp");
+USEUNIT("..\..\..\..\src\framework\XMLElementDecl.cpp");
+USEUNIT("..\..\..\..\src\framework\XMLEntityDecl.cpp");
+USEFILE("..\..\..\..\src\framework\XMLEntityHandler.hpp");
+USEFILE("..\..\..\..\src\framework\XMLErrorCodes.hpp");
+USEFILE("..\..\..\..\src\framework\XMLErrorReporter.hpp");
+USEUNIT("..\..\..\..\src\framework\XMLFormatter.cpp");
+USEUNIT("..\..\..\..\src\framework\XMLNotationDecl.cpp");
+USEFILE("..\..\..\..\src\framework\XMLPScanToken.hpp");
+USEUNIT("..\..\..\..\src\framework\XMLRecognizer.cpp");
+USEFILE("..\..\..\..\src\framework\XMLRefInfo.hpp");
+USEUNIT("..\..\..\..\src\framework\XMLValidator.cpp");
+USEFILE("..\..\..\..\src\framework\XMLValidityCodes.hpp");
+USEFILE("..\..\..\..\src\internal\CharTypeTables.hpp");
+USEUNIT("..\..\..\..\src\internal\ElemStack.cpp");
+USEFILE("..\..\..\..\src\internal\EndOfEntityException.hpp");
+USEUNIT("..\..\..\..\src\internal\ReaderMgr.cpp");
+USEUNIT("..\..\..\..\src\internal\VecAttributesImpl.cpp");
+USEUNIT("..\..\..\..\src\internal\VecAttrListImpl.cpp");
+USEUNIT("..\..\..\..\src\internal\XMLReader.cpp");
+USEUNIT("..\..\..\..\src\internal\XMLScanner.cpp");
+USEUNIT("..\..\..\..\src\internal\XMLScanner2.cpp");
+USEUNIT("..\..\..\..\src\parsers\DOMParser.cpp");
+USEUNIT("..\..\..\..\src\parsers\SAX2XMLReaderImpl.cpp");
+USEUNIT("..\..\..\..\src\parsers\SAXParser.cpp");
+USEFILE("..\..\..\..\src\sax\AttributeList.hpp");
+USEFILE("..\..\..\..\src\sax\DocumentHandler.hpp");
+USEFILE("..\..\..\..\src\sax\DTDHandler.hpp");
+USEUNIT("..\..\..\..\src\sax\Dummy.cpp");
+USEFILE("..\..\..\..\src\sax\EntityResolver.hpp");
+USEFILE("..\..\..\..\src\sax\ErrorHandler.hpp");
+USEFILE("..\..\..\..\src\sax\HandlerBase.hpp");
+USEUNIT("..\..\..\..\src\sax\InputSource.cpp");
+USEFILE("..\..\..\..\src\sax\Locator.hpp");
+USEFILE("..\..\..\..\src\sax\Parser.hpp");
+USEUNIT("..\..\..\..\src\sax\SAXException.cpp");
+USEUNIT("..\..\..\..\src\sax\SAXParseException.cpp");
+USEFILE("..\..\..\..\src\sax2\Attributes.hpp");
+USEFILE("..\..\..\..\src\sax2\ContentHandler.hpp");
+USEFILE("..\..\..\..\src\sax2\DefaultHandler.hpp");
+USEUNIT("..\..\..\..\src\sax2\sax2Dummy.cpp");
+USEFILE("..\..\..\..\src\sax2\SAX2XMLReader.hpp");
+USEFILE("..\..\..\..\src\sax2\XMLReaderFactory.hpp");
+USEFILE("..\..\..\..\src\util\ArrayIndexOutOfBoundsException.hpp");
+USEFILE("..\..\..\..\src\util\AutoSense.hpp");
+USEUNIT("..\..\..\..\src\util\BinFileInputStream.cpp");
+USEUNIT("..\..\..\..\src\util\BinInputStream.cpp");
+USEUNIT("..\..\..\..\src\util\BinMemInputStream.cpp");
+USEFILE("..\..\..\..\src\util\BitOps.hpp");
+USEUNIT("..\..\..\..\src\util\BitSet.cpp");
+USEFILE("..\..\..\..\src\util\Compilers\BorlandCDefs.hpp");
+USEFILE("..\..\..\..\src\util\CountedPointer.hpp");
+USEFILE("..\..\..\..\src\util\EmptyStackException.hpp");
+USEFILE("..\..\..\..\src\util\FlagJanitor.hpp");
+USEFILE("..\..\..\..\src\util\HashBase.hpp");
+USEUNIT("..\..\..\..\src\util\HashPtr.cpp");
+USEUNIT("..\..\..\..\src\util\HashXMLCh.cpp");
+USEUNIT("..\..\..\..\src\util\HeaderDummy.cpp");
+USEFILE("..\..\..\..\src\util\IllegalArgumentException.hpp");
+USEFILE("..\..\..\..\src\util\InvalidCastException.hpp");
+USEFILE("..\..\..\..\src\util\IOException.hpp");
+USEFILE("..\..\..\..\src\util\Janitor.hpp");
+USEFILE("..\..\..\..\src\util\KeyValuePair.hpp");
+USEUNIT("..\..\..\..\src\util\KVStringPair.cpp");
+USEFILE("..\..\..\..\src\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp");
+USEUNIT("..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.cpp");
+USEUNIT("..\..\..\..\src\util\Mutexes.cpp");
+USEFILE("..\..\..\..\src\util\NameIdPool.hpp");
+USEUNIT("..\..\..\..\src\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp");
+USEUNIT("..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.cpp");
+USEFILE("..\..\..\..\src\util\NoDefTranscoderException.hpp");
+USEFILE("..\..\..\..\src\util\NoSuchElementException.hpp");
+USEFILE("..\..\..\..\src\util\NullPointerException.hpp");
+USEFILE("..\..\..\..\src\util\Platforms\Win32\resource.h");
+USEFILE("..\..\..\..\src\util\Platforms\Win32\resource.h");
+USERC("..\..\..\..\src\util\Platforms\Win32\Version.rc");
+USEFILE("..\..\..\..\src\util\Platforms\Win32\Win32Defs.hpp");
+USEUNIT("..\..\..\..\src\util\Platforms\Win32\Win32PlatformUtils.cpp");
+USEUNIT("..\..\..\..\src\util\PlatformUtils.cpp");
+USEFILE("..\..\..\..\src\util\RefArrayOf.hpp");
+USEFILE("..\..\..\..\src\util\RefHashTableOf.hpp");
+USEFILE("..\..\..\..\src\util\RefStackOf.hpp");
+USEFILE("..\..\..\..\src\util\RefVectorOf.hpp");
+USEFILE("..\..\..\..\src\util\RuntimeException.hpp");
+USEUNIT("..\..\..\..\src\util\StringPool.cpp");
+USEUNIT("..\..\..\..\src\util\Transcoders\Win32\Win32TransService.cpp");
+USEFILE("..\..\..\..\src\util\TranscodingException.hpp");
+USEUNIT("..\..\..\..\src\util\TransService.cpp");
+USEFILE("..\..\..\..\src\util\UnexpectedEOFException.hpp");
+USEFILE("..\..\..\..\src\util\UnsupportedEncodingException.hpp");
+USEFILE("..\..\..\..\src\util\UTFDataFormatException.hpp");
+USEFILE("..\..\..\..\src\util\ValueArrayOf.hpp");
+USEFILE("..\..\..\..\src\util\ValueStackOf.hpp");
+USEFILE("..\..\..\..\src\util\ValueVectorOf.hpp");
+USEFILE("..\..\..\..\src\util\XercesDefs.hpp");
+USEUNIT("..\..\..\..\src\util\XML256TableTranscoder.cpp");
+USEUNIT("..\..\..\..\src\util\XML88591Transcoder.cpp");
+USEUNIT("..\..\..\..\src\util\XMLASCIITranscoder.cpp");
+USEUNIT("..\..\..\..\src\util\XMLChTranscoder.cpp");
+USEFILE("..\..\..\..\src\util\XMLDeleterFor.hpp");
+USEUNIT("..\..\..\..\src\util\XMLEBCDICTranscoder.cpp");
+USEFILE("..\..\..\..\src\util\XMLEnumerator.hpp");
+USEUNIT("..\..\..\..\src\util\XMLException.cpp");
+USEFILE("..\..\..\..\src\util\XMLExceptMsgs.hpp");
+USEUNIT("..\..\..\..\src\util\XMLIBM1140Transcoder.cpp");
+USEFILE("..\..\..\..\src\util\XMLMsgLoader.hpp");
+USEFILE("..\..\..\..\src\util\XMLNetAccessor.hpp");
+USEUNIT("..\..\..\..\src\util\XMLString.cpp");
+USEFILE("..\..\..\..\src\util\XMLUCS4Transcoder.hpp");
+USEUNIT("..\..\..\..\src\util\XMLUCSTranscoder.cpp");
+USEUNIT("..\..\..\..\src\util\XMLUni.cpp");
+USEFILE("..\..\..\..\src\util\XMLUniDefs.hpp");
+USEUNIT("..\..\..\..\src\util\XMLURL.cpp");
+USEUNIT("..\..\..\..\src\util\XMLUTF16Transcoder.cpp");
+USEUNIT("..\..\..\..\src\util\XMLUTF8Transcoder.cpp");
+USEUNIT("..\..\..\..\src\util\XMLWin1252Transcoder.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\CMBinaryOp.cpp");
+USEFILE("..\..\..\..\src\validators\DTD\CMLeaf.hpp");
+USEFILE("..\..\..\..\src\validators\DTD\CMNode.hpp");
+USEFILE("..\..\..\..\src\validators\DTD\CMStateSet.hpp");
+USEUNIT("..\..\..\..\src\validators\DTD\CMUnaryOp.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\ContentSpecNode.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\DFAContentModel.cpp");
+USEFILE("..\..\..\..\src\validators\DTD\DocTypeHandler.hpp");
+USEUNIT("..\..\..\..\src\validators\DTD\DTDAttDef.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\DTDAttDefList.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\DTDElementDecl.cpp");
+USEFILE("..\..\..\..\src\validators\DTD\DTDEntityDecl.hpp");
+USEUNIT("..\..\..\..\src\validators\DTD\DTDValidator.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\DTDValidator2.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\MixedContentModel.cpp");
+USEUNIT("..\..\..\..\src\validators\DTD\SimpleContentModel.cpp");
 //---------------------------------------------------------------------------
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void*)
 {
-  return 1;
+	return 1;
 }
 //---------------------------------------------------------------------------
