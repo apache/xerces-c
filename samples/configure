@@ -1381,8 +1381,6 @@ case "${host}" in
         *-*-cygwin*)	platform=CYGWIN ;;
 		*-*-mingw*)		platform=MINGW ;;
         *-*-interix*)   platform=INTERIX ;;
-		*-*-mingw*)		platform=MINGW ;;
-        *-*-interix*)   platform=INTERIX ;;
         *)              platform=UNKNOWN ;;
 esac
 
