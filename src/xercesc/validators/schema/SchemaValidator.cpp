@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2002/11/26 21:20:09  tng
+ * Schema Fix: List can have Union, and Union can have List.  So need to check its items for ID/IDREF/Entity.
+ *
  * Revision 1.18  2002/11/07 21:57:37  tng
  * Fix the following Schema Test Failures:
  * 1. Typo when comparing miscFlags with FIXED
@@ -351,6 +354,21 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         else if (itemDTVType == DatatypeValidator::IDREF) {
                             ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
                         }
+                        else if (itemDTVType == DatatypeValidator::Union) {
+                            RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)itemDTV)->getMemberTypeValidators();
+                            unsigned int memberTypeNumber = memberDTV->size();
+                            for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
+                            {
+                                DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
+                                if (memberDTVType == DatatypeValidator::ENTITY)
+                                    ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                                else if (memberDTVType == DatatypeValidator::ID)
+                                    ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                                else if (memberDTVType == DatatypeValidator::IDREF) {
+                                    ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                                }
+                            }
+                        }
                     }
                     else if (eleDefDVType == DatatypeValidator::Union) {
                         RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)fCurrentDV)->getMemberTypeValidators();
@@ -364,6 +382,17 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                                 ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
                             else if (memberDTVType == DatatypeValidator::IDREF) {
                                 ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                            }
+                            else if (memberDTVType == DatatypeValidator::List) {
+                                DatatypeValidator* itemDTV = ((ListDatatypeValidator*)memberDTV->elementAt(memberIndex))->getItemTypeDTV();
+                                DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
+                                if (itemDTVType == DatatypeValidator::ENTITY)
+                                    ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                                else if (itemDTVType == DatatypeValidator::ID)
+                                    ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                                else if (itemDTVType == DatatypeValidator::IDREF) {
+                                    ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                                }
                             }
                         }
                     }
