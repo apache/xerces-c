@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/05/15 10:37:08  gareth
+ * Optimization. We now resize the hash when appropriate. Patch by Nathan Codding.
+ *
  * Revision 1.6  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -130,7 +133,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefHashTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems)
-	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
+	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus), fInitialModulus(modulus), fCount(0)
 {
     initialize(modulus);
 	
@@ -139,7 +142,7 @@ template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int mo
 }
 
 template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase)
-	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
+	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus), fInitialModulus(modulus), fCount(0)
 {
     initialize(modulus);
     // set hasher
@@ -147,7 +150,7 @@ template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int mo
 }
 
 template <class TVal> RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus)
-	: fAdoptedElems(true), fBucketList(0), fHashModulus(modulus)
+	: fAdoptedElems(true), fBucketList(0), fHashModulus(modulus), fInitialModulus(modulus), fCount(0)
 {
     initialize(modulus);
 
@@ -233,6 +236,8 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
         // Clean out this entry
         fBucketList[buckInd] = 0;
     }
+    
+    fCount = 0;
 }
 
 // This method returns the data associated with a key. The key entry is deleted. The caller
@@ -313,6 +318,7 @@ template <class TElem> void RefHashTableOf<TElem>::reinitialize(HashBase* hashBa
     if (fBucketList || fHash)
         cleanup();
 
+    fHashModulus = fInitialModulus;
     initialize(fHashModulus);
 
     if (hashBase)
@@ -374,6 +380,14 @@ void RefHashTableOf<TVal>::setAdoptElements(const bool aValue)
 // ---------------------------------------------------------------------------
 template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valueToAdopt)
 {
+    
+    // Apply 0.75 load factor to find threshold.
+    unsigned int threshold = fHashModulus * 3 / 4;
+    
+    // If we've grown too big, expand the table and rehash.
+    if (fCount >= threshold)
+        rehash();
+    
     // First see if the key exists already
     unsigned int hashVal;
     RefHashTableBucketElem<TVal>* newBucket = findBucketElem(key, hashVal);
@@ -394,6 +408,8 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
         newBucket = new RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
+    
+    fCount++;
 }
 
 
@@ -401,6 +417,49 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Private methods
 // ---------------------------------------------------------------------------
+template <class TVal> void RefHashTableOf<TVal>::
+rehash()
+{
+    unsigned int index;
+    unsigned int oldMod = fHashModulus;
+    fHashModulus *= 2;
+    
+    RefHashTableBucketElem<TVal>** oldBucketList = fBucketList;
+    
+    fBucketList = new RefHashTableBucketElem<TVal>*[fHashModulus];
+    for (index = 0; index < fHashModulus; index++)
+        fBucketList[index] = 0;
+    
+    
+    // Rehash all existing entries.
+    for (index = 0; index < oldMod; index++)
+    {
+        // Get the bucket list head for this entry
+        RefHashTableBucketElem<TVal>* curElem = oldBucketList[index];
+        RefHashTableBucketElem<TVal>* nextElem;
+        while (curElem)
+        {
+            // Save the next element before we detach this one
+            nextElem = curElem->fNext;
+
+            unsigned int hashVal = fHash->getHashVal(curElem->fKey, fHashModulus);
+            if (hashVal > fHashModulus)
+                ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+            
+            RefHashTableBucketElem<TVal>* newHeadElem = fBucketList[hashVal];
+            
+            // Insert at the start of this bucket's list.
+            curElem->fNext = newHeadElem;
+            fBucketList[hashVal] = curElem;
+            
+            curElem = nextElem;
+        }
+    }
+            
+    delete[] oldBucketList;
+    
+}
+
 template <class TVal> RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
 findBucketElem(const void* const key, unsigned int& hashVal)
 {
@@ -479,6 +538,8 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
             // Delete the current element
             delete curElem;
 
+            fCount--;
+            
             return;
         }
 

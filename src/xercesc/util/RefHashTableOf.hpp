@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 10:37:08  gareth
+ * Optimization. We now resize the hash when appropriate. Patch by Nathan Codding.
+ *
  * Revision 1.6  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -220,6 +223,7 @@ private:
     const RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
     void removeBucketElem(const void* const key, unsigned int& hashVal);
     void initialize(const unsigned int modulus);
+    void rehash();
 
 
     // -----------------------------------------------------------------------
@@ -244,6 +248,8 @@ private:
     bool                                fAdoptedElems;
     RefHashTableBucketElem<TVal>**      fBucketList;
     unsigned int                        fHashModulus;
+    unsigned int                        fInitialModulus;
+    unsigned int                        fCount;
 	HashBase*							fHash;
 };
 
