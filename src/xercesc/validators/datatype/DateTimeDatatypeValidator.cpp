@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/12/11 21:40:24  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.10  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -169,21 +172,17 @@ void DateTimeDatatypeValidator::parse(XMLDateTime* const pDate)
     pDate->parseDateTime();
 }
 
-/***
- *3.2.7 dateTime
- *
- *  . either the time zone must be omitted or, 
- *    if present, the time zone must be Coordinated Universal Time (UTC) indicated by a "Z".
- ***/   
 const XMLCh* DateTimeDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                                   ,      MemoryManager* const memMgr) const
 {
+    // we need the checkContent to build the fDateTime
+    // to get the canonical representation
     DateTimeDatatypeValidator* temp = (DateTimeDatatypeValidator*) this;
     temp->checkContent(rawData, 0, false);
 
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    //todo: change behaviour later
-    return XMLString::replicate(rawData, toUse);
+    //Have the fDateTime to do the job
+    return fDateTime->getDateTimeCanonicalRepresentation(toUse);
 }
 
 /***

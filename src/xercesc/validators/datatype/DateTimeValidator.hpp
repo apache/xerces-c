@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/12/11 21:40:24  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.6  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -176,8 +179,7 @@ protected:
                                       , const XMLDateTime* const rValue
                                       , bool                     strict);
 
-private:
-    XMLDateTime* fDateTime;
+    XMLDateTime* fDateTime;    //made available to derivatives
 };
 
 XERCES_CPP_NAMESPACE_END

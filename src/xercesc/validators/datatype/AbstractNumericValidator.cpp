@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/12/11 21:40:24  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.8  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -94,6 +97,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/XMLAbstractDoubleFloat.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -189,35 +193,17 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
 
 }
 
-/***
- * 3.2.4 float
- * 3.2.5 double
- *
- * . the exponent must be indicated by "E". 
- *
- * . For the mantissa, 
- *      the preceding optional "+" sign is prohibited and 
- *      the decimal point is required. 
- *
- * . For the exponent, 
- *      the preceding optional "+" sign is prohibited. 
- *      Leading zeroes are prohibited.
- *      
- * . Leading and trailing zeroes are prohibited subject to the following: 
- *      number representations must be normalized such that 
- *          . there is a single digit to the left of the decimal point and
- *          . at least a single digit to the right of the decimal point.
- *
- ***/     
 const XMLCh* AbstractNumericValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                                  ,      MemoryManager* const memMgr) const
 {
+    //Validate the content
     AbstractNumericValidator* temp = (AbstractNumericValidator*) this;
     temp->checkContent(rawData, 0, false);
 
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    //todo: change behaviour later
-    return XMLString::replicate(rawData, toUse);
+
+    return XMLAbstractDoubleFloat::getCanonicalRepresentation(rawData, toUse);
+
 }
 
 /***

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/12/11 21:38:12  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.10  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -172,6 +175,14 @@ public:
     virtual const XMLCh*  getFormattedString() const;
 
     virtual int           getSign() const;
+
+    // -----------------------------------------------------------------------
+    // Canonical Representation
+    // -----------------------------------------------------------------------
+
+    XMLCh*                getDateTimeCanonicalRepresentation(MemoryManager* const memMgr) const;
+
+    XMLCh*                getTimeCanonicalRepresentation(MemoryManager* const memMgr)     const;
 
     // -----------------------------------------------------------------------
     // parsers
@@ -296,6 +307,10 @@ private:
     void                  validateDateTime()          const;
 
     void                  normalize();
+
+    void                  fillString(XMLCh*& ptr, valueIndex ind, int expLen) const;
+
+    void                  searchMiliSeconds(XMLCh*& miliStartPtr, XMLCh*& miliEndPtr) const;
 
     // -----------------------------------------------------------------------
     // Unimplemented operator ==

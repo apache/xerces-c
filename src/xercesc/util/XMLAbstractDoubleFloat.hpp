@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/12/11 21:38:12  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.15  2003/10/15 14:50:01  peiyongz
  * Bugzilla#22821: locale-sensitive function used to validate 'double' type, patch
  * from jsweeney@spss.com (Jeff Sweeney)
@@ -170,6 +173,12 @@ public:
     };
 
     virtual ~XMLAbstractDoubleFloat();
+
+    static XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager
+                        );
 
     /**
      *

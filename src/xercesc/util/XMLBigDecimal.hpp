@@ -94,6 +94,21 @@ public:
     static int            compareValues(const XMLBigDecimal* const lValue
                                       , const XMLBigDecimal* const rValue);
 
+    static XMLCh* getCanonicalRepresentation
+                  (
+                   const XMLCh*         const rawData
+                 ,       MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager
+                  );
+
+    static void  parseDecimal
+                ( 
+                   const XMLCh* const toParse
+                ,        XMLCh* const retBuffer
+                ,        int&         sign
+                ,        int&         totalDigits
+                ,        int&         fractDigits
+                );
+
     /**
      *
      *  Deprecated: please use getRawData
@@ -138,8 +153,7 @@ public:
     XMLBigDecimal(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
-    void  parseBigDecimal( const XMLCh* const strValue
-                         , unsigned int       strValueLen);
+
     void  cleanUp();
     
     // -----------------------------------------------------------------------

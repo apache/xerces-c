@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/11 21:38:12  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.14  2003/10/01 16:32:39  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -128,10 +131,12 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLBigDecimal.hpp>
+#include <xercesc/util/XMLBigInteger.hpp>
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -173,7 +178,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
         );
         memcpy(fRawData, strValue, (fRawDataLen+1) * sizeof(XMLCh));
         fIntVal = fRawData + fRawDataLen + 1;
-        parseBigDecimal(strValue, fRawDataLen);
+        parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale);
     }
     catch(const OutOfMemoryException&)
     {
@@ -217,51 +222,132 @@ void XMLBigDecimal::setDecimalValue(const XMLCh* const strValue)
     }
 
     memcpy(fRawData, strValue, (valueLen + 1) * sizeof(XMLCh));
-    parseBigDecimal(strValue, valueLen);
+    parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale);
+
 }
 
-void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
-                                    , unsigned int     toConvertLen)
+/***
+ * 3.2.3 decimal  
+ *
+ * . the preceding optional "+" sign is prohibited. 
+ * . The decimal point is required. 
+ * . Leading and trailing zeroes are prohibited subject to the following: 
+ *   there must be at least one digit to the right and to the left of the decimal point which may be a zero.
+ *
+ ***/
+XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawData
+                                               ,       MemoryManager* const memMgr)
 {
-    // Scan past any whitespace. If we hit the end, then return failure
-    const XMLCh* startPtr = toConvert;
+    XMLCh* retBuf = (XMLCh*) memMgr->allocate( XMLString::stringLen(rawData) * sizeof(XMLCh));
+    ArrayJanitor<XMLCh> janName(retBuf, memMgr);
+    int   sign, totalDigits, fractDigits;
+
+    XMLBigDecimal::parseDecimal(rawData, retBuf, sign, totalDigits, fractDigits);
+
+    //Extra space reserved in case strLen is zero
+    int    strLen = XMLString::stringLen(retBuf);
+    XMLCh* retBuffer = (XMLCh*) memMgr->allocate( (strLen + 4) * sizeof(XMLCh));
+
+    if ( (sign == 0) || (totalDigits == 0))
+    {
+        retBuffer[0] = chDigit_0;
+        retBuffer[1] = chPeriod;
+        retBuffer[2] = chDigit_0;
+        retBuffer[3] = chNull;
+    }
+    else
+    {
+        XMLCh* retPtr = retBuffer;
+
+        if (sign == -1)
+        {
+            *retPtr++ = chDash;
+        }
+
+        if (fractDigits == totalDigits)   // no integer
+        {           
+            *retPtr++ = chDigit_0;
+            *retPtr++ = chPeriod;
+            XMLString::copyNString(retPtr, retBuf, strLen);
+            retPtr += strLen;
+            *retPtr = chNull;
+        }
+        else if (fractDigits == 0)        // no fraction
+        {
+            XMLString::copyNString(retPtr, retBuf, strLen);
+            retPtr += strLen;
+            *retPtr++ = chPeriod;
+            *retPtr++ = chDigit_0;
+            *retPtr   = chNull;
+        }
+        else  // normal
+        {
+            int intLen = totalDigits - fractDigits;
+            XMLString::copyNString(retPtr, retBuf, intLen);
+            retPtr += intLen;
+            *retPtr++ = chPeriod;
+            XMLString::copyNString(retPtr, &(retBuf[intLen]), fractDigits);
+            retPtr += fractDigits;
+            *retPtr = chNull;
+        }
+
+    }
+            
+    return retBuffer;
+
+}
+
+void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
+                               ,        XMLCh* const retBuffer
+                               ,        int&         sign
+                               ,        int&         totalDigits
+                               ,        int&         fractDigits)
+{
+    //init
+    retBuffer[0] = chNull;
+    totalDigits = 0;
+    fractDigits = 0;
+
+    // Strip leading white space, if any. 
+    const XMLCh* startPtr = toParse;
     while (XMLChar1_0::isWhitespace(*startPtr))
         startPtr++;
 
+    // If we hit the end, then return failure
     if (!*startPtr)
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_WSString);
 
-    // Start at the end and work back through any whitespace
-    const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
+    // Strip tailing white space, if any.
+    const XMLCh* endPtr = toParse + XMLString::stringLen(toParse);
     while (XMLChar1_0::isWhitespace(*(endPtr - 1)))
         endPtr--;
 
     // '+' or '-' is allowed only at the first position
-    fSign = 1;
+    // and is NOT included in the return parsed string
+    sign = 1;
     if (*startPtr == chDash)
     {
-        fSign = -1;
+        sign = -1;
         startPtr++;
     }
     else if (*startPtr == chPlus)
     {
-        startPtr++;        // skip the '+'
+        startPtr++;
     }
 
-    // remove leading zeros
+    // Strip leading zeros
     while (*startPtr == chDigit_0)
         startPtr++;
 
     // containning zero, only zero, nothing but zero
     // it is a zero, indeed
-    if (!*startPtr)
+    if (startPtr >= endPtr)
     {
-        fSign = 0;
-        fIntVal[0] = chNull;
+        sign = 0;
         return;
     }
 
-    XMLCh* retPtr = fIntVal;
+    XMLCh* retPtr = (XMLCh*) retBuffer;
 
     // Scan data
     bool   dotSignFound = false;
@@ -269,10 +355,10 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
     {
         if (*startPtr == chPeriod)
         {
-            if (dotSignFound == false)
+            if (!dotSignFound)
             {
                 dotSignFound = true;
-                fScale = endPtr - startPtr - 1;
+                fractDigits = endPtr - startPtr - 1;
                 startPtr++;
                 continue;
             }
@@ -286,7 +372,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
 
         // copy over
         *retPtr++ = *startPtr++;
-        fTotalDigits++;
+        totalDigits++;
     }
 
     /***
@@ -298,17 +384,16 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         normalization: remove all trailing zero after the '.'
                        and adjust the scaleValue as well.
     ***/
-    while ((fScale > 0) && (*(retPtr-1) == chDigit_0))          
+    while ((fractDigits > 0) && (*(retPtr-1) == chDigit_0))          
     {
         retPtr--;
-        fScale--;
-        fTotalDigits--;
+        fractDigits--;
+        totalDigits--;
     }
 
     *retPtr = chNull;   //terminated
     return;
 }
-
 
 int XMLBigDecimal::compareValues( const XMLBigDecimal* const lValue
                                 , const XMLBigDecimal* const rValue)
@@ -371,6 +456,7 @@ int XMLBigDecimal::toCompare(const XMLBigDecimal& other) const
     }
 
 }
+
 
 /***
  * Support for Serialization/De-serialization

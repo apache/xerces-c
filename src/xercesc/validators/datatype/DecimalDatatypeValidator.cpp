@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/11 21:40:24  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.17  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -168,11 +171,15 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/DecimalDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/XMLCanRepGroup.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+
+#include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/XMLBigDecimal.hpp>
+#include <xercesc/util/XMLBigInteger.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -645,10 +652,12 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
  *   . the preceding optional "+" sign is prohibited and
  *   . leading zeroes are prohibited.
  *   
+ *
+ *  E2-27
  *  3.3.14 nonPositiveInteger
  *
- *  . the negative sign ("-") is required with the token "0" and 
- *  . leading zeroes are prohibited.
+ *   . In the canonical form for zero, the sign must be omitted. 
+ *   . leading zeroes are prohibited.
  *  
  *  3.3.15 negativeInteger
  *  3.3.21 unsignedLong
@@ -658,37 +667,42 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
  *
  *  . leading zeroes are prohibited.
  *  
- *  todo:
- *    In order to implement this method, this class shall have a way to tell if itself
- *    is an 'int', or 'unsignedLong', or something list above, not merely 'Decimal'.
- *
- *    Thus we need to extend DatatypeValidator::ValidatorType to include these
- *    'new' dv types. And assign them the value the way that once AND with mask
- *    it would be 'Decimal', and all the existing dv type would remain what they
- *    are.
- *
- *    eg. 'String' & mask = 'String'
- *        'AnyURI' & mask = 'AnyURI',
- *
- *        'int'    & mask = 'Decimal'
- *        'long'   & mask = 'long'
- *    
- *    thus, when deserialize, we can create 'Decimal'dv even they are 'int',
- *    'long'.
- *
- *    All dv' ctor need to carry an extra field DatatypeValidator::ValidatorType
- *    to specify who it is rather than merely relying on the c++ object itself.
+ *  Summary:
+ *  . leading zeros are prohibited for all three groups
+ *  . '-' is required for nonPositiveInteger if it is zero
  *
  ***/
+
 const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                                  ,      MemoryManager* const memMgr) const
 {
+    //Validate it first
     DecimalDatatypeValidator* temp = (DecimalDatatypeValidator*) this;
     temp->checkContent(rawData, 0, false);
 
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    //todo: change behaviour later
-    return XMLString::replicate(rawData, toUse);
+
+    XMLCanRepGroup::CanRepGroup dvType = DatatypeValidatorFactory::getCanRepGroup(temp);
+
+    if ((dvType == XMLCanRepGroup::Decimal_Derivated_signed)   ||
+        (dvType == XMLCanRepGroup::Decimal_Derivated_unsigned) ||
+        (dvType == XMLCanRepGroup::Decimal_Derivated_npi)        )
+    {          
+        return XMLBigInteger::getCanonicalRepresentation
+               (
+                rawData
+              , toUse
+               );
+    }
+    else if (dvType == XMLCanRepGroup::Decimal) 
+    {
+        return XMLBigDecimal::getCanonicalRepresentation(rawData, toUse);
+    }
+    else //in case?
+    {
+        return XMLString::replicate(rawData, toUse);
+    }
+
 }
 
 /***

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/12/11 21:40:24  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.22  2003/11/13 23:02:09  peiyongz
  * using default memory manager and specify derivated from list, not user defined
  *
@@ -246,6 +249,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -416,6 +420,7 @@ static XMLRegisterCleanup builtInRegistryCleanup;
 //  DatatypeValidatorFactory: Static member data
 // ---------------------------------------------------------------------------
 RefHashTableOf<DatatypeValidator>* DatatypeValidatorFactory::fBuiltInRegistry = 0;
+RefHashTableOf<XMLCanRepGroup>*    DatatypeValidatorFactory::fCanRepRegistry = 0;
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Constructors and Destructor
@@ -451,6 +456,9 @@ void DatatypeValidatorFactory::reinitRegistry() {
 
     delete fBuiltInRegistry;
     fBuiltInRegistry = 0;
+
+    delete fCanRepRegistry;
+    fCanRepRegistry = 0;
 
     // delete local static data
     delete sBuiltInRegistryMutex;
@@ -798,16 +806,96 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
              , false
            );
 
+            initCanRepRegistory();
+
             // register cleanup method
             builtInRegistryCleanup.registerCleanup(reinitRegistry);
             sBuiltInRegistryMutexRegistered = true;
+
         }
     }
 
-    //todo: to move these to fBuiltInRegistry
+}
 
+/***
+ *
+ *   For Decimal-derivated, an instance of DecimalDatatypeValidator
+ *   can be used by the primitive datatype, decimal, or any one of 
+ *   the derivated datatypes, such as int, long, unsighed short, just
+ *   name a few, or any user-defined datatypes, which may derivate from
+ *   either the primitive datatype, decimal, or from any one of those 
+ *   decimal derivated datatypes, or other user-defined datatypes, which
+ *   in turn, indirectly derivate from decimal or decimal-derived.
+ *
+ *   fCanRepRegisty captures deciaml dv and its derivatives.
+ *
+ ***/
+void DatatypeValidatorFactory::initCanRepRegistory()
+{
 
+     /***
+      * key:  dv
+      * data: XMLCanRepGroup
+      ***/
+     fCanRepRegistry  = new RefHashTableOf<XMLCanRepGroup>(29, true, new HashPtr() );
 
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_DECIMAL),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal));
+
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_LONG),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_INT),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_SHORT),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_BYTE),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_POSITIVEINTEGER),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_signed));
+
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_NEGATIVEINTEGER),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_unsigned));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_ULONG),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_unsigned));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_UINT),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_unsigned));
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_USHORT),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_unsigned));        
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_UBYTE),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_unsigned));
+
+     fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER),
+                        new  XMLCanRepGroup(XMLCanRepGroup::Decimal_Derivated_npi));
+
+}
+
+/***
+ *
+ *   For any dv other than Decimaldv, return String only.
+ *   Later on if support to dv other than Decimaldv arise, we may
+ *   add them fCanRepRegistry during DatatypeValidatorFactory::initCanRepRegistory()
+ *
+ ***/
+XMLCanRepGroup::CanRepGroup DatatypeValidatorFactory::getCanRepGroup(const DatatypeValidator* const dv)
+{
+    if (!dv)
+        return XMLCanRepGroup::String;
+
+    DatatypeValidator *curdv = (DatatypeValidator*) dv;
+
+    while (curdv)
+    {
+        if (fCanRepRegistry->containsKey(curdv))
+            return fCanRepRegistry->get(curdv)->getGroup();
+        else
+            curdv = curdv->getBaseValidator();
+    }
+
+    return XMLCanRepGroup::String;
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/11 21:38:12  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.6  2003/05/22 02:10:52  knoaman
  * Default the memory manager.
  *
@@ -109,6 +112,31 @@
 #include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawData
+                                               ,       MemoryManager* const memMgr)
+{
+    XMLCh* retBuf = (XMLCh*) memMgr->allocate( XMLString::stringLen(rawData) * sizeof(XMLCh));
+    int    sign = 0;
+
+    XMLBigInteger::parseBigInteger(rawData, retBuf, sign);
+
+    if (sign == 0)
+    {
+        retBuf[0] = chDigit_0;
+        retBuf[1] = chNull;
+    }
+    else if (sign == -1)
+    {
+        XMLCh* retBuffer = (XMLCh*) memMgr->allocate( (XMLString::stringLen(retBuf) + 2) * sizeof(XMLCh));
+        retBuffer[0] = chDash;
+        XMLString::copyString(&(retBuffer[1]), retBuf);
+        memMgr->deallocate(retBuf);
+        return retBuffer;
+    }
+
+    return retBuf;
+}
 
 /***
    *
@@ -187,7 +215,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
     while (*startPtr == chDigit_0)
         startPtr++;
 
-    if (!*startPtr)
+    if (startPtr >= endPtr)
     {
         signValue = 0;
         // containning zero, only zero, nothing but zero

@@ -92,6 +92,12 @@ public:
 
     XMLBigInteger(const XMLBigInteger& toCopy);
 
+    static XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager
+                        );
+
     static void parseBigInteger(const XMLCh* const toConvert
                               , XMLCh* const       retBuffer
                               , int&   signValue);

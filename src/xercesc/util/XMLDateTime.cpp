@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/12/11 21:38:12  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.16  2003/09/25 22:24:28  peiyongz
  * Using writeString/readString
  *
@@ -1080,6 +1083,11 @@ void XMLDateTime::getTime()
         }
         else
         {
+            //to do: parseInt would eliminate any leading zeros
+            //       therefore for 12:01:01.0034
+            //       fValue[MiliSecond] would catch 34
+            //       rather than 0034
+            //
             fValue[MiliSecond] = parseInt(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
@@ -1438,6 +1446,166 @@ int XMLDateTime::parseIntYear(const int end) const
     bool negative = (fBuffer[0] == chDash);
     int  yearVal = parseInt((negative ? 1 : 0), end);
     return ( negative ? (-1) * yearVal : yearVal );
+}
+
+/***
+ * E2-41
+ *
+ *  3.2.7.2 Canonical representation
+ * 
+ *  Except for trailing fractional zero digits in the seconds representation, 
+ *  '24:00:00' time representations, and timezone (for timezoned values), 
+ *  the mapping from literals to values is one-to-one. Where there is more 
+ *  than one possible representation, the canonical representation is as follows: 
+ *  redundant trailing zero digits in fractional-second literals are prohibited. 
+ *  An hour representation of '24' is prohibited. Timezoned values are canonically
+ *  represented by appending 'Z' to the nontimezoned representation. (All 
+ *  timezoned dateTime values are UTC.) 
+ *
+ *  .'24:00:00' -> '00:00:00'
+ *  .milisecond: trailing zeros removed
+ *  .'Z'
+ *
+ ***/
+XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memMgr) const
+{
+    XMLCh *miliStartPtr, *miliEndPtr;
+    searchMiliSeconds(miliStartPtr, miliEndPtr);
+    int miliSecondsLen = miliEndPtr - miliStartPtr;
+
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    XMLCh* retBuf = (XMLCh*) toUse->allocate( (21 + miliSecondsLen + 2) * sizeof(XMLCh));
+    XMLCh* retPtr = retBuf;
+
+    // ccyy-mm-dd'T'hh:mm:ss'Z'    ('.'s+)?
+    //   10       1      8   1
+    //
+    fillString(retPtr, CentYear, 4);
+    *retPtr++ = DATE_SEPARATOR;
+    fillString(retPtr, Month, 2);
+    *retPtr++ = DATE_SEPARATOR;
+    fillString(retPtr, Day, 2);
+    *retPtr++ = DATETIME_SEPARATOR;
+
+    fillString(retPtr, Hour, 2);
+    if (fValue[Hour] == 24)
+    {
+        *(retPtr - 2) = chDigit_0;
+        *(retPtr - 1) = chDigit_0;
+    }
+    *retPtr++ = TIME_SEPARATOR;
+    fillString(retPtr, Minute, 2);
+    *retPtr++ = TIME_SEPARATOR;
+    fillString(retPtr, Second, 2);
+
+    if (miliSecondsLen)
+    {
+        *retPtr++ = chPeriod;
+        XMLString::copyNString(retPtr, miliStartPtr, miliSecondsLen);
+        retPtr += miliSecondsLen;
+    }
+
+    *retPtr++ = UTC_STD_CHAR;
+    *retPtr = chNull;
+
+    return retBuf;
+}
+
+/***
+ * 3.2.8 time
+ *
+ *  . either the time zone must be omitted or, 
+ *    if present, the time zone must be Coordinated Universal Time (UTC) indicated by a "Z".   
+ *
+ *  . Additionally, the canonical representation for midnight is 00:00:00.
+ *
+***/
+XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) const
+{
+    XMLCh *miliStartPtr, *miliEndPtr;
+    searchMiliSeconds(miliStartPtr, miliEndPtr);
+    int miliSecondsLen = miliEndPtr - miliStartPtr;
+
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    XMLCh* retBuf = (XMLCh*) toUse->allocate( (10 + miliSecondsLen + 2) * sizeof(XMLCh));
+    XMLCh* retPtr = retBuf;
+
+    // 'hh:mm:ss'Z'    ('.'s+)?
+    //      8    1
+    //
+
+    fillString(retPtr, Hour, 2);
+    if (fValue[Hour] == 24)
+    {
+        *(retPtr - 2) = chDigit_0;
+        *(retPtr - 1) = chDigit_0;
+    }
+    *retPtr++ = TIME_SEPARATOR;
+    fillString(retPtr, Minute, 2);
+    *retPtr++ = TIME_SEPARATOR;
+    fillString(retPtr, Second, 2);
+
+    if (miliSecondsLen)
+    {
+        *retPtr++ = chPeriod;
+        XMLString::copyNString(retPtr, miliStartPtr, miliSecondsLen);
+        retPtr += miliSecondsLen;
+    }
+
+    *retPtr++ = UTC_STD_CHAR;
+    *retPtr = chNull;
+
+    return retBuf;
+}
+
+void XMLDateTime::fillString(XMLCh*& ptr, valueIndex ind, int expLen) const
+{
+    XMLCh strBuffer[16];
+    XMLString::binToText(fValue[ind], strBuffer, expLen, 10);
+    int   actualLen = XMLString::stringLen(strBuffer);
+    int   i;
+    //append leading zeros
+    for (i = 0; i < expLen - actualLen; i++)
+    {
+        *ptr++ = chDigit_0;
+    }
+
+    for (i = 0; i < actualLen; i++)
+    {
+        *ptr++ = strBuffer[i];
+    }
+
+}
+
+/***
+ *
+ *   .check if the rawData has the mili second component
+ *   .capture the substring
+ *
+ ***/
+void XMLDateTime::searchMiliSeconds(XMLCh*& miliStartPtr, XMLCh*& miliEndPtr) const
+{
+    miliStartPtr = miliEndPtr = 0;
+
+    int milisec = XMLString::indexOf(fBuffer, MILISECOND_SEPARATOR);
+    if (milisec == -1)
+        return;
+
+    miliStartPtr = fBuffer + milisec + 1;
+    miliEndPtr   = miliStartPtr;
+    while (*miliEndPtr)
+    {
+        if ((*miliEndPtr < chDigit_0) || (*miliEndPtr > chDigit_9))
+            break;
+
+        miliEndPtr++;
+    }
+
+    //remove trailing zeros
+    while( *(miliEndPtr - 1) == chDigit_0)
+        miliEndPtr--;
+
+    return;
 }
 
 /***

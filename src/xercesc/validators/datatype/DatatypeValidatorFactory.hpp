@@ -85,6 +85,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
+#include <xercesc/validators/datatype/XMLCanRepGroup.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
 #include <xercesc/internal/XSerializable.hpp>
@@ -170,6 +171,14 @@ public:
     void expandRegistryToFullSchemaSet();
 
     //@}
+
+    // -----------------------------------------------------------------------
+    // Canonical Representation Group
+    // -----------------------------------------------------------------------
+           void                        initCanRepRegistory();
+
+    static XMLCanRepGroup::CanRepGroup getCanRepGroup(const DatatypeValidator* const);
+
     // -----------------------------------------------------------------------
     // Validator Factory methods
     // -----------------------------------------------------------------------
@@ -263,6 +272,7 @@ private:
     // -----------------------------------------------------------------------
     XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XERCES_CPP_NAMESPACE_QUALIFIER DatatypeValidator>*        fUserDefinedRegistry;
     static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
+    static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XMLCanRepGroup>*    fCanRepRegistry;
     XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager* const fMemoryManager;
 
     friend class XPath2ContextImpl;

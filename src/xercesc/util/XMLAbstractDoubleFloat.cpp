@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2003/12/11 21:38:12  peiyongz
+ * support for Canonical Representation for Datatype
+ *
  * Revision 1.17  2003/10/15 14:50:01  peiyongz
  * Bugzilla#22821: locale-sensitive function used to validate 'double' type, patch
  * from jsweeney@spss.com (Jeff Sweeney)
@@ -123,6 +126,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLAbstractDoubleFloat.hpp>
+#include <xercesc/util/XMLBigDecimal.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -137,6 +141,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
+
+static XMLCh expSign[] = {chLatin_e, chLatin_E, chNull};
 
 // ---------------------------------------------------------------------------
 //  ctor/dtor
@@ -455,6 +461,123 @@ void XMLAbstractDoubleFloat::normalizeDecimalPoint(char* const toNormal)
         }
     }
 }
+
+/***
+ * E2-40
+ *
+ *   3.2.4 float
+ *   3.2.5 double
+ *
+ * . the exponent must be indicated by "E". 
+ *   if the exponent is zero, it must be indicated by "E0". 
+ *
+ * . For the mantissa, 
+ *      the preceding optional "+" sign is prohibited and 
+ *      the decimal point is required. 
+ *
+ * . For the exponent, 
+ *      the preceding optional "+" sign is prohibited. 
+ *      Leading zeroes are prohibited.
+ *      
+ * . Leading and trailing zeroes are prohibited subject to the following: 
+ *   number representations must be normalized such that 
+ *     . there is a single digit, which is non-zero, to the left of the decimal point and
+ *     . at least a single digit to the right of the decimal point.
+ *     . unless the value being represented is zero. 
+ *       The canonical representation for zero is 0.0E0
+ *
+ ***/     
+XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                        ,       MemoryManager* const memMgr)
+{
+    int    strLen = XMLString::stringLen(rawData);
+    XMLCh* manStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
+    ArrayJanitor<XMLCh> janManStr(manStr, memMgr);
+    XMLCh* manBuf = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
+    ArrayJanitor<XMLCh> janManBuf(manBuf, memMgr);
+
+    XMLCh* expStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
+    ArrayJanitor<XMLCh> janExp(expStr, memMgr);
+
+    int sign, totalDigits, fractDigits;
+    int expValue = 0;
+
+    XMLCh* retBuffer = (XMLCh*) memMgr->allocate((strLen + 8) * sizeof(XMLCh));
+
+    const XMLCh* ePosition = XMLString::findAny(rawData, expSign);
+
+    /***
+     *  parse mantissa and exp separately
+     ***/
+    if (!ePosition)
+    {
+        XMLBigDecimal::parseDecimal(rawData, manBuf, sign, totalDigits, fractDigits);
+        expValue = 0;
+    }
+    else
+    {
+        int    manLen = ePosition - rawData;
+        XMLString::copyNString(manStr, rawData, manLen);
+        *(manStr + manLen) = chNull;
+        XMLBigDecimal::parseDecimal(manStr, manBuf, sign, totalDigits, fractDigits);
+
+        int    expLen = strLen - manLen - 1;
+        ePosition++;
+        XMLString::copyNString(expStr, ePosition, expLen);
+        *(expStr + expLen) = chNull;
+        expValue = XMLString::parseInt(expStr); 
+    }
+
+    if ( (sign == 0) || (totalDigits == 0) )
+    {
+        retBuffer[0] = chDigit_0;
+        retBuffer[1] = chPeriod;
+        retBuffer[2] = chDigit_0;
+        retBuffer[3] = chLatin_E;
+        retBuffer[4] = chDigit_0;
+        retBuffer[5] = chNull;
+    }
+    else
+    {
+        XMLCh* retPtr = retBuffer;
+
+        if (sign == -1)
+        {
+            *retPtr++ = chDash;
+        }
+
+        *retPtr++ = manBuf[0];
+        *retPtr++ = chPeriod;
+
+        if (totalDigits - 1 > 0)
+        {
+            XMLString::copyNString(retPtr, &(manBuf[1]), totalDigits - 1);
+            retPtr += (totalDigits - 1);
+        }
+        else
+        {
+            *retPtr++ = chDigit_0;
+        }
+
+        *retPtr++  = chLatin_E;
+        *retPtr = chNull;
+
+        /***
+         * 
+         *  . adjust expValue
+         *   
+         *  new_fractDigits = totalDigits - 1  
+         *  new_expValue = old_expValue + (new_fractDigits - fractDigits)
+         *
+         ***/
+        expValue += (totalDigits - 1) - fractDigits ;
+        XMLString::binToText(expValue, expStr, strLen, 10);
+        XMLString::catString(&(retBuffer[0]), expStr);
+
+    }
+
+    return retBuffer;
+}        
 
 /***
  * Support for Serialization/De-serialization
