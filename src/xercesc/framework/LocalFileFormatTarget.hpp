@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/27 18:09:25  tng
+ * [Bug 13447] Performance: Using LocalFileFormatTarget with DOMWriter is very slow.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -100,13 +103,34 @@ private:
     LocalFileFormatTarget& operator=(const LocalFileFormatTarget&);
 
     // -----------------------------------------------------------------------
+    //  Private helpers
+    // -----------------------------------------------------------------------
+    void flushBuffer();
+    void insureCapacity(const unsigned int extraNeeded);
+
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fSource
     //      The source file that we represent. The FileHandle type is defined
     //      per platform.
+    //
+    //  fDataBuf
+    //      The pointer to the buffer data. Its always
+    //      one larger than fCapacity, to leave room for the null terminator.
+    //
+    //  fIndex
+    //      The current index into the buffer, as characters are appended
+    //      to it. If its zero, then the buffer is empty.
+    //
+    //  fCapacity
+    //      The current capacity of the buffer. Its actually always one
+    //      larger, to leave room for the null terminator.
     // -----------------------------------------------------------------------
     FileHandle      fSource;
+    XMLByte*        fDataBuf;
+    unsigned int    fIndex;
+    unsigned int    fCapacity;
 
 };
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/27 18:09:25  tng
+ * [Bug 13447] Performance: Using LocalFileFormatTarget with DOMWriter is very slow.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -68,38 +71,99 @@
 
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
-:fSource(0)
+: fSource(0)
+, fDataBuf(0)
+, fIndex(0)
+, fCapacity(1023)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
+
+    // Buffer is one larger than capacity, to allow for zero term
+    fDataBuf = new XMLByte[fCapacity+4];
+
+    // Keep it null terminated
+    fDataBuf[0] = XMLByte(0);
+
 }
 
 LocalFileFormatTarget::LocalFileFormatTarget(const char* const fileName)
-:fSource(0)
+: fSource(0)
+, fDataBuf(0)
+, fIndex(0)
+, fCapacity(1023)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
+
+    // Buffer is one larger than capacity, to allow for zero term
+    fDataBuf = new XMLByte[fCapacity+4];
+
+    // Keep it null terminated
+    fDataBuf[0] = XMLByte(0);
 }
 
 LocalFileFormatTarget::~LocalFileFormatTarget()
 {
+    // flush remaining buffer before destroy
+    flushBuffer();
+
     if (fSource)
         XMLPlatformUtils::closeFile(fSource);
+
+    delete [] fDataBuf;
 }
 
 void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
                                      , const unsigned int   count
                                      , XMLFormatter * const        )
 {
-    // Exception thrown in writeBufferToFile, if any, will be propagated to
-    // the XMLFormatter and then to the DOMWriter, which may notify
-    // application through DOMErrorHandler, if any.
-    XMLPlatformUtils::writeBufferToFile(fSource, (long) count, toWrite);
+    if (count) {
+        insureCapacity(count);
+        memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
+        fIndex += count;
+    }
+
     return;
 }
 
+void LocalFileFormatTarget::flushBuffer()
+{
+    // Exception thrown in writeBufferToFile, if any, will be propagated to
+    // the XMLFormatter and then to the DOMWriter, which may notify
+    // application through DOMErrorHandler, if any.
+    XMLPlatformUtils::writeBufferToFile(fSource, (long) fIndex, fDataBuf);
+    fIndex = 0;
+    fDataBuf[0] = 0;
+    fDataBuf[fIndex + 1] = 0;
+    fDataBuf[fIndex + 2] = 0;
+    fDataBuf[fIndex + 3] = 0;
+}
+
+void LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
+{
+    // If we can handle it, do nothing yet
+    if (fIndex + extraNeeded < fCapacity)
+        return;
+
+    // Oops, not enough room. Calc new capacity and allocate new buffer
+    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
+    XMLByte* newBuf = new XMLByte[newCap+4];
+
+    // Copy over the old stuff
+    memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
+
+    // Clean up old buffer and store new stuff
+    delete [] fDataBuf;
+    fDataBuf = newBuf;
+    fCapacity = newCap;
+
+    // flush the buffer too
+    flushBuffer();
+}
 
 XERCES_CPP_NAMESPACE_END
 
