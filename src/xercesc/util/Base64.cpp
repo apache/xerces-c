@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:09  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/15 21:36:56  peiyongz
+ * Interface redefined for conversion in XMLByte
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/10/15 19:42:16  knoaman
  * Null-terminate base64Alphabet.
@@ -99,38 +102,39 @@ static const int FOURBYTE   = 4;
 // ---------------------------------------------------------------------------
 
 // the base64 alphabet according to definition in RFC 2045
-const XMLCh Base64::base64Alphabet[] = {
+const XMLByte Base64::base64Alphabet[] = {
     chLatin_A, chLatin_B, chLatin_C, chLatin_D, chLatin_E,
     chLatin_F, chLatin_G, chLatin_H, chLatin_I, chLatin_J,
     chLatin_K, chLatin_L, chLatin_M, chLatin_N, chLatin_O,
     chLatin_P, chLatin_Q, chLatin_R, chLatin_S, chLatin_T,
-    chLatin_U, chLatin_V, chLatin_W, chLatin_X, chLatin_Y,
-    chLatin_Z, chLatin_a, chLatin_b, chLatin_c, chLatin_d,
-    chLatin_e, chLatin_f, chLatin_g, chLatin_h, chLatin_i,
-    chLatin_j, chLatin_k, chLatin_l, chLatin_m, chLatin_n,
-    chLatin_o, chLatin_p, chLatin_q, chLatin_r, chLatin_s,
-    chLatin_t, chLatin_u, chLatin_v, chLatin_w, chLatin_x,
-    chLatin_y, chLatin_z, chDigit_0, chDigit_1, chDigit_2,
-    chDigit_3, chDigit_4, chDigit_5, chDigit_6, chDigit_7,
-    chDigit_8, chDigit_9, chPlus, chForwardSlash, chNull
+    chLatin_U, chLatin_V, chLatin_W, chLatin_X, chLatin_Y, chLatin_Z, 
+	chLatin_a, chLatin_b, chLatin_c, chLatin_d, chLatin_e, 
+	chLatin_f, chLatin_g, chLatin_h, chLatin_i, chLatin_j, 
+	chLatin_k, chLatin_l, chLatin_m, chLatin_n, chLatin_o, 
+	chLatin_p, chLatin_q, chLatin_r, chLatin_s, chLatin_t, 
+	chLatin_u, chLatin_v, chLatin_w, chLatin_x, chLatin_y, chLatin_z, 
+	chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, 
+	chDigit_5, chDigit_6, chDigit_7, chDigit_8, chDigit_9, 
+	chPlus, chForwardSlash, chNull
 };
-const XMLCh Base64::base64Padding = chEqual;
 
-XMLCh Base64::base64Inverse[ BASELENGTH ];
+XMLByte Base64::base64Inverse[BASELENGTH];
+
+const XMLByte Base64::base64Padding = chEqual;
+
 bool Base64::isInitialized = false;
 
 // number of quadruplets per one line ( must be >1 and <19 )
 const unsigned int Base64::quadsPerLine = 15;
 
-XMLCh* Base64::encode( 
-    const XMLCh* const inputData,
-    const int inputLength,
-    int *outputLength )
+XMLByte* Base64::encode(const XMLByte* const inputData,
+                        const unsigned int   inputLength,
+                        unsigned int*        outputLength)
 {
     if (!isInitialized)
         init();
 
-    if ( inputData == 0 )
+    if (!inputData)
         return 0;
 
     int quadrupletCount = ( inputLength + 2 ) / 3;
@@ -143,12 +147,11 @@ XMLCh* Base64::encode(
     //
     // convert the triplet(s) to quadruplet(s)
     //
-    XMLCh  b1, b2, b3, b4;  // base64 binary codes ( 0..63 )
+    XMLByte  b1, b2, b3, b4;  // base64 binary codes ( 0..63 )
 
-    int inputIndex = 0;
-    int outputIndex = 0;
-    XMLCh *encodedData = 
-        new XMLCh[ quadrupletCount*FOURBYTE + lineCount + 1 ];
+    unsigned int inputIndex = 0;
+    unsigned int outputIndex = 0;
+    XMLByte *encodedData = new XMLByte[ quadrupletCount*FOURBYTE + lineCount + 1 ];
 
     //
     // Process all quadruplet(s) except the last
@@ -234,8 +237,8 @@ XMLCh* Base64::encode(
 //
 int Base64::getDataLength( const XMLCh* const inputData )
 {
-    int    retLen = 0;
-    XMLCh* decodedData = decode( inputData, retLen );
+    unsigned int    retLen = 0;
+    XMLCh* decodedData = decode(inputData, &retLen);
 
     if ( !decodedData )
         return -1;
@@ -254,20 +257,22 @@ int Base64::getDataLength( const XMLCh* const inputData )
 //
 // temporary data, rawInputData, is ALWAYS released by this function.
 //
-XMLCh* Base64::decode( const XMLCh* const inputData, int& outputLength )
+XMLByte* Base64::decode(const XMLByte* const inputData,
+                        unsigned int*        outputLength)
 {
     if (!isInitialized)
         init();
 
-    if (( inputData == 0 ) || ( *inputData == 0 ))
+    if ((!inputData) || (!*inputData))
         return 0;
 
     //
     // remove all whitespaces from the base64Data
     //
-    int inputLength = XMLString::stringLen( inputData );
-    XMLCh* rawInputData = new XMLCh[ inputLength + 1 ];
-    ArrayJanitor<XMLCh> jan(rawInputData);
+
+    int inputLength = XMLString::stringLen( (const char* const)inputData );
+    XMLByte* rawInputData = new XMLByte[ inputLength + 1 ];
+    ArrayJanitor<XMLByte> jan(rawInputData);
 
     int inputIndex = 0;
     int rawInputLength = 0;
@@ -292,12 +297,12 @@ XMLCh* Base64::decode( const XMLCh* const inputData, int& outputLength )
     //
     // convert the quadruplet(s) to triplet(s)
     //
-    XMLCh  d1, d2, d3, d4;  // base64 characters
-    XMLCh  b1, b2, b3, b4;  // base64 binary codes ( 0..64 )
+    XMLByte  d1, d2, d3, d4;  // base64 characters
+    XMLByte  b1, b2, b3, b4;  // base64 binary codes ( 0..64 )
 
     int rawInputIndex  = 0;
     int outputIndex    = 0;
-    XMLCh *decodedData = new XMLCh[ quadrupletCount*3 + 1 ];
+    XMLByte *decodedData = new XMLByte[ quadrupletCount*3 + 1 ];
 
     //
     // Process all quadruplet(s) except the last
@@ -392,9 +397,44 @@ XMLCh* Base64::decode( const XMLCh* const inputData, int& outputLength )
 
     // write out the end of string
     decodedData[ outputIndex ] = 0; 
-    outputLength = outputIndex;
+    *outputLength = outputIndex;
 
     return decodedData;
+}
+
+XMLCh* Base64::decode(const XMLCh* const inputData,
+                      unsigned int*      outputLength)
+{
+	if (!inputData)
+		return 0;
+
+	unsigned int srcLen = XMLString::stringLen(inputData);
+    XMLByte *toFill = new XMLByte[srcLen+1];
+    ArrayJanitor<XMLByte> janFill(toFill);
+
+    for (unsigned int i = 0; i < srcLen; i++)
+		toFill[i] = (XMLByte)inputData[i];
+
+	toFill[srcLen] = 0;
+
+	unsigned int      decodedLen = 0;
+	XMLByte *DecodedBuf = decode(toFill, &decodedLen);
+
+	if (!DecodedBuf)
+		return 0;
+
+    XMLCh *toRet = new XMLCh[decodedLen+1];
+
+    for (unsigned int i = 0; i < decodedLen; i++)
+		toRet[i] = (XMLCh)DecodedBuf[i];
+
+	toRet[decodedLen] = 0;
+
+	*outputLength = decodedLen;
+	delete[] DecodedBuf;
+
+	return toRet;
+
 }
 
 // -----------------------------------------------------------------------
@@ -414,18 +454,14 @@ void Base64::init()
     int i;
     // set all fields to -1
     for ( i = 0; i < BASELENGTH; i++ ) 
-        base64Inverse[i] = (XMLCh)-1; 
+        base64Inverse[i] = (XMLByte)-1; 
 
     // compute inverse table
     for ( i = 0; i < 64; i++ ) 
-        base64Inverse[ base64Alphabet[i] ] = (XMLCh)i;
+        base64Inverse[ base64Alphabet[i] ] = (XMLByte)i;
 }
 
-bool Base64::isData(const XMLCh& octet) 
+bool Base64::isData(const XMLByte& octet) 
 {
-    // sanity check to avoid out-of-bound index
-    if (( octet >= BASELENGTH ) || ( octet < 0 ))
-        return false;
-
-    return( base64Inverse[octet] != (XMLCh) -1);
+    return (base64Inverse[octet]!=(XMLByte)-1);
 }

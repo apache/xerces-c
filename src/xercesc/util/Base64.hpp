@@ -82,42 +82,49 @@ public :
     /**
      * Encodes octets into Base64 data
      * 
-     * @param inputData Byte array containing binary data.
-     * @param inputLength Length of the input array.
-     * @param outputLength Pointer to variable, where will be
-     *     stored length of returned data.
-     * @return Byte array containing encoded Base64 data,
-     *     or NULL if input data can not be encoded.
+     * @param inputData Binary data in XMLByte stream.
+     * @param inputLength Length of the XMLByte stream.
+     * @param outputLength Length of the encoded Base64 byte stream.
+     * @return Encoded Base64 data in XMLByte stream,
+     *      or NULL if input data can not be encoded.
      */
-    static XMLCh* encode (
-        const XMLCh* const inputData,
-        const int inputLength,
-        int *outputLength = 0 );
-
-    /**
-     * Get data length
-     * returns length of decoded data given an array 
-     * containing encoded data.
-     *
-     * @param inputData Byte array containing Base64 data.
-     * @return Length of decoded data, or -1 if input data
-     *     can not be decoded.
-     */
-    static int getDataLength(
-        const XMLCh* const inputData );
+    static XMLByte* encode(const XMLByte* const inputData,
+                           const unsigned int   inputLength,
+                           unsigned int*        outputLength);
 
     /**
      * Decodes Base64 data into octets
      * 
-     * @param inputData Byte array containing Base64 data.
-     * @param outputLength Reference to variable, where will be
-     *     stored length of returned data.
-     * @return Byte array containing decoded binary data, or 
-     *     NULL if input data can not be decoded.
+     * @param inputData Base64 data in XMLByte stream.
+     * @param outputLength Length of decoded XMLByte stream. 
+     * @return Decoded binary data in XMLByte stream, 
+	 *      or NULL if input data can not be decoded.
      */
-    static XMLCh* decode(
-        const XMLCh* const inputData,
-        int& outputLength );
+    static XMLByte* decode(const XMLByte* const inputData,
+                           unsigned int*        outputLength);
+
+    /**
+     * Decodes Base64 data into XMLCh
+     * 
+     * @param inputData Base64 data in XMLCh stream.
+     * @param outputLength Length of decoded XMLCh stream
+     * @return Decoded binary data in XMLCh stream,  
+     *      or NULL if input data can not be decoded.
+     */
+    static XMLCh* decode(const XMLCh* const inputData,
+                         unsigned int*      outputLength);
+
+    /**
+     * Get data length
+	 *
+     * Returns length of decoded data given an array 
+     * containing encoded data.
+     *
+     * @param inputData Base64 data in XMLCh stream.
+     * @return Length of decoded data, 
+	 *      or -1 if input data can not be decoded.
+     */
+    static int getDataLength(const XMLCh* const inputData );
 
     //@}
 
@@ -129,16 +136,16 @@ private :
 
     static void init();
 
-    static bool isData(const XMLCh& octet);
-    static bool isPad(const XMLCh& octet);
+    static bool isData(const XMLByte& octet);
+    static bool isPad(const XMLByte& octet);
 
-    static XMLCh set1stOctet(const XMLCh&, const XMLCh&);
-    static XMLCh set2ndOctet(const XMLCh&, const XMLCh&);
-    static XMLCh set3rdOctet(const XMLCh&, const XMLCh&);
+    static XMLByte set1stOctet(const XMLByte&, const XMLByte&);
+    static XMLByte set2ndOctet(const XMLByte&, const XMLByte&);
+    static XMLByte set3rdOctet(const XMLByte&, const XMLByte&);
 
-    static void split1stOctet(const XMLCh&, XMLCh&, XMLCh&);
-    static void split2ndOctet(const XMLCh&, XMLCh&, XMLCh&);
-    static void split3rdOctet(const XMLCh&, XMLCh&, XMLCh&);
+    static void split1stOctet(const XMLByte&, XMLByte&, XMLByte&);
+    static void split2ndOctet(const XMLByte&, XMLByte&, XMLByte&);
+    static void split3rdOctet(const XMLByte&, XMLByte&, XMLByte&);
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -168,10 +175,10 @@ private :
     //
     // -----------------------------------------------------------------------
 
-    static const XMLCh  base64Alphabet[];
-    static const XMLCh  base64Padding;
+    static const XMLByte  base64Alphabet[];
+    static const XMLByte  base64Padding;
 
-    static XMLCh  base64Inverse[];
+    static XMLByte  base64Inverse[];
     static bool  isInitialized;
 
     static const unsigned int  quadsPerLine;
@@ -180,38 +187,38 @@ private :
 // -----------------------------------------------------------------------
 //  Helper methods
 // -----------------------------------------------------------------------
-inline bool Base64::isPad(const XMLCh& octet) 
+inline bool Base64::isPad(const XMLByte& octet) 
 {
     return ( octet == base64Padding );
 }
 
-inline XMLCh Base64::set1stOctet(const XMLCh& b1, const XMLCh& b2)
+inline XMLByte Base64::set1stOctet(const XMLByte& b1, const XMLByte& b2)
 {
     return (( b1 << 2 ) | ( b2 >> 4 ));
 }
 
-inline XMLCh Base64::set2ndOctet(const XMLCh& b2, const XMLCh& b3)
+inline XMLByte Base64::set2ndOctet(const XMLByte& b2, const XMLByte& b3)
 {
     return (( b2 << 4 ) | ( b3 >> 2 ));
 }
 
-inline XMLCh Base64::set3rdOctet(const XMLCh& b3, const XMLCh& b4)
+inline XMLByte Base64::set3rdOctet(const XMLByte& b3, const XMLByte& b4)
 {
     return (( b3 << 6 ) | b4 );
 }
 
-inline void Base64::split1stOctet(const XMLCh& ch, XMLCh& b1, XMLCh& b2) {
-    b1 = ( ch & 0xff ) >> 2;
+inline void Base64::split1stOctet(const XMLByte& ch, XMLByte& b1, XMLByte& b2) {
+    b1 = ch >> 2;
     b2 = ( ch & 0x3 ) << 4;
 }
 
-inline void Base64::split2ndOctet(const XMLCh& ch, XMLCh& b2, XMLCh& b3) {
-    b2 |= ( ch & 0xff ) >> 4;  // combine with previous value  
+inline void Base64::split2ndOctet(const XMLByte& ch, XMLByte& b2, XMLByte& b3) {
+    b2 |= ch >> 4;  // combine with previous value  
     b3 = ( ch & 0xf ) << 2;
 }
 
-inline void Base64::split3rdOctet(const XMLCh& ch, XMLCh& b3, XMLCh& b4) {
-    b3 |= ( ch & 0xff) >> 6;  // combine with previous value 
+inline void Base64::split3rdOctet(const XMLByte& ch, XMLByte& b3, XMLByte& b4) {
+    b3 |= ch >> 6;  // combine with previous value 
     b4 = ( ch & 0x3f );
 }
 
