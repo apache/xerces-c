@@ -960,9 +960,9 @@ ELEMENTS:
 
   Name: link
   Content Model: EMPTY
-  Attributes:
-    Name:subordinates, Type: IDREF(S)
+  Attributes:    
     Name:manager, Type: IDREF(S)
+    Name:subordinates, Type: IDREF(S)
 
   Name: family
   Content Model: (#PCDATA)
@@ -996,18 +996,15 @@ ComplexType:
 	TypeName:	,C1
 	ContentType:	
 Attributes:
-	Name:			salary
-	Type:			CDATA
-	Default Type:	#IMPLIED
-	Base Datatype:		Decimal
-Facets:		
-	fractionDigits=0
-	pattern=[+\-]?[0-9]+
-
 	Name:			id
 	Type:			ID
 	Default Type:	#REQUIRED
 	Base Datatype:		ID
+
+	Name:			note
+	Type:			CDATA
+	Default Type:	#IMPLIED
+	Base Datatype:		string
 
 	Name:			contr
 	Type:			CDATA
@@ -1018,10 +1015,13 @@ Enumeration:
 	true
 	false
 
-	Name:			note
+	Name:			salary
 	Type:			CDATA
 	Default Type:	#IMPLIED
-	Base Datatype:		string
+	Base Datatype:		Decimal
+Facets:		
+	fractionDigits=0
+	pattern=[+\-]?[0-9]+
 
 --------------------------------------------
 Name:			name
@@ -1073,15 +1073,15 @@ Content Model:	EMPTY
 ComplexType:
 	TypeName:	,C6
 Attributes:
-	Name:			subordinates
-	Type:			IDREFS
-	Default Type:	#IMPLIED
-	Base Datatype:		List
-
 	Name:			manager
 	Type:			IDREF
 	Default Type:	#IMPLIED
 	Base Datatype:		IDREF
+
+	Name:			subordinates
+	Type:			IDREFS
+	Default Type:	#IMPLIED
+	Base Datatype:		List
 
 --------------------------------------------
 The tree just created contains: 4 elements.
