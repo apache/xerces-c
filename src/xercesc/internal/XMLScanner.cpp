@@ -3283,6 +3283,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 );
             }
         }
+
+        if (fGrammarType == Grammar::SchemaGrammarType)
+            ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
     }
 
     //

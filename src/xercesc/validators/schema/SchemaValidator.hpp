@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/04/19 13:33:23  knoaman
+ * Fix for bug 8236.
+ *
  * Revision 1.3  2002/04/01 15:47:06  knoaman
  * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
  *
@@ -99,6 +102,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/ValueStackOf.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
@@ -308,6 +312,9 @@ private:
     //
     //  fSchemaErrorReporter
     //      Report schema process errors
+    //
+    //  fTypeStack
+    //      Stack of complex type declarations. 
     // -----------------------------------------------------------------------
     SchemaGrammar* fSchemaGrammar;
     GrammarResolver* fGrammarResolver;
@@ -319,6 +326,7 @@ private:
     XMLBuffer fDatatypeBuffer;
     bool fTrailing;
     XSDErrorReporter fSchemaErrorReporter;
+    ValueStackOf<ComplexTypeInfo*>* fTypeStack;
 };
 
 

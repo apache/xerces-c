@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/04/19 13:33:23  knoaman
+ * Fix for bug 8236.
+ *
  * Revision 1.8  2002/04/01 20:17:55  peiyongz
  * Bug#7551: Exceptions are caught by value, rather than by reference
  *
@@ -194,12 +197,15 @@ SchemaValidator::SchemaValidator(XMLErrorReporter* const errReporter) :
     , fXsiType(0)
     , fXsiTypeValidator(0)
     , fNil(false)
+    , fTypeStack(0)
 {
+    fTypeStack = new ValueStackOf<ComplexTypeInfo*>(8);
 }
 
 SchemaValidator::~SchemaValidator()
 {
     delete fXsiType;
+    delete fTypeStack;
 }
 
 // ---------------------------------------------------------------------------
@@ -215,6 +221,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     //
     if (!elemDecl)
         ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
+
+    ((SchemaElementDecl*) elemDecl)->setXsiComplexTypeInfo(fTypeStack->pop());
 
     //
     //  Get the content spec type of this element. This will tell us what
@@ -498,6 +506,9 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
 
 void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 {
+    ComplexTypeInfo* elemTypeInfo = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
+    fTypeStack->push(elemTypeInfo);
+
     if (fXsiType) {
         // handle "xsi:type" right here
         unsigned int uri = fXsiType->getURI();
@@ -572,7 +583,8 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         ComplexTypeInfo* destType = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
                         ComplexTypeInfo* tempType = typeInfo;
                         if (destType) {
-                            while (tempType) {
+
+                            while (tempType) {                                 
                                 if (!XMLString::compareString(tempType->getTypeName(), destType->getTypeName()))
                                     break;
                                 tempType = tempType->getBaseComplexTypeInfo();
@@ -599,8 +611,12 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                             }
                         }
 
-                        if (!error)
+                        if (!error) {
+
                             ((SchemaElementDecl*)elemDef)->setXsiComplexTypeInfo(typeInfo);
+                            fTypeStack->pop();
+                            fTypeStack->push(typeInfo);
+                        }
                     }
                     else {
                         // typeInfo not found
@@ -640,12 +656,8 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         // xsi:type was not specified...
         // If the corresponding type is abstract, detect an error
         //
-        ComplexTypeInfo* typeInfo = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
-
-        if (typeInfo) {
-            if (typeInfo->getAbstract()) {
-                emitError(XMLValid::NoUseAbstractType, elemDef->getFullName());
-            }
+        if (elemTypeInfo && elemTypeInfo->getAbstract()) {
+            emitError(XMLValid::NoUseAbstractType, elemDef->getFullName());
         }
     }
 
