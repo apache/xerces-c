@@ -43,10 +43,8 @@
             the &XercesCWindowsLib;.lib library and also make sure that
             the associated DLL is somewhere in your path.</p>
             <note>If you are working on the AlphaWorks version which uses ICU,
-            you must either have the environment variable ICU_DATA set, or
-            keep the international converter files relative to the
-            &XercesCProjectName; DLL (as it came with  the original binary
-            drop) for the program to find it. For finding out where you can
+            you must have the ICU data DLL named <code>icudata.dll</code> available from your path
+            setting. For finding out where you can
             get ICU from and build it, look at the last section of this page.</note>
         </s3>
         <s3 title="Building samples">
@@ -118,7 +116,7 @@
         <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/">ICU</jump>,
         look at the <link anchor="icu">last section</link> of this page.
         It tells you where you can find ICU and how you can build &XercesCName;
-        to include the ICU internationalization library.</note>
+        to include the ICU international library.</note>
 
         <s3 title="Setting build environment variables">
             <p>Before doing the build, you must first set your environment variables
@@ -183,16 +181,18 @@ Usage: runConfigure "options"
        -z &lt;extra compiler options&gt;
        -h (to get help on the above commands)</source>
 
-            <note>&XercesCName; builds as a standalone library and also as a library
+            <note>&XercesCName; can be built as either a standalone library or as a library
             dependent on International Components for Unicode (ICU). For simplicity,
-            the following discussion only targets standalone builds.</note>
+            the following discussion only explains standalone builds.</note>
 
             <p>One of the common ways to build &XercesCName; is as follows:</p>
 
 <source>runConfigure -plinux -cgcc -xg++ -minmem -nfileonly -tnative</source>
 
             <p>The response will be something like this:</p>
-<source>Platform: linux
+<source>
+Generating makefiles with the following options ...
+Platform: linux
 C Compiler: gcc
 C++ Compiler: g++
 Extra compile options:
@@ -205,17 +205,13 @@ Debug is OFF
 
 creating cache ./config.cache
 checking for gcc... gcc
-checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER
-         -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
-checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER
-         -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
+checking whether the C compiler (gcc -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
 checking whether we are using GNU C... yes
 checking whether gcc accepts -g... yes
 checking for c++... g++
-checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER
-                   -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
-checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER
-         -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
+checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) works... yes
+checking whether the C++ compiler (g++ -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER   ) is a cross-compiler... no
 checking whether we are using GNU C++... yes
 checking whether g++ accepts -g... yes
 checking for a BSD compatible install... /usr/bin/install -c
@@ -231,6 +227,7 @@ creating Makefile
 creating util/Makefile
 creating util/Transcoders/ICU/Makefile
 creating util/Transcoders/Iconv/Makefile
+creating util/Transcoders/Iconv390/Makefile
 creating util/Transcoders/Iconv400/Makefile
 creating util/Platforms/Makefile
 creating util/Compilers/Makefile
@@ -246,10 +243,14 @@ creating internal/Makefile
 creating sax/Makefile
 creating ../obj/Makefile
 creating conf.h
+cat: ./conf.h.in: No such file or directory
 conf.h is unchanged
 
-In future, you may also directly type the following commands to
-create the Makefiles.
+Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
+Still cannot resolve it? Find out if someone else had the same problem before.
+Go to http://xml-archive.webweaving.org/xml-archive-xerces/
+
+In future, you may also directly type the following commands to create the Makefiles.
 
 export TRANSCODER=NATIVE
 export MESSAGELOADER=INMEM
@@ -262,7 +263,12 @@ export LIBS= -lpthread
 configure
 
 If the result of the above commands look OK to you, go to the directory
-$XERCESCROOT/src and type "gmake" to make the XERCES-C system.</source>
+XERCESCROOT and type "gmake" to make the XERCES-C system.</source>
+
+<note>The error message concerning <code>conf.h</code>
+is NOT an indication of a problem. This code has been inserted to make it
+work on AS/400, but it gives this message which appears to be an error. The problem
+will be fixed in future.</note>
 
             <p>So now you see what the wrapper script has actually been doing! It has
             invoked <code>configure</code>
@@ -405,12 +411,12 @@ gmake</source>
                 <li>There are a couple of options when building the XML4C parser on AS/400.
                 For messaging support, you can use the in memory message option or the
                 message file support. For code page translation, you can use the AS/400
-                native Iconv400 support or ICU. If you choose ICU, follow the instructions
+                native <code>Iconv400</code> support or ICU. If you choose ICU, follow the instructions
                 to build the ICU service program with the ICU download. Those instructions
                 are not included here.</li>
 
-                <li>Currently we recommend that you take the options of MsgFile and
-                Iconv400 (see below)</li>
+                <li>Currently we recommend that you take the options of <code>MsgFile</code> and
+                <code>Iconv400</code> (see below)</li>
                 </ul>
 
                 <p><em>Setup Instructions:</em></p>
@@ -676,7 +682,7 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
         <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support for 100's
         of encodings. ICU stands for International Components for Unicode and is an
-        open source distribution from IBM. You can get 
+        open source distribution from IBM. You can get
         <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
         <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
         or go to the ICU
@@ -697,29 +703,15 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
         <s3 title="Building ICU on Windows">
             <p>To build ICU from its source, invoke the project
             <code>\icu\source\allinone\allinone.dsw</code>
-            and build the sub-project labeled <code>common</code>.
-            You may also want to build <code>tools/makeconv</code> to make
-            the converter tool. All others are not required for the &XercesCName;
-            build to proceed.</p>
-
-            <p>To build &XercesCName; from it source, you will need to
-            include a project file in your workspace to program your
-            application. Otherwise, you can use the provided workspace and add
-            your application to it as a separate project.</p>
-
-            <p>In the first case the project file is:
-            <code>xml4c2\Projects\Win32\VC6\IXXML4C2\IXXML4C2\IXXML4C2.dsp</code></p>
-
-            <p>In the second case the workspace is:
-            <code>xml4c2\Projects\Win32\VC6\IXXML4C2\IXXML4C2.dsw</code></p>
+            and build the sub-project labeled <code>all</code>.
+            </p>
 
             <p>You must make sure that you are linking your application
             with the &XercesCWindowsLib;.lib library and also make sure
-            that the associated DLL is somewhere in your path. Note
-            that you must either have the environment variable
-            <code>ICU_DATA</code> set, or keep the international converter
-            files relative to the &XercesCProjectName; DLL (as it came with
-            the original binary drop) for the program to find it.</p>
+            that the associated &XercesCName; DLL is somewhere in your path. Note
+            that at runtime, your application will need the ICU data DLL called
+            <code>icudata.dll</code> which must also be available from your path
+            setting.</p>
         </s3>
 
         <anchor name="icu"/>
@@ -731,11 +723,10 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
             <p>First make sure that you have defined the following
             environment variables:</p>
 
-<source>export ICUROOT = &lt;icu_installdir&gt;
-export ICU_DATA = &lt;icu_installdir&gt;/data/</source>
+<source>export ICUROOT = &lt;icu_installdir&gt;</source>
 
             <p>Next, go to the directory, the following commands will create
-            a shell script called 'configure': </p>
+            a shell script called <code>configure</code>: </p>
 
 <source>cd $ICUROOT
 cd source
@@ -762,8 +753,10 @@ gmake
 gmake install
 cd ../tools/makeconv
 gmake</source>
+			<p>The first line is different for different platforms as outlined below:</p>
 
             <p><em>For Solaris and Linux:</em></p>
+
 
 <source>env CC="cc" CXX="CC" C_FLAGS="-w -O" CXX_FLAGS="-w -O"
     ./configure --prefix=$ICUROOT</source>
@@ -829,8 +822,8 @@ gmake</source>
         <p>This should generate the .html files in the 'doc/html'
         directory.</p>
 
-        <p><em>Ok here is where you can get the three jar files that are
-        referred to above.</em></p>
+        <p><em>If you are wondering where to get the three</em> <code>jar</code> <em>files referred above,
+        here is where you would find it.</em></p>
 
         <ul>
 
@@ -877,15 +870,15 @@ gmake</source>
 
       <ol>
 
-        <li>The directory 'src/util/Platforms' contains the
-        platform sensitive files while 'src/util/Compilers' contains
+        <li>The directory <code>src/util/Platforms</code> contains the
+        platform sensitive files while <code>src/util/Compilers</code> contains
         all development environment sensitive files. Each operating
         system has a file of its own and each development environment
         has another one of its own too.
 
         <br/>
 
-        As an example, the Win32 platform as a Win32Defs.hpp file
+        As an example, the Win32 platform as a <code>Win32Defs.hpp</code> file
         and the Visual C++ environment has a <code>VCPPDefs.hpp</code> file.
         These files set up certain define tokens, typedefs,
         constants, etc... that will drive the rest of the code to
@@ -898,19 +891,19 @@ gmake</source>
         the best to follow, since that is where the main
         development is done.</li>
 
-        <li>Next, edit the file XML4CDefs.hpp , which is where all
+        <li>Next, edit the file <code>XML4CDefs.hpp</code>, which is where all
             of the fundamental stuff comes into the system. You will
             see conditional sections in there where the above
             per-platform and per-environment headers are brought in.
             Add the new ones for your platform under the appropriate
             conditionals.</li>
 
-        <li>Now edit 'AutoSense.hpp'. Here we set canonical &XercesCProjectName;
-            internal #define tokens which indicate the platform and
+        <li>Now edit <code>AutoSense.hpp</code>. Here we set canonical &XercesCProjectName;
+            internal <code>#define</code> tokens which indicate the platform and
             compiler. These definitions are based on known platform
             and compiler defines.
             <br/>
-            AutoSense.hpp is included in XML4CDefs.hpp and the
+            <code>AutoSense.hpp</code> is included in <code>XML4CDefs.hpp</code> and the
             canonical platform and compiler settings thus defined will
             make the particular platform and compiler headers to be
             the included at compilation.
@@ -921,13 +914,13 @@ gmake</source>
             will get picked up already using what is already there.</li>
 
         <li>Once this is done, you will then need to implement a
-            version of the 'platform utilities' for your platform.
+            version of the <ref>platform utilities</ref> for your platform.
             Each operating system has a file which implements some
             methods of the XMLPlatformUtils class, specific to that
             operating system. These are not terribly complex, so it
             should not be a lot of work. The Win32 verions is called
-            Win32PlatformUtils.cpp, the AIX version is
-            AIXPlatformUtils.cpp and so on. Create one for your
+            <code>Win32PlatformUtils.cpp</code>, the AIX version is
+            <code>AIXPlatformUtils.cpp</code> and so on. Create one for your
             platform, with the correct name, and empty out all of the
             implementation so that just the empty shells of the
             methods are there (with dummy returns where needed to make

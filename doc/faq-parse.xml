@@ -69,48 +69,31 @@
 
     <q>I cannot run my sample applications. What is wrong?</q>
     <a>
-      <p>There are two major installation issues which must be dealt
-        with in order to use &XercesCProjectName; from your applications. The
-        DLL or shared library must be locatable via the system's
-        environment. And, the converter files used by &XercesCProjectName; for
-        its transcoding must be locatable.
-      </p>
-      <p>On UNIX platforms you need to ensure that your library search
-        environment variable includes the directory which has the
-        &XercesCProjectName; shared library (On AIX, this is LIBPATH, on
-        Solaris and Linux it is LD_LIBRARY_PATH while on HP-UX it is
-        SHLIB_PATH). Thus, if you installed your binaries under
-        <code>$HOME/fastxmlparser</code>, you need to point your
-        library path to that directory.
+      <p>In order to run an application built using &XercesCProjectName; you
+      must set up your path and library search path properly. In the
+      standalone version from Apache, you must have the &XercesCName; runtime library
+      available from your path settings. On Windows this library is called
+      <code>&XercesCWindowsLib;.dll</code> which must be available from your <code>PATH</code>
+      settings. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code>
+      (or <code>.a</code> or <code>.sl</code>) which must be available from your
+      <code>LD_LIBRARY_PATH</code> (or <code>SHLIB_PATH</code> or <code>LIBPATH</code>)
+	  environment variable.</p>
+
+      <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>,
+      you need to point your library path to that directory.
       </p>
 
 <source>export LIBPATH=$LIBPATH:$HOME/fastxmlparser/lib # (AIX)
-
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/fastxmlparser/lib # (Solaris, Linux)
-
 export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
 
-      <p>On Win32, you would ensure that the &XercesCProjectName; DLLs are in
-        the PATH environment.</p>
+      <p>If you are using the enhanced version of this parser from IBM, you will need to
+      put in two additional DLLs. In the Windows build these are <code>icuuc.dll</code> and
+      <code>icudata.dll</code> which must be available from your PATH settings. On UNIX,
+      these libraries are called <code>libicu-uc.so</code> and <code>libicudata.so</code>
+      (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from
+      your library search path.
 
-      <p>For the transcoding files <code>(*.cnv)</code>, the
-        easiest mechanism (which is used in the binary release) is to
-        place them relative to the shared library or DLL. The
-        transcoding converter files should be in the
-        <code>icu/data</code> directory relative to the shared library
-        or DLL. This will allow them to be located automatically.</p>
-
-      <p>However, if you redistribute &XercesCProjectName; within some other
-        product, and cannot maintain this relationship, or if your
-        build scenario does not allow you to maintain this
-        relationship during debugging for instance, you can use the
-        ICU_DATA environment variable to point to these converter
-        files (make sure the variable ends with a backslash '\' on Windows platforms).
-    This variable may be set system wide, within a
-        particular command window, or just within the client
-        application or higher level libraries, as is deemed
-        necessary. It must be set before the XML system is initialized
-        (see below.)
       </p>
     </a>
   </faq>
@@ -137,40 +120,8 @@ catch (const XMLException&amp; toCatch) {
       <p>This initializes the &XercesCProjectName; system and sets its
         internal variables.  Note that you must the include
         <code>util/PlatformUtils.hpp</code> file for this to work.</p>
-
-      <p>The second common problem is the absence of the transcoding
-        converter files <code>(*.cnv)</code>. This problem has a
-        simple fix, if you understand how the transcoding converter
-        files are searched.</p>
-
-      <p>&XercesCProjectName; first looks for the environment variable
-        ICU_DATA. If it finds this variable in your environment
-        settings, then it assumes that the transcoding converter files
-        are kept in that directory.  Thus, for example, if you had set
-        your environment variable to (say):</p>
-
-<source>set ICU_DATA=d:\my&XercesCProjectName;\icu\data\</source>
-
-      <p>The transcoding converter files (all files having extension
-        .cnv and convrtrs.txt) will be searched under
-        <code>d:\my&XercesCProjectName;\icu\data</code></p>
-
-      <p>If you have not set your environment variable, then the
-        search for the transcoding converters is done relative to the
-        location of the shared library &XercesCWindowsLib;.dll (or
-        &XercesCUnixLib;.a on AIX and &XercesCUnixLib;.so on Solaris and
-        Linux, &XercesCUnixLib;.sl on HP-UX). Thus if your shared library
-        is in <code>d:\fastxmlparser\lib</code>, then your transcoding
-        converter files should be in
-        <code>d:\fastxmlparser\lib\icu\data.</code></p>
-
-      <p>Before you run your application, make sure that you have
-        covered the two possibilities mentioned above.</p>
-
     </a>
   </faq>
-
-
 
   <faq title="Is &XercesCProjectName; thread-safe?">
 
@@ -210,16 +161,16 @@ catch (const XMLException&amp; toCatch) {
     <faq title="Why does my multi-threaded application crash on Solaris?">
         <q>Why does my multi-threaded application crash on Solaris?</q>
         <a>
-            <p>The problem appears because the throw call on Solaris 2.6 
-            is not multi-thread safe. Sun Microsystems provides a patch to 
-            solve this problem. To get the latest patch for solving this 
-            problem, go to <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump> 
-            and get the appropriate patch for your operating system. 
-            For Intel machines running Solaris, you need to get Patch ID 104678. 
+            <p>The problem appears because the throw call on Solaris 2.6
+            is not multi-thread safe. Sun Microsystems provides a patch to
+            solve this problem. To get the latest patch for solving this
+            problem, go to <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump>
+            and get the appropriate patch for your operating system.
+            For Intel machines running Solaris, you need to get Patch ID 104678.
             For SPARC machines you need to get Patch ID #105591.</p>
         </a>
-    </faq>  
-    
+    </faq>
+
     <faq title="How do I find out what version of &XercesCProjectName; I am using?">
         <q>How do I find out what version of &XercesCProjectName; I am using?</q>
         <a>
@@ -253,38 +204,6 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="How do I add an additional transcoding file in the existing set?">
-    <q>How do I add an additional transcoding file in the existing set?</q>
-    <a>
-      <p>Transcoding files shipped with binary drops of &XercesCProjectName;
-        exist in the <code>bin/icu/data</code> directory on Win32 and
-        in the <code>lib/icu/data</code> directory under various
-        unix's.  All transcoding files have the extension .cnv and are
-        platform specific binary files. The ICU drop provides the
-        utility 'makeconv' to generate these binary files. To add an
-        additional transcoding file, you need to first define your new
-        code-set in ASCII format (which has the extension .ucm). The
-        coding format for an encoding may be obtained from one of the
-        existing files in icu/data (in the source drop). After you
-        create the .ucm file for your new language, you need to
-        convert it to a binary form using makeconv.</p>
-
-      <p>Thus, if your new code-set is defined in file
-        mynewcodeset.ucm , you would type:</p>
-
-<source>makeconv mynewcodeset.ucm</source>
-
-      <p>...to create the binary transcoding file mynewcodeset.cnv. Make
-        sure that this .cnv file is packaged in the same place as the
-        others, i.e. in a directory <code>icu/data</code> relative to
-        where your shared library is.</p>
-
-      <p>You can also add aliases for this encoding in the file
-        'convrtrs.txt', also present in the same directory as the
-        converter files.</p>
-    </a>
-  </faq>
-
   <faq title="How are entity reference nodes handled in DOM?">
     <q>How are entity reference nodes handled in DOM?</q>
     <a>
@@ -308,48 +227,23 @@ catch (const XMLException&amp; toCatch) {
   <faq title="What kinds of URLs are currently supported in &XercesCProjectName;?">
     <q>What kinds of URLs are currently supported in &XercesCProjectName;?</q>
     <a>
-      <p>We now have a spec. compliant, but limited, implementation of
-        the class URL. Xerces-C has code to parse URL's into components, but
-        it does have intrinsic support for making actual connections to
-        the remote resource pointed to by the URL. The limitations are:</p>
-      <ul>
-        <li>The only protocol currently supported is the "file://"
-          which is used to refer to files locally.</li>
 
-        <li>Only the 'localhost' string is supported in the host
-          placeholder in the URL syntax.</li>
-      </ul>
+    <p>The <code>XMLURL</code> class provides for limited URL support. It understands
+    the <code>file://, http://</code>, and <code>ftp://</code> URL types, and is
+    capable or parsing them into their constituent components, and normalizing
+    them. It also supports the commonly required action of conglomerating a
+    base and relative URL into a single URL. In other words, it performs the
+    limited set of functions required by an XML parser.</p>
 
-      <p>This should work for command line arguments to samples as well as
-        any usage in the XML file when referring to an external file.</p>
+    <p>Another thing that URLs commonly do are to create an input stream that
+    provides access to the entity referenced. The parser, as shipped, only
+    supports this functionality on URLs in the form <code>file:///</code> and
+    <code>file://localhost/</code>, i.e. only when the URL refers to a local file.</p>
 
-      <p>Examples of what this implementation will allow you to do are:</p>
+    <p>You may enable support for HTTP and FTP URLs by implementing and installing
+    a NetAccessor object. When a NetAccessor object is installed, the URL class
+    will use it to create input streams for the remote entities refered to by such URLs.</p>
 
-<source>e:\&gt;domcount file:///e:/&XercesCProjectName;/build/win32/vc6/debug/abc.xml
-
-or
-
-e:\&gt;domcount file::///&XercesCProjectName;/build/win32/vc6/debug/abc.xml
-e:\&gt;domcount file::///d:/abc.xml
-
-or
-
-e:\>domcount file:://localhost/d:/abc.xml</source>
-
-      <p>Example of what you cannot do is:</p>
-      <ul>
-        <li>Refer to files using the 'file://' syntax and giving a
-        relative path to the file.</li>
-
-        <li>This implies that if you are using the 'file://' syntax to
-        refer to external files, you have to give the complete path to
-        files even in the current directory.</li>
-      </ul>
-      <p>You always have the option of not using the 'file://' syntax
-      and referring to files by just giving the filename or a
-      relative path to it as in:</p>
-
-<source>domcount abc.xml</source>
 
     </a>
   </faq>
@@ -437,11 +331,11 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
     <a>
 
       <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16
-      (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC-CP-US and
-      ISO-8859-1 (aka Latin1) encodings. This means that it can parse
+      (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and
+      IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can parse
       input XML files in these above mentioned encodings.</p>
 
-      <p>XML4C - the version of Xerces-c available from IBM - extends
+      <p>XML4C - the version of Xerces-C available from IBM - extends
       this set to include the encodings listed in the table below.</p>
 
       <table>
@@ -464,44 +358,44 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
         <tr><td>Japanese, Shift JIS</td>          <td>Shift_JIS</td></tr>
         <tr><td>Korean, Extended UNIX code</td>   <td>euc-kr</td></tr>
       </table>
-            
+
     <p>Some implementations or ports of Xerces-C provide support for
     additional encodings.  The exact set will depend on the supplier
     of the parser and on the character set transcoding services in use.
     </p>
-    
+
     </a>
   </faq>
 
   <faq title="What character encoding should I use when creating XML documents?">
     <q>What character encoding should I use when creating XML documents?</q>
     <a>
-    
-      <p>The best choice in most cases is either utf-8 or utf-16.  
+
+      <p>The best choice in most cases is either utf-8 or utf-16.
       Advantages of these encodings include </p>
-      
+
       <ul>
          <li>The best portability.  These encodings are more widely
          supported by XML processors than any others, meaning that
-         your documents will have the best possible chance of being 
+         your documents will have the best possible chance of being
          read correctly, no matter where they end up. </li>
-         
+
          <li>Full international character support.  Both utf-8 and
          utf-16 cover the full Unicode character set, which
          includes all of the characters from all major national,
          international and industry character sets. </li>
-         
+
          <li>Efficient.  utf-8 has the smaller storage requirements
          for documents that are primarily composed of of characters
          from the Latin alphabet.  utf-16 is more efficient for
          encoding Asian languages.  But both encodings cover
          all languages without loss.</li>
       </ul>
-      
+
       <p>The only drawback of utf-8 or utf-16 is that they are not
       the native text file format for most systems, meaning that
       common text file editors and viewers can not be directly used.</p>
-      
+
       <p>A second choice of encoding would be any of the others listed in
       the table above.  This works best when the xml encoding is the same
       as the default system encoding on the machine where the
@@ -509,11 +403,11 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
       display correctly as a plain text file.  For UNIX systems
       in countries speaking Western European languages, the encoding
       will usually be iso-8859-1.</p>
-      
+
       <p>The versions of Xerces, both C and Java, distributed
       by IBM as XML4C and XML4J, include all of the encodings
       listed in the above table, on all platforms. </p>
-      
+
       <p>A word of caution for Windows users: The default character set
       on Windows systems is windows-1252, not iso-8859-1.  While Xerces-c
       does recognize this Windows encoding, it is a poor choice for portable
@@ -521,37 +415,35 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
       tools.  If you are using a Windows based editing tool to generate
       XML, check which character set it generates, and make sure that the
       resulting XML specifies the correct name in the encoding="..." declaration.</p>
-      
+
         </a>
       </faq>
 
   <faq title="Is EBCDIC supported?">
     <q>Is EBCDIC supported?</q>
-    
+
     <a>
     <p>Yes, &XercesCName; supports EBCDIC.  When creating EBCDIC encoded XML data,
     the preferred encoding is ibm1140.  Also supported is ibm037 (and its alternate name,
     ebcdic-cp-us); this encoding is almost the same as ibm1140, but it lacks the Euro
     symbol</p>
-    
+
     <p>These two encodings, ibm1140 and ibm037, are available on both Xerces-C and
     IBM XML4C, on all platforms. </p>
-    
+
     <p>On IBM System 390, XML4C also supports two alternative forms, ibm037-s390
     and ibm1140-s390.  These are similar to the base ibm037 and ibm1140 encodings,
     but with alternate mappings of the EBCDIC new-line character, which allows
     them to appear as normal text files on System 390s.  These encodings are not
     supported on other platforms, and should not be used for portable data.</p>
-    
+
     <p>XML4C on System 390 and AS/400 also provides additional EBCDIC encodings, including
     those for the character sets of different countries.  The exact set supported
-    will be platform dependent, and these encodings are not not recommended for
+    will be platform dependent, and these encodings are not recommended for
     portable XML data.  </p>
-    
-    </a>
-      </faq>
-   
 
+    </a>
+    </faq>
 
 </faqs>
 

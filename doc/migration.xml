@@ -4,7 +4,7 @@
 <s1 title="Migrating from XML4C 2.x">
     <p>This document is a discussion of the technical differences between
     XML4C 2.x code base and the new &XercesCName; &XercesCVersion; code base.</p>
-    
+
     <p>Topics discussed are:</p>
     <ul>
         <li><link anchor="GenImprovements">General Improvements</link></li>
@@ -33,34 +33,34 @@
 
     <anchor name="GenImprovements"/>
     <s2 title="General Improvements">
-    
-        <p>The new version is improved in many ways. Some general improvements 
-        are: significantly better conformance to the XML spec, cleaner 
+
+        <p>The new version is improved in many ways. Some general improvements
+        are: significantly better conformance to the XML spec, cleaner
         internal architecture, many bug fixes, and faster speed.</p>
-        
+
         <anchor name="Compliance"/>
         <s3 title="Compliance">
-            <p>Except for a couple of the very obscure (mostly related to 
-            the 'standalone' mode), this version should be quite compliant. 
-            We have more than a thousand tests, some collected from various 
-            public sources and some IBM generated, which are used to do 
-            regression testing. The C++ parser is now passing all but a 
+            <p>Except for a couple of the very obscure (mostly related to
+            the 'standalone' mode), this version should be quite compliant.
+            We have more than a thousand tests, some collected from various
+            public sources and some IBM generated, which are used to do
+            regression testing. The C++ parser is now passing all but a
             handful of them.</p>
         </s3>
 
         <anchor name="BugFixes"/>
         <s3 title="Bug Fixes">
-            <p>This version has many bug fixes with regard to XML4C version 2.x. 
-            Some of these were reported by users and some were brought up by 
+            <p>This version has many bug fixes with regard to XML4C version 2.x.
+            Some of these were reported by users and some were brought up by
             way of the conformance testing.</p>
         </s3>
 
         <anchor name="Speed"/>
         <s3 title="Speed">
-            <p>Much work was done to speed up this version. Some of the 
-            new features, such as namespaces, and conformance checks ended 
-            up eating up some of these gains, but overall the new version 
-            is significantly faster than previous versions, even while doing 
+            <p>Much work was done to speed up this version. Some of the
+            new features, such as namespaces, and conformance checks ended
+            up eating up some of these gains, but overall the new version
+            is significantly faster than previous versions, even while doing
             more.</p>
         </s3>
     </s2>
@@ -227,7 +227,7 @@
         easier for you. In the above example, for instance, the parser will be
         cleaned up for you automatically upon exit since you don't have to
         allocate it anymore.</p>
-    
+
     </s2>
 
 
@@ -238,7 +238,7 @@
         2 specification have been added. These address some of the
         shortcomings in our DOM implementation,
         such as a simple, standard mechanism for tree traversal.</p>
-        
+
     </s2>
 
 
@@ -290,17 +290,23 @@ while (gotMore &amp;&amp; !handler.getDone())
         data or our handler indicates that it saw what it wanted to
         see.</p>
 
-        <note>In the case of the normal parse() call, the end of the
-        parse is unambiguous and the parser will flush any open
-        entities on exit (closing files, sockets, memory buffers,
-        etc...) that were open when the exit completed. In the
-        progressive parse scenario, it cannot know when you are done
-        unless you parse to the end. So, to insure that all entites
-        are closed, you should typically destroy the parser.  If you
-        are going to reuse the parser again and again, each reuse will
-        implicitly flush any previous content, but any opened entities
-        will remain opened until you do one of these things.</note>
-        
+        <p>When doing non-progressive parses, the parser can easily
+        know when the parse is complete and insure that any used
+        resources are cleaned up. Even in the case of a fatal parsing
+        error, it can clean up all per-parse resources. However, when
+        progressive parsing is done, the client code doing the parse
+        loop might choose to stop the parse before the end of the
+        primary file is reached. In such cases, the parser will not
+        know that the parse has ended, so any resources will not be
+        reclaimed until the parser is destroyed or another parse is started.</p>
+
+        <p>This might not seem like such a bad thing; however, in this case,
+        the files and sockets which were opened in order to parse the
+        referenced XML entities will remain open. This could cause
+        serious problems. Therefore, you should destroy the parser instance
+        in such cases, or restart another parse immediately. In a future
+        release, a reset method will be provided to do this more cleanly.</p>
+
         <p>Also note that you must create a scan token and pass it
         back in on each call. This insures that things don't get done
         out of sequence. When you call parseFirst() or parse(), any
@@ -344,9 +350,9 @@ myParser.setDoNamespaces(true);</source>
         directory have been moved to their more correct location in
         the src/framework/ directory. These are classes used by the
         outside world and should have been framework classes to begin
-        with. Also, to avoid name classes in the absense of C++
-        namespace support, some of these classes have been renamed to
-        make them more XML specific and less likely to clash. More
+        with. Also, to avoid name classes in the absense of C++ namespace
+        support, some of these clashes have been renamed to make them
+        more XML specific and less likely to clash. More
         classes might end up being moved to framework as well.</p>
 
         <p>So you might have to change a few include statements to
@@ -366,7 +372,7 @@ myParser.setDoNamespaces(true);</source>
         languages. Anyone interested in contributing any translations
         should contact us. This would be an extremely useful
         service.</p>
-        
+
         <p>In order to support the local message loading services, we
         have created a pretty flexible framework for supporting
         loadable text. Firstly, there is now an XML file, in the
@@ -392,9 +398,8 @@ myParser.setDoNamespaces(true);</source>
         which one is used. You can set this in your build projects to
         control the message loader type used.</p>
 
-        <p>This is also a good place to mention that the Java and C++
-        messages are now the <em>same</em>, since both are being taken
-        from the same XML message file.</p>
+        <p>Both the Java and C++ parsers emit the same messages for an XML error
+        since they are being taken from the same message file.</p>
 
     </s2>
 
@@ -418,8 +423,8 @@ myParser.setDoNamespaces(true);</source>
         proven to handle DTD and Schema cleanly.</p>
 
     </s2>
-    
-    
+
+
     <anchor name="PluggableTranscoders"/>
     <s2 title="Pluggable Transcoders">
 
@@ -437,7 +442,9 @@ myParser.setDoNamespaces(true);</source>
         services, and the <ref>iconv</ref> services available on many
         Unix platforms. The Win32 version only provides native code
         page services, so it can only handle XML code in the intrinsic
-        encodings (UTF-8, ASCII, UTF-16, UCS-4.) The ICU version
+        encodings ASCII, UTF-8, UTF-16 (Big/Small Endian), UCS4
+        (Big/Small Endian), EBCDIC code pages IBM037 and
+        IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. The ICU version
         provides all of the encodings that ICU supports. The
         <ref>iconv</ref> version will support the encodings supported
         by the local system. You can use transcoders we provide or

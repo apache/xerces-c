@@ -8,10 +8,9 @@
         <a>
 
             <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16
-            (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC-US and
-            ISO-8859-1 (aka Latin1) encodings. This means that it can
-            parse input XML files in these above mentioned
-            encodings.</p>
+            (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and
+            IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can parse
+            input XML files in these above mentioned encodings.</p>
 
             <p>However, if you wish to parse XML files in any other
             encodings, say in Shift-JIS, Big5 etc., then you cannot
@@ -30,11 +29,11 @@
             site. The license to use XML4C is simply to comply with
             the Apache license (because of Xerces-C) and IBM Public
             License (because of ICU).</p>
-             
+
             <p>XML4C binaries are published for Solaris using SunWorkshop
             compiler, HPUX 10.20 and 11.0 using CC and aCC, Redhat
             Linux using gcc, Windows NT using MSVC, AIX using xlC.</p>
-            
+
         </a>
     </faq>
 
@@ -44,11 +43,11 @@
             <p>As mentioned above, there are two configurations in
             which Xerces-C binaries are shipped. One is from the <jump
             href="http://xml.apache.org/xerces-c/index.html">Apache
-            site</jump>, while the other is inside <em>XML4C</em>
+            site</jump>, while the other is from IBM
             published at <jump
-            href="http://www.alphaworks.ibm.com/tech/xml4c">IBM
+            href="http://www.alphaworks.ibm.com/tech/xml4c">IBM's
             Alphaworks Site</jump>.</p>
-            
+
             <p>If you are using the binaries from the <jump
             href="http://xml.apache.org/dist">Apache download
             site</jump> site, then you only need to distribute
@@ -58,11 +57,11 @@
             &XercesCUnixLib;.a for AIX, or<br/>
             &XercesCUnixLib;.so for Solaris/Linux, or<br/>
             &XercesCUnixLib;.sl for HP-UX.</p>
-            
+
             <p>However, if you are using the XML4C binaries then in
             <em>addition</em> to the &XercesCName; library file
             mentioned above, you also need to ship:</p>
-    
+
             <ol>
                 <li><em>ICU shared library file</em>:<br></br>
                     icuuc.dll for Windows NT/95/98, or<br></br>
@@ -80,22 +79,22 @@
     </faq>
 
     <faq title="How do I package the sources to create a binary drop?">
-    
+
         <q>How do I package the sources to create a binary drop?</q>
-        
+
         <a>
             <p>You have to first compile the sources inside your IDE to
             create the required DLLs and EXEs. Then you need to copy
             over the binaries to another directory for the binary
             drop. A perl script has been provided to give you a jump
             start. You need to install perl on your machine for the script to work.
-            The file may not work if you have changed your
-            source tree. You have to modify the script to suit
-            your current state of the source tree. To invoke the
+            If you have changed your source tree, you have to modify the script to suit
+            your current directory structure. To invoke the
             script, go to the \&lt;&XercesCProjectName;&gt;\scripts directory, and type:</p>
 <source>perl packageBinaries.pl</source>
 
-            <p>You will get a message that looks like: </p>
+            <p>You will get a message that somewhat looks like this (changes always happpen,
+            we are evolving you see!): </p>
 
 <source>Usage is: packageBinaries &lt;options&gt;
 options are:  -s &lt;source_directory&gt;
@@ -107,20 +106,20 @@ options are:  -s &lt;source_directory&gt;
               -t &lt;transcoder&gt; can be 'icu' or 'native'
               -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
               -h to get help on these commands
-Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0 
-                                 -o$HOME/xerces-c_1_0_0 
-                                 -cgcc -xg++ -minmem 
+Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
+                                 -o$HOME/xerces-c_1_0_0
+                                 -cgcc -xg++ -minmem
                                  -nfileonly -tnative</source>
 
             <p>Make sure that your compiler can be invoked from the command line and
             follow the instructions to produce a binary drop.</p>
         </a>
     </faq>
-    
+
     <faq title="I do not see binaries for my platform. When will they be available?">
-    
+
         <q>I do not see binaries for my platform. When will they be available?"></q>
-        
+
         <a>
             <p>The reason why you see binaries only for some specific
             platforms is that we have had the maximum requests for
@@ -137,9 +136,9 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
 
 
     <faq title="When will a port to my platform be available?">
-    
+
         <q>When will a port to my platform be available?</q>
-        
+
         <a>
           <p>We would like to see &XercesCProjectName; ported to as
           many platforms as there are. Again, due to limited resources
@@ -152,7 +151,7 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
             are required to make it work on another platform. We will
             incorporate these changes in the source code base and make
             them available in the future releases.</p>
-            
+
             <p>All porting changes may be sent to: <jump
             href="mailto:xerces-dev@xml.apache.org">xerces-dev@xml.apache.org</jump>
             .</p>
@@ -164,10 +163,10 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
         <q>How can I port &XercesCProjectName; to my favourite platform?</q>
         <a>
           <p>Some porting information is mentioned on the <jump
-          href="build.html#PortingGuide">'build'</jump> page.</p>
+          href="build.html#PortingGuide">build</jump> page.</p>
         </a>
     </faq>
-    
+
 
 
 
@@ -178,12 +177,12 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
             documentation. The documentation files are all written in XML and the
             application, internally codenamed StyleBook, makes use of XSL to transform
             it into an HTML document that you are seeing right now.
-            It is currently available on the 
-            <jump href="http://xml.apache.org/">Apache</jump> open source website as 
+            It is currently available on the
+            <jump href="http://xml.apache.org/">Apache</jump> open source website as
             <jump href="http://xml.apache.org/cocoon/index.html">Cocoon</jump>.</p>
-            
-            <p>The API documentation is created using 
-            <jump href="http://www.zib.de/Visual/software/doc++/index.html">DOC++</jump>.</p>   
+
+            <p>The API documentation is created using
+            <jump href="http://www.zib.de/Visual/software/doc++/index.html">DOC++</jump>.</p>
         </a>
     </faq>
 
@@ -199,14 +198,14 @@ Example: perl packageBinaries.pl -s$HOME/xerces-c_1_0_0
             'DOMSampleTreeViewer.zip'. Please note, this is provided on a
             "as-is, no support" basis. This sample works with XML4C 2.3.1
             and we have not verified if it works with XML4C 3.x releases.</p>
-            
+
             <p>TreeViewer parses the XML file, using &XercesCProjectName;,
             and displays the data as a tree.</p>
-                    
+
             <p>We welcome your additional feedback at: &lt;
             <jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt;</p>
         </a>
-    
+
     </faq>
 
     <faq title="Can I use &XercesCProjectName; in my product?">
