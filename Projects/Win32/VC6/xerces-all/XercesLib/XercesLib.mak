@@ -3179,7 +3179,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigInteger.cpp
 
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLChar.cpp
 
-"$(INTDIR)\XMLString.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\XMLChar.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
