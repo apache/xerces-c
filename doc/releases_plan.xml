@@ -23,16 +23,25 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Report Schema Error with matching column number and line number.</td>
+        <td>Report Schema Error with matching column number and line number</td>
         <td>Khaled Noaman</td>
         <td>March</td>
-        <td></td>
+        <td>Done</td>
     </tr>
 
     <tr>
-        <td>Claim IDOM as non-experimental, and as Apache Recommended DOM C++ Binding</td>
-        <td>Tinny Ng</td>
+        <td>Move post schema validation (e.g. element consistency check, particle derivation checking)
+            from TraverseSchema to SchemaValidator</td>
+        <td>Khaled Noaman</td>
         <td>March</td>
+        <td>Done</td>
+    </tr>
+
+    <tr>
+        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
+            optionally ignore external DTD</td>
+        <td>Tinny Ng</td>
+        <td>April</td>
         <td></td>
     </tr>
 
@@ -44,9 +53,15 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
-            optionally ignore external DTD</td>
-        <td>Tinny Ng</td>
+        <td>[Bug 5854 &amp; 6095] Modify .so name to have version number</td>
+        <td>PeiYong Zhang</td>
+        <td>April</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Modify runConfigure with 64 bit support</td>
+        <td>PeiYong Zhang</td>
         <td>April</td>
         <td></td>
     </tr>
@@ -73,49 +88,105 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>Produce 64 bit binary distribution for Linux</td>
+        <td>Produce 64 bit binary distribution for Windows</td>
         <td>PeiYong Zhang</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
     <tr>
         <td>Produce 64 bit binary distribution for Windows</td>
         <td>PeiYong Zhang</td>
-        <td>May</td>
+        <td>June</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Core</td>
+        <td>Claim IDOM as non-experimental</td>
         <td>Tinny Ng</td>
         <td>April</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Load and Save</td>
+        <td>DOM Level 3 Core: DOMImplementationSource</td>
         <td>Tinny Ng</td>
         <td>May</td>
         <td></td>
     </tr>
 
     <tr>
-        <td>DOM Level 3 Abstract Schema Load and Save</td>
+        <td>DOM Level 3 Core: Document: set/getEncoding, set/getVersion, set/getStandalone, adoptNode</td>
+        <td>Tinny Ng</td>
+        <td>May</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Level 3 Core: Node: isSameNode, isEqualNode, getInterface</td>
+        <td>Tinny Ng</td>
+        <td>May</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Level 3 Core: UserDataHandler, and Node: get/setUserData</td>
+        <td>Tinny Ng</td>
+        <td>May</td>
+        <td></td>
+    </tr>
+
+
+    <tr>
+        <td>DOM Level 3 Core: DOMErrorHandler, DOMError, DOMLocator</td>
+        <td>Tinny Ng</td>
+        <td>June</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM Level 3 Core: Entity: set/getEncoding, set/getVersion</td>
+        <td>Tinny Ng</td>
+        <td>June</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM L3 Load: DOMInputSource, DOMEntityResolver, DOMBuilder</td>
         <td>Khaled Noaman</td>
         <td>April</td>
         <td></td>
     </tr>
+    <tr>
+        <td>DOM L3 Save: DOMImplementationLS, DocumentLS, DOMWriter</td>
+        <td>PeiYong Zhang</td>
+        <td>May</td>
+        <td></td>
+    </tr>
 
     <tr>
-        <td>[Bug 5563] Add capacity to build Xerces as static library</td>
+        <td>DOM L3 Abstract Schema: ASModel</td>
+        <td>Khaled Noaman</td>
+        <td>May</td>
         <td></td>
-        <td></td>
+    </tr>
+
+    <tr>
+        <td>DOM L3 Abstract Schema Load: ASDOMBuilder</td>
+        <td>Khaled Noaman</td>
+        <td>May</td>
         <td></td>
     </tr>
 
     <tr>
         <td>XML 1.1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>PSVI</td>
         <td></td>
         <td></td>
         <td></td>
