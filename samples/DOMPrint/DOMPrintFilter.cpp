@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/03 22:40:07  peiyongz
+ * *** empty log message ***
+ *
  * Revision 1.1  2002/05/29 13:33:32  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -76,64 +79,78 @@ static const XMLCh  element_link[]=
 	chLatin_l, chLatin_i, chLatin_n, chLatin_k, chNull 
 };
 
-DOMPrintFilter::DOMPrintFilter(unsigned long toShowMask)
-:DOMWriterFilter(toShowMask)
+DOMPrintFilter::DOMPrintFilter(unsigned long whatToShow)
+:DOMWriterFilter(whatToShow)
 {}
 
-short DOMPrintFilter::acceptNode(const DOMNode *const node) const
+short DOMPrintFilter::acceptNode(const DOMNode* node) const
 {
 	//
-	// We are to process what we claimed interested in
+	// The DOMWriter shall call getWhatToShow() before calling 
+	// acceptNode(), to show nodes which are supposed to be 
+	// shown to this filter.
 	// 
-	if (!showNode(node))
+	// REVISIT: In case the DOMWriter does not follow the protocol, 
+	//          Shall the filter honour, or NOT, what it claimes
+	//         (when it is constructed/setWhatToShow()) 
+	//          it is interested in ?
+	// 
+	// The DOMLS specs does not specify that acceptNode() shall do
+	// this way, or not, so it is up the implementation,
+	// to skip the code below for the sake of performance ...
+	//
+	if ((getWhatToShow() & (1 << (node->getNodeType() - 1))) == 0)
 		return DOMNodeFilter::FILTER_ACCEPT;
 
 	switch (node->getNodeType())
 	{
 	case DOMNode::ELEMENT_NODE:
-	{
-		if (XMLString::compareString(node->getNodeName(), element_person)==0)
 		{
-			return DOMNodeFilter::FILTER_SKIP;
-		}
+			// for element whose name is "person", skip it
+			if (XMLString::compareString(node->getNodeName(), element_person)==0)
+				return DOMNodeFilter::FILTER_SKIP;
+			// for element whose name is "line", reject it
+			if (XMLString::compareString(node->getNodeName(), element_link)==0)
+				return DOMNodeFilter::FILTER_REJECT;
+			// for rest, accept it
+			return DOMNodeFilter::FILTER_ACCEPT;
 
-		if (XMLString::compareString(node->getNodeName(), element_link)==0)
-		{
-			return DOMNodeFilter::FILTER_REJECT;
+			break;
 		}
-		break;
-	}
 	case DOMNode::COMMENT_NODE:
-	{
-		//return DOMNodeFilter::FILTER_REJECT;
-		break;
-	}
+		{
+			// the WhatToShow will make this no effect
+			return DOMNodeFilter::FILTER_REJECT;
+			break;
+		}
 	case DOMNode::TEXT_NODE:
-	{
-		//return DOMNodeFilter::FILTER_REJECT;
-		break;
-	}
+		{
+			// the WhatToShow will make this no effect
+			return DOMNodeFilter::FILTER_REJECT;
+			break;
+		}
 	case DOMNode::DOCUMENT_TYPE_NODE:
-	{
-		// even we say we are going to process document type,
-		// we are not able be to see this node since
-		// DOMWriterFilter will block it
-		//
-		return DOMNodeFilter::FILTER_REJECT;  // no effect
-		break;
-	}
+		{
+			// even we say we are going to process document type,
+			// we are not able be to see this node since
+			// DOMWriterImpl (a XercesC's default implementation
+			// of DOMWriter) will not pass DocumentType node to
+			// this filter.
+			//
+			return DOMNodeFilter::FILTER_REJECT;  // no effect
+			break;
+		}
 	case DOMNode::DOCUMENT_NODE:
-	{
-		// same as DOCUMENT_NODE
-		return DOMNodeFilter::FILTER_REJECT;  // no effect
-		break;
-	}
+		{
+			// same as DOCUMENT_NODE
+			return DOMNodeFilter::FILTER_REJECT;  // no effect
+			break;
+		}
 	default :
 		{
 			return DOMNodeFilter::FILTER_ACCEPT;
+			break;
 		}
-
-		break;
 	}
 
 	return DOMNodeFilter::FILTER_ACCEPT;

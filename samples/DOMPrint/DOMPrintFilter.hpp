@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/03 22:40:07  peiyongz
+ * *** empty log message ***
+ *
  * Revision 1.1  2002/05/29 13:33:32  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -76,7 +79,7 @@ class DOMPrintFilter : public DOMWriterFilter {
 public:
 
     /** @name Constructors */
-	DOMPrintFilter(unsigned long toShowMask = DOMNodeFilter::SHOW_ALL);
+	DOMPrintFilter(unsigned long whatToShow = DOMNodeFilter::SHOW_ALL);
     //@{
 
     /** @name Destructors */
