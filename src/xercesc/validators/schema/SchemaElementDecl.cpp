@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/10/16 09:21:53  gareth
+ * use correct new.
+ *
  * Revision 1.12  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -532,7 +535,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
 
             for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
             {
-                SchemaAttDef*  data = new SchemaAttDef();
+                SchemaAttDef*  data = new (getMemoryManager())SchemaAttDef();
                 data->serialize(serEng);            
                 fAttDefs->put(data->getAttName()->getLocalPart(), data->getId(), data);                
             }
