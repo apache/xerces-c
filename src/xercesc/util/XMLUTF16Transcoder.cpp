@@ -72,9 +72,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XMLUTF16Transcoder::XMLUTF16Transcoder( const   XMLCh* const    encodingName
                                         , const unsigned int    blockSize
-                                        , const bool            swapped) :
+                                        , const bool            swapped
+                                        , MemoryManager* const manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
     , fSwapped(swapped)
 {
 }

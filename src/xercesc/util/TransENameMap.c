@@ -86,7 +86,7 @@ template <class TType> XMLTranscoder*
 ENameMapFor<TType>::makeNew(const unsigned int blockSize,
                             MemoryManager* const manager) const
 {
-    return new (manager) TType(getKey(), blockSize);
+    return new (manager) TType(getKey(), blockSize, manager);
 }
 
 
@@ -114,7 +114,7 @@ template <class TType> XMLTranscoder*
 EEndianNameMapFor<TType>::makeNew(const unsigned int blockSize,
                                   MemoryManager* const manager) const
 {
-    return new (manager) TType(getKey(), blockSize, fSwapped);
+    return new (manager) TType(getKey(), blockSize, fSwapped, manager);
 }
 
 XERCES_CPP_NAMESPACE_END

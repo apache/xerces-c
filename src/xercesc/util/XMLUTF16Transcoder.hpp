@@ -82,6 +82,7 @@ public :
         const   XMLCh* const    encodingName
         , const unsigned int    blockSize
         , const bool            swapped
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     virtual ~XMLUTF16Transcoder();

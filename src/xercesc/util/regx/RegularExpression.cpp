@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.16  2003/12/16 12:25:48  cargilld
  * Change a conditional expression to an if-else to avoid a compiler problem.
  *
@@ -461,60 +464,67 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 // ---------------------------------------------------------------------------
 //  RegularExpression: Matching methods
 // ---------------------------------------------------------------------------
-bool RegularExpression::matches(const char* const expression) {
+bool RegularExpression::matches(const char* const expression
+                                , MemoryManager* const manager) {
 
-    XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), 0);
+    XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
+	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), 0, manager);
 }
 
 bool RegularExpression::matches(const char* const expression,
-								const int start, const int end) {
+								const int start, const int end
+                                , MemoryManager* const manager) {
 
-	XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-	return matches(tmpBuf, start, end, 0);
+	XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
+	return matches(tmpBuf, start, end, 0, manager);
 }
 
 bool RegularExpression::matches(const char* const expression,
-								Match* const match)				{
+								Match* const match
+                                , MemoryManager* const manager)				{
 
-	XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), match);
+	XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
+	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), match, manager);
 }
 
 bool RegularExpression::matches(const char* const expression, const int start,
-                                const int end, Match* const pMatch)				{
+                                const int end, Match* const pMatch
+                                , MemoryManager* const manager)				{
 
-	XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-	return matches(tmpBuf, start, end, pMatch);
+	XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
+	return matches(tmpBuf, start, end, pMatch, manager);
 }
 
 
 // ---------------------------------------------------------------------------
 //  RegularExpression: Matching methods - Wide char version
 // ---------------------------------------------------------------------------
-bool RegularExpression::matches(const XMLCh* const expression) {
+bool RegularExpression::matches(const XMLCh* const expression, MemoryManager* const manager) {
 
-	return matches(expression, 0, XMLString::stringLen(expression), 0);
+	return matches(expression, 0, XMLString::stringLen(expression), 0, manager);
 }
 
 bool RegularExpression::matches(const XMLCh* const expression,
-								const int start, const int end) {
+								const int start, const int end
+                                , MemoryManager* const manager) {
 
-	return matches(expression, start, end, 0);
+	return matches(expression, start, end, 0, manager);
 }
 
 bool RegularExpression::matches(const XMLCh* const expression,
-								Match* const match)				{
+								Match* const match
+                                , MemoryManager* const manager)				{
 
-	return matches(expression, 0, XMLString::stringLen(expression), match);
+	return matches(expression, 0, XMLString::stringLen(expression), match, manager);
 }
 
 bool RegularExpression::matches(const XMLCh* const expression, const int start,
-                                const int end, Match* const pMatch)				{
+                                const int end, Match* const pMatch
+                                , MemoryManager* const manager)	{
 		
 	if (fOperations == 0)
 		prepare();
@@ -530,7 +540,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 			fContext = new (fMemoryManager) Context(fMemoryManager);
 
 		if (fContext->fInUse) {
-			context = new (fMemoryManager) Context(fMemoryManager);
+			context = new (manager) Context(manager);
 			tmpContext = context;
 		}
 		else {
@@ -845,7 +855,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
         (
             (matchStart + 1 - tokStart) * sizeof(XMLCh)
         );//new XMLCh[matchStart + 1 - tokStart];
-        XMLString::subString(token, expression, tokStart, matchStart);
+        XMLString::subString(token, expression, tokStart, matchStart, fMemoryManager);
         tokenStack->addElement(token);
       } 
 
@@ -868,7 +878,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
     (
         (strLength + 1 - tokStart) * sizeof(XMLCh)
     );//new XMLCh[strLength + 1 - tokStart];
-    XMLString::subString(token, expression, tokStart, strLength);
+    XMLString::subString(token, expression, tokStart, strLength, fMemoryManager);
   }  
 
   if (!XMLString::equals(fPattern, &chNull)) 
@@ -922,9 +932,12 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
                                   const XMLCh* const replaceString,
                                   const int start, const int end)
 {
+    // REVISIT:: cargillmem - subEx is temporary... replicate was modified below
+    // but there is also a call to delete[]!!!
+
   //check if matches zero length string - throw error if so
-  if (matches(XMLUni::fgZeroLenString)){
-		ThrowXML(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString);
+  if (matches(XMLUni::fgZeroLenString, fMemoryManager)){
+		ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString, fMemoryManager);
   }
       
   RefVectorOf<Match> *subEx = new (fMemoryManager) RefVectorOf<Match>(10, true, fMemoryManager);
@@ -943,7 +956,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
     numSubEx = subEx->elementAt(0)->getNoGroups() - 1;
   
   int tokStackSize = tokenStack->size();
-  const XMLCh* curRepString = XMLString::replicate(replaceString);
+  const XMLCh* curRepString = XMLString::replicate(replaceString, fMemoryManager);
     
   for (int i = 0; i < tokStackSize; i++){
       
@@ -962,7 +975,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
   }  
     
   delete[] (XMLCh*)curRepString;
-  return XMLString::replicate(result.getRawBuffer()); 
+  return XMLString::replicate(result.getRawBuffer(), fMemoryManager); 
     
 }
 
@@ -1356,7 +1369,7 @@ bool RegularExpression::matchBackReference(Context* const context,
 										   const bool ignoreCase)
 {
 	if (refNo <=0 || refNo >= fNoGroups)
-		ThrowXML(IllegalArgumentException, XMLExcepts::Regex_BadRefNo);
+		ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Regex_BadRefNo, fMemoryManager);
 
 	if (context->fMatch->getStartPos(refNo) < 0
 		|| context->fMatch->getEndPos(refNo) < 0)
@@ -1457,7 +1470,7 @@ int RegularExpression::parseOptions(const XMLCh* const options)
 		int v = getOptionValue(options[i]);
 
 		if (v == 0)
-			ThrowXML1(ParseException, XMLExcepts::Regex_UnknownOption, options);
+			ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Regex_UnknownOption, options, fMemoryManager);
 
 		opts |= v;
 	}
@@ -1521,7 +1534,7 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 		ret = compileCondition(token, next, reverse);
 		break;
 	default:
-		ThrowXML(RuntimeException, XMLExcepts::Regex_UnknownTokenType);
+		ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_UnknownTokenType, fMemoryManager);
 		break; // this line to be deleted
 	}
 
@@ -1544,7 +1557,7 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
   int numSubExp = subEx->getNoGroups() - 1;
 
   if (numSubExp == 0)
-    return XMLString::replicate(repString);
+    return XMLString::replicate(repString, fMemoryManager);
   
   bool notEscaped = true;                 
   
@@ -1565,15 +1578,15 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
       if (!XMLString::isDigit(*ptr)){
        
         //invalid replace string - $ must be followed by a digit
-				ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidRepPattern);
+				ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
       }
         
       indexStr[0] = *ptr;                     //get the digit 
-      index = XMLString::parseInt(indexStr);  //convert it to an int
+      index = XMLString::parseInt(indexStr, fMemoryManager);  //convert it to an int
 
       //now check that the index is legal
       if (index > numSubExp){
-				ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidRepPattern);
+				ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
       }
         
       int start = subEx->getStartPos(index);
@@ -1589,7 +1602,7 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
       //if you have a slash and then a character that's not a $ or /, 
       //then it's an invalid replace string  
       if (!notEscaped && (*ptr != chDollarSign && *ptr != chBackSlash)){
-				ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidRepPattern);
+				ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
       }
       
       if (*ptr == chBackSlash){
@@ -1603,7 +1616,7 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
     }
   }
 
-  return XMLString::replicate(newString.getRawBuffer());
+  return XMLString::replicate(newString.getRawBuffer(), fMemoryManager);
        
 }
 
@@ -1699,7 +1712,7 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 
 				fWordRange = fTokenFactory->getRange(fgUniIsWord);
 				if (fWordRange == 0)
-					ThrowXML1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord);
+					ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, fMemoryManager);
 			}
 
 			return fWordRange->match(ch) ? WT_LETTER : WT_OTHER;

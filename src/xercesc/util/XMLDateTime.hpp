@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/12/11 21:38:12  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -218,6 +221,7 @@ public:
 
     static int            compareOrder(const XMLDateTime* const
                                      , const XMLDateTime* const);
+                                    // , MemoryManager* const memMgr);// = XMLPlatformUtils::fgMemoryManager);
 
     /***
      * Support for Serialization/De-serialization
@@ -402,8 +406,9 @@ inline void XMLDateTime::assertBuffer() const
     if ( ( !fBuffer )            ||
          ( fBuffer[0] == chNull ) )
     {
-        ThrowXML(SchemaDateTimeException
-               , XMLExcepts::DateTime_Assert_Buffer_Fail);
+        ThrowXMLwithMemMgr(SchemaDateTimeException
+               , XMLExcepts::DateTime_Assert_Buffer_Fail
+               , fMemoryManager);
     }
 
 }

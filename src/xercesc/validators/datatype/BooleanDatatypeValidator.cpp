@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -150,14 +153,15 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
         // Boolean shall NOT have enumeration
         if (enums) {
             delete enums;
-            ThrowXML1(InvalidDatatypeFacetException
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                     , XMLExcepts::FACET_Invalid_Tag
-                    , "enumeration");
+                    , "enumeration"
+                    , manager);
         }
 
         XMLCh* key;
         XMLCh* value;
-        RefHashTableOfEnumerator<KVStringPair> e(facets);
+        RefHashTableOfEnumerator<KVStringPair> e(facets, false, manager);
 
         while (e.hasMoreElements())
         {
@@ -172,9 +176,10 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
             }
             else
             {
-                ThrowXML1(InvalidDatatypeFacetException
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                         , XMLExcepts::FACET_Invalid_Tag
-                        , key);
+                        , key
+                        , manager);
             }
 
         }
@@ -184,13 +189,14 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
 
 void BooleanDatatypeValidator::checkContent( const XMLCh*             const content
                                            ,       ValidationContext* const context
-                                           ,       bool                     asBase)
+                                           ,       bool                     asBase
+                                           ,       MemoryManager*     const manager)
 {
 
     //validate against base validator if any
     BooleanDatatypeValidator *pBaseValidator = (BooleanDatatypeValidator*) this->getBaseValidator();
     if (pBaseValidator !=0)
-        pBaseValidator->checkContent(content, context, true);
+        pBaseValidator->checkContent(content, context, true, manager);
 
     // we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
@@ -202,16 +208,17 @@ void BooleanDatatypeValidator::checkContent( const XMLCh*             const cont
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
             }
         }
 
-        if (getRegex()->matches(content) ==false)
+        if (getRegex()->matches(content, manager) ==false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -228,13 +235,14 @@ void BooleanDatatypeValidator::checkContent( const XMLCh*             const cont
     }
 
     if (i == ARRAYSIZE)
-        ThrowXML(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType);
+        ThrowXMLwithMemMgr(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType, manager);
         //Not valid boolean type
 
 }
 
 int BooleanDatatypeValidator::compare(const XMLCh* const lValue
-                                    , const XMLCh* const rValue)
+                                    , const XMLCh* const rValue
+                                    , MemoryManager* const manager)
 {
     // need to check by bool semantics
     // 1 == true
@@ -273,9 +281,8 @@ const XMLCh* BooleanDatatypeValidator::getCanonicalRepresentation(const XMLCh*  
                                                                 ,       MemoryManager* const memMgr) const
 {
     BooleanDatatypeValidator *temp = (BooleanDatatypeValidator*) this;
-    temp->checkContent(rawData, 0, false);
-
     MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
+    temp->checkContent(rawData, 0, false, toUse);   
 
     return ( XMLString::equals(rawData, fgValueSpace[0]) ||
              XMLString::equals(rawData, fgValueSpace[2])  ) ?

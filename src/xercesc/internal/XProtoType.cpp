@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.1  2003/09/18 18:31:24  peiyongz
  * OSU: Object Serialization Utilities
  *
@@ -92,12 +95,13 @@ void XProtoType::store(XSerializeEngine& serEng) const
  *
  ***/
 void XProtoType::load(XSerializeEngine& serEng
-                    , XMLByte* const    inName)
+                    , XMLByte* const    inName
+                    , MemoryManager* const manager)
 {
     if (!inName)
     {       
-        ThrowXML(XSerializationException
-               , XMLExcepts::XSer_ProtoType_Null_ClassName);
+        ThrowXMLwithMemMgr(XSerializationException
+               , XMLExcepts::XSer_ProtoType_Null_ClassName, manager);
     }
 
     // read and check class name length
@@ -109,13 +113,14 @@ void XProtoType::load(XSerializeEngine& serEng
     {
         XMLCh value1[16];
         XMLCh value2[16];
-        XMLString::binToText(inNameLen,    value1, 16, 10);
-        XMLString::binToText(classNameLen, value2, 16, 10);
+        XMLString::binToText(inNameLen,    value1, 16, 10, manager);
+        XMLString::binToText(classNameLen, value2, 16, 10, manager);
 
-        ThrowXML2(XSerializationException
+        ThrowXMLwithMemMgr2(XSerializationException
                 , XMLExcepts::XSer_ProtoType_NameLen_Dif
                 , value1
-                , value2);  
+                , value2
+                , manager);  
     }
 
     // read and check class name
@@ -131,10 +136,11 @@ void XProtoType::load(XSerializeEngine& serEng
         XMLString::transcode((char*)inName,    name1, 255);
         XMLString::transcode((char*)className, name2, 255);
 
-        ThrowXML2(XSerializationException
+        ThrowXMLwithMemMgr2(XSerializationException
                 , XMLExcepts::XSer_ProtoType_Name_Dif
                 , name1
-                , name2);  
+                , name2
+                , manager);  
     }
 
     return;

@@ -1291,9 +1291,9 @@ void IGXMLScanner::scanReset(const InputSource& src)
 
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId(), fMemoryManager);
         else
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId(), fMemoryManager);
     }
 
     // Push this read onto the reader manager
@@ -1722,18 +1722,19 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 
             try
             {
-                XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+                XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer(), fMemoryManager);
                 if (urlTmp.isRelative())
                 {
-                    ThrowXML
+                    ThrowXMLwithMemMgr
                     (
                         MalformedURLException
                         , XMLExcepts::URL_NoProtocolPresent
+                        , fMemoryManager
                     );
                 }
                 else {
                     if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                        ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                     srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
                 }
             }
@@ -1798,7 +1799,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     {
                         if (fValidatorFromUser) {
                             // the fValidator is from user
-                            ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
                         }
                         else {
                             fValidator = fSchemaValidator;
@@ -1851,7 +1852,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         {
             if (fValidatorFromUser) {
                 // the fValidator is from user
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
             }
             else {
                 fValidator = fSchemaValidator;
@@ -1906,15 +1907,16 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
             if (urlTmp.isRelative())
             {
-                ThrowXML
+                ThrowXMLwithMemMgr
                 (
                     MalformedURLException
                     , XMLExcepts::URL_NoProtocolPresent
+                    , fMemoryManager
                 );
             }
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
@@ -1954,7 +1956,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
 
     if (!fValidator->handlesSchema()) {
         if (fValidatorFromUser && fValidate)
-            ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
         else {
             fValidator = fSchemaValidator;
         }
@@ -2069,7 +2071,7 @@ bool IGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                 nextCh = fReaderMgr.getNextChar();
 
                 if (!nextCh)
-                    ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                    ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
                 //  Check for our ending quote. It has to be in the same entity
                 //  as where we started. Quotes in nested entities are ignored.
@@ -2139,6 +2141,7 @@ bool IGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                                 , tmpBuf
                                 , 8
                                 , 16
+                                , fMemoryManager
                             );
                             emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                         }
@@ -2221,7 +2224,7 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
             nextCh = fReaderMgr.getNextChar();
 
             if (!nextCh)
-                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
             // Check for our ending quote in the same entity
             if (nextCh == quoteCh)
@@ -2288,6 +2291,7 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                     }
@@ -2451,7 +2455,7 @@ void IGXMLScanner::scanCDSection()
         if (!nextCh)
         {
             emitError(XMLErrs::UnterminatedCDATASection);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         if (fValidate && fStandalone && (fReaderMgr.getCurrentReader()->isWhitespace(nextCh)))
@@ -2594,6 +2598,7 @@ void IGXMLScanner::scanCDSection()
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         emittedError = true;
@@ -2720,6 +2725,7 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                                 , tmpBuf
                                 , 8
                                 , 16
+                                , fMemoryManager
                             );
                             emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         }
@@ -2950,7 +2956,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         //  If the creation failed, and its not because the source was empty,
         //  then emit an error and return.
         if (!reader)
-            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
 
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.
@@ -2964,7 +2970,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         // how many entity references we've had
         if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
             XMLCh expLimStr[16];
-            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
             emitError
             ( 
                 XMLErrs::EntityExpansionLimitExceeded
@@ -3022,7 +3028,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         // how many entity references we've had
         if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
             XMLCh expLimStr[16];
-            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
             emitError
             ( 
                 XMLErrs::EntityExpansionLimitExceeded
@@ -3065,14 +3071,14 @@ bool IGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
         fGrammarType = fGrammar->getGrammarType();
         if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
             if (fValidatorFromUser)
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
             else {
                 fValidator = fSchemaValidator;
             }
         }
         else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
             if (fValidatorFromUser)
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
             else {
                 fValidator = fDTDValidator;
             }

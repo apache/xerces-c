@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/10/01 01:09:35  knoaman
  * Refactoring of some code to improve performance.
  *
@@ -157,17 +160,19 @@ protected:
     );
 
     virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
+                                     , const XMLCh* const value
+                                     , MemoryManager* const manager);
 
     virtual void inheritAdditionalFacet();
 
-    virtual void checkAdditionalFacetConstraints() const;
+    virtual void checkAdditionalFacetConstraints(MemoryManager* const manager) const;
 
-    virtual void checkAdditionalFacet(const XMLCh* const content) const;
+    virtual void checkAdditionalFacet(const XMLCh* const content
+                        , MemoryManager* const manager) const;
 
-    virtual void checkValueSpace(const XMLCh* const content);
+    virtual void checkValueSpace(const XMLCh* const content
+                        , MemoryManager* const manager);
 
-    virtual int  getLength(const XMLCh* const content) const;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.4  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -91,9 +94,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Op: Constructors and Destructors
 // ---------------------------------------------------------------------------
-Op::Op(const short type) : fOpType(type),
-                           fNextOp(0) {
-
+Op::Op(const short type, MemoryManager* const manager) 
+    : fOpType(type)
+    , fNextOp(0) 
+    , fMemoryManager(manager)
+{
 }
 
 // ---------------------------------------------------------------------------
@@ -101,67 +106,67 @@ Op::Op(const short type) : fOpType(type),
 // ---------------------------------------------------------------------------
 int Op::getSize() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 XMLInt32 Op::getData() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 XMLInt32 Op::getData2() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 int Op::getRefNo() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::elementAt(int index) const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::getChild() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::getConditionFlow() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::getYesFlow() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::getNoFlow() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 	
 const XMLCh* Op::getLiteral() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 	
 const Token* Op::getToken() const {
 
-	ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
@@ -169,8 +174,9 @@ const Token* Op::getToken() const {
 // ---------------------------------------------------------------------------
 //  CharOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-CharOp::CharOp(const short type, const XMLInt32 charData)
-    : Op(type)
+CharOp::CharOp(const short type, const XMLInt32 charData
+               , MemoryManager* const manager)
+    : Op(type, manager)
       , fCharData(charData) {
 }
 
@@ -186,7 +192,7 @@ XMLInt32 CharOp::getData() const {
 //  UnionOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
 UnionOp::UnionOp(const short type, const int size, MemoryManager* const manager)
-    : Op(type)
+    : Op(type, manager)
       , fBranches(new (manager) RefVectorOf<Op> (size, false, manager)) {
 
 }
@@ -212,8 +218,8 @@ void UnionOp::addElement(Op* const op) {
 // ---------------------------------------------------------------------------
 //  ChildOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-ChildOp::ChildOp(const short type)
-    : Op(type)
+ChildOp::ChildOp(const short type, MemoryManager* const manager)
+    : Op(type, manager)
       , fChild(0) {
 
 }
@@ -234,8 +240,9 @@ void ChildOp::setChild(const Op* const child) {
 // ---------------------------------------------------------------------------
 //  ModifierOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-ModifierOp::ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2)
-    : ChildOp(type)
+ModifierOp::ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2
+                       , MemoryManager* const manager)
+    : ChildOp(type, manager)
       , fVal1(v1)
       , fVal2(v2) {
 
@@ -257,8 +264,8 @@ XMLInt32 ModifierOp::getData2() const {
 // ---------------------------------------------------------------------------
 //  RangeOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-RangeOp::RangeOp(const short type, const Token* const token)
-    : Op (type)
+RangeOp::RangeOp(const short type, const Token* const token, MemoryManager* const manager)
+    : Op (type, manager)
       , fToken(token) {
 
 }
@@ -275,9 +282,10 @@ const Token* RangeOp::getToken() const {
 // ---------------------------------------------------------------------------
 //  StringOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-StringOp::StringOp(const short type, const XMLCh* const literal)
-    : Op (type)
-      , fLiteral(XMLString::replicate(literal)) {
+StringOp::StringOp(const short type, const XMLCh* const literal
+                   , MemoryManager* const manager)
+    : Op (type, manager)
+      , fLiteral(XMLString::replicate(literal, manager)) {
 
 }
 
@@ -294,8 +302,8 @@ const XMLCh* StringOp::getLiteral() const {
 // ---------------------------------------------------------------------------
 ConditionOp::ConditionOp(const short type, const int refNo,
                          const Op* const condFlow, const Op* const yesFlow,
-                         const Op* const noFlow)
-    : Op (type)
+                         const Op* const noFlow, MemoryManager* const manager)
+    : Op (type, manager)
       , fRefNo(refNo)
       , fConditionOp(condFlow)
       , fYesOp(yesFlow)

@@ -74,7 +74,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	UnionToken(const unsigned short tokType);
+	UnionToken(const unsigned short tokType
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~UnionToken();
 
 	// -----------------------------------------------------------------------

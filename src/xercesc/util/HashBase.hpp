@@ -58,6 +58,7 @@
 #define HASHBASE_HPP
 
 #include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -79,7 +80,8 @@ public:
       * @param key the key to be hashed
 	  * @param mod the modulus the hasher should use
       */
-	virtual unsigned int getHashVal(const void *const key, unsigned int mod) = 0;
+	virtual unsigned int getHashVal(const void *const key, unsigned int mod
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
 	/**
       * Compares two keys and determines if they are semantically equal

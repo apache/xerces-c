@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/10/17 16:44:34  knoaman
  * Fix multithreading problem.
  *
@@ -214,7 +217,7 @@ Token* TokenFactory::createToken(const unsigned short tokType) {
 	if (tokType == Token::T_EMPTY && fEmpty != 0)
 		return fEmpty;
 
-	Token* tmpTok = new (fMemoryManager) Token(tokType);
+	Token* tmpTok = new (fMemoryManager) Token(tokType, fMemoryManager);
 
 	if (tokType == Token::T_EMPTY) {
 		fEmpty = tmpTok;
@@ -229,7 +232,7 @@ Token* TokenFactory::createToken(const unsigned short tokType) {
 ParenToken* TokenFactory::createLook(const unsigned short tokType,
 									 Token* const token) {
 
-	ParenToken* tmpTok = new (fMemoryManager) ParenToken(tokType, token, 0);
+	ParenToken* tmpTok = new (fMemoryManager) ParenToken(tokType, token, 0, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -238,7 +241,7 @@ ParenToken* TokenFactory::createLook(const unsigned short tokType,
 ParenToken* TokenFactory::createParenthesis(Token* const token,
 											const int noGroups) {
 
-	ParenToken* tmpTok = new (fMemoryManager) ParenToken(Token::T_PAREN, token, noGroups);
+	ParenToken* tmpTok = new (fMemoryManager) ParenToken(Token::T_PAREN, token, noGroups, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -247,8 +250,8 @@ ParenToken* TokenFactory::createParenthesis(Token* const token,
 ClosureToken* TokenFactory::createClosure(Token* const token,
 										  bool isNonGreedy) {
 
-	ClosureToken* tmpTok = isNonGreedy ? new (fMemoryManager) ClosureToken(Token::T_NONGREEDYCLOSURE, token)
-									   : new (fMemoryManager) ClosureToken(Token::T_CLOSURE, token);
+	ClosureToken* tmpTok = isNonGreedy ? new (fMemoryManager) ClosureToken(Token::T_NONGREEDYCLOSURE, token, fMemoryManager)
+									   : new (fMemoryManager) ClosureToken(Token::T_CLOSURE, token, fMemoryManager);
 	
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -257,7 +260,7 @@ ClosureToken* TokenFactory::createClosure(Token* const token,
 ConcatToken* TokenFactory::createConcat(Token* const token1,
                                         Token* const token2) {
 
-    ConcatToken* tmpTok = new (fMemoryManager) ConcatToken(token1, token2);
+    ConcatToken* tmpTok = new (fMemoryManager) ConcatToken(token1, token2, fMemoryManager);
 	
     fTokens->addElement(tmpTok);
     return tmpTok;
@@ -265,8 +268,8 @@ ConcatToken* TokenFactory::createConcat(Token* const token1,
 
 UnionToken* TokenFactory::createUnion(const bool isConcat) {
 
-	UnionToken* tmpTok = isConcat ? new (fMemoryManager) UnionToken(Token::T_CONCAT)
-								  : new (fMemoryManager) UnionToken(Token::T_UNION);
+	UnionToken* tmpTok = isConcat ? new (fMemoryManager) UnionToken(Token::T_CONCAT, fMemoryManager)
+								  : new (fMemoryManager) UnionToken(Token::T_UNION, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -286,8 +289,8 @@ RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 CharToken* TokenFactory::createChar(const XMLUInt32 ch, const bool isAnchor) {
 
-	CharToken* tmpTok = isAnchor ? new (fMemoryManager) CharToken(Token::T_ANCHOR, ch)
-								: new (fMemoryManager) CharToken(Token::T_CHAR, ch);
+	CharToken* tmpTok = isAnchor ? new (fMemoryManager) CharToken(Token::T_ANCHOR, ch, fMemoryManager)
+								: new (fMemoryManager) CharToken(Token::T_CHAR, ch, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -313,7 +316,7 @@ ModifierToken* TokenFactory::createModifierGroup(Token* const child,
                                                  const int add,
                                                  const int mask) {
 
-	ModifierToken* tmpTok = new (fMemoryManager) ModifierToken(child, add, mask);
+	ModifierToken* tmpTok = new (fMemoryManager) ModifierToken(child, add, mask, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -325,7 +328,7 @@ ConditionToken* TokenFactory::createCondition(const int refNo,
                                               Token* const noFlow) {
 
 	ConditionToken* tmpTok = new (fMemoryManager) ConditionToken(refNo, condition, yesFlow,
-                                                noFlow);
+                                                noFlow, fMemoryManager);
 	fTokens->addElement(tmpTok);
 	return tmpTok;
 }

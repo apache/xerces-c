@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -134,7 +137,7 @@ DoubleDatatypeValidator::DoubleDatatypeValidator(
                         , MemoryManager* const                manager)
 :AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Double, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DoubleDatatypeValidator::~DoubleDatatypeValidator()
@@ -144,10 +147,11 @@ DoubleDatatypeValidator::~DoubleDatatypeValidator()
 // Compare methods
 // -----------------------------------------------------------------------
 int DoubleDatatypeValidator::compare(const XMLCh* const lValue
-                                   , const XMLCh* const rValue)
+                                   , const XMLCh* const rValue
+                                   , MemoryManager* const manager)
 {
-    XMLDouble lObj(lValue, fMemoryManager);
-    XMLDouble rObj(rValue, fMemoryManager);
+    XMLDouble lObj(lValue, manager);
+    XMLDouble rObj(rValue, manager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -176,23 +180,6 @@ DoubleDatatypeValidator::DoubleDatatypeValidator(DatatypeValidator*            c
     //do not invoke init here !!!
 }
 
-void DoubleDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
-                                                  , const XMLCh* const)
-{
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void DoubleDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void DoubleDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void DoubleDatatypeValidator::checkAdditionalFacetConstraintsBase() const
-{}
-
 int  DoubleDatatypeValidator::compareValues(const XMLNumber* const lValue
                                           , const XMLNumber* const rValue)
 {
@@ -219,7 +206,7 @@ void  DoubleDatatypeValidator::setMinExclusive(const XMLCh* const value)
     fMinExclusive = new (fMemoryManager) XMLDouble(value, fMemoryManager);
 }
 
-void  DoubleDatatypeValidator::setEnumeration()
+void  DoubleDatatypeValidator::setEnumeration(MemoryManager* const manager)
 {
     // check 4.3.5.c0 must: enumeration values from the value space of base
     //
@@ -239,14 +226,15 @@ void  DoubleDatatypeValidator::setEnumeration()
         {
             for ( i = 0; i < enumLength; i++)
             {
-                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
+                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
             }
         }
         catch (XMLException&)
         {
-            ThrowXML1(InvalidDatatypeFacetException
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                     , XMLExcepts::FACET_enum_base
-                    , fStrEnumeration->elementAt(i));
+                    , fStrEnumeration->elementAt(i)
+                    , manager);
 
         }
     }
@@ -256,15 +244,15 @@ void  DoubleDatatypeValidator::setEnumeration()
     //
     for ( i = 0; i < enumLength; i++)
     {
-        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
+        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
     }
 
-    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true, fMemoryManager);
+    fEnumeration = new (manager) RefVectorOf<XMLNumber>(enumLength, true, manager);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new (fMemoryManager) XMLDouble(fStrEnumeration->elementAt(i), fMemoryManager), i);
+        fEnumeration->insertElementAt(new (manager) XMLDouble(fStrEnumeration->elementAt(i), manager), i);
     }
 }
 
@@ -274,13 +262,14 @@ void  DoubleDatatypeValidator::setEnumeration()
 
 void DoubleDatatypeValidator::checkContent(const XMLCh*             const content
                                           ,      ValidationContext* const context
-                                          ,      bool                     asBase)
+                                          ,      bool                     asBase
+                                          ,      MemoryManager*     const manager)
 {
 
     //validate against base validator if any
     DoubleDatatypeValidator *pBase = (DoubleDatatypeValidator*) this->getBaseValidator();
     if (pBase)
-        pBase->checkContent(content, context, true);
+        pBase->checkContent(content, context, true, manager);
 
     // we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
@@ -292,16 +281,17 @@ void DoubleDatatypeValidator::checkContent(const XMLCh*             const conten
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
             }
         }
 
-        if (getRegex()->matches(content) ==false)
+        if (getRegex()->matches(content, manager) ==false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -311,7 +301,7 @@ void DoubleDatatypeValidator::checkContent(const XMLCh*             const conten
         return;
 
     try {
-        XMLDouble theValue(content, fMemoryManager);
+        XMLDouble theValue(content, manager);
         XMLDouble *theData = &theValue;
 
         if (getEnumeration())
@@ -325,15 +315,15 @@ void DoubleDatatypeValidator::checkContent(const XMLCh*             const conten
             }
 
             if (i == enumLength)
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
         }
 
-        boundsCheck(theData);
+        boundsCheck(theData, manager);
 
     }
     catch (XMLException &e)
     {
-       ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage());
+       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage(), manager);
     }
 
 }

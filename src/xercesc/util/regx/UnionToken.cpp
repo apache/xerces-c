@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -119,8 +122,8 @@ const unsigned short UnionToken::INITIALSIZE = 8;
 // ---------------------------------------------------------------------------
 //  UnionToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
-UnionToken::UnionToken(const unsigned short tokType)
-    : Token(tokType)
+UnionToken::UnionToken(const unsigned short tokType, MemoryManager* const manager)
+    : Token(tokType, manager)
     , fChildren(0)
 {
 

@@ -70,9 +70,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XMLUCS4Transcoder::XMLUCS4Transcoder(const  XMLCh* const    encodingName
                                     , const unsigned int    blockSize
-                                    , const bool            swapped) :
+                                    , const bool            swapped
+                                    , MemoryManager* const manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
     , fSwapped(swapped)
 {
 }
@@ -246,7 +247,7 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
             //  an exception.
             //
             if ( !( (trailCh >= 0xDC00) && (trailCh <= 0xDFFF) ) )
-            ThrowXML(TranscodingException, XMLExcepts::Trans_BadTrailingSurrogate);
+                ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadTrailingSurrogate, getMemoryManager());
 
             // And now combine the two into a single output char
             *outPtr++ = ((curCh - 0xD800) << 10)

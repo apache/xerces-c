@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -137,26 +140,29 @@ protected:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    void init(RefArrayVectorOf<XMLCh>*  const enums);
+    void init(RefArrayVectorOf<XMLCh>*  const enums
+        , MemoryManager* const manager);
 
     //
     // Abstract interface
     //
     virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value) = 0;
+                                     , const XMLCh* const value
+                                     , MemoryManager* const manager);
 
-    virtual void inheritAdditionalFacet() = 0;
+    virtual void inheritAdditionalFacet();
 
-    virtual void checkAdditionalFacetConstraints() const = 0;
+    virtual void checkAdditionalFacetConstraints(MemoryManager* const manager) const;
 
-    virtual void checkAdditionalFacetConstraintsBase() const = 0;
+    virtual void checkAdditionalFacetConstraintsBase(MemoryManager* const manager) const;
 
     virtual int  compareValues(const XMLNumber* const lValue
                              , const XMLNumber* const rValue) = 0;
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase) = 0;
+                            , bool                           asBase
+                            ,       MemoryManager*     const manager) = 0;
 
 // -----------------------------------------------------------------------
 // Setter methods
@@ -170,7 +176,7 @@ protected:
 
     virtual void  setMinExclusive(const XMLCh* const) = 0;
 
-    virtual void  setEnumeration() = 0;
+    virtual void  setEnumeration(MemoryManager* const manager) = 0;
 
     static const int INDETERMINATE;
 
@@ -212,11 +218,11 @@ protected:
 
 private:
 
-    void assignFacet();
+    void assignFacet(MemoryManager* const manager);
 
-    void inspectFacet();
+    void inspectFacet(MemoryManager* const manager);
 
-    void inspectFacetBase();
+    void inspectFacetBase(MemoryManager* const manager);
 
     void inheritFacet();
 

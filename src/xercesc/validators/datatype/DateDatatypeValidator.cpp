@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -117,10 +120,10 @@ DateDatatypeValidator::DateDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefArrayVectorOf<XMLCh>*      const enums
                         , const int                           finalSet
-                        , MemoryManager* const                 manager)
+                        , MemoryManager* const                manager)
 :DateTimeValidator(baseValidator, facets, finalSet, DatatypeValidator::Date, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DateDatatypeValidator::~DateDatatypeValidator()
@@ -140,9 +143,9 @@ DatatypeValidator* DateDatatypeValidator::newInstance
 //
 // caller need to release the date created here
 //
-XMLDateTime* DateDatatypeValidator::parse(const XMLCh* const content)
+XMLDateTime* DateDatatypeValidator::parse(const XMLCh* const content, MemoryManager* const manager)
 {
-    XMLDateTime *pRetDate = new (fMemoryManager) XMLDateTime(content, fMemoryManager);
+    XMLDateTime *pRetDate = new (manager) XMLDateTime(content, manager);
 
     try
     {

@@ -118,7 +118,7 @@ public:
     //          of IE 5.0.
     // -----------------------------------------------------------------------
     XMLException();
-    XMLException(const char* const srcFile, const unsigned int srcLine);
+    XMLException(const char* const srcFile, const unsigned int srcLine, MemoryManager* const memoryManager = 0);
     XMLException(const XMLException& toCopy);
     XMLException& operator=(const XMLException& toAssign);
 
@@ -170,10 +170,13 @@ private :
     //  fMsg
     //      The loaded message text for this exception.
     // -----------------------------------------------------------------------
-    XMLExcepts::Codes fCode;
-    char*               fSrcFile;
-    unsigned int        fSrcLine;
-    XMLCh*              fMsg;
+    XMLExcepts::Codes       fCode;
+    char*                   fSrcFile;
+    unsigned int            fSrcLine;
+    XMLCh*                  fMsg;
+
+protected:
+    MemoryManager*          fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------
@@ -224,8 +227,9 @@ public: \
  \
     theType(const   char* const         srcFile \
             , const unsigned int        srcLine \
-            , const XMLExcepts::Codes toThrow) : \
-        XMLException(srcFile, srcLine) \
+            , const XMLExcepts::Codes toThrow \
+            , MemoryManager*            memoryManager = 0) : \
+        XMLException(srcFile, srcLine, memoryManager) \
     { \
         loadExceptText(toThrow); \
     } \
@@ -238,24 +242,26 @@ public: \
   \
     theType(const   char* const         srcFile \
             , const unsigned int        srcLine \
-            , const XMLExcepts::Codes toThrow \
+            , const XMLExcepts::Codes   toThrow \
             , const XMLCh* const        text1 \
             , const XMLCh* const        text2 = 0 \
             , const XMLCh* const        text3 = 0 \
-            , const XMLCh* const        text4 = 0) : \
-        XMLException(srcFile, srcLine) \
+            , const XMLCh* const        text4 = 0 \
+            , MemoryManager*            memoryManager = 0) : \
+        XMLException(srcFile, srcLine, memoryManager) \
     { \
         loadExceptText(toThrow, text1, text2, text3, text4); \
     } \
  \
     theType(const   char* const         srcFile \
             , const unsigned int        srcLine \
-            , const XMLExcepts::Codes toThrow \
+            , const XMLExcepts::Codes   toThrow \
             , const char* const         text1 \
             , const char* const         text2 = 0 \
             , const char* const         text3 = 0 \
-            , const char* const         text4 = 0) : \
-        XMLException(srcFile, srcLine) \
+            , const char* const         text4 = 0 \
+            , MemoryManager*            memoryManager = 0) : \
+        XMLException(srcFile, srcLine, memoryManager) \
     { \
         loadExceptText(toThrow, text1, text2, text3, text4); \
     } \
@@ -270,7 +276,7 @@ public: \
  \
     virtual XMLException* duplicate() const \
     { \
-        return new theType(*this); \
+        return new (fMemoryManager) theType(*this); \
     } \
  \
     virtual const XMLCh* getType() const \
@@ -289,15 +295,26 @@ private : \
 //  to make sure that source code line/col info is stored correctly, and to
 //  give flexibility for other stuff in the future.
 // ---------------------------------------------------------------------------
+
 #define ThrowXML(type,code) throw type(__FILE__, __LINE__, code)
 
-#define ThrowXML1(type,code,p1) throw type(__FILE__, __LINE__, code, p1)
+#define ThrowXML1(type,code,p1) throw type(__FILE__, __LINE__, code, p1, 0, 0, 0)
 
-#define ThrowXML2(type,code,p1,p2) throw type(__FILE__, __LINE__, code, p1, p2)
+#define ThrowXML2(type,code,p1,p2) throw type(__FILE__, __LINE__, code, p1, p2, 0, 0)
 
-#define ThrowXML3(type,code,p1,p2,p3) throw type(__FILE__, __LINE__, code, p1, p2, p3)
+#define ThrowXML3(type,code,p1,p2,p3) throw type(__FILE__, __LINE__, code, p1, p2, p3, 0)
 
 #define ThrowXML4(type,code,p1,p2,p3,p4) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4)
+
+#define ThrowXMLwithMemMgr(type,code,memMgr) throw type(__FILE__, __LINE__, code, memMgr)
+
+#define ThrowXMLwithMemMgr1(type,code,p1,memMgr) throw type(__FILE__, __LINE__, code, p1, 0, 0, 0, memMgr)
+
+#define ThrowXMLwithMemMgr2(type,code,p1,p2,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, 0, 0, memMgr)
+
+#define ThrowXMLwithMemMgr3(type,code,p1,p2,p3,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, p3, 0, memMgr)
+
+#define ThrowXMLwithMemMgr4(type,code,p1,p2,p3,p4,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4, memMgr)
 
 XERCES_CPP_NAMESPACE_END
 

@@ -669,18 +669,19 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
             if (toEat == 1)
             {
                 XMLCh tmpBuf[16];
-                XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16);
-                ThrowXML2
+                XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16, getMemoryManager());
+                ThrowXMLwithMemMgr2
                 (
                     TranscodingException
                     , XMLExcepts::Trans_BadSrcCP
                     , tmpBuf
                     , getEncodingName()
+                    , getMemoryManager()
                 );
             }
              else
             {
-                ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+                ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
             }
         }
 
@@ -750,13 +751,14 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         if (usedDef && (options == UnRep_Throw))
         {
             XMLCh tmpBuf[16];
-            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
-            ThrowXML2
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_Unrepresentable
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/11/03 22:00:31  peiyongz
  * RefHashTable-like enumeration accessing added
  *
@@ -207,7 +210,7 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
 template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const unsigned int modulus)
 {
 	if (modulus == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
     fBucketList = (RefHash3KeysTableBucketElem<TVal>**) fMemoryManager->allocate
@@ -313,7 +316,7 @@ RefHash3KeysIdPool<TVal>::getById(const unsigned int elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_InvalidId, fMemoryManager);
 
     return fIdPtrs[elemId];
 }
@@ -323,11 +326,16 @@ RefHash3KeysIdPool<TVal>::getById(const unsigned int elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_InvalidId, fMemoryManager);
 
     return fIdPtrs[elemId];
 }
 
+template <class TVal>
+MemoryManager* RefHash3KeysIdPool<TVal>::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Putters
 // ---------------------------------------------------------------------------
@@ -402,9 +410,9 @@ template <class TVal> RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal
 findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -424,7 +432,7 @@ findBucketElem(const void* const key1, const int key2, const int key3, unsigned 
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     const RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -443,11 +451,13 @@ findBucketElem(const void* const key1, const int key2, const int key3, unsigned 
 //  RefHash3KeysIdPoolEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
-RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool adopt)
-	: fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum)
+RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum
+                             , const bool adopt
+                             , MemoryManager* const manager)
+	: fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum), fMemoryManager(manager)
 {
     if (!toEnum)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, fMemoryManager);
 
     Reset();
     resetKey();
@@ -475,7 +485,7 @@ template <class TVal> TVal& RefHash3KeysIdPoolEnumerator<TVal>::nextElement()
 {
     // If our index is zero or past the end, then we are done
     if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     // Return the current element and bump the index
     return *fToEnum->fIdPtrs[fCurIndex++];
@@ -521,7 +531,7 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::nextElementKey(vo
 {
     // Make sure we have an element to return
     if (!hasMoreKeys())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the

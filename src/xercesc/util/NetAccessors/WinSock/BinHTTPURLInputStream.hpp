@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.2  2002/11/04 15:11:39  tng
  * C++ Namespace Support.
  *
@@ -145,7 +148,7 @@ private :
     //      Pointers into fBuffer, showing start and end+1 of content
     //      that readBytes must return.
     // -----------------------------------------------------------------------
-
+    MemoryManager*      fMemoryManager;
     unsigned int        fSocketHandle;
     unsigned int        fBytesProcessed;
     char                fBuffer[4000];
@@ -154,7 +157,7 @@ private :
     static bool         fInitialized;
     static XMLMutex*        fInitMutex;
 
-	static void Initialize();
+	static void Initialize(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
 	inline static hostent* gethostbyname(const char* name);
 	inline static unsigned long inet_addr(const char* cp);

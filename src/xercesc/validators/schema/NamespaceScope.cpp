@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -162,7 +165,7 @@ unsigned int NamespaceScope::increaseDepth()
 unsigned int NamespaceScope::decreaseDepth()
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow, fMemoryManager);
 
     fStackTop--;
 
@@ -177,7 +180,7 @@ void NamespaceScope::addPrefix(const XMLCh* const prefixToAdd,
                                const unsigned int uriId) {
 
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     // Get a convenience pointer to the stack top row
     StackElem* curRow = fStack[fStackTop - 1];

@@ -134,7 +134,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getters
     // -----------------------------------------------------------------------
-    TVal& get(const void* const key);
+    TVal& get(const void* const key, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     const TVal& get(const void* const key) const;
 
 
@@ -193,7 +193,9 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ValueHashTableOfEnumerator(ValueHashTableOf<TVal>* const toEnum, const bool adopt = false);
+    ValueHashTableOfEnumerator(ValueHashTableOf<TVal>* const toEnum
+        , const bool adopt = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~ValueHashTableOfEnumerator();
 
 
@@ -239,6 +241,7 @@ private :
     ValueHashTableBucketElem<TVal>* fCurElem;
     unsigned int                    fCurHash;
     ValueHashTableOf<TVal>*         fToEnum;
+    MemoryManager* const            fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

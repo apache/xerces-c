@@ -220,8 +220,9 @@ XMLCh XMLIBM1047Transcoder::xlatThisOne(const XMLByte toXlat)
 // ---------------------------------------------------------------------------
 //  XMLIBM1047Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLIBM1047Transcoder::XMLIBM1047Transcoder(const  XMLCh* const    encodingName
-                                        , const unsigned int    blockSize) :
+XMLIBM1047Transcoder::XMLIBM1047Transcoder(const  XMLCh* const  encodingName
+                                        , const unsigned int    blockSize
+                                        , MemoryManager* const  manager) :
 
     XML256TableTranscoder
     (
@@ -230,6 +231,7 @@ XMLIBM1047Transcoder::XMLIBM1047Transcoder(const  XMLCh* const    encodingName
         , gFromTable
         , gToTable
         , gToTableSz
+        , manager
     )
 {
 }

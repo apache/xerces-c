@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -92,7 +95,8 @@ class XMLUTIL_EXPORT HashCMStateSet : public HashBase
 public:
 	HashCMStateSet();
 	virtual ~HashCMStateSet();
-	virtual unsigned int getHashVal(const void *const key, unsigned int mod);
+	virtual unsigned int getHashVal(const void *const key, unsigned int mod
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	virtual bool equals(const void *const key1, const void *const key2);
 
 };
@@ -105,7 +109,8 @@ inline HashCMStateSet::~HashCMStateSet()
 {
 }
 
-inline unsigned int HashCMStateSet::getHashVal(const void *const key, unsigned int mod)
+inline unsigned int HashCMStateSet::getHashVal(const void *const key, unsigned int mod
+                                               , MemoryManager* const manager)
 {
     const CMStateSet* const pkey = (const CMStateSet* const) key;
 	return ((pkey->hashCode()) % mod);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.29  2003/11/21 22:38:50  neilg
  * Enable grammar pools and grammar resolvers to manufacture
  * XSModels.  This also cleans up handling in the
@@ -637,7 +640,7 @@ void SAXParser::setSecurityManager(SecurityManager* const securityManager)
     // since this could impact various components, don't permit it to change
     // during a parse
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     fScanner->setSecurityManager(securityManager);
 }
@@ -698,7 +701,7 @@ void SAXParser::parse(const InputSource& source)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -721,7 +724,7 @@ void SAXParser::parse(const XMLCh* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -744,7 +747,7 @@ void SAXParser::parse(const char* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -861,7 +864,7 @@ bool SAXParser::parseFirst( const   XMLCh* const    systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(systemId, toFill);
 }
@@ -874,7 +877,7 @@ bool SAXParser::parseFirst( const   char* const     systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(systemId, toFill);
 }
@@ -887,7 +890,7 @@ bool SAXParser::parseFirst( const   InputSource&    source
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(source, toFill);
 }
@@ -1445,7 +1448,7 @@ Grammar* SAXParser::loadGrammar(const char* const systemId,
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -1473,7 +1476,7 @@ Grammar* SAXParser::loadGrammar(const XMLCh* const systemId,
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -1501,7 +1504,7 @@ Grammar* SAXParser::loadGrammar(const InputSource& source,
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try

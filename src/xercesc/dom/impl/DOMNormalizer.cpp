@@ -511,7 +511,7 @@ void DOMNormalizer::InScopeNamespaces::Scope::addOrChangeBinding(const XMLCh *pr
         fUriHash = new (manager) RefHashTableOf<XMLCh>(10, (bool) false, manager);
         
         if(fBaseScopeWithBindings) {
-            RefHashTableOfEnumerator<XMLCh> preEnumer(fBaseScopeWithBindings->fPrefixHash);
+            RefHashTableOfEnumerator<XMLCh> preEnumer(fBaseScopeWithBindings->fPrefixHash, false, manager);
             while(preEnumer.hasMoreElements()) {
                 const XMLCh* prefix = (XMLCh*) preEnumer.nextElementKey();
                 const XMLCh* uri  = fBaseScopeWithBindings->fPrefixHash->get((void*)prefix);
@@ -520,7 +520,7 @@ void DOMNormalizer::InScopeNamespaces::Scope::addOrChangeBinding(const XMLCh *pr
                 fPrefixHash->put((void *)prefix, (XMLCh*)uri);
             }
             
-            RefHashTableOfEnumerator<XMLCh> uriEnumer(fBaseScopeWithBindings->fUriHash);
+            RefHashTableOfEnumerator<XMLCh> uriEnumer(fBaseScopeWithBindings->fUriHash, false, manager);
             while(uriEnumer.hasMoreElements()) {
                 const XMLCh* uri = (XMLCh*) uriEnumer.nextElementKey();
                 const XMLCh* prefix  = fBaseScopeWithBindings->fUriHash->get((void*)uri);

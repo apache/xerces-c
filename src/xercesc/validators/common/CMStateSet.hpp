@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -257,7 +260,7 @@ public :
 
         // They have to be the same size
         if (fBitCount != srcSet.fBitCount)
-            ThrowXML(RuntimeException, XMLExcepts::Bitset_NotEqualSize);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Bitset_NotEqualSize, fMemoryManager);
 
         if (fBitCount < 65)
         {
@@ -276,7 +279,7 @@ public :
     bool getBit(const unsigned int bitToGet) const
     {
         if (bitToGet >= fBitCount)
-            ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
+            ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex, fMemoryManager);
 
         if (fBitCount < 65)
         {
@@ -311,7 +314,7 @@ public :
     void setBit(const unsigned int bitToSet)
     {
         if (bitToSet >= fBitCount)
-            ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
+            ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex, fMemoryManager);
 
         if (fBitCount < 65)
         {

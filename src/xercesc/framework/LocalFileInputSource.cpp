@@ -131,16 +131,16 @@ LocalFileInputSource::LocalFileInputSource( const XMLCh* const basePath
     //
     if (XMLPlatformUtils::isRelative(relativePath))
     {
-        XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath);
+        XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath, manager);
         setSystemId(tmpBuf);
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmpBuf); //delete [] tmpBuf;
+        manager->deallocate(tmpBuf); //delete [] tmpBuf;
     }
     else
     {
-        XMLCh* tmpBuf = XMLString::replicate(relativePath, getMemoryManager());
-        XMLPlatformUtils::removeDotSlash(tmpBuf);
+        XMLCh* tmpBuf = XMLString::replicate(relativePath, manager);
+        XMLPlatformUtils::removeDotSlash(tmpBuf, manager);
         setSystemId(tmpBuf);
-        getMemoryManager()->deallocate(tmpBuf);//delete [] tmpBuf;
+        manager->deallocate(tmpBuf);//delete [] tmpBuf;
     }
 
 }
@@ -157,11 +157,11 @@ LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath,
     //
     if (XMLPlatformUtils::isRelative(filePath))
     {
-        XMLCh* curDir = XMLPlatformUtils::getCurrentDirectory(getMemoryManager());
+        XMLCh* curDir = XMLPlatformUtils::getCurrentDirectory(manager);
 
         int    curDirLen = XMLString::stringLen(curDir);
         int    filePathLen = XMLString::stringLen(filePath);
-        XMLCh* fullDir = (XMLCh*) getMemoryManager()->allocate
+        XMLCh* fullDir = (XMLCh*) manager->allocate
         (
             (curDirLen + filePathLen + 2) * sizeof(XMLCh)
         );//new XMLCh [ curDirLen + filePathLen + 2];
@@ -170,20 +170,20 @@ LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath,
         fullDir[curDirLen] = chForwardSlash;
         XMLString::copyString(&fullDir[curDirLen+1], filePath);
         
-        XMLPlatformUtils::removeDotSlash(fullDir);
-        XMLPlatformUtils::removeDotDotSlash(fullDir);
+        XMLPlatformUtils::removeDotSlash(fullDir, manager);
+        XMLPlatformUtils::removeDotDotSlash(fullDir, manager);
 
         setSystemId(fullDir);
 
-        getMemoryManager()->deallocate(curDir);//delete [] curDir;
-        getMemoryManager()->deallocate(fullDir);//delete [] fullDir;
+        manager->deallocate(curDir);//delete [] curDir;
+        manager->deallocate(fullDir);//delete [] fullDir;
     }
      else
     {
-        XMLCh* tmpBuf = XMLString::replicate(filePath, getMemoryManager());
-        XMLPlatformUtils::removeDotSlash(tmpBuf);
+        XMLCh* tmpBuf = XMLString::replicate(filePath, manager);
+        XMLPlatformUtils::removeDotSlash(tmpBuf, manager);
         setSystemId(tmpBuf);
-        getMemoryManager()->deallocate(tmpBuf);//delete [] tmpBuf;
+        manager->deallocate(tmpBuf);//delete [] tmpBuf;
     }
 
 }

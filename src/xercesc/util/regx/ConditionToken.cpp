@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -84,8 +87,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  ConditionToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
 ConditionToken::ConditionToken(const unsigned int refNo, Token* const condTok,
-                               Token* const yesTok, Token* const noTok)
-    : Token(Token::T_CONDITION)
+                               Token* const yesTok, Token* const noTok, MemoryManager* const manager)
+    : Token(Token::T_CONDITION, manager)
     , fRefNo(refNo)
     , fConditionToken(condTok)
     , fYesToken(yesTok)

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.14  2003/12/10 20:52:27  neilg
  * fixes for canonical value production; memory management was not implemented correctly
  *
@@ -167,9 +170,9 @@ ListDatatypeValidator::ListDatatypeValidator(
     // In either case, it shall be not null
     //
     if (!baseValidator)
-        ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_List_Null_baseValidator);
+        ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_List_Null_baseValidator, manager);
 
-    init(enums);
+    init(enums, manager);
 }
 
 ListDatatypeValidator::~ListDatatypeValidator()
@@ -187,13 +190,14 @@ DatatypeValidator* ListDatatypeValidator::newInstance
 }
 
 
-int ListDatatypeValidator::compare(const XMLCh* const lValue
-                                 , const XMLCh* const rValue)
+int ListDatatypeValidator::compare(const XMLCh*     const lValue
+                                 , const XMLCh*     const rValue
+                                 , MemoryManager*   const manager)
 {
     DatatypeValidator* theItemTypeDTV = getItemTypeDTV();
-    BaseRefVectorOf<XMLCh>* lVector = XMLString::tokenizeString(lValue);
+    BaseRefVectorOf<XMLCh>* lVector = XMLString::tokenizeString(lValue, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janl(lVector);
-    BaseRefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue);
+    BaseRefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janr(rVector);
 
     int lNumberOfTokens = lVector->size();
@@ -207,7 +211,7 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
     { //compare each token
         for ( int i = 0; i < lNumberOfTokens; i++)
         {
-            int returnValue = theItemTypeDTV->compare(lVector->elementAt(i), rVector->elementAt(i));
+            int returnValue = theItemTypeDTV->compare(lVector->elementAt(i), rVector->elementAt(i), manager);
             if (returnValue != 0)
                 return returnValue; //REVISIT: does it make sense to return -1 or +1..?
         }
@@ -217,22 +221,24 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
 }
 
 void ListDatatypeValidator::validate( const XMLCh*             const content
-                                    ,       ValidationContext* const context)
+                                    ,       ValidationContext* const context
+                                    ,       MemoryManager*     const manager)
 {
     setContent(content);
-    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, content, context, false);
+    checkContent(tokenVector, content, context, false, manager);
 }
 
 void ListDatatypeValidator::checkContent( const XMLCh*             const content
                                          ,      ValidationContext* const context
-                                         ,      bool                     asBase)
+                                         ,      bool                     asBase
+                                         ,      MemoryManager*     const manager)
 {
     setContent(content);
-    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, content, context, asBase);
+    checkContent(tokenVector, content, context, asBase, manager);
 }
 
 //
@@ -241,16 +247,17 @@ void ListDatatypeValidator::checkContent( const XMLCh*             const content
 void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       tokenVector
                                         , const XMLCh*                  const content
                                         ,       ValidationContext*      const context
-                                        ,       bool                          asBase)
+                                        ,       bool                          asBase
+                                        ,       MemoryManager*          const manager)
 {
     DatatypeValidator* bv = getBaseValidator();
 
     if (bv->getType() == DatatypeValidator::List)
-        ((ListDatatypeValidator*)bv)->checkContent(tokenVector, content, context, true);
+        ((ListDatatypeValidator*)bv)->checkContent(tokenVector, content, context, true, manager);
     else
     {   // the ultimate itemType DTV
         for (unsigned int i = 0; i < tokenVector->size(); i++)
-            bv->validate(tokenVector->elementAt(i), context);
+            bv->validate(tokenVector->elementAt(i), context, manager);
     }
 
     int thisFacetsDefined = getFacetsDefined();
@@ -266,17 +273,18 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), manager);
             }
         }
 
         //check every item in the list as a whole
-        if (getRegex()->matches(content) == false)
+        if (getRegex()->matches(content, manager) == false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
 
     }
@@ -291,40 +299,43 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (tokenNumber > getMaxLength()))
     {
-        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10);
-        XMLString::binToText(getMaxLength(), value2, BUF_LEN, 10);
+        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
+        XMLString::binToText(getMaxLength(), value2, BUF_LEN, 10, manager);
 
-        ThrowXML3(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_GT_maxLen
                 , getContent()
                 , value1
-                , value2);
+                , value2
+                , manager);
     }
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0) &&
         (tokenNumber < getMinLength()))
     {
-        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10);
-        XMLString::binToText(getMinLength(), value2, BUF_LEN, 10);
+        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
+        XMLString::binToText(getMinLength(), value2, BUF_LEN, 10, manager);
 
-        ThrowXML3(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_LT_minLen
                 , getContent()
                 , value1
-                , value2);
+                , value2
+                , manager);
     }
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
         (tokenNumber != AbstractStringValidator::getLength()))
     {
-        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10);
-        XMLString::binToText(AbstractStringValidator::getLength(), value2, BUF_LEN, 10);
+        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
+        XMLString::binToText(AbstractStringValidator::getLength(), value2, BUF_LEN, 10, manager);
 
-        ThrowXML3(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NE_Len
                 , getContent()
                 , value1
-                , value2);
+                , value2
+                , manager);
     }
 
     if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
@@ -346,22 +357,23 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
             // eg.
             // tokenVector = "1 2 3.0 4" vs enumeration = "1 2 3 4.0"
             //
-            if (valueSpaceCheck(tokenVector, getEnumeration()->elementAt(i)))
+            if (valueSpaceCheck(tokenVector, getEnumeration()->elementAt(i), manager))
                 break;
         }
 
         if (i == enumLength)
-            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, getContent());
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, getContent(), manager);
 
     } // enumeration
 
 }
 
 bool ListDatatypeValidator::valueSpaceCheck(BaseRefVectorOf<XMLCh>* tokenVector
-                                          , const XMLCh* const  enumStr) const
+                                          , const XMLCh*    const  enumStr
+                                          , MemoryManager*  const  manager) const
 {
     DatatypeValidator* theItemTypeDTV = getItemTypeDTV();
-    BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(enumStr);
+    BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(enumStr, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janName(enumVector);
 
     if (tokenVector->size() != enumVector->size())
@@ -369,7 +381,7 @@ bool ListDatatypeValidator::valueSpaceCheck(BaseRefVectorOf<XMLCh>* tokenVector
 
     for ( unsigned int j = 0; j < tokenVector->size(); j++ )
     {
-        if (theItemTypeDTV->compare(tokenVector->elementAt(j), enumVector->elementAt(j)) != 0)
+        if (theItemTypeDTV->compare(tokenVector->elementAt(j), enumVector->elementAt(j), manager) != 0)
             return false;
     }
 
@@ -389,35 +401,21 @@ DatatypeValidator* ListDatatypeValidator::getItemTypeDTV() const
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-void ListDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
-                                                 , const XMLCh* const)
+
+void ListDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                            , MemoryManager* const manager)
+{}
+
+int ListDatatypeValidator::getLength(const XMLCh* const content
+                                     , MemoryManager* const manager) const
 {
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void ListDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void ListDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void ListDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-void ListDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{}
-
-int ListDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
 
     return tokenVector->size();
 }
 
-void ListDatatypeValidator::inspectFacetBase()
+void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
 {
 
     //
@@ -426,7 +424,7 @@ void ListDatatypeValidator::inspectFacetBase()
 
     if (getBaseValidator()->getType() == DatatypeValidator::List)
     {
-        AbstractStringValidator::inspectFacetBase();
+        AbstractStringValidator::inspectFacetBase(manager);
     }
     else
     {
@@ -442,13 +440,13 @@ void ListDatatypeValidator::inspectFacetBase()
                 for ( i = 0; i < enumLength; i++)
                 {
                     // ask the itemType for a complete check
-                    BaseRefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i));
+                    BaseRefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i), manager);
                     int tokenNumber = tempList->size();
 
                     try
                     {
                         for ( int j = 0; j < tokenNumber; j++)
-                            getBaseValidator()->validate(tempList->elementAt(j), (ValidationContext*)0);
+                            getBaseValidator()->validate(tempList->elementAt(j), (ValidationContext*)0, manager);
                     }
                     catch(const OutOfMemoryException&)
                     {
@@ -463,15 +461,16 @@ void ListDatatypeValidator::inspectFacetBase()
                     delete tempList;
 
                     // enum shall pass this->checkContent() as well.
-                    checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false);
+                    checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
                 }
             }
 
             catch ( XMLException& )
             {
-                ThrowXML1(InvalidDatatypeFacetException
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                         , XMLExcepts::FACET_enum_base
-                        , getEnumeration()->elementAt(i));
+                        , getEnumeration()->elementAt(i)
+                        , manager);
             }
 
         }
@@ -505,12 +504,13 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
     ListDatatypeValidator* temp = (ListDatatypeValidator*) this;
 
     temp->setContent(rawData);
-    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(rawData);
-    Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
-    temp->checkContent(tokenVector, rawData, 0, false);
-
     MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(rawData, toUse);
+    Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);    
+    temp->checkContent(tokenVector, rawData, 0, false, toUse);
+    
     unsigned int  retBufSize = 2 * XMLString::stringLen(rawData);
+
     XMLCh* retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh));
     XMLCh* retBufPtr = retBuf;
 

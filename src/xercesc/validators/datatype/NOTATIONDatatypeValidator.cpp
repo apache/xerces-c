@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -137,7 +140,7 @@ NOTATIONDatatypeValidator::NOTATIONDatatypeValidator(
                         , MemoryManager* const manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::NOTATION, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DatatypeValidator* NOTATIONDatatypeValidator::newInstance
@@ -154,24 +157,9 @@ DatatypeValidator* NOTATIONDatatypeValidator::newInstance
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-void NOTATIONDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
-                                                     , const XMLCh* const)
-{
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
 
-void NOTATIONDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void NOTATIONDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void NOTATIONDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
+void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                                , MemoryManager* const manager)
 {
     //
     //  NOTATATION: <URI>:<localPart>
@@ -183,24 +171,25 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
 
     if ((colonPosition == -1)                ||  // no ':'
         (colonPosition == contentLength - 1)  )  // <URI>':'
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NOTATION_Invalid
-                , content);
+                , content
+                , manager);
 
     if (colonPosition > 0)
     {
         // Extract URI
-        XMLCh* uriPart = (XMLCh*) fMemoryManager->allocate
+        XMLCh* uriPart = (XMLCh*) manager->allocate
         (
             (colonPosition + 1) * sizeof(XMLCh)
         );//new XMLCh[colonPosition + 1];
-        ArrayJanitor<XMLCh> jan1(uriPart, fMemoryManager);
-        XMLString::subString(uriPart, content, 0, colonPosition);
+        ArrayJanitor<XMLCh> jan1(uriPart, manager);
+        XMLString::subString(uriPart, content, 0, colonPosition, manager);
 
         try
         {
             // no relative uri support here
-            XMLUri  newURI(uriPart, fMemoryManager);
+            XMLUri  newURI(uriPart, manager);
         }
         catch(const OutOfMemoryException&)
         {
@@ -208,32 +197,29 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
         }
         catch (...)
         {
-            ThrowXML1(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NOTATION_Invalid
-                    , content);
+                    , content
+                    , manager);
         }
     }
 
     // Extract localpart
-    XMLCh* localPart = (XMLCh*) fMemoryManager->allocate
+    XMLCh* localPart = (XMLCh*) manager->allocate
     (
         (contentLength - colonPosition) * sizeof(XMLCh)
     );//new XMLCh[contentLength - colonPosition];
-    ArrayJanitor<XMLCh> jan2(localPart, fMemoryManager);
-    XMLString::subString(localPart, content, colonPosition + 1, contentLength);
+    ArrayJanitor<XMLCh> jan2(localPart, manager);
+    XMLString::subString(localPart, content, colonPosition + 1, contentLength, manager);
 
     if ( !XMLString::isValidNCName(localPart))
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NOTATION_Invalid
-                , content);
+                , content
+                , manager);
     }
 
-}
-
-int NOTATIONDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    return XMLString::stringLen(content);
 }
 
 /***

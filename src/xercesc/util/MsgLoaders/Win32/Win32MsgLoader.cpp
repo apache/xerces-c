@@ -243,8 +243,10 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3
-                            , const char* const             repText4)
+                            , const char* const             repText4
+                            , MemoryManager* const          manager)
 {
+    MemoryManager* toUse = manager ? manager : XMLPlatformUtils::fgMemoryManager;
     //
     //  Transcode the provided parameters and call the other version,
     //  which will do the replacement work.
@@ -256,24 +258,24 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1, XMLPlatformUtils::fgMemoryManager);
+        tmp1 = XMLString::transcode(repText1, toUse);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2, XMLPlatformUtils::fgMemoryManager);
+        tmp2 = XMLString::transcode(repText2, toUse);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3, XMLPlatformUtils::fgMemoryManager);
+        tmp3 = XMLString::transcode(repText3, toUse);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4, XMLPlatformUtils::fgMemoryManager);
+        tmp4 = XMLString::transcode(repText4, toUse);
 
     bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
 
     if (tmp1)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp1);//delete [] tmp1;
+        toUse->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
+        toUse->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp3);//delete [] tmp3;
+        toUse->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp4);//delete [] tmp4;
+        toUse->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

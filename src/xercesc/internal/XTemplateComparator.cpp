@@ -57,6 +57,9 @@
 /*
 /*
  * $Log$
+ * Revision 1.2  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.1  2003/10/29 16:14:15  peiyongz
  * XObjectComparator/XTemplateComparator
  *
@@ -401,7 +404,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<KVStringPair>* const lValu
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<KVStringPair> lEnum(lValue);
+    RefHashTableOfEnumerator<KVStringPair> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -409,7 +412,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<KVStringPair>* const lValu
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<KVStringPair> rEnum(lValue);
+    RefHashTableOfEnumerator<KVStringPair> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -442,7 +445,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XMLAttDef>* const lValue
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<XMLAttDef> lEnum(lValue);
+    RefHashTableOfEnumerator<XMLAttDef> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -450,7 +453,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XMLAttDef>* const lValue
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<XMLAttDef> rEnum(lValue);
+    RefHashTableOfEnumerator<XMLAttDef> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -485,7 +488,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<DTDAttDef>* const lValue
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<DTDAttDef> lEnum(lValue);
+    RefHashTableOfEnumerator<DTDAttDef> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -493,7 +496,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<DTDAttDef>* const lValue
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<DTDAttDef> rEnum(lValue);
+    RefHashTableOfEnumerator<DTDAttDef> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -527,7 +530,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<ComplexTypeInfo>* const lV
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<ComplexTypeInfo> lEnum(lValue);
+    RefHashTableOfEnumerator<ComplexTypeInfo> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -535,7 +538,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<ComplexTypeInfo>* const lV
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<ComplexTypeInfo> rEnum(lValue);
+    RefHashTableOfEnumerator<ComplexTypeInfo> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -568,7 +571,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XercesGroupInfo>* const lV
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<XercesGroupInfo> lEnum(lValue);
+    RefHashTableOfEnumerator<XercesGroupInfo> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -576,7 +579,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XercesGroupInfo>* const lV
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<XercesGroupInfo> rEnum(lValue);
+    RefHashTableOfEnumerator<XercesGroupInfo> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -609,7 +612,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XercesAttGroupInfo>* const
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<XercesAttGroupInfo> lEnum(lValue);
+    RefHashTableOfEnumerator<XercesAttGroupInfo> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -617,7 +620,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XercesAttGroupInfo>* const
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<XercesAttGroupInfo> rEnum(lValue);
+    RefHashTableOfEnumerator<XercesAttGroupInfo> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -650,7 +653,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XMLRefInfo>* const lValue
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<XMLRefInfo> lEnum(lValue);
+    RefHashTableOfEnumerator<XMLRefInfo> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -658,7 +661,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<XMLRefInfo>* const lValue
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<XMLRefInfo> rEnum(lValue);
+    RefHashTableOfEnumerator<XMLRefInfo> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -691,7 +694,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<DatatypeValidator>* const 
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<DatatypeValidator> lEnum(lValue);
+    RefHashTableOfEnumerator<DatatypeValidator> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -699,7 +702,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<DatatypeValidator>* const 
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<DatatypeValidator> rEnum(lValue);
+    RefHashTableOfEnumerator<DatatypeValidator> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -732,7 +735,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<Grammar>* const lValue
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHashTableOfEnumerator<Grammar> lEnum(lValue);
+    RefHashTableOfEnumerator<Grammar> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -740,7 +743,7 @@ bool XTemplateComparator::isEquivalent(RefHashTableOf<Grammar>* const lValue
         lItemNumber++;
     }
 
-    RefHashTableOfEnumerator<Grammar> rEnum(lValue);
+    RefHashTableOfEnumerator<Grammar> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -781,7 +784,7 @@ bool XTemplateComparator::isEquivalent(RefHash2KeysTableOf<SchemaAttDef>* const 
 {
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHash2KeysTableOfEnumerator<SchemaAttDef> lEnum(lValue);
+    RefHash2KeysTableOfEnumerator<SchemaAttDef> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -789,7 +792,7 @@ bool XTemplateComparator::isEquivalent(RefHash2KeysTableOf<SchemaAttDef>* const 
         lItemNumber++;
     }
 
-    RefHash2KeysTableOfEnumerator<SchemaAttDef> rEnum(lValue);
+    RefHash2KeysTableOfEnumerator<SchemaAttDef> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -827,7 +830,7 @@ bool XTemplateComparator::isEquivalent(RefHash2KeysTableOf<ElemVector>* const lV
 
     IS_EQUIVALENT(lValue, rValue);
 
-    RefHash2KeysTableOfEnumerator<ElemVector> lEnum(lValue);
+    RefHash2KeysTableOfEnumerator<ElemVector> lEnum(lValue, false, lValue->getMemoryManager());
     int lItemNumber = 0;        
     while (lEnum.hasMoreElements())
     {
@@ -835,7 +838,7 @@ bool XTemplateComparator::isEquivalent(RefHash2KeysTableOf<ElemVector>* const lV
         lItemNumber++;
     }
 
-    RefHash2KeysTableOfEnumerator<ElemVector> rEnum(lValue);
+    RefHash2KeysTableOfEnumerator<ElemVector> rEnum(rValue, false, rValue->getMemoryManager());
     int rItemNumber = 0;        
     while (rEnum.hasMoreElements())
     {
@@ -880,8 +883,8 @@ bool XTemplateComparator::isEquivalent(RefHash3KeysIdPool<SchemaElementDecl>* co
 
     IS_EQUIVALENT(lValue, rValue)
 
-    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> lEnum(lValue);
-    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> rEnum(rValue);
+    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> lEnum(lValue, false, lValue->getMemoryManager());
+    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> rEnum(rValue, false, rValue->getMemoryManager());
 
     if (lEnum.size() != rEnum.size())
         return false;
@@ -914,8 +917,8 @@ bool XTemplateComparator::isEquivalent(NameIdPool<DTDElementDecl>* const lValue
 
     IS_EQUIVALENT(lValue, rValue)
 
-    NameIdPoolEnumerator<DTDElementDecl> lEnum(lValue);
-    NameIdPoolEnumerator<DTDElementDecl> rEnum(lValue);
+    NameIdPoolEnumerator<DTDElementDecl> lEnum(lValue, lValue->getMemoryManager());
+    NameIdPoolEnumerator<DTDElementDecl> rEnum(rValue, rValue->getMemoryManager());
 
     if (lEnum.size() != rEnum.size())
         return false;
@@ -940,8 +943,8 @@ bool XTemplateComparator::isEquivalent(NameIdPool<DTDEntityDecl>* const lValue
 
     IS_EQUIVALENT(lValue, rValue)
 
-    NameIdPoolEnumerator<DTDEntityDecl> lEnum(lValue);
-    NameIdPoolEnumerator<DTDEntityDecl> rEnum(lValue);
+    NameIdPoolEnumerator<DTDEntityDecl> lEnum(lValue, lValue->getMemoryManager());
+    NameIdPoolEnumerator<DTDEntityDecl> rEnum(rValue, rValue->getMemoryManager());
 
     if (lEnum.size() != rEnum.size())
         return false;
@@ -965,8 +968,8 @@ bool XTemplateComparator::isEquivalent(NameIdPool<XMLNotationDecl>* const lValue
 {
     IS_EQUIVALENT(lValue, rValue)
 
-    NameIdPoolEnumerator<XMLNotationDecl> lEnum(lValue);
-    NameIdPoolEnumerator<XMLNotationDecl> rEnum(lValue);
+    NameIdPoolEnumerator<XMLNotationDecl> lEnum(lValue, lValue->getMemoryManager());
+    NameIdPoolEnumerator<XMLNotationDecl> rEnum(rValue, rValue->getMemoryManager());
 
     if (lEnum.size() != rEnum.size())
         return false;

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -155,43 +158,11 @@ public:
 
 protected:
 
-    virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
+    virtual void checkValueSpace(const XMLCh* const content
+        , MemoryManager* const manager);
 
-    virtual void inheritAdditionalFacet();
-
-    virtual void checkAdditionalFacetConstraints() const;
-
-    virtual void checkAdditionalFacet(const XMLCh* const content) const;
-
-    virtual void checkValueSpace(const XMLCh* const content);
-
-    virtual int  getLength(const XMLCh* const content) const;
-
-private:
-
-    inline void cleanUp();
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fTempURI
-    //      to support relative URI, such as the urispec= "\sample"
-	//		
-    // -----------------------------------------------------------------------
-
-    XMLUri       *fTempURI;
-
+private:    
 };
-
-inline void AnyURIDatatypeValidator::cleanUp()
-{
-    if (fTempURI)
-    {
-        delete fTempURI;
-        fTempURI = 0;
-    }
-}
 
 XERCES_CPP_NAMESPACE_END
 

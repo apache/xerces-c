@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -148,34 +151,30 @@ static const XMLCh BASE_URI[] =
 // ---------------------------------------------------------------------------
 AnyURIDatatypeValidator::AnyURIDatatypeValidator(MemoryManager* const manager)
 :AbstractStringValidator(0, 0, 0, DatatypeValidator::AnyURI, manager)
-,fTempURI(0)
 {}
 
 AnyURIDatatypeValidator::~AnyURIDatatypeValidator()
-{
-    cleanUp();
+{  
 }
 
 AnyURIDatatypeValidator::AnyURIDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
+                        , RefArrayVectorOf<XMLCh>*      const enums
                         , const int                           finalSet
                         , MemoryManager* const manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::AnyURI, manager)
-,fTempURI(0)
 {
     try
     {
-        init(enums);
+        init(enums, manager);
     }
     catch(const OutOfMemoryException&)
     {
         throw;
     }
     catch (...)
-    {
-        cleanUp();
+    {        
         throw;
     }
 }
@@ -186,54 +185,31 @@ DatatypeValidator* AnyURIDatatypeValidator::newInstance(
                                     , const int                           finalSet
                                     , MemoryManager* const manager)
 {
-    return (DatatypeValidator*) new AnyURIDatatypeValidator(this, facets, enums, finalSet, manager);
+    return (DatatypeValidator*) new (manager) AnyURIDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
 
-void AnyURIDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
-                                                   , const XMLCh* const)
-{
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void AnyURIDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void AnyURIDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void AnyURIDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-int AnyURIDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    return XMLString::stringLen(content);
-}
-
-void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
+void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                              , MemoryManager* const manager)
 {
 
     // check 3.2.17.c0 must: URI (rfc 2396/2723)
     try
     {
-        if (!fTempURI)
-            fTempURI = new (fMemoryManager) XMLUri(BASE_URI, fMemoryManager);
-
         // Support for relative URLs
         // According to Java 1.1: URLs may also be specified with a
         // String and the URL object that it is related to.
         //
         if (XMLString::stringLen(content))
-        {
-            if (!XMLUri::isValidURI(fTempURI, content))
-                ThrowXML1(InvalidDatatypeValueException
+        {          
+              if (!XMLUri::isValidURI(true, content))
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_URI_Malformed
-                    , content);
+                    , content
+                    , manager);
         }
     }
     catch(const OutOfMemoryException&)
@@ -242,9 +218,10 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
     }
     catch (...)
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_URI_Malformed
-                , content);
+                , content
+                , manager);
     }
 
 }
@@ -258,8 +235,6 @@ IMPL_XSERIALIZABLE_TOCREATE(AnyURIDatatypeValidator)
 void AnyURIDatatypeValidator::serialize(XSerializeEngine& serEng)
 {
     AbstractStringValidator::serialize(serEng);
-
-    //don't serialize fTempURI
 }
 
 XERCES_CPP_NAMESPACE_END

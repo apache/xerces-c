@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/11/20 18:12:20  knoaman
  * Use a bitwise operation to check the node type.
  *
@@ -188,7 +191,7 @@ MixedContentModel::MixedContentModel(const bool             dtd
     //
     ContentSpecNode* curNode = parentContentSpec;
     if (!curNode)
-        ThrowXML(RuntimeException, XMLExcepts::CM_NoParentCSN);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoParentCSN, fMemoryManager);
 
     // And now call the private recursive method that iterates the tree
     buildChildList(curNode, children, childTypes);

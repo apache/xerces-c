@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/12/11 21:40:24  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -112,10 +115,13 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     virtual int  compare(const XMLCh* const value1
-                       , const XMLCh* const value2);
+                       , const XMLCh* const value2
+                       , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+                       );
 
     /***
      * Support for Serialization/De-serialization
@@ -140,21 +146,13 @@ protected:
     // Abstract interface
     //
 
-    virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
-
-    virtual void inheritAdditionalFacet();
-
-    virtual void checkAdditionalFacetConstraints() const;
-
-    virtual void checkAdditionalFacetConstraintsBase() const;
-
     virtual int  compareValues(const XMLNumber* const lValue
                              , const XMLNumber* const rValue);
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            ,       MemoryManager*     const manager);
 
     virtual void  setMaxInclusive(const XMLCh* const);
 
@@ -164,14 +162,14 @@ protected:
 
     virtual void  setMinExclusive(const XMLCh* const);
 
-    virtual void  setEnumeration();
+    virtual void  setEnumeration(MemoryManager* const manager);
 
 protected:
 
     // -----------------------------------------------------------------------
     //  helper interface: to be implemented/overwritten by derived class
     // -----------------------------------------------------------------------
-    virtual XMLDateTime*   parse(const XMLCh* const) = 0;
+    virtual XMLDateTime*   parse(const XMLCh* const, MemoryManager* const manager) = 0;
     virtual void parse(XMLDateTime* const) = 0;
 
     // to be overwritten by duration

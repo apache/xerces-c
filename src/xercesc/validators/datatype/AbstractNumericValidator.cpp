@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/12/11 21:40:24  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -101,11 +104,12 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-#define  REPORT_VALUE_ERROR(val1, val2, except_code)    \
-  ThrowXML2(InvalidDatatypeValueException               \
+#define  REPORT_VALUE_ERROR(val1, val2, except_code, manager)    \
+  ThrowXMLwithMemMgr2(InvalidDatatypeValueException               \
           , except_code                                 \
           , val1->getFormattedString()                  \
-          , val2->getFormattedString());
+          , val2->getFormattedString()                  \
+          , manager);
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -125,12 +129,14 @@ AbstractNumericValidator::AbstractNumericValidator(
 }
 
 void AbstractNumericValidator::validate(const XMLCh*             const content
-                                       ,      ValidationContext* const context)
+                                       ,      ValidationContext* const context
+                                       ,      MemoryManager*     const manager)
 {
-    checkContent(content, context, false);
+    checkContent(content, context, false, manager);
 }
 
-void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
+void AbstractNumericValidator::boundsCheck(const XMLNumber*         const theData
+                                          ,      MemoryManager*     const manager)
 {
     int thisFacetsDefined = getFacetsDefined();
     int result;
@@ -146,7 +152,8 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             {
                 REPORT_VALUE_ERROR(theData
                                  , getMaxExclusive()
-                                 , XMLExcepts::VALUE_exceed_maxExcl)
+                                 , XMLExcepts::VALUE_exceed_maxExcl
+                                 , manager)
             }
         } 	
 
@@ -158,7 +165,8 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             {
                 REPORT_VALUE_ERROR(theData
                                  , getMaxInclusive()
-                                 , XMLExcepts::VALUE_exceed_maxIncl)
+                                 , XMLExcepts::VALUE_exceed_maxIncl
+                                 , manager)
             }
         }
 
@@ -170,7 +178,8 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             {
                 REPORT_VALUE_ERROR(theData
                                  , getMinInclusive()
-                                 , XMLExcepts::VALUE_exceed_minIncl)
+                                 , XMLExcepts::VALUE_exceed_minIncl
+                                 , manager)
             }
         }
 
@@ -182,13 +191,14 @@ void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)
             {
                 REPORT_VALUE_ERROR(theData
                                  , getMinExclusive()
-                                 , XMLExcepts::VALUE_exceed_minExcl)
+                                 , XMLExcepts::VALUE_exceed_minExcl
+                                 , manager)
             }
         }
     }
     catch (XMLException &e)
     {
-       ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+       ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), manager);
     }
 
 }
@@ -198,12 +208,10 @@ const XMLCh* AbstractNumericValidator::getCanonicalRepresentation(const XMLCh*  
 {
     //Validate the content
     AbstractNumericValidator* temp = (AbstractNumericValidator*) this;
-    temp->checkContent(rawData, 0, false);
-
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-
+    temp->checkContent(rawData, 0, false, toUse);
+    
     return XMLAbstractDoubleFloat::getCanonicalRepresentation(rawData, toUse);
-
 }
 
 /***

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.13  2003/10/15 14:50:01  peiyongz
  * Bugzilla#22821: locale-sensitive function used to validate 'double' type, patch
  * from jsweeney@spss.com (Jeff Sweeney)
@@ -182,7 +185,7 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
     // check if all chars are valid char
     if ( (endptr - nptr) != strLen)
     {
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
     }
 
     // check if overflow/underflow occurs

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -81,8 +84,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  ParenToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
 ParenToken::ParenToken(const unsigned short tokType,
-                       Token* const tok, const int noParen)
-    : Token(tokType)
+                       Token* const tok, const int noParen, MemoryManager* const manager)
+    : Token(tokType, manager)
     , fNoParen(noParen)
     , fChild(tok)
 {

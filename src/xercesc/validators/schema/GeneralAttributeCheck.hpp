@@ -224,7 +224,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned short getFacetId(const XMLCh* const facetName);
+    unsigned short getFacetId(const XMLCh* const facetName, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -299,9 +299,9 @@ private:
 //  GeneralAttributeCheck: Getter methods
 // ---------------------------------------------------------------------------
 inline unsigned short
-GeneralAttributeCheck::getFacetId(const XMLCh* const facetName) {
+GeneralAttributeCheck::getFacetId(const XMLCh* const facetName, MemoryManager* const manager) {
 
-    return fFacetsMap->get(facetName);
+    return fFacetsMap->get(facetName, manager);
 }
 
 // ---------------------------------------------------------------------------

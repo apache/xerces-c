@@ -74,7 +74,7 @@ public:
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
 	ParenToken(const unsigned short tokType, Token* const tok,
-               const int noParen);
+               const int noParen, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ParenToken();
 
 	// -----------------------------------------------------------------------

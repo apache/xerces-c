@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -117,11 +120,12 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Macro
 // ---------------------------------------------------------------------------
-#define  REPORT_VALUE_ERROR(val1, val2, except_code)    \
-  ThrowXML2(InvalidDatatypeValueException               \
+#define  REPORT_VALUE_ERROR(val1, val2, except_code, manager)    \
+  ThrowXMLwithMemMgr2(InvalidDatatypeValueException               \
           , except_code                                 \
           , val1->getRawData()                          \
-          , val2->getRawData());
+          , val2->getRawData()                          \
+          , manager);
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -145,19 +149,21 @@ DateTimeValidator::DateTimeValidator(
 }
 
 void DateTimeValidator::validate(const XMLCh*             const content
-                               ,       ValidationContext* const context)
+                               ,       ValidationContext* const context
+                               ,       MemoryManager*     const manager)
 {
-    checkContent(content, context, false);
+    checkContent(content, context, false, manager);
 }
 
 int DateTimeValidator::compare(const XMLCh* const value1
-                             , const XMLCh* const value2)
+                             , const XMLCh* const value2
+                             , MemoryManager* const manager)
 {
     try
     {
-        XMLDateTime *pDate1 = parse(value1);
+        XMLDateTime *pDate1 = parse(value1, manager);
         Janitor<XMLDateTime> jName1(pDate1);
-        XMLDateTime *pDate2 = parse(value2);
+        XMLDateTime *pDate2 = parse(value2, manager);
         Janitor<XMLDateTime> jName2(pDate2);
         int result = compareDates(pDate1, pDate2, true);
         return (result==INDETERMINATE)? -1 : result;
@@ -173,32 +179,18 @@ int DateTimeValidator::compare(const XMLCh* const value1
 
 }
 
-void DateTimeValidator::assignAdditionalFacet( const XMLCh* const key
-                                             , const XMLCh* const)
-{
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void DateTimeValidator::inheritAdditionalFacet()
-{}
-
-void DateTimeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void DateTimeValidator::checkAdditionalFacetConstraintsBase() const
-{}
 
 void DateTimeValidator::checkContent(const XMLCh*             const content
                                    ,       ValidationContext* const context
-                                   ,       bool                     asBase)
+                                   ,       bool                     asBase
+                                   ,       MemoryManager*     const manager)
 {
+    bool deleteLazy = false;
 
     //validate against base validator if any
     DateTimeValidator *pBaseValidator = (DateTimeValidator*) this->getBaseValidator();
     if (pBaseValidator)
-        pBaseValidator->checkContent(content, context, true);
+        pBaseValidator->checkContent(content, context, true, manager);
 
     int thisFacetsDefined = getFacetsDefined();
 
@@ -212,16 +204,17 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
             }
         }
 
-        if (getRegex()->matches(content) ==false)
+        if (getRegex()->matches(content, manager) ==false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -236,7 +229,12 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
     if (fDateTime)
         fDateTime->setBuffer(content);
     else
-        fDateTime = new (fMemoryManager) XMLDateTime(content, fMemoryManager);
+    {
+        fDateTime = new (manager) XMLDateTime(content, manager);
+        // REVISIT: cargillmem
+        if (manager != fMemoryManager)
+            deleteLazy = true;
+    }
 
     parse(fDateTime);
 
@@ -247,7 +245,8 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         {
             REPORT_VALUE_ERROR( fDateTime
                               , getMaxExclusive()
-                              , XMLExcepts::VALUE_exceed_maxExcl)
+                              , XMLExcepts::VALUE_exceed_maxExcl
+                              , manager)
         }
     } 	
 
@@ -259,7 +258,8 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         {
             REPORT_VALUE_ERROR( fDateTime
                               , getMaxInclusive()
-                              , XMLExcepts::VALUE_exceed_maxIncl)
+                              , XMLExcepts::VALUE_exceed_maxIncl
+                              , manager)
         }
     }
 
@@ -271,7 +271,8 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         {
             REPORT_VALUE_ERROR( fDateTime
                               , getMinInclusive()
-                              , XMLExcepts::VALUE_exceed_minIncl)
+                              , XMLExcepts::VALUE_exceed_minIncl
+                              , manager)
         }
     }
 
@@ -282,7 +283,8 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         {
             REPORT_VALUE_ERROR( fDateTime
                               , getMinExclusive()
-                              , XMLExcepts::VALUE_exceed_minExcl)
+                              , XMLExcepts::VALUE_exceed_minExcl
+                              , manager)
         }
     }
 
@@ -298,7 +300,16 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         }
 
         if (i == enumLength)
-            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
+    }
+
+    if (deleteLazy)
+    {
+        // REVISIT: cargillmem
+        // hmm.. if an exception is thrown do we cleanup...
+        // no but this avoids a number of exceptions for now...
+        delete fDateTime;
+        fDateTime = 0;
     }
 }
 
@@ -345,25 +356,25 @@ int DateTimeValidator::compareDates(const XMLDateTime* const date1
 
 void DateTimeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = parse(value);
+    fMaxInclusive = parse(value, fMemoryManager);
 }
 
 void DateTimeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = parse(value);
+    fMaxExclusive = parse(value, fMemoryManager);
 }
 
 void DateTimeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = parse(value);
+    fMinInclusive = parse(value, fMemoryManager);
 }
 
 void DateTimeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = parse(value);
+    fMinExclusive = parse(value, fMemoryManager);
 }
 
-void DateTimeValidator::setEnumeration()
+void DateTimeValidator::setEnumeration(MemoryManager* const manager)
 {
 // to do: do we need to check against base value space???
 
@@ -375,7 +386,7 @@ void DateTimeValidator::setEnumeration()
     fEnumerationInherited = false;
 
     for ( int i = 0; i < enumLength; i++)
-        fEnumeration->insertElementAt(parse(fStrEnumeration->elementAt(i)), i);
+        fEnumeration->insertElementAt(parse(fStrEnumeration->elementAt(i), fMemoryManager), i);
 
 }
 

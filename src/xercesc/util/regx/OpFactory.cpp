@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -115,14 +118,14 @@ OpFactory::~OpFactory() {
 // ---------------------------------------------------------------------------
 Op* OpFactory::createDotOp() {
 
-	Op* tmpOp = new (fMemoryManager) Op(Op::O_DOT);
+	Op* tmpOp = new (fMemoryManager) Op(Op::O_DOT, fMemoryManager);
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
 }
 
 CharOp* OpFactory::createCharOp(int data) {
 
-	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CHAR, data);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CHAR, data, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -130,7 +133,7 @@ CharOp* OpFactory::createCharOp(int data) {
 
 CharOp* OpFactory::createAnchorOp(int data) {
 
-	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_ANCHOR, data);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_ANCHOR, data, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -138,7 +141,7 @@ CharOp* OpFactory::createAnchorOp(int data) {
 
 CharOp* OpFactory::createCaptureOp(int number, const Op* const next) {
 
-	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CAPTURE, number);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CAPTURE, number, fMemoryManager);
 
 	tmpOp->setNextOp(next);
 	fOpVector->addElement(tmpOp);
@@ -155,7 +158,7 @@ UnionOp* OpFactory::createUnionOp(int size) {
 
 ChildOp* OpFactory::createClosureOp(int id) {
 
-	ModifierOp* tmpOp = new (fMemoryManager) ModifierOp(Op::O_CLOSURE, id, -1);
+	ModifierOp* tmpOp = new (fMemoryManager) ModifierOp(Op::O_CLOSURE, id, -1, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -163,7 +166,7 @@ ChildOp* OpFactory::createClosureOp(int id) {
 
 ChildOp* OpFactory::createNonGreedyClosureOp() {
 
-	ChildOp* tmpOp = new (fMemoryManager) ChildOp(Op::O_NONGREEDYCLOSURE);
+	ChildOp* tmpOp = new (fMemoryManager) ChildOp(Op::O_NONGREEDYCLOSURE, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -172,7 +175,7 @@ ChildOp* OpFactory::createNonGreedyClosureOp() {
 ChildOp* OpFactory::createQuestionOp(bool nonGreedy) {
 
 	ChildOp* tmpOp = new (fMemoryManager)  ChildOp(nonGreedy ? Op::O_NONGREEDYQUESTION :
-											 Op::O_QUESTION);
+											 Op::O_QUESTION, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -180,7 +183,7 @@ ChildOp* OpFactory::createQuestionOp(bool nonGreedy) {
 
 RangeOp* OpFactory::createRangeOp(const Token* const token) {
 
-	RangeOp* tmpOp = new (fMemoryManager)  RangeOp(Op::O_RANGE, token);
+	RangeOp* tmpOp = new (fMemoryManager)  RangeOp(Op::O_RANGE, token, fMemoryManager);
 	
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -189,7 +192,7 @@ RangeOp* OpFactory::createRangeOp(const Token* const token) {
 ChildOp* OpFactory::createLookOp(const short type, const Op* const next,
 						         const Op* const branch) {
 
-	ChildOp* tmpOp = new (fMemoryManager) ChildOp(type);
+	ChildOp* tmpOp = new (fMemoryManager) ChildOp(type, fMemoryManager);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -199,7 +202,7 @@ ChildOp* OpFactory::createLookOp(const short type, const Op* const next,
 
 CharOp* OpFactory::createBackReferenceOp(int refNo) {
 
-	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_BACKREFERENCE, refNo);
+	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_BACKREFERENCE, refNo, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -207,7 +210,7 @@ CharOp* OpFactory::createBackReferenceOp(int refNo) {
 
 StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
 
-	StringOp* tmpOp = new (fMemoryManager) StringOp(Op::O_STRING, literal);
+	StringOp* tmpOp = new (fMemoryManager) StringOp(Op::O_STRING, literal, fMemoryManager);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -216,7 +219,7 @@ StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
 ChildOp* OpFactory::createIndependentOp(const Op* const next,
 							            const Op* const branch) {
 
-	ChildOp* tmpOp = new (fMemoryManager) ChildOp(Op::O_INDEPENDENT);
+	ChildOp* tmpOp = new (fMemoryManager) ChildOp(Op::O_INDEPENDENT, fMemoryManager);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -228,7 +231,7 @@ ModifierOp* OpFactory::createModifierOp(const Op* const next,
                                         const Op* const branch,
                                         const int add, const int mask) {
 
-	ModifierOp* tmpOp = new (fMemoryManager) ModifierOp(Op::O_MODIFIER, add, mask);
+	ModifierOp* tmpOp = new (fMemoryManager) ModifierOp(Op::O_MODIFIER, add, mask, fMemoryManager);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -241,7 +244,7 @@ ConditionOp* OpFactory::createConditionOp(const Op* const next, const int ref,
 								          const Op* const noFlow) {
 
 	ConditionOp* tmpOp = new (fMemoryManager) ConditionOp(Op::O_CONDITION, ref, conditionFlow,
-										 yesFlow, noFlow);
+										 yesFlow, noFlow, fMemoryManager);
 
 	tmpOp->setNextOp(next);
 	return tmpOp;

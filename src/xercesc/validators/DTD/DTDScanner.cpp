@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.29  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -482,7 +485,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
 
         // If the creation failed then throw an exception
         if (!reader)
-            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
 
         // Set the 'throw at end' flag, to the one we were given
         reader->setThrowAtEnd(throwEndOfExt);
@@ -774,7 +777,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
             const XMLCh fgDefault[] = { chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
             bool ok = false;
             if (decl->getType() == XMLAttDef::Enumeration) {
-                BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration());
+                BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration(), fMemoryManager);
                 int size = enumVector->size();
                 ok = (size == 1 &&
                      (XMLString::equals(enumVector->elementAt(0), fgDefault) ||
@@ -863,7 +866,7 @@ void DTDScanner::scanAttListDecl()
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chCloseAngle)
         {
@@ -992,7 +995,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
             nextCh = fReaderMgr->getNextChar();
 
             if (!nextCh)
-                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
             // Check for our ending quote in the same entity
             if (nextCh == quoteCh)
@@ -1047,6 +1050,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                         , tmpBuf
                         , 8
                         , 16
+                        , fMemoryManager
                     );
                     fScanner->emitError
                     (
@@ -1157,7 +1161,7 @@ bool DTDScanner::scanCharRef(XMLCh& first, XMLCh& second)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         // Break out on the terminating semicolon
         if (nextCh == chSemiColon)
@@ -1605,7 +1609,7 @@ void DTDScanner::scanComment()
         if (!nextCh)
         {
             fScanner->emitError(XMLErrs::UnterminatedComment);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         // Check for correct surrogate pairs
@@ -1633,6 +1637,7 @@ void DTDScanner::scanComment()
                     , tmpBuf
                     , 8
                     , 16
+                    , fMemoryManager
                 );
                 fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
             }
@@ -2197,7 +2202,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         //  If the creation failed then throw an exception
         //
         if (!reader)
-            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
 
         //
         //  Push the reader. If its a recursive expansion, then emit an error
@@ -2286,7 +2291,7 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
         if (!nextCh)
         {
             fScanner->emitError(XMLErrs::UnterminatedEntityLiteral);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         //
@@ -2391,6 +2396,7 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
                     , tmpBuf
                     , 8
                     , 16
+                    , fMemoryManager
                 );
                 fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 fReaderMgr->skipPastChar(quoteCh);
@@ -2764,6 +2770,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                         , tmpBuf
                         , 8
                         , 16
+                        , fMemoryManager
                     );
                     fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 }
@@ -2977,7 +2984,7 @@ void DTDScanner::scanIgnoredSection()
         const XMLCh nextCh = fReaderMgr->getNextChar();
 
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chOpenAngle)
         {
@@ -3043,6 +3050,7 @@ void DTDScanner::scanIgnoredSection()
                         , tmpBuf
                         , 8
                         , 16
+                        , fMemoryManager
                     );
                     fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 }
@@ -3153,6 +3161,7 @@ bool DTDScanner::scanInternalSubset()
                 , tmpBuf
                 , 8
                 , 16
+                , fMemoryManager
             );
             fScanner->emitError
             (
@@ -3730,7 +3739,7 @@ void DTDScanner::scanPI()
             if (!nextCh)
             {
                 fScanner->emitError(XMLErrs::UnterminatedPI);
-                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
             }
 
             // Watch for potential terminating character
@@ -3766,6 +3775,7 @@ void DTDScanner::scanPI()
                         , tmpBuf
                         , 8
                         , 16
+                        , fMemoryManager
                     );
                     fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 }
@@ -3832,7 +3842,7 @@ bool DTDScanner::scanPublicLiteral(XMLBuffer& toFill)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == quoteCh)
             break;
@@ -3850,6 +3860,7 @@ bool DTDScanner::scanPublicLiteral(XMLBuffer& toFill)
                 , tmpBuf
                 , 8
                 , 16
+                , fMemoryManager
             );
             fScanner->emitError(XMLErrs::InvalidPublicIdChar, tmpBuf);
         }
@@ -3882,7 +3893,7 @@ bool DTDScanner::scanSystemLiteral(XMLBuffer& toFill)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         // Break out on terminating quote
         if (nextCh == quoteCh)

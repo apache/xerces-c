@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -115,7 +118,7 @@ template <class TElem> const TElem* RefStackOf<TElem>::
 elementAt(const unsigned int index) const
 {
     if (index > fVector.size())
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Stack_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Stack_BadIndex, fVector.getMemoryManager());
     return fVector.elementAt(index);
 }
 
@@ -128,7 +131,7 @@ template <class TElem> const TElem* RefStackOf<TElem>::peek() const
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::Stack_EmptyStack, fVector.getMemoryManager());
 
     return fVector.elementAt(curSize-1);
 }
@@ -137,7 +140,7 @@ template <class TElem> TElem* RefStackOf<TElem>::pop()
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::Stack_EmptyStack, fVector.getMemoryManager());
 
     // Orphan off the element from the last slot in the vector
     return fVector.orphanElementAt(curSize-1);

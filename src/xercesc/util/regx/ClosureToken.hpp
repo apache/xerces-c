@@ -73,7 +73,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ClosureToken(const unsigned short tokType, Token* const tok);
+	ClosureToken(const unsigned short tokType, Token* const tok
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ClosureToken();
 
 	// -----------------------------------------------------------------------

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.10  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -167,6 +170,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     //@}
@@ -177,7 +181,9 @@ public:
     /** @name Compare Function */
     //@{
 
-    virtual int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const
+        ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -197,41 +203,47 @@ protected:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    void init(RefArrayVectorOf<XMLCh>*           const enums);
+    void init(RefArrayVectorOf<XMLCh>*           const enums
+        , MemoryManager* const manager);
 
     //
     // Abstract interface
     //
     virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value) = 0;
+                                     , const XMLCh* const value
+                                     , MemoryManager* const manager);
 
-    virtual void inheritAdditionalFacet() = 0;
+    virtual void inheritAdditionalFacet();
 
-    virtual void checkAdditionalFacetConstraints() const = 0;
+    virtual void checkAdditionalFacetConstraints(MemoryManager* const manager) const;
 
-    virtual void checkAdditionalFacet(const XMLCh* const content) const = 0;
+    virtual void checkAdditionalFacet(const XMLCh* const content
+                                    , MemoryManager* const manager);
 
-    virtual void checkValueSpace(const XMLCh* const content) = 0;
-
-    virtual int  getLength(const XMLCh* const content) const = 0;
+    virtual int  getLength(const XMLCh* const content
+        , MemoryManager* const manager) const;
+    
+    virtual void checkValueSpace(const XMLCh* const content
+        , MemoryManager* const manager) = 0;
 
     //
     //   to Allow ListDTV to overwrite
     //
-    virtual void inspectFacetBase();
+    virtual void inspectFacetBase(MemoryManager* const manager);
 
     virtual void inheritFacet();
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            , MemoryManager* const manager);
 
     /*
      **  Base64BinaryDatatypeValidator to overwrite
      */
-    virtual void normalizeEnumeration();
+    virtual void normalizeEnumeration(MemoryManager* const manager);
 
-    virtual void normalizeContent(XMLCh* const) const;
+    virtual void normalizeContent(XMLCh* const, MemoryManager* const manager) const;
 
 public:
 // -----------------------------------------------------------------------
@@ -261,9 +273,9 @@ protected:
 
 private:
 
-    void assignFacet();
+    void assignFacet(MemoryManager* const manager);
 
-    void inspectFacet();
+    void inspectFacet(MemoryManager* const manager);
 
     // -----------------------------------------------------------------------
     //  Private data members

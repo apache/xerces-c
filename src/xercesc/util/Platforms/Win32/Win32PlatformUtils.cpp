@@ -167,37 +167,40 @@ static bool isBackSlash(XMLCh c) {
            c == chWonSign;
 }
 
-unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
+unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile
+                                          , MemoryManager* const manager)
 {
     // Get the current position
     const unsigned int curPos = ::SetFilePointer(theFile, 0, 0, FILE_CURRENT);
     if (curPos == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
 
     return curPos;
 }
 
-void XMLPlatformUtils::closeFile(FileHandle theFile)
+void XMLPlatformUtils::closeFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     if (!::CloseHandle(theFile))
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile, manager);
 }
 
-unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
+unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
+                                        , MemoryManager* const manager)
 {
     // Get the current position
     const unsigned int curPos = ::SetFilePointer(theFile, 0, 0, FILE_CURRENT);
     if (curPos == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
 
     // Seek to the end and save that value for return
     const unsigned int retVal = ::SetFilePointer(theFile, 0, 0, FILE_END);
     if (retVal == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd, manager);
 
     // And put the pointer back
     if (::SetFilePointer(theFile, curPos, 0, FILE_BEGIN) == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos, manager);
 
     return retVal;
 }
@@ -463,7 +466,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openStdInHandle()
+FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 {
     //
     //  Get the standard input handle. Duplicate it and return that copy
@@ -474,7 +477,7 @@ FileHandle XMLPlatformUtils::openStdInHandle()
     HANDLE stdInOrg = ::GetStdHandle(STD_INPUT_HANDLE);
     if (stdInOrg == INVALID_HANDLE_VALUE) {
         XMLCh stdinStr[] = {chLatin_s, chLatin_t, chLatin_d, chLatin_i, chLatin_n, chNull};
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, stdinStr);
+        ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, stdinStr, manager);
     }
 
     HANDLE retHandle;
@@ -488,7 +491,7 @@ FileHandle XMLPlatformUtils::openStdInHandle()
         , FALSE
         , DUPLICATE_SAME_ACCESS))
     {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotDupHandle);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotDupHandle, manager);
     }
     return retHandle;
 }
@@ -497,7 +500,8 @@ FileHandle XMLPlatformUtils::openStdInHandle()
 unsigned int
 XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
                                 , const unsigned int    toRead
-                                ,       XMLByte* const  toFill)
+                                ,       XMLByte* const  toFill
+                                , MemoryManager* const  manager)
 {
     unsigned long bytesRead = 0;
     if (!::ReadFile(theFile, toFill, toRead, &bytesRead, 0))
@@ -507,7 +511,7 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
         //  means no more data from the pipe, so return zero.
         //
         if (::GetLastError() != ERROR_BROKEN_PIPE)
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
     }
     return (unsigned int)bytesRead;
 }
@@ -515,7 +519,8 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)
+                                   , const XMLByte* const  toFlush
+                                   , MemoryManager* const  manager)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -528,7 +533,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
     while (true)
     {
         if (!::WriteFile(theFile, tmpFlush, toWrite, &bytesWritten, 0))
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 
         if (bytesWritten < (unsigned long) toWrite) //incomplete write
         {
@@ -543,11 +548,13 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
     return;
 }
 
-void XMLPlatformUtils::resetFile(FileHandle theFile)
+void XMLPlatformUtils::resetFile(FileHandle theFile
+                                 , MemoryManager* const manager)
 {
     // Seek to the start of the file
     if (::SetFilePointer(theFile, 0, 0, FILE_BEGIN) == 0xFFFFFFFF)
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile, manager);
+
 }
 
 

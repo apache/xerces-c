@@ -105,7 +105,8 @@ MemoryManager* XMLString::fgMemoryManager = 0;
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       char* const     toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     static const char digitList[16] =
     {
@@ -114,7 +115,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     };
 
     if (!maxChars)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
     // Handle special case
     if (!toFormat)
@@ -173,12 +174,12 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
      else
     {
-        ThrowXML(RuntimeException, XMLExcepts::Str_UnknownRadix);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Str_UnknownRadix, manager);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall, manager);
 
     // Reverse the tmp buffer into the caller's buffer
     unsigned int outIndex = 0;
@@ -192,16 +193,18 @@ void XMLString::binToText(  const   unsigned long   toFormat
 void XMLString::binToText(  const   unsigned int    toFormat
                             ,       char* const     toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     // Just call the unsigned long version
-    binToText((unsigned long)toFormat, toFill, maxChars, radix);
+    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   long            toFormat
                             ,       char* const     toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     //
     //  If its negative, then put a negative sign into the output and flip
@@ -221,13 +224,14 @@ void XMLString::binToText(  const   long            toFormat
     }
 
     // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix);
+    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   int             toFormat
                             ,       char* const     toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     //
     //  If its negative, then put a negative sign into the output and flip
@@ -247,7 +251,7 @@ void XMLString::binToText(  const   int             toFormat
     }
 
     // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix);
+    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
 }
 
 
@@ -325,10 +329,11 @@ void XMLString::cut(        XMLCh* const    toCutFrom
 
 
 unsigned int XMLString::hash(   const   char* const     tohash
-                                , const unsigned int    hashModulus)
-{
+                                , const unsigned int    hashModulus
+                                , MemoryManager* const  manager)
+{    
     if (!hashModulus)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, manager);
 
     unsigned int hashVal = 0;
     if (tohash) {
@@ -360,13 +365,14 @@ int XMLString::indexOf(const char* const toSearch, const char ch)
 
 int XMLString::indexOf( const   char* const     toSearch
                         , const char            ch
-                        , const unsigned int    fromIndex)
+                        , const unsigned int    fromIndex
+                        , MemoryManager* const  manager)
 {
     const unsigned int len = strlen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
 	if ((int)fromIndex > len-1)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (unsigned int i = fromIndex; i < len; i++)
     {
@@ -389,13 +395,14 @@ int XMLString::lastIndexOf(const char* const toSearch, const char ch)
 
 int XMLString::lastIndexOf( const   char* const     toSearch
                             , const char            ch
-                            , const unsigned int    fromIndex)
+                            , const unsigned int    fromIndex
+                            , MemoryManager* const  manager)
 {
     const int len = strlen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
 	if ((int)fromIndex > len-1)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i = (int)fromIndex; i >= 0; i--)
     {
@@ -636,17 +643,18 @@ void XMLString::trim(char* const toTrim)
 
 
 void XMLString::subString(char* const targetStr, const char* const srcStr
-                          , const int startIndex, const int endIndex)
+                          , const int startIndex, const int endIndex
+                          , MemoryManager* const manager)
 {
     if (targetStr == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
     const int srcLen = strlen(srcStr);
     const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
     if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i= startIndex; i < endIndex; i++) {
         targetStr[i-startIndex] = srcStr[i];
@@ -756,7 +764,8 @@ bool XMLString::isAllWhiteSpace(const XMLCh* const toCheck)
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       XMLCh* const    toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     static const XMLCh digitList[16] =
     {
@@ -766,7 +775,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     };
 
     if (!maxChars)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
     // Handle special case
     if (!toFormat)
@@ -825,12 +834,12 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
      else
     {
-        ThrowXML(RuntimeException, XMLExcepts::Str_UnknownRadix);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Str_UnknownRadix, manager);
     }
 
     // See if have enough room in the caller's buffer
     if (tmpIndex > maxChars)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_TargetBufTooSmall, manager);
 
     // Reverse the tmp buffer into the caller's buffer
     unsigned int outIndex = 0;
@@ -844,16 +853,18 @@ void XMLString::binToText(  const   unsigned long   toFormat
 void XMLString::binToText(  const   unsigned int    toFormat
                             ,       XMLCh* const    toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     // Just call the unsigned long version
-    binToText((unsigned long)toFormat, toFill, maxChars, radix);
+    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   long            toFormat
                             ,       XMLCh* const    toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     //
     //  If its negative, then put a negative sign into the output and flip
@@ -873,13 +884,14 @@ void XMLString::binToText(  const   long            toFormat
     }
 
     // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix);
+    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   int             toFormat
                             ,       XMLCh* const    toFill
                             , const unsigned int    maxChars
-                            , const unsigned int    radix)
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
 {
     //
     //  If its negative, then put a negative sign into the output and flip
@@ -899,7 +911,7 @@ void XMLString::binToText(  const   int             toFormat
     }
 
     // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix);
+    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
 }
 
 
@@ -1071,10 +1083,11 @@ bool XMLString::copyNString(        XMLCh* const    target
 
 
 unsigned int XMLString::hash(   const   XMLCh* const    tohash
-                                , const unsigned int    hashModulus)
-{
+                                , const unsigned int    hashModulus
+                                , MemoryManager* const  manager)
+{    
     if (!hashModulus)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, manager);
 
     unsigned int hashVal = 0;
     if (tohash) {
@@ -1165,10 +1178,11 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 
 unsigned int XMLString::hashN(  const   XMLCh* const    tohash
                                 , const unsigned int    n
-                                , const unsigned int    hashModulus)
+                                , const unsigned int    hashModulus
+                                , MemoryManager* const  manager)
 {
     if (!hashModulus)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, manager);
 
     unsigned int hashVal = 0;
     if (tohash) {
@@ -1206,13 +1220,14 @@ int XMLString::indexOf(const XMLCh* const toSearch, const XMLCh ch)
 
 int XMLString::indexOf( const   XMLCh* const    toSearch
                         , const XMLCh           ch
-                        , const unsigned int    fromIndex)
+                        , const unsigned int    fromIndex
+                        , MemoryManager* const  manager)
 {
     const int len = stringLen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
 	if ((int)fromIndex > len-1)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i = (int)fromIndex; i < len; i++)
     {
@@ -1236,11 +1251,12 @@ int XMLString::lastIndexOf(const XMLCh ch,
 
 int XMLString::lastIndexOf( const   XMLCh* const    toSearch
                             , const XMLCh           ch
-                            , const unsigned int    fromIndex)
+                            , const unsigned int    fromIndex
+                            , MemoryManager* const  manager)
 {
     const int len = stringLen(toSearch);
 	if ((int)fromIndex > len-1)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i = (int)fromIndex; i >= 0; i--)
     {
@@ -1282,7 +1298,8 @@ XMLString::makeUName(const XMLCh* const pszURI, const XMLCh* const pszName)
 }
 
 
-bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
+bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill
+                          , MemoryManager* const manager)
 {
     toFill = 0;
 
@@ -1290,8 +1307,8 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
     if ((!toConvert) || (!*toConvert))
         return false;
 
-	XMLCh* trimmedStr = XMLString::replicate(toConvert);
-	ArrayJanitor<XMLCh> jan1(trimmedStr);
+	XMLCh* trimmedStr = XMLString::replicate(toConvert, manager);
+	ArrayJanitor<XMLCh> jan1(trimmedStr, manager);
 	XMLString::trim(trimmedStr);
     unsigned int trimmedStrLen = XMLString::stringLen(trimmedStr);
 
@@ -1299,14 +1316,14 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
 		return false;
 
 	// we don't allow '-' sign
-	if (XMLString::indexOf(trimmedStr, chDash, 0) != -1)
+	if (XMLString::indexOf(trimmedStr, chDash, 0, manager) != -1)
 		return false;
 
 	//the errno set by previous run is NOT automatically cleared
 	errno = 0;
 
-	char *nptr = XMLString::transcode(trimmedStr);
-    ArrayJanitor<char> jan2(nptr);
+	char *nptr = XMLString::transcode(trimmedStr, manager);
+    ArrayJanitor<char> jan2(nptr, manager);
 
     char *endptr;
 	 //
@@ -1323,36 +1340,37 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
     return true;
 }
 
-int XMLString::parseInt(const XMLCh* const toConvert)
+int XMLString::parseInt(const XMLCh* const toConvert
+                     , MemoryManager* const manager)
 {
     // If no string, or empty string, then it is a failure
     if ((!toConvert) || (!*toConvert))
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_null_ptr, manager);
 
-	XMLCh* trimmedStr = XMLString::replicate(toConvert);
-	ArrayJanitor<XMLCh> jan1(trimmedStr);
+	XMLCh* trimmedStr = XMLString::replicate(toConvert, manager);
+	ArrayJanitor<XMLCh> jan1(trimmedStr, manager);
 	XMLString::trim(trimmedStr);
     unsigned int trimmedStrLen = XMLString::stringLen(trimmedStr);
 
 	if ( !trimmedStrLen )
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_null_ptr, manager);
 
 	//the errno set by previous run is NOT automatically cleared
 	errno = 0;
 
-	char *nptr = XMLString::transcode(trimmedStr);
-    ArrayJanitor<char> jan2(nptr);
+	char *nptr = XMLString::transcode(trimmedStr, manager);
+    ArrayJanitor<char> jan2(nptr, manager);
 
     char *endptr;
     long retVal = strtol(nptr, &endptr, 10);
 
 	// check if all chars are valid char
 	if ( (endptr - nptr) != (int) trimmedStrLen)
-		ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+		ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
 
 	// check if overflow/underflow occurs
     if (errno == ERANGE)
-        ThrowXML(NumberFormatException, XMLExcepts::Str_ConvertOverflow);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::Str_ConvertOverflow, manager);
 
 	 //
      // REVISIT: conversion of (long) to (int)
@@ -1409,20 +1427,21 @@ void XMLString::lowerCase(XMLCh* const toLowerCase)
 
 
 void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
-                          , const int startIndex, const int endIndex)
+                          , const int startIndex, const int endIndex
+                          , MemoryManager* const manager)
 {
     //if (startIndex < 0 || endIndex < 0)
-    //    ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_NegativeIndex);
+    //    ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_NegativeIndex);
 
     if (targetStr == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
     const int srcLen = stringLen(srcStr);
     const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
     if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i= startIndex; i < endIndex; i++) {
         targetStr[i-startIndex] = srcStr[i];
@@ -1431,13 +1450,14 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
     targetStr[copySize] = 0;
 }
 
-BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
+BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh*      const   tokenizeSrc
+                                               ,  MemoryManager*    const   manager)
 {
-    XMLCh* orgText = replicate(tokenizeSrc, fgMemoryManager);
-    ArrayJanitor<XMLCh> janText(orgText, fgMemoryManager);
+    XMLCh* orgText = replicate(tokenizeSrc, manager);
+    ArrayJanitor<XMLCh> janText(orgText, manager);
     XMLCh* tokenizeStr = orgText;
 
-    RefArrayVectorOf<XMLCh>* tokenStack = new RefArrayVectorOf<XMLCh>(16, true);
+    RefArrayVectorOf<XMLCh>* tokenStack = new (manager) RefArrayVectorOf<XMLCh>(16, true, manager);
 
     unsigned int len = stringLen(tokenizeStr);
     unsigned int skip;
@@ -1465,12 +1485,12 @@ BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc
 
         // these tokens are adopted in the RefVector and will be deleted
         // when the vector is deleted by the caller
-        XMLCh* token = (XMLCh*) fgMemoryManager->allocate
+        XMLCh* token = (XMLCh*) manager->allocate
         (
             (skip+1-index) * sizeof(XMLCh)
         );//new XMLCh[skip+1-index];
 
-        XMLString::subString(token, tokenizeStr, index, skip);
+        XMLString::subString(token, tokenizeStr, index, skip, manager);
         tokenStack->addElement(token);
         index = skip;
     }
@@ -1708,13 +1728,14 @@ void XMLString::collapseWS(XMLCh* const toConvert)
 //
 // remove whitespace
 //
-void XMLString::removeWS(XMLCh* const toConvert)
+void XMLString::removeWS(XMLCh* const toConvert
+                         , MemoryManager* const manager)
 {
     // If no string, then its a failure
     if (( !toConvert ) || ( !*toConvert ))
         return;
 
-    XMLCh* retBuf = (XMLCh*) fgMemoryManager->allocate
+    XMLCh* retBuf = (XMLCh*) manager->allocate
     (
         (XMLString::stringLen(toConvert) + 1) * sizeof(XMLCh)
     );//new XMLCh[ XMLString::stringLen(toConvert) + 1];
@@ -1737,7 +1758,7 @@ void XMLString::removeWS(XMLCh* const toConvert)
 
     *retPtr = chNull;
     XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
-    fgMemoryManager->deallocate(retBuf);//delete[] retBuf;
+    manager->deallocate(retBuf);//delete[] retBuf;
     return;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -219,7 +222,7 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
     Token* retTok = parseRegx();
 
 	if (fOffset != fStringLen) {
-        ThrowXML(ParseException,XMLExcepts::Parser_Parse1);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Parse1, fMemoryManager);
     }
 
     if (fReferences != 0) {
@@ -228,7 +231,7 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
         for (unsigned int i = 0; i < refSize; i++) {
 
 			if (fNoGroups <= fReferences->elementAt(i)->fReferenceNo) {
-                ThrowXML(ParseException,XMLExcepts::Parser_Parse2);
+                ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Parse2, fMemoryManager);
             }
         }
 
@@ -259,7 +262,7 @@ void RegxParser::processNext() {
             nextState = REGX_T_BACKSOLIDUS;
 
 			if (fOffset >= fStringLen) {
-				ThrowXML(ParseException,XMLExcepts::Parser_Next1);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next1, fMemoryManager);
 			}
 
 			fCharData = fString[fOffset++];
@@ -342,7 +345,7 @@ void RegxParser::processNext() {
                 break;
 
             if (++fOffset >= fStringLen)
-                ThrowXML(ParseException,XMLExcepts::Parser_Next2);
+                ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next2, fMemoryManager);
 
             ch = fString[fOffset++];
 
@@ -364,7 +367,7 @@ void RegxParser::processNext() {
 				break;
             case chOpenAngle:
 				if (fOffset >= fStringLen)
-					ThrowXML(ParseException,XMLExcepts::Parser_Next2);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next2, fMemoryManager);
 
 				ch = fString[fOffset++];
 
@@ -375,7 +378,7 @@ void RegxParser::processNext() {
 					nextState = REGX_T_NEGATIVELOOKBEHIND;
 				}
 				else {
-					ThrowXML(ParseException,XMLExcepts::Parser_Next3);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next3, fMemoryManager);
 				}
 				break;
             case chPound:
@@ -387,7 +390,7 @@ void RegxParser::processNext() {
 				}
 
 				if (ch != chCloseParen)
-					ThrowXML(ParseException,XMLExcepts::Parser_Next4);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next4, fMemoryManager);
 
 				nextState = REGX_T_COMMENT;
 				break;
@@ -403,14 +406,14 @@ void RegxParser::processNext() {
                     nextState = REGX_T_CONDITION;
                     break;
                 }
-                ThrowXML(ParseException,XMLExcepts::Parser_Next2);
+                ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next2, fMemoryManager);
             }
         }
 		break;
 	case chBackSlash:
         nextState = REGX_T_BACKSOLIDUS;
         if (fOffset >= fStringLen) {
-			ThrowXML(ParseException,XMLExcepts::Parser_Next1);
+			ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next1, fMemoryManager);
         }
 
         fCharData = fString[fOffset++];
@@ -507,7 +510,7 @@ Token* RegxParser::processLook(const unsigned short tokType) {
 	Token* tok = fTokenFactory->createLook(tokType, parseRegx());
 
     if (fState != REGX_T_RPAREN) {
-        ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
     }
 
     processNext();
@@ -624,7 +627,7 @@ Token* RegxParser::processParen() {
     Token* tok = fTokenFactory->createParenthesis(parseRegx(true),num);
 
     if (fState != REGX_T_RPAREN)
-        ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 
     processNext();
     return tok;
@@ -637,7 +640,7 @@ Token* RegxParser::processParen2() {
     Token* tok = fTokenFactory->createParenthesis(parseRegx(), 0);
 
     if (fState != REGX_T_RPAREN)
-        ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 
     processNext();
     return tok;
@@ -647,7 +650,7 @@ Token* RegxParser::processParen2() {
 Token* RegxParser::processCondition() {
 
     if (fOffset + 1 >= fStringLen)
-		ThrowXML(ParseException,XMLExcepts::Parser_Factor4);
+		ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor4, fMemoryManager);
 
     int refNo = -1;
 	Token* conditionTok = 0;
@@ -666,7 +669,7 @@ Token* RegxParser::processCondition() {
         fOffset++;
 
         if (fString[fOffset] != chCloseParen)
-            ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+            ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 
         fOffset++;
     }
@@ -686,10 +689,10 @@ Token* RegxParser::processCondition() {
             break;
         case Token::T_ANCHOR:
             if (fState != REGX_T_RPAREN)
-				ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 			break;
         default:
-			ThrowXML(ParseException,XMLExcepts::Parser_Factor5);
+			ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor5, fMemoryManager);
         }
     }
 
@@ -700,14 +703,14 @@ Token* RegxParser::processCondition() {
     if (yesPattern->getTokenType() == Token::T_UNION) {
 
         if (yesPattern->size() != 2)
-            ThrowXML(ParseException,XMLExcepts::Parser_Factor6);
+            ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor6, fMemoryManager);
 
         noPattern = yesPattern->getChild(1);
         yesPattern = yesPattern->getChild(0);
     }
 
     if (fState != REGX_T_RPAREN)
-        ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 
 	processNext();
 	return fTokenFactory->createCondition(refNo,conditionTok,
@@ -736,7 +739,7 @@ Token* RegxParser::processModifiers() {
     } // end while
 
     if (fOffset >= fStringLen)
-        ThrowXML(ParseException,XMLExcepts::Parser_Factor2);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor2, fMemoryManager);
 
     if (ch == chDash) {
 
@@ -753,7 +756,7 @@ Token* RegxParser::processModifiers() {
         }
 
         if (fOffset >= fStringLen)
-            ThrowXML(ParseException,XMLExcepts::Parser_Factor2);
+            ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor2, fMemoryManager);
     }
 
     Token* tok = 0;
@@ -765,7 +768,7 @@ Token* RegxParser::processModifiers() {
         tok = fTokenFactory->createModifierGroup(parseRegx(),add,mask);
 
         if (fState != REGX_T_RPAREN)
-            ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+            ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 
         processNext();
     }
@@ -776,7 +779,7 @@ Token* RegxParser::processModifiers() {
         tok = fTokenFactory->createModifierGroup(parseRegx(),add,mask);
     }
     else {
-        ThrowXML(ParseException,XMLExcepts::Parser_Factor3);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor3, fMemoryManager);
 	}
 
 	return tok;
@@ -790,7 +793,7 @@ Token* RegxParser::processIndependent() {
 	Token* tok = fTokenFactory->createLook(Token::T_INDEPENDENT, parseRegx());
 
 	if (fState != REGX_T_RPAREN)
-		ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
+		ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);
 
     processNext();
     return tok;
@@ -803,7 +806,7 @@ Token* RegxParser::processBacksolidus_c() {
 
     if (fOffset >= fStringLen
         || ((ch = fString[fOffset++]) & 0xFFE0) != 0x0040)
-        ThrowXML(ParseException,XMLExcepts::Parser_Atom1);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom1, fMemoryManager);
 
     processNext();
 	return fTokenFactory->createChar(ch - 0x40);
@@ -926,10 +929,10 @@ Token* RegxParser::parseFactor() {
                 }
 
                 if (min < 0)
-                    ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier5, fString);
+                    ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Parser_Quantifier5, fString, fMemoryManager);
             }
             else {
-                ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier1, fString);
+                ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Parser_Quantifier1, fString, fMemoryManager);
             }
 
             max = min;
@@ -937,7 +940,7 @@ Token* RegxParser::parseFactor() {
             if (ch == chComma) {
 
                 if (fOffset >= fStringLen) {
-                    ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier3, fString);
+                    ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Parser_Quantifier3, fString, fMemoryManager);
                 }
                 else if ((ch = fString[fOffset++]) >= chDigit_0 && ch <= chDigit_9) {
 
@@ -950,9 +953,9 @@ Token* RegxParser::parseFactor() {
                     }
 
                     if (max < 0)
-                        ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier5, fString);
+                        ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Parser_Quantifier5, fString, fMemoryManager);
                     else if (min > max)
-                        ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier4, fString);
+                        ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Parser_Quantifier4, fString, fMemoryManager);
                 }
                 else {
                     max = -1;
@@ -960,7 +963,7 @@ Token* RegxParser::parseFactor() {
             }
 
             if (ch != chCloseCurly)  {
-                ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier2, fString);
+                ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Parser_Quantifier2, fString, fMemoryManager);
             }
 
             if (checkQuestion(fOffset)) {
@@ -1048,7 +1051,7 @@ Token* RegxParser::parseAtom() {
 				int start = fOffset;
 				tok = processBacksolidus_pP(fCharData);
 				if (tok == 0) {
-					ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom5, fMemoryManager);
 				}
 			}
             break;
@@ -1074,13 +1077,13 @@ Token* RegxParser::parseAtom() {
         if (fCharData == chOpenCurly
             || fCharData == chCloseCurly
             || fCharData == chCloseSquare)
-            ThrowXML(ParseException,XMLExcepts::Parser_Atom4);
+            ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom4, fMemoryManager);
 
         tok = fTokenFactory->createChar(fCharData);
         processNext();
         break;
     default:
-        ThrowXML(ParseException,XMLExcepts::Parser_Atom4);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom4, fMemoryManager);
     } //end switch
 
     return tok;
@@ -1092,13 +1095,13 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
     processNext();
 
     if (fState != REGX_T_CHAR || fCharData != chOpenCurly)
-        ThrowXML(ParseException,XMLExcepts::Parser_Atom2);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom2, fMemoryManager);
 
     int nameStart = fOffset;
-    int nameEnd = XMLString::indexOf(fString,chCloseCurly,nameStart);
+    int nameEnd = XMLString::indexOf(fString,chCloseCurly,nameStart, fMemoryManager);
 
     if (nameEnd < 0)
-        ThrowXML(ParseException,XMLExcepts::Parser_Atom3);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom3, fMemoryManager);
     
     fOffset = nameEnd + 1;
     XMLCh* rangeName = (XMLCh*) fMemoryManager->allocate
@@ -1106,7 +1109,7 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
         (nameEnd - nameStart + 1) * sizeof(XMLCh)
     );//new XMLCh[(nameEnd - nameStart) + 1];
     ArrayJanitor<XMLCh> janRangeName(rangeName, fMemoryManager);
-    XMLString::subString(rangeName, fString, nameStart, nameEnd);
+    XMLString::subString(rangeName, fString, nameStart, nameEnd, fMemoryManager);
 
     return  fTokenFactory->getRange(rangeName, !(ch == chLatin_p));
 }
@@ -1186,7 +1189,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 					RangeToken* tok2 = processBacksolidus_pP(ch);
 
 					if (tok2 == 0) {
-						ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
+						ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom5, fMemoryManager);
 					}
 
 					tok->mergeRanges(tok2);
@@ -1199,10 +1202,10 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
         } // end if REGX_T_BACKSOLIDUS
         else if (fState == REGX_T_POSIX_CHARCLASS_START) {
 
-            int nameEnd = XMLString::indexOf(fString, chColon, fOffset);
+            int nameEnd = XMLString::indexOf(fString, chColon, fOffset, fMemoryManager);
 
             if (nameEnd < 0) {
-				ThrowXML(ParseException,XMLExcepts::Parser_CC1);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC1, fMemoryManager);
 			}
 
             bool positive = true;
@@ -1219,18 +1222,18 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
             );//new XMLCh[(nameEnd - fOffset) + 1];
 			ArrayJanitor<XMLCh> janName(name, fMemoryManager);
 
-			XMLString::subString(name, fString, fOffset, nameEnd);
+			XMLString::subString(name, fString, fOffset, nameEnd, fMemoryManager);
             RangeToken* rangeTok = fTokenFactory->getRange(name, !positive);
 
             if (rangeTok == 0) {
-				ThrowXML(ParseException,XMLExcepts::Parser_CC3);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC3, fMemoryManager);
             }
 
 			tok->mergeRanges(rangeTok);
 			end = true;
 
 			if (nameEnd+1 >= fStringLen || fString[nameEnd+1] != chCloseSquare) {
-				ThrowXML(ParseException,XMLExcepts::Parser_CC1);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC1, fMemoryManager);
 			}
 
 			fOffset = nameEnd + 2;
@@ -1247,7 +1250,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
                 processNext();
 
                 if (fState == REGX_T_EOF)
-                    ThrowXML(ParseException,XMLExcepts::Parser_CC2);
+                    ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, fMemoryManager);
 
                 if (fState == REGX_T_CHAR && fCharData == chCloseSquare) {
 
@@ -1275,7 +1278,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
     } // end while fState
 
 	if (fState == REGX_T_EOF) {
-        ThrowXML(ParseException,XMLExcepts::Parser_CC2);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, fMemoryManager);
 	}
 
     if (!useNRange && nRange) {
@@ -1305,7 +1308,7 @@ RangeToken* RegxParser::parseSetOperations() {
 
             processNext();
             if (fState != REGX_T_LBRACKET)
-                ThrowXML(ParseException,XMLExcepts::Parser_Ope1);
+                ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Ope1, fMemoryManager);
 
             RangeToken* tok2 = parseCharacterClass(false);
 
@@ -1319,11 +1322,11 @@ RangeToken* RegxParser::parseSetOperations() {
                 tok->intersectRanges(tok2);
             }
             else {
-                throw 0; // ThrowXML(RuntimeException, "ASSERT")
+                throw 0; // ThrowXMLwithMemMgr(RuntimeException, "ASSERT")
             }
         }
         else {
-			ThrowXML(ParseException,XMLExcepts::Parser_Ope2);
+			ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Ope2, fMemoryManager);
 		}
     }
 
@@ -1361,7 +1364,7 @@ Token* RegxParser::getTokenForShorthand(const XMLInt32 ch) {
 		tok = useUnicode ? fTokenFactory->getRange(fgUniIsSpace, true)
 						 : fTokenFactory->getRange(fgASCIISpace, true);
 //	default:
-//		ThrowXML(RuntimeException, "Invalid shorthand {0}", chAsString)
+//		ThrowXMLwithMemMgr(RuntimeException, "Invalid shorthand {0}", chAsString)
 	}
 
     return tok;
@@ -1371,7 +1374,7 @@ Token* RegxParser::getTokenForShorthand(const XMLInt32 ch) {
 XMLInt32 RegxParser::decodeEscaped() {
 
     if (fState != REGX_T_BACKSOLIDUS)
-		ThrowXML(ParseException,XMLExcepts::Parser_Next1);
+		ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next1, fMemoryManager);
 
     XMLInt32 ch = fCharData;
 
@@ -1395,7 +1398,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 		{
 			processNext();
 			if (fState != REGX_T_CHAR) {
-				ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 			}
 			if (fCharData == chOpenCurly) {
 
@@ -1405,7 +1408,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 				do {
 					processNext();
 					if (fState != REGX_T_CHAR)
-						ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+						ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 
 					if ((v1 = hexChar(fCharData)) < 0)
 						break;
@@ -1414,23 +1417,23 @@ XMLInt32 RegxParser::decodeEscaped() {
 				} while (true);
 
 				if (fCharData != chCloseCurly)
-					ThrowXML(ParseException,XMLExcepts::Parser_Descape3);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape3, fMemoryManager);
 
 				if (uv > Token::UTF16_MAX)
-					ThrowXML(ParseException,XMLExcepts::Parser_Descape4);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape4, fMemoryManager);
 
 				ch = uv;
 			}
 			else {
 				int v1 = 0;
 				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
-					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 
 				int uv = v1;
 
 				processNext();
 				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
-					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 
 				ch = uv*16 + v1;
 			}
@@ -1445,7 +1448,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 
 				processNext();
 				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
-					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 
 				uv = (i == 0) ? v1 : uv*16 + v1;
 			}
@@ -1462,13 +1465,13 @@ XMLInt32 RegxParser::decodeEscaped() {
 
 				processNext();
 				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
-					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 
 				uv = (i == 0) ? v1 : uv*16 + v1;
 			}
 
 			if (uv > Token::UTF16_MAX)
-				ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
+				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape1, fMemoryManager);
 
 			ch = uv;
 		}
@@ -1476,7 +1479,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 	case chLatin_A:
 	case chLatin_Z:
 	case chLatin_z:
-		ThrowXML(ParseException,XMLExcepts::Parser_Descape5);
+		ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Descape5, fMemoryManager);
 	} // end switch
 
     return ch;

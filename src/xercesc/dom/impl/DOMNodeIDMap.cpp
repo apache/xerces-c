@@ -85,7 +85,7 @@ DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
             // We need a bigger size than the largest available one.
             //   Big trouble.
             fSizeIndex--;
-            ThrowXML(RuntimeException, XMLExcepts::NodeIDMap_GrowErr);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::NodeIDMap_GrowErr, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
         }
     }
 
@@ -126,7 +126,7 @@ void DOMNodeIDMap::add(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    XMLSize_t initalHash = XMLString::hash(id, fSize-1);
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
 	initalHash++;
 	XMLSize_t currentHash = initalHash;
 
@@ -163,7 +163,7 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    XMLSize_t initalHash = XMLString::hash(id, fSize-1);
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
 	initalHash++;
 	XMLSize_t currentHash = initalHash;
 
@@ -202,7 +202,7 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
     //
     //  Get the hashcode for the supplied string.
     //
-	XMLSize_t initalHash = XMLString::hash(id, fSize-1);
+	XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
 	initalHash++;
 	XMLSize_t currentHash = initalHash;
 
@@ -253,7 +253,7 @@ void DOMNodeIDMap::growTable()
         // We need to grow bigger than the largest available size.
         //   Big trouble.
         fSizeIndex--;
-        ThrowXML(RuntimeException, XMLExcepts::NodeIDMap_GrowErr);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::NodeIDMap_GrowErr, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
     }
 
     //

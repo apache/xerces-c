@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:41  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/10/01 16:32:42  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -159,7 +162,7 @@ void ValueStoreCache::endElement() {
     }
 
     RefHashTableOf<ValueStore>* oldMap = fGlobalMapStack->pop();
-    RefHashTableOfEnumerator<ValueStore> mapEnum(oldMap);
+    RefHashTableOfEnumerator<ValueStore> mapEnum(oldMap, false, fMemoryManager);
 //    Janitor<RefHashTableOf<ValueStore> > janMap(oldMap);
 
     while (mapEnum.hasMoreElements()) {

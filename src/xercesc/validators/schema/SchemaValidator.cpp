@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.48  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.47  2003/12/03 20:00:27  neilg
  * PSVI fix:  cannot allow validator to reset its element content buffer before exposing it to the application
  *
@@ -356,7 +359,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     //  the element decl in our own way of looking at them.
     //
     if (!elemDecl)
-        ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_InvalidElemId, fMemoryManager);
 
     //
     //  Get the content spec type of this element. This will tell us what
@@ -493,7 +496,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         // if the flag is FIXED, then this value must be same as default value
                         if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_FIXED) != 0)
                         {
-                            if (fCurrentDatatypeValidator->compare(value, elemDefaultValue) != 0 )
+                            if (fCurrentDatatypeValidator->compare(value, elemDefaultValue, fMemoryManager) != 0 )
                             {
                                 emitError(XMLValid::FixedDifferentFromActual, elemDecl->getFullName());
                                 fErrorOccurred = true;
@@ -513,7 +516,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                 {
                     try
                     {
-                        fCurrentDatatypeValidator->validate(value, getScanner()->getValidationContext());
+                        fCurrentDatatypeValidator->validate(value, getScanner()->getValidationContext(), fMemoryManager);
                     }
                     catch (XMLException& idve)
                     {
@@ -541,7 +544,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     }
     else
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMType, fMemoryManager);
     }
 
     // must rely on scanner to clear fDatatypeBuffer
@@ -672,11 +675,13 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 notationBuf.append(&attrValue[colonPos + 1]);
 
                 attDefDV->validate(notationBuf.getRawBuffer()
-                                 , context);
+                                 , context
+                                 , fMemoryManager);
             }
             else {
                 attDefDV->validate(attrValue
-                                 , context);
+                                 , context
+                                 , fMemoryManager);
             }
 
         }
@@ -1084,7 +1089,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
                         //  We need to verify that all of its possible values
                         //  (in the enum list) refer to valid notations.
                         //
-                        XMLCh* list = XMLString::replicate(curAttDef.getEnumeration());
+                        XMLCh* list = XMLString::replicate(curAttDef.getEnumeration(), fMemoryManager);
                         ArrayJanitor<XMLCh> janList(list);
 
                         //
@@ -1147,7 +1152,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
         if (getScanner()->getValidationSchemaFullChecking()) {
             RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = sGrammar.getComplexTypeRegistry();
 
-            RefHashTableOfEnumerator<ComplexTypeInfo> complexTypeEnum(complexTypeRegistry);
+            RefHashTableOfEnumerator<ComplexTypeInfo> complexTypeEnum(complexTypeRegistry, false, fMemoryManager);
             while (complexTypeEnum.hasMoreElements())
             {
                 ComplexTypeInfo& curTypeInfo = complexTypeEnum.nextElement();
@@ -1157,7 +1162,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
             }
 
             RefHashTableOf<XercesGroupInfo>* groupInfoRegistry = sGrammar.getGroupInfoRegistry();
-            RefHashTableOfEnumerator<XercesGroupInfo> groupEnum(groupInfoRegistry);
+            RefHashTableOfEnumerator<XercesGroupInfo> groupEnum(groupInfoRegistry, false, fMemoryManager);
 
             while (groupEnum.hasMoreElements()) {
 
@@ -1369,7 +1374,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
     // the contentspec which is not pointless. If the result is a non-pointless
     // group, Vector is filled  in with the children of interest
     if (curNode && !baseNode)
-        ThrowXML(RuntimeException, XMLExcepts::PD_EmptyBase);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_EmptyBase, fMemoryManager);
 
     if (!curNode)
         return;
@@ -1422,7 +1427,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                 }
             default:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_InvalidContentType, fMemoryManager);
                 }
             }		
         }
@@ -1443,11 +1448,11 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::All:
             case ContentSpecNode::Leaf:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes1);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_ForbiddenRes1, fMemoryManager);
                 }
             default:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_InvalidContentType, fMemoryManager);
                 }
             }
         }
@@ -1471,11 +1476,11 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::Sequence:
             case ContentSpecNode::Leaf:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes2);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_ForbiddenRes2, fMemoryManager);
                 }
             default:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_InvalidContentType, fMemoryManager);
                 }
             }
         }
@@ -1499,11 +1504,11 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::Sequence:
             case ContentSpecNode::Leaf:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes3);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_ForbiddenRes3, fMemoryManager);
                 }
             default:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_InvalidContentType, fMemoryManager);
                 }
             }
         }
@@ -1537,11 +1542,11 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                 }
             case ContentSpecNode::Leaf:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes4);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_ForbiddenRes4, fMemoryManager);
                 }
             default:
                 {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_InvalidContentType, fMemoryManager);
                 }
             }
         }
@@ -1618,14 +1623,14 @@ SchemaValidator::checkNSCompat(const ContentSpecNode* const derivedSpecNode,
     if (toCheckOccurence &&
         !isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE,
-                  derivedSpecNode->getElement()->getLocalPart());
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_OccurRangeE,
+                  derivedSpecNode->getElement()->getLocalPart(), fMemoryManager);
     }
 
     // check wildcard subset
     if (!wildcardEltAllowsNamespace(baseSpecNode, derivedSpecNode->getElement()->getURI())) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_NSCompat1,
-                  derivedSpecNode->getElement()->getLocalPart());
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NSCompat1,
+                  derivedSpecNode->getElement()->getLocalPart(), fMemoryManager);
     }
 }
 
@@ -1669,7 +1674,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
 
     if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_NameTypeOK1);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);
     }
 
 	// case of mixed complex types with attributes only
@@ -1679,7 +1684,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
 
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName);
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName, fMemoryManager);
     }
 
     SchemaGrammar* aGrammar = currentGrammar;
@@ -1711,7 +1716,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
 
     if (((baseFlags & SchemaSymbols::XSD_NILLABLE) == 0) &&
 		((derivedFlags & SchemaSymbols::XSD_NILLABLE) != 0)) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK2, derivedName);
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NameTypeOK2, derivedName, fMemoryManager);
     }
 
     const XMLCh* derivedDefVal = derivedElemDecl->getDefaultValue();
@@ -1720,14 +1725,14 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     if (baseDefVal && (baseFlags & SchemaSymbols::XSD_FIXED) != 0 &&
         ((derivedFlags & SchemaSymbols::XSD_FIXED) == 0 ||
          !XMLString::equals(derivedDefVal, baseDefVal))) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK3, derivedName);
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NameTypeOK3, derivedName, fMemoryManager);
     }
 
     int derivedBlockSet = derivedElemDecl->getBlockSet();
     int baseBlockSet = baseElemDecl->getBlockSet();
 
     if ((derivedBlockSet & baseBlockSet) != baseBlockSet) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK4, derivedName);
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NameTypeOK4, derivedName, fMemoryManager);
     }
 
     // check identity constraints
@@ -1785,7 +1790,7 @@ SchemaValidator::checkICRestriction(const SchemaElementDecl* const derivedElemDe
     unsigned int baseICCount = baseElemDecl->getIdentityConstraintCount();
 
     if (derivedICCount > baseICCount) {
-        ThrowXML2(RuntimeException, XMLExcepts::PD_NameTypeOK6, derivedElemName, baseElemName);
+        ThrowXMLwithMemMgr2(RuntimeException, XMLExcepts::PD_NameTypeOK6, derivedElemName, baseElemName, fMemoryManager);
     }
 
     for (unsigned int i=0; i < derivedICCount; i++) {
@@ -1802,7 +1807,7 @@ SchemaValidator::checkICRestriction(const SchemaElementDecl* const derivedElemDe
         }
 
         if (!found) {
-            ThrowXML2(RuntimeException, XMLExcepts::PD_NameTypeOK7, derivedElemName, baseElemName);
+            ThrowXMLwithMemMgr2(RuntimeException, XMLExcepts::PD_NameTypeOK7, derivedElemName, baseElemName, fMemoryManager);
         }
     }
 }
@@ -1824,7 +1829,7 @@ SchemaValidator::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
     if (derivedElemDecl->getModelType() == SchemaElementDecl::Simple) {
 
         if (baseType != SchemaElementDecl::Simple) {
-            ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName, fMemoryManager);
         }
 
         if (!rInfo) {
@@ -1833,7 +1838,7 @@ SchemaValidator::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
 
             if (bInfo || bDV == 0 ||
 				!bDV->isSubstitutableBy(derivedElemDecl->getDatatypeValidator())) {
-                ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName, fMemoryManager);
             }
 
             return;
@@ -1852,7 +1857,7 @@ SchemaValidator::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
     }
 
     if (!rInfo) {
-        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName, fMemoryManager);
     }
 }
 
@@ -1895,7 +1900,7 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
 
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_Recurse1, fMemoryManager);
     }
 
     // check for mapping of children
@@ -1948,7 +1953,7 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
     }
 
     if (codeToThrow != XMLExcepts::NoError) {
-        ThrowXML(RuntimeException, codeToThrow);
+        ThrowXMLwithMemMgr(RuntimeException, codeToThrow, fMemoryManager);
     }
 }
 
@@ -1958,11 +1963,11 @@ void SchemaValidator::checkNSSubset(const ContentSpecNode* const derivedSpecNode
     // check Occurrence ranges
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_NSSubset1);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NSSubset1, fMemoryManager);
     }
 
     if (!isWildCardEltSubset(derivedSpecNode, baseSpecNode)) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_NSSubset2);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NSSubset2, fMemoryManager);
     }
 }
 
@@ -2018,7 +2023,7 @@ SchemaValidator::checkNSRecurseCheckCardinality(SchemaGrammar* const currentGram
     if (toCheckOccurence &&
         !isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
                               baseSpecNode->getMaxOccurs())) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_NSRecurseCheckCardinality1);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NSRecurseCheckCardinality1, fMemoryManager);
     }
 
     // Check that each member of the group is a valid restriction of the wildcard
@@ -2042,7 +2047,7 @@ SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
     // check Occurrence ranges
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_Recurse1, fMemoryManager);
     }
 
     XMLExcepts::Codes  codeToThrow = XMLExcepts::NoError;
@@ -2103,7 +2108,7 @@ SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
     }
 
     if (codeToThrow != XMLExcepts::NoError) {
-        ThrowXML(RuntimeException, codeToThrow);
+        ThrowXMLwithMemMgr(RuntimeException, codeToThrow, fMemoryManager);
     }
 }
 
@@ -2129,7 +2134,7 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
 
     if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
                              baseSpecNode->getMaxOccurs())) {
-        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_Recurse1, fMemoryManager);
     }
 
     // check for mapping of children
@@ -2152,7 +2157,7 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
 
         // didn't find a match.
         if (!matched) {
-	        ThrowXML(RuntimeException, XMLExcepts::PD_MapAndSum);
+	        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_MapAndSum, fMemoryManager);
         }
     }
 

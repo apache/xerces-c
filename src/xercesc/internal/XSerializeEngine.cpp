@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/25 20:37:40  jberry
  * Cleanup build errors/warnings from CodeWarrior
  *
@@ -116,21 +119,23 @@ static XMLCh value2[16];
 #define TEST_THROW_ARG1(condition, data, err_msg) \
 if (condition) \
 { \
-    XMLString::binToText(data, value1, 16, 10); \
-    ThrowXML1(XSerializationException \
+    XMLString::binToText(data, value1, 16, 10, fMemoryManager); \
+    ThrowXMLwithMemMgr1(XSerializationException \
             , err_msg  \
-            , value1); \
+            , value1 \
+            , fMemoryManager); \
 }
 
 #define TEST_THROW_ARG2(condition, data1, data2, err_msg) \
 if (condition) \
 { \
-    XMLString::binToText(data1, value1, 16, 10); \
-    XMLString::binToText(data2, value2, 16, 10); \
-    ThrowXML2(XSerializationException \
+    XMLString::binToText(data1, value1, 16, 10, fMemoryManager); \
+    XMLString::binToText(data2, value2, 16, 10, fMemoryManager); \
+    ThrowXMLwithMemMgr2(XSerializationException \
             , err_msg  \
             , value1   \
-            , value2); \
+            , value2 \
+            , fMemoryManager); \
 }
 
 // ---------------------------------------------------------------------------
@@ -435,7 +440,7 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
 	{
         // what follows fgNewClassTag is the prototype object info
         // for the object anticipated, go and verify the info
-        XProtoType::load(*this, protoType->fClassName);
+        XProtoType::load(*this, protoType->fClassName, fMemoryManager);
 
         addLoadPool((void*)protoType);
 	}

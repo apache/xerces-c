@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.4  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -148,7 +151,7 @@ template <class TElem> TElem& ValueArrayOf<TElem>::
 operator[](const unsigned int index)
 {
     if (index >= fSize)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
     return fArray[index];
 }
 
@@ -156,7 +159,7 @@ template <class TElem> const TElem& ValueArrayOf<TElem>::
 operator[](const unsigned int index) const
 {
     if (index >= fSize)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
     return fArray[index];
 }
 
@@ -252,7 +255,7 @@ resize(const unsigned int newSize)
         return;
 
     if (newSize < fSize)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Array_BadNewSize);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Array_BadNewSize);
 
     // Allocate the new array
     TElem* newArray = (TElem*) fMemoryManager->allocate

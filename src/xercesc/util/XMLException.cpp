@@ -161,8 +161,8 @@ static XMLMsgLoader& gGetMsgLoader()
 // ---------------------------------------------------------------------------
 XMLException::~XMLException()
 {
-    XMLPlatformUtils::fgMemoryManager->deallocate(fMsg);
-    XMLPlatformUtils::fgMemoryManager->deallocate(fSrcFile);
+    fMemoryManager->deallocate(fMsg);
+    fMemoryManager->deallocate(fSrcFile);
 }
 
 
@@ -186,19 +186,24 @@ XMLException::XMLException() :
     , fSrcFile(0)
     , fSrcLine(0)
     , fMsg(0)
+    , fMemoryManager(0)
 {
 }
 
 
 XMLException::XMLException( const   char* const     srcFile
-                            , const unsigned int    srcLine) :
+                            , const unsigned int    srcLine
+                            , MemoryManager* const  memoryManager) :
 
     fCode(XMLExcepts::NoError)
     , fSrcFile(0)
     , fSrcLine(srcLine)
     , fMsg(0)
+    , fMemoryManager(memoryManager)
 {
-    fSrcFile = XMLString::replicate(srcFile, XMLPlatformUtils::fgMemoryManager);
+    if (!memoryManager)
+        fMemoryManager = XMLPlatformUtils::fgMemoryManager;
+    fSrcFile = XMLString::replicate(srcFile, fMemoryManager);
 }
 
 
@@ -207,13 +212,14 @@ XMLException::XMLException(const XMLException& toCopy) :
     fCode(toCopy.fCode)
     , fSrcFile(0)
     , fSrcLine(toCopy.fSrcLine)
-    , fMsg(XMLString::replicate(toCopy.fMsg, XMLPlatformUtils::fgMemoryManager))
+    , fMemoryManager(toCopy.fMemoryManager)
+    , fMsg(XMLString::replicate(toCopy.fMsg, fMemoryManager))
 {
     if (toCopy.fSrcFile) {
         fSrcFile = XMLString::replicate
         (
             toCopy.fSrcFile
-            , XMLPlatformUtils::fgMemoryManager
+            , fMemoryManager
         );
     }
 }
@@ -223,9 +229,10 @@ XMLException& XMLException::operator=(const XMLException& toAssign)
 {
     if (this != &toAssign)
     {
-        XMLPlatformUtils::fgMemoryManager->deallocate(fSrcFile);
+        fMemoryManager = toAssign.fMemoryManager;
+        fMemoryManager->deallocate(fSrcFile);
         fSrcFile = 0;
-        XMLPlatformUtils::fgMemoryManager->deallocate(fMsg);
+        fMemoryManager->deallocate(fMsg);
         fMsg = 0;
 
         fSrcLine = toAssign.fSrcLine;
@@ -235,7 +242,7 @@ XMLException& XMLException::operator=(const XMLException& toAssign)
             fMsg = XMLString::replicate
             (
                 toAssign.fMsg
-                , XMLPlatformUtils::fgMemoryManager
+                , fMemoryManager
             );
         }
 
@@ -243,7 +250,7 @@ XMLException& XMLException::operator=(const XMLException& toAssign)
             fSrcFile = XMLString::replicate
             (
                 toAssign.fSrcFile
-                , XMLPlatformUtils::fgMemoryManager
+                , fMemoryManager
             );
         }
     }
@@ -270,13 +277,13 @@ void XMLException::loadExceptText(const XMLExcepts::Codes toLoad)
 		fMsg = XMLString::replicate
         (
             gDefErrMsg
-            , XMLPlatformUtils::fgMemoryManager
+            , fMemoryManager
         );
 		return;
 	}
 
     // We got the text so replicate it into the message member
-    fMsg = XMLString::replicate(errText, XMLPlatformUtils::fgMemoryManager);
+    fMsg = XMLString::replicate(errText, fMemoryManager);
 }
 
 
@@ -300,13 +307,13 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
 		fMsg = XMLString::replicate
         (
             gDefErrMsg
-            , XMLPlatformUtils::fgMemoryManager
+            , fMemoryManager
         );
 		return;
 	}
 
     // We got the text so replicate it into the message member
-    fMsg = XMLString::replicate(errText, XMLPlatformUtils::fgMemoryManager);
+    fMsg = XMLString::replicate(errText, fMemoryManager);
 }
 
 
@@ -325,18 +332,18 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     XMLCh errText[msgSize + 1];
 
     // load the text
-	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
+	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4, fMemoryManager))
 	{
 		fMsg = XMLString::replicate
         (
             gDefErrMsg
-            , XMLPlatformUtils::fgMemoryManager
+            , fMemoryManager
         );
 		return;
 	}
 
     // We got the text so replicate it into the message member
-    fMsg = XMLString::replicate(errText, XMLPlatformUtils::fgMemoryManager);
+    fMsg = XMLString::replicate(errText, fMemoryManager);
 }
 
 // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/05/15 18:42:54  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -179,7 +182,7 @@ Token* ParserForXMLSchema::processParen() {
     Token* retTok = getTokenFactory()->createParenthesis(parseRegx(true), 0);
 
     if (getState() != REGX_T_RPAREN) {
-        ThrowXML(ParseException, XMLExcepts::Parser_Factor1);
+        ThrowXMLwithMemMgr(ParseException, XMLExcepts::Parser_Factor1, getMemoryManager());
     }
 
     processNext();
@@ -258,7 +261,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                     RangeToken* tok2 = processBacksolidus_pP(ch);
 
                     if (tok2 == 0) {
-                        ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
+                        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom5, getMemoryManager());
                     }
 
                     tok->mergeRanges(tok2);
@@ -281,7 +284,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
             tok->subtractRanges(rangeTok);
 
             if (getState() != REGX_T_CHAR || getCharData() != chCloseSquare) {
-                ThrowXML(ParseException,XMLExcepts::Parser_CC5);
+                ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC5, getMemoryManager());
             }
             break;
         } // end if REGX_T_XMLSCHEMA...
@@ -296,7 +299,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                     || ch == chDash)) {
                 // '[', ']', '-' not allowed and should be esacaped
                 XMLCh chStr[] = { ch, chNull };
-                ThrowXML2(ParseException,XMLExcepts::Parser_CC6, chStr, chStr);
+                ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_CC6, chStr, chStr, getMemoryManager());
             }
 
             if (getState() != REGX_T_CHAR || getCharData() != chDash) {
@@ -306,13 +309,13 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
                 processNext();
                 if ((type = getState()) == REGX_T_EOF)
-                    ThrowXML(ParseException,XMLExcepts::Parser_CC2);
+                    ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, getMemoryManager());
 
                 if ((type == REGX_T_CHAR && getCharData() == chCloseSquare)
                     || type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
 
                     static const XMLCh dashStr[] = { chDash, chNull};
-                    ThrowXML2(ParseException, XMLExcepts::Parser_CC6, dashStr, dashStr);
+                    ThrowXMLwithMemMgr2(ParseException, XMLExcepts::Parser_CC6, dashStr, dashStr, getMemoryManager());
                 }
                 else {
 
@@ -325,7 +328,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                             || rangeEnd == chCloseSquare
                             || rangeEnd == chDash)
                             // '[', ']', '-' not allowed and should be esacaped
-                            ThrowXML2(ParseException, XMLExcepts::Parser_CC6, rangeEndStr, rangeEndStr);
+                            ThrowXMLwithMemMgr2(ParseException, XMLExcepts::Parser_CC6, rangeEndStr, rangeEndStr, getMemoryManager());
                     }
                     else if (type == REGX_T_BACKSOLIDUS) {
                         rangeEnd = decodeEscaped();
@@ -335,7 +338,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
                     if (ch > rangeEnd) {
                         XMLCh chStr[] = { ch, chNull };
-                        ThrowXML2(ParseException,XMLExcepts::Parser_Ope3, rangeEndStr, chStr);
+                        ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_Ope3, rangeEndStr, chStr, getMemoryManager());
                     }
 
                     tok->addRange(ch, rangeEnd);
@@ -346,7 +349,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
     }
 
     if (getState() == REGX_T_EOF)
-        ThrowXML(ParseException,XMLExcepts::Parser_CC2);
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, getMemoryManager());
 
     tok->sortRanges();
     tok->compactRanges();
@@ -365,25 +368,25 @@ XMLInt32 ParserForXMLSchema::processCInCharacterClass(RangeToken* const tok,
 
 Token* ParserForXMLSchema::processLook(const unsigned short tokType) {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_A() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_B() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_b() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
@@ -401,13 +404,13 @@ Token* ParserForXMLSchema::processBacksolidus_c() {
 
 Token* ParserForXMLSchema::processBacksolidus_g() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_gt() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
@@ -425,61 +428,61 @@ Token* ParserForXMLSchema::processBacksolidus_i() {
 
 Token* ParserForXMLSchema::processBacksolidus_lt() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_X() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_Z() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBacksolidus_z() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processBackReference() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processCondition() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processIndependent() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processModifiers() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 Token* ParserForXMLSchema::processParen2() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
 RangeToken* ParserForXMLSchema::parseSetOperations() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
 }
 
@@ -526,7 +529,7 @@ bool ParserForXMLSchema::checkQuestion(const int off) {
 XMLInt32 ParserForXMLSchema::decodeEscaped() {
 
     if (getState() != REGX_T_BACKSOLIDUS)
-        ThrowXML(ParseException,XMLExcepts::Parser_Next1);;
+        ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Next1, getMemoryManager());
 
     XMLInt32 ch = getCharData();
 
@@ -559,7 +562,7 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
 		{
         XMLCh chString[] = {chBackSlash, ch, chNull};
         chString[1] = ch;
-        ThrowXML1(ParseException,XMLExcepts::Parser_Process2, chString);
+        ThrowXMLwithMemMgr1(ParseException,XMLExcepts::Parser_Process2, chString, getMemoryManager());
         }
     }
 

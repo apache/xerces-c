@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/11/13 23:19:49  peiyongz
  * initSize
  *
@@ -114,8 +117,8 @@ DTDAttDefList::DTDAttDefList(RefHashTableOf<DTDAttDef>* const listToUse, MemoryM
 ,fSize(0)
 ,fCount(0)
 {
-    fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(listToUse);
-    fArray = (DTDAttDef **)((getMemoryManager())->allocate( sizeof(DTDAttDef*) << 1));
+    fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(listToUse, false, manager);
+    fArray = (DTDAttDef **)(manager->allocate( sizeof(DTDAttDef*) << 1));
     fSize = 2;
 }
 
@@ -200,7 +203,7 @@ unsigned int DTDAttDefList::getAttDefCount() const
 XMLAttDef &DTDAttDefList::getAttDef(unsigned int index) 
 {
     if(index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
     return *(fArray[index]);
 }
 
@@ -210,7 +213,7 @@ XMLAttDef &DTDAttDefList::getAttDef(unsigned int index)
 const XMLAttDef &DTDAttDefList::getAttDef(unsigned int index) const 
 {
     if(index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
     return *(fArray[index]);
 }
 
@@ -249,7 +252,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
         serEng >> fSize;
         if (!fEnum && fList)
         {
-             fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(fList);
+             fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(fList, false, getMemoryManager());
         }
         if(fSize) 
         {

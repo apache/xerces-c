@@ -134,15 +134,17 @@ protected:
     // -----------------------------------------------------------------------
     //  Protected Constructors
     // -----------------------------------------------------------------------
-    Op(const short type);
+    Op(const short type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     friend class OpFactory;
+
+    MemoryManager* const fMemoryManager;
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    Op(const Op&) {ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);};
-    Op& operator=(const Op&) {ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);};
+    Op(const Op&);
+    Op& operator=(const Op&);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -163,7 +165,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	CharOp(const short type, const XMLInt32 charData);
+	CharOp(const short type, const XMLInt32 charData, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~CharOp() {}
 
 	// -----------------------------------------------------------------------
@@ -208,7 +210,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ChildOp(const short type);
+	ChildOp(const short type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ChildOp() {}
 
 	// -----------------------------------------------------------------------
@@ -231,7 +233,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2);
+	ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ModifierOp() {}
 
 	// -----------------------------------------------------------------------
@@ -251,7 +253,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RangeOp(const short type, const Token* const token);
+	RangeOp(const short type, const Token* const token, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~RangeOp() {}
 
 	// -----------------------------------------------------------------------
@@ -269,7 +271,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	StringOp(const short type, const XMLCh* const literal);
+	StringOp(const short type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~StringOp() { delete[] fLiteral;}
 
 	// -----------------------------------------------------------------------
@@ -289,7 +291,7 @@ public:
     // -----------------------------------------------------------------------
 	ConditionOp(const short type, const int refNo,
 				const Op* const condFlow, const Op* const yesFlow,
-				const Op* const noFlow);
+				const Op* const noFlow, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ConditionOp() {}
 
 	// -----------------------------------------------------------------------

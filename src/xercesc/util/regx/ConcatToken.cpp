@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -83,8 +86,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
 // ---------------------------------------------------------------------------
-ConcatToken::ConcatToken(Token* const tok1, Token* const tok2)
-    : Token(Token::T_CONCAT)
+ConcatToken::ConcatToken(Token* const tok1, Token* const tok2, MemoryManager* const manager)
+    : Token(Token::T_CONCAT, manager)
     , fChild1(tok1)
     , fChild2(tok2)
 {

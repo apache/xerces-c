@@ -73,7 +73,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ConcatToken(Token* const tok1, Token* const tok2);
+	ConcatToken(Token* const tok1, Token* const tok2
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ConcatToken();
 
 	// -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/10/01 16:32:39  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -193,7 +196,7 @@ XMLCh* XMLStringTokenizer::nextToken() {
             (endIndex - startIndex + 1) * sizeof(XMLCh)
         );//new XMLCh[(endIndex - startIndex) + 1];
 
-        XMLString::subString(tokStr, fString, startIndex, endIndex);
+        XMLString::subString(tokStr, fString, startIndex, endIndex, fMemoryManager);
         fTokens->addElement(tokStr);
 
         return tokStr;

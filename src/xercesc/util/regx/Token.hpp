@@ -65,6 +65,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -81,7 +82,9 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	Token(const unsigned short tokType);
+	Token(const unsigned short tokType
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 	virtual ~Token();
 
 	// -----------------------------------------------------------------------
@@ -177,6 +180,8 @@ private:
     //  Private data members
 	// -----------------------------------------------------------------------
 	unsigned short fTokenType;
+protected:
+    MemoryManager* const    fMemoryManager;
 };
 
 
@@ -254,7 +259,7 @@ inline bool Token::isSet(const int options, const unsigned int flag) {
 // ---------------------------------------------------------------------------
 inline void Token::addChild(Token* const, TokenFactory* const) {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 // ---------------------------------------------------------------------------
@@ -262,32 +267,32 @@ inline void Token::addChild(Token* const, TokenFactory* const) {
 // ---------------------------------------------------------------------------
 inline void Token::addRange(const XMLInt32, const XMLInt32) {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 inline void Token::mergeRanges(const Token *const) {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 inline void Token::sortRanges() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 inline void Token::compactRanges() {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 inline void Token::subtractRanges(RangeToken* const) {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 inline void Token::intersectRanges(RangeToken* const) {
 
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

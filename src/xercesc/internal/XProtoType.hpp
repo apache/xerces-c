@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.2  2003/09/23 18:12:19  peiyongz
  * Macro re-organized: provide create/nocreate macros for abstract and
  * nonabstract classes
@@ -70,7 +73,7 @@
 #if !defined(XPROTOTYPE_HPP)
 #define XPROTOTYPE_HPP
 
-#include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -84,7 +87,9 @@ public:
            void       store(XSerializeEngine& serEng) const;
 
     static void        load(XSerializeEngine&          serEng
-                          , XMLByte*          const    name);
+                          , XMLByte*          const    name
+                          , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+                          );
 
     // -------------------------------------------------------------------------------
     //  data

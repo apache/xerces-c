@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.16  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -146,24 +149,26 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 
-#define  REPORT_FACET_ERROR(val1, val2, except_code)    \
-  ThrowXML2(InvalidDatatypeFacetException               \
+#define  REPORT_FACET_ERROR(val1, val2, except_code, manager)    \
+  ThrowXMLwithMemMgr2(InvalidDatatypeFacetException               \
           , except_code                                 \
           , val1->getFormattedString()                  \
-          , val2->getFormattedString());
+          , val2->getFormattedString()                  \
+          , manager);
 
-#define  FROM_BASE_VALUE_SPACE(val, facetFlag, except_code)   \
+#define  FROM_BASE_VALUE_SPACE(val, facetFlag, except_code, manager)   \
   if ((thisFacetsDefined & facetFlag) != 0)                   \
 {                                                             \
     try                                                       \
 {                                                             \
-        numBase->checkContent(val->getRawData(), (ValidationContext*)0, false);      \
+        numBase->checkContent(val->getRawData(), (ValidationContext*)0, false, manager);      \
 }                                                             \
     catch ( XMLException& )                                   \
 {                                                             \
-        ThrowXML1(InvalidDatatypeFacetException               \
+        ThrowXMLwithMemMgr1(InvalidDatatypeFacetException               \
                 , except_code                                 \
-                , val->getRawData());                         \
+                , val->getRawData()                           \
+                , manager);                                   \
 }                                                             \
 }
 
@@ -218,7 +223,8 @@ AbstractNumericFacetValidator::AbstractNumericFacetValidator(
 //
 //  P1. Enumeration
 //
-void AbstractNumericFacetValidator::init(RefArrayVectorOf<XMLCh>* const enums)
+void AbstractNumericFacetValidator::init(RefArrayVectorOf<XMLCh>* const enums
+                                         , MemoryManager* const manager)
 {
 
     fStrEnumeration = enums; // save the literal value
@@ -229,9 +235,9 @@ void AbstractNumericFacetValidator::init(RefArrayVectorOf<XMLCh>* const enums)
         setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
     }
 
-    assignFacet();
-    inspectFacet();
-    inspectFacetBase();
+    assignFacet(manager);
+    inspectFacet(manager);
+    inspectFacetBase(manager);
     inheritFacet();
 }
 
@@ -240,7 +246,7 @@ void AbstractNumericFacetValidator::init(RefArrayVectorOf<XMLCh>* const enums)
 //        assign common facets
 //        assign additional facet
 //
-void AbstractNumericFacetValidator::assignFacet()
+void AbstractNumericFacetValidator::assignFacet(MemoryManager* const manager)
 {
 
     RefHashTableOf<KVStringPair>* facets = getFacets();
@@ -251,7 +257,7 @@ void AbstractNumericFacetValidator::assignFacet()
     XMLCh* key;
     XMLCh* value;
 
-    RefHashTableOfEnumerator<KVStringPair> e(facets);
+    RefHashTableOfEnumerator<KVStringPair> e(facets, false, manager);
 
     while (e.hasMoreElements())
     {
@@ -274,7 +280,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MaxIncl, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MaxIncl, value, manager);
             }
             setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
         }
@@ -286,7 +292,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MaxExcl, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MaxExcl, value, manager);
             }
             setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);
         }
@@ -298,7 +304,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MinIncl, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MinIncl, value, manager);
             }
             setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);
         }
@@ -310,7 +316,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MinExcl, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MinExcl, value, manager);
             }
             setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
         }
@@ -320,16 +326,16 @@ void AbstractNumericFacetValidator::assignFacet()
             bool         retStatus;
             try
             {
-                retStatus = XMLString::textToBin(value, val);
+                retStatus = XMLString::textToBin(value, val, fMemoryManager);
             }
             catch (RuntimeException&)
             {
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed, manager);
             }
 
             if (!retStatus)
             {
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed, manager);
             }
 
             setFixed(val);
@@ -338,7 +344,7 @@ void AbstractNumericFacetValidator::assignFacet()
         }
         else
         {
-            assignAdditionalFacet(key, value);
+            assignAdditionalFacet(key, value, manager);
         }
 
     }//while
@@ -350,7 +356,7 @@ void AbstractNumericFacetValidator::assignFacet()
 //         check common facets
 //         check Additional Facet Constraint
 //
-void AbstractNumericFacetValidator::inspectFacet()
+void AbstractNumericFacetValidator::inspectFacet(MemoryManager* const manager)
 {
 
     int thisFacetsDefined = getFacetsDefined();
@@ -366,13 +372,13 @@ void AbstractNumericFacetValidator::inspectFacet()
     // check 4.3.8.c1 error: maxInclusive + maxExclusive
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
         ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) )
-        ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_max_Incl_Excl);
+        ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_max_Incl_Excl, manager);
 
     // non co-existence checking
     // check 4.3.9.c1 error: minInclusive + minExclusive
     if (((thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
         ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) )
-        ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_min_Incl_Excl);
+        ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_min_Incl_Excl, manager);
 
     //
     // minExclusive < minInclusive <= maxInclusive < maxExclusive
@@ -386,7 +392,8 @@ void AbstractNumericFacetValidator::inspectFacet()
         {
             REPORT_FACET_ERROR(thisMinInclusive
                              , thisMaxInclusive
-                             , XMLExcepts::FACET_maxIncl_minIncl)
+                             , XMLExcepts::FACET_maxIncl_minIncl
+                             , manager)
         }
     }
 
@@ -399,7 +406,8 @@ void AbstractNumericFacetValidator::inspectFacet()
         {
             REPORT_FACET_ERROR(thisMinExclusive
                              , thisMaxExclusive
-                             , XMLExcepts::FACET_maxExcl_minExcl)
+                             , XMLExcepts::FACET_maxExcl_minExcl
+                             , manager)
         }
     }
 
@@ -412,7 +420,8 @@ void AbstractNumericFacetValidator::inspectFacet()
         {
             REPORT_FACET_ERROR(thisMinExclusive
                              , thisMaxInclusive
-                             , XMLExcepts::FACET_maxIncl_minExcl)
+                             , XMLExcepts::FACET_maxIncl_minExcl
+                             , manager)
         }
     }
 
@@ -425,11 +434,12 @@ void AbstractNumericFacetValidator::inspectFacet()
         {
             REPORT_FACET_ERROR(thisMinInclusive
                              , thisMaxExclusive
-                             , XMLExcepts::FACET_maxExcl_minIncl)
+                             , XMLExcepts::FACET_maxExcl_minIncl
+                             , manager)
         }
     }
 
-    checkAdditionalFacetConstraints();
+    checkAdditionalFacetConstraints(manager);
 
 }// end of inspectFacet()
 
@@ -439,7 +449,7 @@ void AbstractNumericFacetValidator::inspectFacet()
 //         check enumeration
 //         check Additional Facet Constraint
 //
-void AbstractNumericFacetValidator::inspectFacetBase()
+void AbstractNumericFacetValidator::inspectFacetBase(MemoryManager* const manager)
 {
 
     AbstractNumericFacetValidator* numBase = (AbstractNumericFacetValidator*) getBaseValidator();
@@ -488,14 +498,16 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxInclusive
                                  , baseMaxInclusive
-                                 , XMLExcepts::FACET_maxIncl_base_fixed)
+                                 , XMLExcepts::FACET_maxIncl_base_fixed
+                                 , manager)
             }
 
             if (result == 1 || result == INDETERMINATE)
             {
                 REPORT_FACET_ERROR(thisMaxInclusive
                                  , baseMaxInclusive
-                                 , XMLExcepts::FACET_maxIncl_base_maxIncl)
+                                 , XMLExcepts::FACET_maxIncl_base_maxIncl
+                                 , manager)
             }
 
         }
@@ -507,7 +519,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxInclusive
                                  , baseMaxExclusive
-                                 , XMLExcepts::FACET_maxIncl_base_maxExcl)
+                                 , XMLExcepts::FACET_maxIncl_base_maxExcl
+                                 , manager)
             }
         }
 
@@ -519,7 +532,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxInclusive
                                  , baseMinInclusive
-                                 , XMLExcepts::FACET_maxIncl_base_minIncl)
+                                 , XMLExcepts::FACET_maxIncl_base_minIncl
+                                 , manager)
             }
         }
 
@@ -530,7 +544,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxInclusive
                                  , baseMinExclusive
-                                 , XMLExcepts::FACET_maxIncl_base_minExcl)
+                                 , XMLExcepts::FACET_maxIncl_base_minExcl
+                                 , manager)
             }
         }
 
@@ -553,14 +568,16 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxExclusive
                                  , baseMaxExclusive
-                                 , XMLExcepts::FACET_maxExcl_base_fixed)
+                                 , XMLExcepts::FACET_maxExcl_base_fixed
+                                 , manager)
              }
 
             if (result == 1 || result == INDETERMINATE)
             {
                 REPORT_FACET_ERROR(thisMaxExclusive
                                  , baseMaxExclusive
-                                 , XMLExcepts::FACET_maxExcl_base_maxExcl)
+                                 , XMLExcepts::FACET_maxExcl_base_maxExcl
+                                 , manager)
             }
 
             /**
@@ -576,14 +593,16 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 FROM_BASE_VALUE_SPACE(thisMaxExclusive
                         , DatatypeValidator::FACET_MAXEXCLUSIVE
-                        , XMLExcepts::FACET_maxExcl_notFromBase)
+                        , XMLExcepts::FACET_maxExcl_notFromBase
+                        , manager)
             }
         }
         else  // base has no maxExclusive
         {
             FROM_BASE_VALUE_SPACE(thisMaxExclusive
                         , DatatypeValidator::FACET_MAXEXCLUSIVE
-                        , XMLExcepts::FACET_maxExcl_notFromBase)
+                        , XMLExcepts::FACET_maxExcl_notFromBase
+                        , manager)
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
@@ -593,7 +612,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxExclusive
                                  , baseMaxInclusive
-                                 , XMLExcepts::FACET_maxExcl_base_maxIncl)
+                                 , XMLExcepts::FACET_maxExcl_base_maxIncl
+                                 , manager)
             }
         }
 
@@ -604,7 +624,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxExclusive
                                  , baseMinExclusive
-                                 , XMLExcepts::FACET_maxExcl_base_minExcl)
+                                 , XMLExcepts::FACET_maxExcl_base_minExcl
+                                 , manager)
             }
         }
 
@@ -615,7 +636,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxExclusive
                                  , baseMinInclusive
-                                 , XMLExcepts::FACET_maxExcl_base_minIncl)
+                                 , XMLExcepts::FACET_maxExcl_base_minIncl
+                                 , manager)
             }
         }
     }
@@ -637,14 +659,16 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinExclusive
                                  , baseMinExclusive
-                                 , XMLExcepts::FACET_minExcl_base_fixed)
+                                 , XMLExcepts::FACET_minExcl_base_fixed
+                                 , manager)
             }
 
             if (result == -1 || result == INDETERMINATE)
             {
                 REPORT_FACET_ERROR(thisMinExclusive
                                  , baseMinExclusive
-                                 , XMLExcepts::FACET_minExcl_base_minExcl)
+                                 , XMLExcepts::FACET_minExcl_base_minExcl
+                                 , manager)
             }
 
             /**
@@ -661,7 +685,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 FROM_BASE_VALUE_SPACE(thisMinExclusive
                         , DatatypeValidator::FACET_MINEXCLUSIVE
-                        , XMLExcepts::FACET_minExcl_notFromBase)
+                        , XMLExcepts::FACET_minExcl_notFromBase
+                        , manager)
             }
         }
         else // base has no minExclusive
@@ -669,7 +694,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
 
             FROM_BASE_VALUE_SPACE(thisMinExclusive
                         , DatatypeValidator::FACET_MINEXCLUSIVE
-                        , XMLExcepts::FACET_minExcl_notFromBase)
+                        , XMLExcepts::FACET_minExcl_notFromBase
+                        , manager)
         }
 
         if (( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
@@ -679,8 +705,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinExclusive
                                  , baseMaxInclusive
-
-                                 , XMLExcepts::FACET_minExcl_base_maxIncl)
+                                 , XMLExcepts::FACET_minExcl_base_maxIncl
+                                 , manager)
             }
         }
 
@@ -691,7 +717,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinExclusive
                                  , baseMinInclusive
-                                 , XMLExcepts::FACET_minExcl_base_minIncl)
+                                 , XMLExcepts::FACET_minExcl_base_minIncl
+                                 , manager)
             }
         }
 
@@ -702,7 +729,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinExclusive
                                  , baseMaxExclusive
-                                 , XMLExcepts::FACET_minExcl_base_maxExcl)
+                                 , XMLExcepts::FACET_minExcl_base_maxExcl
+                                 , manager)
             }
         }
 
@@ -726,14 +754,16 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinInclusive
                                  , baseMinInclusive
-                                 , XMLExcepts::FACET_minIncl_base_fixed)
+                                 , XMLExcepts::FACET_minIncl_base_fixed
+                                 , manager)
             }
 
             if (result == -1 || result == INDETERMINATE)
             {
                 REPORT_FACET_ERROR(thisMinInclusive
                                  , baseMinInclusive
-                                 , XMLExcepts::FACET_minIncl_base_minIncl)
+                                 , XMLExcepts::FACET_minIncl_base_minIncl
+                                 , manager)
             }
         }
 
@@ -744,7 +774,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinInclusive
                                  , baseMaxInclusive
-                                 , XMLExcepts::FACET_minIncl_base_maxIncl)
+                                 , XMLExcepts::FACET_minIncl_base_maxIncl
+                                 , manager)
             }
         }
 
@@ -755,7 +786,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinInclusive
                                  , baseMinExclusive
-                                 , XMLExcepts::FACET_minIncl_base_minExcl)
+                                 , XMLExcepts::FACET_minIncl_base_minExcl
+                                 , manager)
             }
         }
 
@@ -766,13 +798,14 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinInclusive
                                  , baseMaxExclusive
-                                 , XMLExcepts::FACET_minIncl_base_maxExcl)
+                                 , XMLExcepts::FACET_minIncl_base_maxExcl
+                                 , manager)
             }
         }
 
     }
 
-    checkAdditionalFacetConstraintsBase();
+    checkAdditionalFacetConstraintsBase(manager);
 
     // check 4.3.5.c0 must: enumeration values from the value space of base
     //
@@ -783,7 +816,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     if ( ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0) &&
         ( fStrEnumeration ))
     {
-        setEnumeration();
+        setEnumeration(manager);
     }
 
     //
@@ -793,11 +826,13 @@ void AbstractNumericFacetValidator::inspectFacetBase()
 
     FROM_BASE_VALUE_SPACE(thisMaxInclusive
                         , DatatypeValidator::FACET_MAXINCLUSIVE
-                        , XMLExcepts::FACET_maxIncl_notFromBase)
+                        , XMLExcepts::FACET_maxIncl_notFromBase
+                        , manager)
 
     FROM_BASE_VALUE_SPACE(thisMinInclusive
                         , DatatypeValidator::FACET_MININCLUSIVE
-                        , XMLExcepts::FACET_minIncl_notFromBase)
+                        , XMLExcepts::FACET_minIncl_notFromBase
+                        , manager)
 
 } //end of inspectFacetBase
 
@@ -876,6 +911,34 @@ const RefArrayVectorOf<XMLCh>* AbstractNumericFacetValidator::getEnumString() co
 {
 	return (fEnumerationInherited? getBaseValidator()->getEnumString() : fStrEnumeration );
 }
+
+
+void AbstractNumericFacetValidator::checkAdditionalFacetConstraints(MemoryManager* const manager) const
+{
+    return;
+}
+
+void AbstractNumericFacetValidator::checkAdditionalFacetConstraintsBase(MemoryManager* const manager) const
+{
+    return;
+}
+
+void AbstractNumericFacetValidator::inheritAdditionalFacet()
+{
+    return;
+}
+
+void AbstractNumericFacetValidator::assignAdditionalFacet( const XMLCh* const key
+                                                   , const XMLCh* const
+                                                   , MemoryManager* const manager)
+{
+    ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
+            , XMLExcepts::FACET_Invalid_Tag
+            , key
+            , manager);
+}
+
+
 
 /***
  * Support for Serialization/De-serialization

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/11/12 20:31:33  peiyongz
  * Using ValidationContext to validate()
  *
@@ -123,7 +126,7 @@ IDDatatypeValidator::IDDatatypeValidator(
                         , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ID, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 IDDatatypeValidator::~IDDatatypeValidator()
@@ -152,13 +155,14 @@ IDDatatypeValidator::IDDatatypeValidator(
 }
 
 void IDDatatypeValidator::validate(const XMLCh*             const content
-                                 ,       ValidationContext* const context)
+                                 ,       ValidationContext* const context
+                                 ,       MemoryManager*     const manager)
 {
     // use StringDatatypeValidator (which in turn, invoke
     // the baseValidator) to validate content against
     // facets if any.
     //
-    StringDatatypeValidator::validate(content, context);
+    StringDatatypeValidator::validate(content, context, manager);
 
     // storing IDs to the global ID table
     if (context)
@@ -168,16 +172,18 @@ void IDDatatypeValidator::validate(const XMLCh*             const content
 
 }
 
-void IDDatatypeValidator::checkValueSpace(const XMLCh* const content)
+void IDDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                          , MemoryManager* const manager)
 {
     //
     // 3.3.8 check must: "NCName"
     //
     if ( !XMLString::isValidNCName(content))
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Invalid_NCName
-                , content);
+                , content
+                , manager);
     }
 
 }

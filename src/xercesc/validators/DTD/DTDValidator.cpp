@@ -99,7 +99,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
     //  the element decl in our own way of looking at them.
     //
     if (!elemDecl)
-        ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_InvalidElemId, getScanner()->getMemoryManager());
 
     //
     //  Get the content spec type of this element. This will tell us what
@@ -131,7 +131,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
     }
      else
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMType, getScanner()->getMemoryManager());
     }
 
     // Went ok, so return success
@@ -512,7 +512,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
                   if(reuseGrammar && reason == XMLElementDecl::JustFaultIn){
                   }
                   else
-                      ThrowXML(RuntimeException, XMLExcepts::DTD_UnknownCreateReason);
+                      ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::DTD_UnknownCreateReason, getScanner()->getMemoryManager());
                 #endif
             }
         }

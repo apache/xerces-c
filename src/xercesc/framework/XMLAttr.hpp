@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/11/24 05:19:37  neilg
  * update XMLAttr class to carry information needed by DOMTypeInfo
  *
@@ -593,7 +596,7 @@ inline const XMLCh* XMLAttr::getValidatingTypeName() const
     }
     else
     {
-        return XMLAttDef::getAttTypeString(fType);
+        return XMLAttDef::getAttTypeString(fType, fMemoryManager);
     }
 }
 

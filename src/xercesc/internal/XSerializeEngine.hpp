@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/25 20:37:40  jberry
  * Cleanup build errors/warnings from CodeWarrior
  *
@@ -664,7 +667,7 @@ inline void XSerializeEngine::Assert(bool toEval
 {
     if (!toEval)
     {
-        ThrowXML(XSerializationException, toThrow);  
+        ThrowXMLwithMemMgr(XSerializationException, toThrow, fMemoryManager);  
     }
 
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -166,7 +169,7 @@ void ContentLeafNameTypeVector::setValues
 QName* ContentLeafNameTypeVector::getLeafNameAt(const unsigned int pos) const
 {
     if (pos >= fLeafCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     return fLeafNames[pos];
 }
@@ -175,7 +178,7 @@ const ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
        (const unsigned int pos) const
 {
     if (pos >= fLeafCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
 	return fLeafTypes[pos];
 }

@@ -123,19 +123,21 @@ const unsigned int XMLAttDef::fgInvalidAttrId = 0xFFFFFFFE;
 // ---------------------------------------------------------------------------
 //  XMLAttDef: Public, static methods
 // ---------------------------------------------------------------------------
-const XMLCh* XMLAttDef::getAttTypeString(const XMLAttDef::AttTypes attrType)
+const XMLCh* XMLAttDef::getAttTypeString(const XMLAttDef::AttTypes attrType
+                                         , MemoryManager* const manager)
 {
     // Check for an invalid attribute type and return a null
     if ((attrType < AttTypes_Min) || (attrType > AttTypes_Max))
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttDef_BadAttType);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttDef_BadAttType, manager);
     return gAttTypeStrings[attrType];
 }
 
-const XMLCh* XMLAttDef::getDefAttTypeString(const XMLAttDef::DefAttTypes attrType)
+const XMLCh* XMLAttDef::getDefAttTypeString(const XMLAttDef::DefAttTypes attrType
+                                            , MemoryManager* const manager)
 {
     // Check for an invalid attribute type and return a null
     if ((attrType < DefAttTypes_Min) || (attrType > DefAttTypes_Max))
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttDef_BadDefAttType);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttDef_BadDefAttType, manager);
     return gDefAttTypeStrings[attrType];
 }
 

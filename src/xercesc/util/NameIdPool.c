@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/10/29 16:18:05  peiyongz
  * size() added and Reset() bug fixed
  *
@@ -139,7 +142,7 @@ NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
     , fHashModulus(hashModulus)
 {
     if (!fHashModulus)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
     fBucketList = (NameIdPoolBucketElem<TElem>**) fMemoryManager->allocate
@@ -244,7 +247,7 @@ NameIdPool<TElem>::getById(const unsigned int elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_InvalidId, fMemoryManager);
 
     return fIdPtrs[elemId];
 }
@@ -254,12 +257,16 @@ const TElem* NameIdPool<TElem>::getById(const unsigned int elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_InvalidId, fMemoryManager);
 
     return fIdPtrs[elemId];
 }
 
-
+template <class TElem>
+MemoryManager* NameIdPool<TElem>::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  NameIdPool: Setters
@@ -271,11 +278,12 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
     unsigned int hashVal;
     if (findBucketElem(elemToAdopt->getKey(), hashVal))
     {
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             IllegalArgumentException
             , XMLExcepts::Pool_ElemAlreadyExists
             , elemToAdopt->getKey()
+            , fMemoryManager
         );
     }
 
@@ -327,10 +335,10 @@ NameIdPoolBucketElem<TElem>* NameIdPool<TElem>::
 findBucketElem(const XMLCh* const key, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus);
+    hashVal = XMLString::hash(key, fHashModulus, fMemoryManager);
 
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::Pool_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
@@ -348,10 +356,10 @@ const NameIdPoolBucketElem<TElem>* NameIdPool<TElem>::
 findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus);
+    hashVal = XMLString::hash(key, fHashModulus, fMemoryManager);
 
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::Pool_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     const NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
@@ -371,11 +379,13 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
 //  NameIdPoolEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem> NameIdPoolEnumerator<TElem>::
-NameIdPoolEnumerator(NameIdPool<TElem>* const toEnum) :
+NameIdPoolEnumerator(NameIdPool<TElem>* const toEnum
+                     , MemoryManager* const manager) :
 
     XMLEnumerator<TElem>()
     , fCurIndex(0)
     , fToEnum(toEnum)
+    , fMemoryManager(manager)
 {
         Reset();
 }
@@ -385,6 +395,7 @@ NameIdPoolEnumerator(const NameIdPoolEnumerator<TElem>& toCopy) :
 
     fCurIndex(toCopy.fCurIndex)
     , fToEnum(toCopy.fToEnum)
+    , fMemoryManager(toCopy.fMemoryManager)
 {
 }
 
@@ -402,12 +413,11 @@ operator=(const NameIdPoolEnumerator<TElem>& toAssign)
 {
     if (this == &toAssign)
         return *this;
-
-    fCurIndex   = toAssign.fCurIndex;
-    fToEnum     = toAssign.fToEnum;
+    fMemoryManager = toAssign.fMemoryManager;
+    fCurIndex      = toAssign.fCurIndex;
+    fToEnum        = toAssign.fToEnum;
     return *this;
 }
-
 
 // ---------------------------------------------------------------------------
 //  NameIdPoolEnumerator: Enum interface
@@ -425,7 +435,7 @@ template <class TElem> TElem& NameIdPoolEnumerator<TElem>::nextElement()
 {
     // If our index is zero or past the end, then we are done
     if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     // Return the current element and bump the index
     return *fToEnum->fIdPtrs[fCurIndex++];

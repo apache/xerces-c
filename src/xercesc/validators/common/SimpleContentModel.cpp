@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/11/20 18:12:20  knoaman
  * Use a bitwise operation to check the node type.
  *
@@ -331,7 +334,7 @@ SimpleContentModel::validateContent(QName** const       children
             break;
 
         default :
-            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
             break;
     }
     return -1;
@@ -491,7 +494,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
             break;
 
         default :
-            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
             break;
     }
     return -1;

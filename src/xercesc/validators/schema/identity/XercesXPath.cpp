@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:41  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/10/17 21:18:04  peiyongz
  * using XTemplateSerializer
  *
@@ -444,7 +447,7 @@ void XercesXPath::checkForSelectedAttributes() {
 
         if (stepSize) {
             if (locPath->getStep(stepSize - 1)->getAxisType() == XercesStep::ATTRIBUTE) {
-                ThrowXML(XPathException, XMLExcepts::XPath_NoAttrSelector);
+                ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoAttrSelector, fMemoryManager);
             }
 		}
     }
@@ -480,13 +483,13 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         case  XercesXPath::EXPRTOKEN_OPERATOR_UNION:
             {
                 if (i == 0) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_NoUnionAtStart);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoUnionAtStart, fMemoryManager);
                 }
 
                 int stepsSize = stepsVector->size();
 
                 if (stepsSize == 0) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_NoMultipleUnion);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoMultipleUnion, fMemoryManager);
                 }
 
                 fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
@@ -505,7 +508,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             {
                 // consume QName token
                 if (i == tokenCount - 1) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_MissingAttr);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_MissingAttr, fMemoryManager);
                 }
 
                 aToken = tokens.elementAt(++i);
@@ -513,7 +516,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 if (aToken != XercesXPath::EXPRTOKEN_NAMETEST_QNAME
                     && aToken!= XercesXPath::EXPRTOKEN_NAMETEST_ANY
                     && aToken!= XercesXPath::EXPRTOKEN_NAMETEST_NAMESPACE) {
-                        ThrowXML(XPathException, XMLExcepts::XPath_ExpectedToken1);
+                        ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_ExpectedToken1, fMemoryManager);
                 }
 
                 bool isNamespaceAtt=false;
@@ -545,7 +548,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                         }
 
                         if (aToken != -1 && scopeContext && uri == fEmptyNamespaceId) {
-                            ThrowXML1(XPathException, XMLExcepts::XPath_PrefixNoURI, prefix);
+                            ThrowXMLwithMemMgr1(XPathException, XMLExcepts::XPath_PrefixNoURI, prefix, fMemoryManager);
                         }
 
                         if (isNamespaceAtt) {
@@ -576,7 +579,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         case XercesXPath::EXPRTOKEN_DOUBLE_COLON:
             {
                 // should never have a bare double colon
-                ThrowXML(XPathException, XMLExcepts::XPath_NoDoubleColon);
+                ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoDoubleColon, fMemoryManager);
             }
         case XercesXPath::EXPRTOKEN_AXISNAME_CHILD:
             {
@@ -584,7 +587,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 i++;
 
                 if (i == tokenCount - 1) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_ExpectedStep1);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_ExpectedStep1, fMemoryManager);
                 }
 
                 firstTokenOfLocationPath=false;
@@ -617,7 +620,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                 }
 
                 if (aToken != -1 && scopeContext && uri == fEmptyNamespaceId) {
-                    ThrowXML1(XPathException, XMLExcepts::XPath_PrefixNoURI, prefix);
+                    ThrowXMLwithMemMgr1(XPathException, XMLExcepts::XPath_PrefixNoURI, prefix, fMemoryManager);
                 }
 
                 if (isNamespace) {
@@ -654,7 +657,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                     if (aToken == XercesXPath::EXPRTOKEN_OPERATOR_DOUBLE_SLASH){
 
                         if (++i == tokenCount - 1) {
-                            ThrowXML(XPathException, XMLExcepts::XPath_ExpectedStep2);
+                            ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_ExpectedStep2, fMemoryManager);
                         }
 
                         if (i+1 < tokenCount)	{
@@ -662,7 +665,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                             aToken = tokens.elementAt(i+1);
 
                             if (aToken == XercesXPath::EXPRTOKEN_OPERATOR_SLASH) {
-                                ThrowXML(XPathException, XMLExcepts::XPath_NoForwardSlash);
+                                ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoForwardSlash, fMemoryManager);
                             }
                         }
                         // build step
@@ -676,21 +679,21 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             }
         case XercesXPath::EXPRTOKEN_OPERATOR_DOUBLE_SLASH:
             {
-                ThrowXML(XPathException, XMLExcepts::XPath_NoDoubleForwardSlash);
+                ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoDoubleForwardSlash, fMemoryManager);
             }
         case XercesXPath::EXPRTOKEN_OPERATOR_SLASH:
             {
                 if (i == 0) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_NoForwardSlashAtStart);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoForwardSlashAtStart, fMemoryManager);
                 }
 
                 // keep on truckin'
                 if (firstTokenOfLocationPath) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_NoSelectionOfRoot);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoSelectionOfRoot, fMemoryManager);
                 }
 
                 if (i == tokenCount - 1) {
-                    ThrowXML(XPathException, XMLExcepts::XPath_ExpectedStep3);
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_ExpectedStep3, fMemoryManager);
                 }
 
                 firstTokenOfLocationPath=false;
@@ -705,10 +708,10 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
     if (stepsSize == 0) {
         if (!fLocationPaths || fLocationPaths->size() == 0) {
-            ThrowXML(XPathException, XMLExcepts::XPath_EmptyExpr);
+            ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_EmptyExpr, fMemoryManager);
         }
         else {
-            ThrowXML(XPathException, XMLExcepts::XPath_NoUnionAtEnd);
+            ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoUnionAtEnd, fMemoryManager);
         }
     }
 
@@ -921,7 +924,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
                     break;
                 }
             } else {
-                ThrowXML(XPathException, XMLExcepts::XPath_InvalidChar);
+                ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_InvalidChar, tokens->getMemoryManager());
             }
 
             break;
@@ -1431,7 +1434,7 @@ int XPathScanner::scanNumber(const XMLCh* const data,
             }
 
             if (part != 0) {
-                ThrowXML(RuntimeException, XMLExcepts::XPath_FindSolution);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::XPath_FindSolution, tokens->getMemoryManager());
             }
         }
     }
@@ -1476,7 +1479,7 @@ void XPathScannerForSchema::addToken(ValueVectorOf<int>* const tokens,
         return;
     }
 
-    ThrowXML(XPathException, XMLExcepts::XPath_TokenNotSupported);
+    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_TokenNotSupported, tokens->getMemoryManager());
 }
 
 XERCES_CPP_NAMESPACE_END

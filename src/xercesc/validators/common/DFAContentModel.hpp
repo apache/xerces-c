@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -342,7 +345,7 @@ DFAContentModel::getNextState(const unsigned int currentState,
     }
 
     if (currentState >= fTransTableSize || elementIndex >= fElemMapSize) {
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
     }
 
     return fTransTable[currentState][elementIndex];

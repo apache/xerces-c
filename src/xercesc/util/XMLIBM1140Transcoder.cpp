@@ -222,8 +222,9 @@ XMLCh XMLIBM1140Transcoder::xlatThisOne(const XMLByte toXlat)
 // ---------------------------------------------------------------------------
 //  XMLIBM1140Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLIBM1140Transcoder::XMLIBM1140Transcoder( const   XMLCh* const encodingName
-                                            , const unsigned int blockSize) :
+XMLIBM1140Transcoder::XMLIBM1140Transcoder( const   XMLCh* const    encodingName
+                                            , const unsigned int    blockSize
+                                            , MemoryManager* const  manager) :
     XML256TableTranscoder
     (
         encodingName
@@ -231,6 +232,7 @@ XMLIBM1140Transcoder::XMLIBM1140Transcoder( const   XMLCh* const encodingName
         , gFromTable
         , gToTable
         , gToTableSz
+        , manager
     )
 {
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:41  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/12/16 18:41:15  knoaman
  * Make IC_Field stateless
  *
@@ -111,7 +114,7 @@ FieldActivator::FieldActivator(const FieldActivator& other)
     , fMemoryManager(other.fMemoryManager)
 {
     fMayMatch = new (fMemoryManager) ValueHashTableOf<bool>(29, new (fMemoryManager) HashPtr(), fMemoryManager);
-    ValueHashTableOfEnumerator<bool> mayMatchEnum(other.fMayMatch);
+    ValueHashTableOfEnumerator<bool> mayMatchEnum(other.fMayMatch, false, fMemoryManager);
 
     // Build key set
     while (mayMatchEnum.hasMoreElements())

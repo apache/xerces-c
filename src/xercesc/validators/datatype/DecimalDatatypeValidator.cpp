@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.18  2003/12/11 21:40:24  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -203,15 +206,15 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(MemoryManager* const manager)
 DecimalDatatypeValidator::DecimalDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefArrayVectorOf<XMLCh>*           const enums
+                        , RefArrayVectorOf<XMLCh>*      const enums
                         , const int                           finalSet
-                        , MemoryManager* const manager)
+                        , MemoryManager*                const manager)
 :AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
 , fCompareData(0)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DecimalDatatypeValidator::~DecimalDatatypeValidator()
@@ -224,10 +227,11 @@ DecimalDatatypeValidator::~DecimalDatatypeValidator()
 // Compare methods
 // -----------------------------------------------------------------------
 int DecimalDatatypeValidator::compare(const XMLCh* const lValue
-                                    , const XMLCh* const rValue)
+                                    , const XMLCh* const rValue
+                                    , MemoryManager* const manager)
 {
-    XMLBigDecimal lObj(lValue, fMemoryManager);
-    XMLBigDecimal rObj(rValue, fMemoryManager);
+    XMLBigDecimal lObj(lValue, manager);
+    XMLBigDecimal rObj(rValue, manager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -259,23 +263,24 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(DatatypeValidator*           
 }
 
 void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
-                                                   , const XMLCh* const value)
+                                                   , const XMLCh* const value
+                                                   , MemoryManager* const manager)
 {
     if (XMLString::equals(key, SchemaSymbols::fgELT_TOTALDIGITS))
     {
         int val;
         try
         {
-            val = XMLString::parseInt(value);
+            val = XMLString::parseInt(value, manager);
         }
         catch (NumberFormatException&)
         {
-            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_TotalDigit, value);
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_TotalDigit, value, manager);
         }
 
         // check 4.3.11.c0 must: totalDigits > 0
         if ( val <= 0 )
-            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_PosInt_TotalDigit, value);
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_PosInt_TotalDigit, value, manager);
 
         setTotalDigits(val);
         setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
@@ -285,25 +290,26 @@ void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
         int val;
         try
         {
-            val = XMLString::parseInt(value);
+            val = XMLString::parseInt(value, manager);
         }
         catch (NumberFormatException&)
         {
-            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_FractDigit, value);
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_FractDigit, value, manager);
         }
 
         // check 4.3.12.c0 must: fractionDigits > 0
         if ( val < 0 )
-            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_FractDigit, value);
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_FractDigit, value, manager);
 
         setFractionDigits(val);
         setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);
     }
     else
     {
-        ThrowXML1(InvalidDatatypeFacetException
+        ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                 , XMLExcepts::FACET_Invalid_Tag
-                , key);
+                , key
+                , manager);
     }
 }
 
@@ -335,7 +341,7 @@ void DecimalDatatypeValidator::inheritAdditionalFacet()
     }
 }
 
-void DecimalDatatypeValidator::checkAdditionalFacetConstraints() const
+void DecimalDatatypeValidator::checkAdditionalFacetConstraints(MemoryManager* const manager) const
 {
     int thisFacetsDefined = getFacetsDefined();
 
@@ -345,18 +351,19 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraints() const
     {
         if ( fFractionDigits > fTotalDigits )
         {
-            XMLString::binToText(getFractionDigits(), value1, BUF_LEN, 10);
-            XMLString::binToText(getTotalDigits(), value2, BUF_LEN, 10);
-            ThrowXML2(InvalidDatatypeFacetException
+            XMLString::binToText(getFractionDigits(), value1, BUF_LEN, 10, manager);
+            XMLString::binToText(getTotalDigits(), value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_TotDigit_FractDigit
                                  , value2
-                                 , value1);
+                                 , value1
+                                 , manager);
         }
     }
 
 }
 
-void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase() const
+void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase(MemoryManager* const manager) const
 {
 
     DecimalDatatypeValidator *numBase = (DecimalDatatypeValidator*) getBaseValidator();
@@ -374,24 +381,26 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase() const
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             ( fTotalDigits > numBase->fTotalDigits ))
         {
-            XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10);
-            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
-            ThrowXML2(InvalidDatatypeFacetException
+            XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10, manager);
+            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_totalDigit_base_totalDigit
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
         }
 
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             (( numBase->getFixed() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             ( fTotalDigits != numBase->fTotalDigits ))
         {
-            XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10);
-            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
-            ThrowXML2(InvalidDatatypeFacetException
+            XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10, manager);
+            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_totalDigit_base_fixed
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
         }
     }
 
@@ -401,24 +410,26 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase() const
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
             ( fFractionDigits > numBase->fFractionDigits ))
         {
-            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
-            XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10);
-            ThrowXML2(InvalidDatatypeFacetException
+            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10, manager);
+            XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_fractDigit_base_fractDigit
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
                         }
 
         // check question error: fractionDigits > base.totalDigits ???
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             ( fFractionDigits > numBase->fTotalDigits ))
         {
-            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
-            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10);
-            ThrowXML2(InvalidDatatypeFacetException
+            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10, manager);
+            XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_fractDigit_base_totalDigit
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
         }
 
         // fractionDigits != base.fractionDigits if (base.fixed)
@@ -426,12 +437,13 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase() const
             (( numBase->getFixed() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
             ( fFractionDigits != numBase->fFractionDigits ))
         {
-            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
-            XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10);
-            ThrowXML2(InvalidDatatypeFacetException
+            XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10, manager);
+            XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                                  , XMLExcepts::FACET_fractDigit_base_fixed
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
         }
     }
 
@@ -440,7 +452,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase() const
 int  DecimalDatatypeValidator::compareValues(const XMLNumber* const lValue
                                            , const XMLNumber* const rValue)
 {
-    return XMLBigDecimal::compareValues((XMLBigDecimal*) lValue, (XMLBigDecimal*) rValue);
+    return XMLBigDecimal::compareValues((XMLBigDecimal*) lValue, (XMLBigDecimal*) rValue,
+                                        ((XMLBigDecimal*)lValue)->getMemoryManager());
 }
 
 void  DecimalDatatypeValidator::setMaxInclusive(const XMLCh* const value)
@@ -463,7 +476,7 @@ void  DecimalDatatypeValidator::setMinExclusive(const XMLCh* const value)
     fMinExclusive = new (fMemoryManager) XMLBigDecimal(value, fMemoryManager);
 }
 
-void DecimalDatatypeValidator::setEnumeration()
+void DecimalDatatypeValidator::setEnumeration(MemoryManager* const manager)
 {
     // check 4.3.5.c0 must: enumeration values from the value space of base
     //
@@ -483,14 +496,15 @@ void DecimalDatatypeValidator::setEnumeration()
         {
             for ( i = 0; i < enumLength; i++)
             {
-                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
+                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
             }
         }
         catch (XMLException&)
         {
-            ThrowXML1(InvalidDatatypeFacetException
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                     , XMLExcepts::FACET_enum_base
-                    , fStrEnumeration->elementAt(i));
+                    , fStrEnumeration->elementAt(i)
+                    , manager);
         }
     }
 
@@ -499,15 +513,15 @@ void DecimalDatatypeValidator::setEnumeration()
     //
     for ( i = 0; i < enumLength; i++)
     {
-        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
+        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
     }
 
-    fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true, fMemoryManager);
+    fEnumeration = new (manager) RefVectorOf<XMLNumber>(enumLength, true, manager);
     fEnumerationInherited = false;
 
     for ( i = 0; i < enumLength; i++)
     {
-        fEnumeration->insertElementAt(new (fMemoryManager) XMLBigDecimal(fStrEnumeration->elementAt(i), fMemoryManager), i);
+        fEnumeration->insertElementAt(new (manager) XMLBigDecimal(fStrEnumeration->elementAt(i), manager), i);
     }
 
 }
@@ -517,13 +531,15 @@ void DecimalDatatypeValidator::setEnumeration()
 // -----------------------------------------------------------------------
 void DecimalDatatypeValidator::checkContent(const XMLCh*             const content
                                            ,      ValidationContext* const context
-                                           ,      bool                     asBase)
+                                           ,      bool                     asBase
+                                           ,      MemoryManager*     const manager)
 {
+    bool deleteLazy = false;
 
     //validate against base validator if any
     DecimalDatatypeValidator *pBase = (DecimalDatatypeValidator*) this->getBaseValidator();
     if (pBase)
-        pBase->checkContent(content, context, true);
+        pBase->checkContent(content, context, true, manager);
 
     int thisFacetsDefined = getFacetsDefined();
 
@@ -533,20 +549,22 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         // lazy construction
         if (getRegex() ==0) {
             try {
+                // REVISIT: cargillmem fMemoryManager vs manager
                 setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), manager);
             }
         }
 
-        if (getRegex()->matches(content) ==false)
+        if (getRegex()->matches(content, manager) ==false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -558,8 +576,12 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
     try {
         if (fCompareData)
             fCompareData->setDecimalValue(content);
-        else
-            fCompareData = new (fMemoryManager) XMLBigDecimal(content, fMemoryManager);
+        else {
+            // REVISIT: cargillmem
+            fCompareData = new (manager) XMLBigDecimal(content, manager);
+            if (manager != fMemoryManager)
+                deleteLazy = true;
+        }
 
         if (getEnumeration())
         {
@@ -572,22 +594,23 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
             }
 
             if (i == enumLength)
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
         }
 
-        boundsCheck(fCompareData);
+        boundsCheck(fCompareData, manager);
 
         if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
         {
             if ( fCompareData->getScale() > fFractionDigits )
             {                
-                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10);
-                XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10);
-                ThrowXML3(InvalidDatatypeFacetException
+                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10, manager);
+                XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10, manager);
+                ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_fractDigit
                                  , fCompareData->getRawData()
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
             }
         }
 
@@ -595,13 +618,14 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         {
             if ( fCompareData->getTotalDigit() > fTotalDigits )
             {                
-                XMLString::binToText(fCompareData->getTotalDigit(), value1, BUF_LEN, 10);
-                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10);
-                ThrowXML3(InvalidDatatypeFacetException
+                XMLString::binToText(fCompareData->getTotalDigit(), value1, BUF_LEN, 10, manager);
+                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
+                ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
                                  , fCompareData->getRawData()
                                  , value1
-                                 , value2);
+                                 , value2
+                                 , manager);
             }
 
             /***
@@ -613,23 +637,29 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
 
             if ( fCompareData->getScale() > fTotalDigits )  
             {                
-                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10);
-                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10);
-                ThrowXML3(InvalidDatatypeFacetException
+                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10, manager);
+                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
+                ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
                                  , fCompareData->getRawData()
                                  , value1
-                                 , value2);
-            }
-        
+                                 , value2
+                                 , manager);
+            }        
         }
-
     }
     catch (XMLException &e)
     {
-       ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage());
+        if (deleteLazy) {
+            delete fCompareData;
+            fCompareData = 0;
+        }
+       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage(), manager);
     }
-
+    if (deleteLazy) {
+        delete fCompareData;
+        fCompareData = 0;
+    }
 }
 
 /***
@@ -678,10 +708,9 @@ const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*  
 {
     //Validate it first
     DecimalDatatypeValidator* temp = (DecimalDatatypeValidator*) this;
-    temp->checkContent(rawData, 0, false);
-
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-
+    temp->checkContent(rawData, 0, false, toUse);
+    
     XMLCanRepGroup::CanRepGroup dvType = DatatypeValidatorFactory::getCanRepGroup(temp);
 
     if ((dvType == XMLCanRepGroup::Decimal_Derivated_signed)   ||
@@ -702,7 +731,6 @@ const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*  
     {
         return XMLString::replicate(rawData, toUse);
     }
-
 }
 
 /***

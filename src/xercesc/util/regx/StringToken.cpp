@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -87,7 +90,7 @@ StringToken::StringToken(const unsigned short tokType,
                          const XMLCh* const literal,
                          const int refNo,
                          MemoryManager* const manager)
-    : Token(tokType)
+    : Token(tokType, manager)
     , fString(XMLString::replicate(literal, manager))
     , fRefNo(refNo)
     , fMemoryManager(manager)

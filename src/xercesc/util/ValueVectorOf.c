@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/11/21 15:44:12  amassari
  * insertElementAt was not checking if there was room for the new element (bug#24714)
  *
@@ -207,7 +210,7 @@ template <class TElem> void ValueVectorOf<TElem>::
 setElementAt(const TElem& toSet, const unsigned int setAt)
 {
     if (setAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
     fElemList[setAt] = toSet;
 }
 
@@ -221,7 +224,7 @@ insertElementAt(const TElem& toInsert, const unsigned int insertAt)
     }
 
     if (insertAt > fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     // Make room for the newbie
     ensureExtraCapacity(1);
@@ -237,7 +240,7 @@ template <class TElem> void ValueVectorOf<TElem>::
 removeElementAt(const unsigned int removeAt)
 {
     if (removeAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     if (removeAt == fCurCount-1)
     {
@@ -279,7 +282,7 @@ template <class TElem> const TElem& ValueVectorOf<TElem>::
 elementAt(const unsigned int getAt) const
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
     return fElemList[getAt];
 }
 
@@ -287,7 +290,7 @@ template <class TElem> TElem& ValueVectorOf<TElem>::
 elementAt(const unsigned int getAt)
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
     return fElemList[getAt];
 }
 

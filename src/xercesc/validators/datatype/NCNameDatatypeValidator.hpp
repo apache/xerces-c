@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -138,6 +141,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     //@}
@@ -155,7 +159,8 @@ public:
      * @param content2
      * @return
      */
-    virtual int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const
+        ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 
@@ -190,7 +195,8 @@ protected:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    virtual void checkValueSpace(const XMLCh* const content);
+    virtual void checkValueSpace(const XMLCh* const content
+        , MemoryManager* const manager);
 
 private:
 

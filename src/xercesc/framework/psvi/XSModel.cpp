@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.13  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -128,7 +131,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
 {
     // First loop through top-level BUILTIN simple type definitions in the grammar...
     // all grammar's would be the same...    
-    RefHashTableOfEnumerator<DatatypeValidator> simpleEnum = RefHashTableOfEnumerator<DatatypeValidator> (namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getBuiltInRegistry());
+    RefHashTableOfEnumerator<DatatypeValidator> simpleEnum = RefHashTableOfEnumerator<DatatypeValidator> (namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getBuiltInRegistry(), false, fMemoryManager);
     while (simpleEnum.hasMoreElements())
     {
         DatatypeValidator& curSimple = simpleEnum.nextElement();
@@ -145,7 +148,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     // end of simple BuiltIn loop
 
     // Loop through top-level attribute declarations in the grammar...
-    RefHashTableOfEnumerator<XMLAttDef> attrEnum = RefHashTableOfEnumerator<XMLAttDef> (namespaceItem->getSchemaGrammar()->getAttributeDeclRegistry());
+    RefHashTableOfEnumerator<XMLAttDef> attrEnum = RefHashTableOfEnumerator<XMLAttDef> (namespaceItem->getSchemaGrammar()->getAttributeDeclRegistry(), false, fMemoryManager);
         
     while (attrEnum.hasMoreElements())
     {
@@ -180,7 +183,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     DVHashTable* dvHT = namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getUserDefinedRegistry();
     if (dvHT)
     {
-        RefHashTableOfEnumerator<DatatypeValidator> simpleUserEnum = RefHashTableOfEnumerator<DatatypeValidator> (dvHT);
+        RefHashTableOfEnumerator<DatatypeValidator> simpleUserEnum = RefHashTableOfEnumerator<DatatypeValidator> (dvHT, false, fMemoryManager);
         while (simpleUserEnum.hasMoreElements())
         {
             DatatypeValidator& curSimple = simpleUserEnum.nextElement();
@@ -196,7 +199,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     }
 
     // Loop through top-level COMPLEX type definitions in the grammar...        
-    RefHashTableOfEnumerator<ComplexTypeInfo> complexEnum = RefHashTableOfEnumerator<ComplexTypeInfo> (namespaceItem->getSchemaGrammar()->getComplexTypeRegistry());      
+    RefHashTableOfEnumerator<ComplexTypeInfo> complexEnum = RefHashTableOfEnumerator<ComplexTypeInfo> (namespaceItem->getSchemaGrammar()->getComplexTypeRegistry(), false, fMemoryManager);      
     while (complexEnum.hasMoreElements())
     {
         ComplexTypeInfo&  curComplex = complexEnum.nextElement();           
@@ -210,7 +213,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     }  // end of type definition loop
 
     // Loop through top-level attribute group definitions in the grammar...
-    RefHashTableOfEnumerator<XercesAttGroupInfo> attrGroupEnum = RefHashTableOfEnumerator<XercesAttGroupInfo> (namespaceItem->getSchemaGrammar()->getAttGroupInfoRegistry());
+    RefHashTableOfEnumerator<XercesAttGroupInfo> attrGroupEnum = RefHashTableOfEnumerator<XercesAttGroupInfo> (namespaceItem->getSchemaGrammar()->getAttGroupInfoRegistry(), false, fMemoryManager);
     while (attrGroupEnum.hasMoreElements())
     {
         XercesAttGroupInfo& curAttrGroup = attrGroupEnum.nextElement();
@@ -221,7 +224,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     } // end of attribute group loop
         
     // Loop through top-level model group definitions in the grammar...        
-    RefHashTableOfEnumerator<XercesGroupInfo> modelGroupEnum = RefHashTableOfEnumerator<XercesGroupInfo> (namespaceItem->getSchemaGrammar()->getGroupInfoRegistry());
+    RefHashTableOfEnumerator<XercesGroupInfo> modelGroupEnum = RefHashTableOfEnumerator<XercesGroupInfo> (namespaceItem->getSchemaGrammar()->getGroupInfoRegistry(), false, fMemoryManager);
     while (modelGroupEnum.hasMoreElements())
     {
         XercesGroupInfo& curModelGroup = modelGroupEnum.nextElement();

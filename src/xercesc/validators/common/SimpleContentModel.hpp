@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/06/03 18:12:29  knoaman
  * Add default value for memory manager argument.
  *
@@ -244,6 +247,7 @@ public :
     QName*                     fSecondChild;
     ContentSpecNode::NodeTypes fOp;
     bool                       fDTD;
+    MemoryManager* const       fMemoryManager;
 };
 
 
@@ -262,6 +266,7 @@ inline SimpleContentModel::SimpleContentModel
     , fSecondChild(0)
     , fOp(cmOp)
 	, fDTD(dtd)
+    , fMemoryManager(manager)
 {
     if (firstChild)
         fFirstChild = new (manager) QName(*firstChild);

@@ -154,7 +154,7 @@ protected:
     // -----------------------------------------------------------------------
     virtual bool        checkQuestion(const int off);
 	virtual XMLInt32    decodeEscaped();
-
+    MemoryManager*      getMemoryManager() const;
     // -----------------------------------------------------------------------
     //  Protected Parsing/Processing methods
     // -----------------------------------------------------------------------
@@ -279,6 +279,9 @@ inline TokenFactory* RegxParser::getTokenFactory() const {
     return fTokenFactory;
 }
 
+inline MemoryManager* RegxParser::getMemoryManager() const {
+    return fMemoryManager;
+}
 // ---------------------------------------------------------------------------
 //  RegxParser: Setter Methods
 // ---------------------------------------------------------------------------

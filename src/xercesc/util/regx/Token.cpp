@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2002/11/21 14:56:35  gareth
  * Fixed bug in Token::analyzeFirstCharacter so that . matches new line with head character optimisation enabled. As per discussion Jennifer Schachter had with Khaled.
  *
@@ -115,7 +118,11 @@ const unsigned short Token::FC_ANY = 2;
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
 // ---------------------------------------------------------------------------
-Token::Token(const unsigned short tokType) : fTokenType(tokType) {
+Token::Token(const unsigned short tokType
+             , MemoryManager* const manager) 
+             : fTokenType(tokType) 
+             , fMemoryManager(manager)
+{
 
 }
 
@@ -375,11 +382,11 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 
 				RangeToken* caseITok = (((RangeToken*)
 					                       this)->getCaseInsensitiveToken(tokFactory));
-				rangeTok->mergeRanges(RangeToken::complementRanges(caseITok, tokFactory));
+				rangeTok->mergeRanges(RangeToken::complementRanges(caseITok, tokFactory, fMemoryManager));
 			}
 			else {
 				rangeTok->mergeRanges(
-					RangeToken::complementRanges((RangeToken*) this, tokFactory));
+					RangeToken::complementRanges((RangeToken*) this, tokFactory, fMemoryManager));
 			}
 		}
 	case T_INDEPENDENT:

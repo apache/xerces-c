@@ -221,7 +221,8 @@ XMLCh XMLEBCDICTranscoder::xlatThisOne(const XMLByte toXlat)
 //  XMLEBCDICTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLEBCDICTranscoder::XMLEBCDICTranscoder(const  XMLCh* const    encodingName
-                                        , const unsigned int    blockSize) :
+                                        , const unsigned int    blockSize
+                                        , MemoryManager* const manager) :
 
     XML256TableTranscoder
     (
@@ -230,6 +231,7 @@ XMLEBCDICTranscoder::XMLEBCDICTranscoder(const  XMLCh* const    encodingName
         , gFromTable
         , gToTable
         , gToTableSz
+        , manager
     )
 {
 }

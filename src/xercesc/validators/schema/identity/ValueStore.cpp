@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:41  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/12/16 18:41:15  knoaman
  * Make IC_Field stateless
  *
@@ -315,7 +318,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
     // are the validators equal?
     // As always we are obliged to compare by reference...
     if (dv1 == dv2) {
-        return ((dv1->compare(val1, val2)) == 0);
+        return ((dv1->compare(val1, val2, fMemoryManager)) == 0);
     }
 
     // see if this.fValidator is derived from value.fValidator:
@@ -323,14 +326,14 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
     for(; !tempVal || tempVal == dv2; tempVal = tempVal->getBaseValidator()) ;
 
     if (tempVal) { // was derived!
-        return ((dv2->compare(val1, val2)) == 0);
+        return ((dv2->compare(val1, val2, fMemoryManager)) == 0);
     }
 
     // see if value.fValidator is derived from this.fValidator:
     for(tempVal = dv2; !tempVal || tempVal == dv1; tempVal = tempVal->getBaseValidator()) ;
 
     if(tempVal) { // was derived!
-        return ((dv1->compare(val1, val2)) == 0);
+        return ((dv1->compare(val1, val2, fMemoryManager)) == 0);
     }
 
     // if we're here it means the types weren't related.  Must fall back to strings:

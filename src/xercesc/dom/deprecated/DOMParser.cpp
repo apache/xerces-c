@@ -453,7 +453,7 @@ void DOMParser::parse(const InputSource& source)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -476,7 +476,7 @@ void DOMParser::parse(const XMLCh* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -499,7 +499,7 @@ void DOMParser::parse(const char* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -531,7 +531,7 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(systemId, toFill);
 }
@@ -544,7 +544,7 @@ bool DOMParser::parseFirst( const   char* const         systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(systemId, toFill);
 }
@@ -557,7 +557,7 @@ bool DOMParser::parseFirst( const   InputSource&    source
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(source, toFill);
 }
@@ -1407,7 +1407,7 @@ Grammar* DOMParser::loadGrammar(const char* const systemId,
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -1434,7 +1434,7 @@ Grammar* DOMParser::loadGrammar(const XMLCh* const systemId,
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -1462,7 +1462,7 @@ Grammar* DOMParser::loadGrammar(const InputSource& source,
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
    Grammar* grammar = 0;
     try

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.10  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -394,7 +397,7 @@ private:
     //
     //  fFatalErrorIfNotFound
     // -----------------------------------------------------------------------
-    MemoryManager* fMemoryManager;
+    MemoryManager* const fMemoryManager;
     XMLCh*         fEncoding;
     XMLCh*         fPublicId;
     XMLCh*         fSystemId;

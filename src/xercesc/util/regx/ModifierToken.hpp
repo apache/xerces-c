@@ -73,7 +73,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ModifierToken(Token* const child, const int options, const int mask);
+	ModifierToken(Token* const child, const int options, const int mask
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ModifierToken();
 
 	// -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.16  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -152,22 +155,24 @@ static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
 static XMLCh value2[BUF_LEN+1];
 
-#define  REPORT_FACET_ERROR(val1, val2, except_code)    \
-   XMLString::binToText(val1, value1, BUF_LEN, 10);     \
-   XMLString::binToText(val2, value2, BUF_LEN, 10);     \
-   ThrowXML2(InvalidDatatypeFacetException              \
+#define  REPORT_FACET_ERROR(val1, val2, except_code, manager)    \
+   XMLString::binToText(val1, value1, BUF_LEN, 10, manager);     \
+   XMLString::binToText(val2, value2, BUF_LEN, 10, manager);     \
+   ThrowXMLwithMemMgr2(InvalidDatatypeFacetException             \
            , except_code                                \
            , value1                                     \
-           , value2);
+           , value2                                     \
+           , manager);
 
-#define  REPORT_VALUE_ERROR(data, val1, val2, except_code)      \
-   XMLString::binToText(val1, value1, BUF_LEN, 10);             \
-   XMLString::binToText(val2, value2, BUF_LEN, 10);             \
-   ThrowXML3(InvalidDatatypeValueException                      \
+#define  REPORT_VALUE_ERROR(data, val1, val2, except_code, manager)      \
+   XMLString::binToText(val1, value1, BUF_LEN, 10, manager);             \
+   XMLString::binToText(val2, value2, BUF_LEN, 10, manager);             \
+   ThrowXMLwithMemMgr3(InvalidDatatypeValueException                     \
            , except_code                                        \
            , data                                               \
            , value1                                             \
-           , value2);
+           , value2                                             \
+           , manager);
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -200,18 +205,19 @@ AbstractStringValidator::AbstractStringValidator(
     // assigneAdditionalFacet(), inheritAdditionalFacet().
 }
 
-void AbstractStringValidator::init(RefArrayVectorOf<XMLCh>*           const enums)
+void AbstractStringValidator::init(RefArrayVectorOf<XMLCh>*           const enums
+                                   ,MemoryManager*                    const manager)
 {
 
     if (enums)
     {
         setEnumeration(enums, false);
-        normalizeEnumeration();
+        normalizeEnumeration(manager);
     }
 
-    assignFacet();
-    inspectFacet();
-    inspectFacetBase();
+    assignFacet(manager);
+    inspectFacet(manager);
+    inspectFacetBase(manager);
     inheritFacet();
 
 }
@@ -221,7 +227,7 @@ void AbstractStringValidator::init(RefArrayVectorOf<XMLCh>*           const enum
 //        assign common facets
 //        assign additional facet
 //
-void AbstractStringValidator::assignFacet()
+void AbstractStringValidator::assignFacet(MemoryManager* const manager)
 {
 
     RefHashTableOf<KVStringPair>* facets = getFacets();
@@ -231,7 +237,7 @@ void AbstractStringValidator::assignFacet()
 
     XMLCh* key;
     XMLCh* value;
-    RefHashTableOfEnumerator<KVStringPair> e(facets);
+    RefHashTableOfEnumerator<KVStringPair> e(facets, false, manager);
 
     while (e.hasMoreElements())
     {
@@ -244,33 +250,33 @@ void AbstractStringValidator::assignFacet()
             int val;
             try
             {
-                val = XMLString::parseInt(value);
+                val = XMLString::parseInt(value, manager);
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value, manager);
             }
 
             if ( val < 0 )
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_Len, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_Len, value, manager);
 
-                setLength(val);
-                setFacetsDefined(DatatypeValidator::FACET_LENGTH);
+            setLength(val);
+            setFacetsDefined(DatatypeValidator::FACET_LENGTH);
         }
         else if (XMLString::equals(key, SchemaSymbols::fgELT_MINLENGTH))
         {
             int val;
             try
             {
-                val = XMLString::parseInt(value);
+                val = XMLString::parseInt(value, manager);
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_minLen, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_minLen, value, manager);
             }
 
             if ( val < 0 )
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_minLen, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_minLen, value, manager);
 
             setMinLength(val);
             setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
@@ -280,15 +286,15 @@ void AbstractStringValidator::assignFacet()
             int val;
             try
             {
-                val = XMLString::parseInt(value);
+                val = XMLString::parseInt(value, manager);
             }
             catch (NumberFormatException&)
             {
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_maxLen, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_maxLen, value, manager);
             }
 
             if ( val < 0 )
-                ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_maxLen, value);
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_maxLen, value, manager);
 
             setMaxLength(val);
             setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
@@ -306,16 +312,16 @@ void AbstractStringValidator::assignFacet()
             bool         retStatus;
             try
             {
-                retStatus = XMLString::textToBin(value, val);
+                retStatus = XMLString::textToBin(value, val, fMemoryManager);
             }
             catch (RuntimeException&)
             {
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed, manager);
             }
 
             if (!retStatus)
             {
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
+                ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed, manager);
             }
 
             setFixed(val);
@@ -329,7 +335,7 @@ void AbstractStringValidator::assignFacet()
         //
         else
         {
-            assignAdditionalFacet(key, value);
+            assignAdditionalFacet(key, value, manager);
         }
     }//while
 }//end of assigneFacet()
@@ -339,7 +345,7 @@ void AbstractStringValidator::assignFacet()
 //         check common facets
 //         check Additional Facet Constraint
 //
-void AbstractStringValidator::inspectFacet()
+void AbstractStringValidator::inspectFacet(MemoryManager* const manager)
 {
 
     int thisFacetsDefined = getFacetsDefined();
@@ -351,9 +357,9 @@ void AbstractStringValidator::inspectFacet()
     if ((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0)
     {
         if ((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0)
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
+            ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen, manager);
         else if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0))
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
+            ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen, manager);
     }
 
     // check 4.3.2.c1 must: minLength <= maxLength
@@ -366,7 +372,8 @@ void AbstractStringValidator::inspectFacet()
         {
             REPORT_FACET_ERROR(thisMaxLength
                              , thisMinLength
-                             , XMLExcepts::FACET_maxLen_minLen)
+                             , XMLExcepts::FACET_maxLen_minLen
+                             , manager)
         }
     }
 
@@ -378,7 +385,7 @@ void AbstractStringValidator::inspectFacet()
 //         check enumeration
 //         check Additional Facet Constraint
 //
-void AbstractStringValidator::inspectFacetBase()
+void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
 {
 
     AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) getBaseValidator();
@@ -424,7 +431,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisLength
                              , baseMaxLength
-                             , XMLExcepts::FACET_Len_baseMaxLen)
+                             , XMLExcepts::FACET_Len_baseMaxLen
+                             , manager)
         }
         
         if (((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
@@ -432,7 +440,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisLength
                              , baseMinLength
-                             , XMLExcepts::FACET_Len_baseMinLen)
+                             , XMLExcepts::FACET_Len_baseMinLen
+                             , manager)
         }
     }
 
@@ -445,7 +454,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisMaxLength
                              , baseLength
-                             , XMLExcepts::FACET_maxLen_baseLen)
+                             , XMLExcepts::FACET_maxLen_baseLen
+                             , manager)
         }
         
         if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
@@ -453,7 +463,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisMinLength
                              , baseLength
-                             , XMLExcepts::FACET_minLen_baseLen)
+                             , XMLExcepts::FACET_minLen_baseLen
+                             , manager)
         }
     }
 
@@ -465,7 +476,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisLength
                              , baseLength
-                             , XMLExcepts::FACET_Len_baseLen)
+                             , XMLExcepts::FACET_Len_baseLen
+                             , manager)
         }
     }
 
@@ -483,7 +495,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisMinLength
                              , baseMaxLength
-                             , XMLExcepts::FACET_minLen_basemaxLen)
+                             , XMLExcepts::FACET_minLen_basemaxLen
+                             , manager)
         }
     }
 
@@ -497,7 +510,8 @@ void AbstractStringValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinLength
                                  , baseMinLength
-                                 , XMLExcepts::FACET_minLen_base_fixed)
+                                 , XMLExcepts::FACET_minLen_base_fixed
+                                 , manager)
             }
 
         }
@@ -507,7 +521,8 @@ void AbstractStringValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMinLength
                                  , baseMinLength
-                                 , XMLExcepts::FACET_minLen_baseminLen)
+                                 , XMLExcepts::FACET_minLen_baseminLen
+                                 , manager)
             }
         }
     }
@@ -520,7 +535,8 @@ void AbstractStringValidator::inspectFacetBase()
         {
             REPORT_FACET_ERROR(thisMaxLength
                              , baseMinLength
-                             , XMLExcepts::FACET_maxLen_baseminLen)
+                             , XMLExcepts::FACET_maxLen_baseminLen
+                             , manager)
         }
     }
 
@@ -534,7 +550,8 @@ void AbstractStringValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxLength
                                  , baseMaxLength
-                                 , XMLExcepts::FACET_maxLen_base_fixed)
+                                 , XMLExcepts::FACET_maxLen_base_fixed
+                                 , manager)
             }
         }
         else
@@ -543,7 +560,8 @@ void AbstractStringValidator::inspectFacetBase()
             {
                 REPORT_FACET_ERROR(thisMaxLength
                                  , baseMaxLength
-                                 , XMLExcepts::FACET_maxLen_basemaxLen)
+                                 , XMLExcepts::FACET_maxLen_basemaxLen
+                                 , manager)
             }
         }
     }
@@ -557,13 +575,13 @@ void AbstractStringValidator::inspectFacetBase()
         for ( ; i < enumLength; i++)
         {
             // ask parent do a complete check
-            pBaseValidator->checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false);
+            pBaseValidator->checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
             // enum shall pass this->checkContent() as well.
-            checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false);
+            checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
         }
     }
 
-    checkAdditionalFacetConstraints();
+    checkAdditionalFacetConstraints(manager);
 
 } //end of inspectFacetBase
 
@@ -637,26 +655,30 @@ void AbstractStringValidator::inheritFacet()
 // Compare methods
 // -----------------------------------------------------------------------
 int AbstractStringValidator::compare(const XMLCh* const lValue
-                                   , const XMLCh* const rValue)
+                                   , const XMLCh* const rValue
+                                   , MemoryManager*     const manager)
 {
     return XMLString::compareString(lValue, rValue);
 }
 
 void AbstractStringValidator::validate( const XMLCh*             const content
-                                      ,       ValidationContext* const context )
+                                      ,       ValidationContext* const context
+                                      ,       MemoryManager*     const manager)
 {
-    checkContent(content, context, false);
+    checkContent(content, context, false, manager);
 }
 
 void AbstractStringValidator::checkContent( const XMLCh*             const content
                                           ,       ValidationContext* const context
-                                          ,       bool                     asBase)
+                                          ,       bool                     asBase
+                                          ,       MemoryManager*     const manager
+                                          )
 {
 
     //validate against base validator if any
     AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) this->getBaseValidator();
     if (pBaseValidator)
-        pBaseValidator->checkContent(content, context, true);
+        pBaseValidator->checkContent(content, context, true, manager);
 
     int thisFacetsDefined = getFacetsDefined();
 
@@ -666,20 +688,22 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         // lazy construction
         if (getRegex() ==0) {
             try {
+                // REVISIT: cargillmem fMemoryManager or manager?
                 setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
             }
         }
 
-        if (getRegex()->matches(content) ==false)
+        if (getRegex()->matches(content, manager) ==false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -688,8 +712,8 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
     if (asBase)
         return;
 
-    checkValueSpace(content);
-    unsigned int length = getLength(content);
+    checkValueSpace(content, manager);
+    unsigned int length = getLength(content, manager);
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (length > getMaxLength()))
@@ -697,7 +721,8 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         REPORT_VALUE_ERROR(content
                          , length
                          , getMaxLength()
-                         , XMLExcepts::VALUE_GT_maxLen)
+                         , XMLExcepts::VALUE_GT_maxLen
+                         , manager)
     }
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0) &&
@@ -706,7 +731,8 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         REPORT_VALUE_ERROR(content
                          , length
                          , getMinLength()
-                         , XMLExcepts::VALUE_LT_minLen)
+                         , XMLExcepts::VALUE_LT_minLen
+                         , manager)
     }
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
@@ -715,15 +741,16 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         REPORT_VALUE_ERROR(content
                          , length
                          , getLength()
-                         , XMLExcepts::VALUE_NE_Len)
+                         , XMLExcepts::VALUE_NE_Len
+                         , manager)
     }
 
     if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
     {
-        XMLCh* normContent = XMLString::replicate(content, fMemoryManager);
-        ArrayJanitor<XMLCh>  jan(normContent, fMemoryManager);
-        normalizeContent(normContent);
+        XMLCh* normContent = XMLString::replicate(content, manager);
+        ArrayJanitor<XMLCh>  jan(normContent, manager);
+        normalizeContent(normContent, manager);
 
         int i=0;
         int enumLength = getEnumeration()->size();
@@ -734,10 +761,10 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         }
 
         if (i == enumLength)
-            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
     }
 
-    checkAdditionalFacet(content);
+    checkAdditionalFacet(content, manager);
 
 }
 
@@ -746,16 +773,49 @@ const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 	return getEnumeration();
 }
 
-void AbstractStringValidator::normalizeEnumeration()
+void AbstractStringValidator::normalizeEnumeration(MemoryManager* const manager)
 {
     // default implementation: do nothing
     return;
 }
 
-void AbstractStringValidator::normalizeContent(XMLCh* const) const
+void AbstractStringValidator::normalizeContent(XMLCh* const, MemoryManager* const manager) const
 {
     // default implementation: do nothing
     return;
+}
+
+
+void AbstractStringValidator::checkAdditionalFacetConstraints(MemoryManager* const manager) const
+{
+    return;
+}
+
+void AbstractStringValidator::checkAdditionalFacet(const XMLCh* const content
+                                    , MemoryManager* const manager)
+{
+    return;
+}
+
+void AbstractStringValidator::inheritAdditionalFacet()
+{
+    return;
+}
+
+void AbstractStringValidator::assignAdditionalFacet( const XMLCh* const key
+                                                   , const XMLCh* const
+                                                   , MemoryManager* const manager)
+{
+    ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
+            , XMLExcepts::FACET_Invalid_Tag
+            , key
+            , manager);
+}
+
+int AbstractStringValidator::getLength(const XMLCh* const content
+                                   , MemoryManager* const manager) const
+{
+    return XMLString::stringLen(content);
 }
 
 /***

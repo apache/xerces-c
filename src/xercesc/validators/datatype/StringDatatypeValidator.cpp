@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.10  2003/11/24 05:11:06  neilg
  * remove unused statics
  *
@@ -165,7 +168,7 @@ StringDatatypeValidator::StringDatatypeValidator(
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::String, manager)
 {
     setWhiteSpace(DatatypeValidator::PRESERVE);
-    init(enums);
+    init(enums, manager);
 }
 
 StringDatatypeValidator::~StringDatatypeValidator()
@@ -198,7 +201,8 @@ StringDatatypeValidator::StringDatatypeValidator(
 //  Utilities
 // ---------------------------------------------------------------------------
 void StringDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
-                                                  , const XMLCh* const value)
+                                                  , const XMLCh* const value
+                                                  , MemoryManager* const manager)
 {
     if (XMLString::equals(key, SchemaSymbols::fgELT_WHITESPACE))
     {
@@ -210,16 +214,17 @@ void StringDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
         else if (XMLString::equals(value, SchemaSymbols::fgWS_COLLAPSE))
             setWhiteSpace(DatatypeValidator::COLLAPSE);
         else
-            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_WS, value);
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_WS, value, manager);
         //("whiteSpace value '" + ws + "' must be one of 'preserve', 'replace', 'collapse'.");
 
         setFacetsDefined(DatatypeValidator::FACET_WHITESPACE);
     }
     else
     {
-        ThrowXML1(InvalidDatatypeFacetException
+        ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                 , XMLExcepts::FACET_Invalid_Tag
-                , key);
+                , key
+                , manager);
     }
 }
 
@@ -239,7 +244,7 @@ void StringDatatypeValidator::inheritAdditionalFacet()
     }
 }
 
-void StringDatatypeValidator::checkAdditionalFacetConstraints() const
+void StringDatatypeValidator::checkAdditionalFacetConstraints(MemoryManager* const manager) const
 {
 
     StringDatatypeValidator *pBaseValidator = (StringDatatypeValidator*) getBaseValidator();
@@ -257,25 +262,27 @@ void StringDatatypeValidator::checkAdditionalFacetConstraints() const
         if ((baseWSFacet == DatatypeValidator::COLLAPSE) &&
             ((thisWSFacet == DatatypeValidator::PRESERVE) ||
              (thisWSFacet == DatatypeValidator::REPLACE)))
-             ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_collapse);
+             ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_collapse, manager);
 
         if ((baseWSFacet == DatatypeValidator::REPLACE) &&
             (thisWSFacet == DatatypeValidator::PRESERVE))
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_replace);
+            ThrowXMLwithMemMgr(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_replace, manager);
 
         if (((pBaseValidator->getFixed() & DatatypeValidator::FACET_WHITESPACE) !=0) &&
             ( thisWSFacet != baseWSFacet))
         {
-            ThrowXML2(InvalidDatatypeFacetException
+            ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
                         , XMLExcepts::FACET_whitespace_base_fixed
                         , getWSstring(thisWSFacet)
-                        , getWSstring(baseWSFacet));
+                        , getWSstring(baseWSFacet)
+                        , manager);
         }
     }
 
 }
 
-void StringDatatypeValidator::checkAdditionalFacet(const XMLCh* const content) const
+void StringDatatypeValidator::checkAdditionalFacet(const XMLCh* const content
+                                                   , MemoryManager* const manager) const
 {
     //
     // check WhiteSpace
@@ -285,24 +292,20 @@ void StringDatatypeValidator::checkAdditionalFacet(const XMLCh* const content) c
         if ( getWSFacet() == DatatypeValidator::REPLACE )
         {
             if (!XMLString::isWSReplaced(content))
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_WS_replaced, content);
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_WS_replaced, content, manager);
         }
         else if ( getWSFacet() == DatatypeValidator::COLLAPSE )
         {
             if (!XMLString::isWSCollapsed(content))
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_WS_collapsed, content);
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_WS_collapsed, content, manager);
         }
 
     }
 }
 
-void StringDatatypeValidator::checkValueSpace(const XMLCh* const content)
+void StringDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                              , MemoryManager* const manager)
 {}
-
-int StringDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    return XMLString::stringLen(content);
-}
 
 /***
  * Support for Serialization/De-serialization

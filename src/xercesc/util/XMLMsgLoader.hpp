@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -171,6 +174,7 @@ public :
         , const char* const     repText2 = 0
         , const char* const     repText3 = 0
         , const char* const     repText4 = 0
+        , MemoryManager* const manager   = 0
     ) = 0;
 
     /** @name Locale Handling  */

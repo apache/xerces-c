@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.16  2003/12/12 18:36:37  peiyongz
  * getObjectType()
  *
@@ -330,7 +333,7 @@ XMLAttDefList& SchemaElementDecl::getAttDefList() const
 {
     if (!fComplexTypeInfo)
 	{
-        ThrowXML(RuntimeException, XMLExcepts::DV_InvalidOperation);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::DV_InvalidOperation, getMemoryManager());
     }
 
 	return fComplexTypeInfo->getAttDefList();

@@ -581,7 +581,7 @@ Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
 	Grammar* grammar = 0;
     try
@@ -621,7 +621,7 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -661,7 +661,7 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/10/17 16:44:34  knoaman
  * Fix multithreading problem.
  *
@@ -162,7 +165,6 @@ RangeTokenMap::~RangeTokenMap() {
 
     delete fCategories;
     fCategories = 0;
-
     delete fTokenFactory;
     fTokenFactory = 0;
 }
@@ -207,7 +209,7 @@ RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
 
             if (complement)
             {
-                rangeTok = (RangeToken*) RangeToken::complementRanges(rangeTok, fTokenFactory);
+                rangeTok = (RangeToken*) RangeToken::complementRanges(rangeTok, fTokenFactory, fTokenRegistry->getMemoryManager());
                 elemMap->setRangeToken(rangeTok , complement);
             }
         }
@@ -242,7 +244,7 @@ void RangeTokenMap::addKeywordMap(const XMLCh* const keyword,
 	unsigned int categId = fCategories->getId(categoryName);
 
 	if (categId == 0) {
-		ThrowXML1(RuntimeException, XMLExcepts::Regex_InvalidCategoryName, categoryName);
+		ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_InvalidCategoryName, categoryName, fTokenRegistry->getMemoryManager());
 	}
 
     if (fTokenRegistry->containsKey(keyword)) {
@@ -271,7 +273,7 @@ void RangeTokenMap::setRangeToken(const XMLCh* const keyword,
         fTokenRegistry->get(keyword)->setRangeToken(tok, complement);
     }
     else {
-		ThrowXML1(RuntimeException, XMLExcepts::Regex_KeywordNotFound, keyword);
+		ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_KeywordNotFound, keyword, fTokenRegistry->getMemoryManager());
 	}
 }
 

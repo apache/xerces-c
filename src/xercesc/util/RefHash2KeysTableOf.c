@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/10/17 21:10:40  peiyongz
  * nextElementKey() added
  *
@@ -154,7 +157,7 @@ template <class TVal>
 void RefHash2KeysTableOf<TVal>::initialize(const unsigned int modulus)
 {
 	if (modulus == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
     fBucketList = (RefHash2KeysTableBucketElem<TVal>**) fMemoryManager->allocate
@@ -257,7 +260,11 @@ get(const void* const key1, const int key2) const
     return findIt->fData;
 }
 
-
+template <class TVal>
+MemoryManager* RefHash2KeysTableOf<TVal>::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOf: Putters
 // ---------------------------------------------------------------------------
@@ -295,9 +302,9 @@ template <class TVal> RefHash2KeysTableBucketElem<TVal>* RefHash2KeysTableOf<TVa
 findBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -315,9 +322,9 @@ template <class TVal> const RefHash2KeysTableBucketElem<TVal>* RefHash2KeysTable
 findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     const RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -338,7 +345,7 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     //
     //  Search the given bucket for this key. Keep up with the previous
@@ -378,7 +385,7 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
     }
 
     // We never found that key
-    ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+    ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
 }
 
 
@@ -388,11 +395,14 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 //  RefHash2KeysTableOfEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal> RefHash2KeysTableOfEnumerator<TVal>::
-RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum, const bool adopt)
+RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
+                              , const bool adopt
+                              , MemoryManager* const manager)
 	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+    , fMemoryManager(manager)
 {
     if (!toEnum)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, fMemoryManager);
 
     //
     //  Find the next available bucket element in the hash table. If it
@@ -429,7 +439,7 @@ template <class TVal> TVal& RefHash2KeysTableOfEnumerator<TVal>::nextElement()
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the
@@ -445,7 +455,7 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::nextElementKey(v
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the

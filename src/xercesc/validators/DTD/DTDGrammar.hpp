@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/10/14 15:20:42  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -338,19 +341,19 @@ inline unsigned int DTDGrammar::getRootElemId()
 inline NameIdPoolEnumerator<DTDElementDecl>
 DTDGrammar::getElemEnumerator() const
 {
-    return NameIdPoolEnumerator<DTDElementDecl>(fElemDeclPool);
+    return NameIdPoolEnumerator<DTDElementDecl>(fElemDeclPool, fMemoryManager);
 }
 
 inline NameIdPoolEnumerator<DTDEntityDecl>
 DTDGrammar::getEntityEnumerator() const
 {
-    return NameIdPoolEnumerator<DTDEntityDecl>(fEntityDeclPool);
+    return NameIdPoolEnumerator<DTDEntityDecl>(fEntityDeclPool, fMemoryManager);
 }
 
 inline NameIdPoolEnumerator<XMLNotationDecl>
 DTDGrammar::getNotationEnumerator() const
 {
-    return NameIdPoolEnumerator<XMLNotationDecl>(fNotationDeclPool);
+    return NameIdPoolEnumerator<XMLNotationDecl>(fNotationDeclPool, fMemoryManager);
 }
 
 inline const DTDEntityDecl*

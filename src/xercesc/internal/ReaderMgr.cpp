@@ -403,7 +403,7 @@ void ReaderMgr::cleanStackBackTo(const unsigned int readerNum)
             break;
 
         if (fReaderStack->empty())
-            ThrowXML(RuntimeException, XMLExcepts::RdrMgr_ReaderIdNotFound);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::RdrMgr_ReaderIdNotFound, fMemoryManager);
 
         delete fCurReader;
         fCurReader = fReaderStack->pop();
@@ -546,18 +546,19 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
 
         try
         {
-            XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+            XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer(), fMemoryManager);
             if (urlTmp.isRelative())
             {
-                ThrowXML
+                ThrowXMLwithMemMgr
                 (
                     MalformedURLException
                     , XMLExcepts::URL_NoProtocolPresent
+                    , fMemoryManager
                 );
             }
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
@@ -654,19 +655,20 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
 
         try
         {
-            XMLURL urlTmp((!baseURI || !*baseURI) ? lastInfo.systemId : baseURI, expSysId.getRawBuffer());
+            XMLURL urlTmp((!baseURI || !*baseURI) ? lastInfo.systemId : baseURI, expSysId.getRawBuffer(), fMemoryManager);
 
             if (urlTmp.isRelative())
             {
-                ThrowXML
+                ThrowXMLwithMemMgr
                 (
                     MalformedURLException
                     , XMLExcepts::URL_NoProtocolPresent
+                    , fMemoryManager
                 );
             }
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }

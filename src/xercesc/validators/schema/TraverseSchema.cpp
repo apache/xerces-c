@@ -1872,7 +1872,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     }
     else {
 
-        BaseRefVectorOf<XMLCh>* nameSpaceTokens = XMLString::tokenizeString(nameSpace);
+        BaseRefVectorOf<XMLCh>* nameSpaceTokens = XMLString::tokenizeString(nameSpace, fMemoryManager);
         ValueVectorOf<unsigned int> uriList(8, fGrammarPoolMemoryManager);
         ContentSpecNode* firstNode = 0;
         ContentSpecNode* secondNode = 0;
@@ -1892,7 +1892,8 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                 else {
                     try {
                         anyURIDV->validate(tokenElem
-                                         , fSchemaGrammar->getValidationContext());
+                                         , fSchemaGrammar->getValidationContext()
+                                         , fMemoryManager);
                     }
                     catch(const XMLException& excep) {
                         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
@@ -2308,7 +2309,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
         try {
             dv->validate(valueToCheck
-                      , fSchemaGrammar->getValidationContext());
+                      , fSchemaGrammar->getValidationContext()
+                      , fMemoryManager);
         }
         catch (const XMLException& excep) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -2871,7 +2873,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
             // create & register validator for "generated" type
             try {
                 newDV = fDatatypeRegistry->createDatatypeValidator(
-                    qualifiedName, baseValidator, 0, 0, true, finalSet);
+                    qualifiedName, baseValidator, 0, 0, true, finalSet, true, fMemoryManager );
             }
             catch (const XMLException& excep) {
                 reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -2978,7 +2980,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                 const XMLCh* facetName = content->getLocalName();
 
                 try {
-                    scope = fAttributeCheck.getFacetId(facetName);
+                    scope = fAttributeCheck.getFacetId(facetName, fMemoryManager);
                 }
                 catch(const OutOfMemoryException&)
                 {
@@ -3107,7 +3109,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
         if (fixedFlag) {
 
-            XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
+            XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10, fGrammarPoolMemoryManager);
             facets->put((void*) SchemaSymbols::fgATT_FIXED,
                         new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr, fGrammarPoolMemoryManager));
         }
@@ -3116,7 +3118,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
             fSchemaGrammar->putAnnotation(enums, janEnumAnnot.release());
 
         try {
-            newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, facets, enums, false, finalSet);
+            newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, facets, enums, false, finalSet, true, fMemoryManager);
         }
         catch (const XMLException& excep) {
             reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -3243,7 +3245,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     janValidators.orphan();
 
     try {
-        newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet);
+        newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet, true, fMemoryManager);
     }
     catch (const XMLException& excep) {
         reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -3505,7 +3507,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
                 // if not a valid facet, break from the loop
                 try {
-                    scope = fAttributeCheck.getFacetId(facetName);
+                    scope = fAttributeCheck.getFacetId(facetName, fMemoryManager);
                 }
                 catch(const OutOfMemoryException&)
                 {
@@ -3573,15 +3575,16 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         (void*) SchemaSymbols::fgELT_PATTERN,
                         new (fGrammarPoolMemoryManager) KVStringPair
                             (
-                                SchemaSymbols::fgELT_PATTERN,
-                                pattern.getRawBuffer()
+                                SchemaSymbols::fgELT_PATTERN
+                                , pattern.getRawBuffer()
+                                , fGrammarPoolMemoryManager
                             )
                     );
                 }
 
                 if (fixedFlag) {
 
-                    XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
+                    XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10, fGrammarPoolMemoryManager);
                     facets->put((void*) SchemaSymbols::fgATT_FIXED,
                         new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr, fGrammarPoolMemoryManager));
                 }
@@ -3594,7 +3597,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         (
                             qualifiedName,
                             typeInfo->getBaseDatatypeValidator(),
-                            facets, enums, false, 0
+                            facets, enums, false, 0, true, fMemoryManager
                         )
                     );
                 }
@@ -3893,7 +3896,8 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
 
                 try {
                     anyURIDV->validate(token
-                                     , fSchemaGrammar->getValidationContext());
+                                     , fSchemaGrammar->getValidationContext()
+                                     , fMemoryManager);
                 }
                 catch(const XMLException& excep) {
                     reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
@@ -4199,7 +4203,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             fBuffer.append(fgDotForwardSlash);
         }
 
-        int chOffset = XMLString::indexOf(xpathExpr, chPipe, startIndex);
+        int chOffset = XMLString::indexOf(xpathExpr, chPipe, startIndex, fMemoryManager);
 
         if (chOffset == -1)
             break;
@@ -5587,7 +5591,8 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                     else {
                         try {
                             attDV->validate(valueConstraint
-                                          , fSchemaGrammar->getValidationContext());
+                                          , fSchemaGrammar->getValidationContext()
+                                          , fMemoryManager);
                         }
                         catch(const XMLException& excep) {
                             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -5638,7 +5643,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
     }
     else {
         try {
-            minOccurs = XMLString::parseInt(minOccursStr);
+            minOccurs = XMLString::parseInt(minOccursStr, fMemoryManager);
         }
         catch(const OutOfMemoryException&)
         {
@@ -5666,7 +5671,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         }
         else {
             try {
-                maxOccurs = XMLString::parseInt(maxOccursStr);
+                maxOccurs = XMLString::parseInt(maxOccursStr, fMemoryManager);
             }
             catch(const OutOfMemoryException&)
             {
@@ -5687,8 +5692,8 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         XMLCh tmpMinStr[128];
         XMLCh tmpMaxStr[128];
 
-        XMLString::binToText(minOccurs, tmpMinStr, 127, 10);
-        XMLString::binToText(maxOccurs, tmpMaxStr, 127, 10);
+        XMLString::binToText(minOccurs, tmpMinStr, 127, 10, fMemoryManager);
+        XMLString::binToText(maxOccurs, tmpMaxStr, 127, 10, fMemoryManager);
 
         if (maxOccurs < 1) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue,
@@ -6442,15 +6447,15 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
 
         try {
 
-            XMLURL urlTmp(fSchemaInfo->getCurrentSchemaURL(), normalizedURI);
+            XMLURL urlTmp(fSchemaInfo->getCurrentSchemaURL(), normalizedURI, fMemoryManager);
 
             if (urlTmp.isRelative()) {
-                ThrowXML(MalformedURLException,
-                         XMLExcepts::URL_NoProtocolPresent);
+                ThrowXMLwithMemMgr(MalformedURLException,
+                         XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
             }
             else {
                 if (fScanner->getStandardUriConformant() && urlTmp.hasInvalidChar())
-                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
@@ -8379,7 +8384,7 @@ TraverseSchema::checkElemDeclValueConstraint(const DOMElement* const elem,
 
         try
         {
-            validator->validate(valConstraint);
+            validator->validate(valConstraint,0,fMemoryManager);
             isValid = true;
         }
         catch(const XMLException& excep)

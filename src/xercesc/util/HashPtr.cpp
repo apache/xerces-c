@@ -66,7 +66,8 @@ HashPtr::~HashPtr()
 {
 }
 
-unsigned int HashPtr::getHashVal(const void *const key, unsigned int mod)
+unsigned int HashPtr::getHashVal(const void *const key, unsigned int mod
+                                 , MemoryManager* const manager)
 {
  return ((long)key % (unsigned long)mod);
 }

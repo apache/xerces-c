@@ -413,7 +413,7 @@ inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const
         (
             (length - index + 1) * sizeof(XMLCh)
         ); //new XMLCh[length - index + 1];
-        XMLString::subString(tName, fTypeName, index + 1, length);
+        XMLString::subString(tName, fTypeName, index + 1, length, fMemoryManager);
         ((ComplexTypeInfo *)this)->fTypeLocalName = tName;
     }
 
@@ -428,7 +428,7 @@ inline const XMLCh* ComplexTypeInfo::getTypeUri() const
         (
             (index + 1) * sizeof(XMLCh)
         ); //new XMLCh[index + 1];
-        XMLString::subString(uri, fTypeName, 0, index);
+        XMLString::subString(uri, fTypeName, 0, index, fMemoryManager);
         ((ComplexTypeInfo *)this)->fTypeUri = uri;
     }
 
@@ -576,7 +576,7 @@ inline bool ComplexTypeInfo::contains(const XMLCh* const attName) {
         return false;
     }
 
-    RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs);
+    RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs, false, fMemoryManager);
 
     while (enumDefs.hasMoreElements()) {
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/11/24 05:19:15  neilg
  * update method documentation
  *
@@ -253,7 +256,8 @@ public:
       * @return A const pointer to the static string that holds the text
       *         description of the passed type.
       */
-    static const XMLCh* getAttTypeString(const AttTypes attrType);
+    static const XMLCh* getAttTypeString(const AttTypes attrType
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Get a string representation of the passed def attribute type enum
       *
@@ -265,7 +269,8 @@ public:
       * @return A const pointer to the static string that holds the text
       *         description of the passed default type.
       */
-    static const XMLCh* getDefAttTypeString(const DefAttTypes attrType);
+    static const XMLCh* getDefAttTypeString(const DefAttTypes attrType
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 

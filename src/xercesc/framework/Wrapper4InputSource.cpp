@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/05/30 16:11:43  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -88,12 +91,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Wrapper4InputSource: Constructor and Destructor
 // ---------------------------------------------------------------------------
 Wrapper4InputSource::Wrapper4InputSource(InputSource* const inputSource,
-                                         const bool adoptFlag) :
+                                         const bool adoptFlag
+                                         , MemoryManager* const manager) :
     fAdoptInputSource(adoptFlag)
     ,  fInputSource(inputSource)
 {
     if (!inputSource)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, manager);
 }
 
 Wrapper4InputSource::~Wrapper4InputSource()

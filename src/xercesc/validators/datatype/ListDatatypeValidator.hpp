@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -186,6 +189,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     //@}
@@ -203,7 +207,9 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    int compare(const XMLCh* const, const XMLCh* const
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -232,29 +238,23 @@ protected:
     // ctor provided to be used by derived classes: No
     //
 
-    virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
+    virtual void checkValueSpace(const XMLCh* const content
+                                , MemoryManager* const manager);
 
-    virtual void inheritAdditionalFacet();
-
-    virtual void checkAdditionalFacetConstraints() const;
-
-    virtual void checkAdditionalFacet(const XMLCh* const content) const;
-
-    virtual void checkValueSpace(const XMLCh* const content);
-
-    virtual int  getLength(const XMLCh* const content) const;
+    virtual int  getLength(const XMLCh* const content
+            , MemoryManager* const manager) const;
 
     //
     // Overwrite AbstractStringValidator's
     //
-    virtual void inspectFacetBase();
+    virtual void inspectFacetBase(MemoryManager* const manager);
 
     virtual void inheritFacet();
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            ,       MemoryManager*     const manager);
 
 private:
 
@@ -262,10 +262,12 @@ private:
                     , const XMLCh*                  const  content
                     ,       ValidationContext*      const  context
                     ,       bool                           asBase
+                    ,       MemoryManager*          const  manager
                     );
 
     bool valueSpaceCheck(BaseRefVectorOf<XMLCh>* tokenVector
-                       , const XMLCh* const  enumStr) const;
+                       , const XMLCh*   const enumStr
+                       , MemoryManager* const manager) const;
 
 // -----------------------------------------------------------------------
 // Getter methods

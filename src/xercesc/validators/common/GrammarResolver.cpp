@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.21  2003/11/21 22:38:50  neilg
  * Enable grammar pools and grammar resolvers to manufacture
  * XSModels.  This also cleans up handling in the
@@ -316,13 +319,13 @@ Grammar* GrammarResolver::getGrammar( XMLGrammarDescription* const gramDesc)
 RefHashTableOfEnumerator<Grammar>
 GrammarResolver::getGrammarEnumerator() const
 {
-    return RefHashTableOfEnumerator<Grammar>(fGrammarBucket);
+    return RefHashTableOfEnumerator<Grammar>(fGrammarBucket, false, fMemoryManager);
 }
 
 RefHashTableOfEnumerator<Grammar>
 GrammarResolver::getReferencedGrammarEnumerator() const
 {
-    return RefHashTableOfEnumerator<Grammar>(fGrammarFromPool);
+    return RefHashTableOfEnumerator<Grammar>(fGrammarFromPool, false, fMemoryManager);
 }
 
 RefHashTableOfEnumerator<Grammar>
@@ -393,7 +396,7 @@ void GrammarResolver::resetCachedGrammar()
 
 void GrammarResolver::cacheGrammars()
 {
-    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket);
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket, false, fMemoryManager);
     ValueVectorOf<XMLCh*> keys(8, fMemoryManager);
     unsigned int keyCount = 0;
 
@@ -489,7 +492,7 @@ XSModel *GrammarResolver::getXSModel()
                 // with our our grammars or we would like to upate it now
                 // so we have to regenerate the XSModel
                 fGrammarsToAddToXSModel->removeAllElements();
-                RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket);
+                RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket, false, fMemoryManager);
                 while (grammarEnum.hasMoreElements()) 
                 {
                     Grammar& grammar = (Grammar&) grammarEnum.nextElement();

@@ -291,7 +291,7 @@ Grammar* XercesDOMParser::loadGrammar(const char* const systemId,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -325,7 +325,7 @@ Grammar* XercesDOMParser::loadGrammar(const XMLCh* const systemId,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     Grammar* grammar = 0;
     try
@@ -359,7 +359,7 @@ Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
    Grammar* grammar = 0;
     try

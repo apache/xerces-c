@@ -431,9 +431,10 @@ void XMLUri::initialize(const XMLUri* const baseURI
     if ( !baseURI &&
         (!trimmedUriSpec || trimmedUriSpecLen == 0))
     {
-        ThrowXML1(MalformedURLException
+        ThrowXMLwithMemMgr1(MalformedURLException
                , XMLExcepts::XMLNUM_URI_Component_Empty
-               , errMsg_PARAMS);
+               , errMsg_PARAMS
+               , fMemoryManager);
     }
 
 	// just make a copy of the base if spec is empty
@@ -462,7 +463,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
             // A standalone base is a valid URI according to spec
             if ( colonIdx == 0 || (!baseURI && fragmentIdx != 0) )
             {
-                ThrowXML(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme);
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme, fMemoryManager);
             }
         }
         else
@@ -475,9 +476,10 @@ void XMLUri::initialize(const XMLUri* const baseURI
     // It's an error if we stop here
     if (index == trimmedUriSpecLen || (foundScheme && (trimmedUriSpec[index] == chPound)))
     {
-        ThrowXML1(MalformedURLException
+        ThrowXMLwithMemMgr1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
-                , errMsg_PATH);
+                , errMsg_PATH
+                , fMemoryManager);
     }
 
 	// two slashes means generic URI syntax, so we get the authority
@@ -486,7 +488,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         (trimmedUriSpecLen+1) * sizeof(XMLCh)
     );//new XMLCh[trimmedUriSpecLen+1];
     ArrayJanitor<XMLCh> authName(authUriSpec, fMemoryManager);
-    XMLString::subString(authUriSpec, trimmedUriSpec, index, trimmedUriSpecLen);
+    XMLString::subString(authUriSpec, trimmedUriSpec, index, trimmedUriSpecLen, fMemoryManager);
 
     if (((index+1) < trimmedUriSpecLen) &&
         XMLString::startsWith(authUriSpec, DOUBLE_SLASH))
@@ -513,7 +515,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // host to empty string
         if (index > startPos)
         {
-            XMLString::subString(authUriSpec, trimmedUriSpec, startPos, index);
+            XMLString::subString(authUriSpec, trimmedUriSpec, startPos, index, fMemoryManager);
             initializeAuthority(authUriSpec);
         }
         else
@@ -532,7 +534,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         (trimmedUriSpecLen+1) * sizeof(XMLCh)
     );//new XMLCh[trimmedUriSpecLen+1];
     ArrayJanitor<XMLCh> pathUriSpecName(pathUriSpec, fMemoryManager);
-    XMLString::subString(pathUriSpec, trimmedUriSpec, index, trimmedUriSpecLen);
+    XMLString::subString(pathUriSpec, trimmedUriSpec, index, trimmedUriSpecLen, fMemoryManager);
 
 	initializePath(pathUriSpec);
 
@@ -625,7 +627,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
             int lastSlash = XMLString::lastIndexOf(basePath, chForwardSlash);
             if (lastSlash != -1)
             {
-                XMLString::subString(path, basePath, 0, lastSlash+1);
+                XMLString::subString(path, basePath, 0, lastSlash+1, fMemoryManager);
             }
         }
 
@@ -636,8 +638,8 @@ void XMLUri::initialize(const XMLUri* const baseURI
         index = -1;
         while ((index = XMLString::patternMatch(path, SLASH_DOT_SLASH)) != -1)
         {
-            XMLString::subString(tmp1, path, 0, index);
-            XMLString::subString(tmp2, path, index+2, XMLString::stringLen(path));
+            XMLString::subString(tmp1, path, 0, index, fMemoryManager);
+            XMLString::subString(tmp2, path, index+2, XMLString::stringLen(path), fMemoryManager);
 
             path[0] = 0;
             XMLString::catString(path, tmp1);
@@ -662,7 +664,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
 			index += offset;
 
 			// Find start of <segment> within substring ending at found point.
-			XMLString::subString(tmp1, path, 0, index-1);
+			XMLString::subString(tmp1, path, 0, index-1, fMemoryManager);
 			segIndex = XMLString::lastIndexOf(tmp1, chForwardSlash);
 
 			// Ensure <segment> exists and != ".."
@@ -672,8 +674,8 @@ void XMLUri::initialize(const XMLUri* const baseURI
 				 segIndex + 3 != index))
             {
 
-                XMLString::subString(tmp1, path, 0, segIndex);
-                XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path));
+                XMLString::subString(tmp1, path, 0, segIndex, fMemoryManager);
+                XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path), fMemoryManager);
 
                 path[0] = 0;
                 XMLString::catString(path, tmp1);
@@ -693,7 +695,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         {
 			// Find start of <segment> within substring ending at found point.
             index = XMLString::stringLen(path) - 3;
-			XMLString::subString(tmp1, path, 0, index-1);
+			XMLString::subString(tmp1, path, 0, index-1, fMemoryManager);
 			segIndex = XMLString::lastIndexOf(tmp1, chForwardSlash);
 
             if (segIndex != -1                &&
@@ -749,7 +751,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     if ( index != -1)
     {
-        XMLString::subString(userinfo, &(uriSpec[start]), 0, index);
+        XMLString::subString(userinfo, &(uriSpec[start]), 0, index, fMemoryManager);
         index++; // skip the @
         start += index;
     }
@@ -787,13 +789,13 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     if ( index != -1 )
     {
-        XMLString::subString(host, &(uriSpec[start]), 0, index);
+        XMLString::subString(host, &(uriSpec[start]), 0, index, fMemoryManager);
         index++;  // skip the :
         start +=index;
     }
     else
     {
-        XMLString::subString(host, &(uriSpec[start]), 0, end-start);
+        XMLString::subString(host, &(uriSpec[start]), 0, end-start, fMemoryManager);
         start = end;
     }
 
@@ -810,13 +812,13 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
         (index != -1)                    &&   // ":" found
         (start < end)                     )   // ":" is not the last
     {
-        XMLString::subString(portStr, &(uriSpec[start]), 0, end-start);
+        XMLString::subString(portStr, &(uriSpec[start]), 0, end-start, fMemoryManager);
 
         if (portStr && *portStr)
         {
             try
             {
-                port = XMLString::parseInt(portStr);
+                port = XMLString::parseInt(portStr, fMemoryManager);
             }
             catch(const OutOfMemoryException&)
             {
@@ -830,7 +832,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     } // if > 0
 
     // Check if we have server based authority.
-    if (isValidServerBasedAuthority(host, port, userinfo))
+    if (isValidServerBasedAuthority(host, port, userinfo, fMemoryManager))
     {
         if (fHost)
             fMemoryManager->deallocate(fHost);//delete [] fHost;
@@ -855,7 +857,7 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
 
     if ( !tmpPtr )
     {
-        ThrowXML(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme);
+        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::XMLNUM_URI_No_Scheme, fMemoryManager);
     }
 	else
     {
@@ -864,7 +866,7 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
             (XMLString::stringLen(uriSpec) + 1) * sizeof(XMLCh)
         );//new XMLCh[XMLString::stringLen(uriSpec)+1];
         ArrayJanitor<XMLCh> tmpName(scheme, fMemoryManager);
-        XMLString::subString(scheme, uriSpec, 0, (tmpPtr - uriSpec));
+        XMLString::subString(scheme, uriSpec, 0, (tmpPtr - uriSpec), fMemoryManager);
         setScheme(scheme);
 	}
 
@@ -874,9 +876,10 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 {
     if ( !uriSpec )
     {
-        ThrowXML1(MalformedURLException
+        ThrowXMLwithMemMgr1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
-                , errMsg_PATH);
+                , errMsg_PATH
+                , fMemoryManager);
     }
 
     int index = 0;
@@ -910,10 +913,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                     {
                         XMLString::moveChars(value1, &(uriSpec[index]), 3);
                         value1[3] = chNull;
-                        ThrowXML2(MalformedURLException
+                        ThrowXMLwithMemMgr2(MalformedURLException
                                 , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                                 , errMsg_PATH
-                                , value1);
+                                , value1
+                                , fMemoryManager);
                     }
                 }
                 else if (!isUnreservedCharacter(testChar) &&
@@ -921,10 +925,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 {
                     value1[0] = testChar;
                     value1[1] = chNull;
-                    ThrowXML2(MalformedURLException
+                    ThrowXMLwithMemMgr2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                             , errMsg_PATH
-                            , value1);
+                            , value1
+                            , fMemoryManager);
                 }
 
                 index++;
@@ -951,10 +956,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                     {
                         XMLString::moveChars(value1, &(uriSpec[index]), 3);
                         value1[3] = chNull;
-                        ThrowXML2(MalformedURLException
+                        ThrowXMLwithMemMgr2(MalformedURLException
                                 , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                                 , errMsg_PATH
-                                , value1);
+                                , value1
+                                , fMemoryManager);
                     }
                 }
                 // If the scheme specific part is opaque, it can contain '['
@@ -967,10 +973,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 {
                     value1[0] = testChar;
                     value1[1] = chNull;
-                    ThrowXML2(MalformedURLException
+                    ThrowXMLwithMemMgr2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                             , errMsg_PATH
-                            , value1);
+                            , value1
+                            , fMemoryManager);
                 }
 
                 index++;
@@ -984,7 +991,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
     }
 
     fPath = (XMLCh*) fMemoryManager->allocate((index+1) * sizeof(XMLCh));//new XMLCh[index+1];
-    XMLString::subString(fPath, uriSpec, start, index);
+    XMLString::subString(fPath, uriSpec, start, index, fMemoryManager);
 
     // query - starts with ? and up to fragment or end
     if (testChar == chQuestion)
@@ -1007,10 +1014,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 {
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
-                    ThrowXML2(MalformedURLException
+                    ThrowXMLwithMemMgr2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                             , errMsg_QUERY
-                            , value1);
+                            , value1
+                            , fMemoryManager);
                 }
             }
             else if (!isUnreservedCharacter(testChar) &&
@@ -1018,10 +1026,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
-                ThrowXML2(MalformedURLException
+                ThrowXMLwithMemMgr2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                         , errMsg_QUERY
-                        , value1);
+                        , value1
+                        , fMemoryManager);
             }
             index++;
         }
@@ -1035,7 +1044,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
         (
             (index - start + 1) * sizeof(XMLCh)
         );//new XMLCh[index - start + 1];
-        XMLString::subString(fQueryString, uriSpec, start, index);
+        XMLString::subString(fQueryString, uriSpec, start, index, fMemoryManager);
     }
 
     // fragment - starts with #
@@ -1055,10 +1064,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 {
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
-                    ThrowXML2(MalformedURLException
+                    ThrowXMLwithMemMgr2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                             , errMsg_FRAGMENT
-                            , value1);
+                            , value1
+                            , fMemoryManager);
                 }
             }
             else if (!isUnreservedCharacter(testChar) &&
@@ -1066,10 +1076,11 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             {
                 value1[0] = testChar;
                 value1[1] = chNull;
-                ThrowXML2(MalformedURLException
+                ThrowXMLwithMemMgr2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                         , errMsg_FRAGMENT
-                        , value1);
+                        , value1
+                        , fMemoryManager);
             }
 
             index++;
@@ -1086,7 +1097,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             (
                 (index - start + 1) * sizeof(XMLCh)
             );//new XMLCh[index - start + 1];
-            XMLString::subString(fFragment, uriSpec, start, index);
+            XMLString::subString(fFragment, uriSpec, start, index, fMemoryManager);
         }
         else
         {
@@ -1110,17 +1121,19 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
 {
     if ( !newScheme )
     {
-        ThrowXML1(MalformedURLException
+        ThrowXMLwithMemMgr1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Set_Null
-                , errMsg_SCHEME);
+                , errMsg_SCHEME
+                , fMemoryManager);
     }
 
     if (!isConformantSchemeName(newScheme))
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
                 , errMsg_SCHEME
-                , newScheme);
+                , newScheme
+                , fMemoryManager);
     }
 
     if (getScheme())
@@ -1128,7 +1141,7 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
         fMemoryManager->deallocate(fScheme);//delete [] fScheme;
     }
 
-    fScheme = XMLString::replicate(newScheme, fMemoryManager);
+    fScheme = XMLString::replicate(newScheme, fMemoryManager);    
     XMLString::lowerCase(fScheme);
 }
 
@@ -1147,15 +1160,16 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
     if ( newUserInfo &&
          !getHost()    )
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_NullHost
                 , errMsg_USERINFO
-                , newUserInfo);
+                , newUserInfo
+                , fMemoryManager);
     }
 
     try
     {
-        isConformantUserInfo(newUserInfo);
+        isConformantUserInfo(newUserInfo, fMemoryManager);
     }
     catch(const OutOfMemoryException&)
     {
@@ -1195,12 +1209,13 @@ void XMLUri::setHost(const XMLCh* const newHost)
         return;
     }
 
-    if ( *newHost && !isWellFormedAddress(newHost))
+    if ( *newHost && !isWellFormedAddress(newHost, fMemoryManager))
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
                 , errMsg_HOST
-                , newHost);
+                , newHost
+                , fMemoryManager);
     }
 
     if (getHost())
@@ -1218,19 +1233,21 @@ void XMLUri::setPort(int newPort)
     {
         if (!getHost())
         {
-            XMLString::binToText(newPort, value1, BUF_LEN, 10);
-            ThrowXML2(MalformedURLException
+            XMLString::binToText(newPort, value1, BUF_LEN, 10, fMemoryManager);
+            ThrowXMLwithMemMgr2(MalformedURLException
                     , XMLExcepts::XMLNUM_URI_NullHost
                     , errMsg_PORT
-                    , value1);
+                    , value1
+                    , fMemoryManager);
         }
     }
     else if (newPort != -1)
     {
-        XMLString::binToText(newPort, value1, BUF_LEN, 10);
-        ThrowXML1(MalformedURLException
+        XMLString::binToText(newPort, value1, BUF_LEN, 10, fMemoryManager);
+        ThrowXMLwithMemMgr1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_PortNo_Invalid
-                , value1);
+                , value1
+                , fMemoryManager);
     }
 
     fPort = newPort;
@@ -1250,10 +1267,11 @@ void XMLUri::setRegBasedAuthority(const XMLCh* const newRegAuth)
     //            ";" | ":" | "@" | "&" | "=" | "+" )
     else if ( !*newRegAuth || !isValidRegistryBasedAuthority(newRegAuth) ) 
     {    
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
                 , errMsg_REGNAME
-                , newRegAuth);
+                , newRegAuth
+                , fMemoryManager);
     }
     
     if (getRegBasedAuthority())
@@ -1298,23 +1316,26 @@ void XMLUri::setFragment(const XMLCh* const newFragment)
 	}
 	else if (!isGenericURI())
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
                 , errMsg_FRAGMENT
-                , newFragment);
+                , newFragment
+                , fMemoryManager);
 	}
 	else if ( !getPath() )
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                , XMLExcepts::XMLNUM_URI_NullPath
                , errMsg_FRAGMENT
-               , newFragment);
+               , newFragment
+               , fMemoryManager);
 	}
 	else if (!isURIString(newFragment))
     {
-        ThrowXML1(MalformedURLException
+        ThrowXMLwithMemMgr1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
-                , errMsg_FRAGMENT);
+                , errMsg_FRAGMENT
+                , fMemoryManager);
 	}
 	else
     {
@@ -1341,24 +1362,27 @@ void XMLUri::setQueryString(const XMLCh* const newQueryString)
 	}
 	else if (!isGenericURI())
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
                 , errMsg_QUERY
-                , newQueryString);
+                , newQueryString
+                , fMemoryManager);
 	}
 	else if ( !getPath() )
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_NullPath
                 , errMsg_QUERY
-                , newQueryString);
+                , newQueryString
+                , fMemoryManager);
 	}
 	else if (!isURIString(newQueryString))
     {
-        ThrowXML2(MalformedURLException
+        ThrowXMLwithMemMgr2(MalformedURLException
                , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                , errMsg_QUERY
-               , newQueryString);
+               , newQueryString
+               , fMemoryManager);
 	}
 	else
     {
@@ -1406,7 +1430,8 @@ bool XMLUri::isConformantSchemeName(const XMLCh* const scheme)
 // userinfo = *( unreserved | escaped |
 //              ";" | ":" | "&" | "=" | "+" | "$" | "," )
 //
-void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
+void XMLUri::isConformantUserInfo(const XMLCh* const userInfo
+                                  , MemoryManager* const manager)
 {
 	if ( !userInfo )
         return;
@@ -1433,18 +1458,20 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
                 value1[2] = *(tmpStr+2);
                 value1[3] = chNull;
 
-                ThrowXML2(MalformedURLException
+                ThrowXMLwithMemMgr2(MalformedURLException
                         , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                         , errMsg_USERINFO
-                        , value1);
+                        , value1
+                        , manager);
             }
         }
         else
         {	
-            ThrowXML2(MalformedURLException
+            ThrowXMLwithMemMgr2(MalformedURLException
                     , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
                     , errMsg_USERINFO
-                    , userInfo);
+                    , userInfo
+                    , manager);
         }
     } //while
 
@@ -1489,12 +1516,13 @@ bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host,
     return true;
 }
 
-bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host,
-                                         const int port,
-                                         const XMLCh* const userinfo)
+bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host
+                                         , const int port
+                                         , const XMLCh* const userinfo
+                                         , MemoryManager* const manager)
 {
     // The order is important, do not change
-    if (!isWellFormedAddress(host))
+    if (!isWellFormedAddress(host, manager))
         return false;
 
     // check port number
@@ -1637,7 +1665,8 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
 //
 //  IPv4address   = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
 //
-bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
+bool XMLUri::isWellFormedAddress(const XMLCh* const addrString
+                                 , MemoryManager* const manager)
 {
     // Check that we have a non-zero length string.
     if (!addrString || !*addrString)
@@ -1670,13 +1699,13 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
     // get the second last "."
     if (lastPeriodPos + 1 == addrStrLen)
     {
-        XMLCh* tmp2 = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        XMLCh* tmp2 = (XMLCh*) manager->allocate
         (
             addrStrLen * sizeof(XMLCh)
         );//new XMLCh[addrStrLen];
-        XMLString::subString(tmp2, addrString, 0, lastPeriodPos);
+        XMLString::subString(tmp2, addrString, 0, lastPeriodPos, manager);
         lastPeriodPos = XMLString::lastIndexOf(tmp2, chPeriod);
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
+        manager->deallocate(tmp2);//delete [] tmp2;
 
         if ( XMLString::isDigit(addrString[lastPeriodPos + 1]))
 			return false;
@@ -1986,7 +2015,7 @@ void XMLUri::buildFullText()
                 *outPtr++ = chColon;
 
                 XMLCh tmpBuf[16];
-                XMLString::binToText(fPort, tmpBuf, 16, 10);
+                XMLString::binToText(fPort, tmpBuf, 16, 10, fMemoryManager);
                 XMLString::copyString(outPtr, tmpBuf);
                 outPtr += XMLString::stringLen(tmpBuf);
             }
@@ -2068,6 +2097,110 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
     {
         // A standalone base is a valid URI according to spec
         if (colonIdx == 0 || (!baseURI && fragmentIdx != 0))
+            return false;
+    }
+    else
+    {
+        if (!processScheme(trimmedUriSpec, index))
+            return false;
+        foundScheme = true;
+        ++index;
+    }
+
+    // It's an error if we stop here
+    if (index == trimmedUriSpecLen || (foundScheme && (trimmedUriSpec[index] == chPound)))
+        return false;
+
+	// two slashes means generic URI syntax, so we get the authority
+    const XMLCh* authUriSpec = trimmedUriSpec +  index;
+    if (((index+1) < trimmedUriSpecLen) &&
+        XMLString::startsWith(authUriSpec, DOUBLE_SLASH))
+    {
+        index += 2;
+        int startPos = index;
+
+        // get authority - everything up to path, query or fragment
+        XMLCh testChar;
+        while (index < trimmedUriSpecLen)
+        {
+            testChar = trimmedUriSpec[index];
+            if (testChar == chForwardSlash ||
+                testChar == chQuestion     ||
+                testChar == chPound         )
+            {
+                break;
+            }
+
+            index++;
+        }
+
+        // if we found authority, parse it out, otherwise we set the
+        // host to empty string
+        if (index > startPos)
+        {
+            if (!processAuthority(trimmedUriSpec + startPos, index - startPos))
+                return false;
+        }
+    }
+
+    // we need to check if index has exceed the lenght or not
+    if (index < trimmedUriSpecLen)
+    {
+	    if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme))
+            return false;
+    }
+
+    return true;
+}
+
+// NOTE: no check for NULL value of uriStr (caller responsiblilty)
+// NOTE: this routine is the same as above, but it uses a flag to
+//       indicate the existance of a baseURI rather than an XMLuri.
+bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr)
+{
+    // get a trimmed version of uriStr
+    // uriStr will NO LONGER be used in this function.
+    const XMLCh* trimmedUriSpec = uriStr;
+
+    while (XMLChar1_0::isWhitespace(*trimmedUriSpec))
+        trimmedUriSpec++;
+
+    int trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
+
+    while (trimmedUriSpecLen) {
+        if (XMLChar1_0::isWhitespace(trimmedUriSpec[trimmedUriSpecLen-1]))
+            trimmedUriSpecLen--;
+        else
+            break;
+    }
+
+    if (trimmedUriSpecLen == 0)
+    {
+        if (!haveBaseURI)
+            return false;
+        else
+            return true;
+        return true;
+    }
+
+    int index = 0;
+    bool foundScheme = false;
+
+    // Check for scheme, which must be before `/', '?' or '#'. 
+    // Also handle names with DOS drive letters ('D:'), 
+    // so 1-character schemes are not allowed.
+    int colonIdx = XMLString::indexOf(trimmedUriSpec, chColon);
+    int slashIdx = XMLString::indexOf(trimmedUriSpec, chForwardSlash);
+    int queryIdx = XMLString::indexOf(trimmedUriSpec, chQuestion);
+    int fragmentIdx = XMLString::indexOf(trimmedUriSpec, chPound);
+
+    if ((colonIdx < 2) ||
+        (colonIdx > slashIdx && slashIdx != -1) ||
+        (colonIdx > queryIdx && queryIdx != -1) ||
+        (colonIdx > fragmentIdx && fragmentIdx != -1))
+    {
+        // A standalone base is a valid URI according to spec
+        if (colonIdx == 0 || (!haveBaseURI && fragmentIdx != 0))
             return false;
     }
     else

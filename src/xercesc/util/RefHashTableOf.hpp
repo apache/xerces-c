@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/10/20 11:45:06  gareth
  * Made enumerators inherit from XMemory.
  *
@@ -292,7 +295,9 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt = false);
+    RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum
+        , const bool adopt = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHashTableOfEnumerator();
 
 
@@ -337,6 +342,7 @@ private :
     RefHashTableBucketElem<TVal>*         fCurElem;
     unsigned int                          fCurHash;
     RefHashTableOf<TVal>*                 fToEnum;
+    MemoryManager* const                  fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

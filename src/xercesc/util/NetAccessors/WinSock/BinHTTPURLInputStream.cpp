@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/12/02 14:12:20  amassari
  * Make the code compilable on Windows when UNICODE is defined (bug#16055)
  *
@@ -157,7 +160,7 @@ LPFN_WSACLEANUP gWSACleanup = NULL;
 bool BinHTTPURLInputStream::fInitialized = false;
 XMLMutex* BinHTTPURLInputStream::fInitMutex = 0;
 
-void BinHTTPURLInputStream::Initialize() {
+void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
     //
     // Initialize the WinSock library here.
     //
@@ -168,7 +171,7 @@ void BinHTTPURLInputStream::Initialize() {
 	if(gWinsockLib == NULL) {
 		gWinsockLib = LoadLibrary(_T("WSOCK32"));
 		if(gWinsockLib == NULL) {
-			ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
+			ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
 		}
 		else {
 			startup = (LPFN_WSASTARTUP) GetProcAddress(gWinsockLib,"WSAStartup");
@@ -199,7 +202,7 @@ void BinHTTPURLInputStream::Initialize() {
 			{
 				gWSACleanup = NULL;
 				Cleanup();
-				ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
+				ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
 			}
 		}
 	}
@@ -208,7 +211,7 @@ void BinHTTPURLInputStream::Initialize() {
     if (err != 0)
     {
         // Call WSAGetLastError() to get the last error.
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
+        ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
     }
     fInitialized = true;
 }
@@ -307,10 +310,11 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
          XMLMutexLock lock(fInitMutex);
          if (!fInitialized)
          {
-             Initialize();
+             Initialize(urlSource.getMemoryManager());
          }
     }
 
+    fMemoryManager = urlSource.getMemoryManager();
     //
     // Pull all of the parts of the URL out of th urlSource object, and transcode them
     //   and transcode them back to ASCII.
@@ -350,16 +354,16 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         if (numAddress == INADDR_NONE)
         {
             // Call WSAGetLastError() to get the error number.
-            ThrowXML1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName);
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
         }
         if ((hostEntPtr =
                 gethostbyaddr((const char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
             // Call WSAGetLastError() to get the error number.
-            ThrowXML1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName);
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
         }
     }
 
@@ -372,15 +376,15 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     if (s == INVALID_SOCKET)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML1(NetAccessorException,
-                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML1(NetAccessorException,
-                 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
     }
 
 
@@ -427,8 +431,8 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     if ((aLent = send(s, fBuffer, lent, 0)) != lent)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML1(NetAccessorException,
-                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
     }
 
 
@@ -440,7 +444,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     if (aLent == SOCKET_ERROR || aLent == 0)
     {
         // Call WSAGetLastError() to get the error number.
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     fBufferEnd = fBuffer+aLent;
@@ -475,7 +479,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
                 if (aLent == SOCKET_ERROR || aLent == 0)
                 {
                     // Call WSAGetLastError() to get the error number.
-                    ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+                    ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
                 }
                 fBufferEnd = fBufferEnd + aLent;
                 *fBufferEnd = 0;
@@ -488,13 +492,13 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
     char *p = strstr(fBuffer, "HTTP");
     if (p == 0)
     {
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     p = strchr(p, ' ');
     if (p == 0)
     {
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     int httpResponse = atoi(p);
@@ -503,7 +507,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         // Most likely a 404 Not Found error.
         //   Should recognize and handle the forwarding responses.
         //
-        ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
     }
 
     fSocketHandle = (unsigned int) s;
@@ -543,7 +547,7 @@ unsigned int BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
         if (len == SOCKET_ERROR)
         {
             // Call WSAGetLastError() to get the error number.
-            ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+            ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, fMemoryManager);
         }
     }
 

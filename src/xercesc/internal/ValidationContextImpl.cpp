@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.2  2003/11/24 05:10:26  neilg
  * implement method for determining member type of union that validated some value
  *
@@ -131,9 +134,10 @@ void ValidationContextImpl::addId(const XMLCh * const content)
     {
         if (idEntry->getDeclared())
         {
-            ThrowXML1(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_ID_Not_Unique
-                    , content);
+                    , content
+                    , fMemoryManager);
         }
     }
     else
@@ -201,19 +205,21 @@ void ValidationContextImpl::checkEntity(const XMLCh * const content) const
 
         if (!decl || !decl->isUnparsed())
         {
-            ThrowXML1(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_ENTITY_Invalid
-                    , content);
+                    , content
+                    , fMemoryManager);
         }
 
     }
     else 
     {
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             InvalidDatatypeValueException
             , XMLExcepts::VALUE_ENTITY_Invalid
             , content
+            , fMemoryManager
         );
     }
 

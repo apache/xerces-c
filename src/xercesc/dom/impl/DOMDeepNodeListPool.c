@@ -170,7 +170,7 @@ template <class TVal>
 void DOMDeepNodeListPool<TVal>::initialize(const XMLSize_t modulus)
 {
 	if (modulus == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
     fBucketList = (DOMDeepNodeListPoolTableBucketElem<TVal>**)
@@ -295,7 +295,7 @@ DOMDeepNodeListPool<TVal>::getById(const XMLSize_t elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_InvalidId, fMemoryManager);
 
     return fIdPtrs[elemId];
 }
@@ -305,7 +305,7 @@ DOMDeepNodeListPool<TVal>::getById(const XMLSize_t elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_InvalidId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_InvalidId, fMemoryManager);
 
     return fIdPtrs[elemId];
 }
@@ -401,9 +401,9 @@ template <class TVal> DOMDeepNodeListPoolTableBucketElem<TVal>* DOMDeepNodeListP
 findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     DOMDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -437,9 +437,9 @@ template <class TVal> const DOMDeepNodeListPoolTableBucketElem<TVal>* DOMDeepNod
 findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     const DOMDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.20  2003/12/10 20:55:18  neilg
  * fixes for canonical value production; memory management was not implemented correctly
  *
@@ -180,8 +183,8 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 {
     if ( !memberTypeValidators )
     {
-        ThrowXML(InvalidDatatypeFacetException
-               , XMLExcepts::FACET_Union_Null_memberTypeValidators);
+        ThrowXMLwithMemMgr(InvalidDatatypeFacetException
+               , XMLExcepts::FACET_Union_Null_memberTypeValidators, manager);
     }
 
     // no pattern, no enumeration
@@ -211,21 +214,22 @@ UnionDatatypeValidator::UnionDatatypeValidator(
     //
     if (!baseValidator)
     {
-        ThrowXML(InvalidDatatypeFacetException
-               , XMLExcepts::FACET_Union_Null_baseValidator);
+        ThrowXMLwithMemMgr(InvalidDatatypeFacetException
+               , XMLExcepts::FACET_Union_Null_baseValidator, manager);
     }
 
     if (baseValidator->getType() != DatatypeValidator::Union)
     {
-        XMLString::binToText(baseValidator->getType(), value1, BUF_LEN, 10);
-        ThrowXML1(InvalidDatatypeFacetException
+        XMLString::binToText(baseValidator->getType(), value1, BUF_LEN, 10, manager);
+        ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                 , XMLExcepts::FACET_Union_invalid_baseValidatorType
-                , value1);
+                , value1
+                , manager);
     }
 
     try
     {
-        init(baseValidator, facets, enums);
+        init(baseValidator, facets, enums, manager);
     }
     catch(const OutOfMemoryException&)
     {
@@ -240,7 +244,8 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 
 void UnionDatatypeValidator::init(DatatypeValidator*            const baseValidator
                                 , RefHashTableOf<KVStringPair>* const facets
-                                , RefArrayVectorOf<XMLCh>*           const enums)
+                                , RefArrayVectorOf<XMLCh>*      const enums
+                                , MemoryManager*                const manager)
 {
     if (enums)
         setEnumeration(enums, false);
@@ -250,7 +255,7 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
     {
         XMLCh* key;
         XMLCh* value;
-        RefHashTableOfEnumerator<KVStringPair> e(facets);
+        RefHashTableOfEnumerator<KVStringPair> e(facets, false, manager);
 
         while (e.hasMoreElements())
         {
@@ -267,9 +272,10 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
             }
             else
             {
-                 ThrowXML1(InvalidDatatypeFacetException
+                 ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                          , XMLExcepts::FACET_Invalid_Tag
-                         , key);
+                         , key
+                         , manager);
             }
         }//while
 
@@ -297,16 +303,17 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
                     // since there are no other facets for Union, parent
                     // checking is good enough.
                     //
-                    baseValidator->validate(getEnumeration()->elementAt(i), (ValidationContext*)0);
+                    baseValidator->validate(getEnumeration()->elementAt(i), (ValidationContext*)0, manager);
 
                 }
             }
 
             catch ( XMLException& )
             {
-                ThrowXML1(InvalidDatatypeFacetException
+                ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                             , XMLExcepts::FACET_enum_base
-                            , getEnumeration()->elementAt(i));
+                            , getEnumeration()->elementAt(i)
+                            , manager);
             }
         }
 
@@ -343,12 +350,13 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
 //
 void UnionDatatypeValidator::checkContent(const XMLCh*             const content
                                         ,       ValidationContext* const context
-                                        ,       bool                     asBase)
+                                        ,       bool                     asBase
+                                        ,       MemoryManager*     const manager)
 {
 
     DatatypeValidator* bv = getBaseValidator();
     if (bv)
-        ((UnionDatatypeValidator*)bv)->checkContent(content, context, true);
+        ((UnionDatatypeValidator*)bv)->checkContent(content, context, true, manager);
     else
     {   // 3) native union type
         // check content against each member type validator in Union
@@ -362,7 +370,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
 
             try
             {
-                fMemberTypeValidators->elementAt(i)->validate(content, context);
+                fMemberTypeValidators->elementAt(i)->validate(content, context, manager);
                 memTypeValid = true;
                 
                 //set the validator of the type actually used to validate the content
@@ -380,9 +388,10 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
 
         if ( !memTypeValid )
         {
-            ThrowXML1(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_no_match_memberType
-                    , content);
+                    , content
+                    , manager);
             //( "Content '"+content+"' does not match any union types" );
         }
     }
@@ -398,16 +407,17 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), manager);
             }
         }
 
-        if (getRegex()->matches(content) == false)
+        if (getRegex()->matches(content, manager) == false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -434,7 +444,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
             {
                 try
                 {
-                    if (memberDTV->elementAt(memberIndex)->compare(content, tmpEnum->elementAt(enumIndex)) == 0)
+                    if (memberDTV->elementAt(memberIndex)->compare(content, tmpEnum->elementAt(enumIndex), manager) == 0)
                         return;
                 }
                 catch (XMLException&)
@@ -444,7 +454,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
             } // for enumIndex
         } // for memberIndex
 
-        ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
 
     } // enumeration
 
@@ -454,14 +464,15 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
 //
 //
 int UnionDatatypeValidator::compare(const XMLCh* const lValue
-                                  , const XMLCh* const rValue)
+                                  , const XMLCh* const rValue
+                                  , MemoryManager* const manager)
 {
     RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();
     unsigned int memberTypeNumber = memberDTV->size();
 
     for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
     {
-        if (memberDTV->elementAt(memberIndex)->compare(lValue, rValue) ==0)
+        if (memberDTV->elementAt(memberIndex)->compare(lValue, rValue, manager) ==0)
             return  0;
     }
 
@@ -486,7 +497,7 @@ const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*    
 {
 
     UnionDatatypeValidator* temp = (UnionDatatypeValidator*) this;
-    temp->checkContent(rawData, 0, false);
+    temp->checkContent(rawData, 0, false, memMgr);
 
     //get the native unionDv
     UnionDatatypeValidator* bdv = (UnionDatatypeValidator*) temp->getBaseValidator();
@@ -503,7 +514,7 @@ const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*    
     {
         try
         {
-            fMemberTypeValidators->elementAt(i)->validate(rawData, 0);
+            fMemberTypeValidators->elementAt(i)->validate(rawData, 0, toUse);                       
             return fMemberTypeValidators->elementAt(i)->getCanonicalRepresentation(rawData, toUse);
         }
         catch (XMLException&)

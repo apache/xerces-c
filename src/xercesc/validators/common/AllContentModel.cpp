@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/11/20 18:09:18  knoaman
  * Store a copy of each child, instead of a reference, as the content spec node
  * tree is not guaranteed to be persistent.
@@ -130,7 +133,7 @@ AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
     //
     ContentSpecNode* curNode = parentContentSpec;
     if (!curNode)
-        ThrowXML(RuntimeException, XMLExcepts::CM_NoParentCSN);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoParentCSN, fMemoryManager);
 
     // And now call the private recursive method that iterates the tree
     buildChildList(curNode, children, childOptional);
@@ -390,13 +393,13 @@ AllContentModel::buildChildList(ContentSpecNode* const       curNode
         // that was specified with minOccurs=0, maxOccurs=1
         ContentSpecNode* leftNode = curNode->getFirst();
         if (leftNode->getType() != ContentSpecNode::Leaf)
-            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
 
         toFill.addElement(leftNode->getElement());
         toOptional.addElement(true);
     }
     else
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

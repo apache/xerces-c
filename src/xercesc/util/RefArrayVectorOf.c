@@ -89,7 +89,7 @@ template <class TElem> void
 RefArrayVectorOf<TElem>::setElementAt(TElem* const toSet, const unsigned int setAt)
 {
     if (setAt >= this->fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, this->fMemoryManager);
 
     if (this->fAdoptedElems)
         this->fMemoryManager->deallocate(this->fElemList[setAt]);
@@ -114,7 +114,7 @@ template <class TElem> void RefArrayVectorOf<TElem>::
 removeElementAt(const unsigned int removeAt)
 {
     if (removeAt >= this->fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, this->fMemoryManager);
 
     if (this->fAdoptedElems)
         this->fMemoryManager->deallocate(this->fElemList[removeAt]);

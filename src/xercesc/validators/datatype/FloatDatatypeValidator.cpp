@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -136,7 +139,7 @@ FloatDatatypeValidator::FloatDatatypeValidator(
                         , MemoryManager* const                manager)
 :AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Float, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 FloatDatatypeValidator::~FloatDatatypeValidator()
@@ -146,10 +149,11 @@ FloatDatatypeValidator::~FloatDatatypeValidator()
 // Compare methods
 // -----------------------------------------------------------------------
 int FloatDatatypeValidator::compare(const XMLCh* const lValue
-                                  , const XMLCh* const rValue)
+                                  , const XMLCh* const rValue
+                                  , MemoryManager* const manager)
 {
-    XMLFloat lObj(lValue, fMemoryManager);
-    XMLFloat rObj(rValue, fMemoryManager);
+    XMLFloat lObj(lValue, manager);
+    XMLFloat rObj(rValue, manager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -178,23 +182,6 @@ FloatDatatypeValidator::FloatDatatypeValidator(DatatypeValidator*            con
     //do not invoke init here !!!
 }
 
-void FloatDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
-                                                 , const XMLCh* const)
-{
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void FloatDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void FloatDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void FloatDatatypeValidator::checkAdditionalFacetConstraintsBase() const
-{}
-
 int  FloatDatatypeValidator::compareValues(const XMLNumber* const lValue
                                          , const XMLNumber* const rValue)
 {
@@ -221,7 +208,7 @@ void  FloatDatatypeValidator::setMinExclusive(const XMLCh* const value)
     fMinExclusive = new (fMemoryManager) XMLFloat(value, fMemoryManager);
 }
 
-void  FloatDatatypeValidator::setEnumeration()
+void  FloatDatatypeValidator::setEnumeration(MemoryManager* const manager)
 {
     // check 4.3.5.c0 must: enumeration values from the value space of base
     //
@@ -241,14 +228,15 @@ void  FloatDatatypeValidator::setEnumeration()
         {
             for ( i = 0; i < enumLength; i++)
             {
-                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
+                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
             }
         }
         catch (XMLException&)
         {
-            ThrowXML1(InvalidDatatypeFacetException
+            ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                 , XMLExcepts::FACET_enum_base
-                , fStrEnumeration->elementAt(i));
+                , fStrEnumeration->elementAt(i)
+                , manager);
 
         }
     }
@@ -258,7 +246,7 @@ void  FloatDatatypeValidator::setEnumeration()
     //
     for ( i = 0; i < enumLength; i++)
     {
-        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
+        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
     }
 
     fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true,  fMemoryManager);
@@ -275,7 +263,8 @@ void  FloatDatatypeValidator::setEnumeration()
 // -----------------------------------------------------------------------
 void FloatDatatypeValidator::checkContent(const XMLCh*             const content
                                          ,      ValidationContext* const context
-                                         ,      bool                     asBase)
+                                         ,      bool                     asBase
+                                         ,      MemoryManager*     const manager)
 {
 
     //validate against base validator if any
@@ -293,16 +282,17 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
             }
             catch (XMLException &e)
             {
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
             }
         }
 
-        if (getRegex()->matches(content) ==false)
+        if (getRegex()->matches(content, manager) ==false)
         {
-            ThrowXML2(InvalidDatatypeValueException
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_NotMatch_Pattern
                     , content
-                    , getPattern());
+                    , getPattern()
+                    , manager);
         }
     }
 
@@ -312,7 +302,7 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
         return;
 
     try {
-        XMLFloat theValue(content, fMemoryManager);
+        XMLFloat theValue(content, manager);
         XMLFloat *theData = &theValue;
 
         if (getEnumeration() != 0)
@@ -326,14 +316,14 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
             }
 
             if (i == enumLength)
-                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
         }
 
-        boundsCheck(theData);
+        boundsCheck(theData, manager);
     }
     catch (XMLException &e)
     {
-       ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage());
+       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage(), manager);
     }
 
 }

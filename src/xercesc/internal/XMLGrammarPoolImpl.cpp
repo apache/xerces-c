@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.15  2003/11/25 18:18:39  knoaman
  * Check for out of memory exception. Thanks to David Cargill.
  *
@@ -130,7 +133,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // private function used to update fXSModel
 void XMLGrammarPoolImpl::createXSModel()
 {
-    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry, false, getMemoryManager());
     if (fXSModel)
     {
         // Need to guarantee that we return a different address...        
@@ -192,7 +195,7 @@ bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 
     if (fGrammarRegistry->containsKey(grammarKey)) 
     {
-        ThrowXML(RuntimeException, XMLExcepts::GC_ExistingGrammar);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::GC_ExistingGrammar, getMemoryManager());
     }
 
     fGrammarRegistry->put((void*) grammarKey, gramToCache);
@@ -226,7 +229,7 @@ Grammar* XMLGrammarPoolImpl::orphanGrammar(const XMLCh* const nameSpaceKey)
 RefHashTableOfEnumerator<Grammar>
 XMLGrammarPoolImpl::getGrammarEnumerator() const
 {
-    return RefHashTableOfEnumerator<Grammar>(fGrammarRegistry);
+    return RefHashTableOfEnumerator<Grammar>(fGrammarRegistry, false, fGrammarRegistry->getMemoryManager());
 }
 
 
@@ -342,10 +345,10 @@ XMLStringPool *XMLGrammarPoolImpl::getURIStringPool()
  ***/
 void XMLGrammarPoolImpl::serializeGrammars(BinOutputStream* const binOut)
 {
-    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry, false, getMemoryManager());
     if (!(grammarEnum.hasMoreElements())) 
     {        
-        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Empty);
+        ThrowXMLwithMemMgr(XSerializationException, XMLExcepts::XSer_GrammarPool_Empty, getMemoryManager());
     }
         
     XSerializeEngine  serEng(binOut, getMemoryManager());
@@ -374,6 +377,7 @@ void XMLGrammarPoolImpl::serializeGrammars(BinOutputStream* const binOut)
  ***/
 void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
 {
+    MemoryManager *memMgr = getMemoryManager();
     unsigned int stringCount = fStringPool->getStringCount();
     if (stringCount)
     {
@@ -388,17 +392,17 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
         }
         else
         {
-            ThrowXML(XSerializationException, XMLExcepts::XSer_StringPool_NotEmpty);
+            ThrowXMLwithMemMgr(XSerializationException, XMLExcepts::XSer_StringPool_NotEmpty, memMgr);
         }
     }
 
-    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry, false, memMgr);
     if (grammarEnum.hasMoreElements()) 
     {
-        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_NotEmpty);
+        ThrowXMLwithMemMgr(XSerializationException, XMLExcepts::XSer_GrammarPool_NotEmpty, memMgr);
     }
 
-    MemoryManager *memMgr = getMemoryManager();
+    
     try 
     {
         XSerializeEngine  serEng(binIn, memMgr);
@@ -424,15 +428,16 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
             XMLCh     MajVerChar[4];
             XMLCh     MinVerChar[4];
             XMLCh     RevisionChar[4];
-            XMLString::binToText(MajVer,   MajVerChar,   4, 10);
-            XMLString::binToText(MinVer,   MinVerChar,   4, 10);
-            XMLString::binToText(Revision, RevisionChar, 4, 10);
+            XMLString::binToText(MajVer,   MajVerChar,   4, 10, memMgr);
+            XMLString::binToText(MinVer,   MinVerChar,   4, 10, memMgr);
+            XMLString::binToText(Revision, RevisionChar, 4, 10, memMgr);
             
-            ThrowXML3(XSerializationException
+            ThrowXMLwithMemMgr3(XSerializationException
                     , XMLExcepts::XSer_BinaryData_Version_NotSupported
                     , MajVerChar
                     , MinVerChar
-                    , RevisionChar);
+                    , RevisionChar
+                    , memMgr);
         }
         //lock status
         serEng>>fLocked;

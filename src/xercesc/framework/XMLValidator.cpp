@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.5  2003/12/17 00:18:34  cargilld
+  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+  *
   * Revision 1.4  2003/05/15 18:26:07  knoaman
   * Partial implementation of the configurable memory manager.
   *
@@ -330,7 +333,7 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
         XMLCh errText[maxChars + 1];
 
         // load the text
-		if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+		if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fScanner->getMemoryManager()))
 		{
 			// <TBD> Should probably load a default message here
         }

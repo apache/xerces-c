@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -142,7 +145,9 @@ public:
      * @param content2
      * @return
      */
-    virtual int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -181,15 +186,6 @@ protected:
 // Abstract interface from AbstractNumericFacetValidator
 // -----------------------------------------------------------------------
 
-    virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
-
-    virtual void inheritAdditionalFacet();
-
-    virtual void checkAdditionalFacetConstraints() const;
-
-    virtual void checkAdditionalFacetConstraintsBase() const;
-
     virtual int  compareValues(const XMLNumber* const lValue
                              , const XMLNumber* const rValue);
 
@@ -201,7 +197,7 @@ protected:
 
     virtual void  setMinExclusive(const XMLCh* const);
 
-    virtual void  setEnumeration();
+    virtual void  setEnumeration(MemoryManager* const manager);
 
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericValidator
@@ -209,7 +205,8 @@ protected:
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            ,       MemoryManager*     const manager);
 
 };
 

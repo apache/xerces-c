@@ -362,9 +362,9 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                 if (!fStandardUriConformant)
                     srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
                 else {
-                    // since this is the top of the try/catch, cannot call ThrowXML
+                    // since this is the top of the try/catch, cannot call ThrowXMLwithMemMgr
                     // emit the error directly
-                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
                     fInException = true;
                     emitError
                     (
@@ -378,7 +378,7 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
             else
             {
                 if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
-                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL, fMemoryManager);
                     fInException = true;
                     emitError
                     (
@@ -396,10 +396,10 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
             if (!fStandardUriConformant)
                 srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
-                // since this is the top of the try/catch, cannot call ThrowXML
+                // since this is the top of the try/catch, cannot call ThrowXMLwithMemMgr
                 // emit the error directly
                 // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
-                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 fInException = true;
                 emitError
                 (
@@ -483,9 +483,9 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
             if (!fStandardUriConformant)
                 srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
-                // since this is the top of the try/catch, cannot call ThrowXML
+                // since this is the top of the try/catch, cannot call ThrowXMLwithMemMgr
                 // emit the error directly
-                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
                 fInException = true;
                 emitError
                 (
@@ -499,7 +499,7 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         else
         {
             if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
-                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 fInException = true;
                 emitError
                 (
@@ -517,7 +517,7 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         if (!fStandardUriConformant)
             srcToUse = new (fMemoryManager) LocalFileInputSource(systemId,  fMemoryManager);
         else {
-            // since this is the top of the try/catch, cannot call ThrowXML
+            // since this is the top of the try/catch, cannot call ThrowXMLwithMemMgr
             // emit the error directly
             // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
             fInException = true;
@@ -693,7 +693,7 @@ void XMLScanner::scanReset(XMLPScanToken& token)
 {
     // Make sure this token is still legal
     if (!isLegalToken(token))
-        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Reset the reader manager
     fReaderMgr.reset();
@@ -888,7 +888,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+        if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fMemoryManager))
         {
                 // <TBD> Should probably load a default message here
         }
@@ -1104,7 +1104,7 @@ void XMLScanner::scanPI()
             if (!nextCh)
             {
                 emitError(XMLErrs::UnterminatedPI);
-                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
             }
 
             // Watch for potential terminating character
@@ -1140,6 +1140,7 @@ void XMLScanner::scanPI()
                         , tmpBuf
                         , 8
                         , 16
+                        , fMemoryManager
                     );
                     emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 }
@@ -1635,9 +1636,9 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                 if (!fStandardUriConformant)
                     srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
                 else {
-                    // since this is the top of the try/catch, cannot call ThrowXML
+                    // since this is the top of the try/catch, cannot call ThrowXMLwithMemMgr
                     // emit the error directly
-                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent);
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
                     fInException = true;
                     emitError
                     (
@@ -1651,7 +1652,7 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             else
             {
                 if (fStandardUriConformant && tmpURL.hasInvalidChar()) {
-                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL);
+                    MalformedURLException e(__FILE__, __LINE__, XMLExcepts::URL_MalformedURL, fMemoryManager);
                     fInException = true;
                     emitError
                     (
@@ -1669,7 +1670,7 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             if (!fStandardUriConformant)
                 srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
-                // since this is the top of the try/catch, cannot call ThrowXML
+                // since this is the top of the try/catch, cannot call ThrowXMLwithMemMgr
                 // emit the error directly
                 // lazy bypass ... since all MalformedURLException are fatal, no need to check the type
                 fInException = true;
@@ -1760,7 +1761,7 @@ void XMLScanner::checkIDRefs()
 {
     //  Iterate the id ref list. If we find any entries here which are used
     //  but not declared, then that's an error.
-    RefHashTableOfEnumerator<XMLRefInfo> refEnum(fValidationContext->getIdRefList());
+    RefHashTableOfEnumerator<XMLRefInfo> refEnum(fValidationContext->getIdRefList(), false, fMemoryManager);
     while (refEnum.hasMoreElements())
     {
         // Get a ref to the current element
@@ -1933,7 +1934,7 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
 
         // Watch for EOF
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         // Break out on the terminating semicolon
         if (nextCh == chSemiColon)
@@ -2048,7 +2049,7 @@ void XMLScanner::scanComment()
         if (!nextCh)
         {
             emitError(XMLErrs::UnterminatedComment);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         // Check for correct surrogate pairs
@@ -2076,6 +2077,7 @@ void XMLScanner::scanComment()
                     , tmpBuf
                     , 8
                     , 16
+                    , fMemoryManager
                 );
                 emitError(XMLErrs::InvalidCharacter, tmpBuf);
             }

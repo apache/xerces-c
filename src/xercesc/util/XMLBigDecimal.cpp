@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.15  2003/12/11 21:38:12  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -167,7 +170,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
 , fMemoryManager(manager)
 {
     if ((!strValue) || (!*strValue))
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
 
     try
     {
@@ -178,7 +181,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
         );
         memcpy(fRawData, strValue, (fRawDataLen+1) * sizeof(XMLCh));
         fIntVal = fRawData + fRawDataLen + 1;
-        parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale);
+        parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale, fMemoryManager);
     }
     catch(const OutOfMemoryException&)
     {
@@ -222,7 +225,7 @@ void XMLBigDecimal::setDecimalValue(const XMLCh* const strValue)
     }
 
     memcpy(fRawData, strValue, (valueLen + 1) * sizeof(XMLCh));
-    parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale);
+    parseDecimal(strValue, fIntVal, fSign, (int&) fTotalDigits, (int&) fScale, fMemoryManager);
 
 }
 
@@ -242,7 +245,7 @@ XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawD
     ArrayJanitor<XMLCh> janName(retBuf, memMgr);
     int   sign, totalDigits, fractDigits;
 
-    XMLBigDecimal::parseDecimal(rawData, retBuf, sign, totalDigits, fractDigits);
+    XMLBigDecimal::parseDecimal(rawData, retBuf, sign, totalDigits, fractDigits, memMgr);
 
     //Extra space reserved in case strLen is zero
     int    strLen = XMLString::stringLen(retBuf);
@@ -301,7 +304,8 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
                                ,        XMLCh* const retBuffer
                                ,        int&         sign
                                ,        int&         totalDigits
-                               ,        int&         fractDigits)
+                               ,        int&         fractDigits
+                               ,        MemoryManager* const manager)
 {
     //init
     retBuffer[0] = chNull;
@@ -315,7 +319,7 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
 
     // If we hit the end, then return failure
     if (!*startPtr)
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_WSString);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_WSString, manager);
 
     // Strip tailing white space, if any.
     const XMLCh* endPtr = toParse + XMLString::stringLen(toParse);
@@ -363,12 +367,12 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
                 continue;
             }
             else  // '.' is allowed only once
-                ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_2ManyDecPoint);
+                ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_2ManyDecPoint, manager);
         }
 
         // If not valid decimal digit, then an error
         if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
 
         // copy over
         *retPtr++ = *startPtr++;
@@ -396,10 +400,11 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
 }
 
 int XMLBigDecimal::compareValues( const XMLBigDecimal* const lValue
-                                , const XMLBigDecimal* const rValue)
+                                , const XMLBigDecimal* const rValue
+                                , MemoryManager* const manager)
 {
     if ((!lValue) || (!rValue) )
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_null_ptr, manager);
         	
     return lValue->toCompare(*rValue);
 }                                

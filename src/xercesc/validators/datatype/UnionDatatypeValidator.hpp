@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.14  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -223,6 +226,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     /**
@@ -251,7 +255,9 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    int compare(const XMLCh* const, const XMLCh* const
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -310,11 +316,13 @@ private:
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            ,       MemoryManager*     const manager);
 
     void init(DatatypeValidator*            const baseValidator
             , RefHashTableOf<KVStringPair>* const facets
-            , RefArrayVectorOf<XMLCh>*           const enums);
+            , RefArrayVectorOf<XMLCh>*      const enums
+            , MemoryManager*                const manager);
 
     void cleanUp();
     
@@ -356,9 +364,10 @@ inline DatatypeValidator* UnionDatatypeValidator::newInstance
 }
 
 inline void UnionDatatypeValidator::validate( const XMLCh*             const content
-                                           ,        ValidationContext* const context)
+                                           ,        ValidationContext* const context
+                                           ,        MemoryManager*     const manager)
 {
-    checkContent(content, context, false);
+    checkContent(content, context, false, manager);
 }
 
 inline void UnionDatatypeValidator::cleanUp()

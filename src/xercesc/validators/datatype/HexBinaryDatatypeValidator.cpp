@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -138,7 +141,7 @@ HexBinaryDatatypeValidator::HexBinaryDatatypeValidator(
                         , MemoryManager* const                manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::HexBinary, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DatatypeValidator* HexBinaryDatatypeValidator::newInstance
@@ -155,34 +158,21 @@ DatatypeValidator* HexBinaryDatatypeValidator::newInstance
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-void HexBinaryDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
-                                                      , const XMLCh* const)
+
+void HexBinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                                 , MemoryManager* const manager)
 {
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void HexBinaryDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void HexBinaryDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void HexBinaryDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-void HexBinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{
-    if (getLength(content) <= 0)
+    if (getLength(content, manager) <= 0)
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Not_HexBin
-                , content);
+                , content
+                , manager);
     }
 }
 
-int HexBinaryDatatypeValidator::getLength(const XMLCh* const content) const
+int HexBinaryDatatypeValidator::getLength(const XMLCh* const content
+                                      , MemoryManager* const manager) const
 {
     return HexBin::getDataLength(content);
 }

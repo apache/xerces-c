@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.10  2003/05/20 22:10:02  peiyongz
  * To differentiate external/internal memory
  *
@@ -211,7 +214,7 @@ const unsigned int Base64::quadsPerLine = 15;
 
 XMLByte* Base64::encode(const XMLByte* const inputData
                       , const unsigned int   inputLength
-                      , unsigned int*        outputLength
+                      , unsigned int*        outputLength                      
                       , MemoryManager* const memMgr)
 {
     if (!isInitialized)
@@ -318,16 +321,17 @@ XMLByte* Base64::encode(const XMLByte* const inputData
 // Since decode() has track of length of the decoded data, we
 // will get this length from decode(), instead of strLen().
 //
-int Base64::getDataLength(const XMLCh* const inputData)
+int Base64::getDataLength(const XMLCh* const inputData
+                          , MemoryManager* const manager)
 {
     unsigned int    retLen = 0;
-    XMLCh* decodedData = decode(inputData, &retLen);
+    XMLCh* decodedData = decode(inputData, &retLen, manager);
 
     if ( !decodedData )
         return -1;
     else
     {
-        returnExternalMemory(0, decodedData);
+        returnExternalMemory(manager, decodedData);
         return retLen;
     }
 }
@@ -357,7 +361,7 @@ int Base64::getDataLength(const XMLCh* const inputData)
 */
 
 XMLByte* Base64::decode(const XMLByte* const inputData
-                      , unsigned int*        decodedLength
+                      , unsigned int*        decodedLength                      
                       , MemoryManager* const memMgr)
 {
     if (!isInitialized)
@@ -365,13 +369,13 @@ XMLByte* Base64::decode(const XMLByte* const inputData
 
     if ((!inputData) || (!*inputData))
         return 0;
-
+    
     //
     // remove all XML whitespaces from the base64Data
     //
     int inputLength = XMLString::stringLen( (const char* const)inputData );
-    XMLByte* rawInputData = (XMLByte*) getInternalMemory((inputLength+1) * sizeof(XMLByte));
-    ArrayJanitor<XMLByte> jan(rawInputData, XMLPlatformUtils::fgMemoryManager);
+    XMLByte* rawInputData = (XMLByte*) getExternalMemory(memMgr, (inputLength+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> jan(rawInputData, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
 
     int inputIndex = 0;
     int rawInputLength = 0;
@@ -523,8 +527,8 @@ XMLCh* Base64::decode(const XMLCh* const   inputData
      *  Move input data to a XMLByte buffer
      */
 	unsigned int srcLen = XMLString::stringLen(inputData);
-    XMLByte *dataInByte = (XMLByte*) getInternalMemory((srcLen+1) * sizeof(XMLByte));
-    ArrayJanitor<XMLByte> janFill(dataInByte, XMLPlatformUtils::fgMemoryManager);
+    XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
 
     for (unsigned int i = 0; i < srcLen; i++)
 		dataInByte[i] = (XMLByte)inputData[i];
@@ -556,7 +560,6 @@ XMLCh* Base64::decode(const XMLCh* const   inputData
     returnExternalMemory(memMgr, DecodedBuf);
 
     return toRet;
-
 }
 
 // -----------------------------------------------------------------------

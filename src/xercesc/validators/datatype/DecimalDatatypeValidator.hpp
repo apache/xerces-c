@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.10  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -150,7 +153,9 @@ public:
      * @param content2
      * @return
      */
-    virtual int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -196,13 +201,14 @@ protected:
 // -----------------------------------------------------------------------
 
     virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
+                                     , const XMLCh* const value
+                                     , MemoryManager* const manager);
 
     virtual void inheritAdditionalFacet();
 
-    virtual void checkAdditionalFacetConstraints() const;
+    virtual void checkAdditionalFacetConstraints(MemoryManager* const manager) const;
 
-    virtual void checkAdditionalFacetConstraintsBase() const;
+    virtual void checkAdditionalFacetConstraintsBase(MemoryManager* const manager) const;
 
     virtual int  compareValues(const XMLNumber* const lValue
                              , const XMLNumber* const rValue);
@@ -215,7 +221,7 @@ protected:
 
     virtual void  setMinExclusive(const XMLCh* const);
 
-    virtual void  setEnumeration();
+    virtual void  setEnumeration(MemoryManager* const manager);
 
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericValidator
@@ -223,7 +229,8 @@ protected:
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            ,       MemoryManager*     const manager);
 public:
 
 // -----------------------------------------------------------------------

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -99,7 +102,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const XMLCh* const   fileName
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
 
     if (!fSource)
-        ThrowXML1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName);
+        ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
 
     // Buffer is one larger than capacity, to allow for zero term
     fDataBuf = (XMLByte*) fMemoryManager->allocate
@@ -123,7 +126,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
 
     if (!fSource)
-        ThrowXML1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName);
+        ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
 
     // Buffer is one larger than capacity, to allow for zero term
     fDataBuf = (XMLByte*) fMemoryManager->allocate

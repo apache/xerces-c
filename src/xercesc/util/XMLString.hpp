@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.20  2003/10/02 11:07:26  gareth
  * Made the non-memory manager version of replicate not inlined. Updated the documentation for the memory manager versions so they don't tell you you should call release.
  *
@@ -619,6 +622,7 @@ public:
     (
         const   char* const     toHash
         , const unsigned int    hashModulus
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Hashes a string given a modulus
@@ -631,6 +635,7 @@ public:
     (
         const   XMLCh* const    toHash
         , const unsigned int    hashModulus
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Hashes a string given a modulus taking a maximum number of characters
@@ -647,6 +652,7 @@ public:
         const   XMLCh* const    toHash
         , const unsigned int    numChars
         , const unsigned int    hashModulus
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}
@@ -688,6 +694,7 @@ public:
         const   char* const     toSearch
         , const char            chToFind
         , const unsigned int    fromIndex
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -705,6 +712,7 @@ public:
         const   XMLCh* const    toSearch
         , const XMLCh           chToFind
         , const unsigned int    fromIndex
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -758,6 +766,7 @@ public:
         const   char* const     toSearch
         , const char            chToFind
         , const unsigned int    fromIndex
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -775,6 +784,7 @@ public:
         const   XMLCh* const    toSearch
         , const XMLCh           ch
         , const unsigned int    fromIndex
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
 
@@ -810,6 +820,7 @@ public:
         , const char* const    srcStr
         , const int            startIndex
         , const int            endIndex
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Create a substring of a givend string. The substring begins at the
@@ -826,6 +837,7 @@ public:
         , const XMLCh* const    srcStr
         , const int             startIndex
         , const int             endIndex
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}
@@ -842,8 +854,6 @@ public:
       * @see   XMLString::release(char**)
       */
     static char* replicate(const char* const toRep);
-
-
 
     /** Replicates a string
       * NOTE: The returned buffer is allocated with the MemoryManager. It is the
@@ -866,7 +876,6 @@ public:
       * @see   XMLString::release(XMLCh**)
       */
     static XMLCh* replicate(const XMLCh* const toRep);
-
 
     /** Replicates a string
       * NOTE: The returned buffer is allocated with the MemoryManager. It is the
@@ -1101,6 +1110,7 @@ public:
         ,       char* const     toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1119,6 +1129,7 @@ public:
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1137,6 +1148,7 @@ public:
         ,       char* const     toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1155,6 +1167,7 @@ public:
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1173,6 +1186,7 @@ public:
         ,       char* const     toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1191,6 +1205,7 @@ public:
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1209,6 +1224,7 @@ public:
         ,       char* const     toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts binary data to a text string based a given radix
@@ -1227,6 +1243,7 @@ public:
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -1243,6 +1260,7 @@ public:
     (
         const   XMLCh* const    toConvert
         ,       unsigned int&   toFill
+        ,       MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -1260,6 +1278,7 @@ public:
     static int parseInt
     (
         const   XMLCh* const    toConvert
+      , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Cut leading chars from a string
@@ -1370,7 +1389,8 @@ public:
       * @param tokenizeSrc String to be tokenized
       * @return a vector of all the tokenized string
       */
-    static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
+    static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc
+                                        , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 
@@ -1387,7 +1407,7 @@ public:
     static XMLCh* makeUName
     (
         const   XMLCh* const    pszURI
-        , const XMLCh* const    pszName
+        , const XMLCh* const    pszName      
     );
 
     /**
@@ -1453,7 +1473,8 @@ public:
       * @param toConvert The string which needs to be whitespace removed.
       *        On return , this buffer also holds the converted string
       */
-    static void removeWS(XMLCh* const toConvert);
+    static void removeWS(XMLCh* const toConvert
+    , MemoryManager*       const manager );//= XMLPlatformUtils::fgMemoryManager);
 
     /**
      * Fixes a platform dependent absolute path filename to standard URI form.

@@ -289,10 +289,11 @@ XMLRecognizer::encodingForName(const XMLCh* const encName)
 
 
 const XMLCh*
-XMLRecognizer::nameForEncoding(const XMLRecognizer::Encodings theEncoding)
+XMLRecognizer::nameForEncoding(const XMLRecognizer::Encodings theEncoding
+                               , MemoryManager* const manager)
 {
     if (theEncoding > Encodings_Count)
-        ThrowXML(RuntimeException, XMLExcepts::XMLRec_UnknownEncoding);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::XMLRec_UnknownEncoding, manager);
 
     return gEncodingNameMap[theEncoding];
 }

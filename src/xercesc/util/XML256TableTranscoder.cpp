@@ -174,13 +174,14 @@ XML256TableTranscoder::transcodeTo( const   XMLCh* const    srcData
         if (options == UnRep_Throw)
         {
             XMLCh tmpBuf[16];
-            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
-            ThrowXML2
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_Unrepresentable
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
 
@@ -211,9 +212,10 @@ XML256TableTranscoder(  const   XMLCh* const                     encodingName
                         , const unsigned int                     blockSize
                         , const XMLCh* const                     fromTable
                         , const XMLTransService::TransRec* const toTable
-                        , const unsigned int                     toTableSize) :
+                        , const unsigned int                     toTableSize
+                        , MemoryManager* const                   manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
     , fFromTable(fromTable)
     , fToSize(toTableSize)
     , fToTable(toTable)

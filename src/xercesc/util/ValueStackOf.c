@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.4  2003/05/29 13:26:44  knoaman
  * Fix memory leak when using deprecated dom.
  *
@@ -124,7 +127,7 @@ template <class TElem> const TElem& ValueStackOf<TElem>::peek() const
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::Stack_EmptyStack, fVector.getMemoryManager());
 
     return fVector.elementAt(curSize-1);
 }
@@ -133,7 +136,7 @@ template <class TElem> TElem ValueStackOf<TElem>::pop()
 {
     const int curSize = fVector.size();
     if (curSize == 0)
-        ThrowXML(EmptyStackException, XMLExcepts::Stack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::Stack_EmptyStack, fVector.getMemoryManager());
 
     TElem retVal = fVector.elementAt(curSize-1);
     fVector.removeElementAt(curSize-1);

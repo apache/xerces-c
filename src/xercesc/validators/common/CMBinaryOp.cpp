@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/11/20 18:12:20  knoaman
  * Use a bitwise operation to check the node type.
  *
@@ -125,7 +128,7 @@ CMBinaryOp::CMBinaryOp( const ContentSpecNode::NodeTypes type
     if (((type & 0x0f) != ContentSpecNode::Choice)
     &&  ((type & 0x0f) != ContentSpecNode::Sequence))
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType, manager);
     }
 }
 

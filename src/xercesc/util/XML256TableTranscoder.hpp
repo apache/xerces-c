@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/03/07 18:11:55  tng
  * Return a reference instead of void for operator=
  *
@@ -133,6 +136,7 @@ protected :
         , const XMLCh* const                        fromTable
         , const XMLTransService::TransRec* const    toTable
         , const unsigned int                        toTableSize
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/05/30 16:11:43  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -95,7 +98,7 @@ Wrapper4DOMInputSource::Wrapper4DOMInputSource(DOMInputSource* const inputSource
     ,  fInputSource(inputSource)
 {
     if (!inputSource)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, getMemoryManager());
 }
 
 Wrapper4DOMInputSource::~Wrapper4DOMInputSource()

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/12/01 23:23:27  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -180,7 +183,8 @@ inline int XMLDouble::compareValues(const XMLDouble* const lValue
                                   , const XMLDouble* const rValue)
 {
     return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
-                                                 (const XMLAbstractDoubleFloat* const) rValue );
+                                                 (const XMLAbstractDoubleFloat* const) rValue 
+                                                 , ((XMLAbstractDoubleFloat*)lValue)->getMemoryManager());
 }
 
 XERCES_CPP_NAMESPACE_END

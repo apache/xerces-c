@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -152,14 +155,14 @@ template <class T> T* CountedPointerTo<T>::operator->()
 template <class T> const T& CountedPointerTo<T>::operator*() const
 {
     if (!fPtr)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
     return *fPtr;
 }
 
 template <class T> T& CountedPointerTo<T>::operator*()
 {
     if (!fPtr)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
     return *fPtr;
 }
 

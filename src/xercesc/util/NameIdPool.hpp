@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/10/29 16:17:48  peiyongz
  * size() added
  *
@@ -191,7 +194,7 @@ public :
     TElem* getById(const unsigned elemId);
     const TElem* getById(const unsigned elemId) const;
 
-
+    MemoryManager* getMemoryManager() const;
     // -----------------------------------------------------------------------
     //  Putters
     //
@@ -278,6 +281,7 @@ public :
     NameIdPoolEnumerator
     (
                 NameIdPool<TElem>* const    toEnum
+                , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     NameIdPoolEnumerator
@@ -294,8 +298,7 @@ public :
     (
         const   NameIdPoolEnumerator<TElem>& toAssign
     );
-
-
+   
     // -----------------------------------------------------------------------
     //  Enum interface
     // -----------------------------------------------------------------------
@@ -315,8 +318,9 @@ private :
     //  fToEnum
     //      The name id pool that is being enumerated.
     // -----------------------------------------------------------------------
-    unsigned int        fCurIndex;
-    NameIdPool<TElem>*  fToEnum;
+    unsigned int            fCurIndex;
+    NameIdPool<TElem>*      fToEnum;
+    MemoryManager* const    fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

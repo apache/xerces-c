@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -143,18 +146,8 @@ public:
 
 protected:
 
-    virtual void assignAdditionalFacet(const XMLCh* const key
-                                     , const XMLCh* const value);
-
-    virtual void inheritAdditionalFacet();
-
-    virtual void checkAdditionalFacetConstraints() const;
-
-    virtual void checkAdditionalFacet(const XMLCh* const content) const;
-
-    virtual void checkValueSpace(const XMLCh* const content);
-
-    virtual int  getLength(const XMLCh* const content) const;
+    virtual void checkValueSpace(const XMLCh* const content
+                                , MemoryManager* const manager);
 
 private:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.16  2003/12/11 21:38:12  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -232,7 +235,8 @@ protected:
 	 */
 
     static int            compareValues(const XMLAbstractDoubleFloat* const lValue
-                                      , const XMLAbstractDoubleFloat* const rValue);
+                                      , const XMLAbstractDoubleFloat* const rValue
+                                      , MemoryManager* const manager);
 
     //
     // to be overwritten by derived class
@@ -254,7 +258,8 @@ private:
     inline bool           isSpecialValue() const;
 
     static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue
-                                       , const XMLAbstractDoubleFloat* const normalValue);
+                                       , const XMLAbstractDoubleFloat* const normalValue
+                                       , MemoryManager* const manager);
 
     void                  formatString();
 

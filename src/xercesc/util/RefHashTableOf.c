@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/08/20 11:51:39  gareth
  * Reorderd initializer list to prevent compiler warning.
  *
@@ -204,7 +207,7 @@ RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus
 template <class TVal> void RefHashTableOf<TVal>::initialize(const unsigned int modulus)
 {
     if (modulus == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
     fBucketList = (RefHashTableBucketElem<TVal>**) fMemoryManager->allocate
@@ -295,9 +298,9 @@ orphanKey(const void* const key)
 {
     // Hash the key
     TVal* retVal = 0;
-    unsigned int hashVal = fHash->getHashVal(key, fHashModulus);
+    unsigned int hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     //
     //  Search the given bucket for this key. Keep up with the previous
@@ -335,7 +338,7 @@ orphanKey(const void* const key)
 
     // We never found that key
     if (!retVal)
-        ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
 
     return retVal;
 }
@@ -496,9 +499,9 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
             // Save the next element before we detach this one
             nextElem = curElem->fNext;
 
-            unsigned int hashVal = fHash->getHashVal(curElem->fKey, fHashModulus);
+            unsigned int hashVal = fHash->getHashVal(curElem->fKey, fHashModulus, fMemoryManager);
             if (hashVal > fHashModulus)
-                ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
             
             RefHashTableBucketElem<TVal>* newHeadElem = fBucketList[hashVal];
             
@@ -518,9 +521,9 @@ template <class TVal> RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
 findBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -538,9 +541,9 @@ template <class TVal> const RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
 findBucketElem(const void* const key, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     const RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -559,9 +562,9 @@ template <class TVal> void RefHashTableOf<TVal>::
 removeBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     //
     //  Search the given bucket for this key. Keep up with the previous
@@ -603,7 +606,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
     }
 
     // We never found that key
-    ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+    ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
 }
 
 
@@ -612,11 +615,14 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
 //  RefHashTableOfEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal> RefHashTableOfEnumerator<TVal>::
-RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt)
+RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum
+                         , const bool adopt
+                         , MemoryManager* const manager)
 	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+    , fMemoryManager(manager)
 {
     if (!toEnum)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, fMemoryManager);
 
     //
     //  Find the next available bucket element in the hash table. If it
@@ -653,7 +659,7 @@ template <class TVal> TVal& RefHashTableOfEnumerator<TVal>::nextElement()
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the
@@ -669,7 +675,7 @@ template <class TVal> void* RefHashTableOfEnumerator<TVal>::nextElementKey()
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the

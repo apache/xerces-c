@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/10/29 16:18:41  peiyongz
  * Implement serialization/deserialization
  *
@@ -220,7 +223,7 @@ unsigned int XMLStringPool::getId(const XMLCh* const toFind) const
 const XMLCh* XMLStringPool::getValueForId(const unsigned int id) const
 {
     if (!id || (id >= fCurId))
-        ThrowXML(IllegalArgumentException, XMLExcepts::StrPool_IllegalId);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::StrPool_IllegalId, fMemoryManager);
 
     // Just index the id map and return that element's string
     return fIdMap[id]->fString;

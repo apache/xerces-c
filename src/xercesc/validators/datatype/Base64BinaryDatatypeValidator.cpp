@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -144,7 +147,7 @@ Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator(
                         , MemoryManager* const                manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::Base64Binary, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DatatypeValidator* Base64BinaryDatatypeValidator::newInstance
@@ -161,52 +164,40 @@ DatatypeValidator* Base64BinaryDatatypeValidator::newInstance
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-void Base64BinaryDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
-                                                         , const XMLCh* const)
+
+void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                                    , MemoryManager* const manager)
 {
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
-
-void Base64BinaryDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void Base64BinaryDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void Base64BinaryDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{
-    if (getLength(content) <= 0)
+    if (getLength(content, manager) <= 0)
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Not_Base64
-                , content);
+                , content
+                , manager);
     }
 }
 
-int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content) const
+int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content
+                                         , MemoryManager* const manager) const
 {
-    return Base64::getDataLength(content);
+    return Base64::getDataLength(content, manager);
 }
 
-void Base64BinaryDatatypeValidator::normalizeEnumeration()
+void Base64BinaryDatatypeValidator::normalizeEnumeration(MemoryManager* const manager)
 {
 
     int enumLength = getEnumeration()->size();
     for ( int i=0; i < enumLength; i++)
     {
-        XMLString::removeWS(getEnumeration()->elementAt(i));
+        XMLString::removeWS(getEnumeration()->elementAt(i), manager);
     }
 
 }
 
-void Base64BinaryDatatypeValidator::normalizeContent(XMLCh* const content) const
+void Base64BinaryDatatypeValidator::normalizeContent(XMLCh* const content
+                                                     , MemoryManager* const manager) const
 {
-    XMLString::removeWS(content);     
+    XMLString::removeWS(content, manager);     
 }
 
 /***

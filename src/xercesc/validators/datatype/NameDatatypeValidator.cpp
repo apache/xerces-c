@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -118,7 +121,7 @@ NameDatatypeValidator::NameDatatypeValidator(
                         , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Name, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DatatypeValidator* NameDatatypeValidator::newInstance
@@ -146,33 +149,37 @@ NameDatatypeValidator::NameDatatypeValidator(
 // Compare methods
 // -----------------------------------------------------------------------
 int NameDatatypeValidator::compare(const XMLCh* const lValue
-                                   , const XMLCh* const rValue)
+                                   , const XMLCh* const rValue
+                                   ,       MemoryManager*     const manager)
 {
     return ( XMLString::equals(lValue, rValue)? 0 : -1);
 }
 
 void NameDatatypeValidator::validate(const XMLCh*             const content
-                                   ,       ValidationContext* const context)
+                                   ,       ValidationContext* const context
+                                   ,       MemoryManager*     const manager)
 {
     // use StringDatatypeValidator (which in turn, invoke
     // the baseValidator) to validate content against
     // facets if any.
     //
-    StringDatatypeValidator::validate(content, context);
+    StringDatatypeValidator::validate(content, context, manager);
 
     return;
 }
 
-void NameDatatypeValidator::checkValueSpace(const XMLCh* const content)
+void NameDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                            , MemoryManager* const manager)
 {
     //
     // 3.3.6 check must: "Name"
     //
     if ( !XMLString::isValidName(content))
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Invalid_Name
-                , content);
+                , content
+                , manager);
     }
 
 }

@@ -179,11 +179,11 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     if ((fEncoding < XMLRecognizer::Encodings_Min)
     ||  (fEncoding > XMLRecognizer::Encodings_Max))
     {
-        ThrowXML(RuntimeException, XMLExcepts::Reader_BadAutoEncoding);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Reader_BadAutoEncoding, fMemoryManager);
     }
     #endif
 
-    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding), fMemoryManager);
+    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding, fMemoryManager), fMemoryManager);
 
     // Check whether the fSwapped flag should be set or not
     checkForSwapped();
@@ -299,11 +299,12 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
     if (!fTranscoder)
     {
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             TranscodingException
             , XMLExcepts::Trans_CantCreateCvtrFor
             , fEncodingStr
+            , fMemoryManager
         );
     }
 
@@ -373,7 +374,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     //  Use the passed encoding code
     //
     fEncoding = encodingEnum;
-    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding), fMemoryManager);
+    fEncodingStr = XMLString::replicate(XMLRecognizer::nameForEncoding(fEncoding, fMemoryManager), fMemoryManager);
 
     // Check whether the fSwapped flag should be set or not
     checkForSwapped();
@@ -393,11 +394,12 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
     if (!fTranscoder)
     {
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             TranscodingException
             , XMLExcepts::Trans_CantCreateCvtrFor
             , fEncodingStr
+            , fMemoryManager
         );
     }
 
@@ -434,7 +436,7 @@ XMLReader::~XMLReader()
 unsigned int XMLReader::getSrcOffset() const
 {
     if (!fSrcOfsSupported || !fCalculateSrcOfs)
-        ThrowXML(RuntimeException, XMLExcepts::Reader_SrcOfsNotSupported);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Reader_SrcOfsNotSupported, fMemoryManager);
 
     //
     //  Take the current source offset and add in the sizes that we've
@@ -475,7 +477,7 @@ bool XMLReader::refreshCharBuffer()
     if (!fTranscoder)
     {
         if (fEncoding == XMLRecognizer::EBCDIC)
-            ThrowXML(RuntimeException, XMLExcepts::Reader_EncodingStrRequired);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Reader_EncodingStrRequired, fMemoryManager);
 
         // Ask the transcoding service to make use a transcoder
         XMLTransService::Codes failReason;
@@ -489,11 +491,12 @@ bool XMLReader::refreshCharBuffer()
 
         if (!fTranscoder)
         {
-            ThrowXML1
+            ThrowXMLwithMemMgr1
             (
                 TranscodingException
                 , XMLExcepts::Trans_CantCreateCvtrFor
                 , fEncodingStr
+                , fMemoryManager
             );
         }
     }
@@ -1230,7 +1233,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         );
 
         if (!fTranscoder)
-            ThrowXML1(TranscodingException, XMLExcepts::Trans_CantCreateCvtrFor, fEncodingStr);
+            ThrowXMLwithMemMgr1(TranscodingException, XMLExcepts::Trans_CantCreateCvtrFor, fEncodingStr, fMemoryManager);
     }
 
     // Update the base encoding member with the new base encoding found
@@ -1318,11 +1321,12 @@ void XMLReader::doInitDecode()
                 {
                     fCharsAvail = 0;
                     fRawBufIndex = 0;
-                    ThrowXML1
+                    ThrowXMLwithMemMgr1
                     (
                         TranscodingException
                         , XMLExcepts::Reader_CouldNotDecodeFirstLine
                         , fSystemId
+                        , fMemoryManager
                     );
                 }
 
@@ -1393,11 +1397,12 @@ void XMLReader::doInitDecode()
                 {
                     fCharsAvail = 0;
                     fRawBufIndex = 0;
-                    ThrowXML1
+                    ThrowXMLwithMemMgr1
                     (
                         TranscodingException
                         , XMLExcepts::Reader_CouldNotDecodeFirstLine
                         , fSystemId
+                        , fMemoryManager
                     );
                 }
             }
@@ -1509,7 +1514,7 @@ void XMLReader::doInitDecode()
 
         default :
             // It should never be anything else here
-            ThrowXML(TranscodingException, XMLExcepts::Reader_BadAutoEncoding);
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Reader_BadAutoEncoding, fMemoryManager);
             break;
     }
 

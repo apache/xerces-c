@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -119,7 +122,7 @@ CMUnaryOp::CMUnaryOp( const ContentSpecNode::NodeTypes type
     &&  (type != ContentSpecNode::ZeroOrMore)
     &&  (type != ContentSpecNode::OneOrMore))
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnaryOpHadBinType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnaryOpHadBinType, manager);
     }
 }
 

@@ -74,7 +74,8 @@ public:
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
 	ConditionToken(const unsigned int refNo, Token* const condTok,
-                   Token* const yesTok, Token* const noTok);
+                   Token* const yesTok, Token* const noTok
+                   , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ConditionToken();
 
 	// -----------------------------------------------------------------------
@@ -118,7 +119,7 @@ inline int ConditionToken::getReferenceNo() const {
 inline Token* ConditionToken::getChild(const int index) const {
 
     if (index < 0 || index > 1)
-        ThrowXML(RuntimeException, XMLExcepts::Regex_InvalidChildIndex);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidChildIndex, fMemoryManager);
 
     if (index == 0)
         return fYesToken;

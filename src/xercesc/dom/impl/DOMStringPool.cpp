@@ -128,7 +128,7 @@ const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
     DOMStringPoolEntry    **pspe;
     DOMStringPoolEntry    *spe;
 
-    int    inHash     = XMLString::hash(in, fHashTableSize);
+    int    inHash     = XMLString::hash(in, fHashTableSize, fDoc->getMemoryManager());
     pspe = &fHashTable[inHash];
     while (*pspe != 0)
     {

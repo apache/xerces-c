@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/10/23 14:11:07  knoaman
  * Fix memory leak.
  *
@@ -282,7 +285,7 @@ const ElemStack::StackElem* ElemStack::popTop()
 {
     // Watch for an underflow error
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow, fMemoryManager);
 
     fStackTop--;
     return fStack[fStackTop];
@@ -293,7 +296,7 @@ void
 ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     fStack[fStackTop - 1]->fThisElement = toSet;
     fStack[fStackTop - 1]->fReaderNum = readerNum;
@@ -306,14 +309,14 @@ ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
 unsigned int ElemStack::addChild(QName* const child, const bool toParent)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     //
     //  If they want to add to the parent, then we have to have at least two
     //  elements on the stack.
     //
     if (toParent && (fStackTop < 2))
-        ThrowXML(NoSuchElementException, XMLExcepts::ElemStack_NoParentPushed);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::ElemStack_NoParentPushed, fMemoryManager);
 
     // Get a convenience pointer to the stack top row
     StackElem* curRow = toParent
@@ -363,7 +366,7 @@ unsigned int ElemStack::addChild(QName* const child, const bool toParent)
 const ElemStack::StackElem* ElemStack::topElement() const
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     return fStack[fStackTop - 1];
 }
@@ -376,7 +379,7 @@ void ElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
                             , const unsigned int    uriId)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     // Get a convenience pointer to the stack top row
     StackElem* curRow = fStack[fStackTop - 1];
@@ -729,7 +732,7 @@ const WFElemStack::StackElem* WFElemStack::popTop()
 {
     // Watch for an underflow error
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_StackUnderflow, fMemoryManager);
 
     fStackTop--;
     return fStack[fStackTop];
@@ -742,7 +745,7 @@ WFElemStack::setElement(const XMLCh* const toSet,
                       const unsigned int readerNum)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     if (toSetLen > fStack[fStackTop - 1]->fElemMaxLength) {
 
@@ -765,7 +768,7 @@ WFElemStack::setElement(const XMLCh* const toSet,
 const WFElemStack::StackElem* WFElemStack::topElement() const
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     return fStack[fStackTop - 1];
 }
@@ -778,7 +781,7 @@ void WFElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
                               , const unsigned int    uriId)
 {
     if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
+        ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
 
     // Get a convenience pointer to the stack top row
     StackElem* curRow = fStack[fStackTop - 1];

@@ -69,9 +69,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XML88591Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XML88591Transcoder::XML88591Transcoder( const   XMLCh* const    encodingName
-                                        , const unsigned int    blockSize) :
+                                        , const unsigned int    blockSize
+                                        , MemoryManager* const  manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
 {
 }
 
@@ -164,13 +165,14 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
         if (options == UnRep_Throw)
         {
             XMLCh tmpBuf[16];
-            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
-            ThrowXML2
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_Unrepresentable
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
         *destPtr++ = 0x1A;

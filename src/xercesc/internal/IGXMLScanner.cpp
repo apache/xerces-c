@@ -267,6 +267,9 @@ void IGXMLScanner::scanDocument(const InputSource& src)
         if (fDocHandler)
             fDocHandler->endDocument();
 
+        //cargill debug:
+        fGrammarResolver->getXSModel();
+
         // Reset the reader manager to close all files, sockets, etc...
         fReaderMgr.reset();
     }
@@ -345,7 +348,7 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
 {
     // Make sure this token is still legal
     if (!isLegalToken(token))
-        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
     unsigned int orgReader;
@@ -804,7 +807,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         //  It was some special case character so do all of the checks and
         //  deal with it.
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chForwardSlash)
         {
@@ -978,7 +981,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     {
         emitError(XMLErrs::MoreEndThanStartTags);
         fReaderMgr.skipPastChar(chCloseAngle);
-        ThrowXML(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
     // After the </ is the element QName, so get a name from the input
@@ -1280,14 +1283,14 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             fGrammarType = fGrammar->getGrammarType();
             if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
                 if (fValidatorFromUser)
-                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
                 else {
                     fValidator = fSchemaValidator;
                 }
             }
             else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
                 if (fValidatorFromUser)
-                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
                 else {
                     fValidator = fDTDValidator;
                 }
@@ -1460,7 +1463,7 @@ void IGXMLScanner::scanDocTypeDecl()
 
         // We can't have any internal subset if we are reusing the validator
         if (fUseCachedGrammar || fToCacheGrammar)
-            ThrowXML(RuntimeException, XMLExcepts::Val_CantHaveIntSS);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
 
         //  And try to scan the internal subset. If we fail, try to recover
         //  by skipping forward tot he close angle and returning.
@@ -1561,7 +1564,7 @@ void IGXMLScanner::scanDocTypeDecl()
 
             //  If it failed then throw an exception
             if (!reader)
-                ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId());
+                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId(), fMemoryManager);
 
             if (fToCacheGrammar) {
 
@@ -1979,7 +1982,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         //  It was some special case character so do all of the checks and
         //  deal with it.
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chForwardSlash)
         {
@@ -3055,14 +3058,14 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             fGrammarType = fGrammar->getGrammarType();
             if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
                 if (fValidatorFromUser)
-                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
                 else {
                     fValidator = fSchemaValidator;
                 }
             }
             else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
                 if (fValidatorFromUser)
-                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
                 else {
                     fValidator = fDTDValidator;
                 }
@@ -3299,7 +3302,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
 
     if (!fValidator->handlesDTD()) {
         if (fValidatorFromUser && fValidate)
-            ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
         else {
             fValidator = fDTDValidator;
         }
@@ -3356,9 +3359,9 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     );
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId(), fMemoryManager);
         else
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId(), fMemoryManager);
     }
 
     //  In order to make the processing work consistently, we have to

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.14  2003/12/11 22:21:25  neilg
  * fixes for the URI implementation to take registry names into account; much thanks to Michael Glavassevich
  *
@@ -407,6 +410,11 @@ public:
      */
     static bool isValidURI( const XMLUri* const baseURI
                           , const XMLCh* const uriStr);
+    /**
+     * Determine whether a given string is a valid URI
+     */
+    static bool isValidURI( bool haveBaseURI
+                          , const XMLCh* const uriStr);
 
     /***
      * Support for Serialization/De-serialization
@@ -466,7 +474,8 @@ private:
      *
      * @return true if the scheme is conformant, false otherwise
      */
-    static void isConformantUserInfo(const XMLCh* const userInfo);
+    static void isConformantUserInfo(const XMLCh* const userInfo
+        , MemoryManager* const manager);
     
     /**
      * Determines whether the components host, port, and user info
@@ -490,7 +499,8 @@ private:
      */
     static bool isValidServerBasedAuthority(const XMLCh* const host
                                            , const int port
-                                           , const XMLCh* const userinfo);
+                                           , const XMLCh* const userinfo
+                                           , MemoryManager* const manager);
       
    /**
     * Determines whether the given string is a registry based authority.
@@ -528,7 +538,8 @@ private:
      * @return true if the string is a syntactically valid IPv4 address
      *              or hostname
      */
-     static bool isWellFormedAddress(const XMLCh* const addr);
+     static bool isWellFormedAddress(const XMLCh* const addr
+         , MemoryManager* const manager);
      
     /**
      * Determines whether a string is an IPv4 address as defined by 

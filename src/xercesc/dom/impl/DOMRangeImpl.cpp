@@ -880,7 +880,7 @@ const XMLCh* DOMRangeImpl::toString() const
             else
                 tempString = temp;
 
-            XMLString::subString(tempString, fStartContainer->getNodeValue(), fStartOffset, fEndOffset);
+            XMLString::subString(tempString, fStartContainer->getNodeValue(), fStartOffset, fEndOffset, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
             const XMLCh* retString = ((DOMDocumentImpl *)fDocument)->getPooledString(tempString);
 
             if ((fEndOffset-fStartOffset) >= 3999)
@@ -901,7 +901,7 @@ const XMLCh* DOMRangeImpl::toString() const
                 else
                     tempString = temp;
 
-                XMLString::subString(tempString, fStartContainer->getNodeValue(), fStartOffset, length);
+                XMLString::subString(tempString, fStartContainer->getNodeValue(), fStartOffset, length, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
                 retStringBuf.append(tempString);
 
                 if ((length - fStartOffset) >= 3999)
@@ -970,7 +970,7 @@ const XMLCh* DOMRangeImpl::toString() const
             else
                 tempString = temp;
 
-            XMLString::subString(tempString, fEndContainer->getNodeValue(), 0, fEndOffset);
+            XMLString::subString(tempString, fEndContainer->getNodeValue(), 0, fEndOffset, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
             retStringBuf.append(tempString);
 
             if (fEndOffset >= 3999)
@@ -1300,7 +1300,7 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
             else
                 tempString = temp;
 
-            XMLString::subString(tempString, cloneCurrent->getNodeValue(), fStartOffset, fEndOffset);
+            XMLString::subString(tempString, cloneCurrent->getNodeValue(), fStartOffset, fEndOffset, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
             cloneCurrent->setNodeValue(((DOMDocumentImpl *)fDocument)->getPooledString(tempString));
 
             if (fEndOffset >= 3999)
@@ -1725,7 +1725,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             else {
                 oldNodeValue = oldTemp;
             }
-            XMLString::subString(oldNodeValue, txtValue, 0, offset);
+            XMLString::subString(oldNodeValue, txtValue, 0, offset, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
 
             if ( how != CLONE_CONTENTS )
                 n->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(oldNodeValue) );
@@ -1755,7 +1755,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             else {
                 newNodeValue = newTemp;
             }
-            XMLString::subString(newNodeValue, txtValue, offset, startLen);
+            XMLString::subString(newNodeValue, txtValue, offset, startLen, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
             newNode->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(newNodeValue) );
 
             if (offset>= 3999)
@@ -1786,7 +1786,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             else {
                 oldNodeValue = oldTemp;
             }
-            XMLString::subString(oldNodeValue, txtValue, offset, endLen);
+            XMLString::subString(oldNodeValue, txtValue, offset, endLen, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
 
             if ( how != CLONE_CONTENTS )
                 n->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(oldNodeValue) );
@@ -1816,7 +1816,7 @@ DOMNode* DOMRangeImpl::traverseTextNode( DOMNode*n, bool isLeft, int how )
             else {
                 newNodeValue = newTemp;
             }
-            XMLString::subString(newNodeValue, txtValue, 0, offset);
+            XMLString::subString(newNodeValue, txtValue, 0, offset, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
             newNode->setNodeValue( ((DOMDocumentImpl *)fDocument)->getPooledString(newNodeValue) );
 
             if (offset>= 3999)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.13  2003/11/14 22:35:09  neilg
  * changes in support of second phase of XSModel implementation; thanks to David Cargill
  *
@@ -451,13 +454,13 @@ private:
 inline RefHash3KeysIdPoolEnumerator<SchemaElementDecl>
 SchemaGrammar::getElemEnumerator() const
 {
-    return RefHash3KeysIdPoolEnumerator<SchemaElementDecl>(fElemDeclPool);
+    return RefHash3KeysIdPoolEnumerator<SchemaElementDecl>(fElemDeclPool, false, fMemoryManager);
 }
 
 inline NameIdPoolEnumerator<XMLNotationDecl>
 SchemaGrammar::getNotationEnumerator() const
 {
-    return NameIdPoolEnumerator<XMLNotationDecl>(fNotationDeclPool);
+    return NameIdPoolEnumerator<XMLNotationDecl>(fNotationDeclPool, fMemoryManager);
 }
 
 inline RefHashTableOf<XMLAttDef>* SchemaGrammar::getAttributeDeclRegistry() const {

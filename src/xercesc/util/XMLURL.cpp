@@ -495,7 +495,7 @@ const XMLCh* XMLURL::getProtocolName() const
 {
     // Check to see if its ever been set
     if (fProtocol == Unknown)
-        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
 
     return gProtoList[fProtocol].prefix;
 }
@@ -533,7 +533,7 @@ void XMLURL::setURL(const XMLCh* const    baseURL
 			if (!conglomerateWithBase(basePart, false))
 			{
 				cleanup();
-				ThrowXML(MalformedURLException, XMLExcepts::URL_RelativeBaseURL);
+				ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_RelativeBaseURL, fMemoryManager);
 			}
 		}
 	}
@@ -598,7 +598,7 @@ BinInputStream* XMLURL::makeNewStream() const
             // HTTP protocol will be done automatically by the netaccessor
             //
             int end = XMLString::stringLen(realPath);
-            int percentIndex = XMLString::indexOf(realPath, chPercent, 0);
+            int percentIndex = XMLString::indexOf(realPath, chPercent, 0, fMemoryManager);
 
             while (percentIndex != -1) {
 
@@ -609,10 +609,11 @@ BinInputStream* XMLURL::makeNewStream() const
                     XMLCh value1[4];
                     XMLString::moveChars(value1, &(realPath[percentIndex]), 3);
                     value1[3] = chNull;
-                    ThrowXML2(MalformedURLException
+                    ThrowXMLwithMemMgr2(MalformedURLException
                             , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
                             , realPath
-                            , value1);
+                            , value1
+                            , fMemoryManager);
                 }
 
                 unsigned int value = (xlatHexDigit(realPath[percentIndex+1]) * 16) + xlatHexDigit(realPath[percentIndex+2]);
@@ -625,7 +626,7 @@ BinInputStream* XMLURL::makeNewStream() const
                 realPath[i] = chNull;
                 end = i;
 
-                percentIndex = XMLString::indexOf(realPath, chPercent, percentIndex);
+                percentIndex = XMLString::indexOf(realPath, chPercent, percentIndex, fMemoryManager);
             }
 
 
@@ -644,7 +645,7 @@ BinInputStream* XMLURL::makeNewStream() const
     //  have to just throw here.
     //
     if (!XMLPlatformUtils::fgNetAccessor)
-        ThrowXML(MalformedURLException, XMLExcepts::URL_UnsupportedProto);
+        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_UnsupportedProto, fMemoryManager);
 
     // Else ask the net accessor to create the stream
     return XMLPlatformUtils::fgNetAccessor->makeNew(*this);
@@ -736,7 +737,7 @@ void XMLURL::buildFullText()
             *outPtr++ = chColon;
 
             XMLCh tmpBuf[16];
-            XMLString::binToText(fPortNum, tmpBuf, 16, 10);
+            XMLString::binToText(fPortNum, tmpBuf, 16, 10, fMemoryManager);
             XMLString::copyString(outPtr, tmpBuf);
             outPtr += XMLString::stringLen(tmpBuf);
         }
@@ -804,7 +805,7 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     if (baseURL.isRelative())
     {
         if (useExceptions)
-			ThrowXML(MalformedURLException, XMLExcepts::URL_RelativeBaseURL);
+			ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_RelativeBaseURL, fMemoryManager);
         else
             return false;
     }
@@ -883,7 +884,7 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
 
     // Its a relative path, so weave them together.
     if (baseURL.fPath) {
-        XMLCh* temp = XMLPlatformUtils::weavePaths(baseURL.fPath, fPath);
+        XMLCh* temp = XMLPlatformUtils::weavePaths(baseURL.fPath, fPath ,fMemoryManager);
         fMemoryManager->deallocate(fPath);//delete [] fPath;
         fPath = temp;
     }
@@ -908,7 +909,7 @@ void XMLURL::parse(const XMLCh* const urlText)
 {
     // Simplify things by checking for the psycho scenarios first
     if (!*urlText)
-        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
 
     // Before we start, check if this urlText contains valid uri characters
     if (!XMLUri::isURIString(urlText))
@@ -929,7 +930,7 @@ void XMLURL::parse(const XMLCh* const urlText)
             if ((*(urlText + 2) == chForwardSlash)
             ||  (*(urlText + 2) == chBackSlash))
             {
-                ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
             }
         }
     }
@@ -954,7 +955,7 @@ void XMLURL::parse(const XMLCh* const urlText)
 
     // Make sure it wasn't all space
     if (!*srcPtr)
-        ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
+        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_NoProtocolPresent, fMemoryManager);
 
     //
     //  Ok, the next thing we have to do is to find either a / or : character.
@@ -977,11 +978,12 @@ void XMLURL::parse(const XMLCh* const urlText)
 
             if (fProtocol == Unknown)
             {
-                ThrowXML1
+                ThrowXMLwithMemMgr1
                 (
                     MalformedURLException
                     , XMLExcepts::URL_UnsupportedProto1
                     , srcPtr
+                    , fMemoryManager
                 );
             }
 
@@ -1046,10 +1048,11 @@ void XMLURL::parse(const XMLCh* const urlText)
         // we didn't get them, so throw an exception
         //
         if (fProtocol == HTTP) {
-            ThrowXML
+            ThrowXMLwithMemMgr
                 (
                     MalformedURLException
                     , XMLExcepts::URL_ExpectingTwoSlashes
+                    , fMemoryManager
                 );
         }
     }
@@ -1104,8 +1107,8 @@ void XMLURL::parse(const XMLCh* const urlText)
 
             // Try to convert it to a numeric port value and store it
             ptr1++;
-            if (!XMLString::textToBin(ptr1, fPortNum))
-                ThrowXML(MalformedURLException, XMLExcepts::URL_BadPortField);
+            if (!XMLString::textToBin(ptr1, fPortNum, fMemoryManager))
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_BadPortField, fMemoryManager);
         }
 
         // If the host ended up empty, then toss is
@@ -1378,7 +1381,7 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 
             // Try to convert it to a numeric port value and store it
             ptr1++;
-            if (!XMLString::textToBin(ptr1, xmlURL.fPortNum))
+            if (!XMLString::textToBin(ptr1, xmlURL.fPortNum, xmlURL.fMemoryManager))
                 return false;
         }
 

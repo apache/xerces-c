@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.19  2003/12/12 04:51:29  peiyongz
  * trailing zeros for double/float w/o decimal point
  *
@@ -170,7 +173,7 @@ XMLAbstractDoubleFloat::~XMLAbstractDoubleFloat()
 void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
 {
     if ((!strValue) || (!*strValue))
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
 
     fRawData = XMLString::replicate(strValue, fMemoryManager);   // preserve the raw data form
 
@@ -284,7 +287,8 @@ int XMLAbstractDoubleFloat::getSign() const
 //
 //
 int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lValue
-                                        , const XMLAbstractDoubleFloat* const rValue)
+                                        , const XMLAbstractDoubleFloat* const rValue
+                                        , MemoryManager* const manager)
 {
     //
     // case#1: lValue normal
@@ -338,7 +342,7 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
     if ((lValue->isSpecialValue()) &&
         (!rValue->isSpecialValue())  )
     {
-        return compareSpecial(lValue, rValue);
+        return compareSpecial(lValue, rValue, manager);
     }
     //
     // case#4: lValue normal
@@ -346,14 +350,15 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
     //
     else
     {
-        return (-1) * compareSpecial(rValue, lValue);
+        return (-1) * compareSpecial(rValue, lValue, manager);
     }
 
     return 0;
 }
 
 int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const specialValue
-                                         , const XMLAbstractDoubleFloat* const normalValue)
+                                         , const XMLAbstractDoubleFloat* const normalValue
+                                         , MemoryManager* const manager)
 {
     switch (specialValue->fType)
     {
@@ -366,10 +371,10 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
         return INDETERMINATE;
 
     default:
-        XMLString::binToText(specialValue->fType, value1, 16, 10);
-        ThrowXML1(NumberFormatException
+        XMLString::binToText(specialValue->fType, value1, 16, 10, manager);
+        ThrowXMLwithMemMgr1(NumberFormatException
                 , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
-                , value1);
+                , value1, manager);
         //internal error
         return 0;
     }
@@ -514,7 +519,7 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
      ***/
     if (!ePosition)
     {
-        XMLBigDecimal::parseDecimal(rawData, manBuf, sign, totalDigits, fractDigits);
+        XMLBigDecimal::parseDecimal(rawData, manBuf, sign, totalDigits, fractDigits, memMgr);
         expValue = 0;
     }
     else
@@ -522,7 +527,7 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
         int    manLen = ePosition - rawData;
         XMLString::copyNString(manStr, rawData, manLen);
         *(manStr + manLen) = chNull;
-        XMLBigDecimal::parseDecimal(manStr, manBuf, sign, totalDigits, fractDigits);
+        XMLBigDecimal::parseDecimal(manStr, manBuf, sign, totalDigits, fractDigits, memMgr);
 
         int    expLen = strLen - manLen - 1;
         ePosition++;
@@ -592,7 +597,7 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
          *
          ***/
         expValue += (totalDigits - 1) - fractDigits ;
-        XMLString::binToText(expValue, expStr, strLen, 10);
+        XMLString::binToText(expValue, expStr, strLen, 10, memMgr);
         *retPtr++  = chLatin_E;
         *retPtr = chNull;
 

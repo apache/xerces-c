@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/12/16 18:37:14  knoaman
  * Add nextElementKey method
  *
@@ -119,7 +122,7 @@ ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
 template <class TVal> void ValueHashTableOf<TVal>::initialize(const unsigned int modulus)
 {
 	if (modulus == 0)
-        ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
     fBucketList = (ValueHashTableBucketElem<TVal>**) fMemoryManager->allocate
@@ -196,12 +199,12 @@ template <class TVal> void ValueHashTableOf<TVal>::removeAll()
 // ---------------------------------------------------------------------------
 //  ValueHashTableOf: Getters
 // ---------------------------------------------------------------------------
-template <class TVal> TVal& ValueHashTableOf<TVal>::get(const void* const key)
+template <class TVal> TVal& ValueHashTableOf<TVal>::get(const void* const key, MemoryManager* const manager)
 {
     unsigned int hashVal;
     ValueHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     if (!findIt)
-        ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, manager);
 
     return findIt->fData;
 }
@@ -212,7 +215,7 @@ get(const void* const key) const
     unsigned int hashVal;
     const ValueHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     if (!findIt)
-        ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
 
     return findIt->fData;
 }
@@ -252,9 +255,9 @@ template <class TVal> ValueHashTableBucketElem<TVal>* ValueHashTableOf<TVal>::
 findBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     ValueHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -272,9 +275,9 @@ template <class TVal> const ValueHashTableBucketElem<TVal>* ValueHashTableOf<TVa
 findBucketElem(const void* const key, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus);
+    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     // Search that bucket for the key
     const ValueHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -295,7 +298,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus);
     if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
 
     //
     //  Search the given bucket for this key. Keep up with the previous
@@ -331,7 +334,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
     }
 
     // We never found that key
-    ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+    ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
 }
 
 
@@ -341,11 +344,13 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
 //  ValueHashTableOfEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal> ValueHashTableOfEnumerator<TVal>::
-ValueHashTableOfEnumerator(ValueHashTableOf<TVal>* const toEnum, const bool adopt)
-	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+ValueHashTableOfEnumerator(ValueHashTableOf<TVal>* const toEnum
+                           , const bool adopt
+                           , MemoryManager* const manager)
+	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum), fMemoryManager(manager)
 {
     if (!toEnum)
-        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, manager);
 
     //
     //  Find the next available bucket element in the hash table. If it
@@ -382,7 +387,7 @@ template <class TVal> TVal& ValueHashTableOfEnumerator<TVal>::nextElement()
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the
@@ -398,7 +403,7 @@ template <class TVal> void* ValueHashTableOfEnumerator<TVal>::nextElementKey()
 {
     // Make sure we have an element to return
     if (!hasMoreElements())
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+        ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::Enum_NoMoreElements, fMemoryManager);
 
     //
     //  Save the current element, then move up to the next one for the

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -135,8 +138,9 @@ protected:
     // -----------------------------------------------------------------------
     //  implementation of (DateTimeValidator's) virtual interface
     // -----------------------------------------------------------------------
-    virtual XMLDateTime*          parse(const XMLCh* const);
-    virtual void                  parse(XMLDateTime* const);};
+    virtual XMLDateTime*          parse(const XMLCh* const, MemoryManager* const manager);
+    virtual void                  parse(XMLDateTime* const);
+};
 
 XERCES_CPP_NAMESPACE_END
 

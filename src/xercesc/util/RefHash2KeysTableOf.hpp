@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/10/20 11:45:06  gareth
  * Made enumerators inherit from XMemory.
  *
@@ -186,7 +189,7 @@ public:
     TVal* get(const void* const key1, const int key2);
     const TVal* get(const void* const key1, const int key2) const;
 
-
+    MemoryManager* getMemoryManager() const;
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
@@ -199,6 +202,7 @@ private :
     // -----------------------------------------------------------------------
     friend class RefHash2KeysTableOfEnumerator<TVal>;
 
+    
 private:
 
     // -----------------------------------------------------------------------
@@ -248,7 +252,9 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum, const bool adopt = false);
+    RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
+        , const bool adopt = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHash2KeysTableOfEnumerator();
 
 
@@ -289,10 +295,11 @@ private :
     //  fToEnum
     //      The value array being enumerated.
     // -----------------------------------------------------------------------
-    bool                                  fAdopted;
-    RefHash2KeysTableBucketElem<TVal>*         fCurElem;
-    unsigned int                          fCurHash;
-    RefHash2KeysTableOf<TVal>*                 fToEnum;
+    bool                                    fAdopted;
+    RefHash2KeysTableBucketElem<TVal>*      fCurElem;
+    unsigned int                            fCurHash;
+    RefHash2KeysTableOf<TVal>*              fToEnum;
+    MemoryManager* const                    fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

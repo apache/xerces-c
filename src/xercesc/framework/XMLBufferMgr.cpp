@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -152,7 +155,7 @@ XMLBuffer& XMLBufferMgr::bidOnBuffer()
     }
 
     // We did not find one, so freak out
-    ThrowXML(RuntimeException, XMLExcepts::BufMgr_NoMoreBuffers);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::BufMgr_NoMoreBuffers, fMemoryManager);
 
     // NOTE: Dummy return to make some compilers happy. Never really gets called!
     return *fBufList[0];
@@ -173,7 +176,7 @@ void XMLBufferMgr::releaseBuffer(XMLBuffer& toRelease)
     }
 
     // It was not a legal buffer
-    ThrowXML(RuntimeException, XMLExcepts::BufMgr_BufferNotInPool);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::BufMgr_BufferNotInPool, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -84,8 +87,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  ModifierToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
 ModifierToken::ModifierToken(Token* const child, const int options,
-                             const int mask)
-    : Token(Token::T_MODIFIERGROUP)
+                             const int mask, MemoryManager* const manager)
+    : Token(Token::T_MODIFIERGROUP, manager)
     , fOptions(options)
     , fOptionsMask(mask)
     , fChild(child)

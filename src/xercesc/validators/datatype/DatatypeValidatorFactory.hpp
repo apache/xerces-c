@@ -214,6 +214,7 @@ public:
         , const bool                          isDerivedByList
         , const int                           finalSet = 0
         , const bool                          isUserDefined = true
+        , MemoryManager* const                manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -235,6 +236,7 @@ public:
         , RefVectorOf<DatatypeValidator>* const validators
         , const int                             finalSet
         , const bool                            isUserDefined = true
+        , MemoryManager* const                  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}

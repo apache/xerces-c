@@ -80,7 +80,7 @@ NodeIDMap::NodeIDMap(int initialSize,
             // We need a bigger size than the largest available one.
             //   Big trouble.
             fSizeIndex--;
-            ThrowXML(RuntimeException, XMLExcepts::NodeIDMap_GrowErr);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::NodeIDMap_GrowErr, fMemoryManager);
         }
     }
 
@@ -120,7 +120,7 @@ void NodeIDMap::add(AttrImpl *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	DOMString id=attr->getValue();
-	unsigned int initalHash = XMLString::hashN(id.rawBuffer(), id.length(), fSize-1);
+	unsigned int initalHash = XMLString::hashN(id.rawBuffer(), id.length(), fSize-1, fMemoryManager);
 	initalHash++;
 	unsigned int currentHash = initalHash;
 
@@ -157,7 +157,7 @@ void NodeIDMap::remove(AttrImpl *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	DOMString id=attr->getValue();
-	unsigned int initalHash = XMLString::hashN(id.rawBuffer(), id.length(), fSize-1);
+	unsigned int initalHash = XMLString::hashN(id.rawBuffer(), id.length(), fSize-1, fMemoryManager);
 	initalHash++;
 	unsigned int currentHash = initalHash;
 
@@ -196,7 +196,7 @@ AttrImpl *NodeIDMap::find(const DOMString &id)
     //
     //  Get the hashcode for the supplied string.
     //
-	unsigned int initalHash = XMLString::hashN(id.rawBuffer(), id.length(), fSize-1);
+	unsigned int initalHash = XMLString::hashN(id.rawBuffer(), id.length(), fSize-1, fMemoryManager);
 	initalHash++;
 	unsigned int currentHash = initalHash;
 
@@ -247,7 +247,7 @@ void NodeIDMap::growTable()
         // We need to grow bigger than the largest available size.
         //   Big trouble.
         fSizeIndex--;
-        ThrowXML(RuntimeException, XMLExcepts::NodeIDMap_GrowErr);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::NodeIDMap_GrowErr, fMemoryManager);
     }
 
     //

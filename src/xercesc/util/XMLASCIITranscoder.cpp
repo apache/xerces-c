@@ -69,9 +69,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XMLASCIITranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLASCIITranscoder::XMLASCIITranscoder( const   XMLCh* const    encodingName
-                                        , const unsigned int    blockSize) :
+                                        , const unsigned int    blockSize
+                                        , MemoryManager* const manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
 {
 }
 
@@ -129,13 +130,14 @@ XMLASCIITranscoder::transcodeFrom(  const   XMLByte* const       srcData
             break;
 
         XMLCh tmpBuf[16];
-        XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
-        ThrowXML2
+        XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
+        ThrowXMLwithMemMgr2
         (
             TranscodingException
             , XMLExcepts::Trans_Unrepresentable
             , tmpBuf
             , getEncodingName()
+            , getMemoryManager()
         );
     }
 
@@ -187,13 +189,14 @@ XMLASCIITranscoder::transcodeTo(const   XMLCh* const    srcData
         if (options == UnRep_Throw)
         {
             XMLCh tmpBuf[16];
-            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
-            ThrowXML2
+            XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_Unrepresentable
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
 

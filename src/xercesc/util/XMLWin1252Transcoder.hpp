@@ -78,6 +78,7 @@ public :
     (
         const   XMLCh* const    encodingName
         , const unsigned int    blockSize
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     virtual ~XMLWin1252Transcoder();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.18  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -639,9 +642,8 @@ const XMLCh* DatatypeValidator::getCanonicalRepresentation(const XMLCh*         
                                                           ,      MemoryManager* const memMgr) const
 {
     DatatypeValidator *temp = (DatatypeValidator*) this;
-    temp->validate(rawData, 0);
-
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    temp->validate(rawData, 0, toUse);    
     return XMLString::replicate(rawData, toUse);
 }
 

@@ -92,7 +92,8 @@ public:
     ~XMLBigDecimal();
 
     static int            compareValues(const XMLBigDecimal* const lValue
-                                      , const XMLBigDecimal* const rValue);
+                                      , const XMLBigDecimal* const rValue
+                                      , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     static XMLCh* getCanonicalRepresentation
                   (
@@ -107,6 +108,7 @@ public:
                 ,        int&         sign
                 ,        int&         totalDigits
                 ,        int&         fractDigits
+                ,        MemoryManager* const manager
                 );
 
     /**
@@ -144,6 +146,8 @@ public:
      * @param   strValue the value to convert
      */
     void setDecimalValue(const XMLCh* const strValue);
+
+    MemoryManager* getMemoryManager() const;
 
     /***
      * Support for Serialization/De-serialization
@@ -222,6 +226,11 @@ inline XMLCh*  XMLBigDecimal::getRawData() const
 inline const XMLCh*  XMLBigDecimal::getFormattedString() const
 {
     return fRawData;
+}
+
+inline MemoryManager* XMLBigDecimal::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 //

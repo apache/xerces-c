@@ -280,6 +280,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   ) = 0;
 
     /**
@@ -314,7 +315,9 @@ public:
       * We will provide a default behavior that should be redefined at the
       * children level, if necessary (i.e. boolean case).
       */
-    virtual int compare(const XMLCh* const value1, const XMLCh* const value2);
+    virtual int compare(const XMLCh* const value1, const XMLCh* const value2
+        ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -725,7 +728,8 @@ inline void DatatypeValidator::setNumeric(bool numeric)
 //  DatatypeValidators: Compare methods
 // ---------------------------------------------------------------------------
 inline int DatatypeValidator::compare(const XMLCh* const lValue,
-                                      const XMLCh* const rValue)
+                                      const XMLCh* const rValue
+                                      , MemoryManager*     const manager)
 {
     return XMLString::compareString(lValue, rValue);
 }

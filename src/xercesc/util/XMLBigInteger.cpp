@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/12/11 21:38:12  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -165,11 +168,12 @@ XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawD
 
 void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
                                   , XMLCh* const retBuffer
-                                  , int&   signValue)
+                                  , int&   signValue
+                                  , MemoryManager* const manager)
 {
     // If no string, then its a failure
     if ((!toConvert) || (!*toConvert))
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, manager);
 
     //
     // Note: in Java's BigInteger, it seems any leading and/or trailing
@@ -183,7 +187,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
         startPtr++;
 
     if (!*startPtr)
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_WSString);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_WSString, manager);
 
     // Start at the end and work back through any whitespace
     const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
@@ -227,7 +231,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
     {
         // If not valid decimal digit, then an error
         if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
 
         // copy over
         *retPtr = *startPtr;
@@ -255,7 +259,7 @@ XMLBigInteger::XMLBigInteger(const XMLCh* const strValue,
 , fMemoryManager(manager)
 {
     if (!strValue)
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
 
     XMLCh* ret_value = (XMLCh*) fMemoryManager->allocate
     (
@@ -263,7 +267,7 @@ XMLBigInteger::XMLBigInteger(const XMLCh* const strValue,
     );//new XMLCh[XMLString::stringLen(strValue)+1];
     ArrayJanitor<XMLCh> janName(ret_value, fMemoryManager);
 
-    parseBigInteger(strValue, ret_value, fSign);
+    parseBigInteger(strValue, ret_value, fSign, fMemoryManager);
 
     if (fSign == 0)
         fMagnitude = XMLString::replicate(XMLUni::fgZeroLenString, fMemoryManager);
@@ -295,10 +299,11 @@ XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
  * than rValue.
 */
 int  XMLBigInteger::compareValues(const XMLBigInteger* const lValue
-                                , const XMLBigInteger* const rValue)
+                                , const XMLBigInteger* const rValue
+                                , MemoryManager* const manager)
 {
     if ((!lValue) || (!rValue) )
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_null_ptr, manager);
 
     int lSign = lValue->getSign();
     int rSign = rValue->getSign();
@@ -400,7 +405,7 @@ void XMLBigInteger::divide(const unsigned int byteToShift)
 int XMLBigInteger::intValue() const
 {
     unsigned int retVal;
-    XMLString::textToBin(fMagnitude, retVal);
+    XMLString::textToBin(fMagnitude, retVal, fMemoryManager);
     return retVal * getSign();
 }
 

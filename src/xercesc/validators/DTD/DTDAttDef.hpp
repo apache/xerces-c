@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/10/10 16:24:51  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -197,7 +200,7 @@ inline unsigned int DTDAttDef::getElemId() const
 
 inline const XMLCh* DTDAttDef::getDOMTypeInfoName() const 
 {
-    return getAttTypeString(getType());
+    return getAttTypeString(getType(), getMemoryManager());
 }
 
 inline const XMLCh* DTDAttDef::getDOMTypeInfoUri() const 

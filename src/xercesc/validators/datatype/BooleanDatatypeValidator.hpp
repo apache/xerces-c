@@ -125,6 +125,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     //@}
@@ -142,7 +143,9 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    int compare(const XMLCh* const, const XMLCh* const
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     //@}
 
@@ -167,7 +170,8 @@ private:
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase);
+                            , bool                           asBase
+                            , MemoryManager* const manager);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -210,9 +214,10 @@ inline DatatypeValidator* BooleanDatatypeValidator::newInstance
 }
 
 inline void BooleanDatatypeValidator::validate( const XMLCh*             const content
-                                              ,       ValidationContext* const context)
+                                              ,       ValidationContext* const context
+                                              ,       MemoryManager*     const manager)
 {
-    checkContent(content, context, false);
+    checkContent(content, context, false, manager);
 }
 
 XERCES_CPP_NAMESPACE_END

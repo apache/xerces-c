@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/11/13 23:20:47  peiyongz
  * initSize
  *
@@ -110,7 +113,7 @@ SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const list
 ,fCount(0)
 ,fSize(0)
 {
-    fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse);
+    fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse, false, getMemoryManager());
     fArray = (SchemaAttDef **)((getMemoryManager())->allocate( sizeof(SchemaAttDef*) << 1));
     fSize = 2;
 }
@@ -158,7 +161,7 @@ XMLAttDef* SchemaAttDefList::findAttDef(   const   XMLCh* const    attURI
                                         , const XMLCh* const    attName)
 {
    //need numeric URI id to locate the attribute, that's how it was stored
-   ThrowXML(RuntimeException, XMLExcepts::Pool_InvalidId);
+   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_InvalidId, getMemoryManager());
    return 0;
 }
 
@@ -168,7 +171,7 @@ SchemaAttDefList::findAttDef( const   XMLCh* const    attURI
                             , const XMLCh* const    attName) const
 {
    //need numeric URI id to locate the attribute, that's how it was stored
-   ThrowXML(RuntimeException, XMLExcepts::Pool_InvalidId);
+   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_InvalidId, getMemoryManager());
    return 0;
 }
 
@@ -198,7 +201,7 @@ unsigned int SchemaAttDefList::getAttDefCount() const
 XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index) 
 {
     if(index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
     return *(fArray[index]);
 }
 
@@ -208,7 +211,7 @@ XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index)
 const XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index) const 
 {
     if(index >= fCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
     return *(fArray[index]);
 }
 
@@ -248,7 +251,7 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
         serEng >> fSize;
         if (!fEnum && fList)
         {
-            fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
+            fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList, false, getMemoryManager());
         }
         if(fSize) 
         {

@@ -63,6 +63,7 @@
 #define WRAPPER4INPUTSOURCE_HPP
 
 #include <xercesc/dom/DOMInputSource.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,8 +89,9 @@ public:
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
     *                      SAX InputSource. Default is true.
     */
-    Wrapper4InputSource(InputSource* const inputSource,
-                        const bool adoptFlag = true);
+    Wrapper4InputSource(InputSource* const inputSource
+                        , const bool adoptFlag = true
+                        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
   /**
     * Destructor

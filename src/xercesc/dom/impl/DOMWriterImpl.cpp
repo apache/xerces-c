@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.47  2003/12/17 00:18:33  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.46  2003/11/24 19:52:22  neilg
  * fix a typo
  *
@@ -1673,7 +1676,7 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
             while (srcPtr < endPtr)
             {
                 // Build a char ref for the current char
-                XMLString::binToText(*srcPtr, &tmpBuf[3], 8, 16);
+                XMLString::binToText(*srcPtr, &tmpBuf[3], 8, 16, fMemoryManager);
                 const unsigned int bufLen = XMLString::stringLen(tmpBuf);
                 tmpBuf[bufLen] = chSemiColon;
                 tmpBuf[bufLen+1] = chNull;

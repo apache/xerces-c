@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/11/11 22:48:13  knoaman
  * Serialization of XSAnnotation.
  *
@@ -777,7 +780,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<KVStringPair> e(objToStore);
+        RefHashTableOfEnumerator<KVStringPair> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -845,7 +848,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<XMLAttDef> e(objToStore);
+        RefHashTableOfEnumerator<XMLAttDef> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -918,7 +921,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<DTDAttDef> e(objToStore);
+        RefHashTableOfEnumerator<DTDAttDef> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -987,7 +990,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<ComplexTypeInfo> e(objToStore);
+        RefHashTableOfEnumerator<ComplexTypeInfo> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -1056,7 +1059,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<XercesGroupInfo> e(objToStore);
+        RefHashTableOfEnumerator<XercesGroupInfo> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -1124,7 +1127,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<XercesAttGroupInfo> e(objToStore);
+        RefHashTableOfEnumerator<XercesAttGroupInfo> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -1192,7 +1195,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<XMLRefInfo> e(objToStore);
+        RefHashTableOfEnumerator<XMLRefInfo> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -1260,7 +1263,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<DatatypeValidator> e(objToStore);
+        RefHashTableOfEnumerator<DatatypeValidator> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -1328,7 +1331,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<Grammar> e(objToStore);
+        RefHashTableOfEnumerator<Grammar> e(objToStore, false, objToStore->getMemoryManager());
         int itemNumber = 0;        
 
         while (e.hasMoreElements())
@@ -1397,7 +1400,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
 
     if (serEng.needToStoreObject(objToStore))
     {
-        RefHashTableOfEnumerator<XSAnnotation> e(objToStore);
+        RefHashTableOfEnumerator<XSAnnotation> e(objToStore, false, objToStore->getMemoryManager());
         ValueVectorOf<XSerializeEngine::XSerializedObjectId_t> ids(16, serEng.getMemoryManager());
         ValueVectorOf<void*> keys(16, serEng.getMemoryManager());
 
@@ -1482,7 +1485,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
     {
         int itemNumber = 0;
 
-        RefHash2KeysTableOfEnumerator<SchemaAttDef> e(objToStore);
+        RefHash2KeysTableOfEnumerator<SchemaAttDef> e(objToStore, false, objToStore->getMemoryManager());
 
         while (e.hasMoreElements())
         {
@@ -1566,7 +1569,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
     {
         int itemNumber = 0;
 
-        RefHash2KeysTableOfEnumerator<ElemVector> e(objToStore);
+        RefHash2KeysTableOfEnumerator<ElemVector> e(objToStore, false, objToStore->getMemoryManager());
 
         while (e.hasMoreElements())
         {
@@ -1656,7 +1659,7 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
     if (serEng.needToStoreObject(objToStore))
     {
         int itemNumber = 0;
-        RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(objToStore);
+        RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(objToStore, false, objToStore->getMemoryManager());
 
         XMLCh*     key1;
         int        key2;
@@ -1753,7 +1756,7 @@ void XTemplateSerializer::storeObject(NameIdPool<DTDElementDecl>* const objToSto
     if (serEng.needToStoreObject(objToStore))
     {
         int itemNumber = 0;
-        NameIdPoolEnumerator<DTDElementDecl> e(objToStore);
+        NameIdPoolEnumerator<DTDElementDecl> e(objToStore, objToStore->getMemoryManager());
 
         while (e.hasMoreElements())
         {
@@ -1819,7 +1822,7 @@ void XTemplateSerializer::storeObject(NameIdPool<DTDEntityDecl>* const objToStor
     if (serEng.needToStoreObject(objToStore))
     {
         int itemNumber = 0;
-        NameIdPoolEnumerator<DTDEntityDecl> e(objToStore);
+        NameIdPoolEnumerator<DTDEntityDecl> e(objToStore, objToStore->getMemoryManager());
 
         while (e.hasMoreElements())
         {
@@ -1885,7 +1888,7 @@ void XTemplateSerializer::storeObject(NameIdPool<XMLNotationDecl>* const objToSt
     if (serEng.needToStoreObject(objToStore))
     {
         int itemNumber = 0;
-        NameIdPoolEnumerator<XMLNotationDecl> e(objToStore);
+        NameIdPoolEnumerator<XMLNotationDecl> e(objToStore, objToStore->getMemoryManager());
 
         while (e.hasMoreElements())
         {

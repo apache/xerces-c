@@ -62,6 +62,7 @@
 #define XMLRECOGNIZER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -155,7 +156,8 @@ public :
         const   XMLCh* const    theEncName
     );
 
-    static const XMLCh* nameForEncoding(const Encodings theEncoding);
+    static const XMLCh* nameForEncoding(const Encodings theEncoding
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 
 protected :

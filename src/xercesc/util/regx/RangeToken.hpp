@@ -110,7 +110,8 @@ public:
     void subtractRanges(RangeToken* const tok);
     void intersectRanges(RangeToken* const tok);
     static Token* complementRanges(RangeToken* const tok,
-                                   TokenFactory* const tokFactory);
+                                   TokenFactory* const tokFactory,
+                                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Match methods

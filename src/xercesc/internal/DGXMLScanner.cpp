@@ -107,7 +107,7 @@ DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt
         if (valToAdopt)
         {
             if (!valToAdopt->handlesDTD())
-               ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+               ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
         }
         else
         {
@@ -149,7 +149,7 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
         if (valToAdopt)
         {
             if (!valToAdopt->handlesDTD())
-               ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+               ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
         }
         else
         {
@@ -323,7 +323,7 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
 {
     // Make sure this token is still legal
     if (!isLegalToken(token))
-        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
     unsigned int orgReader;
@@ -641,7 +641,7 @@ void DGXMLScanner::scanEndTag(bool& gotData)
     {
         emitError(XMLErrs::MoreEndThanStartTags);
         fReaderMgr.skipPastChar(chCloseAngle);
-        ThrowXML(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
     // After the </ is the element QName, so get a name from the input
@@ -922,7 +922,7 @@ void DGXMLScanner::scanDocTypeDecl()
 
         // We can't have any internal subset if we are reusing the validator
         if (fUseCachedGrammar || fToCacheGrammar)
-            ThrowXML(RuntimeException, XMLExcepts::Val_CantHaveIntSS);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
 
         //  And try to scan the internal subset. If we fail, try to recover
         //  by skipping forward tot he close angle and returning.
@@ -1025,7 +1025,7 @@ void DGXMLScanner::scanDocTypeDecl()
 
             //  If it failed then throw an exception
             if (!reader)
-                ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId());
+                ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId(), fMemoryManager);
 
             if (fToCacheGrammar) {
 
@@ -1484,7 +1484,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
         //  It was some special case character so do all of the checks and
         //  deal with it.
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chForwardSlash)
         {
@@ -1816,9 +1816,9 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     );
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId(), fMemoryManager);
         else
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId(), fMemoryManager);
     }
 
     //  In order to make the processing work consistently, we have to
@@ -2203,9 +2203,9 @@ void DGXMLScanner::scanReset(const InputSource& src)
 
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId(), fMemoryManager);
         else
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId(), fMemoryManager);
     }
 
     // Push this read onto the reader manager
@@ -2453,15 +2453,16 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
             if (urlTmp.isRelative())
             {
-                ThrowXML
+                ThrowXMLwithMemMgr
                 (
                     MalformedURLException
                     , XMLExcepts::URL_NoProtocolPresent
+                    , fMemoryManager
                 );
             }
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
@@ -2536,7 +2537,7 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
             nextCh = fReaderMgr.getNextChar();
 
             if (!nextCh)
-                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
             // Check for our ending quote in the same entity
             if (nextCh == quoteCh)
@@ -2603,6 +2604,7 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                     }
@@ -2743,7 +2745,7 @@ void DGXMLScanner::scanCDSection()
         if (!nextCh)
         {
             emitError(XMLErrs::UnterminatedCDATASection);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         if (fValidate && fStandalone && (fReaderMgr.getCurrentReader()->isWhitespace(nextCh)))
@@ -2838,6 +2840,7 @@ void DGXMLScanner::scanCDSection()
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         emittedError = true;
@@ -2964,6 +2967,7 @@ void DGXMLScanner::scanCharData(XMLBuffer& toUse)
                                 , tmpBuf
                                 , 8
                                 , 16
+                                , fMemoryManager
                             );
                             emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         }
@@ -3171,7 +3175,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
         //  If the creation failed, and its not because the source was empty,
         //  then emit an error and return.
         if (!reader)
-            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenExtEntity, srcUsed->getSystemId(), fMemoryManager);
 
         //  Push the reader. If its a recursive expansion, then emit an error
         //  and return an failure.
@@ -3185,7 +3189,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
         // how many entity references we've had
         if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
             XMLCh expLimStr[16];
-            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
             emitError
             ( 
                 XMLErrs::EntityExpansionLimitExceeded
@@ -3243,7 +3247,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
         // how many entity references we've had
         if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
             XMLCh expLimStr[16];
-            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
             emitError
             ( 
                 XMLErrs::EntityExpansionLimitExceeded

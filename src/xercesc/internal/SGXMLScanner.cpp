@@ -128,7 +128,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
          if (valToAdopt)
          {
              if (!valToAdopt->handlesSchema())
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
          }
          else
          {
@@ -181,7 +181,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
          if (valToAdopt)
          {
              if (!valToAdopt->handlesSchema())
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoSchemaValidator, fMemoryManager);
          }
          else
          {
@@ -351,7 +351,7 @@ bool SGXMLScanner::scanNext(XMLPScanToken& token)
 {
     // Make sure this token is still legal
     if (!isLegalToken(token))
-        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
     unsigned int orgReader;
@@ -733,7 +733,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         //  It was some special case character so do all of the checks and
         //  deal with it.
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chForwardSlash)
         {
@@ -904,7 +904,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     {
         emitError(XMLErrs::MoreEndThanStartTags);
         fReaderMgr.skipPastChar(chCloseAngle);
-        ThrowXML(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
     // After the </ is the element QName, so get a name from the input
@@ -3331,9 +3331,9 @@ void SGXMLScanner::scanReset(const InputSource& src)
 
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId(), fMemoryManager);
         else
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId(), fMemoryManager);
     }
 
     // Push this read onto the reader manager
@@ -3675,7 +3675,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>*
 
 void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 {
-    BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr);
+    BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr, fMemoryManager);
     unsigned int size = schemaLocation->size();
     if (size % 2 != 0 ) {
         emitError(XMLErrs::BadSchemaLocation);
@@ -3739,15 +3739,16 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
                 if (urlTmp.isRelative())
                 {
-                    ThrowXML
+                    ThrowXMLwithMemMgr
                     (
                         MalformedURLException
                         , XMLExcepts::URL_NoProtocolPresent
+                        , fMemoryManager
                     );
                 }
                 else {
                     if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                        ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                        ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                     srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
                 }
             }
@@ -3898,15 +3899,16 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
             if (urlTmp.isRelative())
             {
-                ThrowXML
+                ThrowXMLwithMemMgr
                 (
                     MalformedURLException
                     , XMLExcepts::URL_NoProtocolPresent
+                    , fMemoryManager
                 );
             }
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
-                    ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
@@ -4054,7 +4056,7 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                 nextCh = fReaderMgr.getNextChar();
 
                 if (!nextCh)
-                    ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                    ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
                 //  Check for our ending quote. It has to be in the same entity
                 //  as where we started. Quotes in nested entities are ignored.
@@ -4124,6 +4126,7 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                                 , tmpBuf
                                 , 8
                                 , 16
+                                , fMemoryManager
                             );
                             emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                         }
@@ -4213,7 +4216,7 @@ void SGXMLScanner::scanCDSection()
         if (!nextCh)
         {
             emitError(XMLErrs::UnterminatedCDATASection);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         if (fValidate && fStandalone && (fReaderMgr.getCurrentReader()->isWhitespace(nextCh)))
@@ -4341,6 +4344,7 @@ void SGXMLScanner::scanCDSection()
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         emittedError = true;
@@ -4467,6 +4471,7 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                                 , tmpBuf
                                 , 8
                                 , 16
+                                , fMemoryManager
                             );
                             emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         }
@@ -4644,7 +4649,7 @@ SGXMLScanner::scanEntityRef(  const   bool    inAttVal
     // how many entity references we've had
     if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
         XMLCh expLimStr[16];
-        XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+        XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
         emitError
         ( 
             XMLErrs::EntityExpansionLimitExceeded
@@ -4674,7 +4679,7 @@ bool SGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
         fGrammar = tempGrammar;
         fGrammarType = fGrammar->getGrammarType();
         if (fGrammarType == Grammar::DTDGrammarType) {
-            ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_NoDTDValidator, fMemoryManager);
         }
 
         fValidator->setGrammar(fGrammar);

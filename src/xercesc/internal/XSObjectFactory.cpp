@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/12/10 05:14:00  neilg
  * fix seg fault caused when a complex type had simple content; we were not processing the complex type itself, only its base
  *
@@ -387,12 +390,13 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
         {
             typeVariety = XSSimpleTypeDefinition::VARIETY_LIST;
 
-            while (baseDV->getType() == DatatypeValidator::List)
+            while (baseDV && (baseDV->getType() == DatatypeValidator::List))
             {
                 addOrFind(baseDV, xsModel);
                 baseDV = baseDV->getBaseValidator();
             }
-            primitiveOrItemType = addOrFind(baseDV, xsModel);
+            if (baseDV)
+                primitiveOrItemType = addOrFind(baseDV, xsModel);
         }
         else
         {
@@ -845,7 +849,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
         xsFacetList = new (fMemoryManager) RefVectorOf<XSFacet>(10, true, fMemoryManager);
 
         // NOTE: Don't need to add facet to "ObjectMap -> getObjectFromMap/putObjectInMap);
-        RefHashTableOfEnumerator<KVStringPair> e(facets);
+        RefHashTableOfEnumerator<KVStringPair> e(facets, false, fMemoryManager);
         while (e.hasMoreElements())
         {
             KVStringPair& pair = e.nextElement();

@@ -102,7 +102,7 @@ public :
      */
     static XMLByte* encode(const XMLByte* const inputData
                          , const unsigned int   inputLength
-                         , unsigned int*        outputLength
+                         , unsigned int*        outputLength                         
                          , MemoryManager* const memMgr = 0);
 
     /**
@@ -123,7 +123,7 @@ public :
      * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* decode(const XMLByte* const inputData
-                         , unsigned int*        outputLength
+                         , unsigned int*        outputLength                         
                          , MemoryManager* const memMgr = 0);
 
     /**
@@ -157,7 +157,8 @@ public :
      * @return Length of decoded data,
 	 *      or -1 if input data can not be decoded.
      */
-    static int getDataLength(const XMLCh* const inputData);
+    static int getDataLength(const XMLCh* const inputData
+        , MemoryManager* const memMgr = 0);
 
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/07/31 17:14:27  peiyongz
  * Grammar embed grammar description
  *
@@ -144,7 +147,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
 
     if (!fGrammarResolver || !fStringPool )
     {
-        ThrowXML(RuntimeException, XMLExcepts::SubGrpComparator_NGR);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::SubGrpComparator_NGR, anElement->getMemoryManager());
     }
 
     unsigned int uriId = anElement->getURI();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.23  2003/12/11 21:40:24  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -910,6 +913,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
     , const bool                          isDerivedByList
     , const int                           finalSet
     , const bool                          isUserDefined
+    , MemoryManager* const                userManager
 )
 {
 	if (baseValidator == 0) {
@@ -927,7 +931,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
 
 	DatatypeValidator* datatypeValidator = 0;
     MemoryManager* const manager = (isUserDefined)
-        ? fMemoryManager : XMLPlatformUtils::fgMemoryManager;
+        ? userManager : XMLPlatformUtils::fgMemoryManager;
 
     if (isDerivedByList) {
         datatypeValidator = new (manager) ListDatatypeValidator(baseValidator, facets, enums, finalSet, manager);
@@ -1024,7 +1028,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         if (isUserDefined) {
 
             if (!fUserDefinedRegistry) {
-                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29, fMemoryManager);
+                fUserDefinedRegistry = new (userManager) RefHashTableOf<DatatypeValidator>(29, userManager);
             }
 
             fUserDefinedRegistry->put((void *)typeName, datatypeValidator);
@@ -1056,6 +1060,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
     , RefVectorOf<DatatypeValidator>* const validators
     , const int                             finalSet
     , const bool                            userDefined
+    , MemoryManager* const                  userManager
 )
 {
     if (validators == 0)
@@ -1063,7 +1068,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
 
     DatatypeValidator* datatypeValidator = 0;
     MemoryManager* const manager = (userDefined)
-        ? fMemoryManager : XMLPlatformUtils::fgMemoryManager;
+        ? userManager : XMLPlatformUtils::fgMemoryManager;
 
     datatypeValidator = new (manager) UnionDatatypeValidator(validators, finalSet, manager);
 
@@ -1072,7 +1077,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         if (userDefined) {
 
             if (!fUserDefinedRegistry) {
-                fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29, fMemoryManager);
+                fUserDefinedRegistry = new (userManager) RefHashTableOf<DatatypeValidator>(29, userManager);
             }
 
             fUserDefinedRegistry->put((void *)typeName, datatypeValidator);

@@ -104,7 +104,7 @@ template <class TElem> void
 BaseRefVectorOf<TElem>::setElementAt(TElem* const toSet, const unsigned int setAt)
 {
     if (setAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     if (fAdoptedElems)
         delete fElemList[setAt];
@@ -121,7 +121,7 @@ insertElementAt(TElem* const toInsert, const unsigned int insertAt)
     }
 
     if (insertAt > fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     ensureExtraCapacity(1);
 
@@ -138,7 +138,7 @@ template <class TElem> TElem* BaseRefVectorOf<TElem>::
 orphanElementAt(const unsigned int orphanAt)
 {
     if (orphanAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     // Get the element we are going to orphan
     TElem* retVal = fElemList[orphanAt];
@@ -181,7 +181,7 @@ template <class TElem> void BaseRefVectorOf<TElem>::
 removeElementAt(const unsigned int removeAt)
 {
     if (removeAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
 
     if (fAdoptedElems)
         delete fElemList[removeAt];
@@ -278,7 +278,7 @@ template <class TElem> const TElem* BaseRefVectorOf<TElem>::
 elementAt(const unsigned int getAt) const
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
     return fElemList[getAt];
 }
 
@@ -286,7 +286,7 @@ template <class TElem> TElem*
 BaseRefVectorOf<TElem>::elementAt(const unsigned int getAt)
 {
     if (getAt >= fCurCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
     return fElemList[getAt];
 }
 

@@ -278,7 +278,7 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
 {
     // Make sure this token is still legal
     if (!isLegalToken(token))
-        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
     unsigned int orgReader;
@@ -561,9 +561,9 @@ void WFXMLScanner::scanReset(const InputSource& src)
 
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId(), fMemoryManager);
         else
-            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+            ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId(), fMemoryManager);
     }
 
     // Push this read onto the reader manager
@@ -734,7 +734,7 @@ void WFXMLScanner::scanEndTag(bool& gotData)
     {
         emitError(XMLErrs::MoreEndThanStartTags);
         fReaderMgr.skipPastChar(chCloseAngle);
-        ThrowXML(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd, fMemoryManager);
     }
 
     //  Pop the stack of the element we are supposed to be ending. Remember
@@ -943,7 +943,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
 
             //  See if this attribute is declared more than one for this element.
             const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer();
-            unsigned int attNameHash = XMLString::hash(attNameRawBuf, 109);
+            unsigned int attNameHash = XMLString::hash(attNameRawBuf, 109, fMemoryManager);
 
             if (attCount) {
 
@@ -1049,7 +1049,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
         //  It was some special case character so do all of the checks and
         //  deal with it.
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chForwardSlash)
         {
@@ -1270,7 +1270,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
 
             //  See if this attribute is declared more than one for this element.
             const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer();
-            unsigned int attNameHash = XMLString::hash(attNameRawBuf, 109);
+            unsigned int attNameHash = XMLString::hash(attNameRawBuf, 109, fMemoryManager);
             if (attCount) {
 
                 for (unsigned int k=0; k < attCount; k++) {
@@ -1460,7 +1460,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         //  It was some special case character so do all of the checks and
         //  deal with it.
         if (!nextCh)
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
         if (nextCh == chForwardSlash)
         {
@@ -1656,7 +1656,7 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
             nextCh = fReaderMgr.getNextChar();
 
             if (!nextCh)
-                ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
 
             // Check for our ending quote in the same entity
             if (nextCh == quoteCh)
@@ -1725,6 +1725,7 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                     }
@@ -1799,7 +1800,7 @@ void WFXMLScanner::scanCDSection()
         if (!nextCh)
         {
             emitError(XMLErrs::UnterminatedCDATASection);
-            ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
+            ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
         }
 
         //  If this is a close square bracket it could be our closing
@@ -1869,6 +1870,7 @@ void WFXMLScanner::scanCDSection()
                             , tmpBuf
                             , 8
                             , 16
+                            , fMemoryManager
                         );
                         emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         emittedError = true;
@@ -1997,6 +1999,7 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
                                 , tmpBuf
                                 , 8
                                 , 16
+                                , fMemoryManager
                             );
                             emitError(XMLErrs::InvalidCharacter, tmpBuf);
                         }
@@ -2131,7 +2134,7 @@ WFXMLScanner::scanEntityRef(const bool    inAttVal
     // how many entity references we've had
     if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
         XMLCh expLimStr[16];
-        XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10);
+        XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
         emitError
         ( 
             XMLErrs::EntityExpansionLimitExceeded

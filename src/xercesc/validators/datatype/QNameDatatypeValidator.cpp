@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.5  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -126,7 +129,7 @@ QNameDatatypeValidator::QNameDatatypeValidator(
                         , MemoryManager* const                manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::QName, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 DatatypeValidator* QNameDatatypeValidator::newInstance
@@ -143,39 +146,20 @@ DatatypeValidator* QNameDatatypeValidator::newInstance
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-void QNameDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
-                                                  , const XMLCh* const)
-{
-    ThrowXML1(InvalidDatatypeFacetException
-            , XMLExcepts::FACET_Invalid_Tag
-            , key);
-}
 
-void QNameDatatypeValidator::inheritAdditionalFacet()
-{}
-
-void QNameDatatypeValidator::checkAdditionalFacetConstraints() const
-{}
-
-void QNameDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-void QNameDatatypeValidator::checkValueSpace(const XMLCh* const content)
+void QNameDatatypeValidator::checkValueSpace(const XMLCh* const content
+                                             , MemoryManager* const manager)
 {
     //
     // check 3.2.18.c0 must: QName
     //
     if ( !XMLString::isValidQName(content))
     {
-        ThrowXML1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_QName_Invalid
-                , content);
+                , content
+                , manager);
     }
-}
-
-int QNameDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    return XMLString::stringLen(content);
 }
 
 /***

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.15  2003/12/03 17:30:19  neilg
  * uninitialize panic handlers so they will be ready for subsequent initalizations
  *
@@ -446,7 +449,7 @@ XMLMsgLoader* XMLPlatformUtils::loadMsgSet(const XMLCh* const msgDomain)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: NEL Character Handling
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::recognizeNEL(bool state) {
+void XMLPlatformUtils::recognizeNEL(bool state, MemoryManager* const manager) {
 
     //Make sure initialize has been called
     if (gInitFlag == 0) {
@@ -462,7 +465,7 @@ void XMLPlatformUtils::recognizeNEL(bool state) {
     else {
 
         if (XMLChar1_0::isNELRecognized()) {
-            ThrowXML(RuntimeException, XMLExcepts::NEL_RepeatedCalls);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::NEL_RepeatedCalls, manager);
         }
     }
 }

@@ -38,11 +38,12 @@
  *
  ***/
 XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
-                                  , const XMLCh* const    relativePath)
+                                  , const XMLCh* const    relativePath
+                                  , MemoryManager* const  manager)
 
 {
     // Create a buffer as large as both parts and empty it
-    XMLCh* tmpBuf = (XMLCh*) fgMemoryManager->allocate
+    XMLCh* tmpBuf = (XMLCh*) manager->allocate
     (
         (XMLString::stringLen(basePath)
          + XMLString::stringLen(relativePath) + 2) * sizeof(XMLCh)
@@ -80,13 +81,13 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
     // 3. remove all occurences of segment/../ where segment is not ../
 	// 
 
-    XMLString::subString(tmpBuf, basePath, 0, (basePtr - basePath + 1));
+    XMLString::subString(tmpBuf, basePath, 0, (basePtr - basePath + 1), manager);
     tmpBuf[basePtr - basePath + 1] = 0;
     XMLString::catString(tmpBuf, relativePath);
 
-    removeDotSlash(tmpBuf);
+    removeDotSlash(tmpBuf, manager);
 
-    removeDotDotSlash(tmpBuf);
+    removeDotDotSlash(tmpBuf, manager);
 
     return tmpBuf;
 
@@ -99,14 +100,15 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
 // we can't make use of patterMatch().
 //
 //
-void XMLPlatformUtils::removeDotSlash(XMLCh* const path)
+void XMLPlatformUtils::removeDotSlash(XMLCh* const path
+                                      , MemoryManager* const manager)
 {
     if ((!path) || (!*path))
         return;
 
-    XMLCh* srcPtr = XMLString::replicate(path, fgMemoryManager);
+    XMLCh* srcPtr = XMLString::replicate(path, manager);
     int    srcLen = XMLString::stringLen(srcPtr);
-    ArrayJanitor<XMLCh>   janName(srcPtr, fgMemoryManager);   
+    ArrayJanitor<XMLCh>   janName(srcPtr, manager);   
     XMLCh* tarPtr = path;
 
     while (*srcPtr)
@@ -151,20 +153,21 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path)
 //
 // Cases with extra /../ is left to the underlying file system.
 //
-void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path)
+void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path
+                                         , MemoryManager* const manager)
 {
     int pathLen = XMLString::stringLen(path);
-    XMLCh* tmp1 = (XMLCh*) fgMemoryManager->allocate
+    XMLCh* tmp1 = (XMLCh*) manager->allocate
     (
         (pathLen+1) * sizeof(XMLCh)
     );//new XMLCh [pathLen+1];
-    ArrayJanitor<XMLCh>   tmp1Name(tmp1, fgMemoryManager);
+    ArrayJanitor<XMLCh>   tmp1Name(tmp1, manager);
 
-    XMLCh* tmp2 = (XMLCh*) fgMemoryManager->allocate
+    XMLCh* tmp2 = (XMLCh*) manager->allocate
     (
         (pathLen+1) * sizeof(XMLCh)
     );//new XMLCh [pathLen+1];
-    ArrayJanitor<XMLCh>   tmp2Name(tmp2, fgMemoryManager);
+    ArrayJanitor<XMLCh>   tmp2Name(tmp2, manager);
 
     // remove all "<segment>/../" where "<segment>" is a complete
     // path segment not equal to ".."
@@ -178,7 +181,7 @@ void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path)
         index += offset;
 
         // Find start of <segment> within substring ending at found point.
-        XMLString::subString(tmp1, path, 0, index-1);
+        XMLString::subString(tmp1, path, 0, index-1, manager);
         segIndex = index - 1;
         while ((segIndex >= 0) && (!isAnySlash(tmp1[segIndex])))
         {
@@ -192,8 +195,8 @@ void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path)
              segIndex + 3 != index))
         {
 
-            XMLString::subString(tmp1, path, 0, segIndex);
-            XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path));
+            XMLString::subString(tmp1, path, 0, segIndex, manager);
+            XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path), manager);
 
             path[0] = 0;
             XMLString::catString(path, tmp1);

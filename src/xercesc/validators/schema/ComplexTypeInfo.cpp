@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.21  2003/12/16 17:18:50  peiyongz
  * don't expand ContextSpecNode when deserilized
  *
@@ -418,7 +421,7 @@ bool ComplexTypeInfo::resetDefs() {
     //  This lets the scanner use them to track which has been provided and
     //  which have not.
     //
-    RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs);
+    RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs, false, fMemoryManager);
     while (enumDefs.hasMoreElements())
         enumDefs.nextElement().setProvided(false);
 
@@ -549,7 +552,7 @@ XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpec
     }
      else
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren, fMemoryManager);
     }
 
     return cmRet;
@@ -561,7 +564,7 @@ XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpec
 XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, const bool isMixed)
 {
     if(!specNode)
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
 
     ContentSpecNode::NodeTypes specType = specNode->getType();
     //
@@ -570,7 +573,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     //
     if (specNode->getElement()) {
         if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-            ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoPCDATAHere, fMemoryManager);
     }
 
     //
@@ -661,7 +664,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
 
     else
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
     }
 
     // Its not any simple type of content, so create a DFA based content model

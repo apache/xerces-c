@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.6  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -154,7 +157,7 @@ const XMLCh* VecAttrListImpl::getType(const unsigned int index) const
     if (index >= fCount) {
         return 0;
     }
-    return XMLAttDef::getAttTypeString(fVector->elementAt(index)->getType());
+    return XMLAttDef::getAttTypeString(fVector->elementAt(index)->getType(), fVector->getMemoryManager());
 }
 
 const XMLCh* VecAttrListImpl::getValue(const unsigned int index) const
@@ -176,7 +179,7 @@ const XMLCh* VecAttrListImpl::getType(const XMLCh* const name) const
         const XMLAttr* curElem = fVector->elementAt(index);
 
         if (XMLString::equals(curElem->getQName(), name))
-            return XMLAttDef::getAttTypeString(curElem->getType());
+            return XMLAttDef::getAttTypeString(curElem->getType(), fVector->getMemoryManager());
     }
     return 0;
 }

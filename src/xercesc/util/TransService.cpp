@@ -250,7 +250,7 @@ XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encoding
        return temp;
     }
     else {
-        XMLTranscoder* temp =  makeNewXMLTranscoder(XMLRecognizer::nameForEncoding(encodingEnum), resValue, blockSize, manager);
+        XMLTranscoder* temp =  makeNewXMLTranscoder(XMLRecognizer::nameForEncoding(encodingEnum, manager), resValue, blockSize, manager);
 
         // if successful, set resValue to OK
         // if failed, the makeNewXMLTranscoder has already set the proper failing resValue

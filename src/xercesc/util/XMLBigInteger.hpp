@@ -100,10 +100,12 @@ public:
 
     static void parseBigInteger(const XMLCh* const toConvert
                               , XMLCh* const       retBuffer
-                              , int&   signValue);
+                              , int&   signValue
+                              , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     static int  compareValues(const XMLBigInteger* const lValue
-                             ,const XMLBigInteger* const rValue);
+                             ,const XMLBigInteger* const rValue
+                             , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 
     void        multiply(const unsigned int byteToShift);
@@ -192,7 +194,7 @@ inline int XMLBigInteger::getTotalDigit() const
 
 inline bool XMLBigInteger::operator==(const XMLBigInteger& toCompare) const
 {
-    return ( compareValues(this, &toCompare) ==0 ? true : false);
+    return ( compareValues(this, &toCompare, fMemoryManager) ==0 ? true : false);
 }
 
 inline void XMLBigInteger::setSign(int newSign)
@@ -211,7 +213,7 @@ inline XMLCh*  XMLBigInteger::getRawData() const
 inline XMLCh*  XMLBigInteger::toString() const
 {
     // Return data using global operator new
-    return XMLString::replicate(fRawData);
+    return XMLString::replicate(fRawData, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

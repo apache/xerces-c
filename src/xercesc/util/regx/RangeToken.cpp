@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 00:18:37  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.8  2003/05/16 21:37:00  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -126,7 +129,7 @@ const unsigned int RangeToken::INITIALSIZE = 16;
 // ---------------------------------------------------------------------------
 RangeToken::RangeToken(const unsigned short tokType,
                        MemoryManager* const manager) 
-    : Token(tokType)
+    : Token(tokType, manager)
     , fSorted(false)
     , fCompacted(false)
     , fNonMapIndex(0)
@@ -307,7 +310,7 @@ void RangeToken::compactRanges() {
                 target += 2;
             }
             else {
-                ThrowXML(RuntimeException, XMLExcepts::Regex_CompactRangesError);
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_CompactRangesError, fMemoryManager);
             }
         } // inner while
 
@@ -322,7 +325,7 @@ void RangeToken::mergeRanges(const Token *const tok) {
 
 
     if (tok->getTokenType() != this->getTokenType())
-        ThrowXML(IllegalArgumentException, XMLExcepts::Regex_MergeRangesTypeMismatch);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Regex_MergeRangesTypeMismatch, fMemoryManager);
 
     RangeToken* rangeTok = (RangeToken *) tok;
 
@@ -460,7 +463,7 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
         }
         else {
             fMemoryManager->deallocate(result);//delete [] result;
-            ThrowXML(RuntimeException, XMLExcepts::Regex_SubtractRangesError);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_SubtractRangesError, fMemoryManager);
         }
     } //end while
 
@@ -556,7 +559,7 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
         else {
 
             fMemoryManager->deallocate(result);//delete [] result;
-            ThrowXML(RuntimeException, XMLExcepts::Regex_IntersectRangesError);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_IntersectRangesError, fMemoryManager);
         }
     } //end while
 
@@ -571,10 +574,11 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
   * for NRANGE: Creates the same meaning RANGE.
   */
 Token* RangeToken::complementRanges(RangeToken* const tok,
-                                    TokenFactory* const tokFactory) {
+                                    TokenFactory* const tokFactory,
+                                    MemoryManager* const manager) {
 
     if (tok->getTokenType() != T_RANGE && tok->getTokenType() != T_NRANGE)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Regex_ComplementRangesInvalidArg);
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Regex_ComplementRangesInvalidArg, manager);
 
     tok->sortRanges();
     tok->compactRanges();

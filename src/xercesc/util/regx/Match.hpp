@@ -112,13 +112,13 @@ private:
 	void cleanUp();
 
 	// -----------------------------------------------------------------------
-  //  Private data members
-  //
-  //  fNoGroups
-  //      Represents no of regular expression groups
+    //  Private data members
+    //
+    //  fNoGroups
+    //  Represents no of regular expression groups
 	//		
-  //  fStartPositions
-  //      Array of start positions in the target text matched to specific
+    //  fStartPositions
+    //  Array of start positions in the target text matched to specific
 	//		regular expression group
 	//
 	//	fEndPositions
@@ -127,7 +127,7 @@ private:
 	//
 	//	fPositionsSize
 	//		Actual size of Start/EndPositions array.
-  // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 	int fNoGroups;
 	int fPositionsSize;
 	int* fStartPositions;
@@ -145,7 +145,7 @@ private:
 inline int Match::getNoGroups() const {
 
 	if (fNoGroups < 0)
-		ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
+		ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_Result_Not_Set, fMemoryManager);
 
 	return fNoGroups;
 }
@@ -153,10 +153,10 @@ inline int Match::getNoGroups() const {
 inline int Match::getStartPos(int index) const {
 
 	if (!fStartPositions)
-		ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
+		ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_Result_Not_Set, fMemoryManager);
 
 	if (index < 0 || fNoGroups <= index)
-		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+		ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
 
 	return fStartPositions[index];
 }
@@ -164,10 +164,10 @@ inline int Match::getStartPos(int index) const {
 inline int Match::getEndPos(int index) const {
 
 	if (!fEndPositions)
-		ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
+		ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_Result_Not_Set, fMemoryManager);
 
 	if (index < 0 || fNoGroups <= index)
-		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+		ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
 
 	return fEndPositions[index];
 }
@@ -178,10 +178,10 @@ inline int Match::getEndPos(int index) const {
 inline void Match::setStartPos(const int index, const int value) {
 
 	if (!fStartPositions)
-        ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_Result_Not_Set, fMemoryManager);
 
 	if (index < 0 || fNoGroups <= index)
-		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+		ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
 
 	fStartPositions[index] = value;
 }
@@ -189,10 +189,10 @@ inline void Match::setStartPos(const int index, const int value) {
 inline void Match::setEndPos(const int index, const int value) {
 
 	if (!fEndPositions)
-        ThrowXML(RuntimeException, XMLExcepts::Regex_Result_Not_Set);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_Result_Not_Set, fMemoryManager);
 
 	if (index < 0 || fNoGroups <= index)
-		ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+		ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
 
 	fEndPositions[index] = value;
 }

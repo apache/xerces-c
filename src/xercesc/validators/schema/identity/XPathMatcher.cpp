@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/17 00:18:41  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.9  2003/10/01 16:32:42  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -418,7 +421,7 @@ void XPathMatcher::matched(const XMLCh* const content,
 // ---------------------------------------------------------------------------
 int XPathMatcher::getInitialDepth() const
 {
-    ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // to make some compilers happy
 }
 

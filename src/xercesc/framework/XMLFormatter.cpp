@@ -217,11 +217,12 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
     if (!fXCoder)
     {
         fMemoryManager->deallocate(fOutEncoding); //delete [] fOutEncoding;
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             TranscodingException
             , XMLExcepts::Trans_CantCreateCvtrFor
             , outEncoding
+            , fMemoryManager
         );
     }
 
@@ -267,11 +268,12 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
 
     if (!fXCoder)
     {
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             TranscodingException
             , XMLExcepts::Trans_CantCreateCvtrFor
             , outEncoding
+            , fMemoryManager
         );
     }
 
@@ -323,11 +325,12 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
     if (!fXCoder)
     {
         fMemoryManager->deallocate(fOutEncoding); //delete [] fOutEncoding;
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             TranscodingException
             , XMLExcepts::Trans_CantCreateCvtrFor
             , outEncoding
+            , fMemoryManager
         );
     }
 
@@ -375,11 +378,12 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
 
     if (!fXCoder)
     {
-        ThrowXML1
+        ThrowXMLwithMemMgr1
         (
             TranscodingException
             , XMLExcepts::Trans_CantCreateCvtrFor
             , outEncoding
+            , fMemoryManager
         );
     }
 
@@ -603,7 +607,7 @@ void XMLFormatter::writeCharRef(const XMLCh &toWrite)
     tmpBuf[2] = chLatin_x;
 
     // Build a char ref for the current char
-    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16);
+    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16, fMemoryManager);
     const unsigned int bufLen = XMLString::stringLen(tmpBuf);
     tmpBuf[bufLen] = chSemiColon;
     tmpBuf[bufLen+1] = chNull;
@@ -624,7 +628,7 @@ void XMLFormatter::writeCharRef(unsigned long toWrite)
     tmpBuf[2] = chLatin_x;
 
     // Build a char ref for the current char
-    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16);
+    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16, fMemoryManager);
     const unsigned int bufLen = XMLString::stringLen(tmpBuf);
     tmpBuf[bufLen] = chSemiColon;
     tmpBuf[bufLen+1] = chNull;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:35  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/11/03 22:00:31  peiyongz
  * RefHashTable-like enumeration accessing added
  *
@@ -204,6 +207,7 @@ public:
     TVal* getById(const unsigned elemId);
     const TVal* getById(const unsigned elemId) const;
 
+    MemoryManager* getMemoryManager() const;
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
@@ -281,7 +285,9 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool adopt = false);
+    RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum
+        , const bool adopt = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHash3KeysIdPoolEnumerator();
 
 
@@ -321,12 +327,12 @@ private :
     //  fToEnum
     //      The name id pool that is being enumerated.
     // -----------------------------------------------------------------------
-    bool                       fAdoptedElems;
-    unsigned int               fCurIndex;
-    RefHash3KeysIdPool<TVal>*  fToEnum;
-
-    RefHash3KeysTableBucketElem<TVal>*   fCurElem;
-    unsigned int                         fCurHash;
+    bool                                fAdoptedElems;
+    unsigned int                        fCurIndex;
+    RefHash3KeysIdPool<TVal>*           fToEnum;
+    RefHash3KeysTableBucketElem<TVal>*  fCurElem;
+    unsigned int                        fCurHash;
+    MemoryManager* const                fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.3  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -110,9 +113,9 @@ CMAny::CMAny( const ContentSpecNode::NodeTypes type
     &&  (type & 0x0f) != ContentSpecNode::Any_Other
     &&  (type & 0x0f) != ContentSpecNode::Any_NS)
     {
-		ThrowXML1(RuntimeException,
+		ThrowXMLwithMemMgr1(RuntimeException,
 		          XMLExcepts::CM_NotValidSpecTypeForNode,
-				  "CMAny");
+				  "CMAny", manager);
     }
 
 }

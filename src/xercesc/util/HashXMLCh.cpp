@@ -67,9 +67,10 @@ HashXMLCh::~HashXMLCh()
 {
 }
 
-unsigned int HashXMLCh::getHashVal(const void *const key, unsigned int mod)
+unsigned int HashXMLCh::getHashVal(const void *const key, unsigned int mod
+                                   , MemoryManager* const manager)
 {
-	return XMLString::hash((XMLCh*)key, mod);
+	return XMLString::hash((XMLCh*)key, mod, manager);
 }
 
 bool HashXMLCh::equals(const void *const key1, const void *const key2)

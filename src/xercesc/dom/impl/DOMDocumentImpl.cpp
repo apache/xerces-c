@@ -1265,7 +1265,7 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
         DOMNodeUserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
 
         if (node_userDataTable) {
-            RefHashTableOfEnumerator<DOMUserDataRecord> userDataEnum(node_userDataTable);
+            RefHashTableOfEnumerator<DOMUserDataRecord> userDataEnum(node_userDataTable, false, fMemoryManager);
 
             // walk through the entire node_userDataTable table
             while (userDataEnum.hasMoreElements()) {

@@ -249,7 +249,8 @@ public :
       *
       * @param theFile The file handle
       */
-    static unsigned int curFilePos(FileHandle theFile);
+    static unsigned int curFilePos(FileHandle theFile
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Closes the file handle
       *
@@ -260,7 +261,8 @@ public :
       *
       * @param theFile The file handle to close
       */
-    static void closeFile(FileHandle theFile);
+    static void closeFile(FileHandle theFile
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Returns the file size
       *
@@ -272,7 +274,8 @@ public :
       *
       * @return Returns the size of the file in bytes
       */
-    static unsigned int fileSize(FileHandle theFile);
+    static unsigned int fileSize(FileHandle theFile
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Opens the file
       *
@@ -331,7 +334,7 @@ public :
       *
       * @return The file handle of the standard input stream
       */
-    static FileHandle openStdInHandle();
+    static FileHandle openStdInHandle(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Reads the file buffer
       *
@@ -353,6 +356,7 @@ public :
                 FileHandle      theFile
         , const unsigned int    toRead
         ,       XMLByte* const  toFill
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Writes the buffer to the file
@@ -374,6 +378,7 @@ public :
           FileHandle     const  theFile
         , long                  toWrite
         , const XMLByte* const  toFlush
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Resets the file handle
@@ -384,7 +389,8 @@ public :
       *
       * @param theFile The file handle that you want to reset
       */
-    static void resetFile(FileHandle theFile);
+    static void resetFile(FileHandle theFile
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 
@@ -456,7 +462,8 @@ public :
       *
       * @return 
       */
-    static void   removeDotSlash(XMLCh* const srcPath);
+    static void   removeDotSlash(XMLCh* const srcPath
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Remove occurences of the dot dot slash 
       *
@@ -468,7 +475,8 @@ public :
       *
       * @return 
       */
-    static void   removeDotDotSlash(XMLCh* const srcPath);
+    static void   removeDotDotSlash(XMLCh* const srcPath
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Determines if a path is relative or absolute
       *
@@ -508,6 +516,7 @@ public :
     (
         const   XMLCh* const    basePath
         , const XMLCh* const    relativePath
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
 
@@ -685,7 +694,8 @@ public :
       *          which always recognize these two chars (0x85 and 0x2028) as newline characters.
       *
       */
-    static void recognizeNEL(bool state);
+    static void recognizeNEL(bool state
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /**
       * Return the value of fgNEL flag.

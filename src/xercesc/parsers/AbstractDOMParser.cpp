@@ -224,7 +224,7 @@ void AbstractDOMParser::resetPool()
 {
     //  We cannot enter here while a regular parse is in progress.
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     if (fDocumentVector)
         fDocumentVector->removeAllElements();
@@ -406,7 +406,7 @@ void AbstractDOMParser::setSecurityManager(SecurityManager* const securityManage
     // since this could impact various components, don't permit it to change
     // during a parse
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     fScanner->setSecurityManager(securityManager);
 }
@@ -452,7 +452,7 @@ void AbstractDOMParser::parse(const InputSource& source)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -475,7 +475,7 @@ void AbstractDOMParser::parse(const XMLCh* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -498,7 +498,7 @@ void AbstractDOMParser::parse(const char* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     try
     {
@@ -530,7 +530,7 @@ bool AbstractDOMParser::parseFirst( const XMLCh* const    systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(systemId, toFill);
 }
@@ -543,7 +543,7 @@ bool AbstractDOMParser::parseFirst( const char* const         systemId
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(systemId, toFill);
 }
@@ -556,7 +556,7 @@ bool AbstractDOMParser::parseFirst( const InputSource& source
     //  is in progress.
     //
     if (fParseInProgress)
-        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     return fScanner->scanFirst(source, toFill);
 }
@@ -1356,7 +1356,7 @@ void AbstractDOMParser::endAttList
                         else
                             prefix = temp;
 
-                        XMLString::subString(prefix ,qualifiedName, 0, index);
+                        XMLString::subString(prefix ,qualifiedName, 0, index, fMemoryManager);
 
                         if (XMLString::equals(prefix,XMLNS))
                             buf.append(XMLUni::fgXMLNSURIName);

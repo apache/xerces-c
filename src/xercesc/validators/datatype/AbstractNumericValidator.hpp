@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/17 00:18:38  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.7  2003/11/28 18:53:07  peiyongz
  * Support for getCanonicalRepresentation
  *
@@ -112,6 +115,7 @@ public:
                  (
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
+                ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager
                   );
 
     virtual const XMLCh* getCanonicalRepresentation
@@ -136,16 +140,19 @@ protected:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    inline void init(RefArrayVectorOf<XMLCh>*  const enums);
+    inline void init(RefArrayVectorOf<XMLCh>*  const enums
+        , MemoryManager* const manager);
 
     //
     // Abstract interface
     //
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
-                            , bool                           asBase) = 0;
+                            , bool                           asBase
+                            , MemoryManager* const manager) = 0;
 
-    void boundsCheck(const XMLNumber* const);
+    void boundsCheck(const XMLNumber* const
+                    , MemoryManager* const manager);
 
 private:
 
@@ -156,9 +163,10 @@ private:
 
 };
 
-inline void AbstractNumericValidator::init(RefArrayVectorOf<XMLCh>*  const enums)
+inline void AbstractNumericValidator::init(RefArrayVectorOf<XMLCh>*  const enums
+                                           , MemoryManager* const manager)
 {
-    AbstractNumericFacetValidator::init(enums);
+    AbstractNumericFacetValidator::init(enums, manager);
 }
 
 XERCES_CPP_NAMESPACE_END

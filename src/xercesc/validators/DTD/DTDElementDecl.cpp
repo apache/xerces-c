@@ -239,7 +239,7 @@ bool DTDElementDecl::resetDefs()
     //  This lets the scanner use them to track which has been provided and
     //  which have not.
     //
-    RefHashTableOfEnumerator<DTDAttDef> enumDefs(fAttDefs);
+    RefHashTableOfEnumerator<DTDAttDef> enumDefs(fAttDefs, false, getMemoryManager());
     while (enumDefs.hasMoreElements())
         enumDefs.nextElement().setProvided(false);
     return true;
@@ -369,7 +369,7 @@ XMLContentModel* DTDElementDecl::makeContentModel()
     }
      else
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_MustBeMixedOrChildren, getMemoryManager());
     }
     return cmRet;
 }
@@ -381,7 +381,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
     ContentSpecNode* specNode = getContentSpec();
 
     if(!specNode)
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, getMemoryManager());
 
     //
     //  Do a sanity check that the node does not have a PCDATA id. Since,
@@ -389,7 +389,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
     //
     if (specNode->getElement()) {
         if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-            ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoPCDATAHere, getMemoryManager());
     }
 
     //
@@ -451,7 +451,7 @@ XMLContentModel* DTDElementDecl::createChildModel()
     }
      else
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, getMemoryManager());
     }
 
     // Its not any simple type of content, so create a DFA based content model

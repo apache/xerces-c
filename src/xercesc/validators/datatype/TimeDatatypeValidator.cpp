@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/12/17 00:18:39  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.11  2003/12/11 21:40:24  peiyongz
  * support for Canonical Representation for Datatype
  *
@@ -126,7 +129,7 @@ TimeDatatypeValidator::TimeDatatypeValidator(
                         , MemoryManager* const                manager)
 :DateTimeValidator(baseValidator, facets, finalSet, DatatypeValidator::Time, manager)
 {
-    init(enums);
+    init(enums, manager);
 }
 
 TimeDatatypeValidator::~TimeDatatypeValidator()
@@ -146,9 +149,9 @@ DatatypeValidator* TimeDatatypeValidator::newInstance
 //
 // caller need to release the date created here
 //
-XMLDateTime* TimeDatatypeValidator::parse(const XMLCh* const content)
+XMLDateTime* TimeDatatypeValidator::parse(const XMLCh* const content, MemoryManager* const manager)
 {
-    XMLDateTime *pRetDate = new (fMemoryManager) XMLDateTime(content, fMemoryManager);
+    XMLDateTime *pRetDate = new (manager) XMLDateTime(content, manager);
 
     try
     {
@@ -178,9 +181,9 @@ const XMLCh* TimeDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
     // we need the checkContent to build the fDateTime
     // to get the canonical representation
     TimeDatatypeValidator* temp = (TimeDatatypeValidator*) this;
-    temp->checkContent(rawData, 0, false);
-
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    temp->checkContent(rawData, 0, false, toUse);
+    
     //Have the fDateTime to do the job
     return fDateTime->getTimeCanonicalRepresentation(toUse);
 }

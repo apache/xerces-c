@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/17 00:18:40  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.17  2003/12/11 19:26:27  knoaman
  * Store non schema attributes from parent in XSAnnotation
  *
@@ -439,7 +442,7 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         attName = attribute->getLocalName();
 
         try {
-            attNameId= fAttMap->get(attName);
+            attNameId= fAttMap->get(attName, fMemoryManager);
         }
         catch(const OutOfMemoryException&)
         {
@@ -556,7 +559,7 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
 
     if (dv) {
         try {
-            dv->validate(attValue, fValidationContext);
+            dv->validate(attValue, fValidationContext, fMemoryManager);
         }
         catch(const XMLException& excep) {
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());

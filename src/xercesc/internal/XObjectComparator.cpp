@@ -57,6 +57,9 @@
 /*
  *
  * $Log$
+ * Revision 1.5  2003/12/17 00:18:34  cargilld
+ * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
+ *
  * Revision 1.4  2003/12/16 18:42:27  knoaman
  * fMayMatch is no longer a data member of IC_Field
  *
@@ -97,7 +100,7 @@ void XObjectComparator::dumpContent(XMLGrammarPoolImpl* const gramPool)
                                    
 {
     RefHashTableOf<Grammar>*  gramReg = gramPool->fGrammarRegistry;
-    RefHashTableOfEnumerator<Grammar> eNum(gramReg);
+    RefHashTableOfEnumerator<Grammar> eNum(gramReg, false, gramPool->getMemoryManager());
     int itemNumber = 0;        
     while (eNum.hasMoreElements())
     {

@@ -139,9 +139,10 @@ static const XMLByte gFirstByteMark[7] =
 //  XMLUTF8Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLUTF8Transcoder::XMLUTF8Transcoder(const  XMLCh* const    encodingName
-                                    , const unsigned int    blockSize) :
+                                    , const unsigned int    blockSize
+                                    , MemoryManager* const  manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
 {
 }
 
@@ -219,7 +220,7 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             char pos[2] = {(char)0x31, 0}; 
             char len[2] = {(char)trailingBytes+0x31, 0};
             char byte[2] = {*srcPtr,0};
-            ThrowXML3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len);
+            ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
         }
 
         XMLUInt32 tmpVal = *srcPtr++;
@@ -236,7 +237,7 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
                 char len[2] = {(char)trailingBytes+0x31, 0};
                 char pos[2]= {(char)i+0x31, 0};
                 char byte[2] = {*srcPtr,0};
-                ThrowXML3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len);
+                ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
             }
         }
         if((*srcPtr & 0xC0) == 0x80) 
@@ -247,11 +248,11 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
         {
             char len[2] = {(char)trailingBytes+0x31, 0};
             char byte[2] = {*srcPtr,0};
-            ThrowXML3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, len, byte, len);
+            ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, len, byte, len, getMemoryManager());
         }
         // since trailingBytes comes from an array, this logic is redundant
         //  default :
-        //      ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+        //      ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
         //}
         tmpVal -= gUTFOffsets[trailingBytes];
 
@@ -277,7 +278,7 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             if ((outPtr - toFill) > 32)
                 break;
 
-            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
         }
          else
         {
@@ -381,13 +382,14 @@ XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
             if (options == UnRep_Throw)
             {
                 XMLCh tmpBuf[16];
-                XMLString::binToText(curVal, tmpBuf, 16, 16);
-                ThrowXML2
+                XMLString::binToText(curVal, tmpBuf, 16, 16, getMemoryManager());
+                ThrowXMLwithMemMgr2
                 (
                     TranscodingException
                     , XMLExcepts::Trans_Unrepresentable
                     , tmpBuf
                     , getEncodingName()
+                    , getMemoryManager()
                 );
             }
 
