@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.8  2000/01/12 22:54:22  abagchi
+# Added additional transcoding object files and headers
+#
 # Revision 1.7  2000/01/12 20:10:12  aruna1
 # Modified for new file
 #
@@ -160,6 +163,8 @@ UTIL_CPP_PUBHEADERS = \
 	ValueStackOf.hpp \
 	ValueVectorOf.hpp \
 	XML4CDefs.hpp \
+	XML88591Transcoder.hpp \
+	XMLASCIITranscoder.hpp \
 	XMLEBCDICTranscoder.hpp \
 	XMLEnumerator.hpp \
 	XMLExceptMsgs.hpp \
@@ -167,6 +172,9 @@ UTIL_CPP_PUBHEADERS = \
 	XMLMsgLoader.hpp \
 	XMLNetAccessor.hpp \
 	XMLString.hpp \
+	XMLUCS4Transcoder.hpp \
+	XMLUTF16Transcoder.hpp \
+	XMLUTF8Transcoder.hpp \
 	XMLUni.hpp
 
 UTIL_CPP_PRIVHEADERS = 
@@ -197,12 +205,17 @@ UTIL_CPP_OBJECTS = \
 	StdOut.o \
 	StringPool.o \
 	TextOutputStream.o \
+	TransService.o \
 	URL.o \
+	XML88591Transcoder.o \
+	XMLASCIITranscoder.o \
 	XMLEBCDICTranscoder.o \
 	XMLException.o \
 	XMLString.o \
+	XMLUCSTranscoder.o \
+	XMLUTF16Transcoder.o \
+	XMLUTF8Transcoder.o \
 	XMLUni.o
-
 
 all:	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers publish
 
