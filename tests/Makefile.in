@@ -68,6 +68,7 @@ IThreadTest_DIR=IThreadTest
 EncodingTest_DIR=EncodingTest
 DOMRange_DIR=DOM/RangeTest
 IDOMRange_DIR=IDom/IRangeTest
+InitTermTest_DIR=InitTermTest
 
 LIB_DIR=${XERCESCROOT}/lib
 
@@ -85,7 +86,7 @@ ifeq (${PLATFORM},HPUX)
       all:	domtest idomtest threadtest ithreadtest encodingtest traversal itraversal
   endif
 else
-    all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest
+    all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
 endif
 
 domidtest:
@@ -132,6 +133,10 @@ irangetest:
 	@echo Building "Range"
 	cd $(IDOMRange_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
+inittermtest:
+	@echo Building "InitTermTest"
+	cd $(InitTermTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+
 clean:
 	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
@@ -144,6 +149,7 @@ clean:
 	cd $(ITraversal_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMRange_DIR) && $(MAKE) $@ && cd ..
 	cd $(IDOMRange_DIR) && $(MAKE) $@ && cd ..
+	cd $(InitTermTest_DIR) && $(MAKE) $@ && cd ..
 
 distclean:
 	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
@@ -157,6 +163,7 @@ distclean:
 	cd $(ITraversal_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMRange_DIR) && $(MAKE) $@ && cd ..
 	cd $(IDOMRange_DIR) && $(MAKE) $@ && cd ..
+	cd $(InitTermTest_DIR) && $(MAKE) $@ && cd ..
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 

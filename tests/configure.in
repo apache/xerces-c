@@ -79,6 +79,7 @@ IDom/ITraversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 IDom/IRangeTest/Makefile \
+InitTermTest/Makefile \
 ThreadTest/Makefile \
 IThreadTest/Makefile])
 

@@ -1459,6 +1459,7 @@ IDom/ITraversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 IDom/IRangeTest/Makefile \
+InitTermTest/Makefile \
 ThreadTest/Makefile \
 IThreadTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
@@ -1562,6 +1563,7 @@ IDom/ITraversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 IDom/IRangeTest/Makefile \
+InitTermTest/Makefile \
 ThreadTest/Makefile \
 IThreadTest/Makefile"}
 EOF
