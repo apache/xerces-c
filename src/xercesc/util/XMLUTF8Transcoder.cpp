@@ -169,20 +169,16 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
     //
     while ((srcPtr < srcEnd) && (outPtr < outEnd))
     {
-        // Get the next leading byte out
-        const XMLByte firstByte = *srcPtr;
-
         // Special-case ASCII, which is a leading byte value of <= 127
-        if (firstByte <= 127)
+        if (*srcPtr <= 127)
         {
-            *outPtr++ = XMLCh(firstByte);
-            srcPtr++;
+            *outPtr++ = XMLCh(*srcPtr++);
             *sizePtr++ = 1;
             continue;
         }
 
         // See how many trailing src bytes this sequence is going to require
-        const unsigned int trailingBytes = gUTFBytes[firstByte];
+        const unsigned int trailingBytes = gUTFBytes[*srcPtr];
 
         //
         //  If there are not enough source bytes to do this one, then we
