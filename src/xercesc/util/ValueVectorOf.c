@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2003/05/20 21:06:30  knoaman
+ * Set values to 0.
+ *
  * Revision 1.5  2003/05/16 21:37:00  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -100,6 +103,7 @@
 #if defined(XERCES_TMPLSINC)
 #include <xercesc/util/ValueVectorOf.hpp>
 #endif
+#include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -119,6 +123,8 @@ ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems,
     (
         fMaxCount * sizeof(TElem)
     ); //new TElem[fMaxCount];
+
+    memset(fElemList, 0, fMaxCount * sizeof(TElem));
 }
 
 template <class TElem>
