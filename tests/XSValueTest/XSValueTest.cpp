@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.5  2004/08/31 15:15:16  peiyongz
+* remove XSValueContext
+*
 * Revision 1.4  2004/08/24 16:00:15  peiyongz
 * To build on AIX/Win2003-ecl
 *
@@ -96,7 +99,7 @@ static const bool  EXP_RET_VALID_FALSE  = false;
 static const bool  EXP_RET_VALUE_FALSE  = false;
 static const bool  EXP_RET_CANREP_FALSE = false;
 
-static const XSValueContext::Status DONT_CARE = XSValueContext::st_UnknownType;
+static const XSValue::Status DONT_CARE = XSValue::st_UnknownType;
 static bool  errSeen = false;
 
 /**
@@ -107,14 +110,17 @@ static bool  errSeen = false;
 void VALIDATE_TEST( const char*                  const  data
                   , const XSValue::DataType             datatype
                   ,       bool                          expRetValid
-                  , const XSValueContext::Status        expStatus
+                  , const XSValue::Status               expStatus
                   )
 {
-    XSValueContext  myContext(XSValueContext::ver_10);
+    XSValue::Status myStatus = XSValue::st_Init;
+
     bool actRetValid = XSValue::validate(
                                           StrX(data).unicodeForm()
                                         , datatype
-                                        , myContext
+                                        , myStatus
+                                        , XSValue::ver_10
+                                        , true
                                         , XMLPlatformUtils::fgMemoryManager);
 
     if (actRetValid != expRetValid)
@@ -125,12 +131,12 @@ void VALIDATE_TEST( const char*                  const  data
     }
     else 
     {
-        if (!expRetValid                       && 
-             expStatus != DONT_CARE            && 
-             expStatus != myContext.getStatus() ) 
+        if (!expRetValid             && 
+             expStatus != DONT_CARE  && 
+             expStatus != myStatus ) 
         {
             printf("VALIDATE_TEST Context Diff, data=<%s> datatype=<%d>, expStatus=<%d>, actStatus=<%d>\n",
-                    data, datatype, expStatus, myContext.getStatus());
+                    data, datatype, expStatus, myStatus);
             errSeen = true;
         }
     }
@@ -138,11 +144,13 @@ void VALIDATE_TEST( const char*                  const  data
 #else
 #define VALIDATE_TEST(data, datatype, expRetValid, expStatus)                        \
 {                                                                                    \
-    XSValueContext  myContext(XSValueContext::ver_10);                               \
+    XSValue::Status myStatus = XSValue::st_Init;                                     \
     bool actRetValid = XSValue::validate(                                            \
                                           StrX(data).unicodeForm()                   \
                                         , datatype                                   \
-                                        , myContext                                  \
+                                        , myStatus                                   \
+                                        , XSValue::ver_10                            \
+                                        , true                                       \
                                         , XMLPlatformUtils::fgMemoryManager);        \
     if (actRetValid != expRetValid) {                                                \
         printf("VALIDATE_TEST Validation Fail:                                       \
@@ -151,13 +159,13 @@ void VALIDATE_TEST( const char*                  const  data
         errSeen = true;                                                              \
     }                                                                                \
     else {                                                                           \
-        if (!expRetValid                      &&                                     \
-             expStatus != DONT_CARE           &&                                     \
-             expStatus != myContext.getStatus() ) {                                  \
+        if (!expRetValid             &&                                              \
+             expStatus != DONT_CARE  &&                                              \
+             expStatus != myStatus ) {                                               \
              printf("VALIDATE_TEST Context Diff,                                     \
                    at line <%d>, data=<%s> datatype=<%d>,                            \
                    expStatus=<%d>, actStatus=<%d>\n"                                 \
-                  , __LINE__, data, datatype, expStatus, myContext.getStatus());     \
+                  , __LINE__, data, datatype, expStatus, myStatus);                  \
              errSeen = true;                                                         \
         }                                                                            \
     }                                                                                \
@@ -169,14 +177,17 @@ void ACTVALUE_TEST(  const char*                  const  data
                    , const XSValue::DataType             datatype
                    ,       bool                          toValidate
                    ,       bool                          expRetValue
-                   , const XSValueContext::Status        expStatus
+                   , const XSValue::Status               expStatus
                     )
 {
-    XSValueContext  myContext(XSValueContext::ver_10, toValidate);
+    XSValue::Status myStatus = XSValue::st_Init;
+
     XSValue* actRetValue = XSValue::getActualValue(
                                                    StrX(data).unicodeForm()
                                                  , datatype
-                                                 , myContext
+                                                 , myStatus
+                                                 , XSValue::ver_10
+                                                 , toValidate
                                                  , XMLPlatformUtils::fgMemoryManager);
     if (actRetValue) 
     {
@@ -199,11 +210,11 @@ void ACTVALUE_TEST(  const char*                  const  data
         }
         else
         {
-            if (expStatus != DONT_CARE            &&
-                expStatus != myContext.getStatus() ) 
+            if (expStatus != DONT_CARE  &&
+                expStatus != myStatus    ) 
             {
                 printf("ACTVALUE_TEST Context Diff, data=<%s>, datatype=<%d>, expStatus=<%d>, actStatus=<%d>\n" ,
-                       data, datatype, expStatus, myContext.getStatus());
+                       data, datatype, expStatus, myStatus);
                 errSeen = true;
             }
         }
@@ -212,11 +223,13 @@ void ACTVALUE_TEST(  const char*                  const  data
 #else
 #define ACTVALUE_TEST(data, datatype, toValidate, expRetValue, expStatus)              \
 {                                                                                      \
-    XSValueContext  myContext(XSValueContext::ver_10, toValidate);                     \
+    XSValue::Status myStatus = XSValue::st_Init;                                       \
     XSValue* actRetValue = XSValue::getActualValue(                                    \
                                                    StrX(data).unicodeForm()            \
                                                  , datatype                            \
-                                                 , myContext                           \
+                                                 , myStatus                            \
+                                                 , XSValue::ver_10                     \
+                                                 , toValidate                          \
                                                  , XMLPlatformUtils::fgMemoryManager); \
     if (actRetValue) {                                                                 \
        if (!expRetValue) {                                                             \
@@ -235,12 +248,12 @@ void ACTVALUE_TEST(  const char*                  const  data
             errSeen = true;                                                            \
          }                                                                             \
          else {                                                                        \
-             if (expStatus != DONT_CARE            &&                                  \
-                 expStatus != myContext.getStatus()) {                                 \
+             if (expStatus != DONT_CARE &&                                             \
+                 expStatus != myStatus) {                                              \
                  printf("ACTVALUE_TEST Context Diff,                                   \
                          at line <%d> data=<%s>, datatype=<%d>,                        \
                          expStatus=<%d>, actStatus=<%d>\n"                             \
-                        , __LINE__, data, datatype, expStatus, myContext.getStatus()); \
+                        , __LINE__, data, datatype, expStatus, myStatus);              \
                  errSeen = true;                                                       \
              }                                                                         \
         }                                                                              \
@@ -254,14 +267,17 @@ void CANREP_TEST(const char*                  const  data
                ,       bool                          toValidate
                ,       bool                          expRetCanRep
                , const char*                  const  toCompare
-               , const XSValueContext::Status        expStatus
+               , const XSValue::Status               expStatus
                 )
 {
-    XSValueContext  myContext(XSValueContext::ver_10, toValidate);
+    XSValue::Status myStatus = XSValue::st_Init;
+
     XMLCh* actRetCanRep = XSValue::getCanonicalRepresentation(
                                                             StrX(data).unicodeForm()
                                                           , datatype
-                                                          , myContext
+                                                          , myStatus
+                                                          , XSValue::ver_10
+                                                          , toValidate
                                                           , XMLPlatformUtils::fgMemoryManager);
     if (actRetCanRep)
     {
@@ -297,11 +313,11 @@ void CANREP_TEST(const char*                  const  data
         }
         else
         {
-            if (expStatus != DONT_CARE            &&
-                expStatus != myContext.getStatus())
+            if (expStatus != DONT_CARE  &&
+                expStatus != myStatus    )
             {
                 printf("CANREP_TEST Context Diff, data=<%s>, datatype=<%d>\n expStatus=<%d>, actStatus=<%d>\n" ,
-                    data, datatype, expStatus, myContext.getStatus());
+                    data, datatype, expStatus, myStatus);
                 errSeen = true;
             }
         }
@@ -310,11 +326,13 @@ void CANREP_TEST(const char*                  const  data
 #else
 #define CANREP_TEST(data, datatype, toValidate, expRetCanRep, toCompare, expStatus)   \
 {                                                                                     \
-    XSValueContext  myContext(XSValueContext::ver_10, toValidate);                    \
+    XSValue::Status myStatus = XSValue::st_Init;                                      \
     XMLCh* actRetCanRep = XSValue::getCanonicalRepresentation(                        \
                                                   StrX(data).unicodeForm()            \
                                                 , datatype                            \
-                                                , myContext                           \
+                                                , myStatus                            \
+                                                , XSValue::ver_10                     \
+                                                , toValidate                          \
                                                 , XMLPlatformUtils::fgMemoryManager); \
     if (actRetCanRep) {                                                               \
         if (!expRetCanRep) {                                                          \
@@ -345,11 +363,11 @@ void CANREP_TEST(const char*                  const  data
             errSeen = true;                                                           \
         }                                                                             \
         else {                                                                        \
-            if (expStatus != myContext.getStatus()) {                                 \
+        if (expStatus != myStatus) {                                                  \
                 printf("CANREP_TEST Context Diff,                                     \
                         at line <%d> data=<%s>, datatype=<%d>\n                       \
                         expStatus=<%d>, actStatus=<%d>\n"                             \
-                      , __LINE__, data, datatype, expStatus, myContext.getStatus());  \
+                      , __LINE__, data, datatype, expStatus, myStatus);               \
                 errSeen = true;                                                       \
             }                                                                         \
         }                                                                             \
@@ -424,8 +442,8 @@ void test_dt_decimal()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -459,17 +477,17 @@ void test_dt_decimal()
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -511,8 +529,8 @@ void test_dt_decimal()
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1, DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
@@ -596,14 +614,14 @@ void test_dt_float()
     VALIDATE_TEST(lex_v_ran_v_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, range invalid
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -640,14 +658,14 @@ void test_dt_float()
         ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
 
         // lexical valid, range invalid
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
 
     }
 
@@ -686,17 +704,17 @@ void test_dt_float()
         CANREP_TEST(data_rawstr_5,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_5,    DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
     }
 
     // lexical valid, range invalid
 
     toValidate = true;
-    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     toValidate = false;
     CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
@@ -786,14 +804,14 @@ void test_dt_double()
     VALIDATE_TEST(lex_v_ran_v_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, range invalid
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -830,14 +848,14 @@ void test_dt_double()
         ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE);
 
         // lexical valid, range invalid
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
 
     }
 
@@ -876,17 +894,17 @@ void test_dt_double()
         CANREP_TEST(data_rawstr_5,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_5,    DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_InvalidChar);
     }
 
     // lexical valid, range invalid
 
     toValidate = true;
-    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     toValidate = false;
     CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
@@ -963,8 +981,8 @@ void test_dt_integer()
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -998,17 +1016,17 @@ void test_dt_integer()
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1039,14 +1057,14 @@ void test_dt_integer()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,    DONT_CARE);
-        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
@@ -1103,14 +1121,14 @@ void test_dt_nonPositiveInteger()
 
     // lexical valid
     VALIDATE_TEST(lex_v_ran_v_1    , dt, EXP_RET_VALID_TRUE,  DONT_CARE);
-    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     VALIDATE_TEST(lex_v_ran64_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -1143,14 +1161,14 @@ void test_dt_nonPositiveInteger()
 
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1185,8 +1203,8 @@ void test_dt_nonPositiveInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
@@ -1240,14 +1258,14 @@ void test_dt_negativeInteger()
 
     // lexical valid
     VALIDATE_TEST(lex_v_ran_v_1    , dt, EXP_RET_VALID_TRUE,  DONT_CARE);
-    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     VALIDATE_TEST(lex_v_ran64_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -1280,14 +1298,14 @@ void test_dt_negativeInteger()
 
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1321,8 +1339,8 @@ void test_dt_negativeInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
@@ -1386,12 +1404,12 @@ void test_dt_long()
     VALIDATE_TEST(lex_v_ran64_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran64_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran64_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -1425,17 +1443,17 @@ void test_dt_long()
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1466,19 +1484,19 @@ void test_dt_long()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,    DONT_CARE);
-        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran64_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
@@ -1539,12 +1557,12 @@ void test_dt_int()
     VALIDATE_TEST(lex_v_ran_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -1577,11 +1595,11 @@ void test_dt_int()
 
         ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1612,19 +1630,19 @@ void test_dt_int()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,        DONT_CARE);
-        CANREP_TEST(data_rawstr_2, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,        XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,        XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -1689,12 +1707,12 @@ void test_dt_short()
     VALIDATE_TEST(lex_v_ran_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -1727,11 +1745,11 @@ void test_dt_short()
 
         ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1762,19 +1780,19 @@ void test_dt_short()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,        DONT_CARE);
-        CANREP_TEST(data_rawstr_2, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,        XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,        XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -1839,12 +1857,12 @@ void test_dt_byte()
     VALIDATE_TEST(lex_v_ran_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -1877,11 +1895,11 @@ void test_dt_byte()
 
         ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -1912,19 +1930,19 @@ void test_dt_byte()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,        DONT_CARE);
-        CANREP_TEST(data_rawstr_2, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,        XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2, dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,        XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -1982,14 +2000,14 @@ void test_dt_nonNegativeInteger()
 
     // lexical valid
     VALIDATE_TEST(lex_v_ran_v_1    , dt, EXP_RET_VALID_TRUE,  DONT_CARE);
-    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     VALIDATE_TEST(lex_v_ran64_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -2022,14 +2040,14 @@ void test_dt_nonNegativeInteger()
 
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -2064,8 +2082,8 @@ void test_dt_nonNegativeInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
@@ -2131,12 +2149,12 @@ void test_dt_unsignedLong()
     VALIDATE_TEST(lex_v_ran64_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran64_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran64_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -2170,17 +2188,17 @@ void test_dt_unsignedLong()
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -2211,19 +2229,19 @@ void test_dt_unsignedLong()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,    DONT_CARE);
-        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran64_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
@@ -2284,12 +2302,12 @@ void test_dt_unsignedInt()
     VALIDATE_TEST(lex_v_ran_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -2322,11 +2340,11 @@ void test_dt_unsignedInt()
 
         ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -2357,19 +2375,19 @@ void test_dt_unsignedInt()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,    DONT_CARE);
-        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2430,12 +2448,12 @@ void test_dt_unsignedShort()
     VALIDATE_TEST(lex_v_ran_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -2468,11 +2486,11 @@ void test_dt_unsignedShort()
 
         ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -2503,19 +2521,19 @@ void test_dt_unsignedShort()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,    DONT_CARE);
-        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2576,12 +2594,12 @@ void test_dt_unsignedByte()
     VALIDATE_TEST(lex_v_ran_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, invalid range
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -2614,11 +2632,11 @@ void test_dt_unsignedByte()
 
         ACTVALUE_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
         ACTVALUE_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -2649,19 +2667,19 @@ void test_dt_unsignedByte()
         toValidate = ( 0 == j)? true : false;
 
         CANREP_TEST(data_rawstr_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_1,    DONT_CARE);
-        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValueContext::st_InvalidRange);
+        CANREP_TEST(data_rawstr_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_2,    XSValue::st_InvalidRange);
 
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValueContext::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_InvalidRange);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2718,14 +2736,14 @@ void test_dt_positiveInteger()
 
     // lexical valid
     VALIDATE_TEST(lex_v_ran_v_1    , dt, EXP_RET_VALID_TRUE,  DONT_CARE);
-    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidRange);
+    VALIDATE_TEST(lex_v_ran_iv_1   , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidRange);
 
     VALIDATE_TEST(lex_v_ran64_v_2  , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran64_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
-    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValueContext::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
+    VALIDATE_TEST(lex_iv_2         , dt, EXP_RET_VALID_FALSE, XSValue::st_InvalidChar);
 
     /***
      *
@@ -2758,14 +2776,14 @@ void test_dt_positiveInteger()
 
 #if defined(XML_BITSTOBUILD_64)
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #else
         ACTVALUE_TEST(lex_v_ran32_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
-        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidRange);
+        ACTVALUE_TEST(lex_v_ran32_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidRange);
 #endif
 
-        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
-        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_1,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
+        ACTVALUE_TEST(lex_iv_2,         dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_InvalidChar);
     }
 
     /***
@@ -2800,8 +2818,8 @@ void test_dt_positiveInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValueContext::st_InvalidChar);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_InvalidChar);
 
     }
 
@@ -2849,7 +2867,7 @@ void test_dt_boolean()
     VALIDATE_TEST(lex_v_4,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -2881,7 +2899,7 @@ void test_dt_boolean()
         ACTVALUE_TEST(lex_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -2915,7 +2933,7 @@ void test_dt_boolean()
         CANREP_TEST(lex_v_4,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_4_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValueContext::st_Invalid);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
     }
 
 }
@@ -2959,8 +2977,8 @@ void test_dt_hexBinary()
     VALIDATE_TEST(lex_v_2,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -2990,8 +3008,8 @@ void test_dt_hexBinary()
         ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3023,8 +3041,8 @@ void test_dt_hexBinary()
         CANREP_TEST(lex_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_2_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValueContext::st_Invalid);
-        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValueContext::st_Invalid);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
+        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
     }
 
 }
@@ -3060,8 +3078,8 @@ void test_dt_base64Binary()
     VALIDATE_TEST(lex_v_2,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     // lexical invalid
-    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(lex_iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(lex_iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3091,8 +3109,8 @@ void test_dt_base64Binary()
         ACTVALUE_TEST(lex_v_2,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         // lexical invalid
-        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(lex_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(lex_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3124,8 +3142,8 @@ void test_dt_base64Binary()
         CANREP_TEST(lex_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_2_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValueContext::st_Invalid);
-        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValueContext::st_Invalid);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
+        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_Invalid);
     }
 
 }
@@ -3160,9 +3178,9 @@ void test_dt_duration()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3193,9 +3211,9 @@ void test_dt_duration()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3223,17 +3241,17 @@ void test_dt_duration()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3269,9 +3287,9 @@ void test_dt_date()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3302,9 +3320,9 @@ void test_dt_date()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3332,17 +3350,17 @@ void test_dt_date()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3378,9 +3396,9 @@ void test_dt_gYearMonth()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3411,9 +3429,9 @@ void test_dt_gYearMonth()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3441,17 +3459,17 @@ void test_dt_gYearMonth()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3487,9 +3505,9 @@ void test_dt_gYear()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3520,9 +3538,9 @@ void test_dt_gYear()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3550,17 +3568,17 @@ void test_dt_gYear()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3596,9 +3614,9 @@ void test_dt_gMonthDay()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3629,9 +3647,9 @@ void test_dt_gMonthDay()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3659,17 +3677,17 @@ void test_dt_gMonthDay()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3705,9 +3723,9 @@ void test_dt_gDay()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3738,9 +3756,9 @@ void test_dt_gDay()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3768,17 +3786,17 @@ void test_dt_gDay()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3814,9 +3832,9 @@ void test_dt_gMonth()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3847,9 +3865,9 @@ void test_dt_gMonth()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -3877,17 +3895,17 @@ void test_dt_gMonth()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
 
     }
 
@@ -3947,9 +3965,9 @@ void test_dt_dateTime()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -3980,9 +3998,9 @@ void test_dt_dateTime()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -4015,9 +4033,9 @@ void test_dt_dateTime()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_Invalid);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_Invalid);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_Invalid);
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
 
     }
 
@@ -4070,9 +4088,9 @@ void test_dt_time()
     VALIDATE_TEST(v_3,  dt, EXP_RET_VALID_TRUE,  DONT_CARE);
 
     //  invalid
-    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
-    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValueContext::st_Invalid);
+    VALIDATE_TEST(iv_1, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_2, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
+    VALIDATE_TEST(iv_3, dt, EXP_RET_VALID_FALSE, XSValue::st_Invalid);
 
     /***
      *
@@ -4103,9 +4121,9 @@ void test_dt_time()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE);
 
         //  invalid
-        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
-        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_Invalid);
+        ACTVALUE_TEST(iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
+        ACTVALUE_TEST(iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_Invalid);
     }
 
     /***
@@ -4138,9 +4156,9 @@ void test_dt_time()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_Invalid);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_Invalid);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_Invalid);
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_Invalid);
 
     }
 
@@ -4193,7 +4211,7 @@ void test_dt_string()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
     }
@@ -4223,7 +4241,7 @@ void test_dt_string()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
 
@@ -4289,17 +4307,17 @@ void test_dt_anyURI()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoActVal));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoActVal));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoActVal));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
 
     }
 
@@ -4328,17 +4346,17 @@ void test_dt_anyURI()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
     }
 
 }
@@ -4401,17 +4419,17 @@ void test_dt_QName()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoActVal));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoActVal));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoActVal));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoActVal));
 
     }
 
@@ -4440,17 +4458,17 @@ void test_dt_QName()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValueContext::st_Invalid: XSValueContext::st_NoCanRep));
+            (toValidate? XSValue::st_Invalid: XSValue::st_NoCanRep));
     }
 
 }
@@ -4504,7 +4522,7 @@ void test_dt_NOTATION()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
 
@@ -4536,7 +4554,7 @@ void test_dt_NOTATION()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
 
@@ -4600,15 +4618,15 @@ void test_dt_normalizedString()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -4637,15 +4655,15 @@ void test_dt_normalizedString()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -4709,17 +4727,17 @@ void test_dt_token()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -4748,17 +4766,17 @@ void test_dt_token()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -4822,17 +4840,17 @@ void test_dt_language()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -4861,17 +4879,17 @@ void test_dt_language()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -4935,17 +4953,17 @@ void test_dt_NMTOKEN()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -4974,17 +4992,17 @@ void test_dt_NMTOKEN()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -5048,17 +5066,17 @@ void test_dt_NMTOKENS()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -5087,17 +5105,17 @@ void test_dt_NMTOKENS()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -5161,17 +5179,17 @@ void test_dt_Name()
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -5200,17 +5218,17 @@ void test_dt_Name()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -5274,17 +5292,17 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -5313,17 +5331,17 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 
@@ -5386,17 +5404,17 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
         toValidate = ( 0 == i) ? true : false;
 
         //  valid
-        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
-        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValueContext::st_NoActVal);
+        ACTVALUE_TEST(v_1,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_2,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
+        ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal);
 
         //  invalid
         ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
         ACTVALUE_TEST(iv_3,  dt, toValidate, EXP_RET_VALUE_FALSE,
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoActVal));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoActVal));
 
     }
 
@@ -5425,17 +5443,17 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValueContext::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
 
         //  invalid
         CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate ? XSValueContext::st_Invalid : XSValueContext::st_NoCanRep));
+            (toValidate ? XSValue::st_Invalid : XSValue::st_NoCanRep));
 
     }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/08/31 15:14:47  peiyongz
+ * remove XSValueContext
+ *
  * Revision 1.5  2004/08/24 15:59:20  peiyongz
  * using SCHAR_MIN/SCHAR_MAX
  *
@@ -259,7 +262,9 @@ XSValue::~XSValue()
 // ---------------------------------------------------------------------------
 bool XSValue::validate(const XMLCh*         const content    
                      ,       DataType             datatype
-                     ,       XSValueContext&      context
+                     ,       Status&              status
+                     ,       XMLVersion           version
+                     ,       bool                 toValidate
                      ,       MemoryManager* const manager)
 {
 
@@ -269,16 +274,16 @@ bool XSValue::validate(const XMLCh*         const content
     switch (inGroup[datatype])
     {
     case XSValue::dg_numerics :
-        return validateNumerics(content, datatype, context, manager);
+        return validateNumerics(content, datatype, status, version, toValidate, manager);
         break;
     case XSValue::dg_datetimes:
-        return validateDateTimes(content, datatype, context, manager);
+        return validateDateTimes(content, datatype, status, version, toValidate, manager);
         break;
     case XSValue::dg_strings:
-        return validateStrings(content, datatype, context, manager);
+        return validateStrings(content, datatype, status, version, toValidate, manager);
         break;
     default:
-        context.fStatus = XSValueContext::st_UnknownType;
+        status = st_UnknownType;
         return false;
         break;
     }
@@ -288,7 +293,9 @@ bool XSValue::validate(const XMLCh*         const content
 XMLCh* 
 XSValue::getCanonicalRepresentation(const XMLCh*         const content    
                                   ,       DataType             datatype
-                                  ,       XSValueContext&      context
+                                  ,       Status&              status
+                                  ,       XMLVersion           version
+                                  ,       bool                 toValidate
                                   ,       MemoryManager* const manager)
 {
  
@@ -298,16 +305,16 @@ XSValue::getCanonicalRepresentation(const XMLCh*         const content
     switch (inGroup[datatype])
     {
     case XSValue::dg_numerics :
-        return getCanRepNumerics(content, datatype, context, manager);
+        return getCanRepNumerics(content, datatype,  status, version, toValidate, manager);
         break;
     case XSValue::dg_datetimes:
-        return getCanRepDateTimes(content, datatype, context, manager);
+        return getCanRepDateTimes(content, datatype,  status, version, toValidate, manager);
         break;
     case XSValue::dg_strings:
-        return getCanRepStrings(content, datatype, context, manager);
+        return getCanRepStrings(content, datatype,  status, version, toValidate, manager);
         break;
     default:
-        context.fStatus = XSValueContext::st_UnknownType;
+        status = st_UnknownType;
         return 0;
         break;
     }
@@ -316,7 +323,9 @@ XSValue::getCanonicalRepresentation(const XMLCh*         const content
 
 XSValue* XSValue::getActualValue(const XMLCh*         const content    
                                ,       DataType             datatype
-                               ,       XSValueContext&      context
+                               ,       Status&              status
+                               ,       XMLVersion           version
+                               ,       bool                 toValidate
                                ,       MemoryManager* const manager)
 {
 
@@ -326,16 +335,16 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
     switch (inGroup[datatype])
     {
     case XSValue::dg_numerics :
-        return getActValNumerics(content, datatype, context, manager);
+        return getActValNumerics(content, datatype,  status, version, toValidate, manager);
         break;
     case XSValue::dg_datetimes:
-        return getActValDateTimes(content, datatype, context, manager);
+        return getActValDateTimes(content, datatype,  status, version, toValidate, manager);
         break;
     case XSValue::dg_strings:
-        return getActValStrings(content, datatype, context, manager);
+        return getActValStrings(content, datatype,  status, version, toValidate, manager);
         break;
     default:
-        context.fStatus = XSValueContext::st_UnknownType;
+        status = st_UnknownType;
         return 0;
         break;
     }
@@ -353,7 +362,9 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
 bool 
 XSValue::validateNumerics(const XMLCh*         const content    
                         ,       DataType             datatype
-                        ,       XSValueContext&      context
+                        ,       Status&              status
+                        ,       XMLVersion           version
+                        ,       bool                 toValidate
                         ,       MemoryManager* const manager)
 {
 
@@ -371,7 +382,7 @@ XSValue::validateNumerics(const XMLCh*         const content
             XMLFloat data(content, manager);
             if (data.isDataConverted())
             {
-                context.fStatus = XSValueContext::st_InvalidRange;
+                status = st_InvalidRange;
                 return false;
             }
         }
@@ -382,7 +393,7 @@ XSValue::validateNumerics(const XMLCh*         const content
             XMLDouble  data(content, manager);
             if (data.isDataConverted())
             {
-                context.fStatus = XSValueContext::st_InvalidRange;
+                status = st_InvalidRange;
                 return false;
             }
         }
@@ -421,7 +432,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                     , manager) 
                                                     == XMLNumber::GREATER_THAN)
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -436,7 +447,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                    , manager) 
                                                    == XMLNumber::GREATER_THAN)
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -451,7 +462,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                    , manager) 
                                                    == XMLNumber::LESS_THAN)
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -466,7 +477,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                    , manager) 
                                                    == XMLNumber::LESS_THAN)
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -487,7 +498,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                     , manager) 
                                                     == XMLNumber::GREATER_THAN))
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -508,7 +519,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                     , manager) 
                                                     == XMLNumber::GREATER_THAN))
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -530,7 +541,9 @@ XSValue::validateNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   content
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_long
                                 , actVal
                                 , base_decimal
@@ -548,7 +561,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                     if ((actVal.f_long < INT_MIN) || 
                         (actVal.f_long > INT_MAX)  )
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -559,7 +572,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                     if ((actVal.f_long < SHRT_MIN) || 
                         (actVal.f_long > SHRT_MAX)  )
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -570,7 +583,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                     if ((actVal.f_long < SCHAR_MIN) || 
                         (actVal.f_long > SCHAR_MAX)  )
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return false;
                     }
                 }
@@ -589,7 +602,9 @@ XSValue::validateNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   content
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_ulong
                                 , actVal
                                 , base_decimal
@@ -605,7 +620,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 // strtol() won't overflow for UINT_MAX+1 on 64 box
                 if (actVal.f_long > UINT_MAX) 
                 {
-                    context.fStatus = XSValueContext::st_InvalidRange;
+                    status = st_InvalidRange;
                     return false;
                 }
                 break;
@@ -613,7 +628,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 // error: > USHRT_MAX
                 if (actVal.f_ulong > USHRT_MAX) 
                 {
-                    context.fStatus = XSValueContext::st_InvalidRange;
+                    status = st_InvalidRange;
                     return false;
                 }
                 break;
@@ -621,7 +636,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 // error: > UCHAR_MAX
                 if (actVal.f_ulong > UCHAR_MAX) 
                 {
-                    context.fStatus = XSValueContext::st_InvalidRange;
+                    status = st_InvalidRange;
                     return false;
                 }
                 break;
@@ -638,7 +653,7 @@ XSValue::validateNumerics(const XMLCh*         const content
     {
         //getActValue()/getCanonical() need to know the failure details
         //if validation is required
-        context.fStatus = XSValueContext::st_InvalidChar; 
+        status = st_InvalidChar; 
         return false; 
     }
 
@@ -646,7 +661,9 @@ XSValue::validateNumerics(const XMLCh*         const content
 
 bool XSValue::validateDateTimes(const XMLCh*         const content    
                               ,       DataType             datatype
-                              ,       XSValueContext&      context
+                              ,       Status&              status
+                              ,       XMLVersion           version
+                              ,       bool                 toValidate
                               ,       MemoryManager* const manager)
 {
 
@@ -695,7 +712,7 @@ bool XSValue::validateDateTimes(const XMLCh*         const content
     {
         //getActValue()/getCanonical() need to know the failure details
         //if validation is required
-        context.fStatus = XSValueContext::st_Invalid;
+        status = st_Invalid;
         return false; 
     }      
 
@@ -703,7 +720,9 @@ bool XSValue::validateDateTimes(const XMLCh*         const content
 
 bool XSValue::validateStrings(const XMLCh*         const content    
                             ,       DataType             datatype
-                            ,       XSValueContext&      context
+                            ,       Status&              status
+                            ,       XMLVersion           version
+                            ,       bool                 toValidate
                             ,       MemoryManager* const manager)
 {
 
@@ -722,7 +741,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
                 if (i == XMLUni::fgBooleanValueSpaceArraySize)
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return false;
                 }
             }
@@ -731,7 +750,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 if (HexBin::getDataLength(content) == -1) 
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return false;
                 }
             }
@@ -740,7 +759,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 if (Base64::getDataLength(content, manager) == -1) 
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return false;
                 }
             }
@@ -749,7 +768,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             return XMLUri::isValidURI(true, content);
             break;
         case XSValue::dt_QName:
-            return (context.getVersion() == XSValueContext::ver_10) ? 
+            return (version == ver_10) ? 
                 XMLChar1_0::isValidQName(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidQName(content, XMLString::stringLen(content));
             break;
@@ -760,7 +779,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 XMLCh*   rawPtr = (XMLCh*) content;
 
-                if (context.getVersion() == XSValueContext::ver_10)
+                if (version == ver_10)
                 {
                     while (*rawPtr) 
                         if (!XMLChar1_0::isXMLChar(*rawPtr++)) 
@@ -779,7 +798,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 XMLCh*   rawPtr = (XMLCh*) content;
 
-                if (context.getVersion() == XSValueContext::ver_10)
+                if (version == ver_10)
                 {
                     while (*rawPtr) 
                     {
@@ -814,7 +833,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
                 XMLCh*   rawPtr = (XMLCh*) content;
                 bool     inWS = false;
 
-                if (context.getVersion() == XSValueContext::ver_10)
+                if (version == ver_10)
                 {
 
                     // Check leading/Trailing white space
@@ -880,7 +899,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
                 RegularExpression* regEx = getRegEx();
                 if (!regEx)
                 {
-                    context.fStatus = XSValueContext::st_CantCreateRegEx;
+                    status = st_CantCreateRegEx;
                     return false;
                 }
 
@@ -889,7 +908,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
             break;
         case XSValue::dt_NMTOKEN:
-            return (context.getVersion() == XSValueContext::ver_10) ? 
+            return (version == ver_10) ? 
                 XMLChar1_0::isValidNmtoken(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidNmtoken(content, XMLString::stringLen(content));
             break;
@@ -898,7 +917,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 XMLStringTokenizer tokenizer(content, Separator_20, manager);
 
-                if (context.getVersion() ==  XSValueContext::ver_10 )
+                if (version ==  ver_10 )
                 {
                     while (tokenizer.hasMoreTokens()) 
                     {
@@ -921,7 +940,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             }
             break;
         case XSValue::dt_Name:
-            return (context.getVersion() == XSValueContext::ver_10) ? 
+            return (version == ver_10) ? 
                 XMLChar1_0::isValidName(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidName(content, XMLString::stringLen(content));
             break;
@@ -929,7 +948,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
         case XSValue::dt_ID:
         case XSValue::dt_IDREF:
         case XSValue::dt_ENTITY:
-            return (context.getVersion() == XSValueContext::ver_10) ? 
+            return (version == ver_10) ? 
                 XMLChar1_0::isValidNCName(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidNCName(content, XMLString::stringLen(content));
             break;
@@ -938,7 +957,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 XMLStringTokenizer tokenizer(content, Separator_ws, manager);
 
-                if (context.getVersion() ==  XSValueContext::ver_10 )
+                if (version ==  ver_10 )
                 {
                     while (tokenizer.hasMoreTokens()) 
                     {
@@ -970,7 +989,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_Invalid;
+        status = st_Invalid;
         return false; 
     }
 
@@ -979,7 +998,9 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
 XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content    
                                 ,       DataType             datatype
-                                ,       XSValueContext&      context
+                                ,       Status&              status
+                                ,       XMLVersion           version
+                                ,       bool                 toValidate
                                 ,       MemoryManager* const manager)
 {
     try 
@@ -988,7 +1009,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         // All getCanonicalRepresentation does lexcial space validation only
         // (no range checking), therefore if validation is requied,
         // we need to pass the content to the validate interface for complete checking
-        if (context.getValidation() && !validateNumerics(content, datatype, context, manager))
+        if (toValidate && !validateNumerics(content, datatype, status, version, toValidate, manager))
             return 0;
 
         XMLCh* retVal;
@@ -998,7 +1019,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             retVal = XMLBigDecimal::getCanonicalRepresentation(content, manager);
 
             if (!retVal)
-                context.fStatus = XSValueContext::st_InvalidChar;
+                status = st_InvalidChar;
 
             return retVal;
 
@@ -1008,7 +1029,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             retVal = XMLAbstractDoubleFloat::getCanonicalRepresentation(content, manager);
 
             if (!retVal)
-                context.fStatus = XSValueContext::st_InvalidChar;
+                status = st_InvalidChar;
 
             return retVal;
         }  
@@ -1017,7 +1038,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             retVal = XMLBigInteger::getCanonicalRepresentation(content, manager, datatype == XSValue::dt_nonPositiveInteger);
 
             if (!retVal)
-                context.fStatus = XSValueContext::st_InvalidChar;
+                status = st_InvalidChar;
 
             return retVal;
         }
@@ -1025,7 +1046,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_InvalidChar;
+        status = st_InvalidChar;
         return 0;
     }
 
@@ -1033,7 +1054,9 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
 
 XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content    
                                  ,       DataType             datatype
-                                 ,       XSValueContext&      context
+                                 ,       Status&              status
+                                 ,       XMLVersion           version
+                                 ,       bool                 toValidate
                                  ,       MemoryManager* const manager)
 {
 
@@ -1062,10 +1085,10 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         case XSValue::dt_gDay:
         case XSValue::dt_gMonth:
             {
-                if (context.getValidation() && !validateDateTimes(content, datatype, context, manager))
-                    context.fStatus = XSValueContext::st_Invalid;
+                if (toValidate && !validateDateTimes(content, datatype, status, version, toValidate, manager))
+                    status = st_Invalid;
                 else
-                    context.fStatus = XSValueContext::st_NoCanRep;
+                    status = st_NoCanRep;
 
                 return 0;
             }
@@ -1078,7 +1101,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_Invalid;
+        status = st_Invalid;
         return 0;
     }
 
@@ -1086,7 +1109,9 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
 
 XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content    
                                ,       DataType             datatype
-                               ,       XSValueContext&      context
+                               ,       Status&              status
+                               ,       XMLVersion           version
+                               ,       bool                 toValidate
                                ,       MemoryManager* const manager)
 {
     try
@@ -1108,7 +1133,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 }
                 else
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return 0;
                 }
             }
@@ -1118,7 +1143,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 //HexBin::getCanonicalRepresentation does validation automatically
                 XMLCh* canRep = HexBin::getCanonicalRepresentation(content, manager);
                 if (!canRep)
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
 
                 return canRep;
             }
@@ -1128,7 +1153,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 //Base64::getCanonicalRepresentation does validation automatically
                 XMLCh* canRep = Base64::getCanonicalRepresentation(content, manager);
                 if (!canRep)
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
 
                 return canRep;
             }
@@ -1150,10 +1175,10 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
         case XSValue::dt_ENTITIES:
         case XSValue::dt_IDREFS:
             {
-                if (context.getValidation() && !validateStrings(content, datatype, context, manager))
-                    context.fStatus = XSValueContext::st_Invalid;
+                if (toValidate && !validateStrings(content, datatype, status, version, toValidate, manager))
+                    status = st_Invalid;
                 else
-                    context.fStatus = XSValueContext::st_NoCanRep;
+                    status = st_NoCanRep;
 
                 return 0;
             }
@@ -1166,7 +1191,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_Invalid;
+        status = st_Invalid;
         return 0;
     }
 }
@@ -1174,7 +1199,9 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
 XSValue*
 XSValue::getActValNumerics(const XMLCh*         const content    
                          ,       DataType             datatype
-                         ,       XSValueContext&      context
+                         ,       Status&              status
+                         ,       XMLVersion           version
+                         ,       bool                 toValidate
                          ,       MemoryManager* const manager)
 {
 
@@ -1193,7 +1220,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   &(intVal[totalDigit - scale])
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_ulong
                                 , actValFract
                                 , base_decimal
@@ -1208,7 +1237,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   intVal
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_ulong
                                 , actValInt
                                 , base_decimal
@@ -1233,7 +1264,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
             XMLFloat data(content, manager);
             if (data.isDataConverted())
             {
-                context.fStatus = XSValueContext::st_InvalidRange;
+                status = st_InvalidRange;
                 return 0;
             }
             else
@@ -1250,7 +1281,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
             XMLDouble  data(content, manager);
             if (data.isDataConverted())
             {
-                context.fStatus = XSValueContext::st_InvalidRange;
+                status = st_InvalidRange;
                 return 0;
             }
             else
@@ -1270,7 +1301,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   content
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_long
                                 , actVal
                                 , base_decimal
@@ -1347,7 +1380,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   content
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_long
                                 , actVal
                                 , base_decimal
@@ -1373,7 +1408,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     if ((actVal.f_long < INT_MIN) || 
                         (actVal.f_long > INT_MAX)  )
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return 0;
                     }
 
@@ -1387,7 +1422,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if ((actVal.f_long < SHRT_MIN) || (actVal.f_long > SHRT_MAX))
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return 0;
                     }
 
@@ -1401,7 +1436,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if ((actVal.f_long < SCHAR_MIN) || (actVal.f_long > SCHAR_MAX))
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return 0;
                     }
 
@@ -1422,7 +1457,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
             if ( !getActualValue( 
                                   content
-                                , context
+                                , status
+                                , version
+                                , toValidate
                                 , convert_2_ulong
                                 , actVal
                                 , base_decimal
@@ -1448,7 +1485,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
                     if (actVal.f_long > UINT_MAX) 
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return 0;
                     }
 
@@ -1462,7 +1499,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if (actVal.f_ulong > USHRT_MAX)
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return 0;
                     }
 
@@ -1476,7 +1513,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if (actVal.f_ulong > UCHAR_MAX)
                     {
-                        context.fStatus = XSValueContext::st_InvalidRange;
+                        status = st_InvalidRange;
                         return 0;
                     }
 
@@ -1494,7 +1531,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_InvalidChar;
+        status = st_InvalidChar;
         return 0; 
     }
 }
@@ -1502,7 +1539,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
 XSValue*  
 XSValue::getActValDateTimes(const XMLCh*         const content    
                           ,       DataType             datatype
-                          ,       XSValueContext&      context
+                          ,       Status&              status
+                          ,       XMLVersion           version
+                          ,       bool                 toValidate
                           ,       MemoryManager* const manager)
 {
     try
@@ -1563,7 +1602,7 @@ XSValue::getActValDateTimes(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_Invalid;
+        status = st_Invalid;
         return 0; 
     }
 
@@ -1572,7 +1611,9 @@ XSValue::getActValDateTimes(const XMLCh*         const content
 XSValue*  
 XSValue::getActValStrings(const XMLCh*         const content    
                         ,       DataType             datatype
-                        ,       XSValueContext&      context
+                        ,       Status&              status
+                        ,       XMLVersion           version
+                        ,       bool                 toValidate
                         ,       MemoryManager* const manager)
 {
     try
@@ -1598,7 +1639,7 @@ XSValue::getActValStrings(const XMLCh*         const content
                 }
                 else
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return 0;
                 }
             }
@@ -1609,7 +1650,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
                 if (!decodedData)
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return 0;
                 }
 
@@ -1626,7 +1667,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
                 if (!decodedData)
                 {
-                    context.fStatus = XSValueContext::st_Invalid;
+                    status = st_Invalid;
                     return 0;
                 }
 
@@ -1653,10 +1694,10 @@ XSValue::getActValStrings(const XMLCh*         const content
         case XSValue::dt_ENTITIES:
         case XSValue::dt_IDREFS:
             {
-                if (context.getValidation() && !validateStrings(content, datatype, context, manager))
-                    context.fStatus = XSValueContext::st_Invalid;
+                if (toValidate && !validateStrings(content, datatype, status, version, toValidate, manager))
+                    status = st_Invalid;
                 else
-                    context.fStatus = XSValueContext::st_NoActVal;
+                    status = st_NoActVal;
 
                 return 0;
             }
@@ -1669,7 +1710,7 @@ XSValue::getActValStrings(const XMLCh*         const content
 
     catch (...)
     {
-        context.fStatus = XSValueContext::st_Invalid;
+        status = st_Invalid;
         return 0; 
     }
 }
@@ -1678,7 +1719,9 @@ XSValue::getActValStrings(const XMLCh*         const content
 //  Utilities
 // ---------------------------------------------------------------------------
 bool XSValue::getActualValue(const XMLCh*         const content
-                           ,       XSValueContext&      context
+                           ,       Status&              status
+                           ,       XMLVersion           version    
+                           ,       bool                 toValidate 
                            ,       int                  ct
                            ,       t_value&             retVal               
                            ,       int                  base
@@ -1698,7 +1741,7 @@ bool XSValue::getActualValue(const XMLCh*         const content
     {
         if (-1 != XMLString::indexOf(content, chDash))
         {
-            context.fStatus = XSValueContext::st_InvalidRange;
+            status = st_InvalidRange;
             return false;
         }
 
@@ -1709,14 +1752,14 @@ bool XSValue::getActualValue(const XMLCh*         const content
     // check if all chars are valid char
     if ( (endptr - nptr) != strLen)
     {
-        context.fStatus = XSValueContext::st_InvalidChar;
+        status = st_InvalidChar;
         return false;
     }
 
     // check if overflow/underflow occurs
     if (errno == ERANGE)
     {
-        context.fStatus = XSValueContext::st_InvalidRange;
+        status = st_InvalidRange;
         return false;
     }
 
@@ -1737,21 +1780,6 @@ void XSValue::reinitRegEx()
 {
 	delete sXSValueRegEx;
 	sXSValueRegEx = 0;
-}
-
-// ---------------------------------------------------------------------------
-//  XSValueContext: Constructors and Destructor
-// ---------------------------------------------------------------------------
-XSValueContext::XSValueContext(XMLVersion   version
-                            ,  bool         toValidate)
-:fVersion(version)
-,fToValidate(toValidate)
-,fStatus(st_Init)
-{
-}
-
-XSValueContext::~XSValueContext()
-{
 }
 
 XERCES_CPP_NAMESPACE_END

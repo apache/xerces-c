@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/08/31 15:14:47  peiyongz
+ * remove XSValueContext
+ *
  * Revision 1.5  2004/08/17 21:11:41  peiyongz
  * no more Unrepresentable
  *
@@ -77,124 +80,6 @@
 #include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-class XMLPARSER_EXPORT XSValueContext : public XMemory
-{
-public:
-
-    enum XMLVersion {
-            ver_10,
-            ver_11
-    };
-
-    enum Status {
-            st_Init,
-            st_Invalid,
-            st_InvalidChar,     //for numeric
-            st_InvalidRange,    //for numeric
-            st_NoCanRep,
-            st_NoActVal,
-            st_NotSupported,
-            st_CantCreateRegEx,
-            st_UnknownType
-    };
-
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    /** @name Constructors */
-    //@{
-
-    /**
-      * The default constructor 
-      */
-    XSValueContext
-                  (
-                    XMLVersion   version    = ver_10
-                 ,  bool         toValidate = true 
-                  );
-
-    //@};
-
-    /** @name Destructor */
-    //@{
-    ~XSValueContext();
-    //@}
-
-    /** @name Getters */
-    //@{
-
-    inline
-    XMLVersion  getVersion()       const;
-    
-    inline
-    bool        getValidation()    const;
-
-    inline
-    Status      getStatus()        const;
-
-    //@}
-
-    /** @name Setters */
-    //@{
-    inline
-    void        setVersion(XMLVersion newVersion);
-
-    inline
-    void        setValidation(bool    toValidate);
-    //@}
-
-private:
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    XSValueContext(const XSValueContext&);
-    XSValueContext & operator=(const XSValueContext &);
-
-    // -----------------------------------------------------------------------
-    //  data members
-    // -----------------------------------------------------------------------
-    XMLVersion    fVersion;
-    bool          fToValidate;
-    Status        fStatus;
-
-    friend class XSValue;
-};
-
-inline
-XSValueContext::XMLVersion  
-XSValueContext::getVersion() const
-{
-    return fVersion;
-}
-    
-inline
-bool
-XSValueContext::getValidation() const
-{
-    return fToValidate;
-}
-
-inline
-XSValueContext::Status
-XSValueContext::getStatus() const
-{
-    return fStatus;
-}
-
-inline
-void 
-XSValueContext::setVersion(XSValueContext::XMLVersion newVersion)
-{
-    fVersion = newVersion;
-}
-
-inline
-void
-XSValueContext::setValidation(bool toValidate)
-{
-    fToValidate = toValidate;
-}
-
 
 class RegularExpression;
 
@@ -250,6 +135,23 @@ public:
               dt_MAXCOUNT             = 44
     };
 
+    enum XMLVersion {
+            ver_10,
+            ver_11
+    };
+
+    enum Status {
+            st_Init,
+            st_Invalid,
+            st_InvalidChar,     //for numeric
+            st_InvalidRange,    //for numeric
+            st_NoCanRep,
+            st_NoActVal,
+            st_NotSupported,
+            st_CantCreateRegEx,
+            st_UnknownType
+    };
+
     enum DataGroup {
             dg_numerics,
             dg_datetimes,
@@ -272,8 +174,10 @@ public:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
-              ,       MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
+              ,       Status&               status
+              ,       XMLVersion            version    = ver_10
+              ,       bool                  toValidate = true 
+              ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
     static
@@ -281,7 +185,9 @@ public:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version    = ver_10
+              ,       bool                  toValidate = true 
               ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
@@ -290,8 +196,10 @@ public:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
-              ,       MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
+              ,       Status&               status
+              ,       XMLVersion            version    = ver_10
+              ,       bool                  toValidate = true 
+              ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
     //@}
@@ -318,6 +226,7 @@ public:
                             unsigned int     f_scale;  
                             unsigned long    f_integral;
                             unsigned long    f_fraction;
+                            double           f_dvalue;
             } f_decimal;
 
             struct datetime {
@@ -379,7 +288,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -388,7 +299,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -397,7 +310,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -406,7 +321,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -415,7 +332,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -424,7 +343,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -433,7 +354,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -442,7 +365,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -451,7 +376,9 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       XSValueContext&       context
+              ,       Status&               status
+              ,       XMLVersion            version
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -459,11 +386,13 @@ private:
     bool      getActualValue
               (
                  const XMLCh*         const content
-               ,       XSValueContext&      context
-               ,       int                  ct
-               ,       t_value&             retVal               
-               ,       int                  base
-               ,       MemoryManager* const manager
+               ,       Status&               status
+               ,       XMLVersion            version    
+               ,       bool                  toValidate 
+               ,       int                   ct
+               ,       t_value&              retVal               
+               ,       int                   base
+               ,       MemoryManager* const  manager
                );
 
     // -----------------------------------------------------------------------
@@ -471,6 +400,7 @@ private:
     // -----------------------------------------------------------------------
     bool                fMemAllocated;
     MemoryManager*      fMemoryManager;
+
 };
 
 
