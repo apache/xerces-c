@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/23 18:35:33  tng
+ * Eliminate Warning from AIX xlC 3.6:1540-399: (W) "XMLAttr" is undefined.  The delete operator will not call a destructor.
+ *
  * Revision 1.2  2001/11/15 17:10:19  knoaman
  * Particle derivation checking support.
  *
@@ -67,6 +70,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <framework/XMLAttr.hpp>
 #include <validators/schema/identity/IC_Selector.hpp>
 #include <validators/schema/identity/XercesXPath.hpp>
 #include <validators/schema/identity/IdentityConstraint.hpp>
@@ -104,7 +108,7 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
 
     XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
     fElementDepth++;
-    
+
     // activate the fields, if selector is matched
     if (fMatchedDepth == -1 && isMatched()) {
 
