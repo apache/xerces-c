@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/05 16:03:03  peiyongz
+ * delete[] used.
+ *
  * Revision 1.1  2002/05/28 22:39:39  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -377,6 +380,10 @@ private:
 	//      the formatter used in WriteNode()
 	//
 	//  fErrorCount
+	//      the count of error encountered in the serialization,
+	//      which neither the error handler, nor the serializer itself,
+	//      treat as fatal. And the serializer will return true/false
+	//      based on this value.
 	//
     // -----------------------------------------------------------------------
 

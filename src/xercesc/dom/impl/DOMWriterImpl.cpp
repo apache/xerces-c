@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/06/05 16:03:03  peiyongz
+ * delete[] used.
+ *
  * Revision 1.4  2002/06/03 22:35:54  peiyongz
  * constants changed
  *
@@ -261,8 +264,8 @@ catch(TranscodingException const &e)                             \
 DOMWriterImpl::~DOMWriterImpl()
 {
 	delete fFeatures;
-	delete fEncoding;
-	delete fNewLine;
+	delete [] fEncoding;
+	delete [] fNewLine;
 
 	// we don't own/adopt error handler and filter
 }
@@ -374,7 +377,7 @@ bool DOMWriterImpl::getFeature(const XMLCh* const featName) const
 // we don't check the validity of the encoding set
 void DOMWriterImpl::setEncoding(const XMLCh* const encoding)
 {
-	delete fEncoding;
+	delete [] fEncoding;
 	fEncoding = XMLString::replicate(encoding);
 }
 
@@ -385,7 +388,7 @@ const XMLCh* DOMWriterImpl::getEncoding() const
 
 void DOMWriterImpl::setNewLine(const XMLCh* const newLine)
 {
-	delete fNewLine;
+	delete [] fNewLine;
 	fNewLine = XMLString::replicate(newLine);
 }
 
