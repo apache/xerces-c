@@ -689,10 +689,16 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
     if (!srcToFill)
     {
         LastExtEntityInfo lastInfo;
-        getLastExtEntityInfo(lastInfo);
+
+        const XMLCh* baseuri=baseURI;
+        if(!baseuri || !*baseuri)
+        {
+            getLastExtEntityInfo(lastInfo);
+            baseuri = lastInfo.systemId;
+        }
 
         XMLURL urlTmp(fMemoryManager);
-        if ((!urlTmp.setURL((!baseURI || !*baseURI) ? lastInfo.systemId : baseURI, expSysId.getRawBuffer(), urlTmp)) ||
+        if ((!urlTmp.setURL(baseuri, expSysId.getRawBuffer(), urlTmp)) ||
             (urlTmp.isRelative()))
         {
             if (!fStandardUriConformant)
@@ -702,7 +708,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
 
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
-                    lastInfo.systemId
+                    baseuri
                     , resolvedSysId.getRawBuffer()
                     , fMemoryManager
                 );
