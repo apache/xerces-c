@@ -36,12 +36,12 @@ ALL :
 
 !ELSE 
 
-ALL : "DOMNormalizerTest - Win64 Release" "DOMTypeInfoTest - Win64 Release" "DeprecatedDOMCount - Win64 Release" "DOMTraversalTest - Win64 Release" "XercesLib - Win64 Release" "MemHandlerTest - Win64 Release" "XSerializerTest - Win64 Release" "ThreadTest - Win64 Release" "StdInParse - Win64 Release" "SEnumVal - Win64 Release" "SAXPrint - Win64 Release" "SAXCount - Win64 Release" "SAX2Print - Win64 Release" "SAX2Count - Win64 Release" "Redirect - Win64 Release" "RangeTest - Win64 Release" "PParse - Win64 Release" "MemParse - Win64 Release" "InitTermTest - Win64 Release" "EnumVal - Win64 Release" "EncodingTest - Win64 Release" "DOMTest - Win64 Release" "DOMPrint - Win64 Release" "DOMMemTest - Win64 Release" "DOMCount - Win64 Release" "CreateDOMDocument - Win64 Release" 
+ALL : "PSVIWriter - Win64 Release" "DOMNormalizerTest - Win64 Release" "DOMTypeInfoTest - Win64 Release" "DeprecatedDOMCount - Win64 Release" "DOMTraversalTest - Win64 Release" "XercesLib - Win64 Release" "MemHandlerTest - Win64 Release" "XSerializerTest - Win64 Release" "ThreadTest - Win64 Release" "StdInParse - Win64 Release" "SEnumVal - Win64 Release" "SAXPrint - Win64 Release" "SAXCount - Win64 Release" "SAX2Print - Win64 Release" "SAX2Count - Win64 Release" "Redirect - Win64 Release" "RangeTest - Win64 Release" "PParse - Win64 Release" "MemParse - Win64 Release" "InitTermTest - Win64 Release" "EnumVal - Win64 Release" "EncodingTest - Win64 Release" "DOMTest - Win64 Release" "DOMPrint - Win64 Release" "DOMMemTest - Win64 Release" "DOMCount - Win64 Release" "CreateDOMDocument - Win64 Release" 
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"CreateDOMDocument - Win32 ReleaseCLEAN" "DOMCount - Win32 ReleaseCLEAN" "DOMMemTest - Win32 ReleaseCLEAN" "DOMPrint - Win32 ReleaseCLEAN" "DOMTest - Win32 ReleaseCLEAN" "EncodingTest - Win32 ReleaseCLEAN" "EnumVal - Win32 ReleaseCLEAN" "InitTermTest - Win32 ReleaseCLEAN" "MemParse - Win32 ReleaseCLEAN" "PParse - Win32 ReleaseCLEAN" "RangeTest - Win32 ReleaseCLEAN" "Redirect - Win32 ReleaseCLEAN" "SAX2Count - Win32 ReleaseCLEAN" "SAX2Print - Win32 ReleaseCLEAN" "SAXCount - Win32 ReleaseCLEAN" "SAXPrint - Win32 ReleaseCLEAN" "SEnumVal - Win32 ReleaseCLEAN" "StdInParse - Win32 ReleaseCLEAN" "ThreadTest - Win32 ReleaseCLEAN" "XSerializerTest - Win32 ReleaseCLEAN" "MemHandlerTest - Win32 ReleaseCLEAN" "XercesLib - Win32 ReleaseCLEAN" "DOMTraversalTest - Win32 ReleaseCLEAN" "DeprecatedDOMCount - Win64 ReleaseCLEAN" "DOMTypeInfoTest - Win64 ReleaseCLEAN" "DOMNormalizerTest - Win64 ReleaseCLEAN" 
+CLEAN :"CreateDOMDocument - Win64 ReleaseCLEAN" "DOMCount - Win64 ReleaseCLEAN" "DOMMemTest - Win64 ReleaseCLEAN" "DOMPrint - Win64 ReleaseCLEAN" "DOMTest - Win64 ReleaseCLEAN" "EncodingTest - Win64 ReleaseCLEAN" "EnumVal - Win64 ReleaseCLEAN" "InitTermTest - Win64 ReleaseCLEAN" "MemParse - Win64 ReleaseCLEAN" "PParse - Win64 ReleaseCLEAN" "RangeTest - Win64 ReleaseCLEAN" "Redirect - Win64 ReleaseCLEAN" "SAX2Count - Win64 ReleaseCLEAN" "SAX2Print - Win64 ReleaseCLEAN" "SAXCount - Win64 ReleaseCLEAN" "SAXPrint - Win64 ReleaseCLEAN" "SEnumVal - Win64 ReleaseCLEAN" "StdInParse - Win64 ReleaseCLEAN" "ThreadTest - Win64 ReleaseCLEAN" "XSerializerTest - Win64 ReleaseCLEAN" "MemHandlerTest - Win64 ReleaseCLEAN" "XercesLib - Win64 ReleaseCLEAN" "DOMTraversalTest - Win64 ReleaseCLEAN" "DeprecatedDOMCount - Win64 ReleaseCLEAN" "DOMTypeInfoTest - Win64 ReleaseCLEAN" "DOMNormalizerTest - Win64 ReleaseCLEAN" "PSVIWriter - Win64 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -1380,6 +1380,56 @@ MTL_PROJ=
 "DOMNormalizerTest - Win64 ReleaseCLEAN" : 
    cd "..\DOMNormalizerTest"
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\DOMNormalizerTest.mak" CFG="DOMNormalizerTest - Win64 Release" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "all - Win32 Release"
+
+"PSVIWriter - Win32 Release" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win32 Release" 
+   cd "..\all"
+
+"PSVIWriter - Win32 ReleaseCLEAN" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ELSEIF  "$(CFG)" == "all - Win32 Debug"
+
+"PSVIWriter - Win32 Debug" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win32 Debug" 
+   cd "..\all"
+
+"PSVIWriter - Win32 DebugCLEAN" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ELSEIF  "$(CFG)" == "all - Win64 Debug"
+
+"PSVIWriter - Win64 Debug" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win64 Debug" 
+   cd "..\all"
+
+"PSVIWriter - Win64 DebugCLEAN" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win64 Debug" RECURSE=1 CLEAN 
+   cd "..\all"
+
+!ELSEIF  "$(CFG)" == "all - Win64 Release"
+
+"PSVIWriter - Win64 Release" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win64 Release" 
+   cd "..\all"
+
+"PSVIWriter - Win64 ReleaseCLEAN" : 
+   cd "..\PSVIWriter"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\PSVIWriter.mak" CFG="PSVIWriter - Win64 Release" RECURSE=1 CLEAN 
    cd "..\all"
 
 !ENDIF 
