@@ -94,6 +94,8 @@ AbstractDOMParser(valToAdopt)
 , fReuseGrammar(false)
 , fCharsetOverridesXMLEncoding(true)
 {
+    // dom spec has different default from scanner's default, so set explicitly
+    getScanner()->setNormalizeData(false);
 }
 
 

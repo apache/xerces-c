@@ -222,7 +222,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
     , fLoadExternalDTD(true)
-    , fNormalizeData(false)
+    , fNormalizeData(true)
 {
    commonInit();
 
@@ -287,7 +287,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
     , fLoadExternalDTD(true)
-    , fNormalizeData(false)
+    , fNormalizeData(true)
 {
    commonInit();
 
