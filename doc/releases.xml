@@ -65,6 +65,13 @@
 
     <tr>
         <td>2001-10-25</td>
+        <td>Pei Yong Zhang</td>
+        <td>XMLDeleterFor related functions and data are removed.  Replace with XMLRegisterCleanup.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
         <td>Henry Zongaro</td>
         <td>[Bug 2924] runConfigure script to accept multiple linker options.
         </td>
@@ -136,7 +143,7 @@
     <tr>
         <td>2001-10-24</td>
         <td>Peter A. Volchek</td>
-        <td>[Bug 2305] Include <stdlib.h> to BinHTTPURLInputStream.cpp.
+        <td>[Bug 2305] Include stdlib.h to BinHTTPURLInputStream.cpp.
         </td>
     </tr>
 
