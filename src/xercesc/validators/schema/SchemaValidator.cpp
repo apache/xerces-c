@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.18  2002/11/07 21:57:37  tng
+ * Fix the following Schema Test Failures:
+ * 1. Typo when comparing miscFlags with FIXED
+ * 2. If xsi:type is specified, need to validate using that xsitype validator even if the type was any
+ * 3. Need to check ID/IDREFs for element value
+ * 4. Need to duplicate attribute id for wildcard scenario.
+ *
  * Revision 1.17  2002/11/04 14:49:42  tng
  * C++ Namespace Support.
  *
@@ -221,6 +228,7 @@ SchemaValidator::SchemaValidator(XMLErrorReporter* const errReporter) :
     , fGrammarResolver(0)
     , fSchemaGrammar(0)
     , fTrailing(false)
+    , fSeenId(false)
     , fXsiType(0)
     , fXsiTypeValidator(0)
     , fNil(false)
@@ -266,10 +274,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         if (childCount)
             return 0;
     }
-    else if (modelType == SchemaElementDecl::Any)
-    {
-        // We pass no judgement on this one, anything goes
-    }
     else if ((modelType == SchemaElementDecl::Mixed_Simple)
          ||  (modelType == SchemaElementDecl::Mixed_Complex)
          ||  (modelType == SchemaElementDecl::Children))
@@ -301,23 +305,93 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             return result;
         }
     }
-    else if (modelType == SchemaElementDecl::Simple)
+    else if (modelType == SchemaElementDecl::Simple || modelType == SchemaElementDecl::Any)
     {
-        if (childCount > 0) {
+        // Normally for SchemaElementDecl::Any, We pass no judgement on it and anything goes
+        // but if there is a fXsiTypeValidator, we need to use it for validation
+
+        if (modelType == SchemaElementDecl::Simple && childCount > 0) {
             emitError(XMLValid::SimpleTypeHasChild, elemDecl->getFullName());
         } else {
             try {
-                DatatypeValidator* fCurrentDV = ((SchemaElementDecl*)elemDecl)->getDatatypeValidator();
+                DatatypeValidator* fCurrentDV = 0;
+                bool hasXsiType = false;
+
+                if (modelType == SchemaElementDecl::Simple)
+                    fCurrentDV = ((SchemaElementDecl*)elemDecl)->getDatatypeValidator();
+
                 // If there is xsi:type validator, substitute it.
                 if (fXsiTypeValidator) {
+                    hasXsiType = true;
                     fCurrentDV = fXsiTypeValidator;
                     fXsiTypeValidator = 0;
                 }
                 if (!fCurrentDV) {
-                    emitError(XMLValid::NoDatatypeValidatorForSimpleType, elemDecl->getFullName());
+                    if (modelType == SchemaElementDecl::Simple)
+                        emitError(XMLValid::NoDatatypeValidatorForSimpleType, elemDecl->getFullName());
                 } else {
                     XMLCh* value = fDatatypeBuffer.getRawBuffer();
                     XMLCh* elemDefaultValue = ((SchemaElementDecl*) elemDecl)->getDefaultValue();
+
+                    DatatypeValidator::ValidatorType eleDefDVType = fCurrentDV->getType();
+
+                    // if notation, need to bind URI to notation first
+                    XMLBuffer notationBuf;
+
+                    // set up the entitydeclpool in ENTITYDatatypeValidator
+                    // and the idreflist in ID/IDREFDatatypeValidator
+
+                    if (eleDefDVType == DatatypeValidator::List) {
+                        DatatypeValidator* itemDTV = ((ListDatatypeValidator*)fCurrentDV)->getItemTypeDTV();
+                        DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
+                        if (itemDTVType == DatatypeValidator::ENTITY)
+                            ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                        else if (itemDTVType == DatatypeValidator::ID)
+                            ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                        else if (itemDTVType == DatatypeValidator::IDREF) {
+                            ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                        }
+                    }
+                    else if (eleDefDVType == DatatypeValidator::Union) {
+                        RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)fCurrentDV)->getMemberTypeValidators();
+                        unsigned int memberTypeNumber = memberDTV->size();
+                        for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
+                        {
+                            DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
+                            if (memberDTVType == DatatypeValidator::ENTITY)
+                                ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                            else if (memberDTVType == DatatypeValidator::ID)
+                                ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                            else if (memberDTVType == DatatypeValidator::IDREF) {
+                                ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                            }
+                        }
+                    }
+                    else if (eleDefDVType == DatatypeValidator::ENTITY)
+                        ((ENTITYDatatypeValidator*)fCurrentDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                    else if (eleDefDVType == DatatypeValidator::ID)
+                        ((IDDatatypeValidator*)fCurrentDV)->setIDRefList(getScanner()->getIDRefList());
+                    else if (eleDefDVType == DatatypeValidator::IDREF) {
+                        ((IDREFDatatypeValidator*)fCurrentDV)->setIDRefList(getScanner()->getIDRefList());
+                    }
+                    else if (eleDefDVType == DatatypeValidator::NOTATION)
+                    {
+                        //
+                        //  Make sure that this value maps to one of the
+                        //  notation values in the enumList parameter. We don't have to
+                        //  look it up in the notation pool (if a notation) because we
+                        //  will look up the enumerated values themselves. If they are in
+                        //  the notation pool (after the Grammar is parsed), then obviously
+                        //  this value will be legal since it matches one of them.
+                        //
+                        XMLBuffer nameBuf(XMLString::stringLen(value)+1);
+                        XMLBuffer prefixBuf(XMLString::stringLen(value)+1);
+                        unsigned int uriId = getScanner()->resolveQName(value, nameBuf, prefixBuf, ElemStack::Mode_Element);
+                        notationBuf.set(getScanner()->getURIText(uriId));
+                        notationBuf.append(chColon);
+                        notationBuf.append(nameBuf.getRawBuffer());
+                        value = notationBuf.getRawBuffer();
+                    }
 
                     if (elemDefaultValue) {
                         // a default value was specified
@@ -331,11 +405,18 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             // use default value
                             if (getScanner()->getDocHandler())
                                 getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
+
+                            // Normally for default value, it has been validated already during TraverseSchema
+                            // But if there was a xsi:type and this validator is fXsiTypeValidator,
+                            // need to validate again
+                            if (hasXsiType)
+                                fCurrentDV->validate(elemDefaultValue);
+
                         }
                         else {
                             // this element has specified some value
                             // if the flag is FIXED, then this value must be same as default value
-                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() == SchemaSymbols::FIXED) != 0) {
+                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::FIXED) != 0) {
                                 if (fCurrentDV->compare(value, elemDefaultValue) != 0 )
                                     emitError(XMLValid::FixedDifferentFromActual, elemDecl->getFullName());
                             }
@@ -344,7 +425,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             if (fNil)
                                 emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
                             else
-                               fCurrentDV->validate(value);
+                                fCurrentDV->validate(value);
                         }
                     }
                     else {
@@ -408,6 +489,7 @@ void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)
 void SchemaValidator::reset()
 {
     fTrailing = false;
+    fSeenId = false;
     delete fXsiType;
     fXsiType = 0;
     fXsiTypeValidator = 0;
@@ -420,9 +502,10 @@ bool SchemaValidator::requiresNamespaces() const
     return true;
 }
 
-void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
-                                       , const XMLCh* const attrValue
-                                       , bool               preValidation)
+void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
+                                       , const XMLCh* const    attrValue
+                                       , bool                  preValidation
+                                       , const XMLElementDecl* elemDecl)
 {
     //
     //  Get quick refs to lot of the stuff in the passed objects in
@@ -466,13 +549,18 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             // set up the entitydeclpool in ENTITYDatatypeValidator
             // and the idreflist in ID/IDREFDatatypeValidator
 
+            // indicate if this attribute is of type ID
+            bool thisIsAnId = false;
+
             if (attDefDVType == DatatypeValidator::List) {
                 DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
                 DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
                 if (itemDTVType == DatatypeValidator::ENTITY)
                     ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                else if (itemDTVType == DatatypeValidator::ID)
+                else if (itemDTVType == DatatypeValidator::ID) {
                     ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                    thisIsAnId = true;
+                }
                 else if (itemDTVType == DatatypeValidator::IDREF) {
                     // if in prevalidatoin, do not add attDef to IDREFList
                     if (preValidation)
@@ -489,8 +577,10 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                     DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
                     if (memberDTVType == DatatypeValidator::ENTITY)
                         ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
-                    else if (memberDTVType == DatatypeValidator::ID)
+                    else if (memberDTVType == DatatypeValidator::ID) {
                         ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                        thisIsAnId = true;
+                    }
                     else if (memberDTVType == DatatypeValidator::IDREF) {
                         // if in prevalidatoin, do not add attDef to IDREFList
                         if (preValidation)
@@ -502,8 +592,10 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             }
             else if (attDefDVType == DatatypeValidator::ENTITY)
                 ((ENTITYDatatypeValidator*)attDefDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
-            else if (attDefDVType == DatatypeValidator::ID)
+            else if (attDefDVType == DatatypeValidator::ID) {
                 ((IDDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+                thisIsAnId = true;
+            }
             else if (attDefDVType == DatatypeValidator::IDREF) {
                 // if in prevalidatoin, do not add attDef to IDREFList
                 if (preValidation)
@@ -534,8 +626,20 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
 
                 attDefDV->validate(notationBuf.getRawBuffer());
             }
-            else
+            else {
+                if (thisIsAnId) {
+                    if (fSeenId)
+                        emitError
+                        (
+                            XMLValid::MultipleIdAttrs
+                            , elemDecl->getFullName()
+                        );
+                    else
+                        fSeenId = true;
+                }
                 attDefDV->validate(attrValue);
+            }
+
         } catch (InvalidDatatypeValueException& idve) {
             emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
         }
@@ -721,6 +825,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
     fDatatypeBuffer.reset();
     fTrailing = false;
+    fSeenId = false;
 }
 
 void SchemaValidator::preContentValidation(bool reuseGrammar,
@@ -879,6 +984,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
                             &curAttDef
                             , curAttDef.getValue()
                             , true
+                            , &curElem
                         );
                     }
                 }

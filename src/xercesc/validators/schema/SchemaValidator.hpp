@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/11/07 21:57:37  tng
+ * Fix the following Schema Test Failures:
+ * 1. Typo when comparing miscFlags with FIXED
+ * 2. If xsi:type is specified, need to validate using that xsitype validator even if the type was any
+ * 3. Need to check ID/IDREFs for element value
+ * 4. Need to duplicate attribute id for wildcard scenario.
+ *
  * Revision 1.9  2002/11/04 14:49:42  tng
  * C++ Namespace Support.
  *
@@ -191,6 +198,7 @@ public:
         const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
         , bool                              preValidation = false
+        , const XMLElementDecl*             elemDecl = 0
     );
 
     virtual void validateElement
@@ -335,6 +343,9 @@ private:
     //  fTrailing
     //      Previous chunk had a trailing space
     //
+    //  fSeenId
+    //      Indicate if an attribute of ID type has been seen already, reset per element.
+    //
     //  fSchemaErrorReporter
     //      Report schema process errors
     //
@@ -350,6 +361,7 @@ private:
 
     XMLBuffer fDatatypeBuffer;
     bool fTrailing;
+    bool fSeenId;
     XSDErrorReporter fSchemaErrorReporter;
     ValueStackOf<ComplexTypeInfo*>* fTypeStack;
 };
