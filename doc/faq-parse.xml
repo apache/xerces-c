@@ -360,10 +360,18 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why DOMNode::cloneNode() does not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?">
-    <q>Why DOMNode::cloneNode() does not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?</q>
+  <faq title="Why does DOMNode::cloneNode() not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?">
+    <q>Why does DOMNode::cloneNode() not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?</q>
     <a>
-      <p>&XercesCName; supports the DOMNode::userData specified in
+      <p>&XercesCName; supports the DOMNode::userData specified
+      in <jump href="http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/DOM3-Core.html#core-ID-3A0ED0A4">
+      the DOM level 3 Node interface</jump>.  As
+      is made clear in the description of the behaviour of
+      <code>cloneNode()</code>, userData that has been set on the
+      Node is not cloned.  Thus, if the userData is to be copied
+      to the new Node, this copy must be effected manually.
+      Note further that the operation of <code>importNode()</code>
+      is specified similarly.
       </p>
     </a>
   </faq>
