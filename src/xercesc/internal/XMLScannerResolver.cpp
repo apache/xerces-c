@@ -63,10 +63,10 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/XMLScannerResolver.hpp>
-#include <xercesc/internal/IGXMLScanner.hpp>
 #include <xercesc/internal/WFXMLScanner.hpp>
-#include <xercesc/internal/SGXMLScanner.hpp>
 #include <xercesc/internal/DGXMLScanner.hpp>
+#include <xercesc/internal/SGXMLScanner.hpp>
+#include <xercesc/internal/IGXMLScanner.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -83,13 +83,13 @@ XMLScanner*
 XMLScannerResolver::resolveScanner(const XMLCh* const scannerName,
                                    XMLValidator* const valToAdopt)
 {
-    if (XMLString::equals(scannerName, XMLUni::fgWFScanner))
+    if (XMLString::equals(scannerName, XMLUni::fgWFXMLScanner))
         return new WFXMLScanner(valToAdopt);
-    else if (XMLString::equals(scannerName, XMLUni::fgIGScanner))
+    else if (XMLString::equals(scannerName, XMLUni::fgIGXMLScanner))
         return new IGXMLScanner(valToAdopt);
-    else if (XMLString::equals(scannerName, XMLUni::fgSGScanner))
+    else if (XMLString::equals(scannerName, XMLUni::fgSGXMLScanner))
         return new SGXMLScanner(valToAdopt);
-    else if (XMLString::equals(scannerName, XMLUni::fgDGScanner))
+    else if (XMLString::equals(scannerName, XMLUni::fgDGXMLScanner))
         return new DGXMLScanner(valToAdopt);
 
     // REVISIT: throw an exception or return a default one?
@@ -104,13 +104,13 @@ XMLScannerResolver::resolveScanner(const XMLCh* const scannerName,
                                    XMLErrorReporter* const errReporter,
                                    XMLValidator* const valToAdopt)
 {
-    if (XMLString::equals(scannerName, XMLUni::fgWFScanner))
+    if (XMLString::equals(scannerName, XMLUni::fgWFXMLScanner))
         return new WFXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
-    else if (XMLString::equals(scannerName, XMLUni::fgIGScanner))
+    else if (XMLString::equals(scannerName, XMLUni::fgIGXMLScanner))
         return new IGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
-    else if (XMLString::equals(scannerName, XMLUni::fgSGScanner))
+    else if (XMLString::equals(scannerName, XMLUni::fgSGXMLScanner))
         return new SGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
-    else if (XMLString::equals(scannerName, XMLUni::fgDGScanner))
+    else if (XMLString::equals(scannerName, XMLUni::fgDGXMLScanner))
         return new DGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
 
     // REVISIT: throw an exception or return a default one?

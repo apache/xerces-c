@@ -648,25 +648,25 @@ const XMLCh XMLUni::fgApos[] =
         chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNull
 };
 
-const XMLCh XMLUni::fgWFScanner[] =
+const XMLCh XMLUni::fgWFXMLScanner[] =
 {
         chLatin_W, chLatin_F, chLatin_X, chLatin_M, chLatin_L, chLatin_S
     ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
-const XMLCh XMLUni::fgIGScanner[] =
+const XMLCh XMLUni::fgIGXMLScanner[] =
 {
         chLatin_I, chLatin_G, chLatin_X, chLatin_M, chLatin_L, chLatin_S
     ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
-const XMLCh XMLUni::fgSGScanner[] =
+const XMLCh XMLUni::fgSGXMLScanner[] =
 {
         chLatin_S, chLatin_G, chLatin_X, chLatin_M, chLatin_L, chLatin_S
     ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
-const XMLCh XMLUni::fgDGScanner[] =
+const XMLCh XMLUni::fgDGXMLScanner[] =
 {
         chLatin_D, chLatin_G, chLatin_X, chLatin_M, chLatin_L, chLatin_S
     ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull

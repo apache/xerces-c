@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/15 15:49:49  knoaman
+ * Change constant declaration name to match its value.
+ *
  * Revision 1.2  2003/01/13 18:29:41  knoaman
  * Return proper scanner name.
  *
@@ -240,7 +243,7 @@ private :
 
 inline const XMLCh* DGXMLScanner::getName() const
 {
-    return XMLUni::fgDGScanner;
+    return XMLUni::fgDGXMLScanner;
 }
 
 

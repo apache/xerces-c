@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/15 15:49:49  knoaman
+ * Change constant declaration name to match its value.
+ *
  * Revision 1.2  2003/01/13 16:30:18  knoaman
  * [Bug 14469] Validator doesn't enforce xsd:key.
  *
@@ -301,7 +304,7 @@ private :
 
 inline const XMLCh* SGXMLScanner::getName() const
 {
-    return XMLUni::fgSGScanner;
+    return XMLUni::fgSGXMLScanner;
 }
 
 
