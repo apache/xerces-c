@@ -57,6 +57,9 @@
 //REVISIT
 /*
  * $Log$
+ * Revision 1.4  2004/09/02 14:59:29  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.3  2004/02/10 17:36:38  cargilld
  * Fix build problems.
  *
@@ -83,6 +86,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
@@ -347,7 +351,12 @@ int main(int argC, char* argV[])
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
-
+        catch (const OutOfMemoryException&)
+        {
+            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            errorOccurred = true;
+            continue;
+        }
         catch (const XMLException& e)
         {
             XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"

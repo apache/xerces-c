@@ -75,6 +75,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.10  2004/09/02 14:59:29  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.9  2003/08/07 21:21:38  neilg
  * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
  *
@@ -114,7 +117,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/parsers/SAXParser.hpp>
 #include "Redirect.hpp"
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
@@ -190,7 +193,11 @@ int main(int argc, char* args[])
         duration = endMillis - startMillis;
         errorCount = parser->getErrorCount();
     }
-
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        errorCode = 5;
+    }
     catch (const XMLException& e)
     {
         XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"

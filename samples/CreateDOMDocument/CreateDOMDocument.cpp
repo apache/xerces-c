@@ -75,6 +75,7 @@
 #else
 #include <iostream.h>
 #endif
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -213,7 +214,11 @@ int main(int argC, char* argV[])
 
                doc->release();
            }
-
+           catch (const OutOfMemoryException&)
+           {
+               XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+               errorCode = 5;
+           }
            catch (const DOMException& e)
            {
                XERCES_STD_QUALIFIER cerr << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;

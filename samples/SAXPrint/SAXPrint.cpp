@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/09/02 14:59:29  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.23  2004/02/06 15:04:16  cargilld
  * Misc 390 changes.
  *
@@ -148,7 +151,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include "SAXPrint.hpp"
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -354,13 +357,17 @@ int main(int argC, char* argV[])
         parser->parse(xmlFile);
         errorCount = parser->getErrorCount();
     }
-
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        errorCode = 5;
+    }
     catch (const XMLException& toCatch)
     {
         XERCES_STD_QUALIFIER cerr << "\nAn error occurred\n  Error: "
              << StrX(toCatch.getMessage())
              << "\n" << XERCES_STD_QUALIFIER endl;
-        errorCode = -1;
+        errorCode = 4;
     }
     if(errorCode) {
         XMLPlatformUtils::Terminate();

@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/09/02 14:59:28  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.16  2003/09/12 18:14:19  neilg
  * enable MemParse to work on OS400; thanks to Jay Hansen.
  *
@@ -132,7 +135,7 @@
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include "MemParse.hpp"
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -334,7 +337,11 @@ int main(int argC, char* argV[])
         duration = endMillis - startMillis;
         errorCount = parser->getErrorCount();
     }
-
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        errorCode = 5;
+    }
     catch (const XMLException& e)
     {
         XERCES_STD_QUALIFIER cerr << "\nError during parsing memory stream:\n"

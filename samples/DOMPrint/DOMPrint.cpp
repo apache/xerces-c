@@ -120,6 +120,7 @@
 #include "DOMTreeErrorReporter.hpp"
 #include "DOMPrintFilter.hpp"
 #include "DOMPrintErrorHandler.hpp"
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 #include <string.h>
 #include <stdlib.h>
@@ -430,7 +431,11 @@ int main(int argC, char* argV[])
     {
         parser->parse(gXmlFile);
     }
-
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        errorsOccured = true;
+    }
     catch (const XMLException& e)
     {
         XERCES_STD_QUALIFIER cerr << "An error occurred during parsing\n   Message: "
@@ -541,6 +546,11 @@ int main(int argC, char* argV[])
             if (gUseFilter)
                 delete myFilter;
 
+        }
+        catch (const OutOfMemoryException&)
+        {
+            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            retval = 5;
         }
         catch (XMLException& e)
         {

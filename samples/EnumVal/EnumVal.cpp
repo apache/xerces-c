@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/09/02 14:59:28  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.21  2003/08/07 21:21:38  neilg
  * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
  *
@@ -132,6 +135,7 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>    
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #else
@@ -271,7 +275,11 @@ int main(int argC, char* argV[])
         parser->parse(xmlFile);
         errorCount = parser->getErrorCount();
     }
-
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        errorCode = 5;
+    }
     catch (const XMLException& e)
     {
         XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/09/02 14:59:29  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.2  2004/02/12 13:58:58  cargilld
  * Fix build errors.
  *
@@ -87,7 +90,7 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -319,6 +322,11 @@ int main(int argC, char* argV[])
             XERCES_STD_QUALIFIER cout << "No XSModel to print" << "\n\n";
         }
         XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
+    }
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException during parsing: '" << xsdFile << "'\n" << XERCES_STD_QUALIFIER endl;
+        errorCode = 6;
     }
     catch (const XMLException& e)
     {

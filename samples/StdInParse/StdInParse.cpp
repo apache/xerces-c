@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/09/02 14:59:30  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.15  2003/05/30 09:36:36  gareth
  * Use new macros for iostream.h and std:: issues.
  *
@@ -116,7 +119,7 @@
 #include <xercesc/framework/StdInInputSource.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include "StdInParse.hpp"
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -276,6 +279,12 @@ int main(int argC, char* argV[])
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
             errorCount = parser->getErrorCount();
+        }
+        catch (const OutOfMemoryException&)
+        {
+            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            errorCount = 2;
+            return 4;
         }
         catch (const XMLException& e)
         {

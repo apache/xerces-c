@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/09/02 14:59:29  cargilld
+ * Add OutOfMemoryException block to samples.
+ *
  * Revision 1.15  2004/02/06 15:04:16  cargilld
  * Misc 390 changes.
  *
@@ -114,7 +117,7 @@
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include "SAX2Print.hpp"
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -350,7 +353,11 @@ int main(int argC, char* argV[])
         parser->parse(xmlFile);
         errorCount = parser->getErrorCount();
     }
-
+    catch (const OutOfMemoryException&)
+    {
+        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        errorCode = 5;          
+    }
     catch (const XMLException& toCatch)
     {
         XERCES_STD_QUALIFIER cerr << "\nAn error occurred\n  Error: "

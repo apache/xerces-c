@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.28  2004/09/02 14:59:29  cargilld
+* Add OutOfMemoryException block to samples.
+*
 * Revision 1.27  2004/04/13 19:40:47  peiyongz
 * usage
 *
@@ -154,6 +157,7 @@
 #else
 #include <fstream.h>
 #endif
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
@@ -411,7 +415,12 @@ int main(int argC, char* argV[])
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
-
+        catch (const OutOfMemoryException&)
+        {
+            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            errorOccurred = true;
+            continue;
+        }
         catch (const XMLException& e)
         {
             XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
