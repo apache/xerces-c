@@ -66,6 +66,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/17 02:09:41  andyh
+ * Fix bug in DOMString::insertData() that occured if the source
+ * and destination strings were the same and the orginal buffer had
+ * enough space to hold the result.
+ *
  * Revision 1.3  1999/12/10 18:35:15  andyh
  * Removed spurious debug output from DOMMemTest.
  * Udated MSVC project files for Release build of DOMTest and DOMMemTest,
@@ -743,13 +748,36 @@ void main()
 
 
     //
-    //  String bug submitted by David Chung
+    //  String bugs submitted by David Chung
     //
 	TESTPROLOG;
 	{
         DOMString greeting("hello");
         greeting.appendData(greeting);
         TASSERT(greeting.equals("hellohello"));
+
+ 
+        // Test DOMString.insertData, when source string is the same as the destination.
+        //   Implementation forces creation of a new buffer.
+        //                            
+        DOMString greeting2("Hello              ");
+        //                   0123456789012345678
+        greeting2.deleteData(5, 14);    // Leave unused space at end of buffer.
+        TASSERT(greeting2.equals("Hello"));
+
+        greeting2.insertData(2, greeting2); 
+        TASSERT(greeting2.equals("HeHellollo"));
+
+
+        // DOMString.insertData().  Original buffer has space, and is retained.
+        DOMString greeting3("Hello              ");
+        //                   0123456789012345678
+        greeting3.deleteData(5, 14);    // Leave unused space at end of buffer.
+        TASSERT(greeting3.equals("Hello"));  
+
+        greeting3.insertData(2, "ByeBye"); 
+        TASSERT(greeting3.equals("HeByeByello"));
+
     }
     TESTEPILOG;
 

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  1999/12/17 02:09:41  andyh
+ * Fix bug in DOMString::insertData() that occured if the source
+ * and destination strings were the same and the orginal buffer had
+ * enough space to hold the result.
+ *
  * Revision 1.4  1999/12/15 19:44:46  roddey
  * Changed to use new LCP transcoder scheme.
  *
@@ -720,12 +725,13 @@ void DOMString::insertData(int offset, const DOMString &src)
     int srcLength = src.fHandle->fLength;
     int newLength = fHandle->fLength + srcLength;
     if (newLength >= fHandle->fDSData->fBufferLength ||
-        fHandle->fDSData->fRefCount > 1)
+        fHandle->fDSData->fRefCount > 1  || fHandle == src.fHandle )
     {
         // We can't stick the data to be added into the
         //  existing string, either because there is not space in
         //  the buffer, or because the buffer is being shared with
-        //  some other string.  So, make a new buffer.
+        //  some other string.
+        //  So, make a new buffer.
 
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
         XMLCh *newP  = newBuf->fData;
