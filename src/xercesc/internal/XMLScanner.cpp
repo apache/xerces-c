@@ -205,7 +205,9 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                           , XMLValidator* const      valToAdopt
                           , GrammarResolver* const   grammarResolver
                           , MemoryManager* const     manager)
-    : fStandardUriConformant(false)
+
+    : fBufferSize(1024 * 1024)
+    , fStandardUriConformant(false)
     , fCalculateSrcOfs(false)
     , fDoNamespaces(false)
     , fExitOnFirstFatal(true)
