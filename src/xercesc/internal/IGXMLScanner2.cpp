@@ -281,7 +281,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
                 if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);
-
+                    
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
             }
 
@@ -292,7 +292,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attDef->setCreateReason(XMLAttDef::JustFaultIn);
             }
 
-            bool errorCondition = fValidate && !attDefForWildCard &&
+            bool errorCondition = fValidate && !attDefForWildCard && 
                 attDef->getCreateReason() == XMLAttDef::JustFaultIn && !attDef->getProvided();
             if (errorCondition && !skipThisOne && !laxThisOne)
             {
@@ -334,7 +334,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if (attDef->getProvided())
             {
                 emitError
-                (
+                ( 
                     XMLErrs::AttrAlreadyUsedInSTag
                     , attDef->getFullName()
                     , elemDecl->getFullName()
@@ -517,7 +517,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             XMLValid::RequiredAttrNotProvided
                             , curDef->getFullName()
                         );
-                        if(fGrammarType == Grammar::SchemaGrammarType)
+                        if(fGrammarType == Grammar::SchemaGrammarType) 
                             ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
                     }
                     else if ((defType == XMLAttDef::Default) ||
@@ -527,7 +527,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         {
                             // XML 1.0 Section 2.9
                             // Document is standalone, so attributes must not be defaulted.
-                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());
+                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());                                                        
                             if(fGrammarType == Grammar::SchemaGrammarType)
                                 ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
                         }
@@ -883,9 +883,8 @@ void IGXMLScanner::scanReset(const InputSource& src)
         fValidator->setGrammar(fGrammar);
     }
 
-    if (fValScheme == Val_Auto) {
-        fValidate = false;
-    }
+    // Reset validation
+    fValidate = (fValScheme == Val_Always) ? true : false;
 
     //  And for all installed handlers, send reset events. This gives them
     //  a chance to flush any cached data.
@@ -993,7 +992,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
         {
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
-            if(fGrammarType == Grammar::SchemaGrammarType)
+            if(fGrammarType == Grammar::SchemaGrammarType) 
                 ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
         }
         else if (fReaderMgr.getCurrentReader()->isAllSpaces(rawBuf, len))
@@ -1086,7 +1085,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
             else
             {
                 fValidator->emitError(XMLValid::NoCharDataInCM);
-                if(fGrammarType == Grammar::SchemaGrammarType)
+                if(fGrammarType == Grammar::SchemaGrammarType) 
                     ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
             }
         }
@@ -1525,6 +1524,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
     fSchemaValidator->reset();
     fSchemaValidator->setErrorReporter(fErrorReporter);
     fSchemaValidator->setExitOnFirstFatal(fExitOnFirstFatal);
+    fSchemaValidator->setGrammarResolver(fGrammarResolver);
 
     if (fValidatorFromUser)
         fValidator->reset();
@@ -2008,7 +2008,6 @@ void IGXMLScanner::scanCDSection()
             // This document is standalone; this ignorable CDATA whitespace is forbidden.
             // XML 1.0, Section 2.9
             // And see if the current element is a 'Children' style content model
-
             if (topElem->fThisElement->isExternal()) {
 
                 if (charOpts == XMLElementDecl::SpacesOk) // Element Content
@@ -2016,7 +2015,7 @@ void IGXMLScanner::scanCDSection()
                     // Error - standalone should have a value of "no" as whitespace detected in an
                     // element type with element content whose element declaration was external
                     fValidator->emitError(XMLValid::NoWSForStandalone);
-                    if(fGrammarType == Grammar::SchemaGrammarType)
+                    if(fGrammarType == Grammar::SchemaGrammarType) 
                         ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
                 }
             }
@@ -2331,7 +2330,7 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                     // element type with element content whose element declaration was external
                     //
                     fValidator->emitError(XMLValid::NoWSForStandalone);
-                    if(fGrammarType == Grammar::SchemaGrammarType)
+                    if(fGrammarType == Grammar::SchemaGrammarType) 
                         ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->setValidity(PSVIDefs::INVALID);
                 }
             }

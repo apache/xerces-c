@@ -1998,9 +1998,8 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fRootGrammar = 0;
     fValidator->setGrammar(fGrammar);
 
-    if (fValScheme == Val_Auto) {
-        fValidate = false;
-    }
+    // Reset validation
+    fValidate = (fValScheme == Val_Always) ? true : false;
 
     //  And for all installed handlers, send reset events. This gives them
     //  a chance to flush any cached data.
