@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/04/27 19:33:15  rahulj
+ * Included <util/XercesDefs.hpp> as suggested by David N Bertoni.
+ *
  * Revision 1.5  2000/02/24 20:12:55  abagchi
  * Swat for removing Log from API docs
  *
@@ -80,7 +83,10 @@
 #ifndef ERRORHANDLER_HPP
 #define ERRORHANDLER_HPP
 
+#include <util/XercesDefs.hpp>
+
 class SAXParseException;
+
 
 /**
   * Basic interface for SAX error handlers.
