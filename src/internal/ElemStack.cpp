@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/12/12 14:29:50  tng
+ * Remove obsolete code in ElemStack which can help performance.
+ *
  * Revision 1.16  2001/08/29 16:42:27  tng
  * No need to new the child QName in ElemStack addChild.  Remove it for performance gain.
  *
@@ -185,11 +188,6 @@ unsigned int ElemStack::addLevel()
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
-    else
-    {
-        // Cleanup the old element before reuse
-        unsigned int childCount = fStack[fStackTop]->fChildCount;
-    }
 
     // Set up the new top row
     fStack[fStackTop]->fThisElement = 0;
@@ -224,11 +222,6 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
-    else
-    {
-        // Cleanup the old element before reuse
-        unsigned int childCount = fStack[fStackTop]->fChildCount;
-    }
 
     // Set up the new top row
     fStack[fStackTop]->fThisElement = 0;
@@ -250,18 +243,6 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     return fStackTop-1;
 }
 
-
-
-const XMLElementDecl& ElemStack::elemAt(const unsigned int index) const
-{
-    if (!fStackTop)
-        ThrowXML(EmptyStackException, XMLExcepts::ElemStack_EmptyStack);
-
-    if (index >= fStack[fStackTop-1]->fChildCount)
-        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::ElemStack_BadIndex);
-
-    return *(fStack[fStackTop-1]->fThisElement);
-}
 
 
 const ElemStack::StackElem* ElemStack::popTop()

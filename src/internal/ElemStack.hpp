@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/12/12 14:29:50  tng
+ * Remove obsolete code in ElemStack which can help performance.
+ *
  * Revision 1.10  2001/08/07 13:47:47  tng
  * Schema: Fix unmatched end tag for qualified/unqualifed start tag.
  *
@@ -205,8 +208,6 @@ public :
     // -----------------------------------------------------------------------
     unsigned int addLevel();
     unsigned int addLevel(XMLElementDecl* const toSet, const unsigned int readerNum);
-    XMLElementDecl& elemAt(const unsigned int index);
-    const XMLElementDecl& elemAt(const unsigned int index) const;
     const StackElem* popTop();
 
 
