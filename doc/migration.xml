@@ -45,7 +45,7 @@
 
     <anchor name="LibraryChange"/>
     <s3 title="Unix Library Name Change">
-      <p>The Xerces-C++ UNIX Library now follows the Unix Shared Library Naming Convention (libname.so.soname).
+      <p>The &XercesCName; UNIX Library now follows the Unix Shared Library Naming Convention (libname.so.soname).
          It is now called:</p>
          <ul>
             <li>AIX</li>
@@ -267,7 +267,7 @@ void test(char* xmlFile) {
                        cacheGrammarFromParse, isCachingGrammarFromParse, useCachedGrammarInParse,
                        isUsingCachedGrammarInParse.</li>
                    <li>SAX2XMLReader functions loadGrammar, resetCachedGrammarPool, and will recognize the features
-                       http://apache.org/xml/features/validation/cache-grammarFromParse and 
+                       http://apache.org/xml/features/validation/cache-grammarFromParse and
                        http://apache.org/xml/features/validation/use-cachedGrammarInParse.</li>
                 </ul>
               <li>To support access to Grammar info, the following are added:</li>
