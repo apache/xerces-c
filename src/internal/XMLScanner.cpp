@@ -90,12 +90,11 @@
 #include <validators/schema/SchemaSymbols.hpp>
 
 
-
 // ---------------------------------------------------------------------------
 //  Local static data
 // ---------------------------------------------------------------------------
 static XMLUInt32       gScannerId;
-static XMLMsgLoader*   gMsgLoader;
+static XMLMsgLoader*   gMsgLoader = 0;
 static bool            sRegistered = false;
 static XMLMutex*       sScannerMutex = 0;
 
