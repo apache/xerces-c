@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/09/28 08:54:34  amassari
+ * Silence a warning about missing final "return"
+ *
  * Revision 1.12  2004/09/23 21:22:47  peiyongz
  * Documentation
  * st_noContent added
@@ -1192,7 +1195,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         status = st_FOCA0002;
         return 0;
     }
-
+    return 0;
 }
 
 XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content    
@@ -1282,6 +1285,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
         status = st_FOCA0002;
         return 0;
     }
+    return 0;
 }
 
 XSValue*
@@ -1642,6 +1646,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
         status = st_FOCA0002;
         return 0; 
     }
+    return 0; 
 }
 
 XSValue*  
@@ -1823,6 +1828,7 @@ XSValue::getActValStrings(const XMLCh*         const content
         status = st_FOCA0002;
         return 0; 
     }
+    return 0; 
 }
 
 // ---------------------------------------------------------------------------
