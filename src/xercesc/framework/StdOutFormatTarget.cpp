@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/21 15:45:34  gareth
+ * gcc 3.2 now issues a warning for use of iostream.h. Removed the .h and prefixed cout with std::.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -66,7 +69,7 @@
  */
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-#include <iostream.h>
+#include <iostream>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -85,7 +88,7 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
         // Without the cast, it was printing the pointer value in hex.
         // Quite annoying, considering every other platform printed
         // the string with the explicit cast to char* below.
-	cout.write((char *) toWrite, (int) count);
+	std::cout.write((char *) toWrite, (int) count);
 
 }
 
