@@ -80,22 +80,44 @@ public :
     //@{
 
     /**
-     * Get data length
-     * returns length of decoded data given an
-     * array containing encoded data.
-     *
-     * @param base64Data Byte array containing Base64 data
-     * @return         a -1 would be return if not
+     * Encodes octets into Base64 data
+     * 
+     * @param inputData Byte array containing binary data.
+     * @param inputLength Length of the input array.
+     * @param outputLength Pointer to variable, where will be
+     *     stored length of returned data.
+     * @return Byte array containing encoded Base64 data,
+     *     or NULL if input data can not be encoded.
      */
-    static int getDataLength(const XMLCh* const base64Data);
+    static XMLCh* encode (
+        const XMLCh* const inputData,
+        const int inputLength,
+        int *outputLength = 0 );
 
     /**
-     * Decodes Base64 data into octects
-     * 
-     * @param binaryData Byte array containing Base64 data
-     * @return Array containind decoded data.
+     * Get data length
+     * returns length of decoded data given an array 
+     * containing encoded data.
+     *
+     * @param inputData Byte array containing Base64 data.
+     * @return Length of decoded data, or -1 if input data
+     *     can not be decoded.
      */
-    static XMLCh* decode(const XMLCh* const base64Data, int& base64DataLen);
+    static int getDataLength(
+        const XMLCh* const inputData );
+
+    /**
+     * Decodes Base64 data into octets
+     * 
+     * @param inputData Byte array containing Base64 data.
+     * @param outputLength Reference to variable, where will be
+     *     stored length of returned data.
+     * @return Byte array containing decoded binary data, or 
+     *     NULL if input data can not be decoded.
+     */
+    static XMLCh* decode(
+        const XMLCh* const inputData,
+        int& outputLength );
 
     //@}
 
@@ -107,15 +129,16 @@ private :
 
     static void init();
 
-    static bool isData(const XMLCh& octect);
+    static bool isData(const XMLCh& octet);
+    static bool isPad(const XMLCh& octet);
 
-    static bool isPad(const XMLCh& octect);
+    static XMLCh set1stOctet(const XMLCh&, const XMLCh&);
+    static XMLCh set2ndOctet(const XMLCh&, const XMLCh&);
+    static XMLCh set3rdOctet(const XMLCh&, const XMLCh&);
 
-    static XMLCh set1stOctect(const XMLCh&, const XMLCh&);
-
-    static XMLCh set2ndOctect(const XMLCh&, const XMLCh&);
-
-    static XMLCh set3rdOctect(const XMLCh&, const XMLCh&);
+    static void split1stOctet(const XMLCh&, XMLCh&, XMLCh&);
+    static void split2ndOctet(const XMLCh&, XMLCh&, XMLCh&);
+    static void split3rdOctet(const XMLCh&, XMLCh&, XMLCh&);
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -126,43 +149,70 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  isInitialized
-    //
-    //     set once hexNumberTable is initalized.
-    //
     //  base64Alphabet
+    //     The Base64 alphabet (see RFC 2045).
     //
-    //     table used in decoding base64
+    //  base64Padding
+    //     Padding character (see RFC 2045).
+    //
+    //  base64Inverse
+    //     Table used in decoding base64.
+    //
+    //  isInitialized
+    //     Set once base64Inverse is initalized.
+    //
+    //  quadsPerLine
+    //     Number of quadruplets per one line. The encoded output
+    //     stream must be represented in lines of no more 
+    //     than 19 quadruplets each.
     //
     // -----------------------------------------------------------------------
 
-    static bool    isInitialized;
-    static XMLCh   base64Alphabet[];
+    static const XMLCh  base64Alphabet[];
+    static const XMLCh  base64Padding;
 
+    static XMLCh  base64Inverse[];
+    static bool  isInitialized;
+
+    static const unsigned int  quadsPerLine;
 };
 
 // -----------------------------------------------------------------------
 //  Helper methods
 // -----------------------------------------------------------------------
-inline bool Base64::isPad(const XMLCh& octect) 
+inline bool Base64::isPad(const XMLCh& octet) 
 {
-    return(octect == chEqual);
+    return ( octet == base64Padding );
 }
 
-inline XMLCh Base64::set1stOctect(const XMLCh& b1, const XMLCh& b2)
+inline XMLCh Base64::set1stOctet(const XMLCh& b1, const XMLCh& b2)
 {
-    return (( b1 <<2 ) | ( b2>>4 ));
+    return (( b1 << 2 ) | ( b2 >> 4 ));
 }
 
-inline XMLCh Base64::set2ndOctect(const XMLCh& b2, const XMLCh& b3)
+inline XMLCh Base64::set2ndOctet(const XMLCh& b2, const XMLCh& b3)
 {
-    return ((( b2 & 0xf )<<4 ) | (( b3>>2 ) & 0xf));
+    return (( b2 << 4 ) | ( b3 >> 2 ));
 }
 
-inline XMLCh Base64::set3rdOctect(const XMLCh& b3, const XMLCh& b4)
+inline XMLCh Base64::set3rdOctet(const XMLCh& b3, const XMLCh& b4)
 {
-    return (( b3<<6 ) | b4 );
+    return (( b3 << 6 ) | b4 );
+}
+
+inline void Base64::split1stOctet(const XMLCh& ch, XMLCh& b1, XMLCh& b2) {
+    b1 = ch >> 2;
+    b2 = ( ch & 0x3 ) << 4;
+}
+
+inline void Base64::split2ndOctet(const XMLCh& ch, XMLCh& b2, XMLCh& b3) {
+    b2 |= ch >> 4;  // combine with previous value
+    b3 = ( ch & 0xf ) << 2;
+}
+
+inline void Base64::split3rdOctet(const XMLCh& ch, XMLCh& b3, XMLCh& b4) {
+    b3 |= ch >> 6;  // combine with previous value 
+    b4 = ( ch & 0x3f );
 }
 
 #endif
-
