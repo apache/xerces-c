@@ -385,43 +385,15 @@ bool AttrImpl::hasChildNodes()
 
 
 NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
-    if (isReadOnly())
-        throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    
-    if (newChild->getOwnerDocument() != getOwnerDocument())
-        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    
-    // Convert to internal type, to avoid repeated casting  
-    ChildNode * newInternal= (ChildNode *)newChild;
-    
-    // Prevent cycles in the tree
-    // newChild cannot be ancestor of this Node, and actually cannot be this
-    bool treeSafe=true;
-    for(NodeImpl *a=this;
-        treeSafe && a!=null;
-        a=a->getParentNode())
-        treeSafe=(newInternal!=a);
-    if(!treeSafe)
-        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-    
-    // refChild must in fact be a child of this node (or null)
-    if (refChild!=null && refChild->getParentNode() != this)
-        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
-    
-    // it's a no-op if refChild is the same as newChild
-    if(refChild==newChild)
-        return newChild;
-
-    if (newInternal->isDocumentFragmentImpl())
-    {
+ 
+   if (newChild->isDocumentFragmentImpl()) {
         // SLOW BUT SAFE: We could insert the whole subtree without
         // juggling so many next/previous pointers. (Wipe out the
         // parent's child-list, patch the parent pointers, set the
         // ends of the list.) But we know some subclasses have special-
         // case behavior they add to insertBefore(), so we don't risk it.
         // This approch also takes fewer bytecodes.
-        
+
         // NOTE: If one of the children is not a legal child of this
         // node, throw HIERARCHY_REQUEST_ERR before _any_ of the children
         // have been transferred. (Alternative behaviors would be to
@@ -429,85 +401,119 @@ NodeImpl *AttrImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         // which are acceptable to the target node, neither of which is
         // as robust. PR-DOM-0818 isn't entirely clear on which it
         // recommends?????
-        
+
         // No need to check kids for right-document; if they weren't,
         // they wouldn't be kids of that DocFrag.
-        for(NodeImpl *kid=newInternal->getFirstChild(); // Prescan
-        kid!=null;
-        kid=kid->getNextSibling())
-        {
-            if (!DocumentImpl::isKidOK(this, kid))
-              throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+        for (NodeImpl *kid = newChild->getFirstChild(); // Prescan
+             kid != null; kid = kid->getNextSibling()) {
+
+            if (!DocumentImpl::isKidOK(this, kid)) {
+                throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,
+                                       null);
+            }
         }                       
-        while(newInternal->hasChildNodes())     // Move
-            insertBefore(newInternal->getFirstChild(),refChild);
-    }
-    
-    else if (!DocumentImpl::isKidOK(this, newInternal))
-        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-    
-    else {
-        makeChildNode(); // make sure we have a node and not a string
 
-        NodeImpl *oldparent=newInternal->getParentNode();
-        if(oldparent!=null) {
-            oldparent->removeChild(newInternal);
+        while (newChild->hasChildNodes()) {    // Move
+            insertBefore(newChild->getFirstChild(), refChild);
         }
+        return newChild;
+    }
 
-        // Convert to internal type, to avoid repeated casting
-        ChildNode *refInternal = (ChildNode *)refChild;
+    // it's a no-op if refChild is the same as newChild
+    if (refChild == newChild) {
+        return newChild;
+    }
 
-        // Attach up
-        newInternal->ownerNode = this;
-        newInternal->isOwned(true);
+    if (isReadOnly()) {
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+                               null);
+    }
+    if (newChild->getOwnerDocument() != getOwnerDocument()) {
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+    }
+    if (!DocumentImpl::isKidOK(this, newChild)) {
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR, null);
+    }
+    // refChild must be a child of this node (or null)
+    if (refChild != null && refChild->getParentNode() != this) {
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+    }
+
+    // Prevent cycles in the tree
+    // newChild cannot be ancestor of this Node, and actually cannot be this
+    bool treeSafe = true;
+    for (NodeImpl *a = this; treeSafe && a != null; a = a->getParentNode()) {
+        treeSafe = (newChild != a);
+    }
+    if (!treeSafe) {
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR, null);
+    }
+
+    makeChildNode(); // make sure we have a node and not a string
+
+    // Convert to internal type, to avoid repeated casting  
+    ChildNode * newInternal = (ChildNode *)newChild;
+
+    NodeImpl *oldparent = newInternal->getParentNode();
+    if (oldparent != null) {
+        oldparent->removeChild(newInternal);
+    }
+
+    // Convert to internal type, to avoid repeated casting
+    ChildNode *refInternal = (ChildNode *)refChild;
+
+    // Attach up
+    newInternal->ownerNode = this;
+    newInternal->isOwned(true);
         
-        // Attach before and after
-        // Note: firstChild.previousSibling == lastChild!!
-        ChildNode *firstChild = (ChildNode *) value;
-        if (firstChild == null) {
-            // this our first and only child
-            value = newInternal; // firstChild = newInternal
-            newInternal->isFirstChild(true);
-            newInternal->previousSibling = newInternal;
-        } else {
-            if (refInternal == null) {
-                // this is an append
-                ChildNode *lastChild = firstChild->previousSibling;
-                lastChild->nextSibling = newInternal;
-                newInternal->previousSibling = lastChild;
+    // Attach before and after
+    // Note: firstChild.previousSibling == lastChild!!
+    ChildNode *firstChild = (ChildNode *) value;
+    if (firstChild == null) {
+        // this our first and only child
+        value = newInternal; // firstChild = newInternal
+        newInternal->isFirstChild(true);
+        newInternal->previousSibling = newInternal;
+    }
+    else {
+        if (refInternal == null) {
+            // this is an append
+            ChildNode *lastChild = firstChild->previousSibling;
+            lastChild->nextSibling = newInternal;
+            newInternal->previousSibling = lastChild;
+            firstChild->previousSibling = newInternal;
+        }
+        else {
+            // this is an insert
+            if (refChild == firstChild) {
+                // at the head of the list
+                firstChild->isFirstChild(false);
+                newInternal->nextSibling = firstChild;
+                newInternal->previousSibling = firstChild->previousSibling;
                 firstChild->previousSibling = newInternal;
-            } else {
-                // this is an insert
-                if (refChild == firstChild) {
-                    // at the head of the list
-                    firstChild->isFirstChild(false);
-                    newInternal->nextSibling = firstChild;
-                    newInternal->previousSibling =
-                        firstChild->previousSibling;
-                    firstChild->previousSibling = newInternal;
-                    value = newInternal; // firstChild = newInternal;
-                    newInternal->isFirstChild(true);
-                } else {
-                    // somewhere in the middle
-                    ChildNode *prev = refInternal->previousSibling;
-                    newInternal->nextSibling = refInternal;
-                    prev->nextSibling = newInternal;
-                    refInternal->previousSibling = newInternal;
-                    newInternal->previousSibling = prev;
-                }
+                value = newInternal; // firstChild = newInternal;
+                newInternal->isFirstChild(true);
+            }
+            else {
+                // somewhere in the middle
+                ChildNode *prev = refInternal->previousSibling;
+                newInternal->nextSibling = refInternal;
+                prev->nextSibling = newInternal;
+                refInternal->previousSibling = newInternal;
+                newInternal->previousSibling = prev;
             }
         }
+    }
 
-        changed();
+    changed();
 
-        if (this->getOwnerDocument() != null) {
-            typedef RefVectorOf<RangeImpl> RangeImpls;
-            RangeImpls* ranges = this->getOwnerDocument()->getRanges();
-            if ( ranges != null) {
-                unsigned int sz = ranges->size();
-                for (unsigned int i =0; i<sz; i++) {
-                    ranges->elementAt(i)->updateRangeForInsertedNode(newInternal);
-                }
+    if (this->getOwnerDocument() != null) {
+        typedef RefVectorOf<RangeImpl> RangeImpls;
+        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        if ( ranges != null) {
+            unsigned int sz = ranges->size();
+            for (unsigned int i =0; i<sz; i++) {
+                ranges->elementAt(i)->updateRangeForInsertedNode(newInternal);
             }
         }
     }
@@ -603,8 +609,11 @@ NodeImpl *AttrImpl::removeChild(NodeImpl *oldChild) {
 
 NodeImpl *AttrImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild) {
     insertBefore(newChild, oldChild);
+    if (newChild != oldChild) {
+        removeChild(oldChild);
+    }
     // changed() already done.
-    return removeChild(oldChild);
+    return oldChild;
 }
   
 
