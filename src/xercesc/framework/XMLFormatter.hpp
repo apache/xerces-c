@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/09/22 08:50:04  gareth
+ * doc fix
+ *
  * Revision 1.16  2003/09/08 21:48:36  peiyongz
  * Restore pre2.3 constructors
  *
@@ -260,7 +263,7 @@ public:
      * Fail the operation.</p>
      * <p><code>UnRep_CharRef:</code>
      * Display the unrepresented character as reference.</p>
-     * <p><code>UnRep_CharRef:</code>
+     * <p><code>UnRep_Replace:</code>
      * Replace the unrepresented character with the replacement character.</p>
      * <p><code>DefaultUnRep:</code>
      * Special value, do not use directly.</p>
