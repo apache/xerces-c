@@ -12,6 +12,34 @@
     </tr>
 
     <tr>
+        <td>2002-06-12</td>
+        <td>Tinny Ng</td>
+        <td>DOM L3: Add DOMUserDataHandler, DOMNode::set/getUserData.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-06-12</td>
+        <td>Tinny Ng</td>
+        <td> Fix: Thread-safety in DOMString.  The reference or update to DOMString::gLiveStringHandleCount should be synchronized (locked).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-06-07</td>
+        <td>Tinny Ng</td>
+        <td>DOM L3: Add Entity::get/setActualEncoding, get/setEncoding, get/setVersion.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-06-07</td>
+        <td>Tinny Ng</td>
+        <td>DOM L3: Add Document::get/setActualEncoding, get/setEncoding, get/setVersion, get/setStandalone, get/setDocumentURI..
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-06-03</td>
         <td>Tinny Ng</td>
         <td>DOM L3: Add DOMImplementationRegistry and DOMImplementationSource.

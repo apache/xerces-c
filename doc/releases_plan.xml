@@ -116,7 +116,14 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>DOM L3 Core: Document: set/getEncoding, set/getVersion, set/getStandalone, adoptNode</td>
+        <td>DOM L3 Core: Document: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone, set/getDocumentURI</td>
+        <td>Tinny Ng</td>
+        <td>June</td>
+        <td>Complete</td>
+    </tr>
+
+    <tr>
+        <td>DOM L3 Core: Document: adoptNode</td>
         <td>Tinny Ng</td>
         <td>June</td>
         <td></td>
@@ -130,18 +137,18 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>DOM L3 Core: UserDataHandler, and Node: get/setUserData</td>
+        <td>DOM L3 Core: DOMUserDataHandler, and Node: get/setUserData</td>
         <td>Tinny Ng</td>
         <td>June</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
 
     <tr>
-        <td>DOM L3 Core: Entity: set/getEncoding, set/getVersion</td>
+        <td>DOM L3 Core: Entity: set/getActualEncoding, set/getEncoding, set/getVersion</td>
         <td>Tinny Ng</td>
         <td>June</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>
