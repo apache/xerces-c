@@ -63,8 +63,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#ifndef APP_NO_THREADS
-#endif
 
 #define INCL_DOSSEMAPHORES
 #define INCL_DOSERRORS
@@ -89,7 +87,7 @@
   #error A transcoding service must be chosen
 #endif
 
-  #if defined(XML_USE_INMEMORY_MSGLOADER)
+#if defined(XML_USE_INMEMORY_MSGLOADER)
   #include  <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #else
   #error A message loading service must be chosen
@@ -101,35 +99,16 @@
 #include    <OS2.h>
 
 
-// -----------------------------------------------------------------------
-//  File methods
-// -----------------------------------------------------------------------
-static void WriteUStrStdErr( const XMLCh* const toWrite)
-{
-        char* tmpVal = XMLString::transcode(toWrite);
-        ArrayJanitor<char> janText(tmpVal);
-        if (!fputs(tmpVal, stderr))
-        {
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
-        }
-}
-
-static void WriteUStrStdOut( const XMLCh* const toWrite)
-{
-        char* tmpVal = XMLString::transcode(toWrite);
-        ArrayJanitor<char> janText(tmpVal);
-        if (!fputs(tmpVal, stdout))
-        {
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
-        }
-}
-
-
 // ---------------------------------------------------------------------------
-//  XMLPlatformUtils: Platform init method
+//  XMLPlatformUtils: Platform init and term methods
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::platformInit()
 {
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
 }
 
 // ---------------------------------------------------------------------------
@@ -559,14 +538,5 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 #else
     return 0;
 #endif
-}
-
-//void XMLPlatformUtils::platformInit()
-//{
-//}
-
-void XMLPlatformUtils::platformTerm()
-{
-    // We don't have any termination requirements at this time
 }
 
