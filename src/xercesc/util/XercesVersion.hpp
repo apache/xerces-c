@@ -58,6 +58,97 @@
 #define XERCESVERSION_HPP
 
 // ---------------------------------------------------------------------------
+// X E R C E S   V E R S I O N   H E A D E R   D O C U M E N T A T I O N
+
+/**
+ * User Documentation for Xerces Version Values:
+ *
+ *  
+ *
+ * Xerces  Notes:
+ *
+ * Xerces Committers Documentation:
+ *
+ *    Xerces committers normally only need to modify one or two of the 
+ *    following macros:
+ *
+ *      XERCES_VERSION_MAJOR
+ *      XERCES_VERSION_MINOR
+ *      XERCES_VERSION_REVISION
+ *
+ *    The integer values of these macros define the Xerces version number. All
+ *    other constants and preprocessor macros are automatically generated from
+ *    these three definitions.
+ *
+ * Xerces User Documentation:
+ *
+ *  The following sections in the user documentation have examples based upon
+ *  the following three version input values:
+ *
+ *    #define XERCES_VERSION_MAJOR 19
+ *    #define XERCES_VERSION_MINOR 3
+ *    #define XERCES_VERSION_REVISION 74
+ *
+ *  The minor and revision (patch level) numbers have two digits of resolution
+ *  which means that '3' becomes '03' in this example. This policy guarantees
+ *  that when using preprocessor macros, version 19.3.74 will be greater than
+ *  version 1.94.74 since the first will expand to 190374 and the second to
+ *  19474.
+ *
+ *  Preprocessor Macros:
+ *
+ *    _XERCES_VERSION defines the primary preprocessor macro that users will
+ *    introduce into their code to perform conditional compilation where the
+ *    version of Xerces is detected in order to enable or disable version 
+ *    specific capabilities. The value of _XERCES_VERSION for the above example
+ *    will be 190374. To use it a user would perform an operation such as the
+ *    following:
+ *
+ *      #if _XERCES_VERSION >= 190374
+ *        // code specific to new version of Xerces...
+ *      #else
+ *        // old code here...
+ *      #endif
+ *
+ *    XERCES_FULLVERSIONSTR is a preprocessor macro that expands to a string
+ *    constant whose value, for the above example, will be "19_3_74".
+ *
+ *    XERCES_FULLVERSIONDOT is a preprocessor macro that expands to a string
+ *    constant whose value, for the above example, will be "19.3.74".
+ *
+ *    XERCES_VERSIONSTR is a preprocessor macro that expands to a string
+ *    constant whose value, for the above example, will be "19374". This 
+ *    particular macro is very dangerous if it were to be used for comparing
+ *    version numbers since ordering will not be guaranteed.
+ *
+ *    Xerces_DLLVersionStr is a preprocessor macro that expands to a string
+ *    constant whose value, for the above example, will be "19_3_74". This
+ *    macro is provided for backwards compatibility to pre-1.7 versions of
+ *    Xerces.
+ *
+ *  String Constants:
+ *
+ *    gXercesVersionStr is a global string constant whose value corresponds to
+ *    the value "19_3" for the above example.
+ *
+ *    gXercesFullVersionStr is a global string constant whose value corresponds
+ *    to the value "19_3_74" for the above example. 
+ *
+ *  Numeric Constants:
+ *
+ *    gXercesMajVersion is a global integer constant whose value corresponds to
+ *    the major version number. For the above example its value will be 19.
+ *
+ *    gXercesMinVersion is a global integer constant whose value corresponds to
+ *    the minor version number. For the above example its value will be 3.
+ *
+ *    gXercesRevision is a global integer constant whose value corresponds to
+ *    the revision (patch) version number. For the above example its value will
+ *    be 74.
+ *
+ */
+
+// ---------------------------------------------------------------------------
 // X E R C E S   V E R S I O N   S P E C I F I C A T I O N
 
 /**
@@ -110,6 +201,12 @@
 #define INVK_CAT3_RAW_NUMERIC(a,b,c)    CAT3_RAW_NUMERIC(a,b,c)
 
 // ---------------------------------------------------------------------------
+// C A L C U L A T E   V E R S I O N   -   E X P A N D E D   F O R M
+
+#define MULTIPLY(factor,value) factor * value
+#define CALC_EXPANDED_FORM(a,b,c) ( MULTIPLY(10000,a) + MULTIPLY(100,b) + MULTIPLY(1,c) )
+
+// ---------------------------------------------------------------------------
 // X E R C E S   V E R S I O N   I N F O R M A T I O N
 
 // Xerces version strings; these particular macros cannot be used for
@@ -132,6 +229,6 @@ const unsigned int   gXercesRevision   = XERCES_VERSION_REVISION;
 // Xerces version numeric constants that can be used for conditional
 // compilation purposes.
 
-#define _XERCES_VERSION INVK_CAT3_RAW_NUMERIC(XERCES_VERSION_MAJOR,XERCES_VERSION_MINOR,XERCES_VERSION_REVISION)
+#define _XERCES_VERSION CALC_EXPANDED_FORM (XERCES_VERSION_MAJOR,XERCES_VERSION_MINOR,XERCES_VERSION_REVISION)
 
 #endif // XERCESVERSION_HPP
