@@ -309,7 +309,9 @@ catch (const XMLException&amp; toCatch) {
     <q>What kinds of URLs are currently supported in &XercesCProjectName;?</q>
     <a>
       <p>We now have a spec. compliant, but limited, implementation of
-        the class URL.</p>
+        the class URL. Xerces-C has code to parse URL's into components, but
+        it does have intrinsic support for making actual connections to
+        the remote resource pointed to by the URL. The limitations are:</p>
       <ul>
         <li>The only protocol currently supported is the "file://"
           which is used to refer to files locally.</li>
@@ -335,21 +337,73 @@ or
 e:\>domcount file:://localhost/d:/abc.xml</source>
 
       <p>Example of what you cannot do is:</p>
+      <ul>
+		<li>Refer to files using the 'file://' syntax and giving a
+        relative path to the file.</li>
 
-      <p>Refer to files using the 'file://' syntax and giving a
-        relative path to the file.</p>
-
-      <p>This implies that if you are using the 'file://' syntax to
+		<li>This implies that if you are using the 'file://' syntax to
         refer to external files, you have to give the complete path to
-        files even in the current directory.</p>
-
-      <p>You always have the option of not using the 'file://' syntax
-        and referring to files by just giving the filename or a
-        relative path to it as in:</p>
+        files even in the current directory.</li>
+	  </ul>
+	  <p>You always have the option of not using the 'file://' syntax
+      and referring to files by just giving the filename or a
+      relative path to it as in:</p>
 
 <source>domcount abc.xml</source>
+
     </a>
   </faq>
+
+  <faq title="How can I add support for URL's with HTTP/FTP protocols?">
+    <q>How can I add support for URL's with HTTP/FTP protocols?</q>
+    <a>
+      <p>To address the need to make remote connections to resources
+      specified using other protocols like HTTP, FTP etc..., Xerces-C
+      now provides the <code>NetAccessor</code> interface. The header
+      file is <code>src/util/XMLNetAccessor.hpp</code>. This interface
+      allows you to plug in your own implementation of URL networking
+      code into the Xerces-C parser.</p>
+
+      <p>One such implementation <em>(tested minimally under WinNT
+      only)</em> is already provided in &XercesCName; source code
+      drop, using <jump href="http://www.w3.org/Library/">W3C's Libwww
+      library</jump>. Libwww is available for free and has been ported
+      to various platforms. Click <jump
+      href="build.html#BuildUsingLibwww">here</jump> to read how you
+      can rebuild Xerces-C binaries with this implementation.</p>
+
+      <p>Some more notes about the NetAccessor implementation using
+      Libwww:</p>
+
+      <ul>
+		<li>This implementation only supports HTTP and does not return
+      adequate error messages when connections cannot be made to the
+      remote resources. It however illustrates how you can add support
+      for HTTP and FTP URL's.</li>
+
+		<li>The Xerces-C team will <em>NOT</em> be able to address any
+      questions related to how things work in Libwww. You can get some
+      help with Libwww by subscribing to the &lt;<jump
+      href="mailto:www-lib-request@w3.org?subject=subscribe">www-lib@w3.org</jump>&gt;
+      public mailing list.</li>
+
+		<li>However, we will welcome any feedback on the design of the
+      NetAccessor interface. Please send all such feedback to <jump
+      href="mailto:xerces-dev@xml.apache.org">xerces-dev@xml.apache.org</jump>.</li>
+
+		<li>You do not have to recompile &XercesCName; to plugin your
+      NetAccessor implementation. You can simply point the static
+      pointer variable <code>XMLPlatformUtils::fgNetAccessor</code> to
+      an instance of your NetAccessor implementation. Please refer to
+      the files <code>src/util/PlatformUtils.cpp</code> and
+      <code>src/util/Platforms/Win32/Win32PlatformUtils.cpp</code> to
+      see how we have done this simple illustrative
+      implementation.</li>
+
+	  </ul>
+    </a>
+  </faq>
+
 
   <faq title="Can I use &XercesCProjectName; to parse HTML?">
     <q>Can I use &XercesCProjectName; to parse HTML?</q>
