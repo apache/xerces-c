@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/06/03 21:42:42  neilg
+ * update name of test in usage info
+ *
  * Revision 1.3  2003/06/03 14:00:34  neilg
  * attempt to make VC6 happy.
  *
@@ -115,7 +118,7 @@ unsigned int MemoryMonitor::getTotalMemory()
 static void usage()
 {
     XERCES_STD_QUALIFIER cout << "\nUsage:\n"
-            "    MemoryMonitor [options] <XML file | List file>\n\n"
+            "    MemHandlerTest [options] <XML file | List file>\n\n"
             "This program invokes the XercesDOMParser, DOMBuilder, SAXParser ,\n"
             "and the SAX2XMLReader, and ensures that MemoryManagers set on these\n"
             "domBuilders are called to delete just as many bytes as they allocate.\n"
