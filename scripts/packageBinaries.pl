@@ -371,7 +371,14 @@ if ($platform eq "" )
 #
 if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
-    $platformname = 'Win32';    # Needed this way by nmake
+    if ($opt_b eq "64")
+    {
+        $platformname = 'Win64';
+    }
+    else 
+    {
+        $platformname = 'Win32';    
+    }    
     if (-e "$targetdir.zip") {
         print ("Deleting old target file \'$targetdir.zip\' \n");
         unlink("$targetdir.zip");
@@ -426,9 +433,23 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         pchdir ("$ICUROOT/source/allinone");
         if (!$opt_j) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
 	    #For nt we ship both debug and release dlls
-	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");
+	    if ($platformname eq "Win64")
+	    {
+                psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /USEENV /REBUILD /OUT buildlog.txt");
+            }
+            else
+            {
+                psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");            	
+            }
 	    psystem("cat buildlog.txt");
-	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");
+	    if ($platformname eq "Win64")
+	    {
+                psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
+            }
+            else
+            {
+                psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");            	
+            }	    
 	    psystem("cat buildlog.txt");
         }
 
@@ -443,13 +464,28 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     # Make all files in the Xerces-C system including libraries, samples and tests
     pchdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
-    psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD /OUT buildlog.txt");
+    if ($platformname eq "Win64")
+    {
+        psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /USEENV /REBUILD /OUT buildlog.txt");
+    }
+    else
+    {
+        psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD /OUT buildlog.txt");
+    }	        
+
     system("cat buildlog.txt");
 
     # Build the debug xerces dll.  Both debug and release DLLs
     #   are in the standard binary distribution of Xerces.
     if ($buildmode ne "Debug") {
-        psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD /OUT buildlog.txt");
+        if ($platformname eq "Win64")
+        {
+            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
+        }
+        else
+        {
+            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD /OUT buildlog.txt");        	
+        }
         system("cat buildlog.txt");
     }
 
