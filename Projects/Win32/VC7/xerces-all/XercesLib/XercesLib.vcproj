@@ -1140,6 +1140,12 @@
 					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSValue.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSValue.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp">
 				</File>
 				<File
