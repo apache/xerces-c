@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/08/31 20:52:25  peiyongz
+ * Return additional double value for decimal
+ * remove tz_hh/tz_mm
+ *
  * Revision 1.6  2004/08/31 15:14:47  peiyongz
  * remove XSValueContext
  *
@@ -1209,6 +1213,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
         if (datatype == XSValue::dt_decimal)
         {
+            //Prepare for the quadruplet
             XMLBigDecimal data(content, manager); 
 
             int      totalDigit = data.getTotalDigit();
@@ -1248,12 +1253,22 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 )
                 return 0;
 
+            //Prepare the double value
+            XMLDouble  data2(content, manager);
+            if (data2.isDataConverted())
+            {
+                status = st_InvalidRange;
+                return 0;
+            }
+
             XSValue* retVal = new (manager) XSValue(manager);
 
             retVal->fData.f_decimal.f_sign     = data.getSign();
             retVal->fData.f_decimal.f_scale    = data.getScale();
             retVal->fData.f_decimal.f_fraction = actValFract.f_ulong;
             retVal->fData.f_decimal.f_integral = actValInt.f_ulong;
+
+            retVal->fData.f_decimal.f_dvalue   = data2.getValue();
 
             return retVal;
         }
@@ -1592,10 +1607,7 @@ XSValue::getActValDateTimes(const XMLCh*         const content
         retVal->fData.f_datetime.f_hour    = coreDate.fValue[XMLDateTime::Hour];
         retVal->fData.f_datetime.f_min     = coreDate.fValue[XMLDateTime::Minute];
         retVal->fData.f_datetime.f_second  = coreDate.fValue[XMLDateTime::Second];
-        retVal->fData.f_datetime.f_milisec = coreDate.fValue[XMLDateTime::MiliSecond];
-        retVal->fData.f_datetime.f_utc     = coreDate.fValue[XMLDateTime::utc];
-        retVal->fData.f_datetime.f_tz_hh   = coreDate.fTimeZone[XMLDateTime::hh];
-        retVal->fData.f_datetime.f_tz_mm   = coreDate.fTimeZone[XMLDateTime::mm];
+        retVal->fData.f_datetime.f_milisec = coreDate.fMiliSecond;
 
         return retVal;
     }

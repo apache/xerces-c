@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/08/31 20:52:25  peiyongz
+ * Return additional double value for decimal
+ * remove tz_hh/tz_mm
+ *
  * Revision 1.6  2004/08/31 15:14:47  peiyongz
  * remove XSValueContext
  *
@@ -236,10 +240,8 @@ public:
                             int       f_hour;
                             int       f_min;
                             int       f_second;
-                            int       f_milisec;
-                            int       f_utc;
-                            int       f_tz_hh;
-                            int       f_tz_mm;
+                            double    f_milisec;
+
             } f_datetime;
 
     } fData;
