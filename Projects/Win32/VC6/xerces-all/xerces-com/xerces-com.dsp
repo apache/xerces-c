@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src\xercesc" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -82,7 +82,7 @@ SOURCE="$(InputPath)"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O1 /I "..\..\..\..\..\src\xercesc" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /Yu"stdafx.h" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -126,119 +126,119 @@ BuildCmds= \
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\BindStatusCallback.h
+SOURCE=..\..\..\..\..\src\xercesc\com\BindStatusCallback.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\IXMLDOMCharacterDataImpl.h
+SOURCE=..\..\..\..\..\src\xercesc\com\IXMLDOMCharacterDataImpl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\IXMLDOMNodeImpl.h
+SOURCE=..\..\..\..\..\src\xercesc\com\IXMLDOMNodeImpl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\IXMLDOMNodeImpl.inl
+SOURCE=..\..\..\..\..\src\xercesc\com\IXMLDOMNodeImpl.inl
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\IXMLDOMTextImpl.h
+SOURCE=..\..\..\..\..\src\xercesc\com\IXMLDOMTextImpl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\NodeContainerImpl.h
+SOURCE=..\..\..\..\..\src\xercesc\com\NodeContainerImpl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\Resource.h
+SOURCE=..\..\..\..\..\src\xercesc\com\Resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\StdAfx.h
+SOURCE=..\..\..\..\..\src\xercesc\com\StdAfx.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xml4com.h
+SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xml4comCP.h
+SOURCE=..\..\..\..\..\src\xercesc\com\xml4comCP.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMAttribute.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMAttribute.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMCDATASection.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMCDATASection.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMComment.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMComment.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMDocument.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMDocument.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMDocumentFragment.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMDocumentFragment.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMDocumentType.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMDocumentType.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMElement.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMElement.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMEntity.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMEntity.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMEntityReference.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMEntityReference.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMImplementation.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMImplementation.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMNamedNodeMap.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMNamedNodeMap.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMNodeList.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMNodeList.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMNotation.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMNotation.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMParseError.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMParseError.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMProcessingInstruction.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMProcessingInstruction.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMText.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMText.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMUtil.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMUtil.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMXMLDecl.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMXMLDecl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLHTTPRequest.h
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLHTTPRequest.h
 # End Source File
 # End Group
 # Begin Group "Source Files"
@@ -246,86 +246,86 @@ SOURCE=..\..\..\..\..\src\com\XMLHTTPRequest.h
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\BindStatusCallback.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\BindStatusCallback.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\StdAfx.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xml4com.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xml4com.def
+SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.def
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xml4com.idl
-# ADD MTL /I "..\..\..\..\..\src\com" /tlb "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" /h "..\..\..\..\..\src\com\xml4com.h" /iid "..\..\..\..\..\src\com\xml4com_i.c"
+SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.idl
+# ADD MTL /I "..\..\..\..\..\src\xercesc\com" /tlb "..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb" /h "..\..\..\..\..\src\xercesc\com\xml4com.h" /iid "..\..\..\..\..\src\xercesc\com\xml4com_i.c"
 # SUBTRACT MTL /Oicf
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xml4com.rc
+SOURCE=..\..\..\..\..\src\xercesc\com\xml4com.rc
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMAttribute.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMAttribute.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMDocument.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMDocument.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMDocumentType.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMDocumentType.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMElement.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMEntity.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMEntity.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMImplementation.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMImplementation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMNamedNodeMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMNamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMNodeList.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMNodeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMNotation.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMNotation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMParseError.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMParseError.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMProcessingInstruction.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMProcessingInstruction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMUtil.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMUtil.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLDOMXMLDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLDOMXMLDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\XMLHTTPRequest.cpp
+SOURCE=..\..\..\..\..\src\xercesc\com\XMLHTTPRequest.cpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -333,11 +333,11 @@ SOURCE=..\..\..\..\..\src\com\XMLHTTPRequest.cpp
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xmldocument.rgs
+SOURCE=..\..\..\..\..\src\xercesc\com\xmldocument.rgs
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\com\xmlhttprequest.rgs
+SOURCE=..\..\..\..\..\src\xercesc\com\xmlhttprequest.rgs
 # End Source File
 # End Group
 # End Group
