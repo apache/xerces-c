@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/08 23:10:07  aruna1
+ * Recursive locking mechanism added
+ *
  * Revision 1.3  1999/12/02 23:07:13  aruna1
  * Solaris Atomic Mutex initailization changed to native calls
  *
@@ -80,7 +83,7 @@
 // ---------------------------------------------------------------------------
 
 #if !defined (APP_NO_THREADS)
-#include    <thread.h>
+#include    <pthread.h>
 #endif // APP_NO_THREADS
 
 
@@ -158,7 +161,7 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
-static mutex_t* gAtomicOpMutex =0 ;
+static pthread_mutex_t* gAtomicOpMutex =0 ;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -167,8 +170,8 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-    gAtomicOpMutex = new mutex_t;	
-    if (mutex_init(gAtomicOpMutex, NULL, NULL))
+    gAtomicOpMutex = new pthread_mutex_t;	
+    if (pthread_mutex_init(gAtomicOpMutex, NULL))
     {
 	printf("atomicOpMutex not created \n");
 	exit(1);
@@ -592,47 +595,77 @@ void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
 
 #if !defined (APP_NO_THREADS)
 
+class  RecursiveMutex
+{
+public:
+    pthread_mutex_t   mutex;
+    int               recursionCount;
+    pthread_t         tid;
+
+    RecursiveMutex() { 
+		       if (pthread_mutex_init(&mutex, NULL))
+			    ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
+                       recursionCount = 0;
+                       tid = 0;
+                     };
+
+    ~RecursiveMutex() {
+			if (pthread_mutex_destroy(&mutex))
+			    ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotDestroy);
+                      };
+
+     void lock()      {
+			  if (pthread_equal(tid, pthread_self()))
+			  {
+			      recursionCount++;
+			      return;
+			  }
+			  if (pthread_mutex_lock(&mutex) != 0)
+			      ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotLock);
+			  tid = pthread_self();
+			  recursionCount = 1;
+		      };
+
+
+     void unlock()    {
+                          if (--recursionCount > 0)
+                              return;
+
+			  if (pthread_mutex_unlock(&mutex) != 0)
+			      ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotUnlock);
+                          tid = 0;
+                       };
+   };
+
+void* XMLPlatformUtils::makeMutex()
+{
+    return new RecursiveMutex;
+};
+
+
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
-    if (mutex_destroy( (mutex_t*)mtxHandle))
-    {
-        ThrowXML(XMLPlatformUtilsException,
-                 XML4CExcepts::Mutex_CouldNotDestroy);
-    }
-    if ((mutex_t*)mtxHandle)
-        delete mtxHandle;
-}
+    RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+    delete rm;
+};
+
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
-    if (mutex_lock( (mutex_t*)mtxHandle))
-    {
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotLock);
-    }
+    RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+    rm->lock();
 }
 
-void* XMLPlatformUtils::makeMutex()
-{
-    mutex_t* mutex = new mutex_t;
-
-    if (mutex_init(mutex, NULL, NULL))
-    {
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
-    }
-    return (void*)(mutex);
-}
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
-    if (mutex_unlock( (mutex_t*)mtxHandle))
-    {
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotUnlock);
-    }
+    RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+    rm->unlock();
 }
 
 // -----------------------------------------------------------------------
@@ -650,7 +683,7 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
     // the below calls are temporarily made till the above functions are part of user library
     // Currently its supported only in the kernel mode
 
-    if (mutex_lock( gAtomicOpMutex))
+    if (pthread_mutex_lock( gAtomicOpMutex))
     {
 	printf("could not lock atomicOpMutex\n");
 	exit(1);
@@ -661,7 +694,7 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
-    if (mutex_unlock( gAtomicOpMutex))
+    if (pthread_mutex_unlock( gAtomicOpMutex))
     {
 	printf("could not unlock atomicOpMutex\n");
 	exit(1);
@@ -675,14 +708,14 @@ int XMLPlatformUtils::atomicIncrement(int &location)
 {
     //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
 
-    if (mutex_lock( gAtomicOpMutex))
+    if (pthread_mutex_lock( gAtomicOpMutex))
     {
 	printf("could not lock atomicOpMutex\n");
 	exit(1);
 	//call panic instead
     }
     int tmp = ++location;
-    if (mutex_unlock( gAtomicOpMutex))
+    if (pthread_mutex_unlock( gAtomicOpMutex))
     {
 	printf("could not unlock atomicOpMutex\n");
 	exit(1);
@@ -694,7 +727,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 {
     //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
 
-    if (mutex_lock( gAtomicOpMutex))
+    if (pthread_mutex_lock( gAtomicOpMutex))
     {
 	printf("could not lock atomicOpMutex\n");
 	exit(1);
@@ -702,7 +735,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
     }
 	
     int tmp = --location;
-    if (mutex_unlock( gAtomicOpMutex))
+    if (pthread_mutex_unlock( gAtomicOpMutex))
     {
 	printf("could not unlock atomicOpMutex\n");
 	exit(1);
