@@ -2514,7 +2514,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
-	"$(INTDIR)\XSAXMLScanner.obj" \	
+	"$(INTDIR)\XSAXMLScanner.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
