@@ -404,6 +404,9 @@ LINKLIB = $(XML_LIB_DIR)
 .SUFFIXES:
 .SUFFIXES: .cpp .c .$(TO)
 
+# Tell make where the object files are for proper resolution of suffix rules
+vpath %.$(TO) $(XML_OBJ_DIR)
+
 .cpp.$(TO):
 	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)
 
