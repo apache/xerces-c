@@ -242,14 +242,16 @@ sub deleteCVSdirs {
 			# print $name, "\n";
 			next if $subcount == 0;
 
-			($dev,$ino,$mode,$nlink) = lstat($_);
-			next unless -d _;
+			($dev,$ino,$mode,$nlink) = lstat($_);			
 
 			if ($localName =~ m/CVS/i) {
 				print ("Removing $name ...\n");
 				system("$RM -rf $name");
 				next;
 			}
+			
+			next unless -d _;			
+			
 			chdir $_ || die "Cannot cd to $name";
 			&deleteCVSdirs($name,$nlink);
 			chdir '..';
