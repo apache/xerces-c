@@ -382,17 +382,12 @@ endif
 
 #=============== MacOS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MACOSX)
-	MacIncludes = 
-	MacOptions = \
-		-framework Carbon \
-		-framework CoreFoundation \
-		-framework CoreServices
-	PLATFORM_LIBRARIES= \
+	PLATFORM_LIBRARIES = \
 		-framework Carbon \
 		-framework CoreFoundation \
 		-framework CoreServices
 	PLATFORM_COMPILE_OPTIONS = \
-		-D${PLATFORM} ${MacIncludes} ${MacOptions}
+		-D${PLATFORM}
 	MAKE_SHARED = ${CXX} -D${PLATFORM} -dynamiclib
 	MAKE_SHARED_C = ${CC} -D${PLATFORM} -dynamiclib
 	ifeq (${TRANSCODER}, ICU)
