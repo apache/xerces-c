@@ -457,6 +457,10 @@ SOURCE=..\..\..\..\..\src\util\XMLMsgLoader.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLNetAccessor.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLString.cpp
 # End Source File
 # Begin Source File
