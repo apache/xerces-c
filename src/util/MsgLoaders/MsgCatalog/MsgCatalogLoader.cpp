@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 22:00:22  aruna1
+ * Modified message 'set' attribute reading sequence. Removed dependencies on  hard coded constants
+ *
  * Revision 1.2  1999/12/23 01:43:37  aruna1
  * MsgCatalog support added for solaris
  *
@@ -77,10 +80,12 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include "MsgCatalogLoader.hpp"
+#include "XMLMsgCat_Ids.hpp"
 
 #include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
@@ -125,13 +130,13 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
                             , const unsigned long           maxChars)
 {
-    int msgSet = 1;
+    int msgSet = CatId_XML4CErrs;
     if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
-        msgSet = 1;
+        msgSet = CatId_XML4CErrs;
     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
-        msgSet = 2;
+        msgSet = CatId_XML4CExcepts;
     else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
-        msgSet = 3;
+        msgSet = CatId_XML4CValid;
 
     char msgString[100];
     sprintf(msgString, "Could not find message ID %d from message set %d\n", msgToLoad, msgSet);
