@@ -61,6 +61,8 @@
 
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 #include "DOMNodeVector.hpp"
 #include "DOMNamedNodeMapImpl.hpp"
@@ -141,44 +143,7 @@ void DOMNamedNodeMapImpl::removeAll()
 
 int DOMNamedNodeMapImpl::findNamePoint(const XMLCh *name) const
 {
-
-    // Binary search
-    int i=0;
-    if(fNodes!=0)
-    {
-        int first=0,last=fNodes->size()-1;
-
-        while(first<=last)
-        {
-            i=(first+last)/2;
-            int test = XMLString::compareString(name, fNodes->elementAt(i)->getNodeName());
-            if(test==0)
-                return i; // Name found
-            else if(test<0)
-                last=i-1;
-            else
-                first=i+1;
-        }
-        if(first>i) i=first;
-    }
-    /********************
-    // Linear search
-    int i = 0;
-    if (fNodes != 0)
-    for (i = 0; i < fNodes.size(); ++i)
-    {
-    int test = name.compareTo(((NodeImpl *) (fNodes.elementAt(i))).getNodeName());
-    if (test == 0)
-    return i;
-    else
-    if (test < 0)
-    {
-    break; // Found insertpoint
-    }
-    }
-
-    *******************/
-    return -1 - i; // not-found has to be encoded.
+    return findNamePoint(0, name);
 };
 
 
@@ -207,8 +172,8 @@ DOMNode * DOMNamedNodeMapImpl::item(XMLSize_t index) const
 
 //
 // removeNamedItem() - Remove the named item, and return it.
-//                      The caller must arrange for deletion of the
-//                      returned item if its refcount has gone to zero -
+//                      The caller can release the
+//                      returned item if it's not used
 //                      we can't do it here because the caller would
 //                      never see the returned node.
 //
@@ -297,38 +262,54 @@ void DOMNamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
 int DOMNamedNodeMapImpl::findNamePoint(const XMLCh *namespaceURI,
 	const XMLCh *localName) const
 {
-    if (fNodes == 0)
-	return -1;
-    // This is a linear search through the same fNodes Vector.
-    // The Vector is sorted on the DOM Level 1 nodename.
-    // The DOM Level 2 NS keys are namespaceURI and Localname,
-    // so we must linear search thru it.
-    // In addition, to get this to work with fNodes without any namespace
-    // (namespaceURI and localNames are both 0) we then use the nodeName
-    // as a secondary key.
-    int i, len = fNodes -> size();
-    for (i = 0; i < len; ++i) {
-        DOMNode *node = fNodes -> elementAt(i);
-        //	if (! node -> getNamespaceURI().equals(namespaceURI))	//URI not match
-        if (XMLString::compareString(node -> getNamespaceURI(), namespaceURI))	//URI not match
-            continue;
-        const XMLCh * nNamespaceURI = node->getNamespaceURI();
-        const XMLCh * nLocalName = node->getLocalName();
-        if (namespaceURI == 0) {
-            if (nNamespaceURI == 0
-                &&
-                (XMLString::compareString(localName, nLocalName) == 0
-                ||
-                (nLocalName == 0 && XMLString::compareString(localName, node->getNodeName()) == 0)))
-                return i;
-        } else {
-            if (XMLString::compareString(namespaceURI, nNamespaceURI) == 0
-                &&
-                XMLString::compareString(localName, nLocalName) == 0)
-                return i;
-        }
+    XMLBuffer name;
+    if (!namespaceURI || !*namespaceURI)
+        name.set(localName);
+    else {
+        name.set(namespaceURI);
+        name.append(chColon);
+        name.append(localName);
     }
-    return -1;	//not found
+
+    // Binary search
+    int i=0;
+    if(fNodes!=0)
+    {
+        int first=0,last=fNodes->size()-1;
+        XMLBuffer nName;
+
+        while(first<=last)
+        {
+            i=(first+last)/2;
+            DOMNode* node = fNodes->elementAt(i);
+            const XMLCh * nNamespaceURI = node->getNamespaceURI();
+            const XMLCh * nLocalName = node->getLocalName();
+            const XMLCh * nNodeName = node->getNodeName();
+
+            if ((!nNamespaceURI || !*nNamespaceURI) && !nLocalName)
+                nName.set(nNodeName);
+            else if (!nNamespaceURI || !*nNamespaceURI)
+                nName.set(nLocalName);
+            else {
+                nName.set(nNamespaceURI);
+                nName.append(chColon);
+                nName.append(nLocalName);
+            }
+
+            //now find the insert point using binary search
+            int test = XMLString::compareString(name.getRawBuffer(), nName.getRawBuffer());
+
+            if(test==0)
+                return i; // Name found
+            else if(test<0)
+                last=i-1;
+            else
+                first=i+1;
+        }
+        if(first>i) i=first;
+    }
+
+    return -1 - i; // not-found has to be encoded.
 }
 
 
@@ -368,9 +349,7 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItemNS(DOMNode *arg)
         previous = fNodes->elementAt(i);
         fNodes->setElementAt(arg,i);
     } else {
-        i=findNamePoint(arg->getNodeName()); // Insert point (may be end of list)
-        if (i<0)
-          i = -1 - i;
+        i=-1-i; // Insert point (may be end of list)
         if(0==fNodes)
             fNodes=new (doc) DOMNodeVector(doc);
         fNodes->insertElementAt(arg,i);
@@ -385,8 +364,8 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItemNS(DOMNode *arg)
 
 
 // removeNamedItemNS() - Remove the named item, and return it.
-//                      The caller must arrange for deletion of the
-//                      returned item if its refcount has gone to zero -
+//                      The caller can release the
+//                      returned item if it's not used
 //                      we can't do it here because the caller would
 //                      never see the returned node.
 DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
@@ -408,9 +387,10 @@ DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
 
 
 
-void DOMNamedNodeMapImpl::cloneContent(const DOMNamedNodeMapImpl *srcmap) {
-	if ((srcmap != 0) && (srcmap->fNodes != 0))
-	{
+void DOMNamedNodeMapImpl::cloneContent(const DOMNamedNodeMapImpl *srcmap)
+{
+    if ((srcmap != 0) && (srcmap->fNodes != 0))
+    {
         if (fNodes != 0)
             fNodes->reset();
         else
@@ -418,15 +398,35 @@ void DOMNamedNodeMapImpl::cloneContent(const DOMNamedNodeMapImpl *srcmap) {
             DOMDocument *doc = fOwnerNode->getOwnerDocument();
             fNodes = new (doc) DOMNodeVector(doc, srcmap->fNodes->size());
         }
-		for (XMLSize_t i = 0; i < srcmap->fNodes->size(); i++)
-		{
-			DOMNode *n = srcmap->fNodes->elementAt(i);
- 			DOMNode *clone = n->cloneNode(true);
-			castToNodeImpl(clone)->isSpecified(castToNodeImpl(n)->isSpecified());
-			castToNodeImpl(clone)->fOwnerNode = fOwnerNode;
-			castToNodeImpl(clone)->isOwned(true);
-			fNodes->addElement(clone);
-		}
-	}
+
+        for (XMLSize_t i = 0; i < srcmap->fNodes->size(); i++)
+        {
+            DOMNode *n = srcmap->fNodes->elementAt(i);
+            DOMNode *clone = n->cloneNode(true);
+            castToNodeImpl(clone)->isSpecified(castToNodeImpl(n)->isSpecified());
+            castToNodeImpl(clone)->fOwnerNode = fOwnerNode;
+            castToNodeImpl(clone)->isOwned(true);
+            fNodes->addElement(clone);
+        }
+    }
 }
+
+
+// remove the name using index
+// avoid calling findNamePoint again if the index is already known
+DOMNode * DOMNamedNodeMapImpl::removeNamedItemAt(XMLSize_t index)
+{
+    if (this->readOnly())
+        throw DOMException(
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    DOMNode *n = item(index);
+    if(!n)
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+
+    fNodes->removeElementAt(index);
+    castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
+    castToNodeImpl(n)->isOwned(false);
+    return n;
+};
 

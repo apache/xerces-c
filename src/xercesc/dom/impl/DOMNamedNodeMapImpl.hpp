@@ -102,6 +102,7 @@ public:
     virtual DOMNode*        item(XMLSize_t index) const;
     virtual void            removeAll();
     virtual DOMNode*        removeNamedItem(const XMLCh *name);
+    virtual DOMNode*        removeNamedItemAt(XMLSize_t index);
     virtual DOMNode*        setNamedItem(DOMNode *arg);
     virtual void            setReadOnly(bool readOnly, bool deep);
 
