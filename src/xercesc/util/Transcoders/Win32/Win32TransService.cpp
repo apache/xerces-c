@@ -193,7 +193,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
     , fCPId(cpId)
     , fIEId(ieId)
 {
-    fEncodingName = XMLString::replicate(encodingName);
+    fEncodingName = XMLString::replicate(encodingName, XMLPlatformUtils::fgMemoryManager);
 
     //
     //  Upper case it because we are using a hash table and need to be
