@@ -2708,6 +2708,8 @@
 			buildStyles = (
 				1A7E46A50080FC837F000001,
 				1A7E46A60080FC837F000001,
+				F58B302202DE22220195DDC8,
+				F58B302402DE22660195DDC8,
 			);
 			isa = PBXProject;
 			mainGroup = 0867D691FE84028FC02AAC07;
@@ -2754,7 +2756,7 @@
 				HEADER_SEARCH_PATHS = "../../../../src /System/Library/Frameworks/Carbon.framework/Headers";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "-DDEBUG -DTARGET_API_MAC_CARBON -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_MACOS_UNICODECONVERTER -DXML_USE_NETACCESSOR_URLACCESSCF";
+				OTHER_CFLAGS = "-w -DDEBUG -DTARGET_API_MAC_CARBON -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_MACOS_UNICODECONVERTER -DXML_USE_NETACCESSOR_URLACCESSCF";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Xerces;
 				SECTORDER_FLAGS = "";
@@ -5788,6 +5790,27 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		F58B302202DE22220195DDC8 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+				USE_GCC3 = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Development GCC3";
+		};
+		F58B302402DE22660195DDC8 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				USE_GCC3 = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Deployment GCC3";
 		};
 		F58FFB7A02C4EAAC01A80065 = {
 			children = (

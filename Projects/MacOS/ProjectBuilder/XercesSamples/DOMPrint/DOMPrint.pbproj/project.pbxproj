@@ -34,24 +34,11 @@
 		};
 		0249A662FF388D9811CA2CEA = {
 			children = (
-				0249A663FF388D9811CA2CEA,
 				00C89B0EFFA938BB7F000001,
 			);
 			isa = PBXGroup;
 			name = "External Frameworks and Libraries";
 			refType = 4;
-		};
-		0249A663FF388D9811CA2CEA = {
-			isa = PBXFileReference;
-			name = "libstdc++.a";
-			path = "/usr/lib/libstdc++.a";
-			refType = 0;
-		};
-		0249A664FF388D9811CA2CEA = {
-			fileRef = 0249A663FF388D9811CA2CEA;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		02DDAA62FF8BF5E17F000001 = {
 			isa = PBXFileReference;
@@ -104,6 +91,8 @@
 			buildStyles = (
 				32D0C9130081428B7F000001,
 				32D0C9140081428B7F000001,
+				F58B304702DE343B0195DDC8,
+				F58B304802DE34410195DDC8,
 			);
 			isa = PBXProject;
 			mainGroup = 08FB7794FE84155DC02AAC07;
@@ -188,7 +177,6 @@
 		08FB77A3FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
-				0249A664FF388D9811CA2CEA,
 				00C89B0FFFA938BB7F000001,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -256,6 +244,27 @@
 //F52
 //F53
 //F54
+		F58B304702DE343B0195DDC8 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+				USE_GCC3 = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Development GCC3";
+		};
+		F58B304802DE34410195DDC8 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				USE_GCC3 = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Deployment GCC3";
+		};
 		F58FFD0602C4FB8D01A80065 = {
 			isa = PBXFileReference;
 			path = DOMPrintErrorHandler.cpp;
