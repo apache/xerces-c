@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/20 21:41:54  tng
+ * project files changes for Xerces-C++ 1.7.
+ *
  * Revision 1.2  2002/02/17 21:12:06  jberry
  * Adjust "sane includes" include path for Mac OS.
  *
@@ -180,11 +183,11 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_6_0"
-const char* const    gXercesVersionStr = "1_6";
-const char* const    gXercesFullVersionStr = "1_6_0";
+#define Xerces_DLLVersionStr "1_7_0"
+const char* const    gXercesVersionStr = "1_7";
+const char* const    gXercesFullVersionStr = "1_7_0";
 const unsigned int   gXercesMajVersion = 1;
-const unsigned int   gXercesMinVersion = 6;
+const unsigned int   gXercesMinVersion = 7;
 const unsigned int   gXercesRevision   = 0;
 
 

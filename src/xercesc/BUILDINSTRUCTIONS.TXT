@@ -49,13 +49,13 @@ Building Xerces-C++ on Windows NT/98
 
         The workspace containing the Xerces-C++ project file and all other samples is:
 
-           xerces-c-src1_6_0\Projects\Win32\VC6\xerces-all\xerces-all.dsw
+           xerces-c-src1_7_0\Projects\Win32\VC6\xerces-all\xerces-all.dsw
 
         Once you are inside MSVC, you need to build the project marked XercesLib.
 
         If you want to include the Xerces-C++ project separately, you need to pick up:
 
-           xerces-c-src1_6_0\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
+           xerces-c-src1_7_0\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
 
         You must make sure that you are linking your application with the xerces-c_1.lib
         library and also make sure that the associated DLL is somewhere in your path.
@@ -75,7 +75,7 @@ Building Xerces-C++ on Windows NT/98
         samples in one shot.
 
         If you are using the binary package, load the
-        xerces-c1_6_0-win32\samples\Projects\Win32\VC6\samples.dsw Microsoft Visual
+        xerces-c1_7_0-win32\samples\Projects\Win32\VC6\samples.dsw Microsoft Visual
         C++ workspace inside your MSVC IDE. Then select all the samples and right click
         on the selection. Then choose "Build (selection only)" to build all the samples in
         one shot.
@@ -103,12 +103,12 @@ Building Xerces-C++ on Windows using Visual Age C++
            * ICU Build:
              You should have the ICU Library in the same directory as the Xerces-C++
              library. For example if Xerces-C++ is at the top level of the d drive, put the
-             ICU library at the top level of d e.g. d:/xerces-c1_6_0 d:/icu.
+             ICU library at the top level of d e.g. d:/xerces-c1_7_0 d:/icu.
 
         Instructions:
 
-           1.Change the directory to d:\xerces-c1_6_0\Projects\Win32
-           2.If a d:\xerces-c1_6_0\Project\Win32\VACPP40 directory does not exist,
+           1.Change the directory to d:\xerces-c1_7_0\Projects\Win32
+           2.If a d:\xerces-c1_7_0\Project\Win32\VACPP40 directory does not exist,
              create it.
            3.Copy the IBM VisualAge project file, XML4C2X.icc, to the VACPP40
              directory.
@@ -132,12 +132,12 @@ Building Xerces-C++ on Windows using Borland C++Builder
 
         The library and demo projects are all contained in the Xerces-all project group:
 
-           * xerces-c-src1_6_0\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg
+           * xerces-c-src1_7_0\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg
 
         Each project in the group refers a directory belog \Xerces-all. For example, the
         XercesLib project files are contained in the directory
 
-           * xerces-c-src1_6_0\Projects\Win32\BCB5\Xerces-all\XercesLib
+           * xerces-c-src1_7_0\Projects\Win32\BCB5\Xerces-all\XercesLib
 
         To build any project, open the project manager. Double click on the project name.
         Then select "Project|Build" from the menu. For example, double click on
@@ -192,7 +192,7 @@ Building Xerces-C++ on UNIX platforms
 
         Next set your Xerces-C++ root path as follows:
 
-           export XERCESCROOT=<full path to xerces-c-src1_6_0>
+           export XERCESCROOT=<full path to xerces-c-src1_7_0>
 
         This should be the full path of the directory where you extracted Xerces-C++.
 
@@ -333,7 +333,7 @@ Building Xerces-C++ on UNIX platforms
            configure
 
            If the result of the above commands look OK to you, go to the directory
-           $HOME/xerces-c-src1_6_0/src and type "gmake" to make the XERCES-C system.
+           $HOME/xerces-c-src1_7_0/src and type "gmake" to make the XERCES-C system.
 
         The error message concerning conf.h is NOT an indication of a problem. This code has been inserted to make it work on AS/400, but it gives this message which appears to be
         an error. The problem will be fixed in future.
@@ -352,12 +352,12 @@ Building Xerces-C++ on UNIX platforms
 
         The installation process for the samples is same on all UNIX platforms.
 
-           cd xerces-c1_6_0-linux/samples
+           cd xerces-c1_7_0-linux/samples
            ./runConfigure -p<platform> -c<C_compiler> -x<C++_compiler>
            gmake
 
         This will create the object files in each sample directory and the executables in '
-        xerces-c1_6_0-linux/bin' directory.
+        xerces-c1_7_0-linux/bin' directory.
 
         Note that runConfigure is just a helper script and you are free to use ./configure
         with the correct parameters to make it work on any platform-compiler combination
@@ -522,9 +522,9 @@ Building on iSeries (AS/400)
 
               qsh:
                  cd <full path to Xerces-C++>/lib
-                 qar -cuv libxerces-c1_6_0.a *.o
+                 qar -cuv libxerces-c1_7_0.a *.o
               will results in
-                 command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/Xerces-C++/lib/libxerces-c1_6_0.a')
+                 command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/Xerces-C++/lib/libxerces-c1_7_0.a')
                  command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )
 
         Troubleshooting gmake problem:
@@ -548,8 +548,8 @@ Building on iSeries (AS/400)
 
               qsh:
                  cd <full path to Xerces-C++>/lib
-                 ln -s /qsys.lib/<outputdir>.lib/libxercesc.srvpgm   libxerces-c1_6_0.o
-                 qar -cuv libxerces-c1_6_0.a *.o
+                 ln -s /qsys.lib/<outputdir>.lib/libxercesc.srvpgm   libxerces-c1_7_0.o
+                 qar -cuv libxerces-c1_7_0.a *.o
 
            If you are on a v4 system using the ILE C++ PRPQ compiler (which is referred to as the 'old' compiler) you will get
            compiler errors requiring a few manual changes to the source:
@@ -690,14 +690,14 @@ Building Xerces-C++ on OS/2 using Visual Age C++
 
         The "From Existing" Method
 
-           1.In the xerces-c-src1_6_0\Projects\OS2\VACPP40 directory, find
+           1.In the xerces-c-src1_7_0\Projects\OS2\VACPP40 directory, find
              and edit the VAC++ configuration file project_options.icc.
            2.Change the directory on the first line 'BASE_DIR = "..."' to match the
              base directory of the Xerces-C++ sources on your system. Note that the
              directory path must use double backslashes "\\"!
            3.Save project_options.icc
            4.Start the Command Line in the VAC++ folder.
-           5.Navigate to the xerces-c-src1_6_0\Projects\OS2\VACPP40
+           5.Navigate to the xerces-c-src1_7_0\Projects\OS2\VACPP40
              directory.
            6.Run build.cmd. This does a migration build.
            7.When build.cmd finishes, review the file compiler.errors. This file
@@ -714,7 +714,7 @@ Building Xerces-C++ on OS/2 using Visual Age C++
              "Classic Rexx" by running SWITCHRX again. But you probably won't
              need to switch back since Object Rexx runs almost 100% of Classic
              Rexx programs.
-           2.In the xerces-c-src1_6_0\Projects\OS2\VACPP40 directory, run
+           2.In the xerces-c-src1_7_0\Projects\OS2\VACPP40 directory, run
              genICC.cmd. This builds the VAC++ configuration files for the sources you
              have on your system.
            3.Check the generated ICC files to ensure that they didn't pick up some
@@ -723,7 +723,7 @@ Building Xerces-C++ on OS/2 using Visual Age C++
              either edit it out of the ICC file or add them to the "ignore" array in
              genICC.cmd and re-run genICC.
            4.Start the Command Line in the VAC++ folder.
-           5.Navigate to the xerces-c-src1_6_0\Projects\OS2\VACPP40
+           5.Navigate to the xerces-c-src1_7_0\Projects\OS2\VACPP40
              directory.
            6.Run build.cmd This does a migration build.
            7.When build.cmd finishes, review the file compiler.errors. This file
@@ -737,17 +737,17 @@ Building Xerces-C++ on OS/2 using Visual Age C++
            There is an Object Rexx program that will package the binaries and headers.
            (See step 1 of the "From scratch" method on how to switch to Object Rexx.)
            The packageBinaries.cmd file is in the
-           xerces-c-src1_6_0\Projects\OS2\VACPP40 directory. Run
+           xerces-c-src1_7_0\Projects\OS2\VACPP40 directory. Run
            packageBinaries, giving the source and target directories like this:
 
-              packageBinaries -s x:\xerces-c-src1_6_0 -o x:\temp\xerces-c1_6_0-os2
+              packageBinaries -s x:\xerces-c-src1_7_0 -o x:\temp\xerces-c1_7_0-os2
 
            (Match the source directory to your system; the target directory can be anything
            you want.)
 
            If you don't want to use the Object Rexx program, you'll need to manually
            copy the "*.hpp" and "*.c" files to an include directory. (Be sure to maintain
-           the same directory structure that you find under xerces-c-src1_6_0.)
+           the same directory structure that you find under xerces-c-src1_7_0.)
 
     Building Samples
     ----------------
@@ -982,7 +982,7 @@ Building Xerces-C++ with ICU using bundled Perl scripts on Windows
 
     Extract Xerces-C++ source files from the .zip archive using WinZip, say in
     the root directory (an arbitrary drive x:). It should create a directory like
-    'x:\xerces-c-src1_6_0'.
+    'x:\xerces-c-src1_7_0'.
 
     Extract the ICU files, using WinZip, in root directory of the disk where you
     have installed Xerces-C++, sources. After extraction, there should be a new
@@ -993,10 +993,10 @@ Building Xerces-C++ with ICU using bundled Perl scripts on Windows
     Next setup the environment for MSVC using 'VCVARS32.BAT' or a similar file.
     Then at the prompt enter:
 
-        set XERCESCROOT=x:\xerces-c-src1_6_0
+        set XERCESCROOT=x:\xerces-c-src1_7_0
         set ICUROOT=x:\icu
-        cd x:\xerces-c-src1_6_0\scripts
-        perl packageBinaries.pl -s x:\xerces-c-src1_6_0 -o x:\temp\xerces-c1_6_0-win32 -t icu
+        cd x:\xerces-c-src1_7_0\scripts
+        perl packageBinaries.pl -s x:\xerces-c-src1_7_0 -o x:\temp\xerces-c1_7_0-win32 -t icu
 
     (Match the source directory to your system; the target directory can be
     anything you want.)

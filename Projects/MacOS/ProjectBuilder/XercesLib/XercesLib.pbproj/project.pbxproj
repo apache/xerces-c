@@ -4411,7 +4411,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.6.0</string>
+	<string>1.7.0</string>
 </dict>
 </plist>
 ";
