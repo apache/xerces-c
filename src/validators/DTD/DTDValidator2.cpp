@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/03 01:29:35  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.11  2000/03/02 19:55:39  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -114,17 +120,11 @@
 #include <util/BinMemInputStream.hpp>
 #include <util/FlagJanitor.hpp>
 #include <util/Janitor.hpp>
-#include <util/PlatformUtils.hpp>
 #include <util/UnexpectedEOFException.hpp>
-#include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
-#include <framework/XMLBufferMgr.hpp>
 #include <framework/XMLDocumentHandler.hpp>
-#include <framework/XMLElementDecl.hpp>
 #include <framework/XMLEntityHandler.hpp>
-#include <framework/XMLNotationDecl.hpp>
 #include <internal/EndOfEntityException.hpp>
-#include <internal/ReaderMgr.hpp>
 #include <internal/XMLScanner.hpp>
 #include <validators/DTD/ContentSpecNode.hpp>
 #include <validators/DTD/DTDEntityDecl.hpp>

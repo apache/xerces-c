@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/03 01:29:34  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.5  2000/02/17 03:53:50  rahulj
  * Added some new getters to query the parser state and
  * Finished documenting the public and protected methods.
@@ -120,8 +126,12 @@ public :
 
     /** @name Constructors and Destructor */
     //@{
-    /** Constructor with an instance of validator class to use for
-      * validation.
+    /** Construct a DOMParser, with an optional validator
+      *
+      * Constructor with an instance of validator class to use for
+      * validation. If you don't provide a validator, a default one will
+      * be created for you.
+      *
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
@@ -131,9 +141,12 @@ public :
       * Destructor
       */
     ~DOMParser();
+
     //@}
 
-    /** This method resets the state of the DOM driver and makes
+    /** Reset the parser
+      * 
+      * This method resets the state of the DOM driver and makes
       * it ready for a fresh parse run.
       */
     void reset();
@@ -145,7 +158,9 @@ public :
  
     /** @name Getter methods */
     //@{
-    /**
+
+    /** Get the DOM document
+      *
       * This method returns the DOM_Document object representing the
       * root of the document tree. This object provides the primary
       * access to the document's data.
@@ -155,39 +170,44 @@ public :
       */
     DOM_Document getDocument();
 
-    /**
-      * This method returns the installed error handler. Suitable
-      * for 'lvalue' usages.
+    /** Get a pointer to the error handler
+      *
+      * This method returns the installed error handler. If no handler
+      * has been installed, then it will be a zero pointer.
       *
       * @return The pointer to the installed error handler object.
       */
     ErrorHandler* getErrorHandler();
 
-    /**
-      * This method returns the installed error handler. Suitable
-      * for 'rvalue' usages.
+    /** Get a const pointer to the error handler
+      *
+      * This method returns the installed error handler.  If no handler
+      * has been installed, then it will be a zero pointer.
       *
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
 
-    /**
-      * This method returns the installed entity resolver. Suitable
-      * for 'lvalue' usages.
+    /** Get a pointer to the entity resolver
+      *
+      * This method returns the installed entity resolver.  If no resolver
+      * has been installed, then it will be a zero pointer.
       *
       * @return The pointer to the installed entity resolver object.
       */
     EntityResolver* getEntityResolver();
 
-    /**
-      * This method returns the installed entity resolver. Suitable
-      * for 'rvalue' usages.
+    /** Get a const pointer to the entity resolver
+      *
+      * This method returns the installed entity resolver. If no resolver
+      * has been installed, then it will be a zero pointer.
       *
       * @return A const pointer to the installed entity resolver object.
       */
     const EntityResolver* getEntityResolver() const;
 
-    /**
+    /** Get a const reference to the underlying scanner
+      *
       * This method returns a reference to the underlying scanner object.
       * It allows read only access to data maintained in the scanner.
       *
@@ -195,7 +215,8 @@ public :
       */
     const XMLScanner& getScanner() const;
 
-    /**
+    /** Get a const reference to the validator
+      *
       * This method returns a reference to the parser's installed
       * validator.
       *
@@ -203,9 +224,10 @@ public :
       */
     const XMLValidator& getValidator() const;
 
-    /**
-      * This method returns the state of the parser's namespace
-      * handling capability.
+    /** Get the 'do namespaces' flag
+      *
+      * This method returns the state of the parser's namespace processing
+      * flag.
       *
       * @return true, if the parser is currently configured to
       *         understand namespaces, false otherwise.
@@ -214,10 +236,10 @@ public :
       */
     bool getDoNamespaces() const;
 
-    /**
-      * This method returns the state of the parser's validation
-      * handling flag which controls whether validation checks
-      * are enforced or not.
+    /** Get the 'do validation' flag
+      *
+      * This method returns the state of the parser's validation handling
+      * flag which controls whether validation checks are enforced or not.
       *
       * @return true, if the parser is currently configured to
       *         do validation, false otherwise.
@@ -226,9 +248,12 @@ public :
       */
     bool getDoValidation() const;
 
-    /**
+    /** Get the 'exit on first error' flag
+      *
       * This method returns the state of the parser's
-      * exit-on-First-Fatal-Error flag.
+      * exit-on-First-Fatal-Error flag. If this flag is true, then the
+      * parse will exit the first time it sees any non-wellformed XML or
+      * any validity error. The default state is true.
       *
       * @return true, if the parser is currently configured to
       *         exit on the first fatal error, false otherwise.
@@ -237,7 +262,8 @@ public :
       */
     bool getExitOnFirstFatalError() const;
 
-    /**
+    /** Get the 'expand entity references' flag.
+      *
       * This method returns the state of the parser's expand entity
       * references flag.
       *
@@ -247,6 +273,7 @@ public :
       * @see #setExpandEntityReferences
       */
     bool getExpandEntityReferences() const;
+
     //@}
 
 
@@ -256,9 +283,14 @@ public :
 
     /** @name Setter methods */
     //@{
-    /**
-      * This method allows applications to install their own error
-      * handler to trap error and warning messages.
+
+    /** Set the error handler
+      *
+      * This method allows applications to install their own error handler
+      * to trap error and warning messages.
+      *
+      * <i>Any previously set handler is merely dropped, since the parser
+      * does not own them.</i>
       *
       * @param handler  A const pointer to the user supplied error
       *                 handler.
@@ -267,11 +299,15 @@ public :
       */
     void setErrorHandler(ErrorHandler* const handler);
 
-    /**
+    /** Set the entity resolver
+      *
       * This method allows applications to install their own entity
       * resolver. By installing an entity resolver, the applications
       * can trap and potentially redirect references to external
       * entities.
+      *
+      * <i>Any previously set resolver is merely dropped, since the parser
+      * does not own them.</i>
       *
       * @param handler  A const pointer to the user supplied entity
       *                 resolver.
@@ -280,17 +316,18 @@ public :
       */
     void setEntityResolver(EntityResolver* const handler);
 
-    /**
+    /** Set the 'do namespaces' flag
+      *
       * This method allows users to enable or disable the parser's
       * namespace processing. When set to true, parser starts enforcing
-      * all the constraints / rules specified by the NameSpace
+      * all the constraints and rules specified by the NameSpace
       * specification.
       *
-      * <p>The parser's default state is: false.</p>
+      * The parser's default state is: false.
       *
-      * <p>This flag is ignored by the underlying scanner if the installed
+      * This flag is ignored by the underlying scanner if the installed
       * validator indicates that namespace constraints should be
-      * enforced.</p>
+      * enforced.
       *
       * @param newState The value specifying whether NameSpace rules should
       *                 be enforced or not.
@@ -299,7 +336,8 @@ public :
       */
     void setDoNamespaces(const bool newState);
 
-    /**
+    /** Set the 'do validation' flag
+      *
       * This method allows users to enable or disable the parser's validation
       * checks.
       *
@@ -314,14 +352,15 @@ public :
       */
     void setDoValidation(const bool newState);
 
-    /**
+    /** Set the 'exit on first error' flag
+      *
       * This method allows users to set the parser's behaviour when it
       * encounters the first fatal error. If set to true, the parser
       * will exit at the first fatal error. If false, then it will
       * report the error and continue processing.
       *
-      * <p>The default value is 'true' and the parser exits on the
-      * first fatal error.</p>
+      * The default value is 'true' and the parser exits on the
+      * first fatal error.
       *
       * @param newState The value specifying whether the parser should
       *                 continue or exit when it encounters the first
@@ -331,20 +370,21 @@ public :
       */
     void setExitOnFirstFatalError(const bool newState);
 
-    /**
-      * This method allows the user to specify whether the parser
-      * should expand all entity reference nodes. When the
-      * 'do expansion' flag is true, the DOM tree does not have
-      * any entity reference nodes. Is is replaced by the sub-tree
-      * representing the replacement text  of the entity. When
-      * the 'do expansion' flag is false, the DOM tree contains an
-      * extra entity reference node, whose children is the
+    /** Set the 'expand entity references' flag
+      *
+      * This method allows the user to specify whether the parser should
+      * expand all entity reference nodes. When the 'do expansion' flag is
+      * true, the DOM tree does not have any entity reference nodes. It is
+      * replaced by the sub-tree representing the replacement text of the
+      * entity. When the 'do expansion' flag is false, the DOM tree
+      * contains an extra entity reference node, whose children is the
       * sub tree of the replacement text.
       *
       * @param expand The new state of the expand entity reference
       *               flag.
       */
     void setExpandEntityReferences(const bool expand);
+
     //@}
 
 
@@ -354,7 +394,9 @@ public :
 
     /** @name Parsing methods */
     //@{
-    /**
+
+    /** Parse via an input source object
+      *
       * This method invokes the parsing process on the XML file specified
       * by the InputSource parameter. This API is borrowed from the
       * SAX Parser interface.
@@ -368,7 +410,8 @@ public :
       */
     void parse(const InputSource& source, const bool reuseValidator = false);
 
-    /**
+    /** Parse via a file path or URL
+      *
       * This method invokes the parsing process on the XML file specified by
       * the Unicode string parameter 'systemId'. This method is borrowed
       * from the SAX Parser interface.
@@ -383,7 +426,8 @@ public :
       */
     void parse(const XMLCh* const systemId, const bool reuseValidator = false);
 
-    /**
+    /** Parse via a file path or URL (in the local code page)
+      *
       * This method invokes the parsing process on the XML file specified by
       * the native char* string parameter 'systemId'.
       *
@@ -395,29 +439,30 @@ public :
       */
     void parse(const char* const systemId, const bool reuseValidator = false);
 
-    /**
-      * <p>This method is used to start a progressive parse on a XML file.
-      * To continue parsing, subsequent calls must be to the parseNext
-      * method.<p>
+    /** Begin a progressive parse operation
       *
-      * <p>It scans through the prolog and returns a token to be used on
+      * This method is used to start a progressive parse on a XML file.
+      * To continue parsing, subsequent calls must be to the parseNext
+      * method.
+      *
+      * It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
       * token is legal and ready for further use. If it returns false, then
       * the scan of the prolog failed and the token is not going to work on
-      * subsequent scanNext() calls.</p>
+      * subsequent scanNext() calls.
       *
       * @param systemId A pointer to a Unicode string represting the path
       *                 to the XML file to be parsed.
-      * @param toFill A token maintaing state information to maintain
-      *               internal consistency between invocation of 'parseNext'
-      *               calls.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or not for this parsing
-      *                       process.
+      * @param toFill   A token maintaing state information to maintain
+      *                 internal consistency between invocation of 'parseNext'
+      *                 calls.
+      * @param reuseValidator The flag indicating whether the existing
+      *                 validator should be reused or not for this parsing
+      *                 process.
       * @return 'true', if successful in parsing the prolog. It indicates the
-      *         user can go ahead with parsing the rest of the file. It returns
-      *         'false' to indicate that the parser could not find a proper
-      *         prolog definition.
+      *         user can go ahead with parsing the rest of the file. It
+      *         returns 'false' to indicate that the parser could not parse
+      *         the prolog.
       *
       * @see #parseNext
       * @see #parseFirst(char*,...)
@@ -430,30 +475,31 @@ public :
         , const bool            reuseValidator = false
     );
 
-    /**
-      * <p>This method is used to start a progressive parse on a XML file.
-      * To continue parsing, subsequent calls must be to the parseNext
-      * method.<p>
+    /** Begin a progressive parse operation
       *
-      * <p>It scans through the prolog and returns a token to be used on
+      * This method is used to start a progressive parse on a XML file.
+      * To continue parsing, subsequent calls must be to the parseNext
+      * method.
+      *
+      * It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
       * token is legal and ready for further use. If it returns false, then
       * the scan of the prolog failed and the token is not going to work on
-      * subsequent scanNext() calls.</p>
+      * subsequent scanNext() calls.
       *
       * @param systemId A pointer to a regular native string represting
       *                 the path to the XML file to be parsed.
-      * @param toFill A token maintaing state information to maintain
-      *               internal consistency between invocation of 'parseNext'
-      *               calls.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or not for this parsing
-      *                       run.
+      * @param toFill   A token maintaing state information to maintain
+      *                 internal consistency between invocation of 'parseNext'
+      *                 calls.
+      * @param reuseValidator The flag indicating whether the existing
+      *                 validator should be reused or not for this parsing
+      *                 run.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
-      *         user can go ahead with parsing the rest of the file. It returns
-      *         'false' to indicate that the parser could not find a proper
-      *         prolog definition.
+      *         user can go ahead with parsing the rest of the file. It
+      *         returns 'false' to indicate that the parser could not parse
+      *         the prolog.
       *
       * @see #parseNext
       * @see #parseFirst(XMLCh*,...)
@@ -466,30 +512,31 @@ public :
         , const bool            reuseValidator = false
     );
 
-    /**
-      * <p>This method is used to start a progressive parse on a XML file.
-      * To continue parsing, subsequent calls must be to the parseNext
-      * method.<p>
+    /** Begin a progressive parse operation
       *
-      * <p>It scans through the prolog and returns a token to be used on
+      * This method is used to start a progressive parse on a XML file.
+      * To continue parsing, subsequent calls must be to the parseNext
+      * method.
+      *
+      * It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
       * token is legal and ready for further use. If it returns false, then
       * the scan of the prolog failed and the token is not going to work on
-      * subsequent scanNext() calls.</p>
+      * subsequent scanNext() calls.
       *
-      * @param source A const reference to the InputSource object which
+      * @param source   A const reference to the InputSource object which
       *                 points to the XML file to be parsed.
-      * @param toFill A token maintaing state information to maintain
-      *               internal consistency between invocation of 'parseNext'
-      *               calls.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or not for this parsing
-      *                       process.
+      * @param toFill   A token maintaing state information to maintain
+      *                 internal consistency between invocation of 'parseNext'
+      *                 calls.
+      * @param reuseValidator The flag indicating whether the existing
+      *                 validator should be reused or not for this parsing
+      *                 process.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
-      *         user can go ahead with parsing the rest of the file. It returns
-      *         'false' to indicate that the parser could not find a proper
-      *         prolog definition.
+      *         user can go ahead with parsing the rest of the file. It
+      *         returns 'false' to indicate that the parser could not parse
+      *         the prolog.
       *
       * @see #parseNext
       * @see #parseFirst(XMLCh*,...)
@@ -502,12 +549,13 @@ public :
         , const bool            reuseValidator = false
     );
 
-    /**
-      * <p>This method is used to continue with progressive parsing of
-      * XML files started by a call to 'parseFirst' method.<p>
+    /** Continue a progressive parse operation
       *
-      * <p>It parses the XML file and stops as soon as it comes across
-      * a XML token (as defined in the XML specification).</p>
+      * This method is used to continue with progressive parsing of
+      * XML files started by a call to 'parseFirst' method.
+      *
+      * It parses the XML file and stops as soon as it comes across
+      * a XML token (as defined in the XML specification).
       *
       * @param token A token maintaing state information to maintain
       *              internal consistency between invocation of 'parseNext'
@@ -524,6 +572,34 @@ public :
       * @see #parseFirst(InputSource&,...)
       */
     bool parseNext(XMLPScanToken& token);
+
+    /** Reset the parser after a progressive parse
+      *
+      * If a progressive parse loop exits before the end of the document
+      * is reached, the parser has no way of knowing this. So it will leave
+      * open any files or sockets or memory buffers that were in use at
+      * the time that the parse loop exited.
+      *
+      * The next parse operation will cause these open files and such to
+      * be closed, but the next parse operation might occur at some unknown
+      * future point. To avoid this problem, you should reset the parser if
+      * you exit the loop early.
+      *
+      * If you exited because of an error, then this cleanup will be done
+      * for you. Its only when you exit the file prematurely of your own
+      * accord, because you've found what you wanted in the file most
+      * likely.
+      *
+      * @param token A token maintaing state information to maintain
+      *              internal consistency between invocation of 'parseNext'
+      *              calls.
+      *
+      * @see #parseFirst(XMLCh*,...)
+      * @see #parseFirst(char*,...)
+      * @see #parseFirst(InputSource&,...)
+      */
+    void parseReset(XMLPScanToken& token);
+
     //@}
 
 
@@ -534,7 +610,9 @@ public :
 
     /** @name Implementation of the XMLErrorReporter interface. */
     //@{
-    /**
+
+    /** Handle errors reported from the parser
+      *
       * This method is used to report back errors found while parsing the
       * XML file. This method is also borrowed from the SAX specification.
       * It calls the corresponding user installed Error Handler method:
@@ -569,13 +647,13 @@ public :
         , const unsigned int                colNum
     );
 
-    /**
-      * This method allows the user installed Error Handler
-      * callback to 'reset' itself.
+    /** Reset any error data before a new parse
+     *
+      * This method allows the user installed Error Handler callback to
+      * 'reset' itself.
       *
       * <b><font color="#FF0000">This method is a no-op for this DOM
       * implementation.</font></b>
-      *
       */
     virtual void resetErrors();
     //@}
@@ -587,7 +665,9 @@ public :
 
     /** @name Implementation of the XMLEntityHandler interface. */
     //@{
-    /**
+
+    /** Handle an end of input source event
+      *
       * This method is used to indicate the end of parsing of an external
       * entity file.
       *
@@ -600,7 +680,8 @@ public :
       */
     virtual void endInputSource(const InputSource& inputSource);
 
-    /**
+    /** Expand a system id
+      *
       * This method allows an installed XMLEntityHandler to further
       * process any system id's of enternal entities encountered in
       * the XML file being parsed, such as redirection etc.
@@ -620,7 +701,8 @@ public :
         ,       XMLBuffer&      toFill
     );
 
-    /**
+    /** Reset any entity handler information
+      *
       * This method allows the installed XMLEntityHandler to reset
       * itself.
       *
@@ -629,11 +711,12 @@ public :
       */
     virtual void resetEntities();
 
-    /**
+    /** Resolve a public/system id
+      *
       * This method allows a user installed entity handler to further
-      * process any pointers to external entities. The applications
-      * can implement 'redirection' via this callback. This method
-      * is also borrowed from the SAX specification.
+      * process any pointers to external entities. The applications can
+      * implement 'redirection' via this callback. This method is also
+      * borrowed from the SAX specification.
       *
       * @param publicId A const pointer to a Unicode string representing the
       *                 public id of the entity just parsed.
@@ -649,11 +732,12 @@ public :
         , const XMLCh* const    systemId
     );
 
-    /**
-      * This method is used to indicate the start of parsing an
-      * external entity file.
+    /** Handle a 'start input source' event
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * This method is used to indicate the start of parsing an external
+      * entity file.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this DOM parse
       * implementation.</font></b>
       *
       * @param inputSource A const reference to the InputSource object
@@ -661,6 +745,7 @@ public :
       *                    being parsed.
       */
     virtual void startInputSource(const InputSource& inputSource);
+
     //@}
 
 
@@ -671,10 +756,12 @@ public :
 
     /** @name Implementation of the XMLDocumentHandler interface. */
     //@{
-    /**
-      * This method is used to report all the characters scanned
-      * by the parser. This DOM implementation stores this data
-      * in the appropriate DOM node, creating one if necessary.
+
+    /** Handle document character events
+      *
+      * This method is used to report all the characters scanned by the
+      * parser. This DOM implementation stores this data in the appropriate
+      * DOM node, creating one if necessary.
       *
       * @param chars   A const pointer to a Unicode string representing the
       *                character data.
@@ -689,7 +776,8 @@ public :
         , const bool            cdataSection
     );
 
-    /**
+    /** Handle a document comment event
+      *
       * This method is used to report any comments scanned by the parser.
       * A new comment node is created which stores this data.
       *
@@ -701,10 +789,11 @@ public :
         const   XMLCh* const    comment
     );
 
-    /**
-      * This method is used to report any PI scanned by the parser.
-      * A new PI node is created and appended as a child of the
-      * current node in the tree.
+    /** Handle a document PI event
+      *
+      * This method is used to report any PI scanned by the parser. A new
+      * PI node is created and appended as a child of the current node in
+      * the tree.
       *
       * @param target A const pointer to a Unicode string representing the
       *               target of the PI declaration.
@@ -718,14 +807,17 @@ public :
         , const XMLCh* const    data
     );
 
-    /**
-      * This method is used to indicate the end of root element
-      * was just scanned by the parser.
+    /** Handle the end of document event
+      *
+      * This method is used to indicate the end of the current document.
       */
     virtual void endDocument();
 
-    /**
-      * This method is used to indicate the end tag of an element.
+    /** Handle and end of element event
+      *
+      * This method is used to indicate the end tag of an element. The
+      * DOMParse pops the current element off the top of the element
+      * stack, and make it the new current element.
       *
       * @param elemDecl A const reference to the object containing element
       *                 declaration information.
@@ -741,7 +833,8 @@ public :
         , const bool            isRoot
     );
 
-    /**
+    /** Handle and end of entity reference event
+      *
       * This method is used to indicate that an end of an entity reference
       * was just scanned.
       *
@@ -753,16 +846,17 @@ public :
         const   XMLEntityDecl&  entDecl
     );
 
-    /**
-      * This method is used to report all the whitespace characters,
-      * which are determined to be 'ignorable'. This distinction
-      * between characters is only made, if validation is enabled.
+    /** Handle an ignorable whitespace vent
       *
-      * <p>Any whitespace before content is ignored. If the current
-      * node is already of type DOM_Node::TEXT_NODE, then these
-      * whitespaces are appended, otherwise a new Text node is
-      * created which stores this data. Essentially all ignoreable
-      * characters are collected in one node.</p>
+      * This method is used to report all the whitespace characters, which
+      * are determined to be 'ignorable'. This distinction between characters
+      * is only made, if validation is enabled.
+      *
+      * Any whitespace before content is ignored. If the current node is
+      * already of type DOM_Node::TEXT_NODE, then these whitespaces are
+      * appended, otherwise a new Text node is created which stores this
+      * data. Essentially all contiguous ignorable characters are collected
+      * in one node.
       *
       * @param chars   A const pointer to a Unicode string representing the
       *                ignorable whitespace character data.
@@ -777,40 +871,43 @@ public :
         , const bool            cdataSection
     );
 
-    /**
-      * This method allows the user installed Document Handler
-      * to 'reset' itself, freeing all the memory resources. The
-      * scanner calls this method before starting a new parse
-      * event.
+    /** Handle a document reset event
+      *
+      * This method allows the user installed Document Handler to 'reset'
+      * itself, freeing all the memory resources. The scanner calls this
+      * method before starting a new parse event.
       */
     virtual void resetDocument();
 
-    /**
+    /** Handle a start document event
+      *
       * This method is used to report the start of the parsing process.
       */
     virtual void startDocument();
 
-    /**
+    /** Handle a start element event
+      *
       * This method is used to report the start of an element. It is
       * called at the end of the element, by which time all attributes
       * specified are also parsed. A new DOM Element node is created
-      * along with as many attribute nodes as required. This new
-      * element is added appended as a child of the current node in
-      * the tree.
+      * along with as many attribute nodes as required. This new element
+      * is added appended as a child of the current node in the tree, and
+      * then replaces it as the current node (if the isEmpty flag is false.)
       * 
       * @param elemDecl A const reference to the object containing element
       *                 declaration information.
       * @param urlId    An id referring to the namespace prefix, if
       *                 namespaces setting is switched on.
       * @param elemPrefix A const pointer to a Unicode string containing
-      *                   the namespace prefix for this element. Applicable
-      *                   only when namespace processing is enabled.
-      * @param attrList  A const reference to the object containing the
-      *                  list of attributes just scanned for this element.
+      *                 the namespace prefix for this element. Applicable
+      *                 only when namespace processing is enabled.
+      * @param attrList A const reference to the object containing the
+      *                 list of attributes just scanned for this element.
       * @param attrCount A count of number of attributes in the list
-      *                  specified by the parameter 'attrList'.
+      *                 specified by the parameter 'attrList'.
       * @param isEmpty  A flag indicating whether this is an empty element
-      *                 or not.
+      *                 or not. If empty, then no endElement() call will
+      *                 be made.
       * @param isRoot   A flag indicating whether this element was the
       *                 root element.
       * @see DocumentHandler#startElement
@@ -826,7 +923,8 @@ public :
         , const bool                    isRoot
     );
 
-    /**
+    /** Handle a start entity reference event
+      *
       * This method is used to indicate the start of an entity reference.
       * If the expand entity reference flag is true, then a new
       * DOM Entity reference node is created.
@@ -839,7 +937,8 @@ public :
         const   XMLEntityDecl&  entDecl
     );
 
-    /**
+    /** Handle an XMLDecl event
+      *
       * This method is used to report the XML decl scanned by the parser.
       * Refer to the XML specification to see the meaning of parameters.
       *
@@ -873,9 +972,13 @@ protected :
 
     /** @name Protected getter methods */
     //@{
-    /**
+    /** Get the current DOM node
+      *
+      * This provides derived classes with access to the current node, i.e.
+      * the node to which new nodes are being added.
       */
     DOM_Node getCurrentNode();
+
     //@}
 
 
@@ -885,15 +988,18 @@ protected :
 
     /** @name Protected setter methods */
     //@{
-    /**
-      * This method sets the current node maintained inside the
-      * parser to the one specified.
+
+    /** Set the current DOM node
+      *
+      * This method sets the current node maintained inside the parser to
+      * the one specified.
       *
       * @param toSet The DOM node which will be the current node.
       */
     void setCurrentNode(DOM_Node toSet);
 
-    /**
+    /** Set the document node
+      *
       * This method sets the DOM Document node to the one specified.
       *
       * @param toSet The new DOM Document node for this XML document.

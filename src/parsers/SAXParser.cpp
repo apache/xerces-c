@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/03 01:29:34  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.6  2000/03/02 19:54:33  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -449,6 +455,12 @@ bool SAXParser::parseFirst( const   InputSource&    source
 bool SAXParser::parseNext(XMLPScanToken& token)
 {
     return fScanner->scanNext(token);
+}
+
+void SAXParser::parseReset(XMLPScanToken& token)
+{
+    // Reset the scanner
+    fScanner->scanReset(token);
 }
 
 

@@ -57,6 +57,12 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/03 01:29:36  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.5  2000/03/02 19:55:52  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -714,8 +720,13 @@ extern "C" int wmain(int argC, XMLCh** argV)
 
     catch(const ErrReturns retVal)
     {
+        // And call the termination method
+        XMLPlatformUtils::Terminate();
         return retVal;
     }
+
+    // And call the termination method
+    XMLPlatformUtils::Terminate();
 
     // Went ok, so return success
     return ErrReturn_Success;

@@ -56,14 +56,20 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/03 01:29:32  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.11  2000/03/02 19:54:30  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
  * available elsewhere.
  *
  * Revision 1.10  2000/02/29 22:54:46  aruna1
- * MultiThreaded problem for solaris with CC compiler resolved in scanXMLDecl()
- * function.
+ * MultiThreaded problem for solaris with CC compiler resolved in
+ * scanXMLDecl() function.
  *
  * Revision 1.9  2000/02/06 07:47:54  rahulj
  * Year 2K copyright swat.
@@ -86,12 +92,12 @@
  * needed info to the place where the error was issued.
  *
  * Revision 1.5  2000/01/12 00:15:04  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
+ * Changes to deal with multiply nested, relative pathed, entities and to
+ * deal with the new URL class changes.
  *
  * Revision 1.4  1999/12/08 00:15:06  roddey
- * Some small last minute fixes to get into the 3.0.1 build that is going to be
- * going out anyway for platform fixes.
+ * Some small last minute fixes to get into the 3.0.1 build that is going to
+ * be going out anyway for platform fixes.
  *
  * Revision 1.3  1999/12/02 19:02:57  roddey
  * Get rid of a few statically defined XMLMutex objects, and lazy eval them
@@ -106,10 +112,11 @@
  * Initial checkin
  *
  * Revision 1.7  1999/11/08 20:56:54  droddey
- * If the main xml entity does not exist, we need to get the error handling for that
- * inside the main XMLScanner::scanDocument() try block so that it gets reported
- * in the normal way. We have to add a little extra safety code because, when this
- * happens, there is no reader on the reader stack to get position ino from.
+ * If the main xml entity does not exist, we need to get the error handling
+ * for that inside the main XMLScanner::scanDocument() try block so that it
+ * gets reported in the normal way. We have to add a little extra safety
+ * code because, when this happens, there is no reader on the reader stack
+ * to get position ino from.
  *
  * Revision 1.6  1999/11/08 20:44:51  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -209,7 +216,7 @@ XMLScanner::XMLScanner(XMLValidator* const validator) :
     , fRawAttrList(0)
     , fReuseValidator(false)
     , fScannerId(0)
-    , fSequenceId(0xFFFFFFFF)
+    , fSequenceId(0)
     , fStandalone(false)
     , fValidator(validator)
 {
@@ -233,7 +240,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const   docHandler
     , fRawAttrList(0)
     , fReuseValidator(false)
     , fScannerId(0)
-    , fSequenceId(0xFFFFFFFF)
+    , fSequenceId(0)
     , fStandalone(false)
     , fValidator(validator)
 {
@@ -720,7 +727,7 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
 
         catch(...)
         {
-            // REset and rethrow user error
+            // Reset and rethrow user error
             fReaderMgr.reset();
             throw;
         }
@@ -742,6 +749,20 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
         fReaderMgr.reset();
 
     return retVal;
+}
+
+
+void XMLScanner::scanReset(XMLPScanToken& token)
+{
+    // Make sure this token is still legal
+    if (!isLegalToken(token))
+        ThrowXML(RuntimeException, XMLExcepts::Scan_BadPScanToken);
+
+    // Reset the reader manager
+    fReaderMgr.reset();
+
+    // And invalidate any tokens by bumping our sequence number
+    fSequenceId++;
 }
 
 

@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/03 01:29:35  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.5  2000/03/02 19:55:39  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -88,15 +94,9 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/Janitor.hpp>
-#include <util/XMLMsgLoader.hpp>
 #include <util/XMLUni.hpp>
 #include <internal/ReaderMgr.hpp>
 #include <internal/XMLScanner.hpp>
-#include <framework/XMLBuffer.hpp>
-#include <framework/XMLContentModel.hpp>
-#include <framework/XMLElementDecl.hpp>
-#include <framework/XMLEntityDecl.hpp>
-#include <framework/XMLNotationDecl.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 #include <validators/DTD/DocTypeHandler.hpp>
 

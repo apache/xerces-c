@@ -60,6 +60,12 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.11  2000/03/03 01:29:33  roddey
+* Added a scanReset()/parseReset() method to the scanner and
+* parsers, to allow for reset after early exit from a progressive parse.
+* Added calls to new Terminate() call to all of the samples. Improved
+* documentation in SAX and DOM parsers.
+*
 * Revision 1.10  2000/03/02 19:54:33  roddey
 * This checkin includes many changes done while waiting for the
 * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -159,10 +165,13 @@ DOMParser::~DOMParser()
 
 void DOMParser::reset()
 {
+    //
+    //  Note: DOM Documents are reference counted. Doing this assignment
+    //  will cause the old one to go away unless application code is also
+    //  holding a reference to it.
+    //
     fDocument = DOM_Document::createDocument();
-    //   Note:  DOM Documents are reference counted.  Doing this 
-    //   assignment will cause the old one to go away unless 
-    //   application code is also holding a reference to it.
+
     fCurrentParent   = 0;
     fCurrentNode     = 0;
     fParseInProgress = false;
@@ -353,6 +362,12 @@ bool DOMParser::parseNext(XMLPScanToken& token)
     return fScanner->scanNext(token);
 }
 
+void DOMParser::parseReset(XMLPScanToken& token)
+{
+    // Reset the scanner, and then reset the parser
+    fScanner->scanReset(token);
+    reset();
+}
 
 
 // ---------------------------------------------------------------------------

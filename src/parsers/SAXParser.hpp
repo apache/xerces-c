@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/03 01:29:34  roddey
+ * Added a scanReset()/parseReset() method to the scanner and
+ * parsers, to allow for reset after early exit from a progressive parse.
+ * Added calls to new Terminate() call to all of the samples. Improved
+ * documentation in SAX and DOM parsers.
+ *
  * Revision 1.6  2000/02/17 03:54:27  rahulj
  * Added some new getters to query the parser state and
  * clarified the documentation.
@@ -435,29 +441,33 @@ public :
 
     /** @name Progressive scan methods */
     //@{
-    /**
-      * <p>This method is used to start a progressive parse on a XML file.
-      * To continue parsing, subsequent calls must be to the parseNext
-      * method.<p>
+
+    /** Begin a progressive parse operation
       *
-      * <p>It scans through the prolog and returns a token to be used on
+      * This method is used to start a progressive parse on a XML file.
+      * To continue parsing, subsequent calls must be to the parseNext
+      * method.
+      *
+      * It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
       * token is legal and ready for further use. If it returns false, then
       * the scan of the prolog failed and the token is not going to work on
-      * subsequent scanNext() calls.</p>
+      * subsequent scanNext() calls.
       *
       * @param systemId A pointer to a Unicode string represting the path
       *                 to the XML file to be parsed.
-      * @param toFill A token maintaing state information to maintain
-      *               internal consistency between invocation of 'parseNext'
-      *               calls.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or not for this parsing
-      *                       run.
+      * @param toFill   A token maintaing state information to maintain
+      *                 internal consistency between invocation of 'parseNext'
+      *                 calls.
+      * @param reuseValidator The flag indicating whether the existing
+      *                 validator
+      *                 should be reused or not for this parsing
+      *                  run.
+      *
       * @return 'true', if successful in parsing the prolog. It indicates the
-      *         user can go ahead with parsing the rest of the file. It returns
-      *         'false' to indicate that the parser could not find a proper
-      *         prolog definition.
+      *         user can go ahead with parsing the rest of the file. It
+      *         returns 'false' to indicate that the parser could parse the
+      *         prolog (which means the token will not be valid.)
       *
       * @see #parseNext
       * @see #parseFirst(char*,...)
@@ -470,30 +480,31 @@ public :
         , const bool            reuseValidator = false
     );
 
-    /**
-      * <p>This method is used to start a progressive parse on a XML file.
-      * To continue parsing, subsequent calls must be to the parseNext
-      * method.<p>
+    /** Begin a progressive parse operation
       *
-      * <p>It scans through the prolog and returns a token to be used on
+      * This method is used to start a progressive parse on a XML file.
+      * To continue parsing, subsequent calls must be to the parseNext
+      * method.
+      *
+      * It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
       * token is legal and ready for further use. If it returns false, then
       * the scan of the prolog failed and the token is not going to work on
-      * subsequent scanNext() calls.</p>
+      * subsequent scanNext() calls.
       *
       * @param systemId A pointer to a regular native string represting
       *                 the path to the XML file to be parsed.
-      * @param toFill A token maintaing state information to maintain
-      *               internal consistency between invocation of 'parseNext'
-      *               calls.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or not for this parsing
+      * @param toFill   A token maintaing state information to maintain
+      *                 internal consIstency between invocation of 'parseNext'
+      *                 calls.
+      * @param reuseValidator The flag indicating whether the existing
+      *                 validator should be reused or not for this parsing
       *                       run.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
-      *         user can go ahead with parsing the rest of the file. It returns
-      *         'false' to indicate that the parser could not find a proper
-      *         prolog definition.
+      *         user can go ahead with parsing the rest of the file. It
+      *         returns 'false' to indicate that the parser could not parse
+      *         the prolog.
       *
       * @see #parseNext
       * @see #parseFirst(XMLCh*,...)
@@ -506,30 +517,31 @@ public :
         , const bool            reuseValidator = false
     );
 
-    /**
-      * <p>This method is used to start a progressive parse on a XML file.
-      * To continue parsing, subsequent calls must be to the parseNext
-      * method.<p>
+    /** Begin a progressive parse operation
       *
-      * <p>It scans through the prolog and returns a token to be used on
+      * This method is used to start a progressive parse on a XML file.
+      * To continue parsing, subsequent calls must be to the parseNext
+      * method.
+      *
+      * It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
       * token is legal and ready for further use. If it returns false, then
       * the scan of the prolog failed and the token is not going to work on
-      * subsequent scanNext() calls.</p>
+      * subsequent scanNext() calls.
       *
-      * @param source A const reference to the InputSource object which
+      * @param source   A const reference to the InputSource object which
       *                 points to the XML file to be parsed.
-      * @param toFill A token maintaing state information to maintain
-      *               internal consistency between invocation of 'parseNext'
-      *               calls.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or not for this parsing
-      *                       process.
+      * @param toFill   A token maintaing state information to maintain
+      *                 internal consistency between invocation of 'parseNext'
+      *                 calls.
+      * @param reuseValidator The flag indicating whether the existing
+      *                 validator should be reused or not for this parsing
+      *                 process.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
-      *         user can go ahead with parsing the rest of the file. It returns
-      *         'false' to indicate that the parser could not find a proper
-      *         prolog definition.
+      *         user can go ahead with parsing the rest of the file. It
+      *         returns 'false' to indicate that the parser could not parse
+      *         the prolog.
       *
       * @see #parseNext
       * @see #parseFirst(XMLCh*,...)
@@ -542,14 +554,15 @@ public :
         , const bool            reuseValidator = false
     );
 
-    /**
-      * <p>This method is used to continue with progressive parsing of
-      * XML files started by a call to 'parseFirst' method.<p>
+    /** Continue a progressive parse operation
       *
-      * <p>It parses the XML file and stops as soon as it comes across
+      * This method is used to continue with progressive parsing of
+      * XML files started by a call to 'parseFirst' method.
+      *
+      * It parses the XML file and stops as soon as it comes across
       * a XML token (as defined in the XML specification). Relevant
       * callback handlers are invoked as required by the SAX
-      * specification.</p>
+      * specification.
       *
       * @param token A token maintaing state information to maintain
       *              internal consistency between invocation of 'parseNext'
@@ -566,6 +579,30 @@ public :
       * @see #parseFirst(InputSource&,...)
       */
     bool parseNext(XMLPScanToken& token);
+
+    /** Reset the parser after a progressive parse
+      *
+      * If a progressive parse loop exits before the end of the document
+      * is reached, the parser has no way of knowing this. So it will leave
+      * open any files or sockets or memory buffers that were in use at
+      * the time that the parse loop exited.
+      *
+      * The next parse operation will cause these open files and such to
+      * be closed, but the next parse operation might occur at some unknown
+      * future point. To avoid this problem, you should reset the parser if
+      * you exit the loop early.
+      *
+      * If you exited because of an error, then this cleanup will be done
+      * for you. Its only when you exit the file prematurely of your own
+      * accord, because you've found what you wanted in the file most
+      * likely.
+      *
+      * @param token A token maintaing state information to maintain
+      *              internal consistency between invocation of 'parseNext'
+      *              calls.
+      */
+    void parseReset(XMLPScanToken& token);
+
     //@}
 
 
