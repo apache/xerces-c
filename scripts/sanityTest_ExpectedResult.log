@@ -921,18 +921,18 @@ DOM reference counted memory alloction statistics:
 DOM Memory Test.
 DOM reference counted memory alloction statistics:
     live  string handles:   0
-    total string handles:   489
+    total string handles:   505
     live  string buffers:   0
-    total string buffers:   522
+    total string buffers:   538
     live  nodeImpls:        0
     total nodeImpls:        182
     live  NamedNodeMaps:    0
     total NamedNodeMaps:    37
 DOM reference counted memory alloction statistics:
     live  string handles:   0
-    total string handles:   238
+    total string handles:   240
     live  string buffers:   0
-    total string buffers:   269
+    total string buffers:   271
     live  nodeImpls:        0
     total nodeImpls:        220
     live  NamedNodeMaps:    0

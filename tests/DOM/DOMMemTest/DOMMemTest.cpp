@@ -1005,26 +1005,39 @@ void DOMNSTests()
     //                    outside of the TESPROLOG/TESTEPILOG macros to avoid spurious
     //                    reports of memory leaks.
     //
+    // Also test the case-insensitive
+    //
     {
         DOM_DOMImplementation  impl;
-        TASSERT(impl.hasFeature("XML", "2.0")    == true);
-        TASSERT(impl.hasFeature("XML", "")       == true);
+        TASSERT(impl.hasFeature("XmL", "2.0")    == true);
+        TASSERT(impl.hasFeature("xML", "")       == true);
         //  We also support 1.0
-        TASSERT(impl.hasFeature("XML", "1.0")    == true);
-        TASSERT(impl.hasFeature("XML", "3.0")    == false);
-        TASSERT(impl.hasFeature("Traversal", "") == true);
+        TASSERT(impl.hasFeature("XMl", "1.0")    == true);
+        TASSERT(impl.hasFeature("xMl", "3.0")    == false);
+        TASSERT(impl.hasFeature("TrAveRsal", "") == true);
     }
 
 
     TESTPROLOG;
     {
         DOM_DOMImplementation  impl;
-        TASSERT(impl.hasFeature("XML", "2.0")    == true);
         TASSERT(impl.hasFeature("XML", "")       == true);
-        //  We also support 1.0
         TASSERT(impl.hasFeature("XML", "1.0")    == true);
+        TASSERT(impl.hasFeature("XML", "2.0")    == true);
         TASSERT(impl.hasFeature("XML", "3.0")    == false);
+
+        TASSERT(impl.hasFeature("Core", "")       == true);
+        TASSERT(impl.hasFeature("coRe", "1.0")    == true);
+        TASSERT(impl.hasFeature("core", "2.0")    == true);
+        TASSERT(impl.hasFeature("cORe", "3.0")    == false);
+
         TASSERT(impl.hasFeature("Traversal", "") == true);
+        TASSERT(impl.hasFeature("traversal", "1.0") == false);
+        TASSERT(impl.hasFeature("TraVersal", "2.0") == true);
+
+        TASSERT(impl.hasFeature("Range", "")        == true);
+        TASSERT(impl.hasFeature("raNge", "1.0")     == false);
+        TASSERT(impl.hasFeature("RaNge", "2.0")     == true);
 
 
         TASSERT(impl.hasFeature("HTML", "")           == false);
@@ -1037,7 +1050,6 @@ void DOMNSTests()
         TASSERT(impl.hasFeature("MouseEvents", "")    == false);
         TASSERT(impl.hasFeature("MutationEvents", "") == false);
         TASSERT(impl.hasFeature("HTMLEvents", "")     == false);
-        TASSERT(impl.hasFeature("Range", "")          == false);
     }
     TESTEPILOG;
 
