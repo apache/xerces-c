@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.4  1999/11/12 21:14:32  rahulj
+# fixed ver number.
+#
 # Revision 1.3  1999/11/12 20:38:48  rahulj
 # Replaced XML4CROOT with XERCESCROOT.
 #
@@ -99,7 +102,7 @@ LIB_DIR = ${XERCESCROOT}/lib
 LIB = ${XERCESCROOT}/lib
 LIBNAME = libxerces-c
 THISLIB = ${LIB}/${LIBNAME}
-VER = 3_0
+VER = 1_0
 
 ALL_OBJECTS = $(wildcard ${ALL_OBJECTS_DIR}/*.o)
 
