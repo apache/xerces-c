@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.53  2004/05/10 08:03:25  amassari
+ * Performance: push a new map on the namespace stack only when an element has a xmlns attribute
+ *
  * Revision 1.52  2004/04/01 22:05:32  peiyongz
  * invoke DOMException with Memory Manager
  *
@@ -1014,8 +1017,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             int nodeLine = fCurrentLine;
 
             // add an entry in the namespace stack
-            RefHashTableOf<XMLCh>* namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
-            fNamespaceStack->addElement(namespaceMap);
+            RefHashTableOf<XMLCh>* namespaceMap=NULL;
 
             if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)
             {
@@ -1056,6 +1058,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     }
                     if(!bPrefixDeclared)
                     {
+                        if(namespaceMap==NULL)
+                        {
+                            namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
+                            fNamespaceStack->addElement(namespaceMap);
+                        }
                         namespaceMap->put((void*)prefix,(XMLCh*)nodeToWrite->getNamespaceURI());
                         *fFormatter  << XMLFormatter::NoEscapes
                                      << chSpace << XMLUni::fgXMLNSString;
@@ -1108,6 +1115,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     {
                         if(XMLString::equals(ns, XMLUni::fgXMLNSURIName)) 
                         {
+                            if(namespaceMap==NULL)
+                            {
+                                namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
+                                fNamespaceStack->addElement(namespaceMap);
+                            }
 			                const XMLCh* nsPrefix = attribute->getLocalName();
                             if(XMLString::equals(attribute->getNodeName(),XMLUni::fgXMLNSString))
 								nsPrefix = XMLUni::fgZeroLenString;
@@ -1134,6 +1146,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                                 }
                                 if(!bPrefixDeclared)
                                 {
+                                    if(namespaceMap==NULL)
+                                    {
+                                        namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
+                                        fNamespaceStack->addElement(namespaceMap);
+                                    }
                                     namespaceMap->put((void*)prefix,(XMLCh*)attribute->getNamespaceURI());
                                     *fFormatter  << XMLFormatter::NoEscapes
                                                  << chSpace << XMLUni::fgXMLNSString << chColon << prefix
@@ -1228,7 +1245,8 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             }
 
             // remove the namespace map at this level
-            fNamespaceStack->removeLastElement();
+            if(namespaceMap!=NULL)
+                fNamespaceStack->removeLastElement();
 
             break;
         }
