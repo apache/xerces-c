@@ -16,16 +16,22 @@ $targetdir = $opt_o;
 # Check for the environment variables and exit if error
 if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("Usage is: packageBinaries <options>\n");
-    print ("          options are:  -s <source_directory>\n");
-    print ("                        -o <target_directory>\n");
-    print ("                        -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
-    print ("                        -x <C++ compiler name> (e.g. g++, CC, aCC, c++ or xlC_r)\n");
-    print ("                        -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
-    print ("                        -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
-    print ("                        -t <transcoder> can be 'icu' or 'native' \(default\)\n");
-    print ("                        -r <thread option> can be 'pthread' \(default\)or 'dce' (only used on HP-11)\n");
-    print ("                        -h to get help on these commands\n");
-    print ("Example: perl packageBinaries.pl -s\$HOME/xerces-c_1_0_0d01 -o\$HOME/xerces-c_1_0_0d01bin -cgcc -xg++ -minmem -nfileonly -tnative\n");
+    print ("  where options are:\n");
+    print ("    -s <source_directory>\n");
+    print ("    -o <target_directory>\n");
+    print ("    -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++ or xlC_r)\n");
+    print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
+    print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
+    print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
+    print ("    -r <thread option> can be 'pthread' \(default\)or 'dce' (only used on HP-11)\n");
+    print ("    -h to get help on these commands\n\n");
+    print ("Example: Under unix's\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_2_0");
+    print (" -o \$HOME/xerces-c_1_2_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("Example: Under Windows\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src_1_2_0");
+    print (" -o\\xerces-c_1_2_0-win32 [-n fileonly] [-t icu]\n\n");
     exit(-1);
 }
 
@@ -37,7 +43,7 @@ if (!length($ICUROOT)) {
     print "To build with ICU, you must set an environment variable called ICUROOT\n";
     print "Proceeding to build XERCES-C without ICU...\n";
 }
-
+  
 # Check if the source directory exists or not
 if (!(-e $XERCESCROOT)) {
     print ("The directory $XERCESCROOT does not exist. Cannot proceed any further.\n");
@@ -62,6 +68,7 @@ $platform = <PLATFORM>;
 chomp($platform);
 close (PLATFORM);
 
+      
 print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n";
 
 #Construct the name of the zip file by extracting the last directory name
@@ -69,10 +76,10 @@ $zipfiles = $targetdir;
 $zipfiles =~ s/.*\/([\w|-]*)$/$1/g;
 $zipfiles = $zipfiles . "/*";
 
-$buildmode = "Release";    # Universally, why do you want to package Debug builds anyway?
+$buildmode = "Release";         # Universally, why do you want to package Debug builds anyway?
 
 if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
-
+    
     $platformname = 'Win32';    # Needed this way by nmake
     if (-e $targetdir.".zip") {
         print ("Error: The target file \'$targetdir.zip\' already exists.\n");
@@ -105,31 +112,30 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     
     # If 'FileOnly' NetAccessor has been specified, then the project files have to be
     # changed.
-    if ($opt_n =~ m/fileonly/i)
-    {
+    if ($opt_n =~ m/fileonly/i) {
         changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
     }
-
-	if (length($ICUROOT) > 0) {
-	    print ("Building ICU from $ICUROOT ...\n");
+    
+    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+        print ("Building ICU from $ICUROOT ...\n");
         
-	    #Clean up all the dependency files, causes problems for nmake
-	    chdir ("$ICUROOT");
-	    system ("del /s /f *.dep *.ncb *.plg *.opt");
+        #Clean up all the dependency files, causes problems for nmake
+        chdir ("$ICUROOT");
+        system ("del /s /f *.dep *.ncb *.plg *.opt");
         
-	    # Make the icu dlls
-	    chdir ("$ICUROOT/source/allinone");
-	    print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
-	    system("msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
+        # Make the icu dlls
+        chdir ("$ICUROOT/source/allinone");
+        print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
+        system("msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
         
-	    change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+        change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
     }
 
     # Clean up all the dependency files, causes problems for nmake
-	# Also clean up all MSVC-generated project files that just cache the IDE state
+    # Also clean up all MSVC-generated project files that just cache the IDE state
     chdir ("$XERCESCROOT");
     system ("del /s /f *.dep *.ncb *.plg *.opt");
-
+    
     # Make all files in the Xerces-C system including libraries, samples and tests
     chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
     $cmd = "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD";
@@ -152,95 +158,95 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
     
-    @headerDirectories = qw'
-    	sax
-    	framework
-    	dom
-    	internal
-    	parsers
-    	util
-	util/Compilers 	
-	util/MsgLoaders
-	util/MsgLoaders/ICU
-	util/MsgLoaders/InMemory
-	util/MsgLoaders/MsgCatalog
-	util/MsgLoaders/Win32
-	util/Platforms
-	util/Platforms/AIX
-	util/Platforms/HPUX
-	util/Platforms/Linux
-	util/Platforms/MacOS
-	util/Platforms/OS2
-	util/Platforms/OS390
-	util/Platforms/PTX
-	util/Platforms/Solaris
-	util/Platforms/Tandem
-	util/Platforms/Win32
-	util/Transcoders
-	util/Transcoders/ICU
-	util/Transcoders/Iconv
-	util/Transcoders/Win32
-	validators
-	validators/DTD
-    	';
+    @headerDirectories =
+     qw'sax
+        framework
+        dom
+        internal
+        parsers
+        util
+        util/Compilers  
+        util/MsgLoaders
+        util/MsgLoaders/ICU
+        util/MsgLoaders/InMemory
+        util/MsgLoaders/MsgCatalog
+        util/MsgLoaders/Win32
+        util/Platforms
+        util/Platforms/AIX
+        util/Platforms/HPUX
+        util/Platforms/Linux
+        util/Platforms/MacOS
+        util/Platforms/OS2
+        util/Platforms/OS390
+        util/Platforms/PTX
+        util/Platforms/Solaris
+        util/Platforms/Tandem
+        util/Platforms/Win32
+        util/Transcoders
+        util/Transcoders/ICU
+        util/Transcoders/Iconv
+        util/Transcoders/Win32
+        validators
+        validators/DTD';
      
-     foreach $dir (@headerDirectories) {
-         $inclDir = "include/$dir";
-         if (! (-e $inclDir)) {
-             mkdir($inclDir, "0644");
-         }
-         $srcDir = "$XERCESCROOT/src/$dir";
-         
-         # Weed out directories that have no files to copy, to avoid a bunch of
-         #   warnings from the cp command in the build output.
-         opendir(dir, $srcDir);
-	 @allfiles = readdir(dir);
-	 closedir(dir);
-         foreach $fileKind ("hpp", "c")
-         {
-             $matches = grep(/\.$fileKind$/, @allfiles);
-             if ($matches > 0)
-             {
-                 $cmd = "cp -f $srcDir/*.$fileKind  $targetdir/$inclDir";  
-                 print ($cmd . "\n");  
-                 system($cmd);  
-              }
-         }
-     }
-
+    foreach $dir (@headerDirectories) {
+        $inclDir = "include/$dir";
+        if (! (-e $inclDir)) {
+            mkdir($inclDir, "0644");
+        }
+        $srcDir = "$XERCESCROOT/src/$dir";
+        
+        # Weed out directories that have no files to copy, to avoid a bunch of
+        # warnings from the cp command in the build output.
+        opendir(dir, $srcDir);
+        @allfiles = readdir(dir);
+        closedir(dir);
+        foreach $fileKind ("hpp", "c") {
+            $matches = grep(/\.$fileKind$/, @allfiles);
+            if ($matches > 0) {
+                $cmd = "cp -f $srcDir/*.$fileKind  $targetdir/$inclDir";  
+                print ($cmd . "\n");  
+                system($cmd);  
+            }
+        }
+    }
+    
     
     #
     #  Remove internal implementation headers from the DOM include directory.
     #
     system ("rm  $targetdir/include/dom/*Impl.hpp");
     system ("rm  $targetdir/include/dom/DS*.hpp");    
-
     
-    if (length($ICUROOT) > 0) {
+    
+    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         system("cp -Rfv $ICUROOT/include/* $targetdir/include");
-	}
-
-
+    }
+    
+    #
     # Populate the binary output directory
+    #
     print ("\n\nCopying binary outputs ...\n");
     system("cp -fv $BUILDDIR/*.dll $targetdir/bin");
     system("cp -fv $BUILDDIR/*.exe $targetdir/bin");
-	if (length($ICUROOT) > 0) {
-		# Copy the ICU dlls
-		system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
-		system("cp -fv $ICUROOT/data/icudata.dll $targetdir/bin");
-		# Copy the ICU libs
-		system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
-	}
-    system("cp -fv $BUILDDIR/xerces-c_1.lib $targetdir/lib");
+    
+    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+        # Copy the ICU dlls
+        system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
+        system("cp -fv $ICUROOT/data/icudata.dll $targetdir/bin");
+        # Copy the ICU libs
+        system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
+        system("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
+    }
+    system("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
         $DEBUGBUILDDIR = "$XERCESCROOT/Build/Win32/VC6/Debug";
-        system("cp -fv $DEBUGBUILDDIR/xerces-c_1D.lib $targetdir/lib");
+        system("cp -fv $DEBUGBUILDDIR/xerces-c_*D.lib $targetdir/lib");
         system("cp -fv $DEBUGBUILDDIR/xerces*D.dll $targetdir/bin");
-        }
-
+    }
     
-
+    
+    
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
     system("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
@@ -273,12 +279,12 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     system("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
     # system("cp -Rfv $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
     system("cp $XERCESCROOT/Readme.html $targetdir");
-    system("cp $XERCESCROOT/credits.txt $targetdir");	
+    system("cp $XERCESCROOT/credits.txt $targetdir");   
     system("cp $XERCESCROOT/LICENSE.txt $targetdir");
-	if (length($ICUROOT) > 0) {
+    if (length($ICUROOT) > 0) {
         system("cp $XERCESCROOT/license.html $targetdir");
         system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
-	}
+    }
     system("rm -f $targetdir/doc/*.xml");
     system("rm -f $targetdir/doc/*.ent");
     system("rm -f $targetdir/doc/*.gif");
@@ -290,7 +296,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     print ("zip -r $zipname $zipfiles");
     system ("zip -r $zipname $zipfiles");
 }
-
+  
 
 if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
      ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
@@ -302,18 +308,17 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     if ($platform eq 'HP-UX') {
         if ($opt_x eq 'CC') {
             $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"';
-            }
-        else {
+        } else {
             $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="+DAportable -w -O" CFLAGS="+DAportable -w -O"';
         }
-	    # Find out the operating system version from 'uname -r'
-	    open(OSVERSION, "uname -r|");
-	    $osversion = <OSVERSION>;
-	    chomp($osversion);
-	    close (OSVERSION);
-	    $platform = 'hp-11' if ($osversion =~ m/11\./);
-	    $platform = 'hp-10' if ($osversion =~ m/10\./);
-	    $opt_r = 'dce' if ($opt_r eq '');  # By default, use dce threads if not specified
+        # Find out the operating system version from 'uname -r'
+        open(OSVERSION, "uname -r|");
+        $osversion = <OSVERSION>;
+        chomp($osversion);
+        close (OSVERSION);
+        $platform = 'hp-11' if ($osversion =~ m/11\./);
+        $platform = 'hp-10' if ($osversion =~ m/10\./);
+        $opt_r = 'dce' if ($opt_r eq ''); # By default, use dce threads if not specified
         
     }
     if ($platform =~ m/Linux/i) {
@@ -369,35 +374,35 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system ("mkdir $targetdir/bin");
     system ("mkdir $targetdir/lib");
     system ("mkdir $targetdir/include");
-	if (length($ICUROOT) > 0) {
-		system ("mkdir $targetdir/include/unicode");
-	}
+    if (length($ICUROOT) > 0) {
+        system ("mkdir $targetdir/include/unicode");
+    }
     system ("mkdir $targetdir/include/sax");
     system ("mkdir $targetdir/include/framework");
     system ("mkdir $targetdir/include/internal");
     system ("mkdir $targetdir/include/parsers");
     system ("mkdir $targetdir/include/util");
-	system ("mkdir $targetdir/include/util/Compilers");
-	system ("mkdir $targetdir/include/util/MsgLoaders");
-	system ("mkdir $targetdir/include/util/MsgLoaders/ICU");
-	system ("mkdir $targetdir/include/util/MsgLoaders/InMemory");
-	system ("mkdir $targetdir/include/util/MsgLoaders/MsgCatalog");
-	system ("mkdir $targetdir/include/util/MsgLoaders/Win32");
-	system ("mkdir $targetdir/include/util/Platforms");
-	system ("mkdir $targetdir/include/util/Platforms/AIX");
-	system ("mkdir $targetdir/include/util/Platforms/HPUX");
-	system ("mkdir $targetdir/include/util/Platforms/Linux");
-	system ("mkdir $targetdir/include/util/Platforms/MacOS");
-	system ("mkdir $targetdir/include/util/Platforms/OS2");
-	system ("mkdir $targetdir/include/util/Platforms/OS390");
-	system ("mkdir $targetdir/include/util/Platforms/PTX");
-	system ("mkdir $targetdir/include/util/Platforms/Solaris");
-	system ("mkdir $targetdir/include/util/Platforms/Tandem");
-	system ("mkdir $targetdir/include/util/Platforms/Win32");
-	system ("mkdir $targetdir/include/util/Transcoders");
-	system ("mkdir $targetdir/include/util/Transcoders/ICU");
-	system ("mkdir $targetdir/include/util/Transcoders/Iconv");
-	system ("mkdir $targetdir/include/util/Transcoders/Win32");
+    system ("mkdir $targetdir/include/util/Compilers");
+    system ("mkdir $targetdir/include/util/MsgLoaders");
+    system ("mkdir $targetdir/include/util/MsgLoaders/ICU");
+    system ("mkdir $targetdir/include/util/MsgLoaders/InMemory");
+    system ("mkdir $targetdir/include/util/MsgLoaders/MsgCatalog");
+    system ("mkdir $targetdir/include/util/MsgLoaders/Win32");
+    system ("mkdir $targetdir/include/util/Platforms");
+    system ("mkdir $targetdir/include/util/Platforms/AIX");
+    system ("mkdir $targetdir/include/util/Platforms/HPUX");
+    system ("mkdir $targetdir/include/util/Platforms/Linux");
+    system ("mkdir $targetdir/include/util/Platforms/MacOS");
+    system ("mkdir $targetdir/include/util/Platforms/OS2");
+    system ("mkdir $targetdir/include/util/Platforms/OS390");
+    system ("mkdir $targetdir/include/util/Platforms/PTX");
+    system ("mkdir $targetdir/include/util/Platforms/Solaris");
+    system ("mkdir $targetdir/include/util/Platforms/Tandem");
+    system ("mkdir $targetdir/include/util/Platforms/Win32");
+    system ("mkdir $targetdir/include/util/Transcoders");
+    system ("mkdir $targetdir/include/util/Transcoders/ICU");
+    system ("mkdir $targetdir/include/util/Transcoders/Iconv");
+    system ("mkdir $targetdir/include/util/Transcoders/Win32");
     system ("mkdir $targetdir/include/dom");
     system ("mkdir $targetdir/include/validators");
     system ("mkdir $targetdir/include/validators/DTD");
@@ -417,32 +422,32 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system ("mkdir $targetdir/doc/html");
     system ("mkdir $targetdir/doc/html/apiDocs");
     
-	# Build ICU if needed
-	if (length($ICUROOT) > 0) {
-		# First make the ICU files
-		chdir ("$ICUROOT/source");
-		system ("chmod 777 configure");
-		system ("chmod 777 install-sh");
-		if ($platform =~ m/ptx/i) {
-			system ("chmod 777 runConfigureICU");
-			system ("runConfigureICU PTX");
-		} else {
-			print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
-			system ("$icuCompileFlags configure --prefix=$ICUROOT");
-		}
-		system ("gmake clean");	# Clean up the build, may want to comment this line out!
+    # Build ICU if needed
+    if (length($ICUROOT) > 0) {
+        # First make the ICU files
+        chdir ("$ICUROOT/source");
+        system ("chmod 777 configure");
+        system ("chmod 777 install-sh");
+        if ($platform =~ m/ptx/i) {
+            system ("chmod 777 runConfigureICU");
+            system ("runConfigureICU PTX");
+        } else {
+            print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
+            system ("$icuCompileFlags configure --prefix=$ICUROOT");
+        }
+        system ("gmake clean"); # Clean up the build, may want to comment this line out!
         system ("rm -f $ICUROOT/data/*.o"); # gmake clean is not enough
         system ("rm -f $ICUROOT/data/*.c"); # same for .c files
-		system ("gmake");       # This will take a long time!
-		system ("gmake install"); # Make this separate since this breaks on Solaris
+        system ("gmake");       # This will take a long time!
+        system ("gmake install"); # Make this separate since this breaks on Solaris
         
-		# Please check if the following needs any change in Version 1.4
-		# For the antiquated CC compiler under HPUX, we need to invoke
-		# gmake one extra time to generate the .cnv files.
-		# if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {
-		#	system ("gmake");
-		# }
-	}
+        # Please check if the following needs any change in Version 1.4
+        # For the antiquated CC compiler under HPUX, we need to invoke
+        # gmake one extra time to generate the .cnv files.
+        # if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {
+        #   system ("gmake");
+        # }
+    }
     
     # For ptx, ICUROOT must now be set to XMLINSTALL for further work.
     if ($platform =~ m/ptx/i) {
@@ -452,37 +457,37 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # make the source files
     chdir ("$XERCESCROOT/src");
     
-	if ( $platform =~ m/sunos/i ) {
+    if ( $platform =~ m/sunos/i ) {
         $platform = "solaris";
     }
-	if ( $platform =~ m/AIX/i ) {
+    if ( $platform =~ m/AIX/i ) {
         $platform = "aix";
     }
     if ( $platform =~ m/ptx/i ) {
         $platform = "ptx";
     }
     
-	system ("chmod +x run* con* install-sh");
-
-	if (length($opt_r) > 0) {
+    system ("chmod +x run* con* install-sh");
+    
+    if (length($opt_r) > 0) {
         system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
-	} else {
+    } else {
         system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t");
-	}
-
-    system ("gmake clean");	# May want to comment this line out to speed up
+    }
+    
+    system ("gmake clean");     # May want to comment this line out to speed up
     system ("gmake");
     
     # Now build the samples
     chdir ("$XERCESCROOT/samples");
-	system ("chmod +x run* con* install-sh");
+    system ("chmod +x run* con* install-sh");
     system ("runConfigure -p$platform -c$opt_c -x$opt_x");
     system ("gmake clean");     # May want to comment this line out to speed up
     system ("gmake");
     
     # Next build the tests
     chdir ("$XERCESCROOT/tests");
-	system ("chmod +x run* con* install-sh");
+    system ("chmod +x run* con* install-sh");
     system ("runConfigure -p$platform -c$opt_c -x$opt_x");
     system ("gmake clean");     # May want to comment this line out to speed up
     system ("gmake");
@@ -494,50 +499,50 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
     system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
     system("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
-
-	system("rm -f $targetdir/include/dom/*Impl.hpp");
-	system("rm -f $targetdir/include/dom/DS*.hpp");
+    
+    system("rm -f $targetdir/include/dom/*Impl.hpp");
+    system("rm -f $targetdir/include/dom/DS*.hpp");
     system("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
     system("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
     system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
     system("cp -Rf $XERCESCROOT/src/parsers/*.c $targetdir/include/parsers");
     system("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
     system("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
-	system("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
-	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/*.hpp $targetdir/include/util/MsgLoaders");
-	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/ICU/*.hpp $targetdir/include/util/MsgLoaders/ICU");
-	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/InMemory/*.hpp $targetdir/include/util/MsgLoaders/InMemory");
-	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/util/MsgLoaders/MsgCatalog");
-	system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/Win32/*.hpp $targetdir/include/util/MsgLoaders/Win32");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/*.hpp $targetdir/include/util/Platforms");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/AIX/*.hpp $targetdir/include/util/Platforms/AIX");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/HPUX/*.hpp $targetdir/include/util/Platforms/HPUX");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/Linux/*.hpp $targetdir/include/util/Platforms/Linux");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/PTX/*.hpp $targetdir/include/util/Platforms/PTX");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
-	system("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
-	system("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
-	system("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
-	system("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
-	system("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
-	system("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
-		
-	if (length($ICUROOT) > 0) {
-		print "\nICU files are being copied from \'" . $ICUROOT . "\'";
-		system("cp -Rf $ICUROOT/include/* $targetdir/include");
-	}
-
+    system("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
+    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/*.hpp $targetdir/include/util/MsgLoaders");
+    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/ICU/*.hpp $targetdir/include/util/MsgLoaders/ICU");
+    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/InMemory/*.hpp $targetdir/include/util/MsgLoaders/InMemory");
+    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/util/MsgLoaders/MsgCatalog");
+    system("cp -Rf $XERCESCROOT/src/util/MsgLoaders/Win32/*.hpp $targetdir/include/util/MsgLoaders/Win32");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/*.hpp $targetdir/include/util/Platforms");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/AIX/*.hpp $targetdir/include/util/Platforms/AIX");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/HPUX/*.hpp $targetdir/include/util/Platforms/HPUX");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/Linux/*.hpp $targetdir/include/util/Platforms/Linux");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/PTX/*.hpp $targetdir/include/util/Platforms/PTX");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
+    system("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
+    system("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
+    system("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
+    system("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
+    system("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
+    system("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
+    
+    if (length($ICUROOT) > 0) {
+        print "\nICU files are being copied from \'" . $ICUROOT . "\'";
+        system("cp -Rf $ICUROOT/include/* $targetdir/include");
+    }
+    
     # Populate the binary output directory
     print ("\n\nCopying binary outputs ...\n");
     system("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
-	if (length($ICUROOT) > 0) {
-		system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
-		system("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
-	}
+    if (length($ICUROOT) > 0) {
+        system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
+        system("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
+    }
     system("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
     system("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
     system("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
@@ -574,17 +579,17 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     system("rm -f $targetdir/samples/Makefile");
     
-        # Populate the docs directory
+    # Populate the docs directory
     print ("\n\nCopying documentation ...\n");
     system("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
     # system("cp -Rf $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
     system("cp $XERCESCROOT/Readme.html $targetdir");
-    system("cp $XERCESCROOT/credits.txt $targetdir");	
+    system("cp $XERCESCROOT/credits.txt $targetdir");   
     system("cp $XERCESCROOT/LICENSE.txt $targetdir");
-	if (length($ICUROOT) > 0) {
+    if (length($ICUROOT) > 0) {
         system("cp $XERCESCROOT/license.html $targetdir");
         system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
-	}
+    }
     system("rm -f $targetdir/doc/*.xml");
     system("rm -f $targetdir/doc/*.ent");
     system("rm -f $targetdir/doc/*.gif");
@@ -611,8 +616,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 }
   
     
-sub change_windows_project_for_ICU()
-{
+sub change_windows_project_for_ICU() {
     my ($thefile) = @_;
     print "\nConverting Windows Xerces library project ($thefile) for ICU usage...";
     my $thefiledotbak = $thefile . ".bak";
@@ -621,26 +625,21 @@ sub change_windows_project_for_ICU()
     open (FIZZLE, $thefiledotbak);
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
-        if ($line =~ m/Transcoders\\Win32\\Win32TransService\.cpp/g) {
-            while ($line = <FIZZLE>) { # read the next line
-                last if ($line =~ m/^SOURCE/g);
-            }
-        }
-        
         $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
-        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release"/g;
-        $line =~ s/Debug\/xerces-c_1.lib"/Debug\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Debug"/g;
-        $line =~ s/user32\.lib/user32\.lib icuuc\.lib/g;
-        $line =~ s/Transcoders\\Win32\\Win32TransService2\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
+        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
+        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Debug" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
+        $line =~ s/user32\.lib/user32\.lib icuuc\.lib icudata\.lib/g;
+        $line =~ s/Transcoders\\Win32\\Win32TransService\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
+        $line =~ s/Transcoders\\Win32\\Win32TransService\.hpp/Transcoders\\ICU\\ICUTransService\.hpp/g;
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
     close (FIZZLE);
     unlink ($thefiledotbak);
 }
-
-
+  
+      
 #
 # This subroutine is used to munge the XercesLib project file to remove all
 # traces of WinSock based NetAccessor. Once no NetAccessor is specified, the
@@ -654,8 +653,7 @@ sub change_windows_project_for_ICU()
 #   - to remove references to the source files for the WinSock based NetAccessor.
 #
 
-sub changeWindowsProjectForFileOnlyNA()
-{
+sub changeWindowsProjectForFileOnlyNA() {
     my ($thefile) = @_;
     print "\nConfiguring Xerces library project ($thefile) for FileOnly NetAccessor...";
     my $thefiledotbak = $thefile . ".bak";
@@ -663,7 +661,7 @@ sub changeWindowsProjectForFileOnlyNA()
     
     open (PROJFILEIN, $thefiledotbak);
     open (PROJFILEOUT, ">$thefile");
-
+    
     while ($aline = <PROJFILEIN>) {
         # By skipping over lines between the NetAccessors group
         # we can references to the WinSock based NetAccessor files.
@@ -687,7 +685,7 @@ sub changeWindowsProjectForFileOnlyNA()
         # the WinSock library.
         $aline =~ s/\/D \"XML_USE_NETACCESSOR_WINSOCK\" //g;
         $aline =~ s/wsock32.lib //g;
-
+        
         print PROJFILEOUT $aline;
     }
     close (PROJFILEOUT);
