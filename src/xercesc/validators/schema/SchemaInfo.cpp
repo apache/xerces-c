@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/19 15:57:12  knoaman
+ * Fix for bug 7074.
+ *
  * Revision 1.2  2002/02/06 22:24:59  knoaman
  * Use IDOM for schema processing.
  *
@@ -121,6 +124,8 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fImportingInfoList(0)
     , fFailedRedefineList(0)
     , fImportedNSList(0)
+    , fRecursingAnonTypes(0)
+    , fRecursingTypeNames(0)
 {
     fImportingInfoList = new RefVectorOf<SchemaInfo>(4, false);
 }
@@ -142,7 +147,13 @@ SchemaInfo::~SchemaInfo()
     fImportedNSList = 0;
 
     delete fFailedRedefineList;
-    fFailedRedefineList = 0;    
+    fFailedRedefineList = 0;
+
+    delete fRecursingAnonTypes;
+    fRecursingAnonTypes = 0;
+
+    delete fRecursingTypeNames;
+    fRecursingTypeNames = 0;
 }
 
 // ---------------------------------------------------------------------------

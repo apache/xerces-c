@@ -206,8 +206,7 @@ private:
                                                const int modelGroupType);
     ContentSpecNode*    traverseAny(const IDOM_Element* const anyDecl);
     ContentSpecNode*    traverseAll(const IDOM_Element* const allElem);
-    XercesGroupInfo*    traverseGroupDecl(const IDOM_Element* const childElem,
-                                          const bool circularAllowed = false);
+    XercesGroupInfo*    traverseGroupDecl(const IDOM_Element* const childElem);
     XercesAttGroupInfo* traverseAttributeGroupDecl(const IDOM_Element* const elem,
                                                    ComplexTypeInfo* const typeInfo);
     XercesAttGroupInfo* traverseAttributeGroupDeclNS(const XMLCh* const uriStr,
@@ -353,8 +352,7 @@ private:
       * Process a 'ref' on a group
       */
     XercesGroupInfo* processGroupRef(const IDOM_Element* const elem,
-                                     const XMLCh* const refName,
-                                     const bool circularAllowed);
+                                     const XMLCh* const refName);
 
     /**
       * Process a 'ref' on a attributeGroup
@@ -786,7 +784,6 @@ private:
     int                                           fFinalDefault;
     int                                           fBlockDefault;
     int                                           fScopeCount;
-    int                                           fRecursingElemIndex;
     unsigned int                                  fAnonXSTypeCount;
     unsigned int                                  fCircularCheckIndex;
     const XMLCh*                                  fTargetNSURIString;
@@ -828,8 +825,6 @@ private:
     RefHashTableOf<ValueVectorOf<unsigned int> >* fIC_NamespaceDepthNS;
     IDOMParser*                                   fParser;
     RefHashTableOf<SchemaInfo>*                   fPreprocessedNodes;
-    ValueVectorOf<const IDOM_Element*>*           fRecursingAnonTypes;
-    ValueVectorOf<const XMLCh*>*                  fRecursingTypeNames;
 
     friend class GeneralAttributeCheck;
 };

@@ -123,6 +123,8 @@ public:
     unsigned int             getNamespaceScopeLevel() const;
     unsigned short           getElemAttrDefaultQualified() const;
     RefVectorEnumerator<SchemaInfo> getImportingListEnumerator() const;
+    ValueVectorOf<const IDOM_Element*>* getRecursingAnonTypes() const;
+    ValueVectorOf<const XMLCh*>*        getRecursingTypeNames() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -147,6 +149,7 @@ public:
     void addFailedRedefine(const IDOM_Element* const anElem);
     bool isImportingNS(const int namespaceURI);
     void addImportedNS(const int namespaceURI);
+    void addRecursingType(const IDOM_Element* const elem, const XMLCh* const name);
 
 private:
     // -----------------------------------------------------------------------
@@ -169,6 +172,8 @@ private:
     RefVectorOf<SchemaInfo>*            fImportingInfoList;
     ValueVectorOf<const IDOM_Element*>* fFailedRedefineList;
     ValueVectorOf<int>*                 fImportedNSList;
+    ValueVectorOf<const IDOM_Element*>* fRecursingAnonTypes;
+    ValueVectorOf<const XMLCh*>*        fRecursingTypeNames;
 };
 
 // ---------------------------------------------------------------------------
@@ -227,6 +232,19 @@ inline RefVectorEnumerator<SchemaInfo>
 SchemaInfo::getImportingListEnumerator() const {
 
     return RefVectorEnumerator<SchemaInfo>(fImportingInfoList);
+}
+
+inline ValueVectorOf<const IDOM_Element*>*
+SchemaInfo::getRecursingAnonTypes() const {
+
+    return fRecursingAnonTypes;
+}
+
+
+inline ValueVectorOf<const XMLCh*>*
+SchemaInfo::getRecursingTypeNames() const {
+
+    return fRecursingTypeNames;
 }
 
 // ---------------------------------------------------------------------------
@@ -354,6 +372,17 @@ inline bool SchemaInfo::isImportingNS(const int namespaceURI) {
     return (fImportedNSList->containsElement(namespaceURI));
 }
 
+inline void SchemaInfo::addRecursingType(const IDOM_Element* const elem,
+                                         const XMLCh* const name) {
+
+    if (!fRecursingAnonTypes) {
+        fRecursingAnonTypes = new ValueVectorOf<const IDOM_Element*>(8);
+        fRecursingTypeNames = new ValueVectorOf<const XMLCh*>(8);
+    }
+
+    fRecursingAnonTypes->addElement(elem);
+    fRecursingTypeNames->addElement(name);
+}
 
 #endif
 

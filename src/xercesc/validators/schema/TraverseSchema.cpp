@@ -193,7 +193,6 @@ TraverseSchema::TraverseSchema( IDOM_Element* const          schemaRoot
     , fFinalDefault(0)
     , fBlockDefault(0)
     , fScopeCount(0)
-    , fRecursingElemIndex(0)
     , fAnonXSTypeCount(0)
     , fCircularCheckIndex(0)
     , fTargetNSURIString(0)
@@ -233,8 +232,6 @@ TraverseSchema::TraverseSchema( IDOM_Element* const          schemaRoot
     , fIC_NamespaceDepthNS(0)
     , fParser(0)
     , fPreprocessedNodes(0)
-    , fRecursingAnonTypes(0)
-    , fRecursingTypeNames(0)
 {
 
     try {
@@ -1255,6 +1252,9 @@ int TraverseSchema::traverseComplexTypeDecl(const IDOM_Element* const elem,
                     reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidChildFollowingConplexContent);
                 }
             }
+            else if (fCurrentGroupInfo) {
+                typeInfo->setPreprocessed(true);
+            }
             else {
                 // We must have ....
                 // GROUP, ALL, SEQUENCE or CHOICE, followed by optional attributes
@@ -1319,8 +1319,7 @@ int TraverseSchema::traverseComplexTypeDecl(const IDOM_Element* const elem,
   *
   */
 XercesGroupInfo*
-TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem,
-                                  const bool circularAllowed) {
+TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem) {
 
     bool         topLevel = isTopLevelComponent(elem);
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
@@ -1360,7 +1359,7 @@ TraverseSchema::traverseGroupDecl(const IDOM_Element* const elem,
             return 0;
         }
 
-        return processGroupRef(elem, ref, circularAllowed);
+        return processGroupRef(elem, ref);
     }
 
     // ------------------------------------------------------------------
@@ -2365,15 +2364,7 @@ QName* TraverseSchema::traverseElementDecl(const IDOM_Element* const elem, bool&
                 if (typeInfo->getPreprocessed()) {
 
                     const XMLCh* typeInfoName = typeInfo->getTypeName();
-                    
-                    if (!fRecursingAnonTypes) {
-                        fRecursingAnonTypes = new ValueVectorOf<const IDOM_Element*>(8);
-                        fRecursingTypeNames = new ValueVectorOf<const XMLCh*>(8);
-                    }
-
-                    fRecursingAnonTypes->addElement(content);
-                    fRecursingTypeNames->addElement(typeInfoName + XMLString::indexOf(typeInfoName, chComma) + 1);
-                    fRecursingElemIndex++;
+                    fSchemaInfo->addRecursingType(content, typeInfoName + XMLString::indexOf(typeInfoName, chComma) + 1);
                 }
             }
 
@@ -3624,6 +3615,9 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
         }
     }
 
+    if (fCurrentGroupInfo) // defer processing until later
+        throw TraverseSchema::RecursingElement;
+
     // -----------------------------------------------------------------------
     // Process the content of the derivation
     // -----------------------------------------------------------------------
@@ -4298,16 +4292,20 @@ void TraverseSchema::processChildren(const IDOM_Element* const root) {
     } // for each child node
 
     // Handle recursing elements - if any
-    if (fRecursingElemIndex) {
+    ValueVectorOf<const IDOM_Element*>* recursingAnonTypes = fSchemaInfo->getRecursingAnonTypes();
 
-        for (int i=0; i < fRecursingElemIndex; i++) {
-            traverseComplexTypeDecl(fRecursingAnonTypes->elementAt(i),
-                                    fRecursingTypeNames->elementAt(i));
+    if (recursingAnonTypes) {
+
+        ValueVectorOf<const XMLCh*>* recursingTypeNames = fSchemaInfo->getRecursingTypeNames();
+        unsigned int recurseSize = recursingAnonTypes->size();
+
+        for (unsigned int i=0; i < recurseSize; i++) {
+            traverseComplexTypeDecl(recursingAnonTypes->elementAt(i),
+                                    recursingTypeNames->elementAt(i));
         }
 
-        fRecursingAnonTypes->removeAllElements();
-        fRecursingTypeNames->removeAllElements();
-        fRecursingElemIndex = 0;
+        recursingAnonTypes->removeAllElements();
+        recursingTypeNames->removeAllElements();
     }
 }
 
@@ -4885,8 +4883,6 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
         typeInfo = fComplexTypeRegistry->get(fBuffer.getRawBuffer());
     }
 
-    int saveRecursingIndex = fRecursingElemIndex;
-
     if (!typeInfo) {
 
         if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0 ||
@@ -4902,27 +4898,8 @@ TraverseSchema::getElementComplexTypeInfo(const XMLCh* const typeStr,
         }
     }
 
-    // restore schema information, if necessary
-    if (saveInfo != fSchemaInfo) {
-
-        if (infoType == SchemaInfo::IMPORT) {
-
-            int i = fRecursingElemIndex - 1;
-
-            for (; i >= saveRecursingIndex; i--) {
-
-                const IDOM_Element* elem = fRecursingAnonTypes->elementAt(i);
-                const XMLCh* typeName = fRecursingTypeNames->elementAt(i);
-
-                fRecursingAnonTypes->removeElementAt(i);
-                fRecursingTypeNames->removeElementAt(i);
-                fRecursingElemIndex--;
-                traverseComplexTypeDecl(elem, typeName);
-            }
-        }
-
-        restoreSchemaInfo(saveInfo, infoType);
-    }
+    // restore schema information
+    restoreSchemaInfo(saveInfo, infoType);
 
     return typeInfo;
 }
@@ -5566,7 +5543,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
         if (!XMLString::compareString(childName, SchemaSymbols::fgELT_GROUP)) {
 
-            XercesGroupInfo* grpInfo = traverseGroupDecl(childElem, true);
+            XercesGroupInfo* grpInfo = traverseGroupDecl(childElem);
 
             if (grpInfo) {
 
@@ -6556,8 +6533,7 @@ void TraverseSchema::checkEnumerationRequiredNotation(const XMLCh* const name,
 }
 
 XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
-                                                 const XMLCh* const refName,
-                                                 const bool circularAllowed) {
+                                                 const XMLCh* const refName) {
 
     if (XUtil::getFirstChildElement(elem) != 0) {
         reportSchemaError(XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_GROUP);
@@ -6575,13 +6551,8 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
 	
     if (fCurrentGroupStack->containsElement(nameIndex)) {
 
-        if (circularAllowed) {
-            throw TraverseSchema::RecursingElement;
-        }
-        else {
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, localPart);
-            return 0;
-        }
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, localPart);
+        return 0;
     }
 
     XercesGroupInfo*     groupInfo = 0;
@@ -6637,7 +6608,6 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
 
         if (groupElem != 0) {
 
-            int saveRecursingIndex = fRecursingElemIndex;
             groupInfo = traverseGroupDecl(groupElem);
 
             if (groupInfo && fCurrentGroupInfo
@@ -6645,30 +6615,8 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const IDOM_Element* const elem,
                 copyGroupElements(groupInfo, fCurrentGroupInfo, 0);
             }
 
-            // restore schema information, if necessary
-            if (saveInfo != fSchemaInfo) {
-
-                if (infoType == SchemaInfo::IMPORT) {
-
-                    // --------------------------------------------------
-                    // Handle recursing elements
-                    // --------------------------------------------------
-                    int i = fRecursingElemIndex - 1;
-
-                    for (; i >= saveRecursingIndex; i--) {
-
-                        const IDOM_Element* elem = fRecursingAnonTypes->elementAt(i);
-                        const XMLCh* typeName = fRecursingTypeNames->elementAt(i);
-
-                        fRecursingAnonTypes->removeElementAt(i);
-                        fRecursingTypeNames->removeElementAt(i);
-                        fRecursingElemIndex--;
-                        traverseComplexTypeDecl(elem, typeName);
-                    }
-                }
-
-                restoreSchemaInfo(saveInfo, infoType);
-            }
+            // restore schema information
+            restoreSchemaInfo(saveInfo, infoType);
 
             return groupInfo;
         }
@@ -8787,8 +8735,6 @@ void TraverseSchema::cleanUp() {
     delete fIC_NamespaceDepthNS;
     delete fIC_NodeListNS;
     delete fPreprocessedNodes;
-    delete fRecursingTypeNames;
-    delete fRecursingAnonTypes;
     delete fParser;
 }
 
