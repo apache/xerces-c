@@ -212,5 +212,47 @@ void XMLAttDef::cleanUp()
         fMemoryManager->deallocate(fValue);
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(XMLAttDef)
+
+void XMLAttDef::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng<<(int)fDefaultType;
+        serEng<<(int)fType;
+        serEng<<(int)fCreateReason;
+        serEng<<fProvided;
+        serEng<<fExternalAttribute;
+        serEng<<fId;
+
+        serEng.writeString(fValue);
+        serEng.writeString(fEnumeration);
+    }
+    else
+    {
+        int i;
+        serEng>>i;
+        fDefaultType = (DefAttTypes) i;
+
+        serEng>>i;
+        fType = (AttTypes)i;
+
+        serEng>>i;
+        fCreateReason = (CreateReasons)i;
+
+        serEng>>fProvided;
+        serEng>>fExternalAttribute;
+        serEng>>fId;
+
+        serEng.readString(fValue);
+        serEng.readString(fEnumeration);
+    }
+}
+
 XERCES_CPP_NAMESPACE_END
 

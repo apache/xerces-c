@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/10 16:23:29  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -134,6 +137,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMemory.hpp>
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -157,7 +161,7 @@ class XMLAttr;
  *  enumerated or notation type, it will have an 'enumeration value' as well
  *  which is a space separated list of its possible vlaues.
  */
-class XMLPARSER_EXPORT XMLAttDef : public XMemory
+class XMLPARSER_EXPORT XMLAttDef : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -507,6 +511,11 @@ public:
     void setExternalAttDeclaration(const bool aValue);
 
     //@}
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLAttDef)
 
 protected :
     // -----------------------------------------------------------------------

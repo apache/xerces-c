@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/10 16:24:51  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/05/16 21:43:19  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -143,5 +146,29 @@ void DTDAttDef::setName(const XMLCh* const newName)
     getMemoryManager()->deallocate(fName); //delete [] fName;
     fName = XMLString::replicate(newName, getMemoryManager());
 }
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DTDAttDef)
+
+void DTDAttDef::serialize(XSerializeEngine& serEng)
+{
+
+    XMLAttDef::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<fElemId;
+        serEng.writeString(fName);
+    }
+    else
+    {
+        serEng>>fElemId;
+        serEng.readString(fName);
+    }
+}
+
 
 XERCES_CPP_NAMESPACE_END

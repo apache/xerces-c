@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/10 16:23:29  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -89,6 +92,8 @@
 #define XMLATTDEFLIST_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -110,7 +115,8 @@ class XMLAttDef;
  *  there are portability issues with deriving from a template class in a
  *  DLL. It does though provide a similar enumerator interface.
  */
-class XMLPARSER_EXPORT XMLAttDefList : public XMemory
+
+class XMLPARSER_EXPORT XMLAttDefList : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -151,6 +157,10 @@ public:
     virtual XMLAttDef& nextElement() = 0;
     virtual void Reset() = 0;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLAttDefList)
 
 protected :
     // -----------------------------------------------------------------------

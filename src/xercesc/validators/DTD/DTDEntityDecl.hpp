@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/10 16:24:51  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/05/16 21:43:19  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -144,6 +147,10 @@ public :
     void setIsParameter(const bool newValue);
     void setIsSpecialChar(const bool newValue);
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DTDEntityDecl)
 
 private :
     // -----------------------------------------------------------------------

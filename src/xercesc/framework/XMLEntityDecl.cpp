@@ -191,5 +191,38 @@ void XMLEntityDecl::cleanUp()
     fMemoryManager->deallocate(fBaseURI);
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(XMLEntityDecl)
+
+void XMLEntityDecl::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng<<fId;
+        serEng<<fValueLen;
+        serEng.writeString(fValue);
+        serEng.writeString(fName);
+        serEng.writeString(fNotationName);
+        serEng.writeString(fPublicId);
+        serEng.writeString(fSystemId);
+        serEng.writeString(fBaseURI);
+    }
+    else
+    {
+        serEng>>fId;
+        serEng>>fValueLen;
+        serEng.readString(fValue);
+        serEng.readString(fName);
+        serEng.readString(fNotationName);
+        serEng.readString(fPublicId);
+        serEng.readString(fSystemId);
+        serEng.readString(fBaseURI);
+    }
+}
+
 XERCES_CPP_NAMESPACE_END
 

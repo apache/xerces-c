@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/10 16:25:40  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -251,6 +254,11 @@ public :
     void resetNamespaceList();
     void setValidity(PSVIDefs::Validity valid);
     void setValidationAttempted(PSVIDefs::Validation validation);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(SchemaAttDef)
 
 private :
     // -----------------------------------------------------------------------

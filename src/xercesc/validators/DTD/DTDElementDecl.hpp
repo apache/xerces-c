@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/10 16:24:51  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/10/08 21:33:18  peiyongz
  * Synchronize ContentSpec/ContentModel/FormattedModel
  *
@@ -230,6 +233,10 @@ public :
     void addAttDef(DTDAttDef* const toAdd);
     void setModelType(const DTDElementDecl::ModelTypes toSet);
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DTDElementDecl)
 
 private :
     // -----------------------------------------------------------------------

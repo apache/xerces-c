@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,113 +56,29 @@
 
 /**
  * $Id$
+ * $Log$
+ * Revision 1.1  2003/10/10 16:23:29  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/framework/XMLElementDecl.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/framework/XMLAttDefList.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Public, static data
-// ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId    = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId     = 0xFFFFFFFF;
-const XMLCh         XMLElementDecl::fgPCDataElemName[] =
-{
-        chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
-    ,   chLatin_T, chLatin_A, chNull
-};
-
-
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Destructor
-// ---------------------------------------------------------------------------
-XMLElementDecl::~XMLElementDecl()
-{
-    delete fElementName;
-}
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Setter Methods
-// ---------------------------------------------------------------------------
-void
-XMLElementDecl::setElementName(const XMLCh* const       prefix
-                            , const XMLCh* const        localPart
-                            , const int                 uriId )
-{
-    if (fElementName)
-        fElementName->setName(prefix, localPart, uriId);
-    else
-        fElementName = new (fMemoryManager) QName(prefix, localPart, uriId, fMemoryManager);
-}
-
-void
-XMLElementDecl::setElementName(const XMLCh* const       rawName
-                            , const int                 uriId )
-{
-    if (fElementName)
-        fElementName->setName(rawName, uriId);
-    else
-        fElementName = new (fMemoryManager) QName(rawName, uriId, fMemoryManager);
-}
-
-void
-XMLElementDecl::setElementName(const QName* const    elementName)
-{
-    if (fElementName)
-        fElementName->setValues(*elementName);
-    else
-        fElementName = new (fMemoryManager) QName(*elementName);
-}
-
-// ---------------------------------------------------------------------------
-//  ElementDecl: Hidden constructors
-// ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl(MemoryManager* const manager) :
-
-    fMemoryManager(manager)
-    , fElementName(0)
-    , fCreateReason(XMLElementDecl::NoReason)
-    , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement(false)
-{
-}
 
 /***
  * Support for Serialization/De-serialization
  ***/
 
-IMPL_XSERIALIZABLE_NOCREATE(XMLElementDecl)
+IMPL_XSERIALIZABLE_NOCREATE(XMLAttDefList)
 
-void XMLElementDecl::serialize(XSerializeEngine& serEng)
+void XMLAttDefList::serialize(XSerializeEngine& serEng)
 {
-
-    if (serEng.isStoring())
-    {
-        serEng<<fElementName;
-        serEng<<(int) fCreateReason;
-        serEng<<fId;
-        serEng<<fExternalElement;
-    }
-    else
-    {
-        serEng>>fElementName;
-
-        int i;
-        serEng>>i;
-        fCreateReason=(CreateReasons)i;
-
-        serEng>>fId;
-        serEng>>fExternalElement;
-    }
-
+    //no data
 }
 
 XERCES_CPP_NAMESPACE_END

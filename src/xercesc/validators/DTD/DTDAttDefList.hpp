@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/10 16:24:51  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.3  2002/12/06 13:27:22  tng
  * [Bug 9083] Make some classes be exportable.
  *
@@ -147,6 +150,12 @@ public :
     virtual XMLAttDef& nextElement();
     virtual void Reset();
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DTDAttDefList)
+
+	DTDAttDefList(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private :
     // -----------------------------------------------------------------------

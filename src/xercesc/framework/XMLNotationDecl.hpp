@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/10 16:23:29  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.8  2003/05/22 02:10:51  knoaman
  * Default the memory manager.
  *
@@ -108,6 +111,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -120,7 +124,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  At this common level, the information supported is the notation name
  *  and the public and sysetm ids indicated in the notation declaration.
  */
-class XMLPARSER_EXPORT XMLNotationDecl : public XMemory
+class XMLPARSER_EXPORT XMLNotationDecl : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -175,6 +179,10 @@ public:
     // -----------------------------------------------------------------------
     const XMLCh* getKey() const;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLNotationDecl)
 
 private :
     // -----------------------------------------------------------------------

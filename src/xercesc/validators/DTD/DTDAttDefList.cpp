@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/10 16:24:51  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.2  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -89,10 +92,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DTDAttDefList: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDAttDefList::DTDAttDefList(RefHashTableOf<DTDAttDef>* const listToUse) :
-
-    fEnum(0)
-    , fList(listToUse)
+DTDAttDefList::DTDAttDefList(RefHashTableOf<DTDAttDef>* const listToUse)
+:fEnum(0)
+,fList(listToUse)
 {
     fEnum = new RefHashTableOfEnumerator<DTDAttDef>(listToUse);
 }
@@ -163,4 +165,88 @@ void DTDAttDefList::Reset()
     fEnum->Reset();
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DTDAttDefList)
+
+void DTDAttDefList::serialize(XSerializeEngine& serEng)
+{
+
+    XMLAttDefList::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        /***
+         *
+         * Serialize   RefHashTableOf<DTDAttDef>           
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fList))
+        {
+            int itemNumber = 0;
+            fEnum->Reset();
+
+            while (fEnum->hasMoreElements())
+            {
+                fEnum->nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            fEnum->Reset();
+            while (fEnum->hasMoreElements())
+            {
+                DTDAttDef& curAttDef = fEnum->nextElement();
+                curAttDef.serialize(serEng);
+            }
+        }
+
+        // do not serialize fEnum
+    }
+    else
+    {
+        /***
+         *
+         * Deserialize   RefHashTableOf<DTDAttDef>           
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fList))
+        {
+            if (!fList)
+            {
+                fList = new RefHashTableOf<DTDAttDef>(3);
+            }
+
+            serEng.registerTemplateObject(fList);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                DTDAttDef*  data = new DTDAttDef();
+                data->serialize(serEng);               
+                fList->put((void*) data->getFullName(), data);        
+            }
+         }
+
+         if (!fEnum)
+         {
+             fEnum = new RefHashTableOfEnumerator<DTDAttDef>(fList);
+         }
+    }
+
+}
+
+	
+DTDAttDefList::DTDAttDefList(MemoryManager* const manager)
+:fEnum(0)
+,fList(0)
+{
+}
+
 XERCES_CPP_NAMESPACE_END
+

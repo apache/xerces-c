@@ -77,6 +77,7 @@
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -91,7 +92,7 @@ class SchemaElementDecl;
 class XSDLocator;
 
 
-class VALIDATORS_EXPORT ComplexTypeInfo : public XMemory
+class VALIDATORS_EXPORT ComplexTypeInfo : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -190,6 +191,11 @@ public:
       , XMLStringPool*    const pStringPool
       , XMLValidator*     const pValidator
     ) ;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(ComplexTypeInfo)
 
 private:
     // -----------------------------------------------------------------------

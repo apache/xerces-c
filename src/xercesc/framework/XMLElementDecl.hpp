@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/10 16:23:29  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -146,6 +149,7 @@
 #include <xercesc/framework/XMLAttDefList.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -167,7 +171,7 @@ class XMLContentModel;
  *  with invalid or PCDATA element ids without having to know what type of
  *  validator its messing with.)
  */
-class XMLPARSER_EXPORT XMLElementDecl : public XMemory
+class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
 {
  public:
     // -----------------------------------------------------------------------
@@ -587,6 +591,10 @@ class XMLPARSER_EXPORT XMLElementDecl : public XMemory
 
     //@}
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLElementDecl)
 
 protected :
     // -----------------------------------------------------------------------

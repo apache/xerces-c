@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/10 16:25:40  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -200,5 +203,89 @@ void SchemaAttDef::setAttName(const XMLCh* const        prefix
 {
    fAttName->setName(prefix, localPart, uriId);
 }
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(SchemaAttDef)
+
+void SchemaAttDef::serialize(XSerializeEngine& serEng)
+{
+
+    XMLAttDef::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<fElemId;
+        serEng<<fAttName;
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
+        DatatypeValidator::storeDV(serEng, fAnyDatatypeValidator);
+        DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fMemberTypeValidator);
+
+        /***
+         *
+         * Serialize ValueVectorOf<unsigned int>
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fNamespaceList))
+        {
+            unsigned int listSize = fNamespaceList->size();
+            serEng<<listSize;
+
+            for (unsigned int i=0; i < listSize; i++) 
+            {
+                serEng<<fNamespaceList->elementAt(i);
+            }
+
+        }
+
+        serEng<<(int)fValidity;
+        serEng<<(int)fValidation;
+    }
+    else
+    {
+
+        serEng>>fElemId;
+        serEng>>fAttName;
+        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);
+        fAnyDatatypeValidator = DatatypeValidator::loadDV(serEng);
+        fMemberTypeValidator  = DatatypeValidator::loadDV(serEng);
+
+        /***
+         *
+         * Deserialize ValueVectorOf<unsigned int>
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fNamespaceList))
+        {
+            if (!fNamespaceList)
+            {
+                fNamespaceList = new (getMemoryManager()) ValueVectorOf<unsigned int>(8, getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fNamespaceList);
+
+            unsigned int listSize;
+            serEng>>listSize;
+
+            for (unsigned int i=0; i < listSize; i++) 
+            {
+                unsigned int uriId;
+                serEng>>uriId;
+                fNamespaceList->addElement(uriId);
+            }
+
+        }
+
+        int i;
+        serEng>>i;
+        fValidity = (PSVIDefs::Validity)i;
+
+        serEng>>i;
+        fValidation = (PSVIDefs::Validation)i;
+    }
+}
+
 
 XERCES_CPP_NAMESPACE_END

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2003/10/10 16:24:51  peiyongz
+# Implementation of Serialization/Deserialization
+#
 # Revision 1.4  2003/06/20 19:00:00  peiyongz
 # Stateless Grammar Pool :: Part I
 #
@@ -154,6 +157,7 @@ VALIDATORS_DTD_CPP_OBJECTS = \
 	DTDAttDef.$(TO) \
 	DTDAttDefList.$(TO) \
 	DTDElementDecl.$(TO) \
+	DTDEntityDecl.$(TO) \
 	DTDGrammar.$(TO) \
 	DTDScanner.$(TO) \
 	DTDValidator.$(TO) \

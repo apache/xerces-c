@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2003/10/10 16:23:29  peiyongz
+# Implementation of Serialization/Deserialization
+#
 # Revision 1.12  2003/09/30 18:14:34  peiyongz
 # Implementation of Serialization/Deserialization
 #
@@ -209,6 +212,7 @@ FRAMEWORK_CPP_OBJECTS = \
 	Wrapper4DOMInputSource.$(TO) \
 	Wrapper4InputSource.$(TO) \
 	XMLAttDef.$(TO) \
+	XMLAttDefList.$(TO) \
 	XMLAttr.$(TO) \
 	XMLBuffer.$(TO) \
 	XMLBufferMgr.$(TO) \

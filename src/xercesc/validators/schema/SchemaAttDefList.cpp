@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/10 16:25:40  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.3  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -84,10 +87,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SchemaAttDefList: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const listToUse) :
-
-    fEnum(0)
-    , fList(listToUse)
+SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const listToUse)
+:fEnum(0)
+,fList(listToUse)
 {
     fEnum = new RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse);
 }
@@ -160,4 +162,88 @@ void SchemaAttDefList::Reset()
     fEnum->Reset();
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(SchemaAttDefList)
+
+void SchemaAttDefList::serialize(XSerializeEngine& serEng)
+{
+
+    XMLAttDefList::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        /***
+         *
+         * Serialize RefHash2KeysTableOf<SchemaAttDef>
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fList))
+        {
+            int itemNumber = 0;
+            fEnum->Reset();
+
+            while (fEnum->hasMoreElements())
+            {
+                fEnum->nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            fEnum->Reset();
+            while (fEnum->hasMoreElements())
+            {
+                SchemaAttDef& curAttDef = fEnum->nextElement();
+                curAttDef.serialize(serEng);
+            }
+
+        }
+
+        // do not serialize fEnum
+    }
+    else
+    {
+        /***
+         *
+         * Deserialize   RefHash2KeysTableOf<SchemaAttDef>           
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fList))
+        {
+            if (!fList)
+            {
+                fList = new RefHash2KeysTableOf<SchemaAttDef>(3);
+            }
+
+            serEng.registerTemplateObject(fList);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                SchemaAttDef*  data = new SchemaAttDef();
+                data->serialize(serEng);            
+                fList->put(data->getAttName()->getLocalPart(), data->getId(), data);                
+            }
+         }
+
+         if (!fEnum)
+         {
+             fEnum = new RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
+         }
+    }
+
+}
+
+SchemaAttDefList::SchemaAttDefList(MemoryManager* const manager)
+:fEnum(0)
+,fList(0)
+{
+}
+
 XERCES_CPP_NAMESPACE_END
+

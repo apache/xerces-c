@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/10/10 16:25:40  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.11  2003/10/08 21:33:48  peiyongz
  * Synchronize ContentSpec/ContentModel/FormattedModel
  *
@@ -887,6 +890,218 @@ void ComplexTypeInfo::resizeContentSpecOrgURI() {
     fMemoryManager->deallocate(fContentSpecOrgURI); //delete [] fContentSpecOrgURI;
     fContentSpecOrgURI = newContentSpecOrgURI;
     fContentSpecOrgURISize = newSize;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(ComplexTypeInfo)
+
+void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
+{
+   
+    if (serEng.isStoring())
+    {    
+        serEng<<fAnonymous;
+        serEng<<fAbstract;
+        serEng<<fAdoptContentSpec;
+        serEng<<fAttWithTypeId;
+        serEng<<fPreprocessed;
+        serEng<<fDerivedBy;
+        serEng<<fBlockSet;
+        serEng<<fFinalSet;
+        serEng<<fScopeDefined;
+        serEng<<fElementId;
+        serEng<<fContentType;
+
+        serEng.writeString(fTypeName);
+        serEng.writeString(fTypeLocalName);
+        serEng.writeString(fTypeUri);
+
+        DatatypeValidator::storeDV(serEng, fBaseDatatypeValidator);
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
+
+        serEng<<fBaseComplexTypeInfo;
+        serEng<<fContentSpec;
+        serEng<<fAttWildCard;
+        serEng<<fAttList;
+
+        /***
+         * TO DO: once SchemaElementDecl is done
+         * Serialize RefVectorOf<SchemaElementDecl>*    fElements;
+         *
+         ***/
+
+        /***
+         *
+         * Serialize RefVectorOf<ContentSpecNode>
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fSpecNodesToDelete))
+        {
+            int vectorLength = fSpecNodesToDelete->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                serEng<<fSpecNodesToDelete->elementAt(i);
+            }
+        }
+
+        /***
+         *
+         * Serialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
+         *
+         ***/    
+        if (serEng.needToWriteTemplateObject(fAttDefs))
+        {
+            int itemNumber = 0;
+
+            RefHash2KeysTableOfEnumerator<SchemaAttDef> e(fAttDefs);
+            while (e.hasMoreElements())
+            {
+                e.nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            e.Reset();
+            while (e.hasMoreElements())
+            {
+                SchemaAttDef& attDef = e.nextElement();
+                attDef.serialize(serEng);
+            }
+
+        }
+
+         /***
+          *   Don't serialize 
+          *
+          *   fContentModel;
+          *   fFormattedModel;
+          *   
+          ***/
+
+        serEng<<*fContentSpecOrgURI;
+        serEng<<fUniqueURI;
+        serEng<<fContentSpecOrgURISize;
+
+        /***
+         *  don't serialize
+         *  TODO
+         *  fLocator;
+         ***/
+
+    }
+    else
+    {
+        serEng>>fAnonymous;
+        serEng>>fAbstract;
+        serEng>>fAdoptContentSpec;
+        serEng>>fAttWithTypeId;
+        serEng>>fPreprocessed;
+        serEng>>fDerivedBy;
+        serEng>>fBlockSet;
+        serEng>>fFinalSet;
+        serEng>>fScopeDefined;
+        serEng>>fElementId;
+        serEng>>fContentType;
+
+        serEng.readString(fTypeName);
+        serEng.writeString(fTypeLocalName);
+        serEng.writeString(fTypeUri);
+
+        fBaseDatatypeValidator = DatatypeValidator::loadDV(serEng);
+        fDatatypeValidator     = DatatypeValidator::loadDV(serEng);
+
+        serEng>>fBaseComplexTypeInfo;
+        serEng>>fContentSpec;
+        serEng>>fAttWildCard;
+        serEng>>fAttList;
+
+        /***
+         * TO DO: once SchemaElementDecl is done
+         * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
+         *
+         ***/
+
+        /***
+         *
+         * Deserialize RefVectorOf<ContentSpecNode>*    ;
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fSpecNodesToDelete))
+        {
+            if (!fSpecNodesToDelete)
+            {
+                fSpecNodesToDelete = new (fMemoryManager) RefVectorOf<ContentSpecNode>(8, true, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fSpecNodesToDelete);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                ContentSpecNode* node;
+                serEng>>node;
+                fSpecNodesToDelete->addElement(node);
+            }
+        }
+
+        /***
+         *
+         * Deserialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
+         *
+         ***/    
+         if (serEng.needToReadTemplateObject((void**)&fAttDefs))
+        {
+            if (!fAttDefs)
+            {
+                fAttDefs = new (fMemoryManager) RefHash2KeysTableOf<SchemaAttDef>(3, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fAttDefs);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {               
+                SchemaAttDef*  data = new (fMemoryManager) SchemaAttDef(fMemoryManager);
+                data->serialize(serEng);
+                fAttDefs->put(data->getAttName()->getLocalPart(), data->getId(), data);                
+            }
+        }
+
+         /***
+          *   Don't serialize 
+          *
+          *   fContentModel;
+          *   fFormattedModel;
+          *   
+          ***/
+
+        fContentModel   = 0;
+        fFormattedModel = 0;
+
+        unsigned int i;
+
+        serEng>>i;
+        *fContentSpecOrgURI = i;
+
+        serEng>>fUniqueURI;
+        serEng>>fContentSpecOrgURISize;
+
+        /***
+         *  don't serialize
+         *  TODO
+         *  fLocator;
+         ***/
+        fLocator = 0;
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

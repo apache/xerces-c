@@ -460,4 +460,106 @@ void DTDElementDecl::faultInAttDefList() const
     ((DTDElementDecl*)this)->fAttDefs = new (getMemoryManager()) RefHashTableOf<DTDAttDef>(29, true, getMemoryManager());
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DTDElementDecl)
+
+void DTDElementDecl::serialize(XSerializeEngine& serEng)
+{
+
+    /***
+    RefHashTableOf<DTDAttDef>*  fAttDefs;
+    ***/
+
+    if (serEng.isStoring())
+    {
+
+        /***
+         *
+         * Serialize   RefHashTableOf<DTDAttDef>           
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fAttDefs))
+        {
+            RefHashTableOfEnumerator<DTDAttDef> e(fAttDefs);
+
+            int itemNumber = 0;        
+            while (e.hasMoreElements())
+            {
+                e.nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            e.Reset();
+            while (e.hasMoreElements())
+            {
+                DTDAttDef& curAttDef = e.nextElement();
+                curAttDef.serialize(serEng);
+            }
+        }
+
+        serEng<<fAttList;
+        serEng<<fContentSpec;
+        serEng<<(int) fModelType;
+
+        /***
+         *   don't serialize
+         *
+         *   XMLContentModel*            fContentModel;
+         *   XMLCh*                      fFormattedModel;
+         *
+         ***/
+
+    }
+    else
+    {
+        /***
+         *
+         * Deserialize   RefHashTableOf<DTDAttDef>           
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fAttDefs))
+        {
+            if (!fAttDefs)
+            {
+                fAttDefs = new RefHashTableOf<DTDAttDef>(3);
+            }
+
+            serEng.registerTemplateObject(fAttDefs);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                DTDAttDef*  data = new DTDAttDef();
+                data->serialize(serEng);               
+                fAttDefs->put((void*) data->getFullName(), data);        
+            }
+         }
+
+        serEng>>fAttList;
+        serEng>>fContentSpec;
+
+        int i;
+        serEng>>i;
+        fModelType=(ModelTypes)i;
+
+        /***
+         *   don't deserialize
+         *
+         *   XMLContentModel*            fContentModel;
+         *   XMLCh*                      fFormattedModel;
+         *
+         ***/
+        fContentModel   = 0;
+        fFormattedModel = 0;
+    }
+
+}
+
 XERCES_CPP_NAMESPACE_END

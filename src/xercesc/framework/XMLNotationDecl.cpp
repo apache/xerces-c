@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2003/10/10 16:23:29  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/10/01 16:32:38  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -170,5 +173,32 @@ void XMLNotationDecl::cleanUp()
     fMemoryManager->deallocate(fSystemId);
     fMemoryManager->deallocate(fBaseURI);
 }
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLNotationDecl)
+
+void XMLNotationDecl::serialize(XSerializeEngine& serEng)
+{
+    if (serEng.isStoring())
+    {
+        serEng<<fId;
+        serEng.writeString(fName);
+        serEng.writeString(fPublicId);
+        serEng.writeString(fSystemId);
+        serEng.writeString(fBaseURI);
+    }
+    else
+    {
+        serEng>>fId;
+        serEng.readString(fName);
+        serEng.readString(fPublicId);
+        serEng.readString(fSystemId);
+        serEng.readString(fBaseURI);
+    }
+}
+
 
 XERCES_CPP_NAMESPACE_END
