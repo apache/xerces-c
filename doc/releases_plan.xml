@@ -74,25 +74,18 @@
 		<tr>
 			<td>3</td>
 			<td>Refactoring of x-platform support</td>
-			<td>
-				<ol>
-					<li>Initial cut - James</li>
-					<li>Basic posix support - James</li>
-					<li>Mac re-port/test - James</li>
-					<li>Windows re-port/test - Alberto</li>
-					<li>Linux re-port/test<br />
-						Gareth<br />
-						Alberto [VMWare (Red Hat 9, Red Hat 7.3) and I can add more]<br />
-						Scott Cantor [test]<br />
-						cargilld [w/ xlC]
-					</li>
-					<li>Solaris - Scott Cantor [test]</li>
-					<li>Cygwin - Neil</li>
-					<li>MingGW - Alberto</li>
-					<li>Interix - Alberto</li>
-					<li>AIX - cargilld</li>
-					<li>OS390 - cargilld</li>
-				<ol>
+			<td>Initial cut - James<br/>
+					Basic posix support - James<br/>
+					Mac re-port/test - James<br/>
+					Windows re-port/test - Alberto<br/>
+					Linux re-port/test: Gareth, Alberto [VMWare (Red Hat 9, Red Hat 7.3) and I can add more],
+						Scott Cantor [test], cargilld [w/ xlC]<br/>					
+					Solaris - Scott Cantor [test]<br/>
+					Cygwin - Neil<br/>
+					MingGW - Alberto<br/>
+					Interix - Alberto<br/>
+					AIX - cargilld<br/>
+					OS390 - cargilld
 			</td>
 		</tr>
 		
@@ -218,6 +211,12 @@
 			<td>Audit/Potential removal of all deprecated methods</td>
 			<td>cargilld</td>
 		</tr>
+
+		<tr>
+			<td>27</td>
+			<td>Remove tests/samples not invoked by sanityTest.pl</td>
+			<td>cargilld / James</td>
+		</tr>		
 																																	 
 	</table>
 	
