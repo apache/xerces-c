@@ -1057,14 +1057,18 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
     //  a string to skip will never have a new line in it, so we will never
     //  miss adjusting the current line.
     //
-    if (charsLeftInBuffer() < srcLen)
+    unsigned int charsLeft = charsLeftInBuffer();
+    while (charsLeft < srcLen)
     {
-        refreshCharBuffer();
+         refreshCharBuffer();
+         unsigned int t = charsLeftInBuffer();
+         if (t == charsLeft)   // if the refreshCharBuf() did not add anything new
+             return false;     //   give up and return.
+         charsLeft = t;
+	}
 
-        // Did we get enough chars to handle it yet?
-        if (charsLeftInBuffer() < srcLen)
-            return false;
-    }
+
+
 
     //
     //  Ok, now we now that the current reader has enough chars in its
@@ -1337,7 +1341,7 @@ void XMLReader::doInitDecode()
             //   Don't move to char buf - no one wants to see it.
             //   Note: this causes any encoding= declaration to override
             //         the BOM's attempt to say that the encoding is utf-8.
- 
+
             // Look at the raw buffer as short chars
             const char* asChars = (const char*)fRawByteBuf;
 
