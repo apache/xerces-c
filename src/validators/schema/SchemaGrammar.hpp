@@ -56,7 +56,7 @@
 
 /*
  * $Log$
- * Revision 1.11  2001/10/04 15:08:56  knoaman
+ * Revision 1.12  2001/10/04 15:11:51  knoaman
  * Add support for circular import.
  *
  * Revision 1.10  2001/09/14 14:50:22  tng
