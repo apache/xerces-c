@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/10/01 08:10:38  amassari
+ * Updated version numbers to 2.6; use version macros when possible
+ *
  * Revision 1.7  2004/09/08 13:55:36  peiyongz
  * Apache License Version 2.0
  *
@@ -60,7 +63,7 @@ class ATL_NO_VTABLE CXMLHttpRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CXMLHttpRequest, &CLSID_XMLHTTPRequest>,
 	public IObjectSafetyImpl<CXMLHttpRequest, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, 2, 50>,
+	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, XERCES_VERSION_MAJOR, INVK_CAT2_RAW_NUMERIC(XERCES_VERSION_MINOR,XERCES_VERSION_REVISION)>,
 	public IObjectWithSiteImpl<CXMLHttpRequest>,
 	public ISupportErrorInfo,
 	public CWindowImpl<CXMLHttpRequest, CWindow, CWinTraits<0,0> >

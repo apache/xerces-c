@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/10/01 08:10:38  amassari
+ * Updated version numbers to 2.6; use version macros when possible
+ *
  * Revision 1.6  2004/09/08 13:55:35  peiyongz
  * Apache License Version 2.0
  *
@@ -80,7 +83,7 @@ XERCES_CPP_NAMESPACE_USE
 
 template <class T, const IID* piid, class tihclass = CComTypeInfoHolder>
 class ATL_NO_VTABLE IXMLDOMNodeImpl:
-	public IDispatchImpl<T,piid,&LIBID_Xerces, 2, 50,tihclass>,
+	public IDispatchImpl<T,piid,&LIBID_Xerces, XERCES_VERSION_MAJOR, INVK_CAT2_RAW_NUMERIC(XERCES_VERSION_MINOR,XERCES_VERSION_REVISION),tihclass>,
 	public IIBMXMLDOMNodeIdentity,
 	public ISupportErrorInfo
 {

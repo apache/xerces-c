@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/10/01 08:10:38  amassari
+ * Updated version numbers to 2.6; use version macros when possible
+ *
  * Revision 1.8  2004/09/08 13:55:36  peiyongz
  * Apache License Version 2.0
  *
@@ -70,7 +73,7 @@ XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMNodeList :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IXMLDOMNodeList, &IID_IXMLDOMNodeList, &LIBID_Xerces, 2, 50>,
+	public IDispatchImpl<IXMLDOMNodeList, &IID_IXMLDOMNodeList, &LIBID_Xerces, XERCES_VERSION_MAJOR, INVK_CAT2_RAW_NUMERIC(XERCES_VERSION_MINOR,XERCES_VERSION_REVISION)>,
 	public NodeContainerImpl<DOMNodeList>,
 	public ISupportErrorInfo
 {

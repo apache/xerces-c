@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/10/01 08:10:38  amassari
+ * Updated version numbers to 2.6; use version macros when possible
+ *
  * Revision 1.9  2004/09/08 13:55:35  peiyongz
  * Apache License Version 2.0
  *
@@ -91,7 +94,7 @@ class ATL_NO_VTABLE CXMLDOMDocument :
 	public IObjectWithSiteImpl<CXMLDOMDocument>,
 	public CProxyXMLDOMDocumentEvents< CXMLDOMDocument >,
 	public IConnectionPointContainerImpl<CXMLDOMDocument>,
-	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces, 2, 50>,
+	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces, XERCES_VERSION_MAJOR, INVK_CAT2_RAW_NUMERIC(XERCES_VERSION_MINOR,XERCES_VERSION_REVISION)>,
 	public CWindowImpl<CXMLDOMDocument, CWindow, CWinTraits<0,0> >,
 	ErrorHandler
 {
