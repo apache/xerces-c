@@ -1779,6 +1779,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMTreeWalker.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMUserDataHandler.hpp">
 			</File>
 			<File
@@ -1984,6 +1987,12 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp">

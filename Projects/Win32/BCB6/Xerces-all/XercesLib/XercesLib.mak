@@ -243,6 +243,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMStringPool.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTextImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeWalkerImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTypeInfoImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMWriterImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XSDElementNSImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\AttrImpl.obj \

@@ -233,6 +233,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMStringPool.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTextImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeWalkerImpl.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTypeInfoImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMWriterImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSDElementNSImpl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\AttrImpl.obj
@@ -571,6 +572,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp" FORMNAME="" UNITNAME="DOMStringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTextImpl.cpp" FORMNAME="" UNITNAME="DOMTextImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.cpp" FORMNAME="" UNITNAME="DOMTreeWalkerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp" FORMNAME="" UNITNAME="DOMTypeInfoImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp" FORMNAME="" UNITNAME="DOMWriterImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp" FORMNAME="" UNITNAME="XSDElementNSImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\AttrImpl.cpp" FORMNAME="" UNITNAME="AttrImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
