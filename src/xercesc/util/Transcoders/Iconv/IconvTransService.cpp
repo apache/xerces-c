@@ -67,7 +67,17 @@
 #include "IconvTransService.hpp"
 #include <wchar.h>
 #if defined (XML_GCC) || defined (XML_PTX) || defined (XML_IBMVAOS2)
-    #if !defined(XML_OPENSERVER)
+    #if defined(XML_BEOS)
+        wint_t towlower(wint_t wc) {
+          return ((wc>'A')&&(wc<'Z') ? wc+'a'-'A' : wc);
+        }
+        wint_t towupper(wint_t wc) {
+          return ((wc>'a')&&(wc<'z') ? wc-'a'+'A' : wc);
+        }
+        wint_t iswspace(wint_t wc) {
+          return (wc==(wint_t)' ');
+        }
+    #elif !defined(XML_OPENSERVER)
         #include <wctype.h>
     #endif
 #endif

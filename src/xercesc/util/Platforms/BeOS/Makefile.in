@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 2002 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -53,8 +53,10 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
+# $Log$
+# Revision 1.1  2002/12/02 20:42:30  tng
+# [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
 #
-# $Id$
 #
 
 PLATFORM = @platform@
@@ -75,87 +77,12 @@ TRANSCODER = @transcoder@
 THREADS = @threads@
 
 MODULE = util
-SUBMODULE = Compilers
 
-include ../../Makefile.incl
+include ../../../Makefile.incl
 
-CPP_PUBHEADERS = \
-	BorlandCDefs.hpp \
-	CSetDefs.hpp \
-	CodeWarriorDefs.hpp \
-	DECCXXDefs.hpp \
-	GCCDefs.hpp \
-	HPCCDefs.hpp \
-	IBMVAOS2Defs.hpp \
-	IBMVAW32Defs.hpp \
-	MVSCPPDefs.hpp \
-	PTXCCDefs.hpp \
-	SCOCCDefs.hpp \
-	SunCCDefs.hpp \
-	SunKaiDefs.hpp \
-	OS400SetDefs.hpp \
-	MIPSproDefs.hpp \
-	TandemCCDefs.hpp \
-	VCPPDefs.hpp
+SUBMODULE = Platforms/BeOS
+CXXFLAGS += -D_GNU_SOURCE -D__USE_GNU
+CPP_PUBHEADERS = BeOSDefs.hpp
+CPP_OBJECTS = BeOSPlatformUtils.$(TO)
 
-ifeq (${CXX},CC)
-    ifeq (${PLATFORM},SOLARIS)
-        CPP_OBJECTS = SunCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},HPUX)
-        CPP_OBJECTS = HPCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},IRIX)
-        CPP_OBJECTS = MIPSproDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},UNIXWARE)
-        CPP_OBJECTS = SCOCCDefs.$(TO)
-    endif
-endif
-ifeq (xlC,$(findstring xlC,${CXX}))
-    CPP_OBJECTS = CSetDefs.$(TO)
-endif
-ifeq (${GXX},yes)
-    CPP_OBJECTS = GCCDefs.$(TO)
-endif
-ifeq (${CXX},ecc)
-    CPP_OBJECTS = GCCDefs.$(TO)
-endif
-ifeq (${CXX},icc)
-    CPP_OBJECTS = GCCDefs.$(TO)
-endif
-ifeq (${CXX},aCC)
-    CPP_OBJECTS = HPCCDefs.$(TO)
-endif
-ifeq (${CXX},c++)
-    ifeq (${PLATFORM},OS390)
-        CPP_OBJECTS = MVSCPPDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},PTX)
-        CPP_OBJECTS = PTXCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},BEOS)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},LINUX)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},FREEBSD)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},MACOSX)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-endif
-ifeq (${CXX},cc)
-    ifeq (${PLATFORM},MACOSX)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-endif
-ifeq (${CXX}, cxx)
-    ifeq (${PLATFORM},TRU64)
-        CPP_OBJECTS = DECCXXDefs.$(TO)
-    endif
-endif
-
-include ../Makefile.util.submodule
+include ../../Makefile.util.submodule

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/12/02 20:41:17  tng
+ * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
+ *
  * Revision 1.5  2002/11/04 15:11:38  tng
  * C++ Namespace Support.
  *
@@ -112,8 +115,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#if !defined(XML_BEOS)
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+#endif
 #include <netdb.h>
 #include <errno.h>
 

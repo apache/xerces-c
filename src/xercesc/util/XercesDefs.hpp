@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/02 20:40:49  tng
+ * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
+ *
  * Revision 1.9  2002/11/05 21:44:21  tng
  * Do not code using namespace in a global header.
  *
@@ -251,6 +254,10 @@
 
 #if defined(XML_TANDEM)
 #include    <xercesc/util/Platforms/Tandem/TandemDefs.hpp>
+#endif
+
+#if defined(XML_BEOS)
+#include    <xercesc/util/Platforms/BeOS/BeOSDefs.hpp>
 #endif
 
 #if defined(XML_LINUX)

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2002/12/02 20:41:09  tng
+# [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
+#
 # Revision 1.5  2002/08/19 18:35:56  tng
 # [Bug 6467] Installing Xerces C++ on cygwin environment.
 #
@@ -150,6 +153,9 @@ ifeq (${PLATFORM}, SOLARIS)
 endif
 ifeq (${PLATFORM}, AIX)
     SUBMODULE = AIX
+endif
+ifeq (${PLATFORM}, BEOS)
+    SUBMODULE = BeOS
 endif
 ifeq (${PLATFORM}, LINUX)
     SUBMODULE = Linux
