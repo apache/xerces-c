@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -403,7 +403,7 @@ void NodeImpl::normalize()
 };
 
 
-bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
+bool NodeImpl::isSupported(const DOMString &feature, const DOMString &version)
 {
     return DOM_DOMImplementation::getImplementation().hasFeature(feature, version);
 }
@@ -428,6 +428,10 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 {
     throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR,null);
 }
+
+bool NodeImpl::hasAttributes() {
+    return 0;                   // overridden in ElementImpl
+};
 
 
 DOMString NodeImpl::getXmlnsString() {

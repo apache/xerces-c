@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
+ * sane_include
  *
  * Revision 1.9  2000/08/08 01:00:36  aruna1
  * detach functionality removed from TreeWalker
@@ -118,8 +127,6 @@ class TreeWalkerImpl;
  * Text nodes and the root node of a document. In the logical view that results, all text
  * nodes will be siblings and appear as direct children of the root node, no matter how
  * deeply nested the structure of the original document.
- *
- * <p><b>"Experimental - subject to change"</b></p>
  *
  */
 class CDOM_EXPORT DOM_TreeWalker {
@@ -195,18 +202,20 @@ class CDOM_EXPORT DOM_TreeWalker {
         /** @name Get functions. */
         //@{
         /**
+         * The <code>root</code> node of the <code>TreeWalker</code>, as specified
+         * when it was created.
+         */
+        DOM_Node          getRoot();
+
+        /**
           * Return which node types are presented via the DOM_TreeWalker.
           * These constants are defined in the DOM_NodeFilter interface.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         unsigned long   	getWhatToShow();
 
         /**
           * Return The filter used to screen nodes.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         DOM_NodeFilter*		getFilter();
@@ -216,15 +225,11 @@ class CDOM_EXPORT DOM_TreeWalker {
           * The value of this flag determines whether the children of entity reference
           * nodes are visible to the DOM_TreeWalker. If false, they will be skipped over.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         bool getExpandEntityReferences();
 
         /**
           * Return the node at which the DOM_TreeWalker is currently positioned.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         DOM_Node		getCurrentNode();
@@ -235,8 +240,6 @@ class CDOM_EXPORT DOM_TreeWalker {
           * node, or if it fails to find a visible ancestor node, this method retains the
           * current position and returns null.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         DOM_Node		parentNode();
 
@@ -244,8 +247,6 @@ class CDOM_EXPORT DOM_TreeWalker {
           * Moves the <code>DOM_TreeWalker</code> to the first child of the current node,
           * and returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         DOM_Node		firstChild();
@@ -255,8 +256,6 @@ class CDOM_EXPORT DOM_TreeWalker {
           * returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         DOM_Node		lastChild();
 
@@ -264,8 +263,6 @@ class CDOM_EXPORT DOM_TreeWalker {
           * Moves the <code>DOM_TreeWalker</code> to the previous sibling of the current
           * node, and returns the new node. If the current node has no previous sibling,
           * returns <code>null</code>, and retains the current node.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         DOM_Node		previousSibling();
@@ -275,19 +272,15 @@ class CDOM_EXPORT DOM_TreeWalker {
           * and returns the new node. If the current node has no next sibling, returns
           * <code>null</code>, and retains the current node.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         DOM_Node		nextSibling();
 
         /**
           * Moves the <code>DOM_TreeWalker</code> to the previous visible node in document
           * order relative to the current node, and returns the new node. If the current
-          * node has no previous node, 
+          * node has no previous node,
           * or if the search for previousNode attempts to step upward from the DOM_TreeWalker's
-          * root node, returns <code>null</code>, and retains the current node. 
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
+          * root node, returns <code>null</code>, and retains the current node.
           *
           */
         DOM_Node		previousNode();
@@ -295,11 +288,9 @@ class CDOM_EXPORT DOM_TreeWalker {
         /**
           * Moves the <code>DOM_TreeWalker</code> to the next visible node in document order
           * relative to the current node, and returns the new node. If the current node has
-          * no next node, 
+          * no next node,
           * or if the search for nextNode attempts to step upward from the DOM_TreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
           *
           */
         DOM_Node		nextNode();
@@ -310,13 +301,11 @@ class CDOM_EXPORT DOM_TreeWalker {
         /**
           * Set the node at which the DOM_TreeWalker is currently positioned.
           *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
           */
         void			setCurrentNode(DOM_Node currentNode);
         //@}
 
-        
+
     protected:
         DOM_TreeWalker(TreeWalkerImpl* impl);
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -388,6 +388,23 @@ DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &fNamespac
 {
     return new DeepNodeListImpl(this,fNamespaceURI, fLocalName);
 }
+
+bool ElementImpl::hasAttributes()
+{
+    return (attributes != null && attributes->getLength() != 0);
+};
+
+bool ElementImpl::hasAttribute(const DOMString &name)
+{
+    return (getAttributeNode(name) != null);
+};
+
+bool ElementImpl::hasAttributeNS(const DOMString &namespaceURI,
+	const DOMString &localName)
+{
+    return (getAttributeNodeNS(namespaceURI, localName) != null);
+};
+
 
 // DOM_NamedNodeMap UTILITIES
 NamedNodeMapImpl *ElementImpl::NNM_cloneMap(NodeImpl *nnm_ownerNode)

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:49  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:49  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/10/18 18:01:29  tng
  * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
@@ -168,6 +177,12 @@ void TreeWalkerImpl::unreferenced()
     delete ptr;
 }
 
+
+/** Return the Root Node. */
+DOM_Node TreeWalkerImpl::getRoot () {
+
+    return fRoot;
+}
 
 /** Return the whatToShow value */
 unsigned long TreeWalkerImpl::getWhatToShow () {

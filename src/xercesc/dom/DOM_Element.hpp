@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
+ * sane_include
  *
  * Revision 1.9  2001/05/11 13:25:20  tng
  * Copyright update.
@@ -322,8 +331,6 @@ public:
   /**
    * Retrieves an attribute value by local name and namespace URI.
    *
-   * <p><b>"Experimental - subject to change"</b></p>
-   *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to retrieve.
    * @param localName The <em>local name</em> of the
@@ -348,8 +355,6 @@ public:
    * nodes, build the appropriate subtree, and use
    * <CODE>setAttributeNodeNS</CODE> or <CODE>setAttributeNode</CODE> to assign
    * it as the value of an attribute.
-   *
-   * <p><b>"Experimental - subject to change"</b></p>
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to create or alter.
@@ -383,8 +388,6 @@ public:
    * The replacing attribute has the same namespace URI and local name, as well as
    * the original prefix.
    *
-   * <p><b>"Experimental - subject to change"</b></p>
-   *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to remove.
    * @param localName The <em>local name</em> of the
@@ -397,8 +400,6 @@ public:
 
   /**
    * Retrieves an <code>DOM_Attr</code> node by local name and namespace URI.
-   *
-   * <p><b>"Experimental - subject to change"</b></p>
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to retrieve.
@@ -415,8 +416,6 @@ public:
     *
     * If an attribute with that local name and namespace URI is already present
     * in the element, it is replaced by the new one.
-    *
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * @param newAttr The <code>DOM_Attr</code> node to add to the attribute list.
     * @return If the <code>newAttr</code> attribute replaces an existing
@@ -440,8 +439,6 @@ public:
    * would be encountered in a preorder traversal of the
    * <code>DOM_Document</code> tree, starting from this node.
    *
-   * <p><b>"Experimental - subject to change"</b></p>
-   *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the elements to match on. The special value "*" matches all
    *    namespaces.
@@ -452,6 +449,39 @@ public:
    */
   DOM_NodeList    getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName) const;
+
+    /**
+     *  Returns whether this node (if it is an element) has any attributes.
+     * @return <code>true</code> if this node has any attributes,
+     *   <code>false</code> otherwise.
+     */
+    bool         hasAttributes() const;
+
+    /**
+     * Returns <code>true</code> when an attribute with a given name is
+     * specified on this element or has a default value, <code>false</code>
+     * otherwise.
+     * @param nameThe name of the attribute to look for.
+     * @return <code>true</code> if an attribute with the given name is
+     *   specified on this element or has a default value, <code>false</code>
+     *    otherwise.
+     */
+    bool         hasAttribute(const DOMString &name) const;
+
+    /**
+     * Returns <code>true</code> when an attribute with a given local name and
+     * namespace URI is specified on this element or has a default value,
+     * <code>false</code> otherwise. HTML-only DOM implementations do not
+     * need to implement this method.
+     * @param namespaceURIThe namespace URI of the attribute to look for.
+     * @param localNameThe local name of the attribute to look for.
+     * @return <code>true</code> if an attribute with the given local name
+     *   and namespace URI is specified or has a default value on this
+     *   element, <code>false</code> otherwise.
+     * @since DOM Level 2
+     */
+    bool         hasAttributeNS(const DOMString &namespaceURI,
+                                const DOMString &localName) const;
 
   //@}
 

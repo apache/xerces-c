@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 20:03:48  tng
+ * Add DOM Level missing functions:
+ * 1. NodeIterator::getRoot
+ * 2. TreeWalker::getRoot
+ * 3. Element::hasAttribute
+ * 4. Element::hasAttributeNS
+ * 5. Node::hasAttributes
+ * 6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
+ * sane_include
  *
  * Revision 1.7  2000/06/14 21:08:07  andyh
  * DOM attribute/named nodemaps: Fix a couple of null ptr problems.
@@ -101,13 +110,13 @@
 #include "NodeImpl.hpp"
 #include <assert.h>
 
-DOM_Node::DOM_Node() 
+DOM_Node::DOM_Node()
 {
     fImpl = null;
 };
 
 
-DOM_Node::DOM_Node(NodeImpl *impl) 
+DOM_Node::DOM_Node(NodeImpl *impl)
 {
     fImpl = impl;
     RefCountedImpl::addRef(fImpl);
@@ -142,7 +151,7 @@ DOM_Node & DOM_Node::operator = (const DOM_NullPtr *other)
 
 
 
-DOM_Node::~DOM_Node() 
+DOM_Node::~DOM_Node()
 {
     RefCountedImpl::removeRef (this->fImpl);
     fImpl = 0;
@@ -181,73 +190,73 @@ DOM_Node   DOM_Node::appendChild(const DOM_Node &newChild)
 {
     return DOM_Node(fImpl->appendChild(newChild.fImpl));
 };
- 
-  
-DOM_Node      DOM_Node::cloneNode(bool deep) const 
+
+
+DOM_Node      DOM_Node::cloneNode(bool deep) const
 {
     return DOM_Node(fImpl->cloneNode(deep));
 };
 
 
-DOMString  DOM_Node::getNodeName()  const 
+DOMString  DOM_Node::getNodeName()  const
 {
     return fImpl->getNodeName().clone();
 };
 
-  
+
 DOMString  DOM_Node::getNodeValue() const
 {
     return fImpl->getNodeValue().clone();
 };
 
-  
+
 short   DOM_Node::getNodeType() const
 {
     return fImpl->getNodeType();
 };
 
-  
+
 DOM_Node      DOM_Node::getParentNode() const
 {
     return DOM_Node(fImpl->getParentNode());
 };
 
-  
+
 DOM_NodeList      DOM_Node::getChildNodes() const
 {
     return DOM_NodeList(fImpl);
 };
- 
-  
+
+
 DOM_Node      DOM_Node::getFirstChild() const
 {
     return DOM_Node(fImpl->getFirstChild());
 };
 
-  
+
 DOM_Node      DOM_Node::getLastChild() const
 {
     return DOM_Node(fImpl->getLastChild());
 };
- 
-  
+
+
 DOM_Node      DOM_Node::getPreviousSibling() const
 {
     return DOM_Node(fImpl->getPreviousSibling());
 };
- 
-  
+
+
 DOM_Node       DOM_Node::getNextSibling() const
 {
     return DOM_Node(fImpl->getNextSibling());
 };
-  
+
 
 void          *DOM_Node::getUserData() const
 {
     return fImpl->getUserData ();
 }
-  
+
 DOM_NamedNodeMap DOM_Node::getAttributes() const
 {
 	if (getNodeType() == ELEMENT_NODE)
@@ -256,19 +265,19 @@ DOM_NamedNodeMap DOM_Node::getAttributes() const
 		return DOM_NamedNodeMap();
 };
 
-  
+
 DOM_Document   DOM_Node::getOwnerDocument() const
 {
     return fImpl->getOwnerDocument();
 };
 
-  
+
 bool           DOM_Node::hasChildNodes() const
 {
     return fImpl->hasChildNodes();
 };
 
-  
+
 DOM_Node       DOM_Node::insertBefore(const DOM_Node &newChild, const DOM_Node &refChild){
     return DOM_Node(fImpl->insertBefore(newChild.fImpl, refChild.fImpl));
 };
@@ -284,12 +293,12 @@ DOM_Node       DOM_Node::replaceChild(const DOM_Node &newChild, const DOM_Node &
     return DOM_Node(fImpl->replaceChild(newChild.fImpl, oldChild.fImpl));
 };
 
-  
+
 DOM_Node       DOM_Node::removeChild(const DOM_Node &oldChild){
     return DOM_Node(fImpl->removeChild(oldChild.fImpl));
 };
 
-  
+
 void           DOM_Node::setNodeValue(const DOMString &nodeValue)
 {
     fImpl->setNodeValue(nodeValue);
@@ -310,10 +319,10 @@ void              DOM_Node::normalize()
 };
 
 
-bool              DOM_Node::supports(const DOMString &feature,
+bool              DOM_Node::isSupported(const DOMString &feature,
 	                       const DOMString &version) const
 {
-    return fImpl->supports(feature, version);
+    return fImpl->isSupported(feature, version);
 }
 
 DOMString         DOM_Node::getNamespaceURI() const
@@ -335,3 +344,9 @@ void              DOM_Node::setPrefix(const DOMString &prefix)
 {
     fImpl->setPrefix(prefix);
 }
+
+bool              DOM_Node::hasAttributes() const
+{
+    return fImpl->hasAttributes();
+}
+

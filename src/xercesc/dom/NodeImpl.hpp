@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -181,11 +181,12 @@ public:
 
     //Introduced in DOM Level 2
     virtual void	normalize();
-    virtual bool	supports(const DOMString &feature, const DOMString &version);
+    virtual bool	isSupported(const DOMString &feature, const DOMString &version);
     virtual DOMString	getNamespaceURI();
     virtual DOMString   getPrefix();
     virtual DOMString   getLocalName();
     virtual void        setPrefix(const DOMString &prefix);
+    virtual bool        hasAttributes();
 
 protected:
     //Utility, not part of DOM Level 2 API
@@ -298,7 +299,7 @@ public: // should really be protected - ALH
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitNodeImpl();   
+	static void reinitNodeImpl();
 
 };
 

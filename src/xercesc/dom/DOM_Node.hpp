@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -293,8 +293,6 @@ class  CDOM_EXPORT DOM_Node {
      * which is not used with any <code>DOM_Document</code> yet, this is
      * <code>null</code>.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      */
     DOM_Document      getOwnerDocument() const;
 
@@ -513,16 +511,12 @@ class  CDOM_EXPORT DOM_Node {
      * nodes and <CODE>DOM_CDATASection</CODE>
      * nodes.</P>
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      */
     void              normalize();
 
     /**
      * Tests whether the DOM implementation implements a specific
      * feature and that feature is supported by this node.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param feature The string of the feature to test. This is the same
      * name as what can be passed to the method <code>hasFeature</code> on
@@ -534,7 +528,7 @@ class  CDOM_EXPORT DOM_Node {
      * @return Returns <code>true</code> if the specified feature is supported
      * on this node, <code>false</code> otherwise.
      */
-    bool              supports(const DOMString &feature,
+    bool              isSupported(const DOMString &feature,
 	                       const DOMString &version) const;
 
     /**
@@ -550,16 +544,12 @@ class  CDOM_EXPORT DOM_Node {
      * such as <CODE>createElement</CODE> from the <CODE>DOM_Document</CODE>
      * interface, this is always <CODE>null</CODE>.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      */
     DOMString         getNamespaceURI() const;
 
     /**
      * Get the <em>namespace prefix</em>
      * of this node, or <code>null</code> if it is unspecified.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      */
     DOMString         getPrefix() const;
@@ -570,8 +560,6 @@ class  CDOM_EXPORT DOM_Node {
      * For nodes created with a DOM Level 1 method, such as
      * <code>createElement</code> from the <code>DOM_Document</code> interface,
      * it is null.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      */
     DOMString         getLocalName() const;
@@ -589,8 +577,6 @@ class  CDOM_EXPORT DOM_Node {
      * attribute, that is known to have a default value, does not make a new
      * attribute with the default value and the original prefix appear, since the
      * <CODE>namespaceURI</CODE> and <CODE>localName</CODE> do not change.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param prefix The prefix of this node.
      * @exception DOMException
@@ -610,6 +596,13 @@ class  CDOM_EXPORT DOM_Node {
      *      the <CODE>qualifiedName</CODE> of this node is "xmlns".
      */
     void              setPrefix(const DOMString &prefix);
+
+    /**
+     *  Returns whether this node (if it is an element) has any attributes.
+     * @return <code>true</code> if this node has any attributes,
+     *   <code>false</code> otherwise.
+     */
+    bool              hasAttributes() const;
 
     //@}
 
