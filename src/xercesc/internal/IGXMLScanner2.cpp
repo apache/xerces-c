@@ -578,43 +578,46 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                actualAttDef = (SchemaAttDef *)attDef;
 	            else if (attDefForWildCard)
 	                actualAttDef = (SchemaAttDef *)attDefForWildCard;
-	            XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
-                DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
-	            XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
-	            if(attrValid != PSVIItem::VALIDITY_VALID)
-	            {
-	                toFill->reset(
-	                    fRootElemName
-	                    , attrValid
-	                    , attrAssessed
-	                    , normBuf.getRawBuffer()
-	                    , validatingType
-	                    , 0
-	                    , actualAttDef->getValue()
-	                    , false
-	                    , attrDecl
-                        , 0
-	                );
-	            }
-	            else
-	            {
-	                XSSimpleTypeDefinition *memberType = 0;
-	                if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
-	                    memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-	                toFill->reset(
-	                    fRootElemName
-	                    , attrValid
-	                    , attrAssessed
-	                    , normBuf.getRawBuffer()
-	                    , validatingType
-	                    , memberType
-	                    , actualAttDef->getValue()
-	                    , false
-	                    , attrDecl
-                        , (memberType)?attrValidator:attrDataType
-	                );
-	            }
+                if(actualAttDef)
+                {
+	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
+	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
+                    DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
+	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
+	                if(attrValid != PSVIItem::VALIDITY_VALID)
+	                {
+	                    toFill->reset(
+	                        fRootElemName
+	                        , attrValid
+	                        , attrAssessed
+	                        , normBuf.getRawBuffer()
+	                        , validatingType
+	                        , 0
+	                        , actualAttDef->getValue()
+	                        , false
+	                        , attrDecl
+                            , 0
+	                    );
+	                }
+	                else
+	                {
+	                    XSSimpleTypeDefinition *memberType = 0;
+	                    if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
+	                        memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
+	                    toFill->reset(
+	                        fRootElemName
+	                        , attrValid
+	                        , attrAssessed
+	                        , normBuf.getRawBuffer()
+	                        , validatingType
+	                        , memberType
+	                        , actualAttDef->getValue()
+	                        , false
+	                        , attrDecl
+                            , (memberType)?attrValidator:attrDataType
+	                    );
+	                }
+                }
 	        }
 	    }
         else
