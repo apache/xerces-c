@@ -1545,7 +1545,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     if (isRoot)
     {
         fRootGrammar = fGrammar;
-        fRootElemName = XMLString::replicate(qnameRawBuf);
+        fRootElemName = XMLString::replicate(qnameRawBuf, fMemoryManager);
     }
 
     if (fPSVIHandler)
