@@ -973,7 +973,7 @@ case $basic_machine in
 				vendor=apple
 				;;
 			-OS400*)
-				vendor=ibma
+				vendor=ibm
 				;;
 		esac
 		basic_machine=`echo $basic_machine | sed "s/unknown/$vendor/"`
