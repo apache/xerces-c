@@ -5359,7 +5359,7 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
                 return true;
         }
     }
-    else if(validator==0 && typeInfo==0) // no checking
+    else // validator==0 && typeInfo==0 -- no checking
         return true;
 
     if (toEmit) {
