@@ -3,40 +3,103 @@
 
 <faqs title="Other &XercesCName; Questions">
 
-	<faq title="I can't use C++. Do you have a Java version?">
-		<q>I can't use C++. Do you have a Java version?</q>
-		<a>
-			<p>Yes. The &XercesCProjectName; family of products also has a Java version.</p>
-		</a>
-	</faq>
-	
-	<faq title="I found a bug - what do I do?">
-		<q>I found a bug - what do I do?</q>
-		<a>
-			<p>Send the bug report to &lt;<jump href="mailto:&XercesCEmailAddress;">
-			&XercesCEmailAddress;</jump>&gt; with the version number,
-			the exact OS release number, the compiler version number, and a
-			copy of the XML document that generates the error. The more
-			information you can provide, the faster we can get a fix into the
-			build!</p>
-		</a>
-	</faq>
-	
-	<faq title="I have a question not covered -- who
-	do I contact?">
-		<q>I have a question not covered here, or in the documentation -- who do I contact?</q>
-		<a>
-			<p>First post your question on the 
-			<jump href="http://www.alphaworks.ibm.com/aw.nsf/discussion?ReadForm&amp;/forum/xml4c.nsf/discussion?createdocument">XML4C
-			discussion group on Alphaworks</jump>, and someone from the 
-			&XercesCProjectName; development team will answer that question. The list is 
-			monitored very closely and the response is usually within 24 hours. 
-			If you need to ask a special question privately, send email to 
-			&lt;<jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt; 
-			and give us as much information as you can. We will get back to 
-			you as soon as possible.</p>
-		</a>
-	</faq>
+    <faq title="I can't use C++. Do you have a Java version?">
+        <q>I can't use C++. Do you have a Java version?</q>
+        <a>
+
+            <p>Yes. The Xerces family of products also has a Java
+            version.  More information is available at: <jump
+            href="http://xml.apache.org/xerces-j/index.html">http://xml.apache.org/xerces-j/index.html</jump></p>
+
+        </a>
+    </faq>
+
+    
+    <faq title="I found a defect - whom do I report it to?">
+        <q>I found a defect - whom do I report it to?</q>
+        <a>
+
+            <p>Send the defect reports to &lt;<jump
+            href="mailto:&XercesCEmailAddress;">
+            &XercesCEmailAddress;</jump>&gt; with the version number,
+            the exact OS release number, the compiler version number,
+            and a copy of the XML document that generates the
+            error. Do mention the archive (source or binary) you are
+            using. If you have rebuilt the samples/library then please
+            mention that too. The more information we get, the faster
+            we will be able to reproduce and fix the defect.</p>
+
+        </a>
+    </faq>
+    
+
+    <faq title="Is there any kind of support available for Xerces-C/XML4C?">
+        <q>Is there any kind of support available for Xerces-C/XML4C?</q>
+        <a>
+
+            <p>Limited support is available with <em>no
+            guarantees</em> via the Xerces-C mailing list &lt;<jump
+            href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress;</jump>&gt;
+            and <jump
+            href="http://www.alphaworks.ibm.com/forum/xml4c.nsf/discussion_current_frameset">XML4C
+            discussion forum on Alphaworks</jump>. We strongly
+            recommend all &XercesCName; users to subscribe to the
+            Xerces-C mailing list and monitor the discussions on the
+            XML4C discussion forums.</p>
+
+            <p>IBM, in the past, has set up some separate special
+            support contracts for customers who absolutely insisted on
+            having support. If you have similar requirements, then you
+            may contact IBM via email at <jump
+            href="mailto:xml4c@us.ibm.com">xml4c@us.ibm.com</jump>.</p>
+
+        </a>
+    </faq>
+
+    
+    <faq title="I have a question not covered here -- who may I contact?">
+        <q>I have a question not covered here -- who may I contact?</q>
+        <a>
+
+            <p>Hopefully, you have read this entire FAQ and still
+            could not find the answer to your question.</p>
+
+            <p>Next, we would like you to search the archives
+            (addresses given below) and on going discussion threads
+            (URL's mentioned in the answer to the previous question
+            above) to see if someone else has already asked the same
+            question. Its been a while since the first public release
+            of this product was made, so most common questions have
+            been asked and answered. Many people actively
+            subscribe/monitor these lists and is the fastest way to
+            get an answer.</p>
+
+            <p>The Apache's Xerces-C mailing list is archived at <jump
+            href="http://xml-archive.webweaving.org">http://xml-archive.webweaving.org</jump>.</p>
+
+            <p>The archives for IBM's XML4C discussion forum are
+            available at <jump
+            href="http://www.alphaworks.ibm.com/forum/xml4c.nsf/discussion_archived_frameset">here</jump>.</p>
+
+            <p>If you are using XML4C then you may also send your
+            question to <jump
+            href="mailto:xml4c@us.ibm.com">xml4c@us.ibm.com</jump>. Do note
+            that the packaging and bundling of XML4C sources and
+            binaries differs from whats available at the Apache's
+            site, so please address your questions accordingly. Again,
+            the response from this email address may not be as prompt
+            as what you may receive from the mailing lists/discussion
+            forums.</p>
+
+            <p>Its critical, that you very clearly mention the
+            following information along with your question. The
+            product name, version, source/binary archive that you
+            downloaded, whether you rebuilt the samples/library or are
+            using the stock ones that we release, platform, OS version
+            number, compiler, compiler version number.</p>
+
+        </a>
+    </faq>
 
 </faqs>
 

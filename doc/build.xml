@@ -62,7 +62,8 @@
         <p>&XercesCName; uses
         <jump href="http://www.gnu.org">GNU</jump> tools like
         <jump href="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</jump> and
-        <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump> to build the system. You must first make sure you
+        <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
+        to build the system. You must first make sure you
         have these tools installed on your system before proceeding.
         If you don not have required tools, ask your system administrator
         to get them for you. These tools are free under the GNU Public Licence
@@ -89,11 +90,11 @@
 
         <table>
             <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
-            <tr><td>Redhat Linux 6.1</td><td>egcs</td></tr>
-            <tr><td>AIX 4.3.3  and higher</td><td>xlC</td></tr>
-            <tr><td>Solaris 2.6</td><td>CC</td></tr>
-            <tr><td>HP-UX 10.2</td><td>CC</td></tr>
-            <tr><td>HP-UX 11</td><td>aCC</td></tr>
+            <tr><td>Redhat Linux 6.1</td><td>g++, gcc (egcs)</td></tr>
+            <tr><td>AIX 4.3.3  and higher</td><td>xlC_r, xlc_r</td></tr>
+            <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
+            <tr><td>HP-UX 10.2</td><td>CC, cc</td></tr>
+            <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>
         </table>
 
         <p>If you are not using any of these compilers, you are taking a calculated risk
@@ -171,8 +172,8 @@ Usage: runConfigure "options"
        where options may be any of the following:
        -p &lt;platform&gt; (accepts 'aix', 'linux', 'solaris',
                             'hp-10', 'hp-11', 'irix', 'unixware')
-       -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc)
-       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC)
+       -c &lt;C compiler name&gt; (e.g. xlc_r, gcc, cc)
+       -x &lt;C++ compiler name&gt; (e.g. xlC_r, g++, CC, aCC)
        -d (specifies that you want to build debug version)
        -m &lt;message loader&gt; can be 'inmem', 'icu', 'iconv'
        -n &lt;net accessor&gt; can be 'fileonly', 'libwww'
@@ -385,7 +386,7 @@ gmake</source>
     <anchor name="BuildAS400"/>
     <s2 title="Building on AS/400">
             <p>The following addresses the requirements and build of
-	       &XercesCName; natively on the AS/400.
+           &XercesCName; natively on the AS/400.
             </p>
             <s3 title="Building &XercesCName; library">
                 <p><em>Requirements:</em></p>
@@ -401,45 +402,45 @@ gmake</source>
                 <p><em>Recommendations:</em></p>
 
                 <ul>
-				<li>There are a couple of options when building the XML4C parser on AS/400.
-				For messaging support, you can use the in memory message option or the
-				message file support. For code page translation, you can use the AS/400
-				native Iconv400 support or ICU. If you choose ICU, follow the instructions
-				to build the ICU service program with the ICU download. Those instructions
-				are not included here.</li>
+                <li>There are a couple of options when building the XML4C parser on AS/400.
+                For messaging support, you can use the in memory message option or the
+                message file support. For code page translation, you can use the AS/400
+                native Iconv400 support or ICU. If you choose ICU, follow the instructions
+                to build the ICU service program with the ICU download. Those instructions
+                are not included here.</li>
 
-    			<li>Currently we recommend that you take the options of MsgFile and
-    			Iconv400 (see below)</li>
+                <li>Currently we recommend that you take the options of MsgFile and
+                Iconv400 (see below)</li>
                 </ul>
 
                 <p><em>Setup Instructions:</em></p>
 
-				<ul>
-				<li>Make sure that you have the requirements installed on your AS/400.
-				We highly recommend that you read the writeup that accompanies the gnu
-				facilities download.  There are install instructions as well as
-				information about how modules, programs and service programs can be
-				created in Unix-like fashion using gnu utilities.  Note that symbolic
-				links are use in the file system to point to actual AS/400 <code>*module</code>,
-				<code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
-				<li>Download the tar file  (unix version) to the AS/400
-				(using a mapped drive), and decompress and <code>untar</code> the source.
-				We have had difficulty with the tar command on AS/400. This is under
-				investigation.  If you have trouble, we recommend the following work
-				around:</li></ul>
+                <ul>
+                <li>Make sure that you have the requirements installed on your AS/400.
+                We highly recommend that you read the writeup that accompanies the gnu
+                facilities download.  There are install instructions as well as
+                information about how modules, programs and service programs can be
+                created in Unix-like fashion using gnu utilities.  Note that symbolic
+                links are use in the file system to point to actual AS/400 <code>*module</code>,
+                <code>*pgm</code> and <code>*srvpgm</code> objects in libraries.</li>
+                <li>Download the tar file  (unix version) to the AS/400
+                (using a mapped drive), and decompress and <code>untar</code> the source.
+                We have had difficulty with the tar command on AS/400. This is under
+                investigation.  If you have trouble, we recommend the following work
+                around:</li></ul>
 <source>
 qsh:
 gunzip -d &lt;tar file.gz&gt;
 pax -r -f &lt;uncompressed tar file&gt;</source>
 
-				<ul>
-				<li>Create AS400 target library. This library will be the target
-				for the resulting  modules and  &XercesCName; service program. You will
-				specify this library on the <code>OUTPUTDIR</code> environment variable
-				in step 4</li>
-				<li>Set up the following environment variables in your build process
-				(use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
-				</ul>
+                <ul>
+                <li>Create AS400 target library. This library will be the target
+                for the resulting  modules and  &XercesCName; service program. You will
+                specify this library on the <code>OUTPUTDIR</code> environment variable
+                in step 4</li>
+                <li>Set up the following environment variables in your build process
+                (use <code>ADDENVVAR</code> or <code>WRKENVVAR CL</code> commands):</li>
+                </ul>
 <source>
 XERCESCROOT - &lt;the full path to your &XercesCName; sources&gt;
 PLATFORM  - 'OS400'
@@ -447,15 +448,15 @@ MAKE   - '/usr/bin/gmake'
 OUTPUTDIR  - &lt;identifies target as400 library for *module, *pgm and *srvpgm objects&gt;
 ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;</source>
 
-				<ul>
-				<li>Add <code>QCXXN</code>, to your build process library list.
-				This results in the resolution of <code>CRTCPPMOD</code> used by the
-				<code>icc</code> compiler.</li>
+                <ul>
+                <li>Add <code>QCXXN</code>, to your build process library list.
+                This results in the resolution of <code>CRTCPPMOD</code> used by the
+                <code>icc</code> compiler.</li>
 
-				<li>The runConfigure instruction below uses <code>'egrep'</code>.
-				This is not on the AS/400 but you can create it by doing the following:
-				<code>edtf '/usr/bin/egrep'</code> with the following source:</li>
-				</ul>
+                <li>The runConfigure instruction below uses <code>'egrep'</code>.
+                This is not on the AS/400 but you can create it by doing the following:
+                <code>edtf '/usr/bin/egrep'</code> with the following source:</li>
+                </ul>
 
 <source>
 #!/usr/bin/sh
@@ -853,11 +854,12 @@ gmake</source>
           and then extract the file:<br/>
           <code>xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/><br/>
 
-          Under Unix's you may enter:<br/> <code>gzip -d -c
-          xml-stylebook_20000207231311.tar.gz | tar xf -
-          xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/>to extract
-          this file. Copy it to the 'jars' directory as mentioned
-          above.<br/><br/>Under Windows you may use 'WinZip' to
+          Under Unix's you may enter:<br/>
+          <code>gzip -d -c xml-stylebook_20000207231311.tar.gz | tar xf -
+          xml-stylebook/bin/stylebook-1.0-b2.jar</code><br/>
+          to extract this file (in this gzip command, subsitute the tar file
+          name with the one you downloaded). Copy it to the 'jars' directory
+          as mentioned above.<br/><br/>Under Windows you may use 'WinZip' to
           extract the jar file from the tar ball.</li>
 
         </ul>

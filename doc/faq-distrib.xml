@@ -100,8 +100,8 @@
 <source>Usage is: packageBinaries &lt;options&gt;
 options are:  -s &lt;source_directory&gt;
               -o &lt;target_directory&gt;
-              -c &lt;C compiler name&gt; (e.g. gcc or xlc)
-              -x &lt;C++ compiler name&gt; (e.g. g++ or xlC)
+              -c &lt;C compiler name&gt; (e.g. gcc or xlc_r)
+              -x &lt;C++ compiler name&gt; (e.g. g++ or xlC_r)
               -m &lt;message loader&gt; can be 'inmem', 'icu' or 'iconv'
               -n &lt;net accessor&gt; can be 'fileonly' or 'libwww'
               -t &lt;transcoder&gt; can be 'icu' or 'native'
