@@ -870,7 +870,7 @@ void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 	bool firstFlag = true;
 	for (unsigned int count=0; count < attrs->getLength(); count++) {
 		DOMAttr* attr = (DOMAttr*)attrs->item(count);
-		if (XMLString::equals(attr->getPrefix(), XMLUni::fgXMLNSString)) {
+        if (XMLString::equals(attr->getNamespaceURI(), XMLUni::fgXMLNSURIName)) {
 			fNSAttributes->addElement(count);
 		} else {
 			if (firstFlag) {
