@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:21:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/13 17:07:43  peiyongz
+ * using 2 instead of 1.25 to expand capacity
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
+ * sane_include
  *
  * Revision 1.5  2000/08/17 00:04:50  andyh
  * Fix error in growing of XMLBuffer from within ensureCapacity()
@@ -142,7 +145,7 @@ void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
         return;
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
-    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 1.25);
+    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
     XMLCh* newBuf = new XMLCh[newCap+1];
 
     // Copy over the old stuff
