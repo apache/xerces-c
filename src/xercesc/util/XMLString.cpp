@@ -491,6 +491,19 @@ unsigned int XMLString::replaceTokens(          XMLCh* const    errText
 }
 
 
+XMLCh* XMLString::replicate(const XMLCh* const toRep)
+{
+    // If a null string, return a null string!
+    XMLCh* ret = 0;
+    if (toRep)
+    {
+        const unsigned int len = stringLen(toRep);
+        ret = new XMLCh[len + 1];
+        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
+    }
+    return ret;
+}
+
 char* XMLString::replicate(const char* const toRep)
 {
     // If a null string, return a null string

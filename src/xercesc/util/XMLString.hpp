@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/10/02 11:07:26  gareth
+ * Made the non-memory manager version of replicate not inlined. Updated the documentation for the memory manager versions so they don't tell you you should call release.
+ *
  * Revision 1.19  2003/10/01 00:22:20  knoaman
  * Add a lastIndexOf method that takes the string length as one of the params.
  *
@@ -839,6 +842,17 @@ public:
       * @see   XMLString::release(char**)
       */
     static char* replicate(const char* const toRep);
+
+
+
+    /** Replicates a string
+      * NOTE: The returned buffer is allocated with the MemoryManager. It is the
+      * responsibility of the caller to delete it when not longer needed.
+      *
+      * @param toRep The string to replicate
+      * @param manager The MemoryManager to use to allocate the string
+      * @return Returns a pointer to the replicated string
+      */
     static char* replicate(const char* const toRep,
                            MemoryManager* const manager);
 
@@ -852,6 +866,16 @@ public:
       * @see   XMLString::release(XMLCh**)
       */
     static XMLCh* replicate(const XMLCh* const toRep);
+
+
+    /** Replicates a string
+      * NOTE: The returned buffer is allocated with the MemoryManager. It is the
+      * responsibility of the caller to delete it when not longer needed.
+      *
+      * @param toRep The string to replicate
+      * @param manager The MemoryManager to use to allocate the string
+      * @return Returns a pointer to the replicated string
+      */
     static XMLCh* replicate(const XMLCh* const toRep,
                             MemoryManager* const manager);
 
@@ -1531,6 +1555,20 @@ inline unsigned int XMLString::stringLen(const XMLCh* const src)
     }
 }
 
+inline XMLCh* XMLString::replicate(const XMLCh* const toRep,
+                                   MemoryManager* const manager)
+{
+    // If a null string, return a null string!
+    XMLCh* ret = 0;
+    if (toRep)
+    {
+        const unsigned int len = stringLen(toRep);
+        ret = (XMLCh*) manager->allocate((len+1) * sizeof(XMLCh)); //new XMLCh[len + 1];
+        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
+    }
+    return ret;
+}
+
 inline bool XMLString::startsWith(  const   XMLCh* const    toTest
                                     , const XMLCh* const    prefix)
 {
@@ -1551,33 +1589,6 @@ inline bool XMLString::endsWith(const XMLCh* const toTest,
 
     return regionMatches(toTest, XMLString::stringLen(toTest) - suffixLen,
                          suffix, 0, suffixLen);
-}
-
-inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
-{
-    // If a null string, return a null string!
-    XMLCh* ret = 0;
-    if (toRep)
-    {
-        const unsigned int len = stringLen(toRep);
-        ret = new XMLCh[len + 1];
-        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
-    }
-    return ret;
-}
-
-inline XMLCh* XMLString::replicate(const XMLCh* const toRep,
-                                   MemoryManager* const manager)
-{
-    // If a null string, return a null string!
-    XMLCh* ret = 0;
-    if (toRep)
-    {
-        const unsigned int len = stringLen(toRep);
-        ret = (XMLCh*) manager->allocate((len+1) * sizeof(XMLCh)); //new XMLCh[len + 1];
-        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
-    }
-    return ret;
 }
 
 inline bool XMLString::validateRegion(const XMLCh* const str1,
