@@ -329,7 +329,7 @@
            of the features below are set using the "setter" methods (e.g. <code>setDoNamespaces</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getDoNamespaces</code>).
            The following only gives you a quick summary of supported features.  Please
-           refer to <jump href="api.html">API Documentataion</jump> for complete detail.
+           refer to <jump href="api.html">API Documentation</jump> for complete detail.
            </p>
            <p>None of these features can be modified in the middle of a parse, or an exception will be thrown.</p>
 
