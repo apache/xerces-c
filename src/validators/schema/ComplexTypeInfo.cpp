@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/10/12 18:08:57  tng
+ * make sure the second node exists before calling getType
+ *
  * Revision 1.19  2001/10/04 15:08:56  knoaman
  * Add support for circular import.
  *
@@ -360,7 +363,7 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
         fSpecNodesToDelete = new RefVectorOf<ContentSpecNode>(8);
     }
 
-    // expand the content spec first   
+    // expand the content spec first
     ContentSpecNode* aSpecNode = specNode;
     if (aSpecNode) {
 
@@ -479,6 +482,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
         //  be a simple content model
         //
         if ((specNode->getFirst()->getType() == ContentSpecNode::Leaf)
+        &&  (specNode->getSecond())
         &&  (specNode->getSecond()->getType() == ContentSpecNode::Leaf))
         {
             return new SimpleContentModel
