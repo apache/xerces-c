@@ -393,7 +393,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
 
                     // And bump up our pointer
                     srcPtr += charsEaten;
-                    srcCount -= srcChars;
+                    srcCount -= charsEaten;
                 }
             }
              else if (tmpPtr < endPtr)
