@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/11/20 18:51:44  tng
+ * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
+ *
  * Revision 1.15  2001/11/14 14:15:42  tng
  * Update SAX2 feature documentation.
  *
@@ -160,12 +163,14 @@ public :
 
 	static const XMLCh SAX_CORE_VALIDATION[];
 	static const XMLCh SAX_CORE_NAMESPACES[];
-	static const XMLCh SAX_CORE_NAMESPACES_PREFIXES[];
+	static const XMLCh SAX_CORE_NAMESPACE_PREFIXES[];
 	static const XMLCh SAX_XERCES_DYNAMIC[];
 	static const XMLCh SAX_XERCES_REUSEVALIDATOR[];
 	static const XMLCh SAX_XERCES_REUSEGRAMMAR[];
 	static const XMLCh SAX_XERCES_SCHEMA[];
 	static const XMLCh SAX_XERCES_SCHEMA_FULL_CHECKING[];
+	static const XMLCh SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION[];
+	static const XMLCh SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION[];
 	
 	SAX2XMLReaderImpl() ;
 	~SAX2XMLReaderImpl() ;
@@ -648,7 +653,7 @@ public :
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).
     * @exception SAXNotRecognizedException If the requested feature is not known.
-    * @exception SAXNotSupportedException Property modification is not supported during parse
+    * @exception SAXNotSupportedException Feature modification is not supported during parse
     *
     */
 	virtual void setFeature(const XMLCh* const name, const bool value);
@@ -664,12 +669,24 @@ public :
 
   /**
     * Set the value of any property in a SAX2 XMLReader.
-    * Supported property in SAX2 for xerces-c are:
+    * Supported properties in SAX2 for xerces-c are:
+    * <br>(See http://xml.apache.org/xerces-c/program.html#SAX2Properties for detail description).
     *
-    * <br>none
+    * <br>http://apache.org/xml/properties/schema/external-schemaLocation
+    * <br>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation.
+    *
+    * It takes a void pointer as the property value.  Application is required to initialize this void
+    * pointer to a correct type.  See http://xml.apache.org/xerces-c/program.html#SAX2Properties
+    * to learn exactly what type of property value each property expects for processing.
+    * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+    * If the same property is set more than once, the last one takes effect.
     *
     * @param name The unique identifier (URI) of the property being set.
-    * @param value The requested value for the property.
+    * @param value The requested value for the property.  See
+    *            http://xml.apache.org/xerces-c/program.html#SAX2Properties to learn
+    *            exactly what type of property value each property expects for processing.
+    *            Passing a void pointer that was initialized with a wrong type will lead
+    *            to unexpected result.
     * @exception SAXNotRecognizedException If the requested property is not known.
     * @exception SAXNotSupportedException Property modification is not supported during parse
     */
@@ -678,9 +695,21 @@ public :
 	/**
      * Query the current value of a property in a SAX2 XMLReader.
      *
+     * The parser owns the returned pointer, and the memory allocated for
+     * the returned pointer will be destroyed when the parser is deleted.
+     *
+     * To ensure assessiblity of the returned information after the parser
+     * is deleted, callers need to copy and store the returned information
+     * somewhere else; other you may get unexpected result.  Since the returned
+     * pointer is a generic void pointer, see
+     * http://xml.apache.org/xerces-c/program.html#SAX2Properties to learn
+     * exactly what type of object each property returns for replication.
+     *
      * @param name The unique identifier (URI) of the property being set.
-     * @return The current value of the property.
-     * @exception SAXNotRecognizedException If the requested property is not known.
+     * @return     The current value of the property.  The pointer spans the same
+     *             life-time as the parser.  A null pointer is returned if nothing
+     *             was specified externally.
+     * @exception  SAXNotRecognizedException If the requested property is not known.
      */
 	virtual void* getProperty(const XMLCh* const name) const;
 	//@}

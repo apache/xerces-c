@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/11/20 18:51:44  tng
+ * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
+ *
  * Revision 1.19  2001/10/25 19:46:15  tng
  * Comment outside root element should also be reported.
  *
@@ -205,7 +208,7 @@ const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES[] = {
 };
 
 //SAX2 Core: http://xml.org/sax/features/namespace-prefixes
-const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES[] = {
+const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACE_PREFIXES[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
 		chColon, chForwardSlash, chForwardSlash,
 		chLatin_x, chLatin_m, chLatin_l, chPeriod,
@@ -312,6 +315,40 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
 		chLatin_a, chLatin_l,
 		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
 		chLatin_o, chLatin_r, chNull
+};
+
+
+//Property
+//Xerces: http://apache.org/xml/properties/schema/external-schemaLocation
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_p, chLatin_r, chLatin_o, chLatin_p, chLatin_e, chLatin_r,
+      chLatin_t, chLatin_i, chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chForwardSlash,
+		chLatin_e, chLatin_x, chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash,
+      chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
+      chLatin_L, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+//Property
+//Xerces: http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_p, chLatin_r, chLatin_o, chLatin_p, chLatin_e, chLatin_r,
+      chLatin_t, chLatin_i, chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chForwardSlash,
+		chLatin_e, chLatin_x, chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash,
+      chLatin_n, chLatin_o, chLatin_N, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e,
+      chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
+      chLatin_L, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
 SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
@@ -1305,7 +1342,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 	}
 
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACE_PREFIXES) == 0)
 	{
 		fnamespacePrefix = value;
 	}
@@ -1353,7 +1390,7 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 		return getDoNamespaces();
 	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
 		return fValidation;
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACE_PREFIXES) == 0)
 		return fnamespacePrefix;
 	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
 		return fautoValidation;
@@ -1375,16 +1412,30 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	if (fParseInProgress)
 		throw SAXNotSupportedException("Property modification is not supported during parse.");
 
-	throw SAXNotRecognizedException("Unknown Property");
-	// unimplemented
+	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION) == 0)
+	{
+		fScanner->setExternalSchemaLocation((XMLCh*)value);
+	}
+
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION) == 0)
+	{
+		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
+	}
+
+   else
+       throw SAXNotRecognizedException("Unknown Property");
 }
 
 
 void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
 {
-	throw SAXNotRecognizedException("Unknown Property");
-	// unimplemented
-	return 0;
+    if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION) == 0)
+        return (void*)fScanner->getExternalSchemaLocation();
+    else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION) == 0)
+        return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
+    else
+        throw SAXNotRecognizedException("Unknown Property");
+    return 0;
 }
 
 

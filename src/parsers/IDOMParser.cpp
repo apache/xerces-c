@@ -216,7 +216,15 @@ int IDOMParser::getErrorCount() const
     return fScanner->getErrorCount();
 }
 
+XMLCh* IDOMParser::getExternalSchemaLocation() const
+{
+    return fScanner->getExternalSchemaLocation();
+}
 
+XMLCh* IDOMParser::getExternalNoNamespaceSchemaLocation() const
+{
+    return fScanner->getExternalNoNamespaceSchemaLocation();
+}
 
 // ---------------------------------------------------------------------------
 //  IDOMParser: Setter methods
@@ -281,6 +289,25 @@ void IDOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
 }
+
+void IDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
+{
+    fScanner->setExternalSchemaLocation(schemaLocation);
+}
+void IDOMParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
+{
+    fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void IDOMParser::setExternalSchemaLocation(const char* const schemaLocation)
+{
+    fScanner->setExternalSchemaLocation(schemaLocation);
+}
+void IDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
+{
+    fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
 
 // ---------------------------------------------------------------------------
 //  IDOMParser: Parsing methods

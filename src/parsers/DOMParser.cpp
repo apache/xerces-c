@@ -196,6 +196,16 @@ int DOMParser::getErrorCount() const
     return fScanner->getErrorCount();
 }
 
+XMLCh* DOMParser::getExternalSchemaLocation() const
+{
+    return fScanner->getExternalSchemaLocation();
+}
+
+XMLCh* DOMParser::getExternalNoNamespaceSchemaLocation() const
+{
+    return fScanner->getExternalNoNamespaceSchemaLocation();
+}
+
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
@@ -259,6 +269,24 @@ void DOMParser::setDoSchema(const bool newState)
 void DOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
+}
+
+void DOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
+{
+    fScanner->setExternalSchemaLocation(schemaLocation);
+}
+void DOMParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
+{
+    fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void DOMParser::setExternalSchemaLocation(const char* const schemaLocation)
+{
+    fScanner->setExternalSchemaLocation(schemaLocation);
+}
+void DOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
+{
+    fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
 

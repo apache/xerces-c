@@ -1456,7 +1456,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
     //  Since we have seen a grammar, set our validation flag
     //  at this point if the validation scheme is auto
     //
-    if (fValScheme == Val_Auto) {
+    if (fValScheme == Val_Auto && !fValidate) {
         fValidate = true;
         fElemStack.setValidationFlag(fValidate);
     }

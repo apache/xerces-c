@@ -339,6 +339,48 @@ public :
       */
     bool getToCreateXMLDeclTypeNode() const;
 
+   /** Get the set of Namespace/SchemaLocation that is specified externaly.
+      *
+      * This method returns the list of Namespace/SchemaLocation that was
+      * specified using setExternalSchemaLocation.
+      *
+      * The parser owns the returned string, and the memory allocated for
+      * the returned string will be destroyed when the parser is deleted.
+      *
+      * To ensure assessiblity of the returned information after the parser
+      * is deleted, callers need to copy and store the returned information
+      * somewhere else.
+      *
+      * @return a pointer to the list of Namespace/SchemaLocation that was
+      *         specified externally.  The pointer spans the same life-time as
+      *         the parser.  A null pointer is returned if nothing
+      *         was specified externally.
+      *
+      * @see #setExternalSchemaLocation(const XMLCh* const)
+      */
+    XMLCh* getExternalSchemaLocation() const;
+
+   /** Get the noNamespace SchemaLocation that is specified externaly.
+      *
+      * This method returns the no target namespace XML Schema Location
+      * that was specified using setExternalNoNamespaceSchemaLocation.
+      *
+      * The parser owns the returned string, and the memory allocated for
+      * the returned string will be destroyed when the parser is deleted.
+      *
+      * To ensure assessiblity of the returned information after the parser
+      * is deleted, callers need to copy and store the returned information
+      * somewhere else.
+      *
+      * @return a pointer to the no target namespace Schema Location that was
+      *         specified externally.  The pointer spans the same life-time as
+      *         the parser.  A null pointer is returned if nothing
+      *         was specified externally.
+      *
+      * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
+      */
+    XMLCh* getExternalNoNamespaceSchemaLocation() const;
+
     //@}
 
 
@@ -539,6 +581,63 @@ public :
       *
       */
     void setToCreateXMLDeclTypeNode(const bool create);
+
+    /**
+      * This method allows the user to specify a list of schemas to use.
+      * If the targetNamespace of a schema specified using this method matches
+      * the targetNamespace of a schema occuring in the instance document in
+      * the schemaLocation attribute, the schema specified by the user using
+      * this method will be used (i.e., the instance document's schemaLocation
+      * attribute will be effectively ignored).
+      *
+      * If this method is called more than once, only the last one takes effect.
+      *
+      * The syntax is the same as for schemaLocation attributes in instance
+      * documents: e.g, "http://www.example.com file_name.xsd". The user can
+      * specify more than one XML Schema in the list.
+      *
+      * @param the list of schemas to use
+      *
+      * @see #getExternalSchemaLocation
+      */
+
+    void setExternalSchemaLocation(const XMLCh* const schemaLocation);
+
+    /**
+      * This method is same as setExternalSchemaLocation(const XMLCh* const).
+      * It takes native char string as parameter
+      *
+      * @param the list of schemas to use
+      *
+      * @see #setExternalSchemaLocation(const XMLCh* const)
+      */
+    void setExternalSchemaLocation(const char* const schemaLocation);
+
+    /**
+      * This method allows the user to specify the no target namespace XML
+      * Schema Location externally.  If specified, the instance document's
+      * noNamespaceSchemaLocation attribute will be effectively ignored.
+      *
+      * If this method is called more than once, only the last one takes effect.
+      *
+      * The syntax is the same as for the noNamespaceSchemaLocation attribute
+      * that may occur in an instance document: e.g."file_name.xsd".
+      *
+      * @param the XML Schema Location with no target namespace
+      *
+      * @see #getExternalNoNamespaceSchemaLocation
+      */
+    void setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation);
+
+    /**
+      * This method is same as setExternalNoNamespaceSchemaLocation(const XMLCh* const).
+      * It takes native char string as parameter
+      *
+      * @param the XML Schema Location with no target namespace
+      *
+      * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
+      */
+    void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
 
     //@}
 

@@ -216,6 +216,8 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fValueStoreCache(0)
     , fFieldActivator(0)
     , fRootElemName(0)
+    , fExternalSchemaLocation(0)
+    , fExternalNoNamespaceSchemaLocation(0)
 {
    commonInit();
 
@@ -278,6 +280,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fValueStoreCache(0)
     , fFieldActivator(0)
     , fRootElemName(0)
+    , fExternalSchemaLocation(0)
+    , fExternalNoNamespaceSchemaLocation(0)
 {
    commonInit();
 
@@ -315,6 +319,8 @@ XMLScanner::~XMLScanner()
     delete fValueStoreCache;
 
     delete [] fRootElemName;
+    delete [] fExternalSchemaLocation;
+    delete [] fExternalNoNamespaceSchemaLocation;
 }
 
 
@@ -2893,6 +2899,19 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //
     unsigned int elemDepth = fElemStack.addLevel();
     fElemStack.setValidationFlag(fValidate);
+
+    //  Check if there is any external schema location specified, and if we are at root,
+    //  go through them first before scanning those specified in the instance document
+    if (isRoot
+        && fDoSchema
+        && !fReuseGrammar
+        && (fExternalSchemaLocation || fExternalNoNamespaceSchemaLocation)) {
+
+        if (fExternalSchemaLocation)
+            parseSchemaLocation(fExternalSchemaLocation);
+        if (fExternalNoNamespaceSchemaLocation)
+            resolveSchemaGrammar(fExternalNoNamespaceSchemaLocation, XMLUni::fgZeroLenString);
+    }
 
     //
     //  Make an initial pass through the list and find any xmlns attributes or

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/11/20 18:51:44  tng
+ * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
+ *
  * Revision 1.22  2001/10/25 19:46:15  tng
  * Comment outside root element should also be reported.
  *
@@ -335,6 +338,16 @@ int SAXParser::getErrorCount() const
     return fScanner->getErrorCount();
 }
 
+XMLCh* SAXParser::getExternalSchemaLocation() const
+{
+    return fScanner->getExternalSchemaLocation();
+}
+
+XMLCh* SAXParser::getExternalNoNamespaceSchemaLocation() const
+{
+    return fScanner->getExternalNoNamespaceSchemaLocation();
+}
+
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
@@ -375,6 +388,24 @@ void SAXParser::setDoSchema(const bool newState)
 void SAXParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fScanner->setValidationSchemaFullChecking(schemaFullChecking);
+}
+
+void SAXParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)
+{
+    fScanner->setExternalSchemaLocation(schemaLocation);
+}
+void SAXParser::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
+{
+    fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void SAXParser::setExternalSchemaLocation(const char* const schemaLocation)
+{
+    fScanner->setExternalSchemaLocation(schemaLocation);
+}
+void SAXParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
+{
+    fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
 

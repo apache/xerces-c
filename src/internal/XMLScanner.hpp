@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.37  2001/11/20 18:51:44  tng
+ * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
+ *
  * Revision 1.36  2001/11/13 13:27:28  tng
  * Move root element check to XMLScanner.
  *
@@ -372,6 +375,8 @@ public :
     const XMLStringPool* getURIStringPool() const;
     XMLStringPool* getURIStringPool();
     bool getHasNoDTD() const;
+    XMLCh* getExternalSchemaLocation() const;
+    XMLCh* getExternalNoNamespaceSchemaLocation() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -465,6 +470,10 @@ public :
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
     void setHasNoDTD(const bool hasNoDTD);
     void setRootElemName(XMLCh* rootElemName);
+    void setExternalSchemaLocation(const XMLCh* const schemaLocation);
+    void setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation);
+    void setExternalSchemaLocation(const char* const schemaLocation);
+    void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -869,6 +878,15 @@ private :
     //      we need to verify the root element name.  So store the rootElement
     //      that is used in the DOCTYPE in the Scanner instead of in the DTDGrammar
     //      where it used to
+    //
+    //  fExternalSchemaLocation
+    //      The list of Namespace/SchemaLocation that was specified externally
+    //      using setExternalSchemaLocation.
+    //
+    //  fExternalNoNamespaceSchemaLocation
+    //      The no target namespace XML Schema Location that was specified
+    //      externally using setExternalNoNamespaceSchemaLocation.
+    //
     // -----------------------------------------------------------------------
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
@@ -924,6 +942,8 @@ private :
     ValueStoreCache*            fValueStoreCache;
     FieldActivator*             fFieldActivator;
     XMLCh*                      fRootElemName;
+    XMLCh*                      fExternalSchemaLocation;
+    XMLCh*                      fExternalNoNamespaceSchemaLocation;
 };
 
 
@@ -1112,6 +1132,16 @@ inline bool XMLScanner::getHasNoDTD() const
     return fHasNoDTD;
 }
 
+inline XMLCh* XMLScanner::getExternalSchemaLocation() const
+{
+    return fExternalSchemaLocation;
+}
+
+inline XMLCh* XMLScanner::getExternalNoNamespaceSchemaLocation() const
+{
+    return fExternalNoNamespaceSchemaLocation;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1210,6 +1240,31 @@ inline void XMLScanner::setRootElemName(XMLCh* rootElemName)
     delete [] fRootElemName;
     fRootElemName = XMLString::replicate(rootElemName);
 }
+
+inline void XMLScanner::setExternalSchemaLocation(const XMLCh* const schemaLocation)
+{
+    delete [] fExternalSchemaLocation;
+    fExternalSchemaLocation = XMLString::replicate(schemaLocation);
+}
+
+inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation)
+{
+    delete [] fExternalNoNamespaceSchemaLocation;
+    fExternalNoNamespaceSchemaLocation = XMLString::replicate(noNamespaceSchemaLocation);
+}
+
+inline void XMLScanner::setExternalSchemaLocation(const char* const schemaLocation)
+{
+    delete [] fExternalSchemaLocation;
+    fExternalSchemaLocation = XMLString::transcode(schemaLocation);
+}
+
+inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
+{
+    delete [] fExternalNoNamespaceSchemaLocation;
+    fExternalNoNamespaceSchemaLocation = XMLString::transcode(noNamespaceSchemaLocation);
+}
+
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Mutator methods
