@@ -55,6 +55,7 @@
  */
 
 /**
+ * @01A D998714.1 V5R2M0    100301   Swan    :Fix error return flags
  * $Id$
  */
 
@@ -630,7 +631,7 @@ Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
     );
 
 
-    if (!err)
+    if (err)   /*@01A*/
     {
         XMLCh tmpBuf[16];
         XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16);
@@ -691,7 +692,7 @@ bool Iconv400Transcoder::canTranscodeTo(const unsigned int toCheck) const
     );
 
  
-    return err;
+    return (err==U_ZERO_ERROR);  /*@01A*/
 }
 
 
