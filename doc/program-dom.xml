@@ -140,233 +140,1017 @@
        </s3>
     </s2>
 
-    <anchor name="ConstructXercesDOMParser"/>
-    <s2 title="Constructing a XercesDOMParser">
-      <p>In order to use &XercesCName; to parse XML files using DOM, you
-        can create an instance of the XercesDOMParser class. The example
-        below shows the code you need in order to create an instance of the
-        XercesDOMParser.</p>
+    <anchor name="XercesDOMParser"/>
+    <s2 title="XercesDOMParser">
 
-      <source>
-#include &lt;xercesc/parsers/XercesDOMParser.hpp>
-#include &lt;xercesc/dom/DOM.hpp>
-#include &lt;xercesc/sax/HandlerBase.hpp>
-#include &lt;xercesc/util/XMLString.hpp>
+        <anchor name="ConstructXercesDOMParser"/>
+        <s3 title="Constructing a XercesDOMParser">
+          <p>In order to use &XercesCName; to parse XML files using DOM, you
+            can create an instance of the XercesDOMParser class. The example
+            below shows the code you need in order to create an instance of the
+            XercesDOMParser.</p>
 
-int main (int argc, char* args[]) {
+          <source>
+    #include &lt;xercesc/parsers/XercesDOMParser.hpp>
+    #include &lt;xercesc/dom/DOM.hpp>
+    #include &lt;xercesc/sax/HandlerBase.hpp>
+    #include &lt;xercesc/util/XMLString.hpp>
 
-    try {
-        XMLPlatformUtils::Initialize();
+    int main (int argc, char* args[]) {
+
+        try {
+            XMLPlatformUtils::Initialize();
+        }
+        catch (const XMLException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Error during initialization! :\n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return 1;
+        }
+
+        XercesDOMParser* parser = new XercesDOMParser();
+        parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
+        parser->setDoNamespaces(true);    // optional
+
+        ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
+        parser->setErrorHandler(errHandler);
+
+        char* xmlFile = "x1.xml";
+
+        try {
+            parser->parse(xmlFile);
+        }
+        catch (const XMLException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Exception message is: \n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return -1;
+        }
+        catch (const DOMException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Exception message is: \n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return -1;
+        }
+        catch (...) {
+            cout &lt;&lt; "Unexpected Exception \n" ;
+            return -1;
+        }
+
+        delete parser;
+        delete errHandler;
+        return 0;
     }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return 1;
-    }
+          </source>
+        </s3>
 
-    XercesDOMParser* parser = new XercesDOMParser();
-    parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
-    parser->setDoNamespaces(true);    // optional
+        <anchor name="XercesDOMFeatures"/>
+        <s3 title="XercesDOMParser Supported Features">
 
-    ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
-    parser->setErrorHandler(errHandler);
+           <p>The behavior of the XercesDOMParser is dependant on the values of the following features.  All
+           of the features below are set using the "setter" methods (e.g. <code>setDoNamespaces</code>),
+           and are queried using the corresponding "getter" methods (e.g. <code>getDoNamespaces</code>).
+           The following only gives you a quick summary of supported features.  Please
+           refer to <jump href="api.html">API Documentataion</jump> for complete detail.
+           </p>
 
-    char* xmlFile = "x1.xml";
+            <anchor name="createEntityRef"/>
+            <table>
+                <tr><td colspan="2"><em>void setCreateEntityReferenceNodes(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Create EntityReference nodes in the DOM tree.   The
+                EntityReference nodes and their child nodes will be read-only. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
+                EntityReference nodes will be created, only the nodes corresponding to their fully
+                expanded sustitution text will be created.  </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> This feature only affects the appearance of
+                EntityReference nodes in the DOM tree. The document will always contain the entity
+                reference child nodes. </td></tr>
+            </table>
+            <p/>
 
-    try {
-        parser->parse(xmlFile);
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (const DOMException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (...) {
-        cout &lt;&lt; "Unexpected Exception \n" ;
-        return -1;
-    }
+            <table>
+                <tr><td colspan="2"><em>void setExpandEntityReferences(const bool)</em> (deprecated) <br/>
+                please use <link anchor="createEntityRef">setCreateEntityReferenceNodes</link> </td></tr>
+                <tr><td><em>true:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
+                EntityReference nodes will be created, only the nodes corresponding to their fully
+                expanded sustitution text will be created.  </td></tr>
+                <tr><td><em>false:</em></td><td> Create EntityReference nodes in the DOM tree.   The
+                EntityReference nodes and their child nodes will be read-only. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="createEntityRef">setCreateEntityReferenceNodes</link>
+                </td></tr>
+            </table>
+            <p/>
 
-    delete parser;
-    delete errHandler;
-    return 0;
-}
-      </source>
+            <table>
+                <tr><td colspan="2"><em>void setIncludeIgnorableWhitespace(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Include text nodes that can be considered "ignorable
+                whitespace" in the DOM tree. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not include ignorable whitespace in the DOM tree. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> The only way that the parser can determine if text is
+                ignorable is by reading the associated grammar and having a content model for the
+                document. When ignorable whitespace text nodes are included in the DOM tree,
+                they will be flagged as ignorable; and the method DOMText::isIgnorableWhitespace()
+                will return true for those text nodes.   </td></tr>
+            </table>
+            <p/>
+
+            <anchor name="namespaces"/>
+            <table>
+                <tr><td colspan="2"><em>void setDoNamespaces(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Perform Namespace processing </td></tr>
+                <tr><td><em>false:</em></td><td> Do not perform Namespace processing</td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> If the validation scheme is set to Val_Always or Val_Auto, then the
+                document must contain a grammar that supports the use of namespaces </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="validation-dynamic">setValidationScheme</link>
+                </td></tr>
+            </table>
+            <p/>
+
+            <anchor name="validation"/>
+            <table>
+                <tr><td colspan="2"><em>void setDoValidation(const bool)</em> (deprecated) <br/>
+                please use <link anchor="validation-dynamic">setValidationScheme</link>
+                </td></tr>
+                <tr><td><em>true:</em></td><td> Report all validation errors. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not report validation errors. </td></tr>
+                <tr><td><em>default:</em></td><td> see the default of
+                <link anchor="validation-dynamic">setValidationScheme</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="validation-dynamic">setValidationScheme</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="validation-dynamic"/>
+            <table>
+                <tr><td colspan="2"><em>void setValidationScheme(const ValSchemes)</em></td></tr>
+                <tr><td><em>Val_Auto:</em></td><td> The parser will report validation errors only if a grammar is specified.</td></tr>
+                <tr><td><em>Val_Always:</em></td><td> The parser will always report validation errors. </td></tr>
+                <tr><td><em>Val_Never:</em></td><td> Do not report validation errors. </td></tr>
+                <tr><td><em>default:</em></td><td> Val_Auto </td></tr>
+                <tr><td><em>note:</em></td><td> If set to Val_Always, the document must
+                specify a grammar.  If this feature is set to Val_Never and document specifies a grammar,
+                that grammar might be parsed but no validation of the document contents will be
+                performed. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="load-external-dtd">setLoadExternalDTD</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="schema"/>
+            <table>
+                <tr><td colspan="2"><em>void setDoSchema(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Enable the parser's schema support.  </td></tr>
+                <tr><td><em>false:</em></td><td> Disable the parser's schema support. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note</em></td><td> If set to true, namespace processing must also be turned on. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="namespaces">setDoNamespaces</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>void setValidationSchemaFullChecking(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Enable full schema constraint checking, including checking
+                             which may be time-consuming or memory intensive. Currently, particle unique
+                             attribution constraint checking and particle derivation restriction checking
+                             are controlled by this option. </td></tr>
+                <tr><td><em>false:</em></td><td> Disable full schema constraint checking . </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> This feature checks the Schema grammar itself for
+                additional errors that are time-consuming or memory intensive. It does <em>not</em> affect the
+                level of checking performed on document instances that use Schema grammars.</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="schema">setDoSchema</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="load-external-dtd"/>
+            <table>
+                <tr><td colspan="2"><em>void setLoadExternalDTD(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Load the External DTD . </td></tr>
+                <tr><td><em>false:</em></td><td> Ignore the external DTD completely. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note</em></td><td> This feature is ignored and DTD is always loaded
+                if the validation scheme is set to Val_Always or Val_Auto. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="validation-dynamic">setValidationScheme</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="continue-after-fatal"/>
+            <table>
+                <tr><td colspan="2"><em>void setExitOnFirstFatalError(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> Stops parse on first fatal error. </td></tr>
+                <tr><td><em>false:</em></td><td> Attempt to continue parsing after a fatal error. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> The behavior of the parser when this feature is set to
+                false is <em>undetermined</em>! Therefore use this feature with extreme caution because
+                the parser may get stuck in an infinite loop or worse.</td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>void setValidationConstraintFatal(const bool)</em></td></tr>
+                <tr><td><em>true:</em></td><td> The parser will treat validation error as fatal and will
+                exit depends on the state of
+                <link anchor="continue-after-fatal">setExitOnFirstFatalError</link>
+                </td></tr>
+                <tr><td><em>false:</em></td><td> The parser will report the error and continue processing. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this true does not mean the validation error will
+                be printed with the word "Fatal Error".   It is still printed as "Error", but the parser
+                will exit if
+                <link anchor="continue-after-fatal">setExitOnFirstFatalError</link>
+                is set to true.</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="continue-after-fatal">setExitOnFirstFatalError</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+        </s3>
+
+        <anchor name="XercesDOMProperties"/>
+        <s3 title="XercesDOMParser Supported Properties">
+           <p>The behavior of the XercesDOMParser is dependant on the values of the following properties.  All
+           of the properties below are set using the "setter" methods (e.g. <code>setExternalSchemaLocation</code>),
+           and are queried using the corresponding "getter" methods (e.g. <code>getExternalSchemaLocation</code>).
+           The following only gives you a quick summary of supported features.  Please
+           refer to <jump href="api.html">API Documentataion</jump> for complete detail.
+           </p>
+            <table>
+                <tr><td colspan="2"><em>void setExternalSchemaLocation(const XMLCh*)</em></td></tr>
+                <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                            the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                            instance document is only a hint; it does not mandate that these attributes
+                            must be used to locate schemas.  Similar situation happens to &lt;import&gt;
+                            element in schema documents. This property allows the user to specify a list
+                            of schemas to use.  If the targetNamespace of a schema specified using this
+                            method matches the targetNamespace of a schema occurring in the instance
+                            document in schemaLocation attribute, or
+                            if the targetNamespace matches the namespace attribute of &lt;import&gt;
+                            element, the schema specified by the user using this property will
+                            be used (i.e., the schemaLocation attribute in the instance document
+                            or on the &lt;import&gt; element will be effectively ignored).</td></tr>
+                <tr><td><em>Value</em></td><td> The syntax is the same as for schemaLocation attributes
+                                 in instance documents: e.g, "http://www.example.com file_name.xsd".
+                                 The user can specify more than one XML Schema in the list.</td></tr>
+                <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+            </table>
+
+            <p/>
+            <table>
+                <tr><td colspan="2"><em>void setExternalNoNamespaceSchemaLocation(const XMLCh* const)</em></td></tr>
+                <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                            the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                            instance document is only a hint; it does not mandate that these attributes
+                            must be used to locate schemas.  This property allows the user to specify the
+                            no target namespace XML Schema Location externally.  If specified, the instance
+                            document's noNamespaceSchemaLocation attribute will be effectively ignored.</td></tr>
+                <tr><td><em>Value</em></td><td> The syntax is the same as for the noNamespaceSchemaLocation
+                            attribute that may occur in an instance document: e.g."file_name.xsd".</td></tr>
+                <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+            </table>
+
+            <p/>
+
+        </s3>
+
     </s2>
 
-    <anchor name="ConstructDOMBuilder"/>
-    <s2 title="Constructing a DOMBuilder">
-      <p>DOMBuilder is a new interface introduced by the
-        <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-        W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
-        DOMBuilder provides the "Load" interface for parsing XML documents and building the
-        corresponding DOM document tree from various input sources.
-      </p>
-      <p>A DOMBuilder instance is obtained from the DOMImplementationLS interface by invoking
-        its createDOMBuilder method.  For example:
-      </p>
-<source>
-#include &lt;xercesc/dom/DOM.hpp>
-#include &lt;xercesc/util/XMLString.hpp>
+    <anchor name="DOMBuilder"/>
+    <s2 title="DOMBuilder">
 
-int main (int argc, char* args[]) {
+        <anchor name="ConstructDOMBuilder"/>
+        <s3 title="Constructing a DOMBuilder">
+          <p>DOMBuilder is a new interface introduced by the
+            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+            W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
+            DOMBuilder provides the "Load" interface for parsing XML documents and building the
+            corresponding DOM document tree from various input sources.
+          </p>
+          <p>A DOMBuilder instance is obtained from the DOMImplementationLS interface by invoking
+            its createDOMBuilder method.  For example:
+          </p>
+    <source>
+    #include &lt;xercesc/dom/DOM.hpp>
+    #include &lt;xercesc/util/XMLString.hpp>
 
-    try {
-        XMLPlatformUtils::Initialize();
+    int main (int argc, char* args[]) {
+
+        try {
+            XMLPlatformUtils::Initialize();
+        }
+        catch (const XMLException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Error during initialization! :\n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return 1;
+        }
+
+
+        XMLCh tempStr[100];
+        XMLString::transcode("LS", tempStr, 99);
+        DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
+        DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder();
+
+        // optionally you can set some features on this builder
+        if (parser->canSetFeature(XMLUni::fgDOMValidation, true)
+            parser->setFeature(XMLUni::fgDOMValidation, true);
+        if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true)
+            parser->setFeature(XMLUni::fgDOMNamespaces, true);
+
+
+        // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
+        // and set it to the builder
+        MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
+        parser->setErrorHandler(errHandler);
+
+        char* xmlFile = "x1.xml";
+
+        try {
+            parser->parseURI(xmlFile);
+        }
+        catch (const XMLException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Exception message is: \n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return -1;
+        }
+        catch (const DOMException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Exception message is: \n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return -1;
+        }
+        catch (...) {
+            cout &lt;&lt; "Unexpected Exception \n" ;
+            return -1;
+        }
+
+        delete parser;
+        delete errHandler;
+        return 0;
     }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return 1;
-    }
+    </source>
+           <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
+           DOMCount for more detail.
+          </p>
+        </s3>
 
+        <anchor name="InputSourceWrapper"/>
+        <s3 title="How to interchange DOMInputSource and SAX InputSource?">
+        <p>...</p>
+        </s3>
 
-    XMLCh tempStr[100];
-    XMLString::transcode("LS", tempStr, 99);
-    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
-    DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder();
+        <anchor name="DOMBuilderFeatures"/>
+        <s3 title="DOMBuilder Supported Features">
 
-    // optionally you can set some features on this builder
-    if (parser->canSetFeature(XMLUni::fgDOMValidation, true)
-        parser->setFeature(XMLUni::fgDOMValidation, true);
-    if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true)
-        parser->setFeature(XMLUni::fgDOMNamespaces, true);
+           <p>The behavior of the DOMBuilder is dependant on the values of the following features.
+           All of the features below can be set using the function <code>DOMBuilder::setFeature(cons XMLCh* const, const bool)</code>.
+           And can be queried using the function <code>bool DOMBuilder::getFeature(const XMLCh* const)</code>.
+           User can also calls <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
+           to query whether setting a feature to a specific value is supported
+           </p>
 
+           <s4 title="DOM Features">
+            <table>
+                <tr><td colspan="2"><em>cdata-sections</em></td></tr>
+                <tr><td><em>true:</em></td><td> Keep CDATASection nodes in the document. </td></tr>
+                <tr><td><em>false:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to false is not supported. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
 
-    // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
-    // and set it to the builder
-    MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
-    parser->setErrorHandler(errHandler);
+            <p/>
 
-    char* xmlFile = "x1.xml";
+            <table>
+                <tr><td colspan="2"><em>comments</em></td></tr>
+                <tr><td><em>true:</em></td><td> Keep Comment nodes in the document. </td></tr>
+                <tr><td><em>false:</em></td><td> Discard Comment nodes in the document. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
 
-    try {
-        parser->parseURI(xmlFile);
-    }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (const DOMException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (...) {
-        cout &lt;&lt; "Unexpected Exception \n" ;
-        return -1;
-    }
+            <p/>
 
-    delete parser;
-    delete errHandler;
-    return 0;
-}
-</source>
-       <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
-       DOMCount for more detail.
-      </p>
+            <table>
+                <tr><td colspan="2"><em>charset-overrides-xml-encoding</em></td></tr>
+                <tr><td><em>true:</em></td><td> If a higher level protocol such as HTTP [IETF RFC 2616]
+                provides an indication of the character encoding of the input stream being processed,
+                that will override any encoding specified in the XML declaration or the Text declaration
+                (see also [XML 1.0] 4.3.3 "Character Encoding in Entities"). Explicitly setting an
+                encoding in the DOMInputSource overrides encodings from the protocol. </td></tr>
+                <tr><td><em>false:</em></td><td> Any character set encoding information from higher
+                level protocols is ignored by the parser. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>datatype-normalization</em></td></tr>
+                <tr><td><em>true:</em></td><td> Let the validation process do its datatype normalization
+                that is defined in the used schema language. </td></tr>
+                <tr><td><em>false:</em></td><td> Disable datatype normalization.
+                The XML 1.0 attribute value normalization always occurs though. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Note that setting this feature to true does not affect
+                the DTD normalization operation which always takes place, in accordance to
+                <jump href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 (Second Edition)</jump>.
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 (Second Edition)</jump>.
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>entities</em></td></tr>
+                <tr><td><em>true:</em></td><td> Create EntityReference nodes in the DOM tree.   The
+                EntityReference nodes and their child nodes will be read-only. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
+                EntityReference nodes will be created, only the nodes corresponding to their fully
+                expanded sustitution text will be created.  </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> This feature only affects the appearance of
+                EntityReference nodes in the DOM tree. The document will always contain the entity
+                reference child nodes. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>canonical-form</em></td></tr>
+                <tr><td><em>true:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not canonicalize the document. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true is not supported. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>infoset</em></td></tr>
+                <tr><td><em>true:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>false:</em></td><td> No effect. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true is not supported. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-namespaces"/>
+            <table>
+                <tr><td colspan="2"><em>namespaces</em></td></tr>
+                <tr><td><em>true:</em></td><td> Perform Namespace processing </td></tr>
+                <tr><td><em>false:</em></td><td> Do not perform Namespace processing</td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> If the validation is on, then the
+                document must contain a grammar that supports the use of namespaces </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-validation">validation</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>namespace-declarations</em></td></tr>
+                <tr><td><em>true:</em></td><td> Include namespace declaration attributes,
+                specified or defaulted from the schema or the DTD, in the document. </td></tr>
+                <tr><td><em>false:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to false is not supported. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-namespaces">namespaces</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>supported-mediatypes-only</em></td></tr>
+                <tr><td><em>true:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>false:</em></td><td> Don't check the media type, accept any type of data. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true is not supported. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-validate-if-schema"/>
+            <table>
+                <tr><td colspan="2"><em>validate-if-schema</em></td></tr>
+                <tr><td><em>true:</em></td><td> When validation is true, the parser will validate the document only if a grammar is specified.</td></tr>
+                <tr><td><em>false:</em></td><td> Validation is determined by the state of the
+                <link anchor="builder-validation">validation</link> feature. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-validation">validation</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-validation"/>
+            <table>
+                <tr><td colspan="2"><em>validation</em></td></tr>
+                <tr><td><em>true:</em></td><td> Report all validation errors. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not report validation errors. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> If this feature is set to true, the document must
+                specify a grammar.  If this feature is set to false and document specifies a grammar,
+                that grammar might be parsed but no validation of the document contents will be
+                performed. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-validate-if-schema">validate-if-schema</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-load-external-dtd">http://apache.org/xml/features/nonvalidating/load-external-dtd</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-whitespace"/>
+            <table>
+                <tr><td colspan="2"><em>whitespace-in-element-content</em></td></tr>
+                <tr><td><em>true:</em></td><td> Include text nodes that can be considered "ignorable
+                whitespace" in the DOM tree. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not include ignorable whitespace in the DOM tree. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> The only way that the parser can determine if text is
+                ignorable is by reading the associated grammar and having a content model for the
+                document. When ignorable whitespace text nodes are included in the DOM tree,
+                they will be flagged as ignorable; and the method DOMText::isIgnorableWhitespace()
+                will return true for those text nodes. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+           </s4>
+
+           <s4 title="Xerces Features">
+            <anchor name="builder-schema"/>
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema</em></td></tr>
+                <tr><td><em>true:</em></td><td> Enable the parser's schema support.  </td></tr>
+                <tr><td><em>false:</em></td><td> Disable the parser's schema support. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note</em></td><td> If set to true, namespace processing must also be turned on. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-namespaces">namespaces</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema-full-checking</em></td></tr>
+                <tr><td><em>true:</em></td><td> Enable full schema constraint checking, including checking
+                             which may be time-consuming or memory intensive. Currently, particle unique
+                             attribution constraint checking and particle derivation restriction checking
+                             are controlled by this option. </td></tr>
+                <tr><td><em>false:</em></td><td> Disable full schema constraint checking. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> This feature checks the Schema grammar itself for
+                additional errors that are time-consuming or memory intensive. It does <em>not</em> affect the
+                level of checking performed on document instances that use Schema grammars. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-schema">http://apache.org/xml/features/validation/schema</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-load-external-dtd"/>
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/nonvalidating/load-external-dtd</em></td></tr>
+                <tr><td><em>true:</em></td><td> Load the External DTD. </td></tr>
+                <tr><td><em>false:</em></td><td> Ignore the external DTD completely. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note</em></td><td> This feature is ignored and DTD is always loaded when validation is on. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-validation">validation</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-continue-after-fatal"/>
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/continue-after-fatal-error</em></td></tr>
+                <tr><td><em>true:</em></td><td> Attempt to continue parsing after a fatal error. </td></tr>
+                <tr><td><em>false:</em></td><td> Stops parse on first fatal error. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> The behavior of the parser when this feature is set to
+                true is <em>undetermined</em>! Therefore use this feature with extreme caution because
+                the parser may get stuck in an infinite loop or worse. </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation-error-as-fatal</em></td></tr>
+                <tr><td><em>true:</em></td><td> The parser will treat validation error as fatal and will
+                exit depends on the state of
+                <link anchor="builder-continue-after-fatal">http://apache.org/xml/features/continue-after-fatal-error</link>.
+                </td></tr>
+                <tr><td><em>false:</em></td><td> The parser will report the error and continue processing. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this true does not mean the validation error will
+                be printed with the word "Fatal Error".   It is still printed as "Error", but the parser
+                will exit if
+                <link anchor="builder-continue-after-fatal">http://apache.org/xml/features/continue-after-fatal-error</link>
+                is set to false. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-continue-after-fatal">http://apache.org/xml/features/continue-after-fatal-error</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-grammar</em></td></tr>
+                <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parse in subsequent parses. </td></tr>
+                <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> The subsequent xml files cannot have any DTD internal subset. </td></tr>
+            </table>
+
+            <p/>
+
+           </s4>
+
+        </s3>
+
+        <anchor name="DOMBuilderProperties"/>
+        <s3 title="DOMBuilder Supported Properties">
+
+           <p>The behavior of the DOMBuilder is dependant on the values of the following properties.
+           All of the properties below can be set using the function <code>DOMBuilder::setProperty(const XMLCh* const, void*)</code>.
+           It takes a void pointer as the property value.  Application is required to initialize this void
+           pointer to a correct type.  Please check the column "Value Type" below
+           to learn exactly what type of property value each property expects for processing.
+           Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+           If the same property is set more than once, the last one takes effect.</p>
+
+           <p>Property values can be queried using the function <code>void* DOMBuilder::getFeature(const XMLCh* const)</code>.
+            The parser owns the returned pointer, and the memory allocated for the returned pointer will
+            be destroyed when the parser is deleted.  To ensure accessibility of the returned information after
+            the parser is deleted, callers need to copy and store the returned information somewhere else.
+            Since the returned pointer is a generic void pointer, check the column "Value Type" below to learn
+            exactly what type of object each property returns for replication.</p>
+
+           <s4 title="Xerces Properties">
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/properties/schema/external-schemaLocation</em></td></tr>
+                <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                            the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                            instance document is only a hint; it does not mandate that these attributes
+                            must be used to locate schemas.  Similar situation happens to &lt;import&gt;
+                            element in schema documents. This property allows the user to specify a list
+                            of schemas to use.  If the targetNamespace of a schema specified using this
+                            method matches the targetNamespace of a schema occurring in the instance
+                            document in schemaLocation attribute, or
+                            if the targetNamespace matches the namespace attribute of &lt;import&gt;
+                            element, the schema specified by the user using this property will
+                            be used (i.e., the schemaLocation attribute in the instance document
+                            or on the &lt;import&gt; element will be effectively ignored). </td></tr>
+                <tr><td><em>Value</em></td><td> The syntax is the same as for schemaLocation attributes
+                                 in instance documents: e.g, "http://www.example.com file_name.xsd".
+                                 The user can specify more than one XML Schema in the list. </td></tr>
+                <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+            </table>
+
+            <p/>
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</em></td></tr>
+                <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                            the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                            instance document is only a hint; it does not mandate that these attributes
+                            must be used to locate schemas.  This property allows the user to specify the
+                            no target namespace XML Schema Location externally.  If specified, the instance
+                            document's noNamespaceSchemaLocation attribute will be effectively ignored. </td></tr>
+                <tr><td><em>Value</em></td><td> The syntax is the same as for the noNamespaceSchemaLocation
+                            attribute that may occur in an instance document: e.g."file_name.xsd". </td></tr>
+                <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+            </table>
+          </s4>
+        </s3>
+
     </s2>
 
-    <anchor name="InputSourceWrapper"/>
-    <s2 title="How to interchange DOMInputSource and SAX InputSource?">
-    <p>...</p>
-    </s2>
+    <anchor name="DOMWriter"/>
+    <s2 title="DOMWriter">
 
-    <anchor name="ConstructDOMWriter"/>
-    <s2 title="Constructing a DOMWriter">
-      <p>DOMWriter is a new interface introduced by the
-        <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-        W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
-        DOMWriter provides the "Save" interface for serializing (writing) a DOM document into
-        XML data.   The XML data can be written to various type of output stream.
-      </p>
-      <p>A DOMWriter instance is obtained from the DOMImplementationLS interface by invoking
-        its createDOMWriter method.  For example:
-      </p>
-<source>
-#include &lt;xercesc/dom/DOM.hpp>
-#include &lt;xercesc/util/XMLString.hpp>
+        <anchor name="ConstructDOMWriter"/>
+        <s3 title="Constructing a DOMWriter">
+          <p>DOMWriter is a new interface introduced by the
+            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+            W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
+            DOMWriter provides the "Save" interface for serializing (writing) a DOM document into
+            XML data.   The XML data can be written to various type of output stream.
+          </p>
+          <p>A DOMWriter instance is obtained from the DOMImplementationLS interface by invoking
+            its createDOMWriter method.  For example:
+          </p>
+    <source>
+    #include &lt;xercesc/dom/DOM.hpp>
+    #include &lt;xercesc/util/XMLString.hpp>
 
-int serializeDOM(DOMNode* node) {
+    int serializeDOM(DOMNode* node) {
 
-    XMLCh tempStr[100];
-    XMLString::transcode("LS", tempStr, 99);
-    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
-    DOMWriter* theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+        XMLCh tempStr[100];
+        XMLString::transcode("LS", tempStr, 99);
+        DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
+        DOMWriter* theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
 
-    // optionally you can set some features on this serializer
-    if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true))
-        theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true);
+        // optionally you can set some features on this serializer
+        if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true))
+            theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true);
 
-    if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true))
-         theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+        if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true))
+             theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
 
-    // optionally you can implement your DOMWriterFilter (e.g. MyDOMWriterFilter)
-    // and set it to the serializer
-    MyDOMWriterFilter* myFilter = new myDOMWriterFilter();
-    theSerializer->setFilter(myFilter);
+        // optionally you can implement your DOMWriterFilter (e.g. MyDOMWriterFilter)
+        // and set it to the serializer
+        MyDOMWriterFilter* myFilter = new myDOMWriterFilter();
+        theSerializer->setFilter(myFilter);
 
-    // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
-    // and set it to the serializer
-    MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
-    theSerializer->setErrorHandler(myErrorHandler);
+        // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
+        // and set it to the serializer
+        MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
+        theSerializer->setErrorHandler(myErrorHandler);
 
-    // StdOutFormatTarget prints the resultant XML stream
-    // to stdout once it receives any thing from the serializer.
-    StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
+        // StdOutFormatTarget prints the resultant XML stream
+        // to stdout once it receives any thing from the serializer.
+        StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
 
-    try {
-        // do the serialization through DOMWriter::writeNode();
-        theSerializer->writeNode(myFormTarget, *node);
+        try {
+            // do the serialization through DOMWriter::writeNode();
+            theSerializer->writeNode(myFormTarget, *node);
+        }
+        catch (const XMLException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Exception message is: \n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return -1;
+        }
+        catch (const DOMException&amp; toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout &lt;&lt; "Exception message is: \n"
+                 &lt;&lt; message &lt;&lt; "\n";
+            delete [] message;
+            return -1;
+        }
+        catch (...) {
+            cout &lt;&lt; "Unexpected Exception \n" ;
+            return -1;
+        }
+
+
+        delete theSerializer;
+        delete myErrorHandler;
+        delete myFilter;
+        delete myFormTarget;
+        return 0;
     }
-    catch (const XMLException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (const DOMException&amp; toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; message &lt;&lt; "\n";
-        delete [] message;
-        return -1;
-    }
-    catch (...) {
-        cout &lt;&lt; "Unexpected Exception \n" ;
-        return -1;
-    }
 
+    </source>
+           <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
+           DOMPrint for more detail.
+          </p>
+        </s3>
 
-    delete theSerializer;
-    delete myErrorHandler;
-    delete myFilter;
-    delete myFormTarget;
-    return 0;
-}
+        <anchor name="DOMWriterFeatures"/>
+        <s3 title="DOMWriter Supported Features">
 
-</source>
-       <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
-       DOMPrint for more detail.
-      </p>
+           <p>The behavior of the DOMWriter is dependant on the values of the following features.
+           All of the features below can be set using the function <code>DOMWriter::setFeature(cons XMLCh* const, const bool)</code>.
+           And can be queried using the function <code>bool DOMWriter::getFeature(const XMLCh* const)</code>.
+           User can also calls <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
+           to query whether setting a feature to a specific value is supported
+           </p>
+
+           <s4 title="DOM Features">
+            <anchor name="validation"/>
+            <table>
+                <tr><td colspan="2"><em>discard-default-content</em></td></tr>
+                <tr><td><em>true:</em></td><td> Use whatever information available to the implementation
+                (i.e. XML schema, DTD, the specified flag on Attr nodes, and so on) to decide what
+                attributes and content should be discarded or not. </td></tr>
+                <tr><td><em>false:</em></td><td> Keep all attributes and all content. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> Note that the specified flag on Attr nodes in itself
+                is not always reliable, it is only reliable when it is set to false since the only case
+                where it can be set to false is if the attribute was created by the implementation.  The
+                default content won't be removed if an implementation does not have any information
+                available. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>entities</em></td></tr>
+                <tr><td><em>true:</em></td><td> Create EntityReference nodes in the DOM tree.   The
+                EntityReference nodes and their child nodes will be read-only. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not create EntityReference nodes in the DOM tree.  No
+                EntityReference nodes will be created, only the nodes corresponding to their fully
+                expanded sustitution text will be created.  </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>note:</em></td><td> This feature only affects the appearance of
+                EntityReference nodes in the DOM tree. The document will always contain the entity
+                reference child nodes. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="writer-canonical"/>
+            <table>
+                <tr><td colspan="2"><em>canonical-form</em></td></tr>
+                <tr><td><em>true:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not canonicalize the output. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true is not supported. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="writer-pretty">format-pretty-print</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="writer-pretty"/>
+            <table>
+                <tr><td colspan="2"><em>format-pretty-print</em></td></tr>
+                <tr><td><em>true:</em></td><td> Formatting the output by adding whitespace to produce
+                a pretty-printed, indented, human-readable form. The exact form of the transformations
+                is not specified by this specification. </td></tr>
+                <tr><td><em>false:</em></td><td> Don't pretty-print the result. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true will set the feature
+                <link anchor="writer-canonical">canonical-form</link> to false. </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="writer-canonical">canonical-form</link>
+                </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>normalize-characters</em></td></tr>
+                <tr><td><em>true:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not perform character normalization. </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true is not supported. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>split-cdata-sections</em></td></tr>
+                <tr><td><em>true:</em></td><td> Split CDATA sections containing the CDATA section
+                termination marker ']]&gt;'. When a CDATA section is split a warning is issued. </td></tr>
+                <tr><td><em>false:</em></td><td> Signal an error if a CDATASection contains
+                an unrepresentable character. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>validation</em></td></tr>
+                <tr><td><em>true:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>false:</em></td><td> Do not report validation errors. </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to true is not supported. </td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><td colspan="2"><em>whitespace-in-element-content</em></td></tr>
+                <tr><td><em>true:</em></td><td> Include text nodes that can be considered "ignorable
+                whitespace" in the DOM tree. </td></tr>
+                <tr><td><em>false:</em></td><td> Not Supported. </td></tr>
+                <tr><td><em>note:</em></td><td> Setting this feature to false is not supported. </td></tr>
+                <tr><td><em>default:</em></td><td> true </td></tr>
+                <tr><td><em>see:</em></td><td>
+                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+           </s4>
+
+        </s3>
+
     </s2>
 
     <anchor name="Deprecated"/>

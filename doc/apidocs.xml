@@ -31,7 +31,7 @@
            <p>For a complete understanding of how the &XercesCName; APIs work,
 		we recommend you to read these documents.</p>
 
-	    <p>See the <em><jump href="apiDocs/index.html">&XercesCName; API documentation.</jump></em> for more details.</p>
+	    <p>See the <em><jump href="apiDocs/index.html">&XercesCName; API documentation</jump></em> for more details.</p>
 
 	    <note>The API documentation is automatically generated using
 		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and

@@ -3,7 +3,21 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; &XercesCVersion;: XXXX, 2002">
+<s2 title="Releases Plan">
+
+    <p> For future release plan about &XercesCName;,
+        please refer to <jump href="releases_plan.html">Releases Plan</jump>.
+    </p>
+</s2>
+
+<s2 title="Releases Archive">
+
+    <p> For release information about &XercesCName; 1.7.0 or earlier,
+        please refer to <jump href="releases_archive.html">Releases Archive</jump>.
+    </p>
+</s2>
+
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: XXXX, 2002">
 <table>
     <tr>
         <td>Date</td>
@@ -598,21 +612,6 @@
     </tr>
 
 </table>
-</s2>
-
-<s2 title="Releases Archive">
-
-    <p> For release information about &XercesCName; 1.7.0 or earlier,
-        please refer to <jump href="releases_archive.html">Releases Archive</jump>.
-    </p>
-</s2>
-
-
-<s2 title="Releases Plan">
-
-    <p> For future release plan about &XercesCName;,
-        please refer to <jump href="releases_plan.html">Releases Plan</jump>.
-    </p>
 </s2>
 
 </s1>

@@ -2,6 +2,13 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Migration">
+    <s2 title="Migration Archive">
+
+       <p>For migration information to &XercesCName; 1.7.0 or earlier,
+          please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
+
+    </s2>
+
     <s2 title="Migrating from &XercesCName; 1.7.0 to &XercesCName; &XercesCVersion;">
       <p>This document is a discussion of the technical differences between
       &XercesCName; 1.7.0 code base and the &XercesCName; &XercesCVersion;.</p>
@@ -69,13 +76,6 @@
         </s4>
 
     </s3>
-    </s2>
-
-    <s2 title="Migration Archive">
-
-       <p>For migration information to &XercesCName; 1.7.0 or earlier,
-          please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
-
     </s2>
 
 </s1>

@@ -12,10 +12,31 @@
       <li><jump href="program-dom.html#Objectives">Design Objectives</jump></li>
       <li><jump href="program-dom.html#DOM3">DOM Level 3 Support in &XercesCName; </jump></li>
       <li><jump href="program-dom.html#UsingDOMAPI">Using DOM API</jump></li>
-      <li><jump href="program-dom.html#ConstructXercesDOMParser">Constructing a XercesDOMParser</jump></li>
-      <li><jump href="program-dom.html#ConstructDOMBuilder">Constructing a DOMBuilder</jump></li>
-      <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMInputSource and SAX InputSource?</jump></li>
-      <li><jump href="program-dom.html#ConstructDOMWriter">Constructing a DOMWriter</jump></li>
+      <ul>
+          <li><jump href="program-dom.html#AccessAPI">Accessing API from application code</jump></li>
+          <li><jump href="program-dom.html#DOMClassNames">Class Names</jump></li>
+          <li><jump href="program-dom.html#DOMObjMgmt">Objects Management</jump></li>
+          <li><jump href="program-dom.html#DOMMemMgmt">Memory Management</jump></li>
+          <li><jump href="program-dom.html#XMLCh">String Type</jump></li>
+      </ul>
+      <li><jump href="program-dom.html#XercesDOMParser">XercesDOMParser</jump></li>
+      <ul>
+          <li><jump href="program-dom.html#ConstructXercesDOMParser">Constructing a XercesDOMParser</jump></li>
+          <li><jump href="program-dom.html#XercesDOMFeatures">Supported Features</jump></li>
+          <li><jump href="program-dom.html#XercesDOMProperties">Supported Properties</jump></li>
+      </ul>
+      <li><jump href="program-dom.html#DOMBuilder">DOMBuilder</jump></li>
+      <ul>
+          <li><jump href="program-dom.html#ConstructDOMBuilder">Constructing a DOMBuilder</jump></li>
+          <li><jump href="program-dom.html#DOMBuilderFeatures">Supported Features</jump></li>
+          <li><jump href="program-dom.html#DOMBuilderProperties">Supported Properties</jump></li>
+          <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMInputSource and SAX InputSource?</jump></li>
+      </ul>
+      <li><jump href="program-dom.html#DOMWriter">DOMWriter</jump></li>
+      <ul>
+          <li><jump href="program-dom.html#ConstructDOMWriter">Constructing a DOMWriter</jump></li>
+          <li><jump href="program-dom.html#DOMWriterFeatures">Supported Features</jump></li>
+      </ul>
       <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
     </ul>
   </s2>
@@ -25,7 +46,11 @@
       or jump directly to:</p>
     <ul>
       <li><jump href="program-sax.html#UsingSAX1API">Using the SAX API</jump></li>
-      <li><jump href="program-sax.html#ConstructParser">Constructing a SAXParser</jump></li>
+      <li><jump href="program-sax.html#SAXParser">SAXParser</jump></li>
+      <ul>
+          <li><jump href="program-sax.html#ConstructParser">Constructing a SAXParser</jump></li>
+          <li><jump href="program-sax.html#SAXFeatures">Supported Features</jump></li>
+      </ul>
     </ul>
   </s2>
 
@@ -34,9 +59,12 @@
       or jump directly to:</p>
     <ul>
       <li><jump href="program-sax2.html#UsingSAX2API">Using the SAX2 API</jump></li>
-      <li><jump href="program-sax2.html#ConstructParser2">Constructing an XML Reader</jump></li>
-      <li><jump href="program-sax2.html#SAX2Features">Supported Features</jump></li>
-      <li><jump href="program-sax2.html#SAX2Properties">Supported Properties</jump></li>
+      <li><jump href="program-sax2.html#SAX2XMLReader">SAX2XMLReader</jump></li>
+      <ul>
+          <li><jump href="program-sax2.html#ConstructParser2">Constructing an XML Reader</jump></li>
+          <li><jump href="program-sax2.html#SAX2Features">Supported Features</jump></li>
+          <li><jump href="program-sax2.html#SAX2Properties">Supported Properties</jump></li>
+      </ul>
     </ul>
   </s2>
 
