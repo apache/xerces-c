@@ -98,7 +98,7 @@
             <Message Id="DeclarationNoSchemaLocation" Text="A schemaLocation attribute must be specified on '{0}' element."/>
             <Message Id="IncludeNamespaceDifference" Text="Included schema '{0}' has a different targetNameSpace '{1}'"/>
             <Message Id="OnlyAnnotationExpected" Text="At most one &lt;annotation&gt; element is expected in the content."/>
-            <Message Id="InvalidAttributeContent" Text="The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered"/>
+            <Message Id="InvalidAttributeContent" Text="The content must be (annotation?, simpleType?) for attribute '{0}={1}'"/>
             <Message Id="AttributeRequired" Text="Attribute '{0}' must appear in {1} {2} declarations"/>
             <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in {1} {2} declarations"/>
             <Message Id="InvalidMin2MaxOccurs" Text="Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'"/>
@@ -130,12 +130,13 @@
             <Message Id="DuplicateAttInDerivation" Text="Attribute '{0}' already defined in base and should not appear in derivation by extension."/>
             <Message Id="NotExpressibleWildCardIntersection" Text="The intensional intersection of {attributes wildcard}s must be expressible"/>
             <Message Id="BadAttDerivation_1" Text="Base type definition does not have any attributes"/>
-            <Message Id="BadAttDerivation_2" Text="Attribute '{0}' has an inconsistent REQUIRED setting with that of the base"/>
+            <Message Id="BadAttDerivation_2" Text="Attribute '{0}' has an inconsistent REQUIRED setting with that of the base"/>            
             <Message Id="BadAttDerivation_3" Text="Type of attribute '{0}' must be validly derived from type of attribute in base"/>
             <Message Id="BadAttDerivation_4" Text="Attribute '{0}' is either not fixed, or has a different value from that of the base"/>
             <Message Id="BadAttDerivation_5" Text="Attribute '{0}' has invalid target namespace with respect to a base wildcard constraint or, base has no wildcard"/>
             <Message Id="BadAttDerivation_6" Text="An attribute wildcard is present in the derived type, but not in the base"/>
             <Message Id="BadAttDerivation_7" Text="The attribute wildcard in the derived type is not a valid subset of that in the base"/>
+            <Message Id="BadAttDerivation_8" Text="Attribute '{0}' cannot modify the 'use' attribute in a derived type, if base attribute use is prohbited"/>
             <Message Id="AllContentError" Text="Content of &lt;all&gt; is restricted to elements only. '{0}' encountered and ignored."/>
             <Message Id="RedefineNamespaceDifference" Text="Redefined schema '{0}' has a different targetNameSpace '{1}'."/>
             <Message Id="Redefine_InvalidSimpleType" Text="A simpleType child of a &lt;redefine&gt; must have a restriction element as a child"/>
@@ -153,6 +154,11 @@
             <Message Id="IC_KeyRefReferNotFound" Text="Key reference declaration '{0}' refers to unknown key with name '{1}'."/>
             <Message Id="IC_KeyRefCardinality" Text="Cardinality of fields for keyref '{0}' and key '{1}' must match."/>
             <Message Id="IC_XPathExprMissing" Text="Xpath expression is either missing or empty"/>
+            <Message Id="PD_EmptyBase" Text="The complexType has content, while base is empty"/>
+            <Message Id="AttUseCorrect" Text="The {value constraint} of an attribue ref is not fixed or different from the fixed {value constraint} of '{0}'"/>
+            <Message Id="AttDeclPropCorrect3" Text="The {type definition} for attribute '{0}={1}' is or is derived from ID, and must not have {value constraint}"/>
+            <Message Id="AttDeclPropCorrect5" Text="More than one attribute derived from type ID cannot appear in the same complex type definition"/>
+            <Message Id="InvalidTargetNSValue" Text="'' is not a legal value for the targetNamespace attribute; the attribute must be absent or contain a nonempty value"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
@@ -666,6 +672,7 @@
             <Message Id="Regex_RangeTokenGetError" Text="Failed to get RangeToken for: {0}"/>
             <Message Id="Regex_NotSupported" Text="Not supported"/>
             <Message Id="Regex_InvalidChildIndex" Text="Invalid child index"/>
+            <Message Id="Regex_InvalidQuantifier" Text="Invalid quantifier in '{0}'"/>
             <Message Id="NEL_RepeatedCalls" Text="Enabling the NEL option can only be called once per process."/>
             <Message Id="RethrowError" Text="{0}"/>
             <Message Id="Out_Of_Memory" Text="operator new fails.  Possibly running Of memory"/>
@@ -720,6 +727,28 @@
             <Message Id="DateTime_min_invalid"        Text="Minute must have values 0-59! '{0}' "/>
             <Message Id="DateTime_second_invalid"     Text="Second must have values 0-60! '{0}' "/>
             <Message Id="DateTime_tz_hh_invalid"      Text="Minute must have values 0-59! '{0}' "/>
+            <Message Id="PD_NSCompat1" Text="NSCompat: The namespace of '{0}' is not allowed by wildcard in base"/>
+            <Message Id="PD_OccurRangeE" Text="The occurrence range of '{0}' is not a valid restriction of base element's range"/>
+            <Message Id="PD_NameTypeOK1" Text="NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element"/>
+            <Message Id="PD_NameTypeOK2" Text="NameAndTypeOK: Element '{0}' is nillable in the restriction, while it's not in the base"/>
+            <Message Id="PD_NameTypeOK3" Text="NameAndTypeOK: Element '{0}' is either not fixed, or is not fixed with the same value as in the base"/>
+            <Message Id="PD_NameTypeOK4" Text="NameAndTypeOK: The disallowed subsitutions, for element '{0}', are not a superset of those of the base element"/>
+            <Message Id="PD_NameTypeOK5" Text="NameAndTypeOK: Element '{0}' has a type that does not derive from that of the base"/>
+            <Message Id="PD_NameTypeOK6" Text="NameAndTypeOK: Derived element '{0}' has fewer Identity Constraints than base element '{1}'"/>
+            <Message Id="PD_NameTypeOK7" Text="NameAndTypeOK: Derived element '{0}' has has an Identity Constraint that does not appear on base element '{1}'"/>
+            <Message Id="PD_RecurseAsIfGroup" Text="RecurseAsIfGroup: Element '{0}' belongs to a group of a variety different from that of the base"/>
+            <Message Id="PD_Recurse1" Text="Occurrence range of group is not a valid restriction of occurence range of base group"/>
+            <Message Id="PD_Recurse2" Text="Recurse: There is not a complete functional mapping between the particles"/>
+            <Message Id="PD_ForbiddenRes1" Text="Forbidden restriction of 'any': Choice,Seq,All,Elt"/>
+            <Message Id="PD_ForbiddenRes2" Text="Forbidden restriction of 'all': Choice,Seq,Elt"/>
+            <Message Id="PD_ForbiddenRes3" Text="Forbidden restriction of 'choice': All,Seq,Leaf"/>
+            <Message Id="PD_ForbiddenRes4" Text="Forbidden restriction of 'sequence': Elt"/>
+            <Message Id="PD_NSSubset1" Text="Wildcard's occurrence range not a restriction of base wildcard's range"/>
+            <Message Id="PD_NSSubset2" Text="Wildcard is not a subset of corresponding wildcard in base"/>
+            <Message Id="PD_NSRecurseCheckCardinality1" Text="Group's occurrence range not a restriction of base wildcard's range"/>
+            <Message Id="PD_RecurseUnordered" Text="RecurseUnordered: There is not a complete functional mapping between the particles"/>
+            <Message Id="PD_MapAndSum" Text="MapAndSum: There is not a complete functional mapping between the particles"/>
+            <Message Id="PD_InvalidContentType" Text="Particle derivation: Invalid content spec node type"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
