@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.14  2004/12/30 14:52:34  amassari
+ * Added API to remove all entries having the same primary key
+ *
  * Revision 1.13  2004/11/19 00:50:22  cargilld
  * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
@@ -186,6 +189,57 @@ removeKey(const void* const key1, const int key2)
 {
     unsigned int hashVal;
     removeBucketElem(key1, key2, hashVal);
+}
+
+template <class TVal> void RefHash2KeysTableOf<TVal>::
+removeKey(const void* const key1)
+{
+    // Hash the key
+    unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
+    assert(hashVal < fHashModulus);
+
+    //
+    //  Search the given bucket for this key. Keep up with the previous
+    //  element so we can patch around it.
+    //
+    RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
+    RefHash2KeysTableBucketElem<TVal>* lastElem = 0;
+
+    while (curElem)
+    {
+        if (fHash->equals(key1, curElem->fKey1))
+        {
+            if (!lastElem)
+            {
+                // It was the first in the bucket
+                fBucketList[hashVal] = curElem->fNext;
+            }
+            else
+            {
+                // Patch around the current element
+                lastElem->fNext = curElem->fNext;
+            }
+
+            // If we adopted the elements, then delete the data
+            if (fAdoptedElems)
+                delete curElem->fData;
+
+            RefHash2KeysTableBucketElem<TVal>* toBeDeleted=curElem;
+            curElem = curElem->fNext;
+
+            // Delete the current element
+            // delete curElem;
+            // destructor is empty...
+            // curElem->~RefHash2KeysTableBucketElem();
+            fMemoryManager->deallocate(toBeDeleted);
+        }
+        else
+        {
+            // Move both pointers upwards
+            lastElem = curElem;
+            curElem = curElem->fNext;
+        }
+    }
 }
 
 template <class TVal> void RefHash2KeysTableOf<TVal>::removeAll()
@@ -405,7 +459,7 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
                 // It was the first in the bucket
                 fBucketList[hashVal] = curElem->fNext;
             }
-             else
+            else
             {
                 // Patch around the current element
                 lastElem->fNext = curElem->fNext;

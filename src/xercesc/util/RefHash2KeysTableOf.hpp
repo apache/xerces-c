@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/12/30 14:52:34  amassari
+ * Added API to remove all entries having the same primary key
+ *
  * Revision 1.13  2004/11/19 00:50:22  cargilld
  * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
@@ -164,6 +167,7 @@ public:
     bool isEmpty() const;
     bool containsKey(const void* const key1, const int key2) const;
     void removeKey(const void* const key1, const int key2);
+    void removeKey(const void* const key1);
     void removeAll();
     void transferElement(const void* const key1, void* key2);
 
