@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/25 21:34:23  roddey
+ * Added two more 'panic' values, which were requested by folks who needed
+ * to report a couple more panic situations.
+ *
  * Revision 1.3  2000/01/19 00:56:59  roddey
  * Changes to get rid of dependence on old utils standard streams and to
  * get rid of the fgLibLocation stuff.
@@ -112,6 +116,8 @@ public :
         , Panic_CantFindLib
         , Panic_UnknownMsgDomain
         , Panic_CantLoadMsgDomain
+        , Panic_SynchronizationErr
+        , Panic_SystemInit
 
         , PanicReasons_Count
     };
