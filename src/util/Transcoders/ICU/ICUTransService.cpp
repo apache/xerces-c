@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.14  2000/02/10 21:28:53  aruna1
+ * Problem solved for converting UChar to XMLCh. This problem showed up on solaris as UChar was != XMLCh
+ *
  * Revision 1.13  2000/02/06 07:48:32  rahulj
  * Year 2K copyright swat.
  *
@@ -160,7 +163,7 @@ static XMLCh* convertToXMLCh(const UChar* const toConvert)
 
     XMLCh* outPtr = retBuf;
     const UChar* srcPtr = toConvert;
-    while (*srcPtr++)
+    while (*srcPtr)
         *outPtr++ = XMLCh(*srcPtr++);
     *outPtr = 0;
 
