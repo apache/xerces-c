@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/10/17 21:13:43  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.14  2003/10/07 19:39:37  peiyongz
  * Use of Template_Class Object Serialization/Deserialization API
  *
@@ -137,6 +140,8 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -767,19 +772,10 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
 
         /***
          *
-         *  Serialize RefArrayVectorOf<XMLCh>
+         * Serialize RefArrayVectorOf<XMLCh>
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fEnumeration))
-        {
-            int enumLength = fEnumeration->size();
-            serEng<<enumLength;
-
-            for ( int i = 0 ; i < enumLength; i++)
-            {            
-                serEng.writeString(fEnumeration->elementAt(i));
-            }
-        }
+        XTemplateSerializer::storeObject(fEnumeration, serEng);
 
     }
     else
@@ -794,24 +790,7 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
          *  Deserialize RefArrayVectorOf<XMLCh>         
          *
         ***/
-        if (serEng.needToReadTemplateObject((void**)&fEnumeration))
-        {
-            if (!fEnumeration)
-            {
-                fEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fEnumeration);
-
-            int enumLength = 0;
-            serEng>>enumLength;
-            for ( int i = 0; i < enumLength; i++)
-            {
-                XMLCh* enumVal;
-                serEng.readString(enumVal);
-                fEnumeration->addElement(enumVal);
-            }
-        }
+        XTemplateSerializer::loadObject(&fEnumeration, 8, true, serEng);
 
     }
 

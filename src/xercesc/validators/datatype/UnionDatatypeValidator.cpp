@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/10/17 21:13:44  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.13  2003/10/07 19:39:03  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -121,6 +124,8 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -465,36 +470,11 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng<<fMemberTypesInherited;
 
         /***
-         *
          * Serialize RefArrayVectorOf<XMLCh>
-         *
-         ***/
-        if (serEng.needToWriteTemplateObject(fEnumeration))
-        {
-            int enumLength = fEnumeration->size();
-            serEng<<enumLength;
-
-            for ( int i = 0 ; i < enumLength; i++)
-            {            
-                serEng.writeString(fEnumeration->elementAt(i));
-            }
-        }
-
-        /***
-         *
          * Serialize RefVectorOf<DatatypeValidator>
-         *
          ***/
-        if (serEng.needToWriteTemplateObject(fMemberTypeValidators))
-        {
-            int vectorLength = fMemberTypeValidators->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                DatatypeValidator::storeDV(serEng, fMemberTypeValidators->elementAt(i));
-            }
-        }
+        XTemplateSerializer::storeObject(fEnumeration, serEng);
+        XTemplateSerializer::storeObject(fMemberTypeValidators, serEng);
 
         DatatypeValidator::storeDV(serEng, fValidatedDatatype);
 
@@ -505,50 +485,11 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng>>fMemberTypesInherited;
 
         /***
-         *
          * Deserialize RefArrayVectorOf<XMLCh>
-         *
-         ***/    
-        if (serEng.needToReadTemplateObject((void**)&fEnumeration))
-        {
-            if (!fEnumeration)
-            {
-                fEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fEnumeration);
-
-            int enumLength = 0;
-            serEng>>enumLength;
-            for ( int i = 0; i < enumLength; i++)
-            {
-                XMLCh* enumVal;
-                serEng.readString(enumVal);
-                fEnumeration->addElement(enumVal);
-            }
-        }
-
-        /***
-         *
          * Deserialize RefVectorOf<DatatypeValidator>
-         *
-         ***/
-        if (serEng.needToReadTemplateObject((void**)&fMemberTypeValidators))
-        {
-            if (!fMemberTypeValidators)
-            {
-                fMemberTypeValidators = new (fMemoryManager) RefVectorOf<DatatypeValidator>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fMemberTypeValidators);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                fMemberTypeValidators->addElement(DatatypeValidator::loadDV(serEng));
-            }
-        }
+         ***/    
+        XTemplateSerializer::loadObject(&fEnumeration, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fMemberTypeValidators, 8, true, serEng);
 
         fValidatedDatatype = DatatypeValidator::loadDV(serEng);
 

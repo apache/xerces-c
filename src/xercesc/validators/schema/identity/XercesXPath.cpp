@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/17 21:18:04  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.10  2003/10/14 15:24:23  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -110,6 +113,8 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -338,47 +343,16 @@ void XercesLocationPath::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         /***
-         *
          * Serialize RefVectorOf<XercesStep>* fSteps;
-         *
          ***/
-        if (serEng.needToWriteTemplateObject(fSteps))
-        {
-            int vectorLength = fSteps->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fSteps->elementAt(i);
-            }
-        }
-
+        XTemplateSerializer::storeObject(fSteps, serEng);
     }
     else
     {
         /***
-         *
          * Deserialize RefVectorOf<XercesStep>* fSteps;
-         *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fSteps))
-        {
-            if (!fSteps)
-            {
-                fSteps = new (serEng.getMemoryManager()) RefVectorOf<XercesStep>(8, true, serEng.getMemoryManager());
-            }
-
-            serEng.registerTemplateObject(fSteps);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                XercesStep* data;
-                serEng>>data;
-                fSteps->addElement(data);
-            }
-        }
+        XTemplateSerializer::loadObject(&fSteps, 8, true, serEng);
     }
 }
 
@@ -757,21 +731,9 @@ void XercesXPath::serialize(XSerializeEngine& serEng)
         serEng.writeString(fExpression);
 
         /***
-         *
          * Serialize RefVectorOf<XercesLocationPath>* fLocationPaths;
-         *
          ***/
-        if (serEng.needToWriteTemplateObject(fLocationPaths))
-        {
-            int vectorLength = fLocationPaths->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fLocationPaths->elementAt(i);
-            }
-        }
-
+        XTemplateSerializer::storeObject(fLocationPaths, serEng);
     }
     else
     {
@@ -779,29 +741,9 @@ void XercesXPath::serialize(XSerializeEngine& serEng)
         serEng.readString(fExpression);
 
         /***
-         *
          * Deserialize RefVectorOf<XercesLocationPath>* fLocationPaths;
-         *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fLocationPaths))
-        {
-            if (!fLocationPaths)
-            {
-                fLocationPaths = new (fMemoryManager) RefVectorOf<XercesLocationPath>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fLocationPaths);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                XercesLocationPath* data;
-                serEng>>data;
-                fLocationPaths->addElement(data);
-            }
-        }
-
+        XTemplateSerializer::loadObject(&fLocationPaths, 8, true, serEng);
     }
 }
 

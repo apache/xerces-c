@@ -73,6 +73,8 @@
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 
+#include <xercesc/internal/XTemplateSerializer.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -469,38 +471,14 @@ IMPL_XSERIALIZABLE_TOCREATE(DTDElementDecl)
 void DTDElementDecl::serialize(XSerializeEngine& serEng)
 {
 
-    /***
-    RefHashTableOf<DTDAttDef>*  fAttDefs;
-    ***/
-
     if (serEng.isStoring())
     {
-
         /***
          *
-         * Serialize   RefHashTableOf<DTDAttDef>           
+         * Serialize RefHashTableOf<DTDAttDef>
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fAttDefs))
-        {
-            RefHashTableOfEnumerator<DTDAttDef> e(fAttDefs);
-
-            int itemNumber = 0;        
-            while (e.hasMoreElements())
-            {
-                e.nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            e.Reset();
-            while (e.hasMoreElements())
-            {
-                DTDAttDef& curAttDef = e.nextElement();
-                curAttDef.serialize(serEng);
-            }
-        }
+        XTemplateSerializer::storeObject(fAttDefs, serEng);
 
         serEng<<fAttList;
         serEng<<fContentSpec;
@@ -519,28 +497,10 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Deserialize   RefHashTableOf<DTDAttDef>           
+         * Deserialize RefHashTableOf<DTDAttDef>           
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fAttDefs))
-        {
-            if (!fAttDefs)
-            {
-                fAttDefs = new RefHashTableOf<DTDAttDef>(3);
-            }
-
-            serEng.registerTemplateObject(fAttDefs);
-
-            int itemNumber = 0;
-            serEng>>itemNumber;
-
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {
-                DTDAttDef*  data = new DTDAttDef();
-                data->serialize(serEng);               
-                fAttDefs->put((void*) data->getFullName(), data);        
-            }
-         }
+        XTemplateSerializer::loadObject(&fAttDefs, 3, true, serEng);
 
         serEng>>fAttList;
         serEng>>fContentSpec;

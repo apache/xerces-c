@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/17 21:14:30  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.3  2003/10/10 16:24:51  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -86,6 +89,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -180,29 +185,10 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Serialize   RefHashTableOf<DTDAttDef>           
+         * Serialize RefHashTableOf<DTDAttDef>           
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fList))
-        {
-            int itemNumber = 0;
-            fEnum->Reset();
-
-            while (fEnum->hasMoreElements())
-            {
-                fEnum->nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            fEnum->Reset();
-            while (fEnum->hasMoreElements())
-            {
-                DTDAttDef& curAttDef = fEnum->nextElement();
-                curAttDef.serialize(serEng);
-            }
-        }
+        XTemplateSerializer::storeObject(fList, serEng);
 
         // do not serialize fEnum
     }
@@ -210,33 +196,15 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Deserialize   RefHashTableOf<DTDAttDef>           
+         * Deserialize RefHashTableOf<DTDAttDef>           
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fList))
+        XTemplateSerializer::loadObject(&fList, 3, true, serEng);
+
+        if (!fEnum && fList)
         {
-            if (!fList)
-            {
-                fList = new RefHashTableOf<DTDAttDef>(3);
-            }
-
-            serEng.registerTemplateObject(fList);
-
-            int itemNumber = 0;
-            serEng>>itemNumber;
-
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {
-                DTDAttDef*  data = new DTDAttDef();
-                data->serialize(serEng);               
-                fList->put((void*) data->getFullName(), data);        
-            }
-         }
-
-         if (!fEnum)
-         {
-             fEnum = new RefHashTableOfEnumerator<DTDAttDef>(fList);
-         }
+            fEnum = new RefHashTableOfEnumerator<DTDAttDef>(fList);
+        }
     }
 
 }

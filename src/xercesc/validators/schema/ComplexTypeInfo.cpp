@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.13  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -191,6 +194,8 @@
 #include <xercesc/validators/common/MixedContentModel.hpp>
 #include <xercesc/validators/common/SimpleContentModel.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -933,78 +938,16 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         /***
          * 
          * Serialize RefVectorOf<SchemaElementDecl>*    fElements;
-         *
-         ***/
-        if (serEng.needToWriteTemplateObject(fElements))
-        {
-            int vectorLength = fElements->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fElements->elementAt(i);
-            }
-        }
-
-        /***
-         *
-         * Serialize RefVectorOf<ContentSpecNode>
-         *
-         ***/
-        if (serEng.needToWriteTemplateObject(fSpecNodesToDelete))
-        {
-            int vectorLength = fSpecNodesToDelete->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fSpecNodesToDelete->elementAt(i);
-            }
-        }
-
-        /***
-         *
          * Serialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
-         *
-         ***/    
-        if (serEng.needToWriteTemplateObject(fAttDefs))
-        {
-            int itemNumber = 0;
-
-            RefHash2KeysTableOfEnumerator<SchemaAttDef> e(fAttDefs);
-            while (e.hasMoreElements())
-            {
-                e.nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            e.Reset();
-            while (e.hasMoreElements())
-            {
-                SchemaAttDef& attDef = e.nextElement();
-                attDef.serialize(serEng);
-            }
-
-        }
-
-         /***
-          *   Don't serialize 
-          *
-          *   fContentModel;
-          *   fFormattedModel;
-          *   
-          ***/
+         ***/
+        XTemplateSerializer::storeObject(fElements, serEng);
+        XTemplateSerializer::storeObject(fAttDefs, serEng);
 
         /***
          * 
          * fContentSpecOrgURI:     start of the array
          * fContentSpecOrgURISize: size of the array
          * fUniqueURI:             the current last element in the array
-         *
-         * TODO: could we treat this the same way as fContentModel?
-         *
          ***/
         if (fContentSpecOrgURI)
         {
@@ -1024,12 +967,14 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
             serEng<<(int)0;
         }
 
-        /***
-         *  don't serialize
-         *  TODO
-         *  fLocator;
-         ***/
-
+         /***
+          *   Don't serialize 
+          *
+          *   fContentModel;
+          *   fFormattedModel;
+          *   fLocator;
+          *   fSpecNodesToDelete
+          ***/
     }
     else
     {
@@ -1060,94 +1005,16 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         /***
          * 
          * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
-         *
-         ***/
-        if (serEng.needToReadTemplateObject((void**)&fElements))
-        {
-            if (!fElements)
-            {
-                fElements = new (fMemoryManager) RefVectorOf<SchemaElementDecl>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fElements);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                SchemaElementDecl* node;
-                serEng>>node;
-                fElements->addElement(node);
-            }
-        }
-
-        /***
-         *
-         * Deserialize RefVectorOf<ContentSpecNode>*    ;
-         *
-         ***/
-        if (serEng.needToReadTemplateObject((void**)&fSpecNodesToDelete))
-        {
-            if (!fSpecNodesToDelete)
-            {
-                fSpecNodesToDelete = new (fMemoryManager) RefVectorOf<ContentSpecNode>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fSpecNodesToDelete);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                ContentSpecNode* node;
-                serEng>>node;
-                fSpecNodesToDelete->addElement(node);
-            }
-        }
-
-        /***
-         *
          * Deserialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
-         *
-         ***/    
-         if (serEng.needToReadTemplateObject((void**)&fAttDefs))
-        {
-            if (!fAttDefs)
-            {
-                fAttDefs = new (fMemoryManager) RefHash2KeysTableOf<SchemaAttDef>(3, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fAttDefs);
-
-            int itemNumber = 0;
-            serEng>>itemNumber;
-
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {               
-                SchemaAttDef*  data = new (fMemoryManager) SchemaAttDef(fMemoryManager);
-                data->serialize(serEng);
-                fAttDefs->put(data->getAttName()->getLocalPart(), data->getId(), data);                
-            }
-        }
-
-         /***
-          *   Don't serialize 
-          *
-          *   fContentModel;
-          *   fFormattedModel;
-          *   
-          ***/
-         fContentModel   = 0;
-         fFormattedModel = 0;
+         ***/
+        XTemplateSerializer::loadObject(&fElements, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fAttDefs, 8, true, serEng);
 
         /***
          * 
          * fContentSpecOrgURI:     start of the array
          * fContentSpecOrgURISize: size of the array
          * fUniqueURI:             the current last element in the array
-         *
-         * TODO: could we treat this the same way as fContentModel?
-         *
          ***/
          int i;
          serEng>>i;
@@ -1174,12 +1041,18 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
          }
          //else do nothing             
 
-        /***
-         *  don't serialize
-         *  TODO
-         *  fLocator;
-         ***/
-        fLocator = 0;
+         /***
+          *   Don't deserialize 
+          *
+          *   fContentModel;
+          *   fFormattedModel;
+          *   fLocator; 
+          *   fSpecNodesToDelete
+          ***/
+         fContentModel   = 0;
+         fFormattedModel = 0;
+         fLocator = 0;
+         fSpecNodesToDelete = 0;
     }
 }
 

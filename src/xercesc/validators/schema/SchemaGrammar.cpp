@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.10  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -134,6 +137,8 @@
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -327,117 +332,109 @@ IMPL_XSERIALIZABLE_TOCREATE(SchemaGrammar)
 void SchemaGrammar::serialize(XSerializeEngine& serEng)
 {
 
-    Grammar::serialize(serEng);
-
     /***
-    XMLCh*                                 fTargetNamespace;
-    RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
-    RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
-    RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
-    NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
-    RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
-    RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
-    RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
-    RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
-    NamespaceScope*                        fNamespaceScope;
-    RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
-    RefHashTableOf<XMLRefInfo>*            fIDRefList;
-    MemoryManager*                         fMemoryManager;
-    bool                                   fValidated;
-    DatatypeValidatorFactory               fDatatypeRegistry;
-    XMLSchemaDescription*                  fGramDesc;
-    ***/
+     * don't serialize NamespaceScope* fNamespaceScope;
+     ***/
+
+    Grammar::serialize(serEng);
 
     if (serEng.isStoring())
     {
-        serEng.writeString(fTargetNamespace);
-
         /***
          *
          * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
-         *
-         ***/
-        if (serEng.needToWriteTemplateObject(fElemDeclPool))
-        {
-            int itemNumber = 0;
-            RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(fElemDeclPool);
-
-            while (e.hasMoreElements())
-            {
-                e.nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            e.Reset();
-            while (e.hasMoreElements())
-            {
-                SchemaElementDecl& curElem = e.nextElement();
-                curElem.serialize(serEng);
-            }
-
-        }
-
-        /***
-         *
          * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
-         * TODO: will this data be removed
-         ***/
-        if (serEng.needToWriteTemplateObject(fElemDeclPool))
-        {
-            int itemNumber = 0;
-            RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(fElemDeclPool);
-
-            while (e.hasMoreElements())
-            {
-                e.nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            e.Reset();
-            while (e.hasMoreElements())
-            {
-                SchemaElementDecl& curElem = e.nextElement();
-                curElem.serialize(serEng);
-            }
-
-        }
-
-        /***
-         *
          * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
          *
+        ***/
+        XTemplateSerializer::storeObject(fElemDeclPool, serEng);
+        //todo: will fElemNonDeclPool data be removed
+        XTemplateSerializer::storeObject(fElemNonDeclPool, serEng);
+        XTemplateSerializer::storeObject(fGroupElemDeclPool, serEng);
+
+        /***
+         * Serialize NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
          ***/
+        XTemplateSerializer::storeObject(fNotationDeclPool, serEng);        
+    
+        /***
+         *
+         * Serialize RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
+         * Serialize RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
+         * Serialize RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
+         * Serialize RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
+         * Serialize RefHashTableOf<XMLRefInfo>*            fIDRefList;
+         *
+         ***/
+
+        XTemplateSerializer::storeObject(fAttributeDeclRegistry, serEng);
+        XTemplateSerializer::storeObject(fComplexTypeRegistry, serEng);
+        XTemplateSerializer::storeObject(fGroupInfoRegistry, serEng);
+        XTemplateSerializer::storeObject(fAttGroupInfoRegistry, serEng);
+        //fIDRefList todo: tobe removed
+        XTemplateSerializer::storeObject(fIDRefList, serEng);
+       
+        /***
+         *
+         * Serialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
+         * todo
+         ***/
+
+        fDatatypeRegistry.serialize(serEng);
+        serEng.writeString(fTargetNamespace);
+        serEng<<fValidated;
+        serEng<<fGramDesc;
+
     }
     else
     {
         /***
          *
          * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+         * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
+         * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
+         *
+        ***/
+        XTemplateSerializer::loadObject(&fElemDeclPool, 109, true, 128, serEng);
+        //todo: will fElemNonDeclPool data be removed
+        XTemplateSerializer::loadObject(&fElemNonDeclPool, 109, true, 128, serEng);
+        XTemplateSerializer::loadObject(&fGroupElemDeclPool, 109, true, 128, serEng);
+
+        /***
+         * Deserialize NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
+         ***/
+        XTemplateSerializer::loadObject(&fNotationDeclPool, 109, 128, serEng);        
+    
+        /***
+         *
+         * Deserialize RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
+         * Deserialize RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
+         * Deserialize RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
+         * Deserialize RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
+         * Deserialize RefHashTableOf<XMLRefInfo>*            fIDRefList;
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fElemDeclPool))
-        {
-            if (!fElemDeclPool)
-            {
-                fElemDeclPool = new (serEng.getMemoryManager()) RefHash3KeysIdPool<SchemaElementDecl>(109, true, 128, serEng.getMemoryManager());
-            }
 
-            serEng.registerTemplateObject(fElemDeclPool);
+        XTemplateSerializer::loadObject(&fAttributeDeclRegistry, 29, true, serEng);
+        XTemplateSerializer::loadObject(&fComplexTypeRegistry, 29, true, serEng);
+        XTemplateSerializer::loadObject(&fGroupInfoRegistry, 29, true, serEng);
+        XTemplateSerializer::loadObject(&fAttGroupInfoRegistry, 29, true, serEng);
+        //todo: fIDRefList to be removed
+        XTemplateSerializer::loadObject(&fIDRefList, 29, true, serEng);
+       
+        /***
+         *
+         * Deserialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
+         * todo
+         ***/
 
-            int itemNumber = 0;
-            serEng>>itemNumber;
+        fDatatypeRegistry.serialize(serEng);
+        serEng.readString(fTargetNamespace);
+        serEng>>fValidated;
 
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {               
-                SchemaElementDecl*  elemDecl = new (fMemoryManager) SchemaElementDecl(fMemoryManager);
-                elemDecl->serialize(serEng);
-                fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), elemDecl->getEnclosingScope(), elemDecl);
-            }
-        }
+        XMLSchemaDescriptionImpl* gramDesc;
+        serEng>>gramDesc;
+        fGramDesc = gramDesc;
 
     }
 }

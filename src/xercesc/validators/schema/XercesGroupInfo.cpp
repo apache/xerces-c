@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.7  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -91,6 +94,8 @@
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -148,16 +153,8 @@ void XercesGroupInfo::serialize(XSerializeEngine& serEng)
          * Serialize RefVectorOf<SchemaElementDecl>* fElements;
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fElements))
-        {
-            int vectorLength = fElements->size();
-            serEng<<vectorLength;
 
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fElements->elementAt(i);
-            }
-        }
+        XTemplateSerializer::storeObject(fElements, serEng);
 
         serEng<<fBaseGroup;
 
@@ -174,24 +171,7 @@ void XercesGroupInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fElements))
-        {
-            if (!fElements)
-            {
-                fElements = new (serEng.getMemoryManager()) RefVectorOf<SchemaElementDecl>(8, true, serEng.getMemoryManager());
-            }
-
-            serEng.registerTemplateObject(fElements);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                SchemaElementDecl* node;
-                serEng>>node;
-                fElements->addElement(node);
-            }
-        }
+        XTemplateSerializer::loadObject(&fElements, 8, true, serEng);
 
         serEng>>fBaseGroup;
 

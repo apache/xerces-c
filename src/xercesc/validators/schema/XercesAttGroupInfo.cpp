@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.5  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -90,6 +93,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/util/QName.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -183,32 +188,14 @@ void XercesAttGroupInfo::serialize(XSerializeEngine& serEng)
          * Serialize RefVectorOf<SchemaAttDef>* fAttributes;
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fAttributes))
-        {
-            int vectorLength = fAttributes->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fAttributes->elementAt(i);
-            }
-        }
+        XTemplateSerializer::storeObject(fAttributes, serEng);
 
         /***
          *
          * Serialize RefVectorOf<SchemaAttDef>* fAnyAttributes;
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fAnyAttributes))
-        {
-            int vectorLength = fAnyAttributes->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fAnyAttributes->elementAt(i);
-            }
-        }
+        XTemplateSerializer::storeObject(fAnyAttributes, serEng);
 
         serEng<<fCompleteWildCard;
     }
@@ -221,48 +208,15 @@ void XercesAttGroupInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<SchemaAttDef>* fAttributes;
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fAttributes))
-        {
-            if (!fAttributes)
-            {
-                fAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fAttributes);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                SchemaAttDef* node;
-                serEng>>node;
-                fAttributes->addElement(node);
-            }
-        }
+        XTemplateSerializer::loadObject(&fAttributes, 8, true, serEng);
 
         /***
          *
          * Deserialize RefVectorOf<SchemaAttDef>* fAnyAttributes;
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fAnyAttributes))
-        {
-            if (!fAnyAttributes)
-            {
-                fAnyAttributes = new (fMemoryManager) RefVectorOf<SchemaAttDef>(8, true, fMemoryManager);
-            }
 
-            serEng.registerTemplateObject(fAnyAttributes);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                SchemaAttDef* node;
-                serEng>>node;
-                fAnyAttributes->addElement(node);
-            }
-        }
+        XTemplateSerializer::loadObject(&fAnyAttributes, 8, true, serEng);
 
         serEng>>fCompleteWildCard;
     }

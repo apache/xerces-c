@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/17 21:18:04  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.6  2003/10/14 15:24:23  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -97,6 +100,8 @@
 #include <xercesc/validators/schema/identity/IC_Unique.hpp>
 #include <xercesc/validators/schema/identity/IC_Key.hpp>
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -210,16 +215,7 @@ void IdentityConstraint::serialize(XSerializeEngine& serEng)
          * Serialize RefVectorOf<IC_Field>* fFields;
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fFields))
-        {
-            int vectorLength = fFields->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                serEng<<fFields->elementAt(i);
-            }
-        }
+        XTemplateSerializer::storeObject(fFields, serEng);
     
     }
     else
@@ -235,24 +231,7 @@ void IdentityConstraint::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<IC_Field>* fFields;
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fFields))
-        {
-            if (!fFields)
-            {
-                fFields = new (fMemoryManager) RefVectorOf<IC_Field>(8, true, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fFields);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {     
-                IC_Field* data;
-                serEng>>data;
-                fFields->addElement(data);
-            }
-        }
+        XTemplateSerializer::loadObject(&fFields, 8, true, serEng);
 
     }
 

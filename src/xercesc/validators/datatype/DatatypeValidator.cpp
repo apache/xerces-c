@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/10/17 21:13:44  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.12  2003/10/07 19:39:37  peiyongz
  * Use of Template_Class Object Serialization/Deserialization API
  *
@@ -153,6 +156,8 @@
 #include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -310,35 +315,8 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
 
         /***
          *  Serialize RefHashTableOf<KVStringPair>
-         *
-         *  Since the RefHashTableOf does not privide a size() method
-         *  We have to traverse extra time to gather this information
-         *  first, and then the second time for actual serialization.
-         *
-         *  We only need to serialize KVStringPair, when deserialize,
-         *  the KVStringPair.key() can be used as the key to the hash table.
-         *  
          ***/
-        if (serEng.needToWriteTemplateObject(fFacets))
-        {
-            int itemNumber = 0;
-
-            RefHashTableOfEnumerator<KVStringPair> e(fFacets);
-            while (e.hasMoreElements())
-            {
-                e.nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            e.Reset();
-            while (e.hasMoreElements())
-            {
-                KVStringPair& curPair = e.nextElement();
-                curPair.serialize(serEng);
-            }
-        }
+        XTemplateSerializer::storeObject(fFacets, serEng);
 
         serEng.writeString(fPattern);
 
@@ -376,25 +354,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  Deserialize RefHashTableOf<KVStringPair>
          *
          ***/
-         if (serEng.needToReadTemplateObject((void**)&fFacets))
-        {
-            if (!fFacets)
-            {
-                fFacets = new (fMemoryManager) RefHashTableOf<KVStringPair>(3, fMemoryManager);
-            }
-
-            serEng.registerTemplateObject(fFacets);
-
-            int itemNumber = 0;
-            serEng>>itemNumber;
-
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {
-                KVStringPair*  data = new (fMemoryManager) KVStringPair(fMemoryManager);
-                data->serialize(serEng);
-                fFacets->put((void*) data->getKey(), data);        
-            }
-        }
+        XTemplateSerializer::loadObject(&fFacets, 3, true, serEng);
 
         serEng.readString(fPattern);
 

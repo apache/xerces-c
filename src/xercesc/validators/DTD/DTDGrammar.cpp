@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/17 21:14:30  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.10  2003/10/14 15:20:42  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -109,6 +112,8 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -310,43 +315,21 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
 
     Grammar::serialize(serEng);
 
-/***
-    NameIdPool<DTDElementDecl>*       fElemDeclPool;
-    NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
-    NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
-    NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
-    unsigned int                      fRootElemId;
-    bool                              fValidated;
-    XMLDTDDescription*                fGramDesc;
-***/
+    //don't serialize fDefaultEntities
 
     if (serEng.isStoring())
     {
-        //don't serialize fDefaultEntities
-
         /***
          *
          * Serialize NameIdPool<DTDElementDecl>*       fElemDeclPool;
-         *
-         ***/
-
-        /***
-         *
          * Serialize NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
-         * TODO: will this data member removed?
-         ***/
-
-        /***
-         *
          * Serialize NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
-         *
-         ***/
-
-        /***
-         *
          * Serialize NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
-         *
          ***/
+        XTemplateSerializer::storeObject(fElemDeclPool, serEng);
+        XTemplateSerializer::storeObject(fElemNonDeclPool, serEng); //TODO: to be removed
+        XTemplateSerializer::storeObject(fEntityDeclPool, serEng);
+        XTemplateSerializer::storeObject(fNotationDeclPool, serEng);
 
         serEng<<fRootElemId;
         serEng<<fValidated;
@@ -359,26 +342,14 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
        /***
          *
          * Deserialize NameIdPool<DTDElementDecl>*       fElemDeclPool;
-         * 
-         ***/
-
-       /***
-         *
          * Deserialize NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
-         * TODO: will this data member removed?
-         ***/
-
-        /***
-         *
          * Deserialize NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
-         *
+         * Deerialize NameIdPool<XMLNotationDecl>*       fNotationDeclPool;
          ***/
-
-        /***
-         *
-         * Deerialize NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
-         *
-         ***/
+        XTemplateSerializer::loadObject(&fElemDeclPool, 109, 128, serEng);
+        XTemplateSerializer::loadObject(&fElemNonDeclPool, 109, 128, serEng); //TODO: to be removed
+        XTemplateSerializer::loadObject(&fEntityDeclPool, 109, 128, serEng);
+        XTemplateSerializer::loadObject(&fNotationDeclPool, 109, 128, serEng);
 
         serEng>>fRootElemId;
         serEng>>fValidated;

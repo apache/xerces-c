@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.4  2003/10/10 16:25:40  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -81,6 +84,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -180,27 +185,7 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
          * Serialize RefHash2KeysTableOf<SchemaAttDef>
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fList))
-        {
-            int itemNumber = 0;
-            fEnum->Reset();
-
-            while (fEnum->hasMoreElements())
-            {
-                fEnum->nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            fEnum->Reset();
-            while (fEnum->hasMoreElements())
-            {
-                SchemaAttDef& curAttDef = fEnum->nextElement();
-                curAttDef.serialize(serEng);
-            }
-
-        }
+        XTemplateSerializer::storeObject(fList, serEng);
 
         // do not serialize fEnum
     }
@@ -208,33 +193,15 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Deserialize   RefHash2KeysTableOf<SchemaAttDef>           
+         * Deserialize RefHash2KeysTableOf<SchemaAttDef>           
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fList))
+        XTemplateSerializer::loadObject(&fList, 3, true, serEng);
+
+        if (!fEnum && fList)
         {
-            if (!fList)
-            {
-                fList = new RefHash2KeysTableOf<SchemaAttDef>(3);
-            }
-
-            serEng.registerTemplateObject(fList);
-
-            int itemNumber = 0;
-            serEng>>itemNumber;
-
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {
-                SchemaAttDef*  data = new SchemaAttDef();
-                data->serialize(serEng);            
-                fList->put(data->getAttName()->getLocalPart(), data->getId(), data);                
-            }
-         }
-
-         if (!fEnum)
-         {
-             fEnum = new RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
-         }
+            fEnum = new RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
+        }
     }
 
 }

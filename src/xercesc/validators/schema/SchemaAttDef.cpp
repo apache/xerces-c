@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.7  2003/10/10 16:25:40  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -97,6 +100,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -224,21 +229,9 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
         DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fMemberTypeValidator);
 
         /***
-         *
          * Serialize ValueVectorOf<unsigned int>
-         *
          ***/
-        if (serEng.needToWriteTemplateObject(fNamespaceList))
-        {
-            unsigned int listSize = fNamespaceList->size();
-            serEng<<listSize;
-
-            for (unsigned int i=0; i < listSize; i++) 
-            {
-                serEng<<fNamespaceList->elementAt(i);
-            }
-
-        }
+        XTemplateSerializer::storeObject(fNamespaceList, serEng);
 
         serEng<<(int)fValidity;
         serEng<<(int)fValidation;
@@ -253,30 +246,9 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
         fMemberTypeValidator  = DatatypeValidator::loadDV(serEng);
 
         /***
-         *
          * Deserialize ValueVectorOf<unsigned int>
-         *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fNamespaceList))
-        {
-            if (!fNamespaceList)
-            {
-                fNamespaceList = new (getMemoryManager()) ValueVectorOf<unsigned int>(8, getMemoryManager());
-            }
-
-            serEng.registerTemplateObject(fNamespaceList);
-
-            unsigned int listSize;
-            serEng>>listSize;
-
-            for (unsigned int i=0; i < listSize; i++) 
-            {
-                unsigned int uriId;
-                serEng>>uriId;
-                fNamespaceList->addElement(uriId);
-            }
-
-        }
+        XTemplateSerializer::loadObject(&fNamespaceList, 8, false, serEng);
 
         int i;
         serEng>>i;

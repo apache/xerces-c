@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.13  2003/10/16 09:21:53  gareth
- * use correct new.
+ * Revision 1.14  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
  *
  * Revision 1.12  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
@@ -163,6 +163,8 @@
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -443,52 +445,19 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         serEng<<fComplexTypeInfo;
 
         /***
-         *
          * Serialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
-         *
-         */
-        if (serEng.needToWriteTemplateObject(fAttDefs))
-        {
-            int itemNumber = 0;
+         ***/
 
-            RefHash2KeysTableOfEnumerator<SchemaAttDef> e(fAttDefs);
-            while (e.hasMoreElements())
-            {
-                e.nextElement();
-                itemNumber++;
-            }
-
-            serEng<<itemNumber;
-
-            e.Reset();
-            while (e.hasMoreElements())
-            {
-                SchemaAttDef& curAttDef = e.nextElement();
-                curAttDef.serialize(serEng);
-            }
-
-        }
-
+        XTemplateSerializer::storeObject(fAttDefs, serEng);
 
         serEng<<fXsiComplexTypeInfo;
 
         DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fXsiSimpleTypeInfo);
 
         /***
-         * 
          * Serialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
-         *
-         */
-        if (serEng.needToWriteTemplateObject(fIdentityConstraints))
-        {
-            int vectorLength = fIdentityConstraints->size();
-            serEng<<vectorLength;
-
-            for ( int i = 0 ; i < vectorLength; i++)
-            {
-                IdentityConstraint::storeIC(serEng, fIdentityConstraints->elementAt(i));
-            }
-        }
+         ***/
+        XTemplateSerializer::storeObject(fIdentityConstraints, serEng);
 
         serEng<<fAttWildCard;
         serEng<<fSubstitutionGroupElem;
@@ -517,56 +486,18 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         serEng>>fComplexTypeInfo;
 
         /***
-         *
          * DeSerialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
-         *
-         */
-        if (serEng.needToReadTemplateObject((void**)&fAttDefs))
-        {
-            if (!fAttDefs)
-            {
-                fAttDefs = new (getMemoryManager())RefHash2KeysTableOf<SchemaAttDef>(3, true, getMemoryManager());
-            }
-
-            serEng.registerTemplateObject(fAttDefs);
-
-            int itemNumber = 0;
-            serEng>>itemNumber;
-
-            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-            {
-                SchemaAttDef*  data = new (getMemoryManager())SchemaAttDef();
-                data->serialize(serEng);            
-                fAttDefs->put(data->getAttName()->getLocalPart(), data->getId(), data);                
-            }
-         }
+         ***/
+        XTemplateSerializer::loadObject(&fAttDefs, 3, true, serEng);
 
         serEng>>fXsiComplexTypeInfo;
 
         fXsiSimpleTypeInfo = DatatypeValidator::loadDV(serEng);
 
         /***
-         *
          * DeSerialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
-         *
-         */
-        if (serEng.needToReadTemplateObject((void**)&fIdentityConstraints))
-        {
-            if (!fIdentityConstraints)
-            {
-                fIdentityConstraints = new (getMemoryManager()) RefVectorOf<IdentityConstraint>(8, true, getMemoryManager());
-            }
-
-            serEng.registerTemplateObject(fIdentityConstraints);
-
-            int vectorLength = 0;
-            serEng>>vectorLength;
-            for ( int i = 0 ; i < vectorLength; i++)
-            {            
-                IdentityConstraint* node = IdentityConstraint::loadIC(serEng);                    ;
-                fIdentityConstraints->addElement(node);
-            }
-        }
+         ***/
+        XTemplateSerializer::loadObject(&fIdentityConstraints, 8, true, serEng);
 
         serEng>>fAttWildCard;
         serEng>>fSubstitutionGroupElem;

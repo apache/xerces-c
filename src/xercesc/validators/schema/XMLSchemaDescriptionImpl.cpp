@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/17 21:17:12  peiyongz
+ * using XTemplateSerializer
+ *
  * Revision 1.4  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -78,6 +81,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/util/QName.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -219,16 +224,7 @@ void XMLSchemaDescriptionImpl::serialize(XSerializeEngine& serEng)
          * Serialize RefArrayVectorOf<XMLCh>*               fLocationHints;
          *
          ***/
-        if (serEng.needToWriteTemplateObject(fLocationHints))
-        {
-            int enumLength = fLocationHints->size();
-            serEng<<enumLength;
-
-            for ( int i = 0 ; i < enumLength; i++)
-            {            
-                serEng.writeString(fLocationHints->elementAt(i));
-            }
-        }
+        XTemplateSerializer::storeObject(fLocationHints, serEng);
 
         QName* tempQName = (QName*)fTriggeringComponent;
         serEng<<tempQName;
@@ -252,24 +248,7 @@ void XMLSchemaDescriptionImpl::serialize(XSerializeEngine& serEng)
          *  Deserialize RefArrayVectorOf<XMLCh>    fLocationHints     
          *
          ***/
-        if (serEng.needToReadTemplateObject((void**)&fLocationHints))
-        {
-            if (!fLocationHints)
-            {
-                fLocationHints = new (XMLGrammarDescription::getMemoryManager()) RefArrayVectorOf<XMLCh>(4, true, XMLGrammarDescription::getMemoryManager());
-            }
-
-            serEng.registerTemplateObject(fLocationHints);
-
-            int enumLength = 0;
-            serEng>>enumLength;
-            for ( int i = 0; i < enumLength; i++)
-            {
-                XMLCh* enumVal;
-                serEng.readString(enumVal);
-                fLocationHints->addElement(enumVal);
-            }
-        }
+        XTemplateSerializer::loadObject(&fLocationHints, 4, true, serEng);
 
         QName* tempQName;
         serEng>>tempQName;
