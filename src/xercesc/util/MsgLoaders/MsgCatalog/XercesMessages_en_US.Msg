@@ -583,7 +583,7 @@ $set 3
 176  MinExclusive '{0}' is invalid
 177  TotalDigit Value '{0}' is invalid
 178  FractionDigit Value '{0}' is invalid
-179  TotalDigit Value '{0}' must be a nonNegativeInteger
+179  TotalDigit Value '{0}' must be a PositiveInteger
 180  FractionDigit Value '{0}' must be a nonNegativeInteger
 181  It is an error for both maxInclusive and maxExclusive to be specified for the same datatype
 182  It is an error for both minInclusive and minExclusive to be specified for the same datatype

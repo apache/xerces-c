@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/03/01 20:59:06  peiyongz
+ * TotalDigits value must be a positiveInteger
+ *
  * Revision 1.7  2003/02/25 17:24:37  peiyongz
  * Schema Errata: E2-44 totalDigits/fractDigits
  *
@@ -226,7 +229,7 @@ void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
 
         // check 4.3.11.c0 must: totalDigits > 0
         if ( val <= 0 )
-            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_TotalDigit, value);
+            ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_PosInt_TotalDigit, value);
 
         setTotalDigits(val);
         setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
