@@ -97,7 +97,7 @@ public :
     static const XMLCh fgEnumerationString[];
     static const XMLCh fgExceptDomain[];
     static const XMLCh fgFixedString[];
-    static const XMLCh fgGlobalNSURIName[];
+    static const XMLCh* fgGlobalNSURIName;
     static const XMLCh fgIBM037EncodingString[];
     static const XMLCh fgIBM037EncodingString2[];
     static const XMLCh fgIBM1140EncodingString[];

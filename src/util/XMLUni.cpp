@@ -158,15 +158,7 @@ const XMLCh XMLUni::fgFixedString[] =
     chPound, chLatin_F, chLatin_I, chLatin_X, chLatin_E, chLatin_D, chNull
 };
 
-const XMLCh XMLUni::fgGlobalNSURIName[] = 
-{
-        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
-    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c
-    ,   chLatin_h, chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g
-    ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chForwardSlash
-    ,   chLatin_G, chLatin_l, chLatin_o, chLatin_b, chLatin_a, chLatin_l
-    ,   chLatin_N, chLatin_S, chNull
-};
+const XMLCh* XMLUni::fgGlobalNSURIName = fgEmptyString;
 
 const XMLCh XMLUni::fgIBM037EncodingString[] =
 {
