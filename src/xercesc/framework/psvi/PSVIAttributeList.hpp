@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/20 06:19:38  neilg
+ * store name/namespace of corresponding attribute in PSVIAttributeList; not all PSVIAttributes have XSAttributeDeclarations
+ *
  * Revision 1.5  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -173,11 +176,16 @@ public:
     //@{
 
     /**
-      * returns a PSVI attribute of undetermined state and 
+      * returns a PSVI attribute of undetermined state and given name/namespace and 
       * makes that object part of the internal list.  Intended to be called
       * during validation of an element.
+      * @param attrName     name of this attribute
+      * @param attrNS       URI of the attribute
+      * @return             new, uninitialized, PSVIAttribute object
       */
-    PSVIAttribute *getPSVIAttributeToFill();
+    PSVIAttribute *getPSVIAttributeToFill(
+            const XMLCh * attrName
+            , const XMLCh * attrNS);
 
     /**
       * reset the list
@@ -202,28 +210,44 @@ private:
     //  handler to provide dynamically-need memory
     // fAttrList
     //  list of PSVIAttributes contained by this object
+    // fAttrNameList
+    //  list of the names of the initialized PSVIAttribute objects contained
+    //  in this listing
+    // fAttrNSList
+    //  list of the namespaces of the initialized PSVIAttribute objects contained
+    //  in this listing
     // fAttrPos
-    //  current number of valid PSVIAttributes in fAttrList
+    //  current number of initialized PSVIAttributes in fAttrList
     MemoryManager*                  fMemoryManager;    
     RefVectorOf<PSVIAttribute>*     fAttrList;
+    RefArrayVectorOf<XMLCh>*        fAttrNameList;
+    RefArrayVectorOf<XMLCh>*        fAttrNSList;
     unsigned int                    fAttrPos;
 };
 inline PSVIAttributeList::~PSVIAttributeList() 
 {
     delete fAttrList;
+    delete fAttrNameList;
+    delete fAttrNSList;
 }
 
-inline PSVIAttribute *PSVIAttributeList::getPSVIAttributeToFill()
+inline PSVIAttribute *PSVIAttributeList::getPSVIAttributeToFill(
+            const XMLCh *attrName
+            , const XMLCh * attrNS)
 {
     PSVIAttribute *retAttr = 0;
     if(fAttrPos == fAttrList->size())
     {
         retAttr = new (fMemoryManager)PSVIAttribute(fMemoryManager);
-        fAttrList->addElement(retAttr);        
+        fAttrList->addElement(retAttr);
+        fAttrNameList->addElement((XMLCh *)attrName);
+        fAttrNSList->addElement((XMLCh *)attrNS);
     }
     else
     {
         retAttr = fAttrList->elementAt(fAttrPos);
+        fAttrNameList->setElementAt((XMLCh *)attrName, fAttrPos);
+        fAttrNSList->setElementAt((XMLCh *)attrNS, fAttrPos);
     }
     fAttrPos++;
     return retAttr;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/20 06:19:38  neilg
+ * store name/namespace of corresponding attribute in PSVIAttributeList; not all PSVIAttributes have XSAttributeDeclarations
+ *
  * Revision 1.4  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -81,6 +84,8 @@ PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):
         , fAttrPos(0)
 {
     fAttrList= new (fMemoryManager) RefVectorOf<PSVIAttribute> (10, true, fMemoryManager);
+    fAttrNameList= new (fMemoryManager) RefArrayVectorOf<XMLCh> (10, false, fMemoryManager);
+    fAttrNSList= new (fMemoryManager) RefArrayVectorOf<XMLCh> (10, false, fMemoryManager);
 }
 
 /*
@@ -120,7 +125,7 @@ const XMLCh *PSVIAttributeList::getAttributeNameAtIndex(const unsigned int index
     
     if(index >= fAttrPos)
         return 0;
-    return fAttrList->elementAt(index)->getAttributeDeclaration()->getName();
+    return fAttrNameList->elementAt(index);
 }
 
 /*
@@ -135,7 +140,7 @@ const XMLCh *PSVIAttributeList::getAttributeNamespaceAtIndex(const unsigned int 
 {
     if(index >= fAttrPos)
         return 0;
-    return fAttrList->elementAt(index)->getAttributeDeclaration()->getNamespace();
+    return fAttrNSList->elementAt(index);
 }
 
 /*
@@ -149,11 +154,9 @@ PSVIAttribute *PSVIAttributeList::getAttributePSVIByName(const XMLCh *attrName
                 , const XMLCh * attrNamespace)
 {
     for (unsigned int index=0; index <= fAttrPos; index++) {
-        PSVIAttribute* PSVIAttr= fAttrList->elementAt(index);
-        if (XMLString::equals(attrName,PSVIAttr->getAttributeDeclaration()->getName()) &&
-            XMLString::equals(attrNamespace,PSVIAttr->getAttributeDeclaration()->getNamespace())) {
-            return PSVIAttr;
-        }
+        if (XMLString::equals(attrName,fAttrNameList->elementAt(index))
+                && XMLString::equals(attrNamespace,fAttrNSList->elementAt(index)))
+            return fAttrList->elementAt(index);
     }
     return 0;
 }
