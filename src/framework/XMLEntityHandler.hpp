@@ -56,8 +56,12 @@
 
 /**
   * $Log$
-  * Revision 1.1  1999/11/09 01:08:33  twl
-  * Initial revision
+  * Revision 1.2  1999/12/15 19:46:28  roddey
+  * Got rid of redundant 'const' on bool return value. Some compilers choke on this
+  * and its not useful anyway.
+  *
+  * Revision 1.1.1.1  1999/11/09 01:08:33  twl
+  * Initial checkin
   *
   * Revision 1.2  1999/11/08 20:44:38  rahul
   * Swat for adding in Product name and CVS comment log variable.
@@ -115,7 +119,7 @@ public:
       * @param toFill The buffer in which the fully expanded system id needs
       *               to be stored.
       */
-    virtual const bool expandSystemId
+    virtual bool expandSystemId
     (
         const   XMLCh* const    systemId
         ,       XMLBuffer&      toFill
