@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/19 23:21:37  abagchi
+ * Made this file compatible with ICU 1.4
+ *
  * Revision 1.6  2000/01/19 17:37:48  abagchi
  * Removed the streaming classes
  *
@@ -337,61 +340,16 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
 #if defined (XML_USE_ICU_TRANSCODER)
-    //
-    //  We need to figure out the path to the Intl converter files.
-    //
-
-    static const char * icuDataEnvVar   = "ICU_DATA";
-    char *              intlPath        = 0;
-
-    char* envVal = getenv(icuDataEnvVar);
-
-    // Check if environment variable is set...
-    if (envVal != NULL)
-    {
-        unsigned int pathLen = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-
-        ICUTransService::setICUPath(intlPath);
-        delete intlPath;
-
-        return new ICUTransService;
-    }
-
-    //
-    //  If the environment variable ICU_DATA is not set, assume that the
-    //  converter files are stored relative to the Xerces-C library.
-    //
-
-    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
-                         strlen("/icu/data/") + 1;
-    intlPath = new char[lent];
-    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
-    strcat(intlPath, "/icu/data/");
-
-    ICUTransService::setICUPath(intlPath);
-    delete intlPath;
-
+    // Use ICU transcoding services.
+    // same as -DXML_USE_ICU_MESSAGELOADER
     return new ICUTransService;
-
-
 #else
-
     // Use native transcoding services.
     // same as -DXML_USE_INMEM_MESSAGELOADER
     return new IconvTransService;
 
 #endif
-
-} // XMLPlatformUtils::makeTransService
-
-
+}
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
@@ -814,6 +772,63 @@ void XMLPlatformUtils::platformInit()
         panic(XMLPlatformUtils::Panic_CantFindLib);
     }
 }
+
+XMLTransService* XMLPlatformUtils::makeTransService()
+{
+#if defined (XML_USE_ICU_TRANSCODER)
+    //
+    //  We need to figure out the path to the Intl converter files.
+    //
+
+    static const char * icuDataEnvVar   = "ICU_DATA";
+    char *              intlPath        = 0;
+
+    char* envVal = getenv(icuDataEnvVar);
+
+    // Check if environment variable is set...
+    if (envVal != NULL)
+    {
+        unsigned int pathLen = strlen(envVal);
+        intlPath = new char[pathLen + 2];
+
+        strcpy((char *) intlPath, envVal);
+        if (envVal[pathLen - 1] != '/')
+        {
+            strcat((char *) intlPath, "/");
+        }
+
+        ICUTransService::setICUPath(intlPath);
+        delete intlPath;
+
+        return new ICUTransService;
+    }
+
+    //
+    //  If the environment variable ICU_DATA is not set, assume that the
+    //  converter files are stored relative to the Xerces-C library.
+    //
+
+    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
+                         strlen("/icu/data/") + 1;
+    intlPath = new char[lent];
+    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
+    strcat(intlPath, "/icu/data/");
+
+    ICUTransService::setICUPath(intlPath);
+    delete intlPath;
+
+    return new ICUTransService;
+
+
+#else
+
+    // Use native transcoding services.
+    // same as -DXML_USE_INMEM_MESSAGELOADER
+    return new IconvTransService;
+
+#endif
+
+} // XMLPlatformUtils::makeTransService
 
 ********************* End of code attic *******************************/
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/19 23:21:11  abagchi
+ * Made this file compatible with ICU 1.4
+ *
  * Revision 1.4  2000/01/19 00:58:07  roddey
  * Update to support new ICU 1.4 release.
  *
@@ -203,7 +206,7 @@ private :
     // -----------------------------------------------------------------------
     UConverter*     fConverter;
     bool            fFixed;
-    long*           fSrcOffsets;
+    XMLUInt32*      fSrcOffsets;
 };
 
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/19 23:21:11  abagchi
+ * Made this file compatible with ICU 1.4
+ *
  * Revision 1.7  2000/01/19 00:58:07  roddey
  * Update to support new ICU 1.4 release.
  *
@@ -256,7 +259,7 @@ ICUTranscoder::ICUTranscoder(const  XMLCh* const        encodingName
 {
     // If there is a block size, then allocate our source offset array
     if (blockSize)
-        fSrcOffsets = new long[blockSize];
+        fSrcOffsets = new XMLUInt32[blockSize];
 
     // Remember if its a fixed size encoding
     fFixed = (ucnv_getMaxCharSize(fConverter) == ucnv_getMinCharSize(fConverter));
@@ -345,7 +348,7 @@ ICUTranscoder::transcodeXML(const   XMLByte* const          srcData
         , toFill + maxChars
         , (const char**)&startSrc
         , (const char*)endSrc
-        , (fFixed ? 0 : fSrcOffsets)
+        , (fFixed ? 0 : (int32_t*)fSrcOffsets)
         , false
         , &err
     );
