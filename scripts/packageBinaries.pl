@@ -259,7 +259,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         # Copy the ICU dlls and libs
         psystem("cp -fv $ICUROOT/bin/icuuc18.dll $targetdir/bin");
         psystem("cp -fv $ICUROOT/bin/icuuc18d.dll $targetdir/bin");
-        psystem("cp -fv $ICUROOT/source/data/icudt18l.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/source/data/icudt18*.dll $targetdir/bin");
         psystem("cp -fv $ICUROOT/source/data/icudata.lib $targetdir/lib");
 
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
@@ -543,15 +543,19 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Copy the ICU libs for the source build
     #
     if (length($ICUROOT) > 0) {
-      if ($platform =~ m/AIX/i) {
-          psystem("ln -s $ICUROOT/source/data/libicudt18b.a $ICUROOT/lib/libicudata.a");
-      }
-      elsif ($platform =~ m/HP-UX/i) {
-          psystem("ln -s $ICUROOT/source/data/libicudt18b.sl $ICUROOT/lib/libicudata.sl");
-      }
-      else {
-          psystem("ln -s $ICUROOT/source/data/libicudt18b.so $ICUROOT/lib/libicudata.so");
-      }
+        # Only one of the following is generated, but don't know which is generated
+        # so trial and error
+        psystem("cp -f $ICUROOT/source/data/libicudt18e.a $ICUROOT/lib/libicudata.a");
+        psystem("cp -f $ICUROOT/source/data/libicudt18l.a $ICUROOT/lib/libicudata.a");
+        psystem("cp -f $ICUROOT/source/data/libicudt18b.a $ICUROOT/lib/libicudata.a");
+
+        psystem("cp -f $ICUROOT/source/data/libicudt18e.so $ICUROOT/lib/libicudata.so");
+        psystem("cp -f $ICUROOT/source/data/libicudt18l.so $ICUROOT/lib/libicudata.so");
+        psystem("cp -f $ICUROOT/source/data/libicudt18b.so $ICUROOT/lib/libicudata.so");
+
+        psystem("cp -f $ICUROOT/source/data/libicudt18e.sl $ICUROOT/lib/libicudata.sl");
+        psystem("cp -f $ICUROOT/source/data/libicudt18l.sl $ICUROOT/lib/libicudata.sl");
+        psystem("cp -f $ICUROOT/source/data/libicudt18b.sl $ICUROOT/lib/libicudata.sl");
     }
 
     # make the source files
@@ -574,17 +578,9 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     #   the eventual binary packaging, even though we are doing it in the build directory.
     #
     if (length($ICUROOT) > 0) {
-	psystem("cp -f $ICUROOT/lib/libicuuc.* $XERCESCROOT/lib");
-	psystem("cp -f $ICUROOT/source/data/libicudt18b.* $XERCESCROOT/lib");
-      if ($platform =~ m/AIX/i) {
-          psystem("ln -s libicudt18b.a $XERCESCROOT/lib/libicudata.a");
-      }
-      elsif ($platform =~ m/HP-UX/i) {
-          psystem("ln -s libicudt18b.sl $XERCESCROOT/lib/libicudata.sl");
-      }
-      else {
-          psystem("ln -s libicudt18b.so $XERCESCROOT/lib/libicudata.so");
-      }
+        psystem("cp -f $ICUROOT/lib/libicuuc.* $XERCESCROOT/lib");
+        psystem("cp -f $ICUROOT/lib/libicudata.* $XERCESCROOT/lib");
+        psystem("cp -f $ICUROOT/source/data/libicudt18*.* $XERCESCROOT/lib");
     }
 
     # Now build the samples
