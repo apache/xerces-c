@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/16 14:33:40  tng
+ * Schema Constraint checking fix.
+ *
  * Revision 1.3  2001/05/11 17:17:28  tng
  * Schema: DatatypeValidator fixes.  By Pei Yong Zhang.
  *
@@ -401,8 +404,8 @@ void StringDatatypeValidator::init(DatatypeValidator*            const baseValid
                      (getWSFacet() == DatatypeValidator::REPLACE)))
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_collapse);
 
-                if ((pBaseValidator->getWSFacet() == DatatypeValidator::PRESERVE) &&
-                    (getWSFacet() == DatatypeValidator::REPLACE))
+                if ((pBaseValidator->getWSFacet() == DatatypeValidator::REPLACE) &&
+                    (getWSFacet() == DatatypeValidator::PRESERVE))
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_replace);
             }
 
