@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/25 21:27:52  tng
+ * Performance: use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
+ *
  * Revision 1.4  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -130,6 +133,7 @@
 #define TRANSSERVICE_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/framework/XMLRecognizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -191,6 +195,13 @@ public :
     XMLTranscoder* makeNewTranscoderFor
     (
         const   char* const             encodingName
+        ,       XMLTransService::Codes& resValue
+        , const unsigned int            blockSize
+    );
+
+    XMLTranscoder* makeNewTranscoderFor
+    (
+        XMLRecognizer::Encodings        encodingEnum
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
     );
