@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2003/12/31 02:34:41  neilg
+ * fix one more buffer overrun, affecting boolean lists
+ *
  * Revision 1.17  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -544,11 +547,11 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
             {
                 // need to resize
                 XMLCh * oldBuf = retBuf;
-                retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh) * 2);
+                retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh) * 4);
                 memcpy(retBuf, oldBuf, retBufSize * sizeof(XMLCh ));
                 retBufPtr = (retBufPtr - oldBuf) + retBuf;
                 toUse->deallocate(oldBuf);
-                retBufSize <<= 1;
+                retBufSize <<= 2;
             }
 
             XMLString::catString(retBufPtr, itemCanRep);
