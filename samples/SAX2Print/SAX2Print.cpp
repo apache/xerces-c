@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/02/06 16:36:51  knoaman
+ * Added a new flag '-p' to SAX2 samples to set the 'namespace-prefixes' feature.
+ *
  * Revision 1.7  2002/02/01 22:40:44  peiyongz
  * sane_include
  *
@@ -117,7 +120,7 @@ static SAX2XMLReader::ValSchemes valScheme      = SAX2XMLReader::Val_Auto;
 static bool					        expandNamespaces= false ;
 static bool                     doSchema        = true;
 static bool                     schemaFullChecking = false;
-
+static bool                     namespacePrefixes = false;
 
 
 // ---------------------------------------------------------------------------
@@ -136,6 +139,7 @@ static void usage()
              "    -e          Expand Namespace Alias with URI's.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
              "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
+             "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
              "    -s          Disable schema processing. Defaults to on.\n"
              "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
              "    -?          Show this help.\n\n"
@@ -245,6 +249,11 @@ int main(int argC, char* argV[])
         {
             schemaFullChecking = true;
         }
+         else if (!strcmp(argV[parmInd], "-p")
+              ||  !strcmp(argV[parmInd], "-P"))
+        {
+            namespacePrefixes = true;
+        }
          else
         {
             cerr << "Unknown option '" << argV[parmInd]
@@ -293,6 +302,7 @@ int main(int argC, char* argV[])
 
     parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), doSchema);
     parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking"), schemaFullChecking);
+    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespace-prefixes"), namespacePrefixes);
 
     //
     //  Create the handler object and install it as the document and error

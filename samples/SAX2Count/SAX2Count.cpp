@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.15  2002/02/06 16:36:51  knoaman
+* Added a new flag '-p' to SAX2 samples to set the 'namespace-prefixes' feature.
+*
 * Revision 1.14  2002/02/01 22:38:52  peiyongz
 * sane_include
 *
@@ -127,6 +130,7 @@ void usage()
             "                Default to off (Input file is an XML file).\n"
             "    -v=xxx      Validation scheme [always | never | auto*].\n"
             "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
+            "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
             "    -n          Disable namespace processing. Defaults to on.\n"
             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
             "    -s          Disable schema processing. Defaults to on.\n"
@@ -170,6 +174,7 @@ int main(int argC, char* argV[])
     bool                         schemaFullChecking = false;
     bool                         doList = false;
     bool                         errorOccurred = false;
+    bool                         namespacePrefixes = false;
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -223,6 +228,11 @@ int main(int argC, char* argV[])
         {
             doList = true;
         }
+         else if (!strcmp(argV[argInd], "-p")
+              ||  !strcmp(argV[argInd], "-P"))
+        {
+            namespacePrefixes = true;
+        }
         else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -249,6 +259,7 @@ int main(int argC, char* argV[])
     parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces"), doNamespaces);
     parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), doSchema);
     parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking"), schemaFullChecking);
+    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespace-prefixes"), namespacePrefixes);
 
     if (valScheme == SAX2XMLReader::Val_Auto)
     {

@@ -101,13 +101,13 @@ system ("SAXPrint -n -s personal-schema.xml");
 system ("SAX2Count");
 system ("SAX2Count -v=never personal.xml");
 system ("SAX2Count personal.xml");
-system ("SAX2Count personal-schema.xml");
+system ("SAX2Count -p personal-schema.xml");
 
 #  Run SAX2Print
 system ("SAX2Print");
 system ("SAX2Print -v=never personal.xml");
 system ("SAX2Print personal.xml");
-system ("SAX2Print personal-schema.xml");
+system ("SAX2Print -p personal-schema.xml");
 
 #  Run MemParse
 system ("MemParse");
