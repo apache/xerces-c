@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.19  2003/12/17 03:56:15  neilg
  * add default memory manager parameter to loadMsg method that uses char * parameters
  *
@@ -380,30 +383,31 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int           maxChars
+                            , const unsigned int            maxChars
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
-                            , const XMLCh* const            repText4)
+                            , const XMLCh* const            repText4
+                            , MemoryManager* const          manager   )
 {
     // Call the other version to load up the message
     if (!loadMsg(msgToLoad, toFill, maxChars))
         return false;
 
     // And do the token replacement
-    XMLString::replaceTokens(toFill, maxChars, repText1, repText2, repText3, repText4);
+    XMLString::replaceTokens(toFill, maxChars, repText1, repText2, repText3, repText4, manager);
     return true;
 }
 
 
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int           maxChars
+                            , const unsigned int            maxChars
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3
                             , const char* const             repText4
-                            , MemoryManager * const manager)
+                            , MemoryManager * const         manager)
 {
     //
     //  Transcode the provided parameters and call the other version,
@@ -412,29 +416,28 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
     XMLCh* tmp1 = 0;
     XMLCh* tmp2 = 0;
     XMLCh* tmp3 = 0;
-    XMLCh* tmp4 = 0;
-    MemoryManager *managerToUse = (manager)?manager:XMLPlatformUtils::fgMemoryManager;
+    XMLCh* tmp4 = 0;    
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1, managerToUse);
+        tmp1 = XMLString::transcode(repText1, manager);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2, managerToUse);
+        tmp2 = XMLString::transcode(repText2, manager);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3, managerToUse);
+        tmp3 = XMLString::transcode(repText3, manager);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4, managerToUse);
+        tmp4 = XMLString::transcode(repText4, manager);
 
-    bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
+    bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4, manager);
 
     if (tmp1)
-        managerToUse->deallocate(tmp1);//delete [] tmp1;
+        manager->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        managerToUse->deallocate(tmp2);//delete [] tmp2;
+        manager->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        managerToUse->deallocate(tmp3);//delete [] tmp3;
+        manager->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        managerToUse->deallocate(tmp4);//delete [] tmp4;
+        manager->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

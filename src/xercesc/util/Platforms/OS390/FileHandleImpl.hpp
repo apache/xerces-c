@@ -74,9 +74,10 @@ class FileHandleImpl : public XMemory
   int        openType;     // 0=write, 1=read
   int        lrecl;        // LRECL if openType is write
   bool       recordType;   // true if "type=record"
+  MemoryManager* const fMemoryManager;
 
   public:
-  FileHandleImpl(FILE* open_handle, int o_type, bool r_type, int fileLrecl=0);
+      FileHandleImpl(FILE* open_handle, int o_type, bool r_type, int fileLrecl=0, MemoryManager* const manager=XMLPlatformUtils::fgMemoryManager);
  ~FileHandleImpl();
   void  setHandle(FILE* newHandlePtr) { Handle = newHandlePtr; }
   void* getHandle() { return Handle; }

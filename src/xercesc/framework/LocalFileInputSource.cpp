@@ -129,7 +129,7 @@ LocalFileInputSource::LocalFileInputSource( const XMLCh* const basePath
     //  with the base path. If not, just take the relative path as the
     //  entire path.
     //
-    if (XMLPlatformUtils::isRelative(relativePath))
+    if (XMLPlatformUtils::isRelative(relativePath, manager))
     {
         XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath, manager);
         setSystemId(tmpBuf);
@@ -155,7 +155,7 @@ LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath,
     //  working directory rules of the current platform. Else, just take
     //  it as is.
     //
-    if (XMLPlatformUtils::isRelative(filePath))
+    if (XMLPlatformUtils::isRelative(filePath, manager))
     {
         XMLCh* curDir = XMLPlatformUtils::getCurrentDirectory(manager);
 

@@ -8181,7 +8181,7 @@ void TraverseSchema::reportSchemaError(const XSDLocator* const aLocator,
                                        const XMLCh* const text3,
                                        const XMLCh* const text4) {
 
-    fXSDErrorReporter.emitError(errorCode, msgDomain, aLocator, text1, text2, text3, text4);
+    fXSDErrorReporter.emitError(errorCode, msgDomain, aLocator, text1, text2, text3, text4, fMemoryManager);
 }
 
 void TraverseSchema::reportSchemaError(const DOMElement* const elem,
@@ -8207,7 +8207,7 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
                         ((XSDElementNSImpl*) elem)->getLineNo(),
                         ((XSDElementNSImpl*) elem)->getColumnNo());
 
-    fXSDErrorReporter.emitError(errorCode, msgDomain, fLocator, text1, text2, text3, text4);
+    fXSDErrorReporter.emitError(errorCode, msgDomain, fLocator, text1, text2, text3, text4, fMemoryManager);
 }
 
 // ---------------------------------------------------------------------------

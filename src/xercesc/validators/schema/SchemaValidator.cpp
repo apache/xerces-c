@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.50  2003/12/24 15:24:16  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.49  2003/12/17 05:16:59  neilg
  * ensure all uses of ArrayJanitor use a memory manager
  *
@@ -1178,7 +1181,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
                                                   baseGroup->getContentSpec(), baseGroup->getScope());
                     }
                     catch (const XMLException& excep) {
-                        fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curGroup.getLocator(), excep.getMessage());
+                        fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curGroup.getLocator(), excep.getMessage(), 0, 0, 0, fMemoryManager);
 					}
                 }
 
@@ -1310,7 +1313,7 @@ void SchemaValidator::checkRefElementConsistency(SchemaGrammar* const currentGra
                 && (elemDecl->getComplexTypeInfo() != other->getComplexTypeInfo() ||
                     elemDecl->getDatatypeValidator() != other->getDatatypeValidator())) {
                 fSchemaErrorReporter.emitError(XMLErrs::DuplicateElementDeclaration,
-                                               XMLUni::fgXMLErrDomain, typeInfoLocator, elemName);
+                                               XMLUni::fgXMLErrDomain, typeInfoLocator, elemName, 0, 0, 0, fMemoryManager);
                 continue;
             }
 
@@ -1332,7 +1335,7 @@ void SchemaValidator::checkRefElementConsistency(SchemaGrammar* const currentGra
                         && (subsElem->getComplexTypeInfo() != other->getComplexTypeInfo()
                             || subsElem->getDatatypeValidator() != other->getDatatypeValidator())) {
                         fSchemaErrorReporter.emitError(XMLErrs::DuplicateElementDeclaration,
-                                                       XMLUni::fgXMLErrDomain, typeInfoLocator, elemName);
+                                                       XMLUni::fgXMLErrDomain, typeInfoLocator, elemName, 0, 0, 0, fMemoryManager);
                     }
                 }
             }
@@ -1360,7 +1363,7 @@ void SchemaValidator::checkParticleDerivation(SchemaGrammar* const currentGramma
                                       baseTypeInfo->getScopeDefined(), baseTypeInfo);
         }
         catch (const XMLException& excep) {
-            fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curTypeInfo->getLocator(), excep.getMessage());
+            fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curTypeInfo->getLocator(), excep.getMessage(), 0, 0, 0, fMemoryManager);
         }
     }
 }

@@ -314,7 +314,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     XMLCh* newString;
     XMLCh temp[4000];
     if (len >= 3999)
-        newString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        newString = (XMLCh*) ((DOMDocumentImpl *)node->getOwnerDocument())->getMemoryManager()->allocate
         (
             (len + 1) * sizeof(XMLCh)
         );//new XMLCh[len+1];
@@ -327,7 +327,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     const XMLCh* retString = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
 
     if (len >= 3999)
-        XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
+        ((DOMDocumentImpl *)node->getOwnerDocument())->getMemoryManager()->deallocate(newString);//delete[] newString;
 
     return retString;
 

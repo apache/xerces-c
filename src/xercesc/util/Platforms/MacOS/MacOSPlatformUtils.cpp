@@ -341,7 +341,8 @@ XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 
 
 bool
-XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+XMLPlatformUtils::isRelative(const XMLCh* const toCheck
+                             , MemoryManager* const manager)
 {
     return (toCheck[0] != L'/');
 }

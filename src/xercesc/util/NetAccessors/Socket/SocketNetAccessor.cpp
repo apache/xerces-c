@@ -106,7 +106,7 @@ BinInputStream* SocketNetAccessor::makeNew(const XMLURL&  urlSource)
         // unsupported protocol exception for the others.
         //
         default :
-            ThrowXML(MalformedURLException, XMLExcepts::URL_UnsupportedProto);
+            ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_UnsupportedProto, urlSource.getMemoryManager());
             break;
     }
     return 0;

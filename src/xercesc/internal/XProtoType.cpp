@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.2  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -133,8 +136,8 @@ void XProtoType::load(XSerializeEngine& serEng
         //we don't have class name exceed this length in xerces
         XMLCh name1[256];
         XMLCh name2[256];
-        XMLString::transcode((char*)inName,    name1, 255);
-        XMLString::transcode((char*)className, name2, 255);
+        XMLString::transcode((char*)inName,    name1, 255, manager);
+        XMLString::transcode((char*)className, name2, 255, manager);
 
         ThrowXMLwithMemMgr2(XSerializationException
                 , XMLExcepts::XSer_ProtoType_Name_Dif

@@ -860,7 +860,8 @@ MacOSLCPTranscoder::~MacOSLCPTranscoder()
 //	extra buffering to avoid this result.
 // ---------------------------------------------------------------------------
 unsigned int
-MacOSLCPTranscoder::calcRequiredSize(const char* const srcText)
+MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
+                                     , MemoryManager* const manager)
 {
 	if (!srcText)
 		return 0;
@@ -927,7 +928,8 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText)
 //	extra buffering to avoid this result.
 // ---------------------------------------------------------------------------
 unsigned int
-MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                     , MemoryManager* const manager)
 {
 	if (!srcText)
 		return 0;
@@ -1232,7 +1234,8 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
 bool
 MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // toFill must contain space for maxChars XMLCh characters + 1 (for terminating NULL).
 
@@ -1295,7 +1298,8 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
 bool
 MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     //	toFill must contain space for maxChars bytes characters + 1 (for terminating NULL).
 	const XMLCh* src = toTranscode;

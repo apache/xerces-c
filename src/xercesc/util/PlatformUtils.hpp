@@ -495,7 +495,9 @@ public :
       *
       * @return Returns true if the filename appears to be relative
       */
-    static bool isRelative(const XMLCh* const toCheck);
+    static bool isRelative(const XMLCh* const toCheck
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
 
     /** Utility to join two paths
       *

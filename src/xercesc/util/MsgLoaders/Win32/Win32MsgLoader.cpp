@@ -225,14 +225,15 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
-                            , const XMLCh* const            repText4)
+                            , const XMLCh* const            repText4
+                            , MemoryManager* const          manager)
 {
     // Call the other version to load up the message
     if (!loadMsg(msgToLoad, toFill, maxChars))
         return false;
 
     // And do the token replacement
-    XMLString::replaceTokens(toFill, maxChars, repText1, repText2, repText3, repText4);
+    XMLString::replaceTokens(toFill, maxChars, repText1, repText2, repText3, repText4, manager);
     return true;
 }
 
@@ -246,7 +247,6 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             , const char* const             repText4
                             , MemoryManager* const          manager)
 {
-    MemoryManager* toUse = manager ? manager : XMLPlatformUtils::fgMemoryManager;
     //
     //  Transcode the provided parameters and call the other version,
     //  which will do the replacement work.
@@ -258,24 +258,24 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1, toUse);
+        tmp1 = XMLString::transcode(repText1, manager);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2, toUse);
+        tmp2 = XMLString::transcode(repText2, manager);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3, toUse);
+        tmp3 = XMLString::transcode(repText3, manager);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4, toUse);
+        tmp4 = XMLString::transcode(repText4, manager);
 
-    bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
+    bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4, manager);
 
     if (tmp1)
-        toUse->deallocate(tmp1);//delete [] tmp1;
+        manager->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        toUse->deallocate(tmp2);//delete [] tmp2;
+        manager->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        toUse->deallocate(tmp3);//delete [] tmp3;
+        manager->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        toUse->deallocate(tmp4);//delete [] tmp4;
+        manager->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

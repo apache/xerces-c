@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/24 15:24:16  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.5  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -184,7 +187,7 @@ void XMLSchemaDescriptionImpl::setTriggeringComponent(QName* const trigComponent
     if ( fTriggeringComponent)
         delete fTriggeringComponent;
                                 
-    fTriggeringComponent = new QName(*trigComponent); 
+    fTriggeringComponent = new (trigComponent->getMemoryManager()) QName(*trigComponent); 
 
 }
 
@@ -193,7 +196,7 @@ void XMLSchemaDescriptionImpl::setEnclosingElementName(QName* const encElement)
     if (fEnclosingElementName)
         delete fEnclosingElementName;
                                  
-    fEnclosingElementName = new QName(*encElement); 
+    fEnclosingElementName = new (encElement->getMemoryManager()) QName(*encElement); 
 
 }
 

@@ -350,7 +350,8 @@ void Iconv390TransService::lowerCase(XMLCh* const toLowerCase) const
 }
 
 // ---------------------------------------------------------------------------
-unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText
+                                                     , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -367,7 +368,8 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
 }
 
 
-unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                     , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -378,7 +380,7 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     wchar_t*      wideCharBuf = 0;
 
     if (wLent >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = (wchar_t*) XMLPlatformUtils::fgMemoryManager->allocate
+        wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
         (
             (wLent + 1) * sizeof(wLent + 1)
         );//new wchar_t[wLent + 1];
@@ -392,7 +394,7 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     wideCharBuf[wLent] = 0x00;
 
     const unsigned int retVal = ::wcstombs(NULL, wideCharBuf, 0);
-    XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+    manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
     if (retVal == -1)
         return 0;
@@ -463,7 +465,8 @@ char* Iconv390LCPTranscoder::transcode(const XMLCh* const toTranscode,
 
 bool Iconv390LCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes)
+                                    , const unsigned int    maxBytes
+                                    , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)
@@ -547,7 +550,7 @@ XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode,
     XMLCh* retVal = 0;
     if (*toTranscode)
     {
-        const unsigned int len = calcRequiredSize(toTranscode);
+        const unsigned int len = calcRequiredSize(toTranscode, manager);
         if (len == 0)
         {
             retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
@@ -588,7 +591,8 @@ XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode,
 
 bool Iconv390LCPTranscoder::transcode( const   char* const     toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)

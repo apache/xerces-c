@@ -92,7 +92,7 @@ public:
     //-----------------------------------------------------------------------------------
     //  Constructor
     //-----------------------------------------------------------------------------------
-    DOMConfigurationImpl();
+    DOMConfigurationImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~DOMConfigurationImpl();
     
     enum DOMConfigurationFeature {
@@ -196,6 +196,8 @@ private:
 
     static const bool fFalse;
     static const bool fTrue;
+    
+    MemoryManager* fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

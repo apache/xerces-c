@@ -677,7 +677,7 @@ const XMLCh*     DOMDocumentImpl::getBaseURI() const
 DOMRange* DOMDocumentImpl::createRange()
 {
 
-    DOMRangeImpl* range = new (this) DOMRangeImpl(this);
+    DOMRangeImpl* range = new (this) DOMRangeImpl(this, fMemoryManager);
 
     if (fRanges == 0L) {
         //fRanges = new (this) Ranges(1, false);
@@ -1022,7 +1022,7 @@ void DOMDocumentImpl::normalizeDocument() {
 
 DOMConfiguration* DOMDocumentImpl::getDOMConfiguration() const {
     if(!fDOMConfiguration)
-        ((DOMDocumentImpl*)this)->fDOMConfiguration = new ((DOMDocumentImpl*)this) DOMConfigurationImpl();
+        ((DOMDocumentImpl*)this)->fDOMConfiguration = new ((DOMDocumentImpl*)this) DOMConfigurationImpl(fMemoryManager);
 
     return fDOMConfiguration;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/24 15:24:15  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.5  2003/05/17 16:32:18  knoaman
  * Memory manager implementation : transcoder update.
  *
@@ -362,9 +365,11 @@ public:
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText);
+    virtual unsigned int calcRequiredSize(const char* const srcText
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText);
+    virtual unsigned int calcRequiredSize(const XMLCh* const srcText
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     virtual char* transcode(const XMLCh* const toTranscode);
     virtual char* transcode(const XMLCh* const toTranscode,
@@ -375,6 +380,7 @@ public:
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
         , const unsigned int    maxBytes
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     virtual XMLCh* transcode(const char* const toTranscode);
@@ -386,6 +392,7 @@ public:
         const   char* const     toTranscode
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
 

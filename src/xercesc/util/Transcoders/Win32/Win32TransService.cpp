@@ -843,7 +843,8 @@ Win32LCPTranscoder::~Win32LCPTranscoder()
 // ---------------------------------------------------------------------------
 //  Win32LCPTranscoder: Implementation of the virtual transcoder interface
 // ---------------------------------------------------------------------------
-unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
+                                                  , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -860,7 +861,8 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText)
 }
 
 
-unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                  , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -990,7 +992,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
     if (*toTranscode)
     {
         // Calculate the buffer size required
-        const unsigned int neededLen = calcRequiredSize(toTranscode);
+        const unsigned int neededLen = calcRequiredSize(toTranscode, manager);
         if (neededLen == 0)
         {
             retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
@@ -1016,7 +1018,8 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
 
 bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1040,7 +1043,8 @@ bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
 
 bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes)
+                                    , const unsigned int    maxBytes
+                                    , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)

@@ -226,13 +226,13 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
-                            ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
-                            , const char* const            repText1
-                            , const char* const            repText2
-                            , const char* const            repText3
-                            , const char* const            repText4
-                            , MemoryManager * const manager)
+                            ,       XMLCh* const              toFill
+                            , const unsigned int              maxChars
+                            , const char* const               repText1
+                            , const char* const               repText2
+                            , const char* const               repText3
+                            , const char* const               repText4
+                            , MemoryManager * const           manager)
 {
     char * msgId;
     int size=0;
@@ -256,18 +256,18 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     if (!localMsg(msgId, toFill, maxChars, repTexts, size))
         return false;
 
-
     return true;
 }
 
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
-                            ,       XMLCh* const            toFill
-                            , const unsigned int           maxChars
-                            , const XMLCh* const             repText1
-                            , const XMLCh* const             repText2
-                            , const XMLCh* const             repText3
-                            , const XMLCh* const             repText4)
+                            ,       XMLCh* const              toFill
+                            , const unsigned int              maxChars
+                            , const XMLCh* const              repText1
+                            , const XMLCh* const              repText2
+                            , const XMLCh* const              repText3
+                            , const XMLCh* const              repText4
+                            , MemoryManager* const            manager)
 {
     //
     //  Transcode the provided parameters and call the other version,
@@ -280,24 +280,24 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
     bool bRet = false;
     if (repText1)
-        tmp1 = XMLString::transcode(repText1, XMLPlatformUtils::fgMemoryManager);
+        tmp1 = XMLString::transcode(repText1, manager);
     if (repText2)
-        tmp2 = XMLString::transcode(repText2, XMLPlatformUtils::fgMemoryManager);
+        tmp2 = XMLString::transcode(repText2, manager);
     if (repText3)
-        tmp3 = XMLString::transcode(repText3, XMLPlatformUtils::fgMemoryManager);
+        tmp3 = XMLString::transcode(repText3, manager);
     if (repText4)
-        tmp4 = XMLString::transcode(repText4, XMLPlatformUtils::fgMemoryManager);
+        tmp4 = XMLString::transcode(repText4, manager);
 
-    bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4);
+    bRet = loadMsg(msgToLoad, toFill, maxChars, tmp1, tmp2, tmp3, tmp4, manager);
 
     if (tmp1)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp1);//delete [] tmp1;
+        manager->deallocate(tmp1);//delete [] tmp1;
     if (tmp2)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
+        manager->deallocate(tmp2);//delete [] tmp2;
     if (tmp3)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp3);//delete [] tmp3;
+        manager->deallocate(tmp3);//delete [] tmp3;
     if (tmp4)
-        XMLPlatformUtils::fgMemoryManager->deallocate(tmp4);//delete [] tmp4;
+        manager->deallocate(tmp4);//delete [] tmp4;
 
     return bRet;
 }

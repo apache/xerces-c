@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.12  2003/05/17 05:54:18  knoaman
  * Update NetAccessors to use the memory manager.
  *
@@ -217,15 +220,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     const XMLCh*        path = urlSource.getPath();
     const XMLCh*        fragment = urlSource.getFragment();
     const XMLCh*        query = urlSource.getQuery();
-    MemoryManager*      manager = urlSource.getMemoryManager();
+                        fMemoryManager = urlSource.getMemoryManager();
 
     //
     //  Convert the hostName to the platform's code page for gethostbyname and
     //  inet_addr functions.
     //
 
-    char*               hostNameAsCharStar = XMLString::transcode(hostName, manager);
-    ArrayJanitor<char>  janBuf1(hostNameAsCharStar, manager);
+    char*               hostNameAsCharStar = XMLString::transcode(hostName, fMemoryManager);
+    ArrayJanitor<char>  janBuf1(hostNameAsCharStar, fMemoryManager);
 
     //
     //  Convert all the parts of the urlSource object to ASCII so they can be
@@ -233,41 +236,41 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     //
 
     transSize = XMLString::stringLen(hostName)+1;
-    char*               hostNameAsASCII = (char*) manager->allocate
+    char*               hostNameAsASCII = (char*) fMemoryManager->allocate
     (
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
-    ArrayJanitor<char>  janBuf2(hostNameAsASCII, manager);
+    ArrayJanitor<char>  janBuf2(hostNameAsASCII, fMemoryManager);
 
-    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, manager);
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, fMemoryManager);
     trans->transcodeTo(hostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     transSize = XMLString::stringLen(path)+1;
-    char*               pathAsASCII = (char*) manager->allocate
+    char*               pathAsASCII = (char*) fMemoryManager->allocate
     (
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
-    ArrayJanitor<char>     janBuf3(pathAsASCII, manager);
+    ArrayJanitor<char>     janBuf3(pathAsASCII, fMemoryManager);
     trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     char*               fragmentAsASCII = 0;
     if (fragment)
     {
         transSize = XMLString::stringLen(fragment)+1;
-        fragmentAsASCII = (char*) manager->allocate
+        fragmentAsASCII = (char*) fMemoryManager->allocate
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
-        ArrayJanitor<char>  janBuf4(fragmentAsASCII, manager);
+        ArrayJanitor<char>  janBuf4(fragmentAsASCII, fMemoryManager);
         trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     char*               queryAsASCII = 0;
-    ArrayJanitor<char>  janBuf5(queryAsASCII, manager);
+    ArrayJanitor<char>  janBuf5(queryAsASCII, fMemoryManager);
     if (query)
     {
         transSize = XMLString::stringLen(query)+1;
-        queryAsASCII = (char*) manager->allocate
+        queryAsASCII = (char*) fMemoryManager->allocate
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
@@ -282,7 +285,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
 
     XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10);
     transSize = XMLString::stringLen(portBuffer)+1;
-    char*               portAsASCII = (char*) manager->allocate
+    char*               portAsASCII = (char*) fMemoryManager->allocate
     (
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
@@ -302,15 +305,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         unsigned long  numAddress = inet_addr(hostNameAsCharStar);
         if (numAddress < 0)
         {
-            ThrowXML1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName);
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
         }
         if ((hostEntPtr =
                 gethostbyaddr((char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
-            ThrowXML1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName);
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
         }
     }
 
@@ -323,14 +326,14 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     int s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
     if (s < 0)
     {
-        ThrowXML1(NetAccessorException,
-                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
     {
-        ThrowXML1(NetAccessorException,
-                 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     // The port is open and ready to go.
@@ -369,8 +372,8 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
 
     if ((aLent = write(s, (void *) fBuffer, lent)) != lent)
     {
-        ThrowXML1(NetAccessorException,
-                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     //
@@ -379,7 +382,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     aLent = read(s, (void *)fBuffer, sizeof(fBuffer)-1);
     if (aLent <= 0)
     {
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     fBufferEnd = fBuffer+aLent;
@@ -412,13 +415,13 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     char *p = strstr(fBuffer, HTTP);
     if (p == 0)
     {
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
 
     p = strchr(p, chSpace);
     if (p == 0)
     {
-        ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
   
     if (memcmp(p, resp200, strlen(resp200)))
@@ -426,7 +429,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         // Most likely a 404 Not Found error.
         //   Should recognize and handle the forwarding responses.
         //
-        ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText());
+        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
     }
 
     fSocket = s;
@@ -462,7 +465,7 @@ unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
         len = read(fSocket, (void *) toFill, maxToRead);
         if (len == -1)
         {
-            ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
+            ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, fMemoryManager);
         }
     }
 

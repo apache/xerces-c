@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.4  2003/05/22 18:15:16  neilg
  * The PanicHandler interface should not inherit from XMemory.
  * The reason for this is that the default implementation does not
@@ -101,7 +104,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   */
 
-class XMLUTIL_EXPORT PanicHandler 
+class XMLUTIL_EXPORT PanicHandler: public XMemory 
 {
 public:
 

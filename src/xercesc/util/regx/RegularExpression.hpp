@@ -193,8 +193,7 @@ private:
             void reset(const XMLCh* const string, const int stringLen,
                        const int start, const int limit, const int noClosures);
             bool nextCh(XMLInt32& ch, int& offset, const short direction);
-
-            bool      fInUse;
+            
             bool      fAdoptMatch;
             int       fStart;
             int       fLimit;
@@ -323,7 +322,6 @@ private:
     int                fMinLength;
     int                fNoClosures;
     unsigned int       fOptions;
-    Context*           fContext;
     BMPattern*         fBMPattern;
     XMLCh*             fPattern;
     XMLCh*             fFixedString;
@@ -344,8 +342,7 @@ private:
   inline void RegularExpression::cleanUp() {
 
       fMemoryManager->deallocate(fPattern);//delete [] fPattern;
-      fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
-      delete fContext;
+      fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;      
       delete fBMPattern;
       delete fTokenFactory;
   }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/12/24 15:24:15  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.18  2003/12/17 05:16:59  neilg
  * ensure all uses of ArrayJanitor use a memory manager
  *
@@ -180,9 +183,8 @@ RangeToken*          RegularExpression::fWordRange = 0;
 // ---------------------------------------------------------------------------
 //  RegularExpression::Context: Constructors and Destructor
 // ---------------------------------------------------------------------------
-RegularExpression::Context::Context(MemoryManager* const manager) :
-    fInUse(false)
-	, fAdoptMatch(false)
+RegularExpression::Context::Context(MemoryManager* const manager) :    
+	fAdoptMatch(false)
     , fStart(0)
 	, fLimit(0)
 	, fLength(0)
@@ -230,8 +232,7 @@ void RegularExpression::Context::reset(const XMLCh* const string
 
 	fStart = start;
 	fLimit = limit;
-	fLength = fLimit - fStart;
-	fInUse = true;
+	fLength = fLimit - fStart;	
 	if (fAdoptMatch)
 		delete fMatch;
 	fMatch = 0;
@@ -288,7 +289,6 @@ RegularExpression::RegularExpression(const char* const pattern,
 	 fMinLength(0),
 	 fNoClosures(0),
 	 fOptions(0),
-	 fContext(0),
 	 fBMPattern(0),
 	 fPattern(0),
 	 fFixedString(0),
@@ -325,7 +325,6 @@ RegularExpression::RegularExpression(const char* const pattern,
 	 fMinLength(0),
 	 fNoClosures(0),
 	 fOptions(0),
-	 fContext(0),
 	 fBMPattern(0),
 	 fPattern(0),
 	 fFixedString(0),
@@ -364,7 +363,6 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 	 fMinLength(0),
 	 fNoClosures(0),
 	 fOptions(0),
-	 fContext(0),
 	 fBMPattern(0),
 	 fPattern(0),
 	 fFixedString(0),
@@ -399,7 +397,6 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 	 fMinLength(0),
 	 fNoClosures(0),
 	 fOptions(0),
-	 fContext(0),
 	 fBMPattern(0),
 	 fPattern(0),
 	 fFixedString(0),
@@ -532,28 +529,10 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 	if (fOperations == 0)
 		prepare();
 
-	Context* context = 0;
-	Context* tmpContext = 0;
+	Context context(manager);
 	int		 strLength = XMLString::stringLen(expression);
 
-	{
-		XMLMutexLock lockInit(&fMutex);
-
-		if (fContext == 0)
-			fContext = new (fMemoryManager) Context(fMemoryManager);
-
-		if (fContext->fInUse) {
-			context = new (manager) Context(manager);
-			tmpContext = context;
-		}
-		else {
-			context = fContext;
-		}
-
-		context->reset(expression, strLength, start, end, fNoClosures);
-	}
-
-	Janitor<Context> janContext(tmpContext);
+    context.reset(expression, strLength, start, end, fNoClosures);
 
 	bool adoptMatch = false;
 	Match* lMatch = pMatch;
@@ -568,24 +547,22 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 		adoptMatch = true;
 	}
 
-	if (context->fAdoptMatch)
-		delete context->fMatch;
-    context->fMatch = lMatch;
-	context->fAdoptMatch = adoptMatch;
+	if (context.fAdoptMatch)
+		delete context.fMatch;
+    context.fMatch = lMatch;
+	context.fAdoptMatch = adoptMatch;
 
 	if (isSet(fOptions, XMLSCHEMA_MODE)) {
 
-		int matchEnd = match(context, fOperations, context->fStart, 1);
+		int matchEnd = match(&context, fOperations, context.fStart, 1);
 
-		if (matchEnd == context->fLimit) {
+		if (matchEnd == context.fLimit) {
 
-			if (context->fMatch != 0) {
+			if (context.fMatch != 0) {
 
-				context->fMatch->setStartPos(0, context->fStart);
-				context->fMatch->setEndPos(0, matchEnd);
-			}
-
-			context->fInUse = false;
+				context.fMatch->setStartPos(0, context.fStart);
+				context.fMatch->setEndPos(0, matchEnd);
+			}		
 			return true;
 		}
 
@@ -597,19 +574,16 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 	 */
 	if (fFixedStringOnly) {
 
-		int ret = fBMPattern->matches(expression, context->fStart,
-			                          context->fLimit);
+		int ret = fBMPattern->matches(expression, context.fStart,
+			                          context.fLimit);
 		if (ret >= 0) {
 
-			if (context->fMatch != 0) {
-				context->fMatch->setStartPos(0, ret);
-				context->fMatch->setEndPos(0, ret + strLength);
-			}
-
-			context->fInUse = false;
+			if (context.fMatch != 0) {
+				context.fMatch->setStartPos(0, ret);
+				context.fMatch->setEndPos(0, ret + strLength);
+			}		
 			return true;
-		}
-		context->fInUse = false;
+		}		
 		return false;
 	}
 
@@ -620,17 +594,15 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 	 */
 	if (fFixedString != 0) {
 
-		int ret = fBMPattern->matches(expression, context->fStart,
-                                      context->fLimit);
+		int ret = fBMPattern->matches(expression, context.fStart,
+                                      context.fLimit);
 
 		if (ret < 0) { // No match
-
-			context->fInUse = false;
 			return false;
 		}
 	}
 
-	int limit = context->fLimit - fMinLength;
+	int limit = context.fLimit - fMinLength;
 	int matchStart;
 	int matchEnd = -1;
 
@@ -641,13 +613,13 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
         && fOperations->getChild()->getOpType() == Op::O_DOT) {
 
 		if (isSet(fOptions, SINGLE_LINE)) {
-			matchStart = context->fStart;
-			matchEnd = match(context, fOperations, matchStart, 1);
+			matchStart = context.fStart;
+			matchEnd = match(&context, fOperations, matchStart, 1);
 		}
 		else {
 			bool previousIsEOL = true;
 
-			for (matchStart=context->fStart; matchStart<=limit; matchStart++) {
+			for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
 
 				XMLCh ch = expression[matchStart];
 				if (RegxUtil::isEOLChar(ch)) {
@@ -656,7 +628,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 				else {
 
 					if (previousIsEOL) {
-						if (0 <= (matchEnd = match(context, fOperations,
+						if (0 <= (matchEnd = match(&context, fOperations,
                                                    matchStart, 1)))
                             break;
 					}
@@ -677,11 +649,11 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 			if (ignoreCase)
 				range = fFirstChar->getCaseInsensitiveToken(fTokenFactory);
 
-			for (matchStart=context->fStart; matchStart<=limit; matchStart++) {
+			for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
 
                 XMLInt32 ch;
 
-				if (!context->nextCh(ch, matchStart, 1))
+				if (!context.nextCh(ch, matchStart, 1))
 					break;
 
 				if (!range->match(ch)) {
@@ -694,7 +666,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 					continue;
 				}
 
-				if (0 <= (matchEnd = match(context,fOperations,matchStart,1)))
+				if (0 <= (matchEnd = match(&context,fOperations,matchStart,1)))
 					break;
             }
 		}
@@ -703,9 +675,9 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
             /*
              *	Straightforward matching
              */
-			for (matchStart=context->fStart; matchStart<=limit; matchStart++) {
+			for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
 
-				if (0 <= (matchEnd = match(context,fOperations,matchStart,1)))
+				if (0 <= (matchEnd = match(&context,fOperations,matchStart,1)))
 					break;
 			}
 		}
@@ -713,17 +685,13 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 
 	if (matchEnd >= 0) {
 
-		if (context->fMatch != 0) {
+		if (context.fMatch != 0) {
 
-			context->fMatch->setStartPos(0, matchStart);
-			context->fMatch->setEndPos(0, matchEnd);
-		}
-
-		context->fInUse = false;
+			context.fMatch->setStartPos(0, matchStart);
+			context.fMatch->setEndPos(0, matchEnd);
+		}		
 		return true;
 	}
-
-	context->fInUse = false;
 	return false;
 }
 
@@ -769,29 +737,12 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 
   RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true, fMemoryManager);
 
-  Context* context = 0;
-  Context* tmpContext = 0;
+  Context context(fMemoryManager);
 
   int		 strLength = XMLString::stringLen(expression);
  
-  {
- 	   XMLMutexLock lockInit(&fMutex);
-
- 	   if (fContext == 0)
- 	     fContext = new (fMemoryManager) Context(fMemoryManager);
-
- 	   if (fContext->fInUse) {
- 	     context = new (fMemoryManager) Context(fMemoryManager);
- 	     tmpContext = context;
- 	   }
- 	   else {
- 	     context = fContext;
- 	   }
-
- 	   context->reset(expression, strLength, start, end, fNoClosures);
-  }
-
-  Janitor<Context> janContext(tmpContext);
+  context.reset(expression, strLength, start, end, fNoClosures);
+ 
 
   Match* lMatch = 0;
   bool adoptMatch = false;
@@ -802,36 +753,34 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
     lMatch->setNoGroups(fNoGroups);
   }
 
-  if (context->fAdoptMatch)
- 	  delete context->fMatch;
+  if (context.fAdoptMatch)
+ 	  delete context.fMatch;
   
-  context->fMatch = lMatch;
-  context->fAdoptMatch = adoptMatch;
+  context.fMatch = lMatch;
+  context.fAdoptMatch = adoptMatch;
 
   int tokStart = start;
   int matchStart = start;
 
   for (; matchStart <= end; matchStart++) { 
   
- 	  int matchEnd = match(context, fOperations, matchStart, 1);
+ 	  int matchEnd = match(&context, fOperations, matchStart, 1);
   
  	  if (matchEnd != -1) {
 
- 	    if (context->fMatch != 0) {
- 	      context->fMatch->setStartPos(0, context->fStart);
- 	      context->fMatch->setEndPos(0, matchEnd);
+ 	    if (context.fMatch != 0) {
+ 	      context.fMatch->setStartPos(0, context.fStart);
+ 	      context.fMatch->setEndPos(0, matchEnd);
  	    }
 
       if (subEx){
         subEx->addElement(lMatch);
-        lMatch = new (fMemoryManager) Match(*(context->fMatch));
+        lMatch = new (fMemoryManager) Match(*(context.fMatch));
         adoptMatch = true;
         
-        context->fAdoptMatch = adoptMatch;
-        context->fMatch = lMatch;
+        context.fAdoptMatch = adoptMatch;
+        context.fMatch = lMatch;
       }
-  
- 	    context->fInUse = false;
 
       XMLCh* token;
       if (tokStart == matchStart){
@@ -1676,7 +1625,7 @@ void RegularExpression::prepare() {
 		}
 
 		fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
-								  isSet(fOptions, IGNORE_CASE));
+								  isSet(fOptions, IGNORE_CASE), fMemoryManager);
 	}
 	else if (!isSet(fOptions, XMLSCHEMA_MODE) &&
 			 !isSet(fOptions, PROHIBIT_FIXED_STRING_OPTIMIZATION)) {

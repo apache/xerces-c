@@ -60,6 +60,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -119,8 +120,10 @@ const XMLCh DOMConfigurationImpl::fgSCHEMA_LOCATION[] = { chLatin_s, chLatin_c, 
 
 const unsigned short DOMConfigurationImpl::fDEFAULT_VALUES = 0x2596;
 
-DOMConfigurationImpl::DOMConfigurationImpl(): featureValues(fDEFAULT_VALUES),
-                                              fErrorHandler(0), fSchemaType(0), fSchemaLocation(0) {
+DOMConfigurationImpl::DOMConfigurationImpl(MemoryManager* const manager): featureValues(fDEFAULT_VALUES),
+                                              fErrorHandler(0), fSchemaType(0), fSchemaLocation(0)
+, fMemoryManager(manager)
+ {
 }
 
 DOMConfigurationImpl::~DOMConfigurationImpl() {
@@ -128,7 +131,9 @@ DOMConfigurationImpl::~DOMConfigurationImpl() {
                                         
 void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
 
-    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
+    ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
+
     XMLString::lowerCase(lowerCaseName);
 
     if(!canSetParameter(lowerCaseName, value)) {
@@ -169,7 +174,10 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
 // --------------------------------------
 
 const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
-    XMLCh* lowerCaseName = XMLString::replicate(name);
+
+    XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
+    ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
+
     XMLString::lowerCase(lowerCaseName);
 
     bool isBooleanParameter = true;
@@ -218,7 +226,9 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
     // if value is null, return true
     if(value == 0) return true;
 
-    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
+    ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
+    
     XMLString::lowerCase(lowerCaseName);
     
     bool isBooleanParameter = true;
@@ -294,7 +304,9 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
 // -------------------------------------------
 
 DOMConfigurationImpl::DOMConfigurationFeature DOMConfigurationImpl::getFeatureFlag(const XMLCh* name) const {
-    XMLCh* lowerCaseName = XMLString::replicate(name);
+    XMLCh* lowerCaseName = XMLString::replicate(name, fMemoryManager);
+    ArrayJanitor<XMLCh> janName(lowerCaseName, fMemoryManager);
+    
     XMLString::lowerCase(lowerCaseName);
   
     if(XMLString::equals(lowerCaseName, fgCANONICAL_FORM)) {

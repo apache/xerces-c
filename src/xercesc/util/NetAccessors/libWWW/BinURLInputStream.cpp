@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.4  2003/05/17 05:54:18  knoaman
  * Update NetAccessors to use the memory manager.
  *
@@ -151,10 +154,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // 'char *' string.
 //
 
-static char* localTranscode(const XMLCh* latinStrInUnicode)
+static char* localTranscode(const XMLCh* latinStrInUnicode
+                            , MemoryManager* const  manager)
 {
     unsigned int   lent = XMLString::stringLen(latinStrInUnicode);
-    char*  retval = (char*) XMLPlatformUtils::fgMemoryManager->allocate
+    char*  retval = (char*) manager->allocate
     (
         (lent + 1) * sizeof(char)
     );//new char[lent + 1];
@@ -181,7 +185,7 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
         URLISBUFMAXSIZE * sizeof(XMLByte)
     );//new XMLByte[URLISBUFMAXSIZE];
     const XMLCh*  uri = urlSource.getURLText();
-    char*   uriAsCharStar = localTranscode(uri);
+    char*   uriAsCharStar = localTranscode(uri, fMemoryManager);
 
     //
     // First find the size of the remote resource being asked for.
@@ -204,18 +208,18 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
         HTResponse * response = HTRequest_response (request);
         fRemoteFileSize = HTResponse_length(response);
         if (fRemoteFileSize < 0) {
-            ThrowXML(NetAccessorException, XMLExcepts::NetAcc_LengthError);
+            ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_LengthError, fMemoryManager);
         }
     }
 
     // Cleanup, before you throw any errors.
-    delete [] uriAsCharStar;
+    fMemoryManager->deallocate(uriAsCharStar);
     HTRequest_delete(request);
     // Don't know whether I am supposed to delete counterStrm.
 
     if (status == NO)
     {
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_LengthError);
+        ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_LengthError, fMemoryManager);
     }
 }
 

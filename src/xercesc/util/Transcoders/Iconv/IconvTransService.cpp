@@ -255,7 +255,8 @@ void IconvTransService::lowerCase(XMLCh* const toLowerCase) const
 // ---------------------------------------------------------------------------
 //  IconvLCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
+                                                  , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -272,7 +273,8 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText)
 }
 
 
-unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                  , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -284,7 +286,7 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 
     if (wLent >= gTempBuffArraySize)
         wideCharBuf = allocatedArray = (wchar_t*)
-            XMLPlatformUtils::fgMemoryManager->allocate
+            manager->allocate
             (
                 (wLent + 1) * sizeof(wchar_t)
             );//new wchar_t[wLent + 1];
@@ -298,7 +300,7 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     wideCharBuf[wLent] = 0x00;
 
     const unsigned int retVal = ::wcstombs(NULL, wideCharBuf, 0);
-    XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+    manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
     if (retVal == ~0)
         return 0;
@@ -409,7 +411,8 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode,
 
 bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes)
+                                    , const unsigned int    maxBytes
+                                    , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)
@@ -435,7 +438,7 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
     if (maxBytes >= gTempBuffArraySize) {
         wideCharBuf = allocatedArray = (wchar_t*)
-            XMLPlatformUtils::fgMemoryManager->allocate
+            manager->allocate
             (
                 (maxBytes + 1) * sizeof(wchar_t)
             );//new wchar_t[maxBytes + 1];
@@ -453,13 +456,13 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     size_t mblen = ::wcstombs(toFill, wideCharBuf, maxBytes);
     if (mblen == -1)
     {
-        XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
         return false;
     }
 
     // Cap it off just in case
     toFill[mblen] = 0;
-    XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+    manager->deallocate(allocatedArray);//delete [] allocatedArray;
     return true;
 }
 
@@ -516,7 +519,7 @@ XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
     XMLCh* retVal = 0;
     if (*toTranscode)
     {
-        const unsigned int len = calcRequiredSize(toTranscode);
+        const unsigned int len = calcRequiredSize(toTranscode, manager);
         if (len == 0)
         {
             retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
@@ -556,7 +559,8 @@ XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
 
 bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -581,7 +585,7 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
     }
 
     if (maxChars >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = (wchar_t*) XMLPlatformUtils::fgMemoryManager->allocate
+        wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
         (
             (maxChars + 1) * sizeof(wchar_t)
         );//new wchar_t[maxChars + 1];
@@ -590,7 +594,7 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
 
     if (::mbstowcs(wideCharBuf, toTranscode, maxChars) == -1)
     {
-        XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
         return false;
     }
 
@@ -599,7 +603,7 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         toFill[i] = (XMLCh) wideCharBuf[i];
     }
     toFill[len] = 0x00;
-    XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+    manager->deallocate(allocatedArray);//delete [] allocatedArray;
     return true;
 }
 

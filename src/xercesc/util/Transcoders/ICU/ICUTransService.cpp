@@ -365,7 +365,7 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
          (XMLString::endsWith(encodingNameToUse, gS390Id)) )
     {
        int workBufferSize = (XMLString::stringLen(encodingNameToUse) + XMLString::stringLen(gswaplfnlId) - XMLString::stringLen(gS390Id) + 1);
-       workBuffer = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate(workBufferSize * sizeof(XMLCh));
+       workBuffer = (XMLCh*) manager->allocate(workBufferSize * sizeof(XMLCh));
        int moveSize = XMLString::stringLen(encodingNameToUse) - XMLString::stringLen(gS390Id);
        XMLString::moveChars(workBuffer, encodingNameToUse, moveSize);
        XMLString::moveChars((workBuffer + moveSize), gswaplfnlId, XMLString::stringLen(gswaplfnlId));
@@ -384,12 +384,12 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
     }
     else
     {
-        tmpName = convertToUChar(encodingNameToUse, 0, XMLPlatformUtils::fgMemoryManager);
+        tmpName = convertToUChar(encodingNameToUse, 0, manager);
         actualName = tmpName;
     }
 
-    ArrayJanitor<UChar> janTmp(tmpName, XMLPlatformUtils::fgMemoryManager);
-    ArrayJanitor<XMLCh> janTmp1(workBuffer, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<UChar> janTmp(tmpName, manager);
+    ArrayJanitor<XMLCh> janTmp1(workBuffer, manager);
 
     UErrorCode uerr = U_ZERO_ERROR;
     UConverter* converter = ucnv_openU(actualName, &uerr);
@@ -504,17 +504,18 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
         {
             XMLCh tmpBuf[16];
             XMLString::binToText((unsigned int)(*startTarget), tmpBuf, 16, 16);
-            ThrowXML2
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_BadSrcCP
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
         else
         {
-            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
         }
     }
 
@@ -664,12 +665,13 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     {
         XMLCh tmpBuf[16];
         XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16);
-        ThrowXML2
+        ThrowXMLwithMemMgr2
         (
             TranscodingException
             , XMLExcepts::Trans_Unrepresentable
             , tmpBuf
             , getEncodingName()
+            , getMemoryManager()
         );
     }
 
@@ -779,7 +781,8 @@ ICULCPTranscoder::~ICULCPTranscoder()
 // ---------------------------------------------------------------------------
 //  ICULCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -810,8 +813,8 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     else
     {
         // Copy the source to a local temp
-        UChar* tmpBuf = convertToUChar(srcText, 0, XMLPlatformUtils::fgMemoryManager);
-        ArrayJanitor<UChar> janTmp(tmpBuf, XMLPlatformUtils::fgMemoryManager);
+        UChar* tmpBuf = convertToUChar(srcText, 0, manager);
+        ArrayJanitor<UChar> janTmp(tmpBuf, manager);
 
         // Use a faux scope to synchronize while we do this
         {
@@ -835,7 +838,8 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     return (unsigned int)targetCap;
 }
 
-unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText
+                                                , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -1252,7 +1256,8 @@ XMLCh* ICULCPTranscoder::transcode(const char* const toTranscode,
 
 bool ICULCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars)
+                                , const unsigned int    maxChars
+                                , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1278,7 +1283,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
     if (sizeof(XMLCh) == sizeof(UChar))
         targetBuf = (UChar*)toFill;
     else
-        targetBuf = (UChar*) XMLPlatformUtils::fgMemoryManager->allocate
+        targetBuf = (UChar*) manager->allocate
         (
             (maxChars + 1) * sizeof(UChar)
         );//new UChar[maxChars + 1];
@@ -1304,7 +1309,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
     if (U_FAILURE(err))
     {
         if (targetBuf != (UChar*)toFill)
-            XMLPlatformUtils::fgMemoryManager->deallocate(targetBuf);//delete [] targetBuf;
+            manager->deallocate(targetBuf);//delete [] targetBuf;
         return false;
     }
 
@@ -1318,7 +1323,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
         *outPtr = 0;
 
         // And delete the temp buffer
-        XMLPlatformUtils::fgMemoryManager->deallocate(targetBuf);//delete [] targetBuf;
+        manager->deallocate(targetBuf);//delete [] targetBuf;
     }
 
     return true;
@@ -1327,7 +1332,8 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
 
 bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // Watch for a few psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1355,12 +1361,12 @@ bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
      else
     {
         // Allocate a non-const temp buf, but store it also in the actual
-        ncActual = convertToUChar(toTranscode, 0, XMLPlatformUtils::fgMemoryManager);
+        ncActual = convertToUChar(toTranscode, 0, manager);
         actualSrc = ncActual;
     }
 
     // Insure that the temp buffer, if any, gets cleaned up via the nc pointer
-    ArrayJanitor<UChar> janTmp(ncActual, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<UChar> janTmp(ncActual, manager);
 
     //
     //  Use a faux block to enforce a lock on the converter while we do this.

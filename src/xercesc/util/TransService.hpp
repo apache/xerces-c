@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.10  2003/11/24 19:52:06  neilg
  * allow classes derived from XMLTransService to tailor the intrinsic maps to their taste.
  *
@@ -536,9 +539,11 @@ public :
     //          its assumed that the buffer is physically one char or byte
     //          larger.
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText) = 0;
+    virtual unsigned int calcRequiredSize(const char* const srcText
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText) = 0;
+    virtual unsigned int calcRequiredSize(const XMLCh* const srcText
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     virtual char* transcode(const XMLCh* const toTranscode) = 0;
     virtual char* transcode(const XMLCh* const toTranscode,
@@ -553,6 +558,7 @@ public :
         const   char* const     toTranscode
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     ) = 0;
 
     virtual bool transcode
@@ -560,6 +566,7 @@ public :
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
         , const unsigned int    maxBytes
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     ) = 0;
 
 

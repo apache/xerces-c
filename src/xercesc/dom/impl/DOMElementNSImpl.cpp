@@ -184,7 +184,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
     XMLCh *newName;
     XMLCh temp[4000];
     if (newQualifiedNameLen >= 3999)
-        newName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        newName = (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager()->allocate
         (
             newQualifiedNameLen * sizeof(XMLCh)
         );//new XMLCh[newQualifiedNameLen];
@@ -200,7 +200,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
                                            getPooledString(newName);
 
     if (newQualifiedNameLen >= 3999)
-        XMLPlatformUtils::fgMemoryManager->deallocate(newName);//delete[] newName;
+        ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager()->deallocate(newName);//delete[] newName;
 
 }
 
@@ -245,7 +245,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
         XMLCh* newName;
         XMLCh temp[4000];
         if (index >= 3999)
-            newName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+            newName = (XMLCh*) ownerDoc->getMemoryManager()->allocate
             (
                 (XMLString::stringLen(qualifiedName) + 1) * sizeof(XMLCh)
             );//new XMLCh[XMLString::stringLen(qualifiedName)+1];
@@ -258,7 +258,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
         this -> fLocalName = ownerDoc->getPooledString(fName+index+1);
 
         if (index >= 3999)
-            XMLPlatformUtils::fgMemoryManager->deallocate(newName);//delete[] newName;
+            ownerDoc->getMemoryManager()->deallocate(newName);//delete[] newName;
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
         if (!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fPrefix) || !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fLocalName))

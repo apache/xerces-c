@@ -76,7 +76,8 @@ public :
     // -----------------------------------------------------------------------
     virtual ~ENameMap()
     {
-        delete [] fEncodingName;
+        //delete [] fEncodingName;
+        XMLPlatformUtils::fgMemoryManager->deallocate(fEncodingName);
     }
 
 
@@ -105,8 +106,7 @@ protected :
     //  Hidden constructors
     // -----------------------------------------------------------------------
     ENameMap(const XMLCh* const encodingName) :
-
-        fEncodingName(XMLString::replicate(encodingName))
+          fEncodingName(XMLString::replicate(encodingName, XMLPlatformUtils::fgMemoryManager))
     {
     }
 

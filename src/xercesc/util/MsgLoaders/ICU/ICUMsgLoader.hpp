@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.7  2003/12/17 03:56:15  neilg
  * add default memory manager parameter to loadMsg method that uses char * parameters
  *
@@ -140,23 +143,24 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned int           maxChars
+        , const unsigned int            maxChars
         , const XMLCh* const            repText1
         , const XMLCh* const            repText2 = 0
         , const XMLCh* const            repText3 = 0
         , const XMLCh* const            repText4 = 0
+        , MemoryManager* const          manager  = XMLPlatformUtils::fgMemoryManager
     );
 
     virtual bool loadMsg
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned int           maxChars
+        , const unsigned int            maxChars
         , const char* const             repText1
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0
         , const char* const             repText4 = 0
-        , MemoryManager * const manager = 0
+        , MemoryManager * const         manager  = XMLPlatformUtils::fgMemoryManager
     );
 
 

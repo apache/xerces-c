@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.22  2003/12/17 20:00:49  cargilld
  * Update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -1335,6 +1338,7 @@ public:
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
         , const unsigned int    maxChars
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Transcodes a string to native code-page
@@ -1371,6 +1375,7 @@ public:
         const   char* const     toTranscode
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Trims off extra space characters from the start and end of the string,
@@ -1437,6 +1442,7 @@ public:
         , const XMLCh* const    text2
         , const XMLCh* const    text3
         , const XMLCh* const    text4
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Converts a string to uppercase
@@ -1465,13 +1471,15 @@ public:
       * @param toConvert The string which needs to be whitespace replaced.
       *        On return , this buffer also holds the converted string
       */
-    static void replaceWS(XMLCh* const toConvert);
+    static void replaceWS(XMLCh* const toConvert
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
 
 	/** Collapse whitespace
       * @param toConvert The string which needs to be whitespace collapsed.
       *        On return , this buffer also holds the converted string
       */
-    static void collapseWS(XMLCh* const toConvert);
+    static void collapseWS(XMLCh* const toConvert
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Remove whitespace
       * @param toConvert The string which needs to be whitespace removed.

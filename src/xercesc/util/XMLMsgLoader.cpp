@@ -57,6 +57,9 @@
 /*
  *  $Id$
  * $Log$
+ * Revision 1.4  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.3  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -116,7 +119,7 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
 	if (localeToAdopt)
 	{
 		fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-        XMLString::transcode(fLocale, fLanguage, 2);
+        XMLString::transcode(fLocale, fLanguage, 2, XMLPlatformUtils::fgMemoryManager);
         fLanguage[2] = 0;
     }
 

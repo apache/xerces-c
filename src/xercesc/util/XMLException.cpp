@@ -172,8 +172,8 @@ XMLException::~XMLException()
 void XMLException::setPosition(const char* const file, const unsigned int line)
 {
     fSrcLine = line;
-	XMLPlatformUtils::fgMemoryManager->deallocate(fSrcFile);
-    fSrcFile = XMLString::replicate(file, XMLPlatformUtils::fgMemoryManager);
+	fMemoryManager->deallocate(fSrcFile);
+    fSrcFile = XMLString::replicate(file, fMemoryManager);
 }
 
 
@@ -303,7 +303,7 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     XMLCh errText[msgSize + 1];
 
     // load the text
-	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
+	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4, fMemoryManager))
 	{
 		fMsg = XMLString::replicate
         (

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.4  2002/12/09 13:12:12  tng
  * Fix compilation error.
  *
@@ -140,7 +143,7 @@ private :
     char                fBuffer[4000];
     char *              fBufferEnd;
     char *              fBufferPos;
-
+    MemoryManager*      fMemoryManager;
 }; // UnixHTTPURLInputStream
 
 

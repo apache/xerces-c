@@ -272,7 +272,7 @@ public:
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
 	StringOp(const short type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~StringOp() { delete[] fLiteral;}
+	~StringOp() { fMemoryManager->deallocate(fLiteral);}
 
 	// -----------------------------------------------------------------------
 	// Getter functions

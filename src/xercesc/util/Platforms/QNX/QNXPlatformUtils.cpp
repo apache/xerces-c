@@ -250,7 +250,8 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 }
 
 
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
+                                  , MemoryManager* const manager)
 {
     if (!toCheck[0] || toCheck[0] == XMLCh('/'))
         return false;

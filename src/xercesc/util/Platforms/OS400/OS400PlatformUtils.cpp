@@ -431,7 +431,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 
 
 }
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
+                                  , MemoryManager* const manager)
 {
     // Check for pathological case of empty path
     if (!toCheck[0])

@@ -72,6 +72,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMRange.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -81,6 +82,7 @@ class       DOMNode;
 class       DOMDocumentFragment;
 class       DOMDocument;
 class       DOMText;
+class       MemoryManager;
 
 class CDOM_EXPORT DOMRangeImpl: public DOMRange {
 private:
@@ -107,10 +109,11 @@ private:
     bool         fDetached;
 
     DOMNode*     fRemoveChild;
+    MemoryManager* fMemoryManager;
 
 public:
     //c'tor
-    DOMRangeImpl(DOMDocument* doc);
+    DOMRangeImpl(DOMDocument* doc, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DOMRangeImpl(const DOMRangeImpl& other);
 
     //d'tor

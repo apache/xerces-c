@@ -682,7 +682,8 @@ Uniconv390LCPTranscoder::~Uniconv390LCPTranscoder()
 // transcode the string and see how long it is. Fortunately, this is only done as a last
 // ditch effort so it should only be used very rarely (if at all).
 // ---------------------------------------------------------------------------
-unsigned int Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                       , MemoryManager* const manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)  \n");
 //printf("!!!***Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)  \n");
@@ -692,15 +693,16 @@ DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
    if (!*srcText)
       return 0;
 
-   char * result = transcode(srcText, XMLPlatformUtils::fgMemoryManager);
+   char * result = transcode(srcText, manager);
    if (result) {
       thesize = strlen(result);
-      XMLPlatformUtils::fgMemoryManager->deallocate(result);//delete [] result;
+      manager->deallocate(result);//delete [] result;
    }
    return thesize;
 }
 
-unsigned int Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText
+                                                       , MemoryManager* const manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)  \n");
 //printf("!!!***Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)  \n");
@@ -710,10 +712,10 @@ DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
    if (!*srcText)
       return 0;
 
-   XMLCh * result = transcode(srcText, XMLPlatformUtils::fgMemoryManager);
+   XMLCh * result = transcode(srcText, manager);
    if (result) {
       thesize = getWideCharLength(result);
-      XMLPlatformUtils::fgMemoryManager->deallocate(result);//delete [] result;
+      manager->deallocate(result);//delete [] result;
    }
 
 DBGPRINTF2("Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText) %d  \n",thesize);
@@ -908,7 +910,8 @@ DBGPRINTF2("Uniconv390LCPTranscoder::transcode(const char* const toTranscode):%s
 
 bool Uniconv390LCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars)
+                                , const unsigned int    maxChars
+                                , MemoryManager* const  manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::transcode(const  char* const     toTranscode, etc.... \n");
 //printf("transcode handle=%x\n",fConverter->fIconv390DescriptorFrom);
@@ -947,7 +950,8 @@ DBGPRINTF1("Uniconv390LCPTranscoder::transcode(const  char* const     toTranscod
 
 bool Uniconv390LCPTranscoder::transcode(   const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes)
+                                    , const unsigned int    maxBytes
+                                    , MemoryManager* const  manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::transcode(const  XMLCh* const     toTranscode, etc.... \n");
 //printf("transcode handle=%x\n",fConverter->fIconv390DescriptorTo);

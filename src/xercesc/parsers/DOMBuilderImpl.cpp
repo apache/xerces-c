@@ -545,7 +545,7 @@ DOMBuilderImpl::resolveEntity(const XMLCh* const publicId,
         DOMInputSource* is = fEntityResolver->resolveEntity(publicId, systemId, baseURI);
 
         if (is)
-            return new Wrapper4DOMInputSource(is, true, getMemoryManager());
+            return new (getMemoryManager()) Wrapper4DOMInputSource(is, true, getMemoryManager());
     }
 
     return 0;
@@ -563,7 +563,7 @@ DOMBuilderImpl::resolveEntity( XMLResourceIdentifier* resourceIdentifier )
                                                             resourceIdentifier->getSystemId(), 
                                                             resourceIdentifier->getBaseURI());
         if (is)
-            return new Wrapper4DOMInputSource(is, true, getMemoryManager());    
+            return new (getMemoryManager()) Wrapper4DOMInputSource(is, true, getMemoryManager());    
     }
     if (fXMLEntityResolver) {
         return(fXMLEntityResolver->resolveEntity(resourceIdentifier));    

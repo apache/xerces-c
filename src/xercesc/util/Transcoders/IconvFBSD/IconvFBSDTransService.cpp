@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/24 15:24:15  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.14  2003/05/17 16:32:17  knoaman
  * Memory manager implementation : transcoder update.
  *
@@ -937,7 +940,8 @@ void IconvFBSDTransService::lowerCase(XMLCh* const toLowerCase) const
 //  IconvFBSDLCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
 unsigned int
-IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText)
+IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText
+                                          , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -964,7 +968,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText)
         const char    *ptr = srcText + srcLen - len;
         size_t    rc = iconvFrom(ptr, &len, &pTmpArr, gTempBuffArraySize);
         if (rc == (size_t) -1 && errno != E2BIG) {
-            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, manager);
             /* return 0; */
         }
         rc = pTmpArr - (char *) tmpWideArr;
@@ -979,7 +983,8 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText)
 
 
 unsigned int
-IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                         , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -994,7 +999,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     wchar_t*      wideCharBuf = 0;
 
     if (wLent >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = (wchar_t*) XMLPlatformUtils::fgMemoryManager->allocate
+        wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
         (
             (wLent + 1) * sizeof(wchar_t)
         );//new wchar_t[wLent + 1];
@@ -1008,7 +1013,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     const unsigned int retVal = fbsd_wcstombs(NULL, wideCharBuf, 0);
 
     if (allocatedArray)
-        XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
     if (retVal == ~0)
         return 0;
     return retVal;
@@ -1021,7 +1026,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     size_t      len = wLent * uChSize();
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) XMLPlatformUtils::fgMemoryManager->allocate
+            wBufPtr = (char*) manager->allocate
             (
                 len * sizeof(char)
             );//new char[len];
@@ -1044,8 +1049,8 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
         size_t    rc = iconvTo(ptr, &len, &pTmpArr, gTempBuffArraySize);
         if (rc == (size_t) -1 && errno != E2BIG) {
             if (wBufPtr)
-            XMLPlatformUtils::fgMemoryManager->deallocate(wBufPtr);//delete [] wBufPtr;
-            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+            manager->deallocate(wBufPtr);//delete [] wBufPtr;
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, manager);
             /* return 0; */
         }
         rc = pTmpArr - tmpBuff;
@@ -1054,7 +1059,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
             break;
     }
     if (wBufPtr)
-    XMLPlatformUtils::fgMemoryManager->deallocate(wBufPtr);//delete [] wBufPtr;
+        manager->deallocate(wBufPtr);//delete [] wBufPtr;
     return totalLen;
 
 #endif /* !XML_USE_LIBICONV */
@@ -1197,7 +1202,7 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode,
 #else /* XML_USE_LIBICONV */
 
         // Calc needed size.
-        const size_t neededLen = calcRequiredSize (toTranscode);
+        const size_t neededLen = calcRequiredSize (toTranscode, manager);
         if (neededLen == 0)
             return 0;
         // allocate output buffer
@@ -1252,7 +1257,8 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode,
 
 bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
                     , char* const        toFill
-                    , const unsigned int    maxBytes)
+                    , const unsigned int    maxBytes
+                    , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes) {
@@ -1277,7 +1283,7 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     wchar_t*      wideCharBuf = 0;
 
     if (maxBytes >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = (wchar_t*) XMLPlatformUtils::fgMemoryManager->allocate
+        wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
         (
             (maxBytes + 1) * sizeof(wchar_t)
         );//new wchar_t[maxBytes + 1];
@@ -1292,11 +1298,11 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     mblen = fbsd_wcstombs(toFill, wideCharBuf, maxBytes);
     if (mblen == -1) {
         if (allocatedArray)
-            XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+            manager->deallocate(allocatedArray);//delete [] allocatedArray;
         return false;
     }
     if (allocatedArray)
-        XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
 #else /* XML_USE_LIBICONV */
 
@@ -1308,7 +1314,7 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) XMLPlatformUtils::fgMemoryManager->allocate
+            wBufPtr = (char*) manager->allocate
             (
                 len * sizeof(char)
             );//new char[len];
@@ -1328,11 +1334,11 @@ bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     mblen = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
     if (mblen == (size_t)-1) {
         if (wBufPtr)
-           XMLPlatformUtils::fgMemoryManager->deallocate(wBufPtr);//delete [] wBufPtr;
+           manager->deallocate(wBufPtr);//delete [] wBufPtr;
         return false;
     }
     if (wBufPtr)
-        XMLPlatformUtils::fgMemoryManager->deallocate(wBufPtr);//delete [] wBufPtr;
+        manager->deallocate(wBufPtr);//delete [] wBufPtr;
 
 #endif /* !XML_USE_LIBICONV */
 
@@ -1436,7 +1442,7 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode,
 
     XMLCh* retVal = 0;
     if (*toTranscode) {
-        const unsigned int wLent = calcRequiredSize(toTranscode);
+        const unsigned int wLent = calcRequiredSize(toTranscode, manager);
         if (wLent == 0) {
             retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
             retVal[0] = 0;
@@ -1520,7 +1526,8 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode,
 
 bool IconvFBSDLCPTranscoder::transcode(const   char* const    toTranscode
                        ,       XMLCh* const    toFill
-                       , const unsigned int    maxChars)
+                       , const unsigned int    maxChars
+                       , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1546,7 +1553,7 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const    toTranscode
     wchar_t*      wideCharBuf = 0;
 
     if (maxChars >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = (wchar_t*) XMLPlatformUtils::fgMemoryManager->allocate
+        wideCharBuf = allocatedArray = (wchar_t*) manager->allocate
         (
             (wLent + 1) * sizeof(wchar_t)
         );//new wchar_t[wLent + 1];
@@ -1555,13 +1562,13 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const    toTranscode
 
     if (fbsd_mbstowcs(wideCharBuf, toTranscode, wLent) == -1) {
         if (allocatedArray)
-            XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+            manager->deallocate(allocatedArray);//delete [] allocatedArray;
         return false;
     }
     for (unsigned int i = 0; i < wLent; i++)
         toFill[i] = (XMLCh) wideCharBuf[i];
     if (allocatedArray)
-    XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
 #else /* XML_USE_LIBICONV */
 
@@ -1572,7 +1579,7 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const    toTranscode
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
     if (len > gTempBuffArraySize) {
-        wBufPtr = (char*) XMLPlatformUtils::fgMemoryManager->allocate
+        wBufPtr = (char*) manager->allocate
         (
             len * sizeof(char)
         );//new char[len];
@@ -1589,14 +1596,14 @@ bool IconvFBSDLCPTranscoder::transcode(const   char* const    toTranscode
     size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
     if (rc == (size_t)-1) {
         if (wBufPtr)
-            XMLPlatformUtils::fgMemoryManager->deallocate(wBufPtr);//delete [] wBufPtr;
+            manager->deallocate(wBufPtr);//delete [] wBufPtr;
         return false;
     }
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
     mbsToXML (wideCharBuf, wLent, toFill, wLent);
     if (wBufPtr)
-        XMLPlatformUtils::fgMemoryManager->deallocate(wBufPtr);//delete [] wBufPtr;
+        manager->deallocate(wBufPtr);//delete [] wBufPtr;
 
 #endif /* !XML_USE_LIBICONV */
 
@@ -1713,7 +1720,7 @@ unsigned int    IconvFBSDTranscoder::transcodeFrom
             if (errno != E2BIG || prevSrcLen == srcLen) {
                 if (wBufPtr)
                     getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
-                ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+                ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
             }
         }
         charSizes[cnt] = prevSrcLen - srcLen;
@@ -1765,7 +1772,7 @@ unsigned int    IconvFBSDTranscoder::transcodeTo
     if (rc == (size_t)-1 && errno != E2BIG) {
         if (wBufPtr)
             getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
-        ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+        ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
     }
     charsEaten = srcCount - srcLen / uChSize();
     if (wBufPtr)

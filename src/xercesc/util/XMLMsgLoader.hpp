@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 15:24:13  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.7  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -105,6 +108,7 @@
 #define XMLMSGLOADER_HPP
 
 #include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -163,6 +167,7 @@ public :
         , const XMLCh* const    repText2 = 0
         , const XMLCh* const    repText3 = 0
         , const XMLCh* const    repText4 = 0
+        , MemoryManager* const  manager   = XMLPlatformUtils::fgMemoryManager
     ) = 0;
 
     virtual bool loadMsg
@@ -174,7 +179,7 @@ public :
         , const char* const     repText2 = 0
         , const char* const     repText3 = 0
         , const char* const     repText4 = 0
-        , MemoryManager* const manager   = 0
+        , MemoryManager* const  manager  = XMLPlatformUtils::fgMemoryManager
     ) = 0;
 
     /** @name Locale Handling  */

@@ -336,7 +336,7 @@ static FileHandleImpl* openRead(char* tmpFileName
      // of the FileHandleImpl class.
 
      fileHandle = fopen(pathobj.getfopenPath(), optionBuffer);
-     retVal = new FileHandleImpl(fileHandle, _FHI_READ, pathobj.isRecordType());
+     retVal = new (manager) FileHandleImpl(fileHandle, _FHI_READ, pathobj.isRecordType(), manager);
 
      // temp fix for HFS files with "type=record" specified
      // close the file and re-open it without the fopen options
@@ -573,7 +573,7 @@ static FileHandleImpl* openWrite(char* tmpFileName
     if (fileHandle == NULL)
        retVal = 0;
     else
-       retVal = new FileHandleImpl(fileHandle, _FHI_WRITE, isTypeRecord,fileLrecl);
+       retVal = new (manager) FileHandleImpl(fileHandle, _FHI_WRITE, isTypeRecord,fileLrecl, manager);
 
     return retVal;
 }
@@ -896,7 +896,8 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     return XMLString::transcode(newSrc, manager);
 }
 
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
+                                  , MemoryManager* const manager)
 {
     // Check for pathological case of empty path
     if (!toCheck[0])
@@ -926,8 +927,8 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
          return false;
     }
 
-    char* tmpFileName = XMLString::transcode(toCheck, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    char* tmpFileName = XMLString::transcode(toCheck, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     Path390 pathobj;
     pathobj.setPath(tmpFileName);
 
@@ -1119,7 +1120,7 @@ FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
      FILE* fileHandle = 0;
      fileHandle = fdopen(dup(0), "rb");
      if (fileHandle)
-        retVal = new FileHandleImpl(fileHandle, _FHI_READ, _FHI_NOT_TYPE_RECORD);
+        retVal = new (manager) FileHandleImpl(fileHandle, _FHI_READ, _FHI_NOT_TYPE_RECORD, manager);
      else
         retVal = 0;
 

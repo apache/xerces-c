@@ -85,12 +85,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  conversion of all strings. These local helper methods make that easier.
 //
 static UChar* convertToUChar( const   XMLCh* const toConvert
-                            , const unsigned int   srcLen = 0)
+                            , const unsigned int   srcLen = 0
+                            , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager)
 {
     const unsigned int actualLen = srcLen
                                    ? srcLen : XMLString::stringLen(toConvert);
 
-    UChar* tmpBuf = (UChar*) XMLPlatformUtils::fgMemoryManager->allocate
+    UChar* tmpBuf = (UChar*) manager->allocate
     (
         (srcLen + 1) * sizeof(UChar)
     );//new UChar[srcLen + 1];
@@ -429,17 +430,18 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
         {
             XMLCh tmpBuf[16];
             XMLString::binToText((unsigned int)(*startTarget), tmpBuf, 16, 16);
-            ThrowXML2
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_BadSrcCP
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
          else
         {
-            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
         }
     }
 
@@ -530,10 +532,10 @@ Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
     }
      else
     {
-        tmpBufPtr = convertToUChar(srcData, srcCount);
+        tmpBufPtr = convertToUChar(srcData, srcCount, getMemoryManager());
         srcPtr = tmpBufPtr;
     }
-    ArrayJanitor<UChar> janTmpBuf(tmpBufPtr, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<UChar> janTmpBuf(tmpBufPtr, getMemoryManager());
 
     //
     //  Set the appropriate callback so that it will either fail or use
@@ -566,12 +568,13 @@ Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
     {
         XMLCh tmpBuf[16];
         XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16);
-        ThrowXML2
+        ThrowXMLwithMemMgr2
         (
             TranscodingException
             , XMLExcepts::Trans_Unrepresentable
             , tmpBuf
             , getEncodingName()
+            , getMemoryManager()
         );
     }
 
@@ -652,7 +655,8 @@ Iconv400LCPTranscoder::~Iconv400LCPTranscoder()
 // ---------------------------------------------------------------------------
 //  Iconv400LCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-unsigned int Iconv400LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int Iconv400LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                     , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -679,7 +683,8 @@ unsigned int Iconv400LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     return (unsigned int)targetCap;
 }
 
-unsigned int Iconv400LCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int Iconv400LCPTranscoder::calcRequiredSize(const char* const srcText
+                                                     , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -993,7 +998,8 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode,
 
 bool Iconv400LCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars)
+                                , const unsigned int    maxChars
+                                , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1033,7 +1039,8 @@ bool Iconv400LCPTranscoder::transcode(const  char* const     toTranscode
 
 bool Iconv400LCPTranscoder::transcode(   const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // Watch for a few psycho corner cases
     if (!toTranscode || !maxChars)

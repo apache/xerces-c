@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/12/24 15:24:14  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.18  2003/12/19 23:02:25  cargilld
  * More memory management updates.
  *
@@ -463,7 +466,8 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     return XMLString::transcode(absPath, manager);
 }
 
-bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
+bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
+                                  , MemoryManager* const manager)
 {
     // Check for pathological case of empty path
     if (!toCheck[0])

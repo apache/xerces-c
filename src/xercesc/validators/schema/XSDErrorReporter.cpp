@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.11  2003/12/24 15:24:16  cargilld
+  * More updates to memory management so that the static memory manager.
+  *
   * Revision 1.10  2003/03/09 17:05:01  peiyongz
   * PanicHandler
   *
@@ -233,7 +236,8 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
                                  const XMLCh* const text1,
                                  const XMLCh* const text2,
                                  const XMLCh* const text3,
-                                 const XMLCh* const text4)
+                                 const XMLCh* const text4,
+                                 MemoryManager* const manager)
 {
     // Bump the error count if it is not a warning
 //    if (XMLErrs::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
@@ -254,7 +258,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
         msgLoader = getValidMsgLoader();
     }
 
-    if (!msgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+    if (!msgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, manager))
     {
                 // <TBD> Should probably load a default message here
     }

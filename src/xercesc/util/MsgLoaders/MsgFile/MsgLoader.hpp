@@ -100,6 +100,7 @@ public :
         , const XMLCh* const            repText2 = 0
         , const XMLCh* const            repText3 = 0
         , const XMLCh* const            repText4 = 0
+        , MemoryManager* const          manager  = XMLPlatformUtils::fgMemoryManager
     );
 
     virtual bool loadMsg
@@ -111,7 +112,7 @@ public :
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0
         , const char* const             repText4 = 0
-        , MemoryManager * const manager = 0
+        , MemoryManager * const         manager  = XMLPlatformUtils::fgMemoryManager
     );
 
 

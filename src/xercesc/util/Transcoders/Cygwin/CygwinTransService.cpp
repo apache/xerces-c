@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/24 15:24:15  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.9  2003/11/08 23:37:00  neilg
  * fix for bug 24287 by Abe Backus.
  *
@@ -830,17 +833,18 @@ CygwinTranscoder::transcodeFrom(  const XMLByte* const      srcData
             {
                 XMLCh tmpBuf[16];
                 XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16);
-                ThrowXML2
+                ThrowXMLwithMemMgr2
                 (
                     TranscodingException
                     , XMLExcepts::Trans_BadSrcCP
                     , tmpBuf
                     , getEncodingName()
+                    , getMemoryManager()
                 );
             }
             else
             {
-                ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+                ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
             }
         }
 
@@ -911,12 +915,13 @@ CygwinTranscoder::transcodeTo(const  XMLCh* const   srcData
         {
             XMLCh tmpBuf[16];
             XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16);
-            ThrowXML2
+            ThrowXMLwithMemMgr2
             (
                 TranscodingException
                 , XMLExcepts::Trans_Unrepresentable
                 , tmpBuf
                 , getEncodingName()
+                , getMemoryManager()
             );
         }
 
@@ -1001,7 +1006,8 @@ CygwinLCPTranscoder::~CygwinLCPTranscoder()
 // ---------------------------------------------------------------------------
 //  CygwinLCPTranscoder: Implementation of the virtual transcoder interface
 // ---------------------------------------------------------------------------
-unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText)
+unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
+                                                   , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -1013,7 +1019,8 @@ unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText)
 }
 
 
-unsigned int CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
+unsigned int CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+                                                   , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
@@ -1145,7 +1152,8 @@ XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode,
 
 bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars)
+                                    , const unsigned int    maxChars
+                                    , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1169,7 +1177,8 @@ bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
 
 bool CygwinLCPTranscoder::transcode( const  XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes)
+                                    , const unsigned int    maxBytes
+                                    , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)

@@ -841,7 +841,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+        if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fMemoryManager))
         {
                 // <TBD> Should probably load a default message here
         }

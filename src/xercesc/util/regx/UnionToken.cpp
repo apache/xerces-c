@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/24 15:24:15  cargilld
+ * More updates to memory management so that the static memory manager.
+ *
  * Revision 1.7  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -191,9 +194,9 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
 
         if (ch >= 0x10000) {
 
-            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch, XMLPlatformUtils::fgMemoryManager);
+            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch, tokFactory->getMemoryManager());
             stringBuf.append(chSurrogate);
-            XMLPlatformUtils::fgMemoryManager->deallocate(chSurrogate);//delete [] chSurrogate;
+            tokFactory->getMemoryManager()->deallocate(chSurrogate);//delete [] chSurrogate;
         }
         else {
             stringBuf.append((XMLCh) ch);
@@ -212,9 +215,9 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
 
         if (ch >= 0x10000) {
 
-            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch, XMLPlatformUtils::fgMemoryManager);
+            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch, tokFactory->getMemoryManager());
             stringBuf.append(chSurrogate);
-            XMLPlatformUtils::fgMemoryManager->deallocate(chSurrogate);//delete [] chSurrogate;
+            tokFactory->getMemoryManager()->deallocate(chSurrogate);//delete [] chSurrogate;
         }
         else {
             stringBuf.append((XMLCh) ch);

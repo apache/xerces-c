@@ -108,7 +108,9 @@ public:
                    const XMLCh* const text1,
                    const XMLCh* const text2 = 0,
                    const XMLCh* const text3 = 0,
-                   const XMLCh* const text4 = 0);
+                   const XMLCh* const text4 = 0,
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+                   );
 
 private:
     // -----------------------------------------------------------------------

@@ -418,7 +418,8 @@ unsigned int XMLString::replaceTokens(          XMLCh* const    errText
                                         , const XMLCh* const    text1
                                         , const XMLCh* const    text2
                                         , const XMLCh* const    text3
-                                        , const XMLCh* const    text4)
+                                        , const XMLCh* const    text4
+                                        , MemoryManager* const  manager)
 {
     //
     //  We have to build the string back into the source string, so allocate
@@ -426,8 +427,8 @@ unsigned int XMLString::replaceTokens(          XMLCh* const    errText
     //  incoming buffer as a target buffer. Put a janitor on it to make sure
     //  it gets cleaned up.
     //
-    XMLCh* orgText = replicate(errText);
-    ArrayJanitor<XMLCh> janText(orgText);
+    XMLCh* orgText = replicate(errText, manager);
+    ArrayJanitor<XMLCh> janText(orgText, manager);
 
     XMLCh* pszSrc = orgText;
     unsigned int curOutInd = 0;
@@ -581,9 +582,10 @@ char* XMLString::transcode(const XMLCh* const toTranscode,
 
 bool XMLString::transcode(  const   XMLCh* const    toTranscode
                             ,       char* const     toFill
-                            , const unsigned int    maxChars)
+                            , const unsigned int    maxChars
+                            , MemoryManager* const  manager)
 {
-    if (!gTranscoder->transcode(toTranscode, toFill, maxChars))
+    if (!gTranscoder->transcode(toTranscode, toFill, maxChars, manager))
         return false;
     return true;
 }
@@ -601,9 +603,10 @@ XMLCh* XMLString::transcode(const char* const toTranscode,
 
 bool XMLString::transcode(  const   char* const     toTranscode
                             ,       XMLCh* const    toFill
-                            , const unsigned int    maxChars)
+                            , const unsigned int    maxChars
+                            , MemoryManager* const  manager)
 {
-    if (!gTranscoder->transcode(toTranscode, toFill, maxChars))
+    if (!gTranscoder->transcode(toTranscode, toFill, maxChars, manager))
         return false;
     return true;
 }
@@ -1583,13 +1586,14 @@ bool XMLString::isWSReplaced(const XMLCh* const toCheck)
 //    #xA  Line Feed
 //    #x9  TAB
 //
-void XMLString::replaceWS(XMLCh* const toConvert)
+void XMLString::replaceWS(XMLCh* const toConvert
+                          , MemoryManager* const  manager)
 {
     int strLen = XMLString::stringLen(toConvert);
     if (strLen == 0)
         return;
 
-    XMLCh* retBuf = (XMLCh*) fgMemoryManager->allocate
+    XMLCh* retBuf = (XMLCh*) manager->allocate
     (
         (strLen+1) * sizeof(XMLCh)
     );//new XMLCh[strLen+1];
@@ -1612,7 +1616,7 @@ void XMLString::replaceWS(XMLCh* const toConvert)
     retBuf[strLen] = chNull;
 
     XMLString::moveChars(toConvert, retBuf, strLen);
-    fgMemoryManager->deallocate(retBuf);//delete[] retBuf;
+    manager->deallocate(retBuf);//delete[] retBuf;
     return;
 }
 
@@ -1663,14 +1667,15 @@ bool XMLString::isWSCollapsed(const XMLCh* const toCheck)
 // no leading and/or trailing spaces
 // no continuous sequences of spaces
 //
-void XMLString::collapseWS(XMLCh* const toConvert)
+void XMLString::collapseWS(XMLCh* const toConvert
+                           , MemoryManager* const  manager)
 {
     // If no string, then its a failure
     if (( !toConvert ) || ( !*toConvert ))
         return;
 
     // replace whitespace first
-    replaceWS(toConvert);
+    replaceWS(toConvert, manager);
 
     // remove leading spaces
     const XMLCh* startPtr = toConvert;
@@ -1688,7 +1693,7 @@ void XMLString::collapseWS(XMLCh* const toConvert)
     //
     //  Work through what remains and chop continuous spaces
     //
-    XMLCh* retBuf = (XMLCh*) fgMemoryManager->allocate
+    XMLCh* retBuf = (XMLCh*) manager->allocate
     (
         (endPtr - startPtr + 1) * sizeof(XMLCh)
     );//new XMLCh[endPtr - startPtr + 1];
@@ -1721,7 +1726,7 @@ void XMLString::collapseWS(XMLCh* const toConvert)
 
     *retPtr = chNull;
     XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
-    fgMemoryManager->deallocate(retBuf);//delete[] retBuf;
+    manager->deallocate(retBuf);//delete[] retBuf;
     return;
 }
 

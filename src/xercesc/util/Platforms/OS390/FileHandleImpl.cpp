@@ -70,7 +70,8 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 //Constructor:
-FileHandleImpl::FileHandleImpl(FILE* open_handle, int o_type, bool r_type, int fileLrecl): Handle(open_handle), openType(o_type), recordType(r_type), lrecl(fileLrecl) {
+FileHandleImpl::FileHandleImpl(FILE* open_handle, int o_type, bool r_type, int fileLrecl, MemoryManager* const manager): 
+   Handle(open_handle), openType(o_type), recordType(r_type), lrecl(fileLrecl), fMemoryManager(manager) {
 
    stgBufferPtr = 0;
    nextByte = 0;
@@ -79,7 +80,8 @@ FileHandleImpl::FileHandleImpl(FILE* open_handle, int o_type, bool r_type, int f
        (recordType == _FHI_TYPE_RECORD) &&
        (lrecl != 0))
    {
-      stgBufferPtr = new XMLByte [lrecl];
+      //stgBufferPtr = new XMLByte [lrecl];
+      stgBufferPtr = (XMLByte*) manager->allocate(lrecl * sizeof(XMLByte)); 
    }
 
 // printf("FileHandleImpl constructor called\n");
@@ -104,7 +106,8 @@ FileHandleImpl::~FileHandleImpl() {
    if (stgBufferPtr != 0)
    {
 // printf("stgBufferPtr is being freed at: x%8.8X\n", stgBufferPtr);
-      delete [] stgBufferPtr;
+      //delete [] stgBufferPtr;
+        fMemoryManager->deallocate(stgBufferPtr);
    }
 }
 
