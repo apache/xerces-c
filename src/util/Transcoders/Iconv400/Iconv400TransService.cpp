@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/09/12 17:06:48  aruna1
+ * Replaced INDEX_OUTOFBOUNDS error to BUFFER_OVERFLOW error for toUnicode and from_Unicode functions for compatibility with icu 1.6
+ *
  * Revision 1.2  2000/02/11 03:06:58  rahulj
  * Cosmetic changes. Replaced tabs with appropriate number of spaces.
  *
@@ -375,7 +378,7 @@ Iconv400Transcoder::transcodeXML(const   XMLByte* const          srcData
         , &err
     );
 
-    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
+    if ((err != U_ZERO_ERROR) && (err != U_BUFFER_OVERFLOW_ERROR))
         ThrowXML(TranscodingException, XML4CExcepts::Trans_CouldNotXCodeXMLData);
 
     // Calculate the bytes eaten and store in caller's param

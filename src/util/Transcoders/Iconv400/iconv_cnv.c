@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/09/12 17:06:49  aruna1
+ * Replaced INDEX_OUTOFBOUNDS error to BUFFER_OVERFLOW error for toUnicode and from_Unicode functions for compatibility with icu 1.6
+ *
  * Revision 1.1  2000/02/10 18:08:28  abagchi
  * Initial checkin
  *
@@ -294,13 +297,13 @@ int32_t   ucnv_fromUChars (const UConverter * converter,
 
   if (targetSize == 0)
     {
-      *err = U_INDEX_OUTOFBOUNDS_ERROR;
+      *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
   /* If the output buffer is exhausted, we need to stop writing
    * to it but continue the conversion in order to store in targetSize
    * the number of bytes that was required*/
-  if (*err == U_INDEX_OUTOFBOUNDS_ERROR)
+  if (*err == U_BUFFER_OVERFLOW_ERROR)
     {
       char target2[CHUNK_SIZE];
       char *target2_alias = target2;
@@ -310,7 +313,7 @@ int32_t   ucnv_fromUChars (const UConverter * converter,
        *(in case the output is greater than CHUNK_SIZE)
        */
 
-      while (*err == U_INDEX_OUTOFBOUNDS_ERROR)
+      while (*err == U_BUFFER_OVERFLOW_ERROR)
 	{
 	  *err = U_ZERO_ERROR;
 	  target2_alias = target2;
@@ -401,14 +404,14 @@ int32_t ucnv_toUChars (const UConverter * converter,
   targetCapacity += myTarget - target;
   if (targetSize == 0)
     {
-      *err = U_INDEX_OUTOFBOUNDS_ERROR;
+      *err = U_BUFFER_OVERFLOW_ERROR;
     }
   /* If the output buffer is exhausted, we need to stop writing
    * to it but if the input buffer is not exhausted,
    * we need to continue the conversion in order to store in targetSize
    * the number of bytes that was required
    */
-  if (*err == U_INDEX_OUTOFBOUNDS_ERROR)
+  if (*err == U_BUFFER_OVERFLOW_ERROR)
     {
       UChar target2[CHUNK_SIZE];
       UChar *target2_alias = target2;
@@ -417,7 +420,7 @@ int32_t ucnv_toUChars (const UConverter * converter,
       /*We use a stack allocated buffer around which we loop
          (in case the output is greater than CHUNK_SIZE) */
 
-      while (*err == U_INDEX_OUTOFBOUNDS_ERROR)
+      while (*err == U_BUFFER_OVERFLOW_ERROR)
 	{
 	  *err = U_ZERO_ERROR;
 	  target2_alias = target2;
@@ -504,11 +507,11 @@ T_UConverter_fromCodepageToCodepage (UConverter * outConverter,
 		      flush,
 		      err);
 
-      /*INDEX_OUTOFBOUNDS_ERROR means that the output "CHUNK" is full
+      /*BUFFER_OVERFLOW_ERROR means that the output "CHUNK" is full
        *we will require at least another loop (it's a recoverable error)
        */
 
-      if (U_SUCCESS (*err) || (*err == U_INDEX_OUTOFBOUNDS_ERROR))
+      if (U_SUCCESS (*err) || (*err == U_BUFFER_OVERFLOW_ERROR))
 	{
 	  *err = U_ZERO_ERROR;
 	  out_chunk_alias2 = out_chunk;
@@ -596,13 +599,13 @@ int32_t  ucnv_convert(const char *toConverterName,
   targetCapacity = myTarget - target;
   if (targetSize == 0)
     {
-      *err = U_INDEX_OUTOFBOUNDS_ERROR;
+      *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
   /* If the output buffer is exhausted, we need to stop writing
    * to it but continue the conversion in order to store in targetSize
    * the number of bytes that was required*/
-  if (*err == U_INDEX_OUTOFBOUNDS_ERROR)
+  if (*err == U_BUFFER_OVERFLOW_ERROR)
     {
       char target2[CHUNK_SIZE];
       char *target2_alias = target2;
@@ -612,7 +615,7 @@ int32_t  ucnv_convert(const char *toConverterName,
        *(in case the output is greater than CHUNK_SIZE)
        */
 
-      while (*err == U_INDEX_OUTOFBOUNDS_ERROR)
+      while (*err == U_BUFFER_OVERFLOW_ERROR)
 	{
 	  *err = U_ZERO_ERROR;
 	  target2_alias = target2;
@@ -665,7 +668,7 @@ void Converter_fromUnicode(UConverter * _this,
   if (errno!=0)
     if (errno == E2BIG)
       {
-	  *err = U_INDEX_OUTOFBOUNDS_ERROR;
+	  *err = U_BUFFER_OVERFLOW_ERROR;
           return; 
       }
     else
@@ -712,7 +715,7 @@ void Convert_toUnicode(UConverter * _this,
   {
     if (errno == E2BIG)
       {
-	  *err = U_INDEX_OUTOFBOUNDS_ERROR;
+	  *err = U_BUFFER_OVERFLOW_ERROR;
           return; 
       }
     else
