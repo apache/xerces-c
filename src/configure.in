@@ -35,7 +35,13 @@ case "${host}" in
         *-*-unixware*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-irix*)      platform=IRIX ;;
-        *-*-aix*)       platform=AIX ;;
+        *-*-aix*)       platform=AIX
+                      case "${host}" in
+                         *-*-aix4.1*)   osver=AIX41;;
+                         *-*-aix4.2*)   osver=AIX42;;
+                         *-*-aix4.3*)   osver=AIX43;;
+                         *-*-aix4.*)    osver=AIX43;;
+                      esac;;
         *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in

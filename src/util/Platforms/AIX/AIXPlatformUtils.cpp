@@ -63,7 +63,11 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #ifndef APP_NO_THREADS
-#include    <pthread.h>
+#  if defined(XML_USE_DCE)
+#    include    <dce/pthread.h>
+#  else
+#    include    <pthread.h>
+#  endif // XML_USE_DCE
 #include    <sys/atomic_op.h>
 #endif
 
@@ -503,6 +507,16 @@ void* XMLPlatformUtils::makeMutex()
                  XMLExcepts::Mutex_CouldNotCreate);
     }
     pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
+#if defined(XML_USE_DCE)
+    pthread_mutexattr_create(attr);
+    pthread_mutexattr_setkind_np(attr, MUTEX_RECURSIVE_NP);
+    if (pthread_mutex_init(mutex, *attr))
+    {
+          ThrowXML(XMLPlatformUtilsException,
+                   XMLExcepts::Mutex_CouldNotCreate);
+    }
+    pthread_mutexattr_delete(attr);
+#else
     pthread_mutexattr_init(attr);
     pthread_mutexattr_setkind_np(attr, MUTEX_RECURSIVE_NP);
     if (pthread_mutex_init(mutex, attr))
@@ -511,6 +525,7 @@ void* XMLPlatformUtils::makeMutex()
                  XMLExcepts::Mutex_CouldNotCreate);
     }
     pthread_mutexattr_destroy(attr);
+#endif
     delete attr;
     return (void*)(mutex);
 }

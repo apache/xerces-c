@@ -64,7 +64,11 @@
 // ---------------------------------------------------------------------------
 
 #if !defined (APP_NO_THREADS)
-#include    <pthread.h>
+#  if defined (XML_USE_DCE)
+#    include  <dce/pthread.h>
+#  else
+#    include    <pthread.h>
+#  endif
 #endif // APP_NO_THREADS
 
 
@@ -104,7 +108,6 @@
 #if defined (XML_USE_NETACCESSOR_SOCKET)
     #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
-
 
 
 
@@ -521,10 +524,17 @@ void XMLPlatformUtils::platformInit()
 
     gAtomicOpMutex = new pthread_mutex_t;   
 
+#if defined(XML_USE_DCE)
+    if (pthread_mutex_init(gAtomicOpMutex, pthread_mutexattr_default))
+        panic( XMLPlatformUtils::Panic_SystemInit );
+#else // XML_USE_DCE
     if (pthread_mutex_init(gAtomicOpMutex, NULL))
         panic( XMLPlatformUtils::Panic_SystemInit );
+#endif // XML_USE_DCE
 }
 
+#ifndef XML_USE_DCE
+// inlining the class with dce threading causes segmentation fault
 class  RecursiveMutex
 {
 public:
@@ -566,10 +576,30 @@ public:
                           tid = 0;
                        };
    };
+#endif // ifndef XML_USE_DCE
 
 void* XMLPlatformUtils::makeMutex()
 {
+#if defined(XML_USE_DCE)
+    pthread_mutex_t* mutex = new pthread_mutex_t;
+    if (mutex ==  NULL)
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::Mutex_CouldNotCreate);
+    }
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_create(&attr);
+    pthread_mutexattr_setkind_np(&attr, MUTEX_RECURSIVE_NP);
+    if (pthread_mutex_init(mutex, attr))
+    {
+        ThrowXML(XMLPlatformUtilsException,
+                 XMLExcepts::Mutex_CouldNotCreate);
+    }
+    pthread_mutexattr_delete(&attr);
+    return (void*)(mutex);
+#else
     return new RecursiveMutex;
+#endif
 };
 
 
@@ -577,7 +607,12 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
+#if defined(XML_USE_DCE)
+    pthread_mutex_t *rm = (pthread_mutex_t *)mtxHandle;
+    pthread_mutex_destroy(rm);
+#else
     RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
+#endif
     delete rm;
 };
 
@@ -586,16 +621,26 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
+#if defined(XML_USE_DCE)
+    pthread_mutex_t *rm = (pthread_mutex_t *)mtxHandle;
+    pthread_mutex_lock(rm);
+#else
     RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
     rm->lock();
+#endif
 }
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
+#if defined(XML_USE_DCE)
+    pthread_mutex_t *rm = (pthread_mutex_t *)mtxHandle;
+    pthread_mutex_unlock(rm);
+#else
     RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
     rm->unlock();
+#endif
 }
 
 // -----------------------------------------------------------------------

@@ -149,6 +149,13 @@ for i in $*
    esac
 done
 
+if test $platform = "aix"; then
+      if test ! -n "$ccompiler" -o ! -n "$cppcompiler"; then
+              ccompiler=xlc
+              cppcompiler=xlC
+      fi
+fi
+
 echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
@@ -180,9 +187,11 @@ CC=$ccompiler; export CC
 CXX=$cppcompiler; export CXX
 
 case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lpp/xlC/lib"; export LIBS ;;
+   xlC* | xlc*)
+      #the compiler knows better about this stuff
+      #LDFLAGS="-lC"; export LDFLAGS
+      #LIBS="-L/usr/lpp/xlC/lib"; export LIBS
+       ;;
 
    g++ | c++)
        LDFLAGS="-lc"; export LDFLAGS

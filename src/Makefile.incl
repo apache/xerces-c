@@ -122,14 +122,12 @@ ifeq (${PLATFORM}, SOLARIS)
   else
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XML_OBJ_DIR) \
                                -features=rtti -D${PLATFORM} -D_REENTRANT
- MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XML_OBJ_DIR) ${LDFLAGS}
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XML_OBJ_DIR)
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -licuuc -licudata -lc -lgen
+        ALLLIBS = -mt -licuuc -licudata ${LIBS}
     else
-        ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -lc -lgen
+        ALLLIBS = -mt ${LIBS}
     endif
   endif
   SHLIBSUFFIX=.so
@@ -202,6 +200,17 @@ endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 MAKE_SHARED = makeC++SharedLib_r -p 5000
 MAKE_SHARED_C = makeC++SharedLib_r -p 5000
+ifeq (xlC_r4,$(CXX))
+  ifeq (AIX41,$(OSVER))
+    ALLLIBS += -lC_r -lC -L/usr/lib/threads -ldcelibc_r -ldcepthreads
+  endif
+  ifeq (AIX42,$(OSVER))
+    ALLLIBS += -lC_r -lC -L/usr/lib/threads -ldcelibc_r -ldcepthreads
+  endif
+  ifeq (AIX43,$(OSVER))
+    ALLLIBS += -L/usr/lib/threads -ldcelibc_r -ldcepthreads -lpthreads_compat
+  endif
+endif
 SHLIBSUFFIX=.a
 endif
 

@@ -86,7 +86,7 @@ usage()
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
     echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris)"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
@@ -196,6 +196,16 @@ echo "Thread option: $thread"
 echo "Extra configure options: $configureoptions"
 
 
+if test -z "$ccompiler" -a -n "$cppcompiler"; then
+      echo "either both c/c++ compiler must be given or nothing at all"
+      exit ${ERROR_EXIT_CODE};
+fi
+if test -n "$ccompiler" -a -z "$cppcompiler"; then
+      echo "either both c/c++ compiler must be given or nothing at all"
+      exit ${ERROR_EXIT_CODE};
+fi
+
+
 #
 # Now check if the options are correct or not, bail out if incorrect
 #
@@ -259,14 +269,42 @@ if test $platform = "hp-11"; then
     esac
     fi
 elif test $platform = "aix"; then
-    aix_version=`./config.guess`;
+    aix_version=`sh ./config.guess`;
     echo Found host system to be $aix_version
-    case $aix_version in
-       *4.3*)
-          threadingLibs="-lpthreads_compat -lpthreads";;
-       *)
-          threadingLibs="-lpthreads";;
+    if test -n "$ccompiler"; then
+        if test -n "$thread"; then
+            echo "user given compiler no threadig available"
+      fi;
+      case $aix_version in
+         *4.3*)
+            threadingLibs="-lpthreads_compat -lpthreads";;
+         *)
+            threadingLibs="-lpthreads";;
+      esac
+    elif test -z "$thread"; then
+          ccompiler=xlc
+          cppcompiler=xlC
+          threadingLibs=
+          threadingDefines=
+    else
+    case $thread in
+      pthread)
+          ccompiler=xlc_r
+          cppcompiler=xlC_r
+          threadingLibs=
+          threadingDefines=
+          ;;
+      dce)
+          ccompiler=xlc_r4
+          cppcompiler=xlC_r4
+          threadingLibs=
+          threadingDefines="-DXML_USE_DCE"
+          ;;
+      *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+           exit ${ERROR_EXIT_CODE};;
     esac
+    fi
 elif test $platform = "ptx"; then
     threadingLibs=" "
     if test -z $XMLINSTALL; then
@@ -277,6 +315,19 @@ elif test $platform = "hp-10"; then
     threadingDefines="-DXML_USE_DCE"
 elif test $platform = "unixware"; then
 	threadingLibs="-lthread"
+elif test $platform = "solaris"; then
+     if test $thread; then
+     case $thread in
+        pthread)
+            ;;
+        dce)
+            threadingLibs="-ldce";
+            threadingDefines="-DXML_USE_DCE";;
+        *)
+            echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+            exit ${ERROR_EXIT_CODE};;
+     esac
+     fi
 fi
 
 
@@ -370,7 +421,11 @@ case $netaccessor in
        netaccessorDefines="-DXML_USE_NETACCESSOR_SOCKET"
        case $platform in
            solaris)
-               netaccessorLibs="-lnsl -lsocket";;
+               netaccessorLibs="-lnsl -lsocket"
+             if test $thread = "dce"; then
+                 netaccessorLibs=""
+             fi
+             ;;
            *)
                ;;
        esac;;
@@ -406,7 +461,7 @@ export NETACCESSOR
 #
 
 case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
       ;;
 
    *)
@@ -419,7 +474,6 @@ export CC
 
 CXX="$cppcompiler"
 export CXX
-
 
 #
 # Set the extra C and C++ compiler flags
@@ -454,7 +508,7 @@ if test $platform = "os400"; then
 elif test $platform = "ptx"; then
 ./configure --prefix=$XMLINSTALL
 else
-./configure $configureoptions
+sh ./configure $configureoptions
 fi
 echo
 echo In future, you may also directly type the following commands to create the Makefiles.
