@@ -251,7 +251,7 @@ conf.h is unchanged
 
 Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
 Still cannot resolve it? Find out if someone else had the same problem before.
-Go to http://xml-archive.webweaving.org/xml-archive-xerces/
+Check the mailing list archives at http://archive.covalent.net.
 
 In future, you may also directly type the following commands to create the Makefiles.
 
@@ -1094,145 +1094,56 @@ perl packageBinaries.pl -s \xerces-c-src_1_3_0 -o \temp\xerces-c-1_3_0-win32 -t 
 
 
     <anchor name="WCharT"/>
-    <s2 title="What should I define XMLCh to be?">
+    <s2 title="What should I define XMLCh to be?  And what is the
+               relationship between XMLCh and wchar_t?">
 
-        <p>The answer is 'it depends'. We will mention some of the
-        quirks that affect this decision. Hopefully, after reading
-        whats below, you will be able to best decide what the right
-        definition should be. We could not however, resist making a
-        suggestion. Some observations first:</p>
+        <p>XMLCh should be defined to be a type suitable for holding a
+           utf-16 encoded (16 bit) value, usually an <code>unsigned short</code>. </p>
 
-        <ul>
-          <li>Xerces-C uses XMLCh as the fundamental type to hold
-          one Unicode character as, all processing inside Xerces-C
-          happens in Unicode.</li>
-
-          <li>Most modern C++ compilers today provide 'wchar_t' as a
-          fundamental type representing a 'wide character'. Most of them
-          define it in using a typedef. This typedef definition is not
-          consistent on all the platforms that we have come across.</li>
-
-          <li>The size of wchar_t varies among the various compilers. Its
-          either 16-bit or 32-bit. Fortunately, this only affects how
-          much memory you need, to process the XML data, while everything
-          is still in memory.</li>
-
-          <li>Again on most platforms wchar_t represents a unicode
-          character. HPUX, is one exception to this, that we know,
-          where wchar_t <em>does not</em> represent a unicode
-          character, rather its a native wide character.</li>
-
-          <li>Lastly, most OS's/compilers provide a system library to
-          manipulate wide character strings taking wchar_t and
-          wchar_t* arguments. Most applications which support
-          wide-characters make these system calls.</li>
-        </ul>
-
-        <p>Our suggestion is:</p>
-
-        <p>If your compiler defines wchar_t to represent a unicode
-        character, then define XMLCh to be wchar_t.  Such a definition
-        will allow you to pass the data returned by the parser (all
-        api's return XMLCh, which is wchar_t) directly to the
-        wide-character system api's for i/o or manipulation. This is
-        most efficient and convenient.</p>
-
-        <p>However, if your compiler defines wchar_t to be just a
-        wide-character which is not Unicode, then define XMLCh to be
-        unsigned short. For the Xerces-C parser, XMLCh is always
-        Unicode. By defining it to be unsigned short and not wchar_t,
-        the compiler will not let you accidently pass what is
-        returned, via the parser API's, directly to the wide-character
-        library calls. To use the wide-character library of functions,
-        you will have to in your application, call some transcoding
-        function which will convert it from Unicode to the native
-        wide-character form. Again, if your application desires for
-        whatever reason, you may define XMLCh to be 'unsigned
-        long'. By doing so, you have just doubled the memory required
-        to process the XML file.</p>
-
-        <p>Hopefully, you will agree that the answer 'it depends' was
-        the right one.</p>
-    </s2>
+        <p>All XML data is handled within xerces-c as strings of
+           XMLCh characters.  Regardless of the size of the
+           type chosen, the data stored in variables of type XMLCh
+           will always be utf-16 encoded values. </p>
 
 
-    <anchor name="BuildUsingLibWWW"/>
-    <s2 title="How can I generate Xerces-C binaries which includes the
-               sample NetAccessor implementation using Libwww?">
 
-      <p>This sample implementation has only been minimally tested
-      only under Windows NT using Libwww 5.2.8. We have not stress
-      tested our implementation can cannot guarantee that there are no
-      memory leaks. The error reporting is also not adequate. Further,
-      it only handles HTTP style URL's. As you can see, this
-      implementation is only for illustrative purposes. Much more work
-      is required to have a robust cross-platform implementation. We
-      would welcome any volunteers who would contribute code to make
-      this happen on various platforms.</p>
+        <p>Unlike XMLCh, the  encoding
+               of wchar_t is platform dependent.  Sometimes it is utf-16
+               (AIX, Windows), sometimes ucs-4 (Solaris,
+               Linux), sometimes it is not based on Unicode at all
+               (HP/UX, AS/400, system 390).  </p>
 
-      <p>The software that you need are:</p>
-      <ul>
-        <li>You need the &XercesCName; source archive for Windows.</li>
-        <li>LibWWW 5.2.8. Win32 binaries are available at: <jump
-        href="http://www.idm.ru/libwww.htm">http://www.idm.ru/libwww.htm</jump>.
-        Source archives and other details on LibWWW are available at <jump
-        href="http://www.w3.org/Library/">http://www.w3.org/Library/</jump>.</li>
-      </ul>
+        <p>Some earlier releases of xerce-c defined XMLCh to be the
+           same type as wchar_t on most platforms, with the goal of making
+           it possible to pass XMLCh strings to library or system functions
+           that were expecting wchar_t paramters.  This approach has
+           been abandonded because of</p>
 
-      <p>All required changes in Xerces-C are restricted to the Project file
-      settings for the XercesLib. To simplify, we will make certain assumptions
-      about how LibWWW binaries (.lib) and header files are installed on your
-      machine.</p>
+           <ul>
+              <li>
+                 Portability problems with any code that assumes that
+                 the types of XMLCh and wchar_t are compatible
+              </li>
 
-     <ol>
+              <li>Excessive memory usage, especially in the DOM, on
+                  platforms with 32 bit wchar_t.
+              </li>
 
-       <li>First generate all the LibWWW binaries by using the project
-       file supplied. Create a top level (say) <code>\libWWW</code>
-       directory on the same disk drive where you installed the
-       Xerces-C sources.  Copy all the <code>.lib</code> files to
-       <code>\libWWW\lib</code> directory. Next, copy all the
-       <code>.dll</code> files to <code>\libWWW\bin</code> directory
-       and all the header (<code>*.h</code>) files to
-       <code>\libWWW\include</code> directory.</li>
-
-       <li>Next make the following changes to the Xerces-C lib project
-       settings. Invoke the project settings dialog box.</li>
-
-       <ol>
-         <li>In the 'C/C++ : Preprocessor : Preprocessor definitions' add
-         <code>XML_USE_NETACCESSOR_LIBWWW</code></li>
-
-         <li>In the 'C/C++ : Preprocessor : Additional include directories' add
-         <code>\libWWW\include</code>.</li>
-
-       </ol>
-
-       <li>Next, rather than listing all the 20 some LibWWW .lib files in the
-       link settings, add them as external files to the XercesLib project.
-       Right-Click on 'XercesLib files' and choose the 'Add Files to Project'
-       menu item. Next choose all the *.lib files in \libWWW\lib directory and
-       press 'ok'.</li>
-
-       <li>Next, create a new sub-folder in XercesLib:util folder, by
-       right-clicking on 'util' and choosing 'New Folder'. Call it 'libWWW'.</li>
-
-       <li>Add netaccessor files into this 'libWWW' folder again, by
-       right-clicking on 'libWWW' folder and choosing 'Add Files to
-       Folder'.  Choose the four files in
-       <code>&lt;XercesCRoot&gt;\src\util\NetAccessors\libWWW</code>
-       directory.  These files are: <code>BinURLInputStream.[ch]pp and
-       LibWWWNetAccessor.[ch]pp</code>.</li>
-
-       <li>Rebuild the Xerces-C library.</li>
-
-     </ol>
-
-     <p>Make sure you have <code>\libWWW\bin</code> in your
-     <code>PATH</code> environment variable, before you run the
-     samples and refer to a XML file containing HTTP URL's to remote
-     resources.</p>
+              <li>utf-16 encoded XMLCh is not always compatible with
+                  ucs-4 encoded wchar_t on Solaris and Linux.  The
+                  problem occurs with Unicode characters with values
+                  greater than 64k; in ucs-4 the value is stored as
+                  a single 32 bit quatity.  With utf-16, the value
+                  will be stored as a "surrogate pair" of two 16 bit
+                  values.  Even with XMLCh equated to wchar_t, xerces will
+                  still create the utf-16 encoded surrogate pairs, which
+                  are illegal in ucs-4 encoded wchar_t strings.
+               </li>
+           </ul>
 
     </s2>
+
+
 
     <anchor name="BuildSingleThreadedLibrary"/>
         <s2 title="How do I build a single-threaded library on Unix platforms?">
@@ -1289,12 +1200,10 @@ perl packageBinaries.pl -s \xerces-c-src_1_3_0 -o \temp\xerces-c-1_3_0-win32 -t 
         <p>If you have read this page, followed the instructions, and
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
-        solved this same problem before you, by checking the
-        <jump href="http://xml-archive.webweaving.org/xml-archive-xerces-c-dev/">
-        &XercesCProjectName; mailing list archives</jump>.</p>
+        solved this same problem before you, by checking the Apache XML
+        mailing list archives at <jump href="http://archive.covalent.net ">
+        http://archive.covalent.net</jump>.</p>
 
-        <p>If all else fails, you may ask for help by subscribing to the
-        <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.</p>
     </s2>
 
 </s1>
