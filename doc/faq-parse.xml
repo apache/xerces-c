@@ -351,7 +351,7 @@ catch (const XMLException&amp; toCatch) {
         <tr><td>ISO Latin Hebrew</td>             <td>ISO-8859-8</td></tr>
         <tr><td>ISO Latin 5</td>                  <td>ISO-8859-9</td></tr>
         <tr><td>EBCDIC US</td>                    <td>ebcdic-cp-us</td></tr>
-        <tr><td>EBCDIC with Euro symbol</td>      <td>ibm1140></td></tr>
+        <tr><td>EBCDIC with Euro symbol</td>      <td>ibm1140</td></tr>
         <tr><td>Chinese, PRC</td>                 <td>gb2312</td></tr>
         <tr><td>Chinese, Big5</td>                <td>Big5</td></tr>
         <tr><td>Cyrillic</td>                     <td>koi8-r</td></tr>
