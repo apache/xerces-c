@@ -1,3 +1,17 @@
+Jan 21, 2003 - [Bug 16277] Readme should make note of threaded library problems in BCB6 
+=====================================================================================
+There's another known problem with BCB6 to do with linking single-threaded
+applications to DLLs.  Specifically, DLLs are normally linked to the
+multithreaded runtime DLL (CC3260MT.dll); however, if an application is linked
+to the single-threaded DLL (CC3260.dll) and consequently attempts to free memory
+allocated by the MT DLL there will be an memory access violation.  In particular
+this causes problems when using the transcoding utilities that return allocated
+memory (which the sample programs use).
+
+Currently there appears to be no way of forcing an application to be linked
+against the MT version of the runtime, therefore it is recommended that the
+versions of utilities which accept pre-allocated buffers be used.
+
 Feb 7, 2002 - Xerces C and Borland C++Builder6
 ==============================================
 
