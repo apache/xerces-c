@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.26  2003/01/07 16:02:33  tng
+# need to properly copy and clean the message files in make install and clean.
+#
 # Revision 1.25  2002/12/20 22:10:20  tng
 # XML 1.1
 #
@@ -383,6 +386,7 @@ else
 endif
 
 ifeq (${MESSAGELOADER},ICU)
+   MSG_DIR=${XERCESCROOT}/msg
    MESSAGELOADERMODULE=ICU
 else
   ifeq (${MESSAGELOADER},MSGFILE)
@@ -604,12 +608,12 @@ messageloaders::
 ifeq (${MESSAGELOADER},ICONV)
 	mkdir -p ${MSG_DIR}
 	gencat ${MSG_DIR}/XercesMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XercesMessages_en_US.Msg
-
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)
-
 ifeq (${MESSAGELOADER},ICU)
+	mkdir -p ${MSG_DIR}
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)/resources
+	$(CP) MsgLoaders/$(MESSAGELOADERMODULE)/resources/*.res ${MSG_DIR}
 endif
 
 compilers::
@@ -644,6 +648,13 @@ ifeq (${TRANSCODERMODULE},Uniconv390)
 	${MAKE} -C Transcoders/ICU $@
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifeq (${MESSAGELOADER},ICU)
+	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)/resources $@
+	$(RM2) ${MSG_DIR}/*.res
+endif
+ifeq (${MESSAGELOADER},ICONV)
+	$(RM2) ${MSG_DIR}/XercesMessages_en_US.cat
+endif
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
 endif
@@ -663,6 +674,13 @@ ifeq (${TRANSCODERMODULE},Uniconv390)
 	${MAKE} -C Transcoders/ICU $@
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifeq (${MESSAGELOADER},ICU)
+	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)/resources $@
+	$(RM2) ${MSG_DIR}/*.res
+endif
+ifeq (${MESSAGELOADER},ICONV)
+	$(RM2) ${MSG_DIR}/XercesMessages_en_US.cat
+endif
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
 endif
@@ -679,6 +697,14 @@ ifeq (${TRANSCODERMODULE},Uniconv390)
 	${MAKE} -C Transcoders/ICU $@
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
+ifeq (${MESSAGELOADER},ICU)
+	-mkdir -p ${DESTDIR}${PREFIX}/msg
+	$(CP) ${MSG_DIR}/*.res ${DESTDIR}$(PREFIX)/msg
+endif
+ifeq (${MESSAGELOADER},ICONV)
+	-mkdir -p ${DESTDIR}${PREFIX}/msg
+	$(CP) ${MSG_DIR}/XercesMessages_en_US.cat ${DESTDIR}$(PREFIX)/msg
+endif
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
 endif
