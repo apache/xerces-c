@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/05/16 14:03:28  knoaman
+ * Pass memory manager to makeNewTranscoder.
+ *
  * Revision 1.10  2003/02/25 21:22:36  tng
  * Modify UnixHTTPURLInputStream for it to work on ebcdic platform.  Patch from Steve Dulin
  *
@@ -229,7 +232,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     char*               hostNameAsASCII = new char[transSize+1];
     ArrayJanitor<char>  janBuf2(hostNameAsASCII);
 
-    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize);
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, urlSource.getMemoryManager());
     trans->transcodeTo(hostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     transSize = XMLString::stringLen(path)+1;
