@@ -351,7 +351,8 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill
     void * retVal = *toFill;
     if (*toFill == toCompare)
       *toFill = (void *)newValue;
-    return
+
+    return retVal;
 #endif
 }
 
