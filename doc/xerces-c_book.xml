@@ -34,6 +34,7 @@
      <entry id="sax2print"   source="sax2print.xml"/>
      <entry id="idomcount"   source="idomcount.xml"/>
      <entry id="idomprint"   source="idomprint.xml"/>
+     <entry id="senumval"    source="senumval.xml"/>
   </container>
 
   <document id="schema"      label="Schema"       source="schema.xml"/>
