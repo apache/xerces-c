@@ -1576,7 +1576,7 @@ void XMLScanner::scanEndTag(bool& gotData)
 
     // Make sure that its the end of the element that we expect
     XMLElementDecl* tempElement = topElem->fThisElement;
-    if (fDoNamespaces) {
+    if (fDoNamespaces && fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
         if ((tempElement->getURI() != uriId) ||
             (XMLString::compareString(tempElement->getBaseName(), bbName.getRawBuffer())))
         {

@@ -1021,34 +1021,48 @@ void IDOMParser::endAttList
             {
                 if (fScanner->getDoNamespaces())
                 {
-                    // Namespaces is turned on...
-                    //   While scanning the DTD there is no binding defined from
-                    //   name space prefixes to name space URIs.
-                    //   But since there is error checking in AttrNSImpl ctor,
-                    //   if prefix exists, we still need to map it somehow
-
+                    // DOM Level 2 wants all namespace declaration attributes
+                    // to be bound to "http://www.w3.org/2000/xmlns/"
+                    // So as long as the XML parser doesn't do it, it needs to
+                    // done here.
                     const XMLCh* qualifiedName = attr->getFullName();
                     int index = IDDocumentImpl::indexofQualifiedName(qualifiedName);
 
+                    XMLBuffer buf;
+                    static const XMLCh XMLNS[] = {
+                        chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
+
                     if (index > 0) {
                         // there is prefix
+                        // map to XML URI for all cases except when prefix == "xmlns"
+                        XMLCh* prefix;
+                        XMLCh temp[1000];
 
-                        XMLBuffer localPart;
-                        XMLBuffer prefix;
-                        XMLBuffer uriText;
-                        int uriId = fScanner->resolveQName(qualifiedName, localPart, prefix, ElemStack::Mode_Attribute);
-                        fScanner->getURIText(uriId, uriText);
+                        if (index > 999)
+                            prefix = new XMLCh[index+1];
+                        else
+                            prefix = temp;
 
-                        insertAttr = (IDAttrImpl *) fDocument->createAttributeNS(
-                           uriText.getRawBuffer(),     // NameSpaceURI
-                           qualifiedName);   // qualified name
+                        XMLString::subString(prefix ,qualifiedName, 0, index);
+
+                        if (!XMLString::compareString(prefix,XMLNS))
+                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+                        else
+                            fScanner->getURIText(fScanner->getXMLNamespaceId(), buf);
+
+                        if (index > 999)
+                            delete prefix;
                     }
                     else {
-                        //   No prefix, just set all the URIs to be null.
-                        insertAttr = (IDAttrImpl *) fDocument->createAttributeNS(
-                            XMLUni::fgZeroLenString,                     // NameSpaceURI
-                            qualifiedName);   // qualified name
-                     }
+                        //   No prefix
+                        if (!XMLString::compareString(qualifiedName,XMLNS))
+                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+                    }
+
+                    insertAttr = (IDAttrImpl *) fDocument->createAttributeNS(
+                       buf.getRawBuffer(),     // NameSpaceURI
+                       qualifiedName);   // qualified name
+
                 }
                 else
                 {
