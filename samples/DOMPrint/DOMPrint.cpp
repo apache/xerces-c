@@ -176,6 +176,7 @@ static const XMLCh*             gMyEOLSequence         = 0;
 static bool                     gSplitCdataSections    = true;
 static bool                     gDiscardDefaultContent = true;
 static bool                     gUseFilter             = false;
+static bool                     gFormatPrettyPrint     = false;
 
 static XercesDOMParser::ValSchemes    gValScheme       = XercesDOMParser::Val_Auto;
 
@@ -203,6 +204,7 @@ void usage()
             "    -wscs=xxx   Enable/Disable split-cdata-sections.      Default on  \n"
             "    -wddc=xxx   Enable/Disable discard-default-content.   Default on  \n"
             "    -wflt=xxx   Enable/Disable filtering.                 Default off \n"
+            "    -wfpp=xxx   Enable/Disable format-pretty-print.       Default off \n"
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n\n"
             "The parser has intrinsic support for the following encodings:\n"
@@ -351,6 +353,21 @@ int main(int argC, char* argV[])
                 return 2;
             }
         }
+         else if (!strncmp(argV[parmInd], "-wfpp=", 6))
+        {
+            const char* const parm = &argV[parmInd][6];
+
+            if (!strcmp(parm, "on"))
+				gFormatPrettyPrint = true;
+			else if (!strcmp(parm, "off"))
+				gFormatPrettyPrint = false;
+            else
+            {
+                cerr << "Unknown -wfpp= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
+                return 2;
+            }
+        }
          else
         {
             cerr << "Unknown option '" << argV[parmInd]
@@ -461,7 +478,10 @@ int main(int argC, char* argV[])
 			if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent))
 				theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent);
 
-			//
+			if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint))
+				theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint);
+
+            //
 			// Plug in a format target to receive the resultant
 			// XML stream from the serializer.
             //

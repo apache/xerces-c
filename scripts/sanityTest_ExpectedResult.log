@@ -427,6 +427,7 @@ Options:
     -wscs=xxx   Enable/Disable split-cdata-sections.      Default on  
     -wddc=xxx   Enable/Disable discard-default-content.   Default on  
     -wflt=xxx   Enable/Disable filtering.                 Default off 
+    -wfpp=xxx   Enable/Disable format-pretty-print.       Default off 
     -?          Show this help.
 
   * = Default if not provided explicitly.
