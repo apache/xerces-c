@@ -57,6 +57,9 @@
 
 #
 # $Log$
+# Revision 1.2  2001/06/27 17:09:38  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.1  2000/02/10 18:08:28  abagchi
 # Initial checkin
 #
@@ -67,6 +70,7 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@

@@ -76,5 +76,5 @@ distclean:	clean
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(CPP_PUBHEADERS))
 
 install:
-	-mkdir -p $(PREFIX)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(CPP_PUBHEADERS) $(PREFIX)/$(MODULE)/$(SUBMODULE)
+	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(CPP_PUBHEADERS) $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2001/06/27 17:09:56  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.11  2001/05/15 21:59:32  knoaman
 # TraverseSchema: add attribute checking + some fixes + more error messages.
 # More attribute cheking to come.
@@ -97,6 +100,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
@@ -166,5 +170,5 @@ distclean::	clean
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(VALIDATORS_SCHEMA_CPP_PUBHEADERS))
 
 install::
-	-mkdir -p $(PREFIX)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(VALIDATORS_SCHEMA_CPP_PUBHEADERS) $(VALIDATORS_SCHEMA_C_FILES) $(PREFIX)/$(MODULE)/$(SUBMODULE)
+	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(VALIDATORS_SCHEMA_CPP_PUBHEADERS) $(VALIDATORS_SCHEMA_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)

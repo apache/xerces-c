@@ -59,6 +59,9 @@ cc=${CC}
 AC_SUBST(cc)
 
 AC_SUBST(prefix)
+prefix_include=${prefix}/include/xercesc
+AC_SUBST(prefix_include)
+
 AC_SUBST(osver)
 
 cxxflags=${CXXFLAGS}

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.10  2001/06/27 17:08:12  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.9  2000/04/04 21:10:09  abagchi
 # Added XMLFormatter
 #
@@ -100,6 +103,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
@@ -179,5 +183,5 @@ distclean::	clean
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(FRAMEWORK_CPP_PUBHEADERS))
 
 install::
-	-mkdir -p $(PREFIX)/$(MODULE)
-	$(CP) $(FRAMEWORK_CPP_PUBHEADERS) $(FRAMEWORK_C_FILES) $(PREFIX)/$(MODULE)
+	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
+	$(CP) $(FRAMEWORK_CPP_PUBHEADERS) $(FRAMEWORK_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)

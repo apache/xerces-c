@@ -63,6 +63,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
@@ -114,5 +115,5 @@ distclean::	clean
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(PARSERS_CPP_PUBHEADERS))
 
 install::
-	-mkdir -p $(PREFIX)/$(MODULE)
-	$(CP) $(PARSERS_CPP_PUBHEADERS) $(PARSERS_C_FILES) $(PREFIX)/$(MODULE)
+	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
+	$(CP) $(PARSERS_CPP_PUBHEADERS) $(PARSERS_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)

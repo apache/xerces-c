@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2001/06/27 17:08:55  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.1  2001/03/02 14:39:29  tng
 # Enabling libWWW NetAccessor support under UNIX. Tested with latest tarball of libWWW
 # (w3c-libwww-5.3.2) under RedHat Linux 6.1.  Added by Martin Kalen.
@@ -79,6 +82,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@

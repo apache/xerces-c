@@ -1327,6 +1327,9 @@ cc=${CC}
 
 
 
+prefix_include=${prefix}/include/xercesc
+
+
 
 
 cxxflags=${CXXFLAGS}
@@ -1556,6 +1559,7 @@ s%@host_os@%$host_os%g
 s%@platform@%$platform%g
 s%@cxx@%$cxx%g
 s%@cc@%$cc%g
+s%@prefix_include@%$prefix_include%g
 s%@osver@%$osver%g
 s%@cxxflags@%$cxxflags%g
 s%@cppflags@%$cppflags%g

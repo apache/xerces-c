@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2001/06/27 17:08:52  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.1  2000/03/20 23:48:51  rahulj
 # Added Socket based NetAccessor. This will enable one to
 # use HTTP URL's for system id's. Default build options do
@@ -72,6 +75,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@

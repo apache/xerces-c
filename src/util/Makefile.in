@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.39  2001/06/27 17:08:30  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.38  2001/06/11 15:15:45  knoaman
 # StringTokenizer renamed to XMLStringTokenizer.
 #
@@ -209,6 +212,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
@@ -482,8 +486,8 @@ distclean:: clean
 
 
 install::
-	-mkdir -p $(PREFIX)/$(MODULE)
-	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(PREFIX)/$(MODULE)
+	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
+	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(PREFIX_INCLUDE)/$(MODULE)
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.2  2001/06/27 17:09:41  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.1  2001/06/05 19:35:55  jberry
 # Add support for Mac OS X command line configuration and build.
 #
@@ -91,6 +94,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@

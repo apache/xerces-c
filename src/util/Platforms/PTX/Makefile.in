@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.2  2001/06/27 17:09:19  tng
+# [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
+#
 # Revision 1.1  2000/04/04 20:12:36  abagchi
 # Initial checkin
 #
@@ -65,6 +68,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+PREFIX_INCLUDE = @prefix_include@
 LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
