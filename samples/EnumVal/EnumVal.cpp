@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/05/31 18:50:42  rahulj
+ * Removed extraneous command line arguments.
+ *
  * Revision 1.7  2000/03/03 01:29:30  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -150,9 +153,24 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
 
 
 // ---------------------------------------------------------------------------
+//  Local helper methods
+// ---------------------------------------------------------------------------
+static void usage()
+{
+    cout << "\nUsage:\n"
+            "    EnumVal <XML file>\n\n"
+            "This program parses a file, then shows how to enumerate the\n"
+            "contents of the validator pools. Essentially, shows how one can\n"
+            "access the DTD information stored in internal data structures.\n\n"
+            "  * = Default if not provided explicitly\n"
+         << endl;
+}
+
+
+// ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-int main(int argc, char* args[])
+int main(int argC, char* argV[])
 {
     // Initialize the XML4C system
     try
@@ -164,39 +182,28 @@ int main(int argc, char* args[])
     {
          cerr   << "Error during initialization! Message:\n"
                 << StrX(toCatch.getMessage()) << endl;
+         XMLPlatformUtils::Terminate();
          return 1;
     }
 
+    // Check command line and extract arguments.
+    if (argC < 2)
+    {
+        usage();
+        XMLPlatformUtils::Terminate();
+        return 1;
+    }
+    
     // We only have one required parameter, which is the file to process
-    if (argc < 2)
+    if ((argC == 2) && !strcmp(argV[1], "-?"))
     {
         usage();
-        return -1;
+        XMLPlatformUtils::Terminate();
+        return 2;
     }
-    const char* xmlFile = args[1];
-    bool  doValidation = false;
-
-    // Check for some special cases values of the parameter
-    if (!strncmp(xmlFile, "-?", 2))
-    {
-        usage();
-        return 0;
-    }
-     else if (!strncmp(xmlFile, "-v", 2))
-    {
-        doValidation = true;
-        if (argc < 3)
-        {
-            usage();
-            return -1;
-        }
-        xmlFile = args[2];
-    }
-     else if (xmlFile[0] == '-')
-    {
-        usage();
-        return -1;
-    }
+    
+    const char*              xmlFile   = argV[1];
+    SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
 
     //
     //  Create a DTD validator to be used for our validation work. Then create
@@ -206,7 +213,7 @@ int main(int argc, char* args[])
     //
     DTDValidator* valToUse = new DTDValidator;
     SAXParser parser(valToUse);
-    parser.setDoValidation(doValidation);
+    parser.setValidationScheme(valScheme);
 
     //
     //  Get the starting time and kick off the parse of the indicated
@@ -222,7 +229,8 @@ int main(int argc, char* args[])
         cerr << "\nError during parsing: '" << xmlFile << "'\n"
              << "Exception message is:  \n"
              << StrX(e.getMessage()) << "\n" << endl;
-        return -1;
+        XMLPlatformUtils::Terminate();
+        return 3;
     }
 
     //
@@ -305,19 +313,6 @@ int main(int argc, char* args[])
     XMLPlatformUtils::Terminate();
 
     return 0;
-}
-
-
-// ---------------------------------------------------------------------------
-//  Local helper methods
-// ---------------------------------------------------------------------------
-static void usage()
-{
-    cout << "\nUsage:\n"
-         "    EnumVal [-v] <XML file>\n"
-         "    -v  Do a validating parse. Defaults to non-validating.\n"
-         "This program parses a file, then shows how to enumerate the"
-         "contents of the validator pools\n" << endl;
 }
 
 

@@ -75,6 +75,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.4  2000/05/31 18:53:15  rahulj
+ * Removed extraneous command line arguments.
+ *
  * Revision 1.3  2000/02/11 02:38:28  abagchi
  * Removed StrX::transcode
  *
@@ -103,13 +106,13 @@
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    Redirect [-v] <XML file>\n"
-         << "    -v  Invoke the Validating SAX Parser.\n\n"
-         << "This program installs an entity resolver, traps the call to\n"
-         << "the external DTD file and redirects it to another application\n"
-         << "specific file which contains the actual dtd.\n\n"
-         << "The program then counts and reports the number of elements and\n"
-         << "attributes in the given XML file.\n" << endl;
+            "    Redirect <XML file>\n\n"
+            "This program installs an entity resolver, traps the call to\n"
+            "the external DTD file and redirects it to another application\n"
+            "specific file which contains the actual dtd.\n\n"
+            "The program then counts and reports the number of elements and\n"
+            "attributes in the given XML file.\n"
+         << endl;
 }
 
 
@@ -127,6 +130,7 @@ int main(int argc, char* args[])
     {
          cerr << "Error during initialization! Message:\n"
               << StrX(toCatch.getMessage()) << endl;
+        XMLPlatformUtils::Terminate();
          return 1;
     }
 
@@ -134,40 +138,24 @@ int main(int argc, char* args[])
     if (argc < 2)
     {
         usage();
-        return -1;
+        XMLPlatformUtils::Terminate();
+        return 1;
     }
-    const char* xmlFile = args[1];
-    bool  doValidation = false;
+    const char*              xmlFile = args[1];
 
     // Check for some special cases values of the parameter
-    if (!strncmp(xmlFile, "-?", 2))
+    if (xmlFile[0] == '-')
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 0;
     }
-     else if (!strncmp(xmlFile, "-v", 2))
-    {
-        doValidation = true;
-        if (argc < 3)
-        {
-            usage();
-            return -1;
-        }
-        xmlFile = args[2];
-    }
-     else if (xmlFile[0] == '-')
-    {
-        usage();
-        return -1;
-    }
-
 
     //
     //  Create a SAX parser object. Then, according to what we were told on
     //  the command line, set it to validate or not.
     //
     SAXParser parser;
-    parser.setDoValidation(doValidation);
 
     //
     //  Create our SAX handler object and install it on the parser, as the
