@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/02/11 12:42:22  cargilld
+ * Fix for bug 25541.
+ *
  * Revision 1.15  2004/01/29 11:51:20  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -251,15 +254,20 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, fMemoryManager);
     trans->transcodeTo(hostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
-    transSize = XMLString::stringLen(path)+1;
-    char*               pathAsASCII = (char*) fMemoryManager->allocate
-    (
-        (transSize+1) * sizeof(char)
-    );//new char[transSize+1];
-    ArrayJanitor<char>     janBuf3(pathAsASCII, fMemoryManager);
-    trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    char*               pathAsASCII = 0;
+    ArrayJanitor<char>  janBuf3(pathAsASCII, fMemoryManager);
+    if (path)
+    {
+        transSize = XMLString::stringLen(path)+1;
+        pathAsASCII = (char*) fMemoryManager->allocate
+        (
+            (transSize+1) * sizeof(char)
+        );//new char[transSize+1];        
+        trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    }
 
     char*               fragmentAsASCII = 0;
+    ArrayJanitor<char>  janBuf4(fragmentAsASCII, fMemoryManager);
     if (fragment)
     {
         transSize = XMLString::stringLen(fragment)+1;
@@ -267,7 +275,6 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
-        ArrayJanitor<char>  janBuf4(fragmentAsASCII, fMemoryManager);
         trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
@@ -347,7 +354,10 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     // To do:  We should really support http 1.1.  This implementation
     //         is weak.
     strcpy(fBuffer, GET);
-    strcat(fBuffer, pathAsASCII);
+    if (pathAsASCII != 0)
+    {
+         strcat(fBuffer, pathAsASCII);
+    }
 
     if (queryAsASCII != 0)
     {		
