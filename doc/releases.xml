@@ -3,16 +3,200 @@
 
 <s1 title="Releases">
 
+<s2 title="Xerces-C Version 1.2.0: June 15, 2000">
+    <ul>
+
+        <li>DOM: reduced memory usage for elements with no attributes.</li>
+
+        <li>DOMString - add const to return type of <code>const XMLCh
+        *DOMString::rawBuffer()</code>.</li>
+
+        <li>Fix crash with Solaris optimized build.  Modified XMLURL.cpp to
+        dodge compiler code generation error.</li>
+
+        <li>Bug fix: DOM Attr Specified flag was incorrectly set when cloning or
+        importing attributes.</li>
+
+        <li>MSVC projects modified to produce separate debug and release
+        versions of Xerces lib and dll.</li>
+
+        <li>Bug fix: DOMPrint, SAXPrint produced garbage output on Solaris.
+        Solaris library problem.</li>
+
+        <li>Fixed incorrect error check for end of file in Win32 platfrom
+        utils.</li>
+
+        <li>DOMPrint enhancements.  Add options for specifying character
+        encoding of the output, better control over escaping of characters,
+        better handling of CDATA sections.  Default validation is now
+        'auto'.</li>
+
+        <li>XMLFormatter now escapes characters, as reqd., occuring midway in
+        strings.</li>
+
+        <li>Bug fix in implementation of
+        <code>DOM_Document::GetElementById()</code>.</li>
+
+        <li>Documentation, DTD for source xml files moved into xerces-c project,
+        sbk: prefixes removed, xml can now be validated locally.</li>
+
+        <li>Fixed 'fatal error' when 'reusing the validator'.</li>
+
+        <li>Changed <code>#include &lt;memory.h&gt;</code> to
+        <code>&lt;string.h&gt;</code> everywhere.</li>
+
+        <li>DOMTest: removed incorrectly failing entity tests.</li>
+
+        <li>Revised implementation of
+        <code>DOMDocument::getElementsById()</code>, removed memory leaks,
+        new test program for it.</li>
+
+        <li>Bug fix - A PE ref appearing at the start of a skipped conditional
+            section was incorrectly being processed rather than ignored.</li>
+
+        <li>Start using the socket based netaccessor by default on most Unix
+        platforms.</li>
+
+        <li>Update ICUTransService to work with latest revision of ICU which
+            provides a hard linked data DLL. i.e. icudata.dll will be loaded
+            when xerces-c is loaded.</li>
+
+        <li>Problem with progressive parsing. parseNext() would through an
+            exception when the document contains entities, either internal or
+            external.</li>
+
+        <li>Add missing validity checks for stand-alone documents, character
+        range and Well-formed parsed entities.</li>
+
+        <li>Fix: compilation problems on MSVC 5.</li>
+
+        <li>Fix: XMLReader defect.</li>
+
+        <li>Fix: problem with Windows filenames containing '\' in Japanese and
+        Korean encodings.</li>
+
+        <li>Memory Cleanup. XMLPlatformUtils::Terminate() deletes all lazily
+        allocated memory.</li>
+
+        <li>Fixed defect in progressive parsing 'parseNext()'.</li>
+
+        <li>Fixed Solaris build problems with static character constants.</li>
+
+        <li>Reduced memory usage for DOM Attributes.</li>
+
+        <li>New runConfigure options -P and -C.</li>
+
+        <li>Memory leaks in TransService.</li>
+
+        <li>DOM - storage requirements for nodes substantially reduced.</li>
+
+        <li>Added DOM XMLDecl node type; provides access to XML
+        declaration.</li>
+
+        <li>Added DOM access to internal DTD subset (DOM Level 2 feature).</li>
+
+        <li>API document generation changed to DOxygen from Doc++.</li>
+
+        <li>Full support for DOM_EntityReference, DOM_Entity and
+        DOM_DocumentType introduced.</li>
+
+        <li>Don't allow spaces before PI target.</li>
+
+        <li>Follow the SMP/E procedures for the OS/390 BATCH install.</li>
+
+        <li>Auto-validate mode. Validate only when a DTD is present.</li>
+
+        <li>If a SAX error handler is installed, then the resetErrors() event
+        handler should call the one on the installed SAX error handler.</li>
+
+        <li>Allow an empty DOCTYPE declaration, with just the root name.</li>
+
+        <li>Add low level support for transcoding XML output to different
+        character encodings.</li>
+
+        <li>DOM node memory footprint reduction.</li>
+
+        <li>Fixed hanging bug in character transcoding.</li>
+
+        <li>Enable installation of DTDHandler on SAX parser.</li>
+
+        <li>Support for PTX platform.</li>
+
+        <li>IRIX 6.5 port.</li>
+
+        <li>COM wrappers.</li>
+
+        <li>DOM_Document::GetElementsByTagId() added.</li>
+
+        <li>DOM: support for identifying &quot;ignorable white space&quot; text
+        nodes.</li>
+
+        <li>URL Net Accessor added.</li>
+
+        <li>Fix null pointer exception with some bad documents.</li>
+
+        <li>Initial support for two-way transcoding.</li>
+
+        <li>Intrinsic transcoding table generation utility added.</li>
+
+        <li>UNIX build: Now generates object files in platform-specific
+        directories.</li>
+
+        <li>Fix GCC build problem: Changed XML_GNUG to XML_GCC.</li>
+
+        <li>Fixed #54. Changed self-assignment to now use the parameter
+        value.</li>
+
+        <li>Fix bug # 19, add const keyword to API. As a result, update test
+        case.</li>
+
+        <li>DOM: 'specified' flag of attributes now set correctly.</li>
+
+        <li>Some fixes for content models that have multiple, trailing, empty PE
+            refs (for content model extension).</li>
+
+        <li>First cut for additions to Win32 xcode. Based very loosely on a
+            prototype from Eric Ulevik.</li>
+
+        <li>Fixed a bug in SimpleContentModel that allowed an &lt;a/&gt; to be
+        taken as valid for a content model of (a,b).</li>
+
+        <li>Added a scanReset()/parseReset() method to the scanner and parsers,
+        to allow for reset after early exit from a progressive parse. Added
+        calls to new Terminate() call to all of the samples. Improved
+        documentation in SAX and DOM parsers.</li>
+
+        <li>Change 'XML4C' to 'Xerces' in many places.</li>
+
+        <li>Add a cleanup method to XMLPlatformUtils.</li>
+
+        <li>Implement the Locator scheme for SAX.</li>
+
+        <li>Add a -n option to most of the samples, to enable namespaces.</li>
+
+        <li>Fix an error where XMLScanner::parseNext() was falling through on an
+        exception instead of return a failure.</li>
+
+        <li>Implement the specialized string loading for Win98, since
+        LoadStringW() doesn't work on 98 and makes the loaded error text from
+        the Win32 message loader come out junk.</li>
+
+        <li>Fix: error when two trailing entity references in a content model,
+        like: &lt;!ELEMENT foo (a|b|c|d|e %one;%two;)*&gt;</li>
+
+    </ul>
+</s2>
+
 <s2 title="Xerces-C Version 1.1.0: February 28, 2000">
         <ul>
         <li>Simplified platform support (removed need to support local standard output streams or to find the location of the parser DLL/SharedLib.)</li>
-				<li>Added support for the NetAccessor plug in abstraction, which allows the parser to support HTTP/FTP based data sources</li>
-				<li>Added EBCDIC-US and ISO-8859-1 as intrinsic encodings</li>
-				<li>Added more DOM Level II features</li>
-				<li>Support for ICU 1.4, which makes &XercesCName; Unicode 3.0 compliant when using ICU</li>
-				<li>New samples and tests (DOM test, programmatic DOM sample, thread test)</li>
-				<li>Added support for multiply nested entities using relative paths or URLs</li>
-				<li>Significant internal architecture improvements in the handling of encodings and transcoding services.</li>
+                <li>Added support for the NetAccessor plug in abstraction, which allows the parser to support HTTP/FTP based data sources</li>
+                <li>Added EBCDIC-US and ISO-8859-1 as intrinsic encodings</li>
+                <li>Added more DOM Level II features</li>
+                <li>Support for ICU 1.4, which makes &XercesCName; Unicode 3.0 compliant when using ICU</li>
+                <li>New samples and tests (DOM test, programmatic DOM sample, thread test)</li>
+                <li>Added support for multiply nested entities using relative paths or URLs</li>
+                <li>Significant internal architecture improvements in the handling of encodings and transcoding services.</li>
         </ul>
     </s2>
     <s2 title="Xerces-C Version 1.0.1: December 15, 1999">
