@@ -329,6 +329,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLFormatter.obj"
 	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
+	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -781,7 +782,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res"
+	"$(INTDIR)\Version.res" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj"
 
 "$(OUTDIR)\xerces-c_2_4_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -1087,6 +1089,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLFormatter.obj"
 	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
+	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -1540,7 +1543,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res"
+	"$(INTDIR)\Version.res" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj"
 
 "$(OUTDIR)\xerces-c_2_4_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -1846,6 +1850,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLFormatter.obj"
 	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
+	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -2299,7 +2304,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res"
+	"$(INTDIR)\Version.res" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj"
 
 "$(OUTDIR)\xerces-c_2_4_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -2604,6 +2610,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLFormatter.obj"
 	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
+	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -3057,7 +3064,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
-	"$(INTDIR)\Version.res"
+	"$(INTDIR)\Version.res" \
+	"$(INTDIR)\XMLIBM1047Transcoder.obj"
 
 "$(OUTDIR)\xerces-c_2_4_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -3648,6 +3656,12 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLException.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.cpp
 
 "$(INTDIR)\XMLFloat.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp
+
+"$(INTDIR)\XMLIBM1047Transcoder.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
