@@ -77,7 +77,7 @@
 // ---------------------------------------------------------------------------
 static void formatNode( const   ContentSpecNode* const      curNode
                         , const ContentSpecNode::NodeTypes  parentType
-                        , const XMLValidator&               validator
+                        , const Grammar&                    grammar
                         ,       XMLBuffer&                  bufToFill)
 {
     const ContentSpecNode* first = curNode->getFirst();
@@ -108,13 +108,13 @@ static void formatNode( const   ContentSpecNode* const      curNode
             if (tmpVal == XMLElementDecl::fgPCDataElemId)
                 bufToFill.append(XMLElementDecl::fgPCDataElemName);
             else
-                bufToFill.append(validator.getElemDecl(tmpVal)->getFullName());
+                bufToFill.append(grammar.getElemDecl(tmpVal)->getFullName());
             break;
 
         case ContentSpecNode::ZeroOrOne :
             if (doRepParens)
                 bufToFill.append(chOpenParen);
-            formatNode(first, curType, validator, bufToFill);
+            formatNode(first, curType, grammar, bufToFill);
             if (doRepParens)
                 bufToFill.append(chCloseParen);
             bufToFill.append(chQuestion);
@@ -123,7 +123,7 @@ static void formatNode( const   ContentSpecNode* const      curNode
         case ContentSpecNode::ZeroOrMore :
             if (doRepParens)
                 bufToFill.append(chOpenParen);
-            formatNode(first, curType, validator, bufToFill);
+            formatNode(first, curType, grammar, bufToFill);
             if (doRepParens)
                 bufToFill.append(chCloseParen);
             bufToFill.append(chAsterisk);
@@ -132,7 +132,7 @@ static void formatNode( const   ContentSpecNode* const      curNode
         case ContentSpecNode::OneOrMore :
             if (doRepParens)
                 bufToFill.append(chOpenParen);
-            formatNode(first, curType, validator, bufToFill);
+            formatNode(first, curType, grammar, bufToFill);
             if (doRepParens)
                 bufToFill.append(chCloseParen);
             bufToFill.append(chPlus);
@@ -141,9 +141,9 @@ static void formatNode( const   ContentSpecNode* const      curNode
         case ContentSpecNode::Choice :
             if (parentType != curType)
                 bufToFill.append(chOpenParen);
-            formatNode(first, curType, validator, bufToFill);
+            formatNode(first, curType, grammar, bufToFill);
             bufToFill.append(chPipe);
-            formatNode(second, curType, validator, bufToFill);
+            formatNode(second, curType, grammar, bufToFill);
             if (parentType != curType)
                 bufToFill.append(chCloseParen);
             break;
@@ -151,9 +151,9 @@ static void formatNode( const   ContentSpecNode* const      curNode
         case ContentSpecNode::Sequence :
             if (parentType != curType)
                 bufToFill.append(chOpenParen);
-            formatNode(first, curType, validator, bufToFill);
+            formatNode(first, curType, grammar, bufToFill);
             bufToFill.append(chComma);
-            formatNode(second, curType, validator, bufToFill);
+            formatNode(second, curType, grammar, bufToFill);
             if (parentType != curType)
                 bufToFill.append(chCloseParen);
             break;
@@ -164,7 +164,7 @@ static void formatNode( const   ContentSpecNode* const      curNode
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Miscellaneous
 // ---------------------------------------------------------------------------
-void ContentSpecNode::formatSpec(const  XMLValidator&   validator
+void ContentSpecNode::formatSpec(const  Grammar&   grammar
                                 ,       XMLBuffer&      bufToFill) const
 {
     // Clean out the buffer first
@@ -176,7 +176,7 @@ void ContentSpecNode::formatSpec(const  XMLValidator&   validator
     (
         this
         , UnknownType
-        , validator
+        , grammar
         , bufToFill
     );
     if (fType == ContentSpecNode::Leaf)

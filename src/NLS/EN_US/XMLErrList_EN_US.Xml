@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <!DOCTYPE MsgFile SYSTEM "../XMLErrList.Dtd">
 
-<!--  ===================================================== 
- A Message file is designed for a particular locale, which is 
- indicated in the locale attribute. 
+<!--  =====================================================
+ A Message file is designed for a particular locale, which is
+ indicated in the locale attribute.
  =======================================================  -->
 <MsgFile Locale="EN_US">
     <MsgDomain Domain="http://apache.org/xml/messages/XMLErrors">
@@ -153,11 +153,12 @@
             <Message Id="NoContentForRef" Text="Cannot have child content for an element declaration that has a ref attribute"/>
             <Message Id="IncorrectDefaultType" Text="Incorrect type for {0}'s default value: {1}"/>
             <Message Id="IllegalAttContent" Text="Illegal content {0} in attribute group"/>
-            <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/> 
+            <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/>
             <Message Id="DatatypeError" Text="Datatype error: {0}."/>
             <Message Id="TypeAlreadySet" Text="The type of the element has already been declared."/>
-            <Message Id="GenericError" Text="Schema error: {0}."/>
+            <Message Id="GenericError" Text="Schema error during parsing"/>
             <Message Id="UnexpectedError" Text="UnexpectedError"/>
+            <Message Id="BadSchemaLocation" Text="The schemaLocation attribute does not contain pairs of values."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
@@ -204,6 +205,9 @@
             <Message Id="PrecisionExceeded" Text="{0} has exceeded the precision Facet {1}"/>
             <Message Id="ScaleExceeded" Text="{0} has execeed the scale Facet {1}"/>
             <Message Id="NotFloat" Text="{0} is not a float."/>
+            <Message Id="SchemaRootError" Text="Can't get back Schema document's root element {0}."/>
+            <Message Id="WrongTargetNamespace" Text="Schema in {0} has a different target namespace from the one specified in the instance document {1}."/>
+
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -342,6 +346,7 @@
             <Message Id="Parser_Descape4" Text="Invalid Unicode code point"/>
             <Message Id="Parser_Descape5" Text="An anchor must not be here"/>
             <Message Id="Parser_Process1" Text="This expression is not supported in the current option setting"/>
+            <Message Id="Gen_NoSchemaValidator" Text="A schema was seen but the installed validator does not understand schema"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">

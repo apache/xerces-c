@@ -162,9 +162,10 @@ public :
       , TypeAlreadySet                     = 149
       , GenericError                       = 150
       , UnexpectedError                    = 151
-      , E_HighBounds                       = 152
-      , V_LowBounds                        = 153
-      , V_HighBounds                       = 154
+      , BadSchemaLocation                  = 152
+      , E_HighBounds                       = 153
+      , V_LowBounds                        = 154
+      , V_HighBounds                       = 155
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

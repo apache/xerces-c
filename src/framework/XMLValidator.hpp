@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.10  2001/03/21 21:56:03  tng
+  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+  *
   * Revision 1.9  2001/02/26 19:21:33  tng
   * Schema: add parameter prefix in findElem and findAttr.
   *
@@ -97,8 +100,6 @@
 #define XMLVALIDATOR_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/XMLEnumerator.hpp>
-#include <util/RefHashTableOf.hpp>
 #include <framework/XMLAttr.hpp>
 #include <framework/XMLValidityCodes.hpp>
 #include <framework/XMLRefInfo.hpp>
@@ -106,13 +107,11 @@
 class ReaderMgr;
 class XMLBuffer;
 class XMLBufferMgr;
-class XMLElementDecl;
-class XMLEntityDecl;
 class XMLEntityHandler;
 class XMLErrorReporter;
-class XMLNotationDecl;
 class XMLMsgLoader;
 class XMLScanner;
+class Grammar;
 
 
 /**
@@ -134,24 +133,6 @@ class XMLPARSER_EXPORT XMLValidator
 {
 public:
     // -----------------------------------------------------------------------
-    //  Class specific types
-    // -----------------------------------------------------------------------
-    enum Constants
-    {
-        Success     = -1
-        , BadParent = -2
-        , BadChild  = -3
-    };
-
-
-    enum LookupOpts
-    {
-        AddIfNotFound
-        , FailIfNotFound
-    };
-
-
-    // -----------------------------------------------------------------------
     //  Constructors are hidden, just the virtual destructor is exposed
     // -----------------------------------------------------------------------
 
@@ -169,127 +150,11 @@ public:
 
 
     // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-
-    /** @name Getter Methods */
-    //@{
-
-    /**
-      * When an attribute name has no prefix, unlike elements, it is not mapped
-      * to the global namespace. So, in order to have something to map it to
-      * for practical purposes, a id for an empty URL is created and used for
-      * such names.
-      *
-      * @return The URL pool id of the URL for an empty URL "".
-      */
-    unsigned int getEmptyNamespaceId() const;
-
-    /**
-      * When namespaces are enabled, any elements whose names have no prefix
-      * are mapped to a global namespace. This is the URL id for the URL
-      * to which those names are mapped. It has no official standard text,
-      * but the parser must use some id here.
-      *
-      * @return The URL pool id of the URL for the global namespace.
-      */
-    unsigned int getGlobalNamespaceId() const;
-
-    /**
-      * When a prefix is found that has not been mapped, an error is issued.
-      * However, if the parser has been instructed not to stop on the first
-      * fatal error, it needs to be able to continue. To do so, it will map
-      * that prefix tot his magic unknown namespace id.
-      *
-      * @return The URL pool id of the URL for the unknown prefix
-      *         namespace.
-      */
-    unsigned int getUnknownNamespaceId() const;
-
-    /**
-      * The prefix 'xml' is a magic prefix, defined by the XML spec and
-      * requiring no prior definition. This method returns the id for the
-      * intrinsically defined URL for this prefix.
-      *
-      * @return The URL pool id of the URL for the 'xml' prefix.
-      */
-    unsigned int getXMLNamespaceId() const;
-
-    /**
-      * The prefix 'xmlns' is a magic prefix, defined by the namespace spec
-      * and requiring no prior definition. This method returns the id for the
-      * intrinsically defined URL for this prefix.
-      *
-      * @return The URL pool id of the URL for the 'xmlns' prefix.
-      */
-    unsigned int getXMLNSNamespaceId() const;
-
-    //@}
-
-
-    // -----------------------------------------------------------------------
-    //  Setter methods
-    //
-    //  setScannerInfo() is called by the scanner to tell the validator
-    //  about the stuff it needs to have access to.
-    // -----------------------------------------------------------------------
-
-    /** @name Setter methods */
-    //@{
-
-    /**
-      * @param  owningScanner   This is a pointer to the scanner to which the
-      *                         validator belongs. The validator will often
-      *                         need to query state data from the scanner.
-      *
-      * @param  readerMgr       This is a pointer to the reader manager that is
-      *                         being used by the scanner.
-      *
-      * @param  bufMgr          This is the buffer manager of the scanner. This
-      *                         is provided as a convenience so that the validator
-      *                         doesn't have to create its own buffer manager
-      *                         during the parse process.
-      */
-    void setScannerInfo
-    (
-        XMLScanner* const           owningScanner
-        , ReaderMgr* const          readerMgr
-        , XMLBufferMgr* const       bufMgr
-    );
-
-    /**
-      * This method is called to set an error reporter on the validator via
-      * which it will report any errors it sees during parsing or validation.
-      * This is generally called by the owning scanner.
-      *
-      * @param  errorReporter   A pointer to the error reporter to use. This
-      *                         is not adopted, just referenced so the caller
-      *                         remains responsible for its cleanup, if any.
-      */
-    void setErrorReporter
-    (
-        XMLErrorReporter* const errorReporter
-    );
-
-    //@}
-
-
-    // -----------------------------------------------------------------------
     //  The virtual validator interface
     // -----------------------------------------------------------------------
 
     /** @name Virtual validator interface */
     //@{
-
-    /**
-      * The derived class should look for the passed URI (case sensitive) in
-      * its URI pool. If the URI does not exist, then it should be added to the
-      * pool. The new or existing pool id should be returned.
-      */
-    virtual int addOrFindNSId
-    (
-        const   XMLCh* const    uriText
-    ) = 0;
 
     /**
       * The derived class should look up its declaration of the passed element
@@ -343,160 +208,9 @@ public:
     )   const = 0;
 
     /**
-      * The derived class should look up an element in its element declaration
-      * pool and return a pointer to it. The name should be looked up either via
-      * the qName field (if namespaces are off) or via the uriID/baseName combo
-      * (if namespaces are on.)
-      *
-      * The options allow the caller to indicate how the validator should react
-      * if the element exists or not. If the element does not exist, the option
-      * can indicate that it should be faulted it. If it does not exist and
-      * faulting in is not requested, a null pointer should be returned. The
-      * wasAdded flag should be set if the declaration was faulted in, else it
-      * should be cleared.
+      * This method is called by the scanner after a Grammar is scanned.
       */
-    virtual const XMLElementDecl* findElemDecl
-    (
-        const   unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const XMLCh* const    qName
-        , const LookupOpts      options
-        ,       bool&           wasAdded
-    )   const = 0;
-
-    /*
-     *  This method is identical to the previous one, except that it is a non-
-     *  const version.
-     */
-    virtual XMLElementDecl* findElemDecl
-    (
-        const   unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const XMLCh* const    qName
-        , const LookupOpts      options
-        ,       bool&           wasAdded
-    ) = 0;
-
-    /**
-      * The derived class should look the passed entity declaration name in its
-      * entity pool and return a pointer to the declaration object. If the
-      * entity is not in the pool, it should return a null pointer.
-      *
-      * @param  entName     The name of the entity to look up. Entity names can
-      *                     not be namespace based, so its always just a single
-      *                     unqualified name.
-      *
-      * @param  isPE        Indicates whether the name represents a parameter
-      *                     entity or a general entity. The validator should
-      *                     look at the correct pool for the entity type.
-      */
-    virtual const XMLEntityDecl* findEntityDecl
-    (
-        const   XMLCh* const    entName
-        , const bool            isPE
-    )   const = 0;
-
-    /**
-      * This method is identical to the previous one, except that it is non-
-      * const.
-      *
-      * @param  entName     The name of the entity to look up. Entity names can
-      *                     not be namespace based, so its always just a single
-      *                     unqualified name.
-      *
-      * @param  isPE        Indicates whether the name represents a parameter
-      *                     entity or a general entity. The validator should
-      *                     look at the correct pool for the entity type.
-      */
-    virtual XMLEntityDecl* findEntityDecl
-    (
-        const   XMLCh* const    entName
-        , const bool            isPE
-    ) = 0;
-
-    /**
-      * The derived class should find the indicate element in its element
-      * declaration pool. If namespaces are on, then it should use the uriId
-      * and base name. Otherwise, it should use the qName. It should return
-      * the element decl pool id for the decl found. If the element is not
-      * not found, it should return the value XMLElementDecl::fgInvalidElemId;
-      */
-    virtual unsigned int findElemId
-    (
-        const   unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const XMLCh* const    qName
-    )   const = 0;
-
-    /**
-      * The derived class should look up the passed notation name in its
-      * notation decl pool. If the name is not found, it should return a null
-      * pointer. If it is found, it should return a pointer to the declaration
-      * object.
-      */
-    virtual const XMLNotationDecl* findNotationDecl
-    (
-        const   XMLCh* const    notName
-    )   const = 0;
-
-    /**
-      * This method is identical to the previous method except that it is non-
-      * const.
-      */
-    virtual XMLNotationDecl* findNotationDecl
-    (
-        const   XMLCh* const    notName
-    ) = 0;
-
-    /**
-      * The derived class should look up the passed namespace name (prefix) in
-      * its namespace name pool and return the id. If not found, it should
-      * return zero, which is never a valid pool id.
-      */
-    virtual unsigned int findNSId
-    (
-        const   XMLCh* const    nsName
-    )   const = 0;
-
-    /**
-      * The derived class should return the element from its element decl pool
-      * which has the indicated element id. Given that these ids are gotten from
-      * the validator itself, it should always be valid. If not, then a major
-      * internal error has occured.
-      */
-    virtual const XMLElementDecl* getElemDecl
-    (
-        const   unsigned int    elemId
-    )   const = 0;
-
-    /**
-      * This method is identical to the previous method, except that it is a
-      * non-const version.
-      */
-    virtual XMLElementDecl* getElemDecl
-    (
-        const   unsigned int    elemId
-    ) = 0;
-
-    /**
-      * The derived class should find the passed URI id in its URI pool and
-      * copy the text of that URI into the passed buffer. Since these ids are
-      * obtained from the validator itself, they should always be valid. If
-      * not, then a major internal error has occured.
-      */
-    virtual bool getURIText
-    (
-        const   unsigned int    uriId
-        ,       XMLBuffer&      uriBufToFill
-    )   const = 0;
-
-	virtual const XMLCh* getURIText
-	(
-	    const   unsigned int    uriId
-    )   const = 0;
+    virtual void preContentValidation(bool reuseGrammar) = 0;
 
     /**
       * This method is called by the scanner after the parse has completed. It
@@ -538,11 +252,17 @@ public:
         , const XMLCh* const                attrValue
     ) = 0;
 
+    /**
+      * Retrieve the Grammar used
+      */
+    virtual Grammar* getGrammar(const XMLCh* uri=0) =0;
+    virtual Grammar* getGrammar(const char* uri) =0;
+
+
     //@}
 
     // -----------------------------------------------------------------------
-    //  Virtual DTD handler interface. If handlesDTD() returns true, then
-    //  scanDTD() will be called when a DOCTYPE is seen.
+    //  Virtual DTD handler interface.
     // -----------------------------------------------------------------------
 
     /** @name Virtual DTD handler interface */
@@ -554,20 +274,63 @@ public:
       */
     virtual bool handlesDTD() const = 0;
 
+    // -----------------------------------------------------------------------
+    //  Virtual Schema handler interface.
+    // -----------------------------------------------------------------------
+
+    /** @name Virtual Schema handler interface */
+
     /**
-      * This method is called by the scanner when it is time for the validator
-      * to parse the DTD. At the time of this call, the parser has parsed up to
-      * the [ of the DOCTYPE line. This call should parse to the ]> that ends
-      * the DOCTYPE line, and any external subset referenced.
-      *
-      * @param  reuseValidator  Indicates whether the current state of the
-      *                         validator should be kept. If the DTD validator
-      *                         sees any internal subset, it should consider
-      *                         it an error for this to be true. Otherwise, it
-      *                         just ignores any external subset and returns
-      *                         with the state unchanged.
+      * This method allows the scanner to ask the validator if it handles
+      * Schema or not.
       */
-    virtual void scanDTD(const bool reuseValidator) = 0;
+    virtual bool handlesSchema() const = 0;
+
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    //
+    //  setScannerInfo() is called by the scanner to tell the validator
+    //  about the stuff it needs to have access to.
+    // -----------------------------------------------------------------------
+
+    /** @name Setter methods */
+    //@{
+
+    /**
+      * @param  owningScanner   This is a pointer to the scanner to which the
+      *                         validator belongs. The validator will often
+      *                         need to query state data from the scanner.
+      *
+      * @param  readerMgr       This is a pointer to the reader manager that is
+      *                         being used by the scanner.
+      *
+      * @param  bufMgr          This is the buffer manager of the scanner. This
+      *                         is provided as a convenience so that the validator
+      *                         doesn't have to create its own buffer manager
+      *                         during the parse process.
+      */
+    void setScannerInfo
+    (
+        XMLScanner* const           owningScanner
+        , ReaderMgr* const          readerMgr
+        , XMLBufferMgr* const       bufMgr
+    );
+
+    /**
+      * This method is called to set an error reporter on the validator via
+      * which it will report any errors it sees during parsing or validation.
+      * This is generally called by the owning scanner.
+      *
+      * @param  errorReporter   A pointer to the error reporter to use. This
+      *                         is not adopted, just referenced so the caller
+      *                         remains responsible for its cleanup, if any.
+      */
+    void setErrorReporter
+    (
+        XMLErrorReporter* const errorReporter
+    );
 
     //@}
 
@@ -638,19 +401,6 @@ protected :
     XMLScanner* getScanner();
 
 
-    // -----------------------------------------------------------------------
-    //  Protected methods
-    // -----------------------------------------------------------------------
-    void setBaseFields
-    (
-        const   unsigned int    emptyNamespaceId
-        , const unsigned int    globalNamespaceId
-        , const unsigned int    unknownNamespaceId
-        , const unsigned int    xmlNamespaceId
-        , const unsigned int    xmlNSNamespaceId
-    );
-
-
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented Constructors and Operators
@@ -662,71 +412,16 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fEmptyNamespaceId
-    //      This is the id of the empty namespace URI. This is a special one
-    //      because of the xmlns="" type of deal. We have to quickly sense
-    //      that its the empty namespace.
-    //
     //  fErrorReporter
     //      The error reporter we are to use, if any.
     //
-    //  fGlobalNamespaceId
-    //      This is the id of the namespace URI which is assigned to the
-    //      global namespace. Its for debug purposes only, since there is no
-    //      real global namespace URI. Its set by the derived class.
-    //
-    //  fUnknownNamespaceId
-    //      This is the id of the namespace URI which is assigned to the
-    //      global namespace. Its for debug purposes only, since there is no
-    //      real global namespace URI. Its set by the derived class.
-    //
-    //  fXMLNamespaceId
-    //  fXMLNSNamespaceId
-    //      These are the ids of the namespace URIs which are assigned to the
-    //      'xml' and 'xmlns' special prefixes. The former is officially
-    //      defined but the latter is not, so we just provide one for debug
-    //      purposes.
     // -----------------------------------------------------------------------
     XMLBufferMgr*       fBufMgr;
-    unsigned int        fEmptyNamespaceId;
     XMLErrorReporter*   fErrorReporter;
-    unsigned int        fGlobalNamespaceId;
     ReaderMgr*          fReaderMgr;
     XMLScanner*         fScanner;
-    unsigned int        fUnknownNamespaceId;
-    unsigned int        fXMLNamespaceId;
-    unsigned int        fXMLNSNamespaceId;
 
 };
-
-
-// ---------------------------------------------------------------------------
-//  XMLValidator: Getter methods
-// ---------------------------------------------------------------------------
-inline unsigned int XMLValidator::getEmptyNamespaceId() const
-{
-    return fEmptyNamespaceId;
-}
-
-inline unsigned int XMLValidator::getGlobalNamespaceId() const
-{
-    return fGlobalNamespaceId;
-}
-
-inline unsigned int XMLValidator::getUnknownNamespaceId() const
-{
-    return fUnknownNamespaceId;
-}
-
-inline unsigned int XMLValidator::getXMLNamespaceId() const
-{
-    return fXMLNamespaceId;
-}
-
-inline unsigned int XMLValidator::getXMLNSNamespaceId() const
-{
-    return fXMLNSNamespaceId;
-}
 
 
 // -----------------------------------------------------------------------
@@ -783,22 +478,5 @@ inline XMLScanner* XMLValidator::getScanner()
     return fScanner;
 }
 
-
-// ---------------------------------------------------------------------------
-//  XMLValidator: Protected methods
-// ---------------------------------------------------------------------------
-inline void
-XMLValidator::setBaseFields(const   unsigned int    emptyNamespaceId
-                            , const unsigned int    globalNamespaceId
-                            , const unsigned int    unknownNamespaceId
-                            , const unsigned int    xmlNamespaceId
-                            , const unsigned int    xmlNSNamespaceId)
-{
-    fEmptyNamespaceId   = emptyNamespaceId;
-    fGlobalNamespaceId  = globalNamespaceId;
-    fUnknownNamespaceId = unknownNamespaceId;
-    fXMLNamespaceId     = xmlNamespaceId;
-    fXMLNSNamespaceId   = xmlNSNamespaceId;
-}
 
 #endif

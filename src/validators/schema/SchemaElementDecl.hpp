@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/03/21 21:56:33  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.2  2001/03/21 19:30:17  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -135,6 +138,7 @@ public :
     )   const;
     virtual XMLAttDefList& getAttDefList() const;
     virtual const XMLCh* getBaseName() const;
+    virtual XMLCh* getBaseName() ;
     virtual const int getURI() const;
     virtual CharDataOpts getCharDataOpts() const;
     virtual const XMLCh* getFullName() const;
@@ -154,6 +158,7 @@ public :
     ModelTypes getModelType() const;
     DatatypeValidator* getDatatypeValidator() const;
     int getEnclosingScope() const;
+    int getDefinedScope() const;
 
 
     // -----------------------------------------------------------------------
@@ -166,16 +171,17 @@ public :
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setEnclosingScope(const int enclosingScope);
+    void setDefinedScope(const int definedScope);
 
 
 protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel(XMLValidator* pValidator=0) const;
+    virtual XMLContentModel* makeContentModel(const Grammar* grammar=0) const;
     virtual XMLCh* formatContentModel
     (
-        const   XMLValidator&   validator
+        const   Grammar&   grammar
     )   const;
 
 
@@ -183,7 +189,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel(XMLValidator* pValidator=0) const;
+    XMLContentModel* createChildModel(const Grammar* grammar=0) const;
     void faultInAttDefList() const;
 
 
@@ -219,6 +225,9 @@ private :
     //
     //  fEnclosingScope
     //      The enclosing scope where this element is declared.
+    //
+    //  fDefinedScope
+    //      The Complex Element that this element belongs to.
     // -----------------------------------------------------------------------
     RefHash2KeysTableOf<SchemaAttDef>*  fAttDefs;
     SchemaAttDefList*              fAttList;
@@ -227,6 +236,7 @@ private :
     ModelTypes                     fModelType;
     DatatypeValidator*             fDatatypeValidator;
     int                            fEnclosingScope;
+    int                            fDefinedScope;
 };
 
 // ---------------------------------------------------------------------------
@@ -275,6 +285,11 @@ inline int SchemaElementDecl::getEnclosingScope() const
     return fEnclosingScope;
 }
 
+inline int SchemaElementDecl::getDefinedScope() const
+{
+    return fDefinedScope;
+}
+
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Setter methods
 // ---------------------------------------------------------------------------
@@ -299,6 +314,11 @@ inline void SchemaElementDecl::setDatatypeValidator(DatatypeValidator* newDataty
 inline void SchemaElementDecl::setEnclosingScope(const int newEnclosingScope)
 {
     fEnclosingScope = newEnclosingScope;
+}
+
+inline void SchemaElementDecl::setDefinedScope(const int newDefinedScope)
+{
+    fDefinedScope = newDefinedScope;
 }
 
 #endif

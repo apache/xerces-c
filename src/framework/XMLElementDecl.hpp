@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/03/21 21:56:02  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.11  2001/03/21 19:29:29  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -105,8 +108,8 @@
 #include <framework/XMLAttDefList.hpp>
 #include <framework/XMLContentModel.hpp>
 
-class XMLValidator;
 class ContentSpecNode;
+class Grammar;
 
 /**
  *  This class defines the core information of an element declaration. Each
@@ -131,7 +134,7 @@ class XMLPARSER_EXPORT XMLElementDecl
     //
     //  CreateReasons
     //      This type is used to store how an element declaration got into
-    //      the validator's element pool. They are faulted in for various
+    //      the grammar's element pool. They are faulted in for various
     //      reasons.
     //
     //  LookupOpts
@@ -261,6 +264,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return A const pointer to the base name of the element decl.
       */
     virtual const XMLCh* getBaseName() const = 0;
+    virtual XMLCh* getBaseName() = 0;
 
     /** Get the URI id of this element type.
       *
@@ -355,14 +359,14 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return A const pointer to the element's content model, via the basic
       * abstract content model type.
       */
-    const XMLContentModel* getContentModel(XMLValidator* pValidator=0) const;
+    const XMLContentModel* getContentModel(const Grammar* grammar=0) const;
 
     /** Get a pointer to the abstract content model
       *
       * This method is identical to the previous one, except that it is non
       * const.
       */
-    XMLContentModel* getContentModel(XMLValidator* pValidator=0);
+    XMLContentModel* getContentModel(const Grammar* grammar=0);
 
     /** Get the create reason for this element type
       *
@@ -382,7 +386,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       * This method will return the element decl pool id of this element
       * declaration. This uniquely identifies this element type within the
       * parse event that it is declared within. This value is assigned by the
-      * validator whose decl pool this object belongs to.
+      * grammar whose decl pool this object belongs to.
       *
       * @return The element decl id of this element declaration.
       */
@@ -447,7 +451,7 @@ class XMLPARSER_EXPORT XMLElementDecl
     /** Set the element decl pool id for this element type
       *
       * This method will set the pool id of this element decl. This is called
-      * by the validator which created this object, and will provide this
+      * by the grammar which created this object, and will provide this
       * decl object with a unique id within the parse event that created it.
       */
     void setId(const unsigned int newId);
@@ -476,12 +480,12 @@ class XMLPARSER_EXPORT XMLElementDecl
       * or reformatting may occur. But, it will be a technically accurate
       * representation of the original content model.
       *
-      * The format depends upon the validator, since content models are
+      * The format depends upon the grammar, since content models are
       * expressed differently in different structural description languages.
       *
-      * @param  validator   The validator which owns this object, and which
-      *                     therefore has the information required to format
-      *                     the content model.
+      * @param  grammar   The grammar which owns this object, and which
+      *                   therefore has the information required to format
+      *                   the content model.
       *
       * @return A pointer to an internal buffer which contains the formatted
       *         content model. The caller does not own this buffer and should
@@ -489,7 +493,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       */
     const XMLCh* getFormattedContentModel
     (
-        const   XMLValidator&   validator
+        const   Grammar& grammar
     )   const;
 
     //@}
@@ -505,10 +509,10 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel(XMLValidator* pValidator=0) const = 0;
+    virtual XMLContentModel* makeContentModel(const Grammar* grammar=0) const = 0;
     virtual XMLCh* formatContentModel
     (
-        const   XMLValidator&   validator
+        const   Grammar&   grammar
     )   const = 0;
 
 
@@ -541,7 +545,7 @@ private :
     //
     //  fId
     //      The unique id of this element. This is created by the derived
-    //      class, or more accurately the validator that owns the objects
+    //      class, or more accurately the grammar that owns the objects
     //      of the derived types. But, since they all have to have them, we
     //      let them all store the id here. It is defaulted to have the
     //      value fgInvalidElem until explicitly set.
@@ -560,18 +564,18 @@ private :
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Getter methods
 // ---------------------------------------------------------------------------
-inline XMLContentModel* XMLElementDecl::getContentModel(XMLValidator* pValidator)
+inline XMLContentModel* XMLElementDecl::getContentModel(const Grammar* grammar)
 {
     if (!fContentModel)
-        fContentModel = makeContentModel(pValidator);
+        fContentModel = makeContentModel(grammar);
     return fContentModel;
 }
 
-inline const XMLContentModel* XMLElementDecl::getContentModel(XMLValidator* pValidator) const
+inline const XMLContentModel* XMLElementDecl::getContentModel(const Grammar* grammar) const
 {
     // Fault in the content model (which requires a cast off of const)
     if (!fContentModel)
-        ((XMLElementDecl*)this)->fContentModel = makeContentModel(pValidator);
+        ((XMLElementDecl*)this)->fContentModel = makeContentModel(grammar);
     return fContentModel;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/03/21 21:56:29  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.4  2001/03/21 19:30:02  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -142,14 +145,14 @@ public :
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-		, const XMLValidator   *pValidator = 0
+        , const Grammar*        grammar = 0
     ) const;
 
 	virtual int validateContentSpecial
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-		, const XMLValidator   *pValidator = 0
+        , const Grammar*        grammar = 0
     ) const;
 
     virtual ContentLeafNameTypeVector *getContentLeafNameTypeVector() const;

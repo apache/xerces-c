@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
- * $Id$
+/*
+ * $Log$
+ * Revision 1.1  2001/03/21 21:56:20  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  */
 
 
@@ -64,60 +67,72 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
-#include <framework/XMLElementDecl.hpp>
+#include <validators/DTD/DTDGrammar.hpp>
 
+//---------------------------------------------------------------------------
+//  DTDGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Public, static data
-// ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId  = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId   = 0xFFFFFFFF;
-const XMLCh         XMLElementDecl::fgPCDataElemName[] =
+DTDGrammar::DTDGrammar(NameIdPool<DTDEntityDecl>* entityDeclPool) :
+    fElemDeclPool(0)
+    , fEntityDeclPool(entityDeclPool)
+    , fNotationDeclPool(0)
 {
-        chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
-    ,   chLatin_T, chLatin_A, chNull
-};
+    //
+    //  Init all the pool members.
+    //
+    //  <TBD> Investigate what the optimum values would be for the various
+    //  pools.
+    //
+    fElemDeclPool = new NameIdPool<DTDElementDecl>(109);
+    fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
 
-
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Destructor
-// ---------------------------------------------------------------------------
-XMLElementDecl::~XMLElementDecl()
-{
-    delete fContentModel;
-    delete [] fFormattedModel;
+    //
+    //  Call our own reset method. This lets us have the pool setup stuff
+    //  done in just one place (because this stame setup stuff has to be
+    //  done every time we are reset.)
+    //
+    reset();
 }
 
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous
-// ---------------------------------------------------------------------------
-const XMLCh*
-XMLElementDecl::getFormattedContentModel(const Grammar& grammar) const
+DTDGrammar::~DTDGrammar()
 {
-    //
-    //  If its not already built, then call the protected virtual method
-    //  to allow the derived class to build it (since only it knows.)
-    //  Otherwise, just return the previously formatted methods.
-    //
-    //  Since we are faulting this in, within a const getter, we have to
-    //  cast off the const-ness.
-    //
-    if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel(grammar);
-
-    return fFormattedModel;
+    delete fElemDeclPool;
+    delete fNotationDeclPool;
 }
 
-
-// ---------------------------------------------------------------------------
-//  ElementDecl: Hidden constructors
-// ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl() :
-
-    fContentModel(0)
-    , fCreateReason(XMLElementDecl::NoReason)
-    , fFormattedModel(0)
-    , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement (false)
+// -----------------------------------------------------------------------
+//  Virtual methods
+// -----------------------------------------------------------------------
+XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+        ,       bool&           wasAdded )
 {
+    // See it it exists
+    DTDElementDecl* retVal = fElemDeclPool->getByKey(qName);
+
+    // if not, then add this in
+    if (!retVal)
+    {
+        retVal = new DTDElementDecl(qName, DTDElementDecl::Any);
+        const unsigned int elemId = fElemDeclPool->put(retVal);
+        retVal->setId(elemId);
+        wasAdded = true;
+    }
+     else
+    {
+        wasAdded = false;
+    }
+    return retVal;
+}
+
+void DTDGrammar::reset()
+{
+    //
+    //  We need to reset all of the pools.
+    //
+    fElemDeclPool->removeAll();
+    fNotationDeclPool->removeAll();
 }

@@ -104,25 +104,14 @@ fErrorHandler(0)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
-, fOldDocTypeHandler(0)
-, fValidator(valToAdopt)
 {
-
-    // Create the validator if one was not provided
-    if (!fValidator)
-        fValidator = new DTDValidator;
-
-    //If the user already registered the doctypehandler then chain it
-	fOldDocTypeHandler =  ((DTDValidator*)fValidator)->getDocTypeHandler();
-	
-	//register the new doctypehandler
-	((DTDValidator*)fValidator)->setDocTypeHandler(this);
     //
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
     //
-    fScanner = new XMLScanner(fValidator);
+    fScanner = new XMLScanner(valToAdopt);
     fScanner->setDocHandler(this);
+    fScanner->setDocTypeHandler(this);
 
     fNodeStack = new ValueStackOf<DOM_Node>(64);
     this->reset();
@@ -135,7 +124,6 @@ DOMParser::~DOMParser()
 {
     delete fNodeStack;
     delete fScanner;
-    delete fValidator;
 }
 
 
@@ -163,7 +151,7 @@ void DOMParser::reset()
 // ---------------------------------------------------------------------------
 const XMLValidator& DOMParser::getValidator() const
 {
-    return *fValidator;
+    return *fScanner->getValidator();
 }
 
 bool DOMParser::getDoNamespaces() const
@@ -205,25 +193,27 @@ void DOMParser::setDoNamespaces(const bool newState)
 void DOMParser::setErrorHandler(ErrorHandler* const handler)
 {
     fErrorHandler = handler;
-    if (fErrorHandler)
-    {
+    if (fErrorHandler) {
         fScanner->setErrorReporter(this);
-        fValidator->setErrorReporter(this);
+        fScanner->setErrorHandler(fErrorHandler);
     }
-    else
-    {
+    else {
         fScanner->setErrorReporter(0);
-        fValidator->setErrorReporter(0);
+        fScanner->setErrorHandler(0);
     }
 }
 
 void DOMParser::setEntityResolver(EntityResolver* const handler)
 {
     fEntityResolver = handler;
-    if (fEntityResolver)
+    if (fEntityResolver) {
         fScanner->setEntityHandler(this);
-    else
+        fScanner->setEntityResolver(fEntityResolver);
+    }
+    else {
         fScanner->setEntityHandler(0);
+        fScanner->setEntityResolver(0);
+    }
 }
 
 void DOMParser::setExitOnFirstFatalError(const bool newState)
@@ -247,11 +237,10 @@ void DOMParser::setSchemaValidation(const bool newState)
 }
 
 
-
 // ---------------------------------------------------------------------------
 //  DOMParser: Parsing methods
 // ---------------------------------------------------------------------------
-void DOMParser::parse(const InputSource& source, const bool reuseValidator)
+void DOMParser::parse(const InputSource& source, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -260,7 +249,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, reuseValidator);
+        fScanner->scanDocument(source, reuseGrammar);
         fParseInProgress = false;
     }
 
@@ -271,7 +260,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
     }
 }
 
-void DOMParser::parse(const XMLCh* const systemId, const bool reuseValidator)
+void DOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -280,7 +269,7 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseValidator)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseValidator);
+        fScanner->scanDocument(systemId, reuseGrammar);
         fParseInProgress = false;
     }
 
@@ -291,7 +280,7 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseValidator)
     }
 }
 
-void DOMParser::parse(const char* const systemId, const bool reuseValidator)
+void DOMParser::parse(const char* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -300,7 +289,7 @@ void DOMParser::parse(const char* const systemId, const bool reuseValidator)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseValidator);
+        fScanner->scanDocument(systemId, reuseGrammar);
         fParseInProgress = false;
     }
 
@@ -318,7 +307,7 @@ void DOMParser::parse(const char* const systemId, const bool reuseValidator)
 // ---------------------------------------------------------------------------
 bool DOMParser::parseFirst( const   XMLCh* const    systemId
                            ,       XMLPScanToken&  toFill
-                           , const bool            reuseValidator)
+                           , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -327,12 +316,12 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseValidator);
+    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
 bool DOMParser::parseFirst( const   char* const         systemId
                            ,       XMLPScanToken&      toFill
-                           , const bool                reuseValidator)
+                           , const bool                reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -341,12 +330,12 @@ bool DOMParser::parseFirst( const   char* const         systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseValidator);
+    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
 bool DOMParser::parseFirst( const   InputSource&    source
                            ,       XMLPScanToken&  toFill
-                           , const bool            reuseValidator)
+                           , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -355,7 +344,7 @@ bool DOMParser::parseFirst( const   InputSource&    source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, reuseValidator);
+    return fScanner->scanFirst(source, toFill, reuseGrammar);
 }
 
 bool DOMParser::parseNext(XMLPScanToken& token)
@@ -601,8 +590,8 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         XMLBuffer buf;
         DOMString namespaceURI = 0;
-        if (urlId != fValidator -> getGlobalNamespaceId()) {  //TagName has a prefix
-            fValidator -> getURIText(urlId, buf);   //get namespaceURI
+        if (urlId != fScanner->getGlobalNamespaceId()) {  //TagName has a prefix
+            fScanner->getURIText(urlId, buf);   //get namespaceURI
             namespaceURI = DOMString(buf.getRawBuffer());
         }
         elem = fDocument.createElementNS(namespaceURI, elemDecl.getFullName());
@@ -615,9 +604,9 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
             if (!XMLString::compareString(oneAttrib -> getName(), XMLNS))    //for xmlns=...
-                attrURIId = fValidator -> getXMLNSNamespaceId();
-            if (attrURIId != fValidator -> getEmptyNamespaceId()) {  //TagName has a prefix
-                fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
+                attrURIId = fScanner->getXMLNSNamespaceId();
+            if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
+                fScanner->getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = DOMString(buf.getRawBuffer());
             }
             AttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
@@ -759,11 +748,6 @@ void DOMParser::attDef
     , const bool                ignoring
 	)
 {	
-    if(fOldDocTypeHandler)
-    {
-        fOldDocTypeHandler->attDef(elemDecl,attDef, ignoring );
-    }
-
     if (fDocumentType->isIntSubsetReading())
     {
         DOMString attString;
@@ -877,10 +861,6 @@ void DOMParser::doctypeComment
     const   XMLCh* const    comment
 )
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->doctypeComment(comment);
-    }
     if (fDocumentType->isIntSubsetReading())
     {
         if (comment != 0)
@@ -906,18 +886,11 @@ void DOMParser::doctypeDecl
     , const bool            hasIntSubset
 )
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->doctypeDecl(elemDecl, publicId, systemId, hasIntSubset);
-	}
-
 	DOM_DocumentType dt;
 	dt = fDocument.getImplementation().createDocumentType(elemDecl.getFullName(), publicId, systemId);
     fDocumentType = (DocumentTypeImpl*)dt.fImpl;
 	((DocumentImpl*)fDocument.fImpl)->setDocumentType(fDocumentType);
 
-	populateDocumentType();                  //  Add the entities and notations to this DocType.
-	
 }
 
 void DOMParser::doctypePI
@@ -926,10 +899,6 @@ void DOMParser::doctypePI
     , const XMLCh* const    data
 )
 {
-    if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->doctypePI(target, data);
-	}
     if (fDocumentType->isIntSubsetReading())
 	{
 		//add these chars to internalSubset variable
@@ -954,11 +923,6 @@ void DOMParser::doctypeWhitespace
     , const unsigned int    length
 )
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->doctypeWhitespace(chars, length);
-	}
-
     if (fDocumentType->isIntSubsetReading())
 		fDocumentType->internalSubset.appendData(chars);
 }
@@ -969,10 +933,6 @@ void DOMParser::elementDecl
     , const bool            isIgnored
 )
 {
-    if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->elementDecl(decl, isIgnored);
-	}
     if (fDocumentType->isIntSubsetReading())
 	{
         DOMString elemDecl;
@@ -984,7 +944,7 @@ void DOMParser::elementDecl
         elemDecl.appendData(decl.getFullName());
 
         //get the ContentSpec information
-        const XMLCh* contentModel = decl.getFormattedContentModel(*fValidator);
+        const XMLCh* contentModel = decl.getFormattedContentModel(*fScanner->getCurrentGrammar());
         if (contentModel != 0) {
             elemDecl.appendData(chSpace);
             elemDecl.appendData(contentModel);
@@ -1000,11 +960,6 @@ void DOMParser::endAttList
     const   DTDElementDecl& elemDecl
 )
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->endAttList(elemDecl);
-	}
-
 	// this section sets up default attributes.
 	// default attribute nodes are stored in a NamedNodeMap DocumentTypeImpl::elements
 	// default attribute data attached to the document is used to conform to the
@@ -1052,18 +1007,10 @@ void DOMParser::endAttList
 void DOMParser::endIntSubset()
 {
 	fDocumentType->intSubsetReading = false;
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->endIntSubset();
-	}
 }
 
 void DOMParser::endExtSubset()
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->endExtSubset();
-	}
 }
 
 void DOMParser::entityDecl
@@ -1142,10 +1089,6 @@ void DOMParser::entityDecl
         fDocumentType->internalSubset.appendData(entityName);
     }
 
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->entityDecl(entityDecl, isPEDecl, isIgnored);
-	}
 }
 
 void DOMParser::resetDocType()
@@ -1165,10 +1108,6 @@ void DOMParser::notationDecl
 
 	fDocumentType->notations->setNamedItem( notation );
 
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->notationDecl(notDecl, isIgnored);
-	}
 }
 
 void DOMParser::startAttList
@@ -1176,27 +1115,15 @@ void DOMParser::startAttList
     const   DTDElementDecl& elemDecl
 )
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->startAttList(elemDecl);
-	}
 }
 
 void DOMParser::startIntSubset()
 {
 	fDocumentType->intSubsetReading = true;
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->startIntSubset();
-	}
 }
 
 void DOMParser::startExtSubset()
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->startExtSubset();
-	}
 }
 
 void DOMParser::TextDecl
@@ -1205,45 +1132,4 @@ void DOMParser::TextDecl
     , const XMLCh* const    encodingStr
 )
 {
-	if (fOldDocTypeHandler)
-	{
-		fOldDocTypeHandler->TextDecl(versionStr, encodingStr);
-	}
-}
-
-
-// to populate the entities in the documentType
-void DOMParser::populateDocumentType()
-{
-	if (fDocumentType == null)
-		return;
-	
-
-	NameIdPoolEnumerator<DTDEntityDecl> entityPoolEnum = ((DTDValidator*)fValidator)->getEntityEnumerator();
-
-	
-	while(entityPoolEnum.hasMoreElements()) {
-		
-		DTDEntityDecl* entityDecl = &entityPoolEnum.nextElement();
-		
-		EntityImpl* entity = ((DocumentImpl*)fDocument.fImpl)->createEntity(entityDecl->getName());
-		entity->setPublicId(entityDecl->getPublicId());
-		entity->setSystemId(entityDecl->getSystemId());
-		entity->setNotationName(entityDecl->getNotationName());
-
-		fDocumentType->entities->setNamedItem( entity );
-	}
-
-	NameIdPoolEnumerator<XMLNotationDecl> notationPoolEnum = ((DTDValidator*)fValidator)->getNotationEnumerator();
-	
-	while(notationPoolEnum.hasMoreElements()) {
-		XMLNotationDecl* notationDecl = &notationPoolEnum.nextElement();
-
-		NotationImpl* notation = ((DocumentImpl*)fDocument.fImpl)->createNotation(notationDecl->getName());
-		notation->setPublicId(notationDecl->getPublicId());
-		notation->setPublicId(notationDecl->getPublicId());
-
-		fDocumentType->notations->setNamedItem( notation );
-	}
-
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/03/21 21:56:19  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.7  2001/03/21 19:29:43  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -150,6 +153,7 @@ public :
     )   const;
     virtual XMLAttDefList& getAttDefList() const;
     virtual const XMLCh* getBaseName() const;
+    virtual XMLCh* getBaseName() ;
     virtual const int getURI() const;
     virtual CharDataOpts getCharDataOpts() const;
     virtual const XMLCh* getFullName() const;
@@ -164,7 +168,7 @@ public :
     //
     // This method allows objects of this type be placed into one of the
     // standard keyed collections. This method will return the full name of
-    // the element, which will vary depending upon the type of the validator.
+    // the element, which will vary depending upon the type of the grammar.
     // -----------------------------------------------------------------------
     const XMLCh* getKey() const;
 
@@ -188,10 +192,10 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel(XMLValidator* pValidator=0) const;
+    virtual XMLContentModel* makeContentModel(const Grammar* grammar=0) const;
     virtual XMLCh* formatContentModel
     (
-        const   XMLValidator&   validator
+        const   Grammar&   grammar
     )   const;
 
 
@@ -199,7 +203,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel(XMLValidator* pValidator=0) const;
+    XMLContentModel* createChildModel(const Grammar* grammar=0) const;
     void faultInAttDefList() const;
 
 

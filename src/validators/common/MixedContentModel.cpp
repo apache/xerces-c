@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/03/21 21:56:28  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.5  2001/03/21 19:29:57  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -102,10 +105,10 @@
 #include <string.h>
 #include <util/RuntimeException.hpp>
 #include <framework/XMLElementDecl.hpp>
-#include <framework/XMLValidator.hpp>
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/common/MixedContentModel.hpp>
 #include <validators/common/CMStateSet.hpp>
+#include <validators/common/Grammar.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -244,7 +247,7 @@ bool MixedContentModel::getIsAmbiguous() const
 int
 MixedContentModel::validateContent( const unsigned int*   childIds
                                   , const unsigned int    childCount
-								  , const XMLValidator   *pValidator) const
+                                  , const Grammar*        grammar) const
 {
 	// must match order
 	if (fOrdered) {
@@ -268,9 +271,9 @@ MixedContentModel::validateContent( const unsigned int*   childIds
 			}
 			else if (type == ContentSpecNode::Any) {
 
-				const XMLElementDecl* elemDecl = pValidator->getElemDecl(inChild);
+				const XMLElementDecl* elemDecl = grammar->getElemDecl(inChild);
 				const int uri = elemDecl->getURI();
-				const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);		
+				const XMLElementDecl* elemDecl2 = grammar->getElemDecl(curChild);		
 				if ((uri != -1 ) &&
 					(uri != elemDecl2->getURI()))
 				{
@@ -279,15 +282,15 @@ MixedContentModel::validateContent( const unsigned int*   childIds
 			}
 			else if (type == ContentSpecNode::Any_Local) {
 
-				const XMLElementDecl* elemDecl = pValidator->getElemDecl(inChild);
+				const XMLElementDecl* elemDecl = grammar->getElemDecl(inChild);
 				if (elemDecl->getURI() != -1) {
 					return outIndex;
 				}
 			}
 			else if (type == ContentSpecNode::Any_Other) {
 
-				const XMLElementDecl* elemDecl = pValidator->getElemDecl(inChild);
-				const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);
+				const XMLElementDecl* elemDecl = grammar->getElemDecl(inChild);
+				const XMLElementDecl* elemDecl2 = grammar->getElemDecl(curChild);
 				if (elemDecl->getURI() == elemDecl2->getURI()) {
 					return outIndex;
 				}
@@ -327,9 +330,9 @@ MixedContentModel::validateContent( const unsigned int*   childIds
 				}
 				else if (type == ContentSpecNode::Any) {
 
-				    const XMLElementDecl* elemDecl = pValidator->getElemDecl(fChildIds[inIndex]);
+				    const XMLElementDecl* elemDecl = grammar->getElemDecl(fChildIds[inIndex]);
 				    const int uri = elemDecl->getURI();
-				    const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);
+				    const XMLElementDecl* elemDecl2 = grammar->getElemDecl(curChild);
 
 					if (uri == -1 || uri == elemDecl2->getURI()) {
 						break;
@@ -337,32 +340,33 @@ MixedContentModel::validateContent( const unsigned int*   childIds
 				}
 				else if (type == ContentSpecNode::Any_Local) {
 
-				    const XMLElementDecl* elemDecl = pValidator->getElemDecl(fChildIds[inIndex]);
+				    const XMLElementDecl* elemDecl = grammar->getElemDecl(fChildIds[inIndex]);
 					if (elemDecl->getURI() == -1) {
 						break;
 					}
 				}
 				else if (type == ContentSpecNode::Any_Other) {
 
-				    const XMLElementDecl* elemDecl = pValidator->getElemDecl(fChildIds[inIndex]);
-				    const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);
+				    const XMLElementDecl* elemDecl = grammar->getElemDecl(fChildIds[inIndex]);
+				    const XMLElementDecl* elemDecl2 = grammar->getElemDecl(curChild);
 					if ( elemDecl->getURI() != elemDecl2->getURI()) {
 						break;
 					}
-				}
+            }
 				// REVISIT: What about checking for multiple ANY matches?
 				//          The content model ambiguity *could* be checked
 				//          by the caller before constructing the mixed
 				//          content model.
-			}
+         }
 				// We did not find this one, so the validation failed
-			if (inIndex == fCount)
-				return outIndex;
-		}
-	}
+         if (inIndex == fCount)
+             return outIndex;
+         }
+    }
 
-	// Everything seems to be in order, so return success
-    return XMLValidator::Success;
+	 // Everything seems to be in order, so return success
+    // success
+    return -1;
 
 }
 
@@ -415,9 +419,9 @@ MixedContentModel::buildChildList(  const   ContentSpecNode&             curNode
 
 int MixedContentModel::validateContentSpecial(  const   unsigned int*   childIds
                                                , const unsigned int    childCount
-								               , const XMLValidator   *pValidator) const
+                                               , const Grammar*        grammar) const
 {
-	return validateContent(childIds, childCount, pValidator);
+	return validateContent(childIds, childCount, grammar);
 };
 
 ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVector() const

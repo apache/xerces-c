@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/03/21 21:56:26  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.2  2001/02/27 14:48:49  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -90,7 +93,7 @@
 #include <util/XercesDefs.hpp>
 
 class XMLBuffer;
-class XMLValidator;
+class Grammar;
 
 
 class ContentSpecNode
@@ -101,7 +104,7 @@ public :
     // -----------------------------------------------------------------------
     enum NodeTypes
     {
-        Leaf
+        Leaf = 0
         , ZeroOrOne
         , ZeroOrMore
         , OneOrMore
@@ -109,13 +112,13 @@ public :
         , Sequence
         , Any
         , Any_Other
-        , Any_Local
-        , Any_Lax
-        , Any_Other_Lax
-        , Any_Local_Lax
-        , Any_Skip
-        , Any_Other_Skip
-        , Any_Local_Skip
+        , Any_Local = 8
+        , Any_Lax = 22
+        , Any_Other_Lax = 23
+        , Any_Local_Lax = 24
+        , Any_Skip = 38
+        , Any_Other_Skip = 39
+        , Any_Local_Skip = 40
 
         , UnknownType = -1
     };
@@ -150,6 +153,7 @@ public :
     bool isPCData() const;
     ContentSpecNode* orphanFirst();
     ContentSpecNode* orphanSecond();
+    int getURI() const;
 
 
     // -----------------------------------------------------------------------
@@ -159,6 +163,7 @@ public :
     void setFirst(ContentSpecNode* const toAdopt);
     void setSecond(ContentSpecNode* const toAdopt);
     void setType(const NodeTypes type);
+    void setURI(const int URIId);
 
 
     // -----------------------------------------------------------------------
@@ -166,7 +171,7 @@ public :
     // -----------------------------------------------------------------------
     void formatSpec
     (
-        const   XMLValidator&   validator
+        const   Grammar&        grammar
         ,       XMLBuffer&      bufToFill
     )   const;
 
@@ -193,15 +198,20 @@ private :
     //          Leaf = Neither valid
     //          ZeroOrOne, ZeroOrMore = First
     //          Choice, Sequence = First and Second
+    //          Any* = Neither valid
     //
     //  fType
     //      The type of node. This controls how many of the child node fields
     //      are used.
+    //
+    //  fURI
+    //      When type == Any* case, we need to store the URI id attribute
     // -----------------------------------------------------------------------
     unsigned int        fElemId;
     ContentSpecNode*    fFirst;
     ContentSpecNode*    fSecond;
     NodeTypes           fType;
+    int                 fURI;
 };
 
 
@@ -214,6 +224,7 @@ inline ContentSpecNode::ContentSpecNode() :
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
+    , fURI(-1)
 {
 }
 
@@ -224,6 +235,7 @@ ContentSpecNode::ContentSpecNode(const unsigned int elemId) :
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
+    , fURI(-1)
 {
 }
 
@@ -236,6 +248,7 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
     , fFirst(firstToAdopt)
     , fSecond(secondToAdopt)
     , fType(type)
+    , fURI(-1)
 {
 }
 
@@ -258,6 +271,7 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
         fSecond = 0;
 
     fType = toCopy.getType();
+    fURI = toCopy.getURI();
 }
 
 inline ContentSpecNode::~ContentSpecNode()
@@ -293,6 +307,7 @@ inline ContentSpecNode& ContentSpecNode::operator=(const ContentSpecNode& toAssi
         fSecond = 0;
 
     fType = toAssign.getType();
+    fURI = toAssign.getURI();
 
 	return *this;
 }
@@ -383,6 +398,11 @@ inline ContentSpecNode* ContentSpecNode::orphanSecond()
     return retNode;
 }
 
+inline int ContentSpecNode::getURI() const
+{
+    return fURI;
+}
+
 
 // ---------------------------------------------------------------------------
 //  ContentSpecType: Setter methods
@@ -407,6 +427,11 @@ inline void ContentSpecNode::setSecond(ContentSpecNode* const toAdopt)
 inline void ContentSpecNode::setType(const NodeTypes type)
 {
     fType = type;
+}
+
+inline void ContentSpecNode::setURI(const int URIId)
+{
+    fURI = URIId;
 }
 
 #endif

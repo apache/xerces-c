@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2001/03/21 21:56:22  tng
+# Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+#
 # Revision 1.7  2001/02/16 14:58:56  tng
 # Schema: Update Makefile, configure files, project files, and include path in
 # certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
@@ -112,6 +115,8 @@ VALIDATORS_DTD_CPP_PUBHEADERS = \
 	DTDAttDefList.hpp \
 	DTDElementDecl.hpp \
 	DTDEntityDecl.hpp \
+       DTDGrammar.hpp \
+       DTDScanner.hpp \
 	DTDValidator.hpp \
 	DocTypeHandler.hpp
 
@@ -123,8 +128,9 @@ VALIDATORS_DTD_CPP_OBJECTS = \
 	DTDAttDef.$(TO) \
 	DTDAttDefList.$(TO) \
 	DTDElementDecl.$(TO) \
-	DTDValidator.$(TO) \
-	DTDValidator2.$(TO)
+	DTDGrammar.$(TO) \
+	DTDScanner.$(TO) \
+	DTDValidator.$(TO)
 
 all::	includes $(VALIDATORS_DTD_CPP_OBJECTS)
 

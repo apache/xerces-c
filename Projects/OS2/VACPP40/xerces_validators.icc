@@ -5,13 +5,20 @@ group xerces_validators =
     BASE_DIR "\\src\\validators\\common\\ContentLeafNameTypeVector.cpp",
     BASE_DIR "\\src\\validators\\common\\ContentSpecNode.cpp",
     BASE_DIR "\\src\\validators\\common\\DFAContentModel.cpp",
+    BASE_DIR "\\src\\validators\\common\\GrammarResolver.cpp",
     BASE_DIR "\\src\\validators\\common\\MixedContentModel.cpp",
-    BASE_DIR "\\src\\validators\\common\\SimpleContentModel.cpp"
+    BASE_DIR "\\src\\validators\\common\\SimpleContentModel.cpp",
+    BASE_DIR "\\src\\validators\\datatype\\DatatypeValidator.cpp",
+    BASE_DIR "\\src\\validators\\datatype\\DatatypeValidatorFactory.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDAttDef.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDAttDefList.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDElementDecl.cpp",
+    BASE_DIR "\\src\\validators\\DTD\\DTDGrammar.cpp",
+    BASE_DIR "\\src\\validators\\DTD\\DTDScanner.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDValidator.cpp",
-    BASE_DIR "\\src\\validators\\DTD\\DTDValidator2.cpp",
-    BASE_DIR "\\src\\validators\\schema\\SchemaAttDef.cpp"
-    BASE_DIR "\\src\\validators\\schema\\SchemaAttDefList.cpp"
-    BASE_DIR "\\src\\validators\\schema\\SchemaElementDecl.cpp"
+    BASE_DIR "\\src\\validators\\schema\\SchemaAttDef.cpp",
+    BASE_DIR "\\src\\validators\\schema\\SchemaAttDefList.cpp",
+    BASE_DIR "\\src\\validators\\schema\\SchemaElementDecl.cpp",
+    BASE_DIR "\\src\\validators\\schema\\SchemaGrammar.cpp",
+    BASE_DIR "\\src\\validators\\schema\\SchemaSymbol.cpp",
+    BASE_DIR "\\src\\validators\\schema\\SchemaValidator.cpp"

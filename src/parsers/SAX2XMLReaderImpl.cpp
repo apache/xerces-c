@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/03/21 21:56:08  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.8  2001/02/15 15:56:29  tng
  * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
  * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
@@ -139,7 +142,6 @@
 #include <sax/SAXException.hpp>
 #include <internal/XMLScanner.hpp>
 #include <parsers/SAX2XMLReaderImpl.hpp>
-#include <validators/DTD/DTDValidator.hpp>
 #include <string.h>
 
 // SAX2 Core: http://xml.org/sax/features/validation
@@ -207,6 +209,42 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC[] = {
 		chLatin_m, chLatin_i, chLatin_c, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validation/reuse-grammar
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_f, chLatin_e, chLatin_a,
+		chLatin_t, chLatin_u, chLatin_r,
+		chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_v, chLatin_a, chLatin_l,
+		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
+		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
+		chLatin_r, chLatin_e, chLatin_u, chLatin_s, chLatin_e, chDash,
+      chLatin_g, chLatin_r, chLatin_a,	chLatin_m, chLatin_m,
+      chLatin_a, chLatin_r, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/schema
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_f, chLatin_e, chLatin_a,
+		chLatin_t, chLatin_u, chLatin_r,
+		chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_v, chLatin_a, chLatin_l,
+		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
+		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
+		chLatin_s, chLatin_c, chLatin_h, chLatin_e,
+		chLatin_m, chLatin_a, chNull
+};
+
+//deprecated
 //Xerces: http://apache.org/xml/features/validation/reuse-validator
 const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
 		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
@@ -227,43 +265,24 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
 		chLatin_o, chLatin_r, chNull
 };
 
-//Xerces: http://apache.org/xml/features/validation/schema
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
-		chLatin_s, chLatin_c, chLatin_h, chLatin_e,
-		chLatin_m, chLatin_a, chNull
-};
-
 SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     fDocHandler(0)
     , fDTDHandler(0)
     , fElemDepth(0)
     , fEntityResolver(0)
     , fErrorHandler(0)
-   , fLexicalHandler(0)
+    , fLexicalHandler(0)
     , fAdvDHCount(0)
     , fAdvDHList(0)
     , fAdvDHListSize(32)
     , fParseInProgress(false)
     , fScanner(0)
-    , fValidator(0)
 {
-    // Create the validator if one was not provided.
-    if (!fValidator)
-        fValidator = new DTDValidator;
-
-    // Create our scanner and tell it what validator to use
-    fScanner = new XMLScanner(fValidator);
+    //
+    //  Create a scanner and tell it what validator to use. Then set us
+    //  as the document event handler so we can fill the DOM document.
+    //
+    fScanner = new XMLScanner(0);
 
     // Create the initial advanced handler list array and zero it out
     fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
@@ -280,7 +299,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	fautoValidation = false;
 
 	// default: reuseValidator is off
-	freuseValidator = false;
+	fReuseGrammar = false;
 
 	// default: schema is on
 	setSchemaValidation(true);
@@ -294,10 +313,9 @@ SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
 {
     delete [] fAdvDHList;
     delete fScanner;
-    delete fValidator;
-	delete fPrefixes;
-	delete tempAttrVec;
-	delete prefixCounts ;
+    delete fPrefixes;
+    delete tempAttrVec;
+    delete prefixCounts ;
 }
 
 
@@ -306,9 +324,12 @@ SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
 // ---------------------------------------------------------------------------
 void SAX2XMLReaderImpl::setValidator(XMLValidator* valueToAdopt)
 {
-	if (fValidator)
-		delete fValidator;
-	fValidator = valueToAdopt;
+	fScanner->setValidator(valueToAdopt);
+}
+
+XMLValidator* SAX2XMLReaderImpl::getValidator() const
+{
+	return fScanner->getValidator();
 }
 
 // ---------------------------------------------------------------------------
@@ -340,17 +361,11 @@ void SAX2XMLReaderImpl::setContentHandler(ContentHandler* const handler)
 
 void SAX2XMLReaderImpl::setDTDHandler(DTDHandler* const handler)
 {
-    //
-    //  <TBD>
-    //  This gets tricky. We can only set this if its a DTD validator, but it
-    //  might not be. We'll have to think about this one once there is more
-    //  than a DTD validator available.
-    //
     fDTDHandler = handler;
     if (fDTDHandler)
-        ((DTDValidator*)fValidator)->setDocTypeHandler(this);
+        fScanner->setDocTypeHandler(this);
     else
-        ((DTDValidator*)fValidator)->setDocTypeHandler(0);
+        fScanner->setDocTypeHandler(0);
 }
 
 
@@ -358,19 +373,13 @@ void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler)
 {
     //
     //  Store the handler. Then either install or deinstall us as the
-    //  error reporter on the scanner and validator.
+    //  error reporter on the scanner.
     //
     fErrorHandler = handler;
     if (fErrorHandler)
-    {
         fScanner->setErrorReporter(this);
-        fValidator->setErrorReporter(this);
-    }
      else
-    {
         fScanner->setErrorReporter(0);
-        fValidator->setErrorReporter(0);
-    }
 }
 
 
@@ -398,7 +407,7 @@ void SAX2XMLReaderImpl::parse (const   InputSource&    source)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, freuseValidator);
+        fScanner->scanDocument(source, fReuseGrammar);
         fParseInProgress = false;
     }
 
@@ -418,7 +427,7 @@ void SAX2XMLReaderImpl::parse (const   XMLCh* const    systemId)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, freuseValidator);
+        fScanner->scanDocument(systemId, fReuseGrammar);
         fParseInProgress = false;
     }
 
@@ -438,7 +447,7 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, freuseValidator);
+        fScanner->scanDocument(systemId, fReuseGrammar);
         fParseInProgress = false;
     }
 
@@ -673,15 +682,15 @@ startElement(   const   XMLElementDecl&         elemDecl
 			}
 			prefixCounts->push(numPrefix) ;
 			if (!fnamespacePrefix)
-				fAttrList.setVector(tempAttrVec, tempAttrVec->size(), fScanner->getValidator());
+				fAttrList.setVector(tempAttrVec, tempAttrVec->size(), fScanner);
 			else
-                fAttrList.setVector(&attrList, attrCount, fScanner->getValidator());
+                fAttrList.setVector(&attrList, attrCount, fScanner);
 
 			// call startElement() with namespace declarations
 			XMLBufBid URIBufferBid ( &fStringBuffers ) ;
 			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
 
-			fScanner->getValidator()->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
+			fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
 			
 			fDocHandler->startElement(URIBuffer.getRawBuffer(),
 										elemDecl.getBaseName(),
@@ -690,7 +699,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 		}
 		else
 		{
-			fAttrList.setVector(&attrList, attrCount, fScanner->getValidator());
+			fAttrList.setVector(&attrList, attrCount, fScanner);
 			fDocHandler->startElement(XMLUni::fgZeroLenString,
 										elemDecl.getBaseName(),
 										elemDecl.getFullName(),
@@ -708,7 +717,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 				XMLBufBid URIBufferBid ( &fStringBuffers ) ;
 				XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
 
-				fScanner->getValidator()->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
+				fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
 			
 				fDocHandler->endElement(	URIBuffer.getRawBuffer(),
 											elemDecl.getBaseName(),
@@ -765,7 +774,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 			XMLBufBid URIBufferBid ( &fStringBuffers ) ;
 			XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
 
-			fScanner->getValidator()->getURIText(uriId, URIBuffer ) ;
+			fScanner->getURIText(uriId, URIBuffer ) ;
 			fDocHandler->endElement(	URIBuffer.getRawBuffer(),
 										elemDecl.getBaseName(),
 										elemDecl.getFullName() );
@@ -1051,10 +1060,9 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES) == 0)
 	{
 		setDoNamespaces(value);
-		return;
 	}
 
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
 	{
 		fValidation = value;
 		if (fValidation)
@@ -1064,17 +1072,15 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 				setValidationScheme(Val_Always);
 		else
 			setValidationScheme(Val_Never);
-		return;
 	}
 
 
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES) == 0)
 	{
 		fnamespacePrefix = value;
-		return;
 	}
 
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
 	{
 		fautoValidation = value;
 		// for auto validation, the sax2 core validation feature must also be enabled.
@@ -1085,40 +1091,45 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 				setValidationScheme(Val_Always);
 		else
 			setValidationScheme(Val_Never);
-		return;
 	}
 
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
 	{
-		freuseValidator = value;
-		return;
+		fReuseGrammar = value;
 	}
 
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR) == 0)
+	{
+		fReuseGrammar = value;
+	}
+
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
 	{
 		setSchemaValidation(value);
-		return;
 	}
 
-	throw SAXNotRecognizedException("Unknown Feature");
+   else
+       throw SAXNotRecognizedException("Unknown Feature");
 }
 
 bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 {
 	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES) == 0)
 		return getDoNamespaces();
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
 		return fValidation;
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES_PREFIXES) == 0)
 		return fnamespacePrefix;
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
 		return fautoValidation;
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
-        return freuseValidator;
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
+        return fReuseGrammar;
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR) == 0)
+        return fReuseGrammar;
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
         return getSchemaValidation();
-
-	throw SAXNotRecognizedException("Unknown Feature");
+   else
+       throw SAXNotRecognizedException("Unknown Feature");
 	return false;
 }
 

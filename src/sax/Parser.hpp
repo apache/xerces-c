@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/03/21 21:56:10  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.6  2000/03/02 19:54:35  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -115,7 +118,7 @@ class InputSource;
 
 #include <util/XercesDefs.hpp>
 
-class SAX_EXPORT Parser 
+class SAX_EXPORT Parser
 {
 public:
     /** @name Constructors and Destructor */
@@ -155,7 +158,7 @@ public:
     * @see HandlerBase#HandlerBase
     */
     virtual void setEntityResolver(EntityResolver* const resolver) = 0;
-     
+
   /**
     * Allow an application to register a DTD event handler.
     *
@@ -225,9 +228,9 @@ public:
     *
     * @param source The input source for the top-level of the
     *               XML document.
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
+    * @param reuseGrammar The flag indicating whether the existing Grammar
+    *                     should be reused or not for this parsing run.
+    *                     If true, there cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -241,7 +244,7 @@ public:
     virtual void parse
     (
         const   InputSource&    source
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     ) = 0;
 
   /**
@@ -257,9 +260,9 @@ public:
     * by the application before it is passed to the parser.
     *
     * @param systemId The system identifier (URI).
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
+    * @param reuseGrammar The flag indicating whether the existing Grammar
+    *                     should be reused or not for this parsing run.
+    *                     If true, there cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -269,7 +272,7 @@ public:
     virtual void parse
     (
         const   XMLCh* const    systemId
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     ) = 0;
 
   /**
@@ -285,9 +288,9 @@ public:
     * by the application before it is passed to the parser.
     *
     * @param systemId The system identifier (URI).
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
+    * @param reuseGrammar The flag indicating whether the existing Grammar
+    *                     should be reused or not for this parsing run.
+    *                     If true, there cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -297,7 +300,7 @@ public:
     virtual void parse
     (
         const   char* const     systemId
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     ) = 0;
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/03/21 21:56:08  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.15  2001/02/15 15:56:29  tng
  * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
  * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
@@ -134,7 +137,6 @@
 #include <sax/SAXParseException.hpp>
 #include <internal/XMLScanner.hpp>
 #include <parsers/SAXParser.hpp>
-#include <validators/DTD/DTDValidator.hpp>
 #include <string.h>
 
 
@@ -153,14 +155,9 @@ SAXParser::SAXParser(XMLValidator* const valToAdopt) :
     , fAdvDHListSize(32)
     , fParseInProgress(false)
     , fScanner(0)
-    , fValidator(valToAdopt)
 {
-    // Create the validator if one was not provided.
-    if (!fValidator)
-        fValidator = new DTDValidator;
-
     // Create our scanner and tell it what validator to use
-    fScanner = new XMLScanner(fValidator);
+    fScanner = new XMLScanner(valToAdopt);
 
     // Create the initial advanced handler list array and zero it out
     fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
@@ -172,7 +169,6 @@ SAXParser::~SAXParser()
 {
     delete [] fAdvDHList;
     delete fScanner;
-    delete fValidator;
 }
 
 
@@ -271,7 +267,7 @@ bool SAXParser::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
 // ---------------------------------------------------------------------------
 const XMLValidator& SAXParser::getValidator() const
 {
-    return *fValidator;
+    return *fScanner->getValidator();
 }
 
 
@@ -339,7 +335,7 @@ void SAXParser::setSchemaValidation(const bool newState)
 // ---------------------------------------------------------------------------
 //  SAXParser: Overrides of the SAX Parser interface
 // ---------------------------------------------------------------------------
-void SAXParser::parse(const InputSource& source, const bool reuseValidator)
+void SAXParser::parse(const InputSource& source, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -348,7 +344,7 @@ void SAXParser::parse(const InputSource& source, const bool reuseValidator)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, reuseValidator);
+        fScanner->scanDocument(source, reuseGrammar);
         fParseInProgress = false;
     }
 
@@ -359,7 +355,7 @@ void SAXParser::parse(const InputSource& source, const bool reuseValidator)
     }
 }
 
-void SAXParser::parse(const XMLCh* const systemId, const bool reuseValidator)
+void SAXParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -368,7 +364,7 @@ void SAXParser::parse(const XMLCh* const systemId, const bool reuseValidator)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseValidator);
+        fScanner->scanDocument(systemId, reuseGrammar);
         fParseInProgress = false;
     }
 
@@ -379,7 +375,7 @@ void SAXParser::parse(const XMLCh* const systemId, const bool reuseValidator)
     }
 }
 
-void SAXParser::parse(const char* const systemId, const bool reuseValidator)
+void SAXParser::parse(const char* const systemId, const bool reuseGrammar)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -388,7 +384,7 @@ void SAXParser::parse(const char* const systemId, const bool reuseValidator)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseValidator);
+        fScanner->scanDocument(systemId, reuseGrammar);
         fParseInProgress = false;
     }
 
@@ -425,17 +421,11 @@ void SAXParser::setDocumentHandler(DocumentHandler* const handler)
 
 void SAXParser::setDTDHandler(DTDHandler* const handler)
 {
-    //
-    //  <TBD>
-    //  This gets tricky. We can only set this if its a DTD validator, but it
-    //  might not be. We'll have to think about this one once there is more
-    //  than a DTD validator available.
-    //
     fDTDHandler = handler;
     if (fDTDHandler)
-        ((DTDValidator*)fValidator)->setDocTypeHandler(this);
+        fScanner->setDocTypeHandler(this);
     else
-        ((DTDValidator*)fValidator)->setDocTypeHandler(0);
+        fScanner->setDocTypeHandler(0);
 }
 
 
@@ -443,19 +433,13 @@ void SAXParser::setErrorHandler(ErrorHandler* const handler)
 {
     //
     //  Store the handler. Then either install or deinstall us as the
-    //  error reporter on the scanner and validator.
+    //  error reporter on the scanner.
     //
     fErrorHandler = handler;
     if (fErrorHandler)
-    {
         fScanner->setErrorReporter(this);
-        fValidator->setErrorReporter(this);
-    }
      else
-    {
         fScanner->setErrorReporter(0);
-        fValidator->setErrorReporter(0);
-    }
 }
 
 
@@ -475,7 +459,7 @@ void SAXParser::setEntityResolver(EntityResolver* const resolver)
 // ---------------------------------------------------------------------------
 bool SAXParser::parseFirst( const   XMLCh* const    systemId
                             ,       XMLPScanToken&  toFill
-                            , const bool            reuseValidator)
+                            , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -484,12 +468,12 @@ bool SAXParser::parseFirst( const   XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseValidator);
+    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
 bool SAXParser::parseFirst( const   char* const     systemId
                             ,       XMLPScanToken&  toFill
-                            , const bool            reuseValidator)
+                            , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -498,12 +482,12 @@ bool SAXParser::parseFirst( const   char* const     systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseValidator);
+    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
 }
 
 bool SAXParser::parseFirst( const   InputSource&    source
                             ,       XMLPScanToken&  toFill
-                            , const bool            reuseValidator)
+                            , const bool            reuseGrammar)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -512,7 +496,7 @@ bool SAXParser::parseFirst( const   InputSource&    source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, reuseValidator);
+    return fScanner->scanFirst(source, toFill, reuseGrammar);
 }
 
 bool SAXParser::parseNext(XMLPScanToken& token)

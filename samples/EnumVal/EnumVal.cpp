@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/03/21 21:55:57  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.9  2000/06/12 22:07:22  rahulj
  * Correctly rejects unsupported command line options.
  *
@@ -241,7 +244,8 @@ int main(int argC, char* argV[])
     //  and enumerate the elements, printing them as we go. For each element
     //  we get an enumerator for its attributes and print them also.
     //
-    NameIdPoolEnumerator<DTDElementDecl> elemEnum = valToUse->getElemEnumerator();
+	DTDGrammar* grammar = (DTDGrammar*) valToUse->getGrammar();
+    NameIdPoolEnumerator<DTDElementDecl> elemEnum = grammar->getElemEnumerator();
     if (elemEnum.hasMoreElements())
     {
         cout << "\nELEMENTS:\n----------------------------\n";
@@ -251,7 +255,7 @@ int main(int argC, char* argV[])
             cout << "  Name: " << StrX(curElem.getFullName()) << "\n";
 
             cout << "  Content Model: "
-                 << StrX(curElem.getFormattedContentModel(*valToUse))
+                 << StrX(curElem.getFormattedContentModel(*grammar))
                  << "\n";
 
             // Get an enumerator for this guy's attributes if any

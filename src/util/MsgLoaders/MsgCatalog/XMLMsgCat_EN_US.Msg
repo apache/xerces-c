@@ -146,8 +146,9 @@ $set 1
 147  Value of {0} is not an integer.
 148  Datatype error: {0}.
 149  The type of the element has already been declared.
-150  Schema error: {0}.
+150  Schema error during parsing
 151  UnexpectedError
+152  The schemaLocation attribute does not contain pairs of values.
 
 
 $set 2
@@ -193,6 +194,8 @@ $set 2
  41  {0} has exceeded the precision Facet {1}
  42  {0} has execeed the scale Facet {1}
  43  {0} is not a float.
+ 44  Can't get back Schema document's root element {0}.
+ 45  Schema in {0} has a different target namespace from the one specified in the instance document {1}.
 
 
 $set 3
@@ -330,5 +333,6 @@ $set 3
 133  Invalid Unicode code point
 134  An anchor must not be here
 135  This expression is not supported in the current option setting
+136  A schema was seen but the installed validator does not understand schema
 
 

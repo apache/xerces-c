@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/03/21 21:56:27  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.5  2001/03/21 19:29:51  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -103,7 +106,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/RuntimeException.hpp>
-#include <framework/XMLValidator.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <validators/common/CMAny.hpp>
 #include <validators/common/CMBinaryOp.hpp>
@@ -111,6 +113,7 @@
 #include <validators/common/CMUnaryOp.hpp>
 #include <validators/common/DFAContentModel.hpp>
 #include <validators/common/ContentSpecNode.hpp>
+#include <validators/common/Grammar.hpp>
 #include <util/RefHashTableOf.hpp>
 
 // ---------------------------------------------------------------------------
@@ -135,13 +138,13 @@ static const unsigned int   gEpsilonFakeId  = 0xFFFFFFF2;
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DFAContentModel::DFAContentModel(const XMLElementDecl& elemDecl,
-								 XMLValidator         *pValidator,
-								 bool                  dtd) :
+DFAContentModel::DFAContentModel(const XMLElementDecl& elemDecl
+                               , Grammar*        grammar
+                               , bool                  dtd) :
 
     fElemDecl(elemDecl)
     , fElemMap(0)
-	, fElemMapType(0)
+	 , fElemMapType(0)
     , fElemMapSize(0)
     , fEmptyOk(false)
     , fEOCPos(0)
@@ -153,9 +156,9 @@ DFAContentModel::DFAContentModel(const XMLElementDecl& elemDecl,
     , fSpecNode(0)
     , fTransTable(0)
     , fTransTableSize(0)
-	, fDTD(dtd)
-	, fLeafNameTypeVector(0)
-	, fValidator(pValidator)
+    , fDTD(dtd)
+    , fLeafNameTypeVector(0)
+    , fGrammar(grammar)
 {
     //
     //  Store away our content spec node. This is used all over the place
@@ -191,7 +194,7 @@ DFAContentModel::~DFAContentModel()
 int
 DFAContentModel::validateContent( const unsigned int*   childIds
                                   , const unsigned int    childCount
-								  , const XMLValidator   *pValidator) const
+                                  , const Grammar*        grammar) const
 {
     //
     //  If there are no children, then either we fail on the 0th element
@@ -200,8 +203,10 @@ DFAContentModel::validateContent( const unsigned int*   childIds
     //
     if (!childCount)
     {
-        if (fEmptyOk)
-            return XMLValidator::Success;
+        if (fEmptyOk) {
+            // success
+            return -1;
+        }
         return 0;
     }
 
@@ -223,49 +228,55 @@ DFAContentModel::validateContent( const unsigned int*   childIds
         for (; elemIndex < fElemMapSize; elemIndex++)
         {
 			if (fDTD)
-			{          
-				if (fElemMap[elemIndex] == curElem)
-             		break;
+			{
+				if (fElemMap[elemIndex] == curElem) {
+                nextState = fTransTable[curState][elemIndex];
+                if (nextState != gInvalidTrans)
+                    break;
+            }
 			}
 			else
 			{
 				ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
 
-                if (type == ContentSpecNode::Leaf) 
+                if (type == ContentSpecNode::Leaf)
 				{
-                    if (fElemMap[elemIndex]==curElem)
-                        break;
+                    if (fElemMap[elemIndex]==curElem) {
+                        nextState = fTransTable[curState][elemIndex];
+                        if (nextState != gInvalidTrans)
+                            break;
+                    }
                 }
                 else if (type == ContentSpecNode::Any)
 				{
-				     const XMLElementDecl* elemDecl = pValidator->getElemDecl(fElemMap[elemIndex]);
+				     const XMLElementDecl* elemDecl = grammar->getElemDecl(fElemMap[elemIndex]);
 				     const int uri = elemDecl->getURI();
-				     const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curElem);
+				     const XMLElementDecl* elemDecl2 = grammar->getElemDecl(curElem);
 					 if (uri == -1 || uri == elemDecl2->getURI())
 					 {
                          nextState = fTransTable[curState][elemIndex];
-                         if (nextState != gInvalidTrans) 
+                         if (nextState != gInvalidTrans)
                              break;
 					 }
                 }
                 else if (type == ContentSpecNode::Any_Local)
 				{
-				     const XMLElementDecl* elemDecl = pValidator->getElemDecl(fElemMap[elemIndex]);
+				     const XMLElementDecl* elemDecl = grammar->getElemDecl(fElemMap[elemIndex]);
 				     if (elemDecl->getURI() == -1)
 					 {
                          nextState = fTransTable[curState][elemIndex];
-                         if (nextState != gInvalidTrans) 
+                         if (nextState != gInvalidTrans)
                              break;
 					 }
 				}
-				else if (type == ContentSpecNode::Any_Other) 
+				else if (type == ContentSpecNode::Any_Other)
 				{
-				     const XMLElementDecl* elemDecl = pValidator->getElemDecl(fElemMap[elemIndex]);
-				     const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curElem);
+				     const XMLElementDecl* elemDecl = grammar->getElemDecl(fElemMap[elemIndex]);
+				     const XMLElementDecl* elemDecl2 = grammar->getElemDecl(curElem);
 					 if ( elemDecl->getURI() != elemDecl2->getURI())
 					 {
                          nextState = fTransTable[curState][elemIndex];
-                         if (nextState != gInvalidTrans) 
+                         if (nextState != gInvalidTrans)
                              break;
 					 }
                 }
@@ -273,15 +284,15 @@ DFAContentModel::validateContent( const unsigned int*   childIds
 			}
         }//for elemIndex
 
-        // If "nextState" is -1, we found a match, but the transition is invalid 
-        if (nextState == gInvalidTrans) 
+        // If "nextState" is -1, we found a match, but the transition is invalid
+        if (nextState == gInvalidTrans)
             return childIndex;
 
         // If we didn't find it, then obviously not valid
         if (elemIndex == fElemMapSize)
             return childIndex;
 
-        curState = nextState;                              
+        curState = nextState;
         nextState = 0;
 
     }//for childIndex
@@ -294,7 +305,8 @@ DFAContentModel::validateContent( const unsigned int*   childIds
     if (!fFinalStateFlags[curState])
         return childIndex;
 
-    return XMLValidator::Success;
+    //success
+    return -1;
 }
 
 
@@ -409,8 +421,8 @@ void DFAContentModel::buildDFA()
     for (unsigned int outIndex = 0; outIndex < fLeafCount; outIndex++)
     {
 
-        if ( (fLeafListType[outIndex] & 0x0f) != ContentSpecNode::Leaf ) 
-            if (fLeafNameTypeVector == 0) 
+        if ( (fLeafListType[outIndex] & 0x0f) != ContentSpecNode::Leaf )
+            if (fLeafNameTypeVector == 0)
                 fLeafNameTypeVector = new ContentLeafNameTypeVector();
 
         // Get the current leaf's element index
@@ -443,9 +455,9 @@ void DFAContentModel::buildDFA()
         fLeafNameTypeVector->setValues(fElemMap, fElemMapType, fElemMapSize);
     }
 
-	/*** 
-	* Optimization(Jan, 2001); We sort fLeafList according to 
-	* elemIndex which is *uniquely* associated to each leaf.  
+	/***
+	* Optimization(Jan, 2001); We sort fLeafList according to
+	* elemIndex which is *uniquely* associated to each leaf.
 	* We are *assuming* that each element appears in at least one leaf.
 	**/
     // don't forget to delete it
@@ -456,13 +468,13 @@ void DFAContentModel::buildDFA()
     for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
     {
         element = fElemMap[elemIndex];
-        for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++) 
+        for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
         {
             if (element == fLeafList[leafIndex]->getId())
                 fLeafSorter[fSortCount++] = leafIndex;
         }
         fLeafSorter[fSortCount++] = -1;
-	} 
+	}
 
     //
     //  Next lets create some arrays, some that that hold transient info
@@ -934,38 +946,38 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
          (curType == ContentSpecNode::Any_Other)  )
     {
 
-		// The following discussion apply to node of type 
+		// The following discussion apply to node of type
 		// Any, Any_Local, Any_Other only
 		//
         // In buildSyntaxTree(), we convert a node from ContentSpecNode to
         // a CMAny, and lost the ElementId (compared to CMLeaf).
         //
-        // Here, we need to create a CMLeaf node out of a CMAny node, we need 
+        // Here, we need to create a CMLeaf node out of a CMAny node, we need
 		// the ElementId.
         //
-		// There are two twys to overcome this, one is to add an elementId 
+		// There are two twys to overcome this, one is to add an elementId
 		// data member into CMAny and retain this info when we construct a
 		// CMAny out of ContentSpecNode.
 		// But when we create fElemMap from fLeafList, we will have
-		// multiple entries for nodes who share the same URI. This is contradict 
+		// multiple entries for nodes who share the same URI. This is contradict
 		// to XML4J.
 		//
-		// The second way, is to create a common pseudo elementDecl for nodes of 
+		// The second way, is to create a common pseudo elementDecl for nodes of
 		// the same URI, therefore, we won't have multiple entries problem.
 
         // create a pseudo elementDecl if necessary
 		// obtain the elementId
         bool wasAdded;
-        XMLElementDecl* elemDecl = fValidator->findElemDecl
-        ( static_cast<CMAny*>(nodeCur)->getURI()
+        XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
+        ( ((CMAny*)nodeCur)->getURI()
         , 0
         , 0
         , 0
-        , XMLValidator::AddIfNotFound
+        , 0
         , wasAdded
         );
 
-        fLeafList[newIndex] = new CMLeaf(elemDecl->getId(), static_cast<CMAny*>(nodeCur)->getPosition());
+        fLeafList[newIndex] = new CMLeaf(elemDecl->getId(), ((CMAny*)nodeCur)->getPosition());
         fLeafListType[newIndex] = curType;
         ++newIndex;
     }
@@ -975,8 +987,8 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getLeft(), newIndex);
         newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getRight(), newIndex);
     }
-    else if (curType == ContentSpecNode::ZeroOrMore || 
-	         curType == ContentSpecNode::ZeroOrOne  || 
+    else if (curType == ContentSpecNode::ZeroOrMore ||
+	         curType == ContentSpecNode::ZeroOrOne  ||
 			 curType == ContentSpecNode::OneOrMore)
     {
         newIndex = postTreeBuildInit(((CMUnaryOp*)nodeCur)->getChild(), newIndex);
@@ -1004,7 +1016,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
 int
 DFAContentModel::validateContentSpecial( const unsigned int*   childIds
                                   , const unsigned int    childCount
-								  , const XMLValidator   *pValidator) const
+                                  , const Grammar*        grammar) const
 {
 	return 0;
 };

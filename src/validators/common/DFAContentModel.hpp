@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/03/21 21:56:27  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.4  2001/03/21 19:29:55  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -120,8 +123,8 @@ public:
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     DFAContentModel(const XMLElementDecl&  elemDecl
-		           , XMLValidator         *pValidator = 0
-				   , bool                  dtd = true);
+                  , Grammar*         grammar =0
+                  , bool                   dtd = true);
     virtual ~DFAContentModel();
 
 
@@ -130,18 +133,18 @@ public:
     // -----------------------------------------------------------------------
     virtual bool getIsAmbiguous() const;
 
-	virtual int validateContent
+    virtual int validateContent
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-		, const XMLValidator   *pValidator = 0
+        , const Grammar*        grammar = 0
     ) const;
 
-	virtual int validateContentSpecial
+    virtual int validateContentSpecial
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-		, const XMLValidator   *pValidator = 0
+        , const Grammar*        grammar = 0
     ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
@@ -189,7 +192,7 @@ private :
     //      actual validation.
     //
 	//  fElemMapType
-    //      This is a map of whether the element map contains information 
+    //      This is a map of whether the element map contains information
     //      related to ANY models.
     //
     //  fEmptyOk
@@ -236,7 +239,7 @@ private :
     //      the actually leaf list array itself needs cleanup.
     //
 	//  fLeafListType
-    //      Array mapping ANY types to the leaf list. 
+    //      Array mapping ANY types to the leaf list.
 	//
     //  fSpecNode
     //      The content spec node for the element that this object represents
@@ -262,13 +265,13 @@ private :
     //  fDTD;
     //      Boolean to allow DTDs to validate even with namespace support.
     //
-	//  fValidator
-	//      instead of passing the validator pointer round, we save it here
-	//
+    //  fGrammar
+    //      A pointer to the Grammar
+    //
     // -----------------------------------------------------------------------
     const XMLElementDecl&   fElemDecl;
     unsigned int*           fElemMap;
-	ContentSpecNode::NodeTypes  *fElemMapType;
+    ContentSpecNode::NodeTypes  *fElemMapType;
     unsigned int            fElemMapSize;
     bool                    fEmptyOk;
     unsigned int            fEOCPos;
@@ -278,13 +281,13 @@ private :
     bool                    fIsAmbiguous;
     unsigned int            fLeafCount;
     CMLeaf**                fLeafList;
-	ContentSpecNode::NodeTypes  *fLeafListType;
+    ContentSpecNode::NodeTypes  *fLeafListType;
     const ContentSpecNode*  fSpecNode;
     unsigned int**          fTransTable;
     unsigned int            fTransTableSize;
     bool                    fDTD;
-	ContentLeafNameTypeVector *fLeafNameTypeVector;
-	XMLValidator           *fValidator;
+    ContentLeafNameTypeVector *fLeafNameTypeVector;
+    Grammar*                fGrammar;
 };
 
 

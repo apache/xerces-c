@@ -72,7 +72,6 @@
 #include <validators/DTD/DocTypeHandler.hpp>
 #include <dom/DOM_DocumentType.hpp>
 #include <validators/DTD/DTDElementDecl.hpp>
-#include <validators/DTD/DTDValidator.hpp>
 
 class EntityResolver;
 class ErrorHandler;
@@ -120,7 +119,7 @@ public :
       *
       * Constructor with an instance of validator class to use for
       * validation. If you don't provide a validator, a default one will
-      * be created for you.
+      * be created for you in the scanner.
       *
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
@@ -517,12 +516,12 @@ public :
       *
       * @param source A const reference to the InputSource object which
       *               points to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing
-      *                       validator should be reused or not for this
-      *                       parsing run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       * @see Parser#parse(InputSource)
       */
-    void parse(const InputSource& source, const bool reuseValidator = false);
+    void parse(const InputSource& source, const bool reuseGrammar = false);
 
     /** Parse via a file path or URL
       *
@@ -532,13 +531,13 @@ public :
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing
-      *                       validator should be reused or not for this
-      *                       parsing run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @see Parser#parse(XMLCh*)
       */
-    void parse(const XMLCh* const systemId, const bool reuseValidator = false);
+    void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
 
     /** Parse via a file path or URL (in the local code page)
       *
@@ -547,11 +546,11 @@ public :
       *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing
-      *                       validator should be reused or not for this
-      *                       parsing run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       */
-    void parse(const char* const systemId, const bool reuseValidator = false);
+    void parse(const char* const systemId, const bool reuseGrammar = false);
 
     /** Begin a progressive parse operation
       *
@@ -570,9 +569,9 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseValidator The flag indicating whether the existing
-      *                 validator should be reused or not for this parsing
-      *                 process.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing process.
+      *                     If true, there cannot be any internal subset.
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
       *         returns 'false' to indicate that the parser could not parse
@@ -586,7 +585,7 @@ public :
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -606,9 +605,9 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseValidator The flag indicating whether the existing
-      *                 validator should be reused or not for this parsing
-      *                 run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -623,7 +622,7 @@ public :
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -643,9 +642,9 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseValidator The flag indicating whether the existing
-      *                 validator should be reused or not for this parsing
-      *                 process.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing process.
+      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -660,7 +659,7 @@ public :
     (
         const   InputSource&    source
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     /** Continue a progressive parse operation
@@ -1107,7 +1106,10 @@ public :
       * @see #getDoValidation
       */
     void setDoValidation(const bool newState);
-    //doctypehandler interfaces
+
+    /**
+      * Deprecated doctypehandler interfaces
+      */
 	virtual void attDef
     (
         const   DTDElementDecl&     elemDecl
@@ -1233,9 +1235,6 @@ protected :
 
 
 private :
-    //local private function to populate the doctype data
-	virtual void populateDocumentType();
-
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -1272,12 +1271,6 @@ private :
     //      The scanner used for this parser. This is created during the
     //      constructor.
     //
-    //  fValidator
-    //      The validator that is installed. If none is provided, we will
-    //      create and install a DTD validator. We install this on the
-    //      scanner we create, which it will use to do validation. We set
-    //      ourself on it as the error reporter for validity errors.
-    //
     //  fWithinElement
     //      A flag to indicate that the parser is within at least one level
     //      of element processing.
@@ -1285,10 +1278,6 @@ private :
     //  fDocumentType
     //      Used to store and update the documentType variable information
     //      in fDocument
-    //
-    //  fOldDocTypeHandler
-    //      Used to chain the old documentType node if the user has set it
-    //      from outside
     //
     //  fToCreateXMLDecTypeNode
     //      A flag to create a DOM_XMLDecl node in the ODM tree if it exists
@@ -1305,10 +1294,8 @@ private :
     ValueStackOf<DOM_Node>* fNodeStack;
     bool                    fParseInProgress;
     XMLScanner*             fScanner;
-    XMLValidator*           fValidator;
     bool                    fWithinElement;
-    DocumentTypeImpl*		fDocumentType;
-	DocTypeHandler*			fOldDocTypeHandler;
+    DocumentTypeImpl*       fDocumentType;
     bool                    fToCreateXMLDeclTypeNode;
 };
 

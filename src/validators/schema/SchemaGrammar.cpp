@@ -54,70 +54,87 @@
  * <http://www.apache.org/>.
  */
 
-/**
- * $Id$
+/*
+ * $Log$
+ * Revision 1.1  2001/03/21 21:56:33  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  */
 
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <util/XMLUni.hpp>
-#include <framework/XMLElementDecl.hpp>
+#include <validators/schema/SchemaGrammar.hpp>
 
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Public, static data
+//  SchemaGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId  = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId   = 0xFFFFFFFF;
-const XMLCh         XMLElementDecl::fgPCDataElemName[] =
+SchemaGrammar::SchemaGrammar() :
+    fElemDeclPool(0)
+    , fNotationDeclPool(0)
+    , fTargetNamespace(0)
 {
-        chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
-    ,   chLatin_T, chLatin_A, chNull
-};
+    //
+    //  Init all the pool members.
+    //
+    //  <TBD> Investigate what the optimum values would be for the various
+    //  pools.
+    //
+    fElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109);
+    fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
 
-
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Destructor
-// ---------------------------------------------------------------------------
-XMLElementDecl::~XMLElementDecl()
-{
-    delete fContentModel;
-    delete [] fFormattedModel;
+    //
+    //  Call our own reset method. This lets us have the pool setup stuff
+    //  done in just one place (because this stame setup stuff has to be
+    //  done every time we are reset.)
+    //
+    reset();
 }
 
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous
-// ---------------------------------------------------------------------------
-const XMLCh*
-XMLElementDecl::getFormattedContentModel(const Grammar& grammar) const
+SchemaGrammar::~SchemaGrammar()
 {
-    //
-    //  If its not already built, then call the protected virtual method
-    //  to allow the derived class to build it (since only it knows.)
-    //  Otherwise, just return the previously formatted methods.
-    //
-    //  Since we are faulting this in, within a const getter, we have to
-    //  cast off the const-ness.
-    //
-    if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel(grammar);
-
-    return fFormattedModel;
+    delete fElemDeclPool;
+    delete fNotationDeclPool;
+    delete fTargetNamespace;
 }
 
-
-// ---------------------------------------------------------------------------
-//  ElementDecl: Hidden constructors
-// ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl() :
-
-    fContentModel(0)
-    , fCreateReason(XMLElementDecl::NoReason)
-    , fFormattedModel(0)
-    , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement (false)
+// -----------------------------------------------------------------------
+//  Virutal methods
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+//  Virtual methods
+// -----------------------------------------------------------------------
+XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+        ,       bool&           wasAdded )
 {
+    // See it it exists
+    SchemaElementDecl* retVal = fElemDeclPool->getByKey(baseName, uriId, scope);
+
+    // if not, then add this in
+    if (!retVal)
+    {
+        retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
+        const unsigned int elemId = fElemDeclPool->put((void*)baseName, uriId, scope, retVal);
+        retVal->setId(elemId);
+        wasAdded = true;
+    }
+     else
+    {
+        wasAdded = false;
+    }
+    return retVal;
+}
+
+void SchemaGrammar::reset()
+{
+    //
+    //  We need to reset all of the pools.
+    //
+    fElemDeclPool->removeAll();
+    fNotationDeclPool->removeAll();
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/03/21 21:56:11  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.3  2001/02/27 14:48:35  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -168,6 +171,57 @@ QName::QName(const QName& qname)
 //  QName: Getter methods
 // ---------------------------------------------------------------------------
 const XMLCh* QName::getRawName() const
+{
+    //
+    //  If there is no buffer, or if there is but we've not faulted in the
+    //  value yet, then we have to do that now.
+    //
+    if (!fRawName || !*fRawName)
+    {
+        //
+        //  Calculate the worst case size buffer we will need. We use the
+        //  current high water marks of the prefix and name buffers, so it
+        //  might be a little wasteful of memory but we don't have to do
+        //  string len operations on the two strings.
+        //
+        const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
+
+        //
+        //  If no buffer, or the current one is too small, then allocate one
+        //  and get rid of any old one.
+        //
+        if (!fRawName || (neededLen > fRawNameBufSz))
+        {
+            delete [] fRawName;
+
+            // We have to cast off the const'ness to do this
+            ((QName*)this)->fRawNameBufSz = neededLen;
+            ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
+
+            // Make sure its initially empty
+            *fRawName = 0;
+        }
+
+        //
+        //  If we have a prefix, then do the prefix:name version. Else, its
+        //  just the name.
+        //
+        if (*fPrefix)
+        {
+            const XMLCh colonStr[] = { chColon, chNull };
+            XMLString::copyString(fRawName, fPrefix);
+            XMLString::catString(fRawName, colonStr);
+            XMLString::catString(fRawName, fLocalPart);
+        }
+         else
+        {
+            XMLString::copyString(fRawName, fLocalPart);
+        }
+    }
+    return fRawName;
+}
+
+XMLCh* QName::getRawName()
 {
     //
     //  If there is no buffer, or if there is but we've not faulted in the

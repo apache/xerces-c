@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/03/21 21:56:09  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.11  2001/02/15 15:56:29  tng
  * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
  * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
@@ -408,13 +411,13 @@ public :
       *
       * @param source A const reference to the InputSource object which
       *               points to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing
-      *                       validator should be reused or not for this
-      *                       parsing run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @see Parser#parse(InputSource)
       */
-    virtual void parse(const InputSource& source, const bool reuseValidator = false);
+    virtual void parse(const InputSource& source, const bool reuseGrammar = false);
 
     /**
       * This method invokes the parsing process on the XML file specified by
@@ -422,13 +425,13 @@ public :
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing
-      *                       validator should be reused or not for this
-      *                       parsing run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @see Parser#parse(XMLCh*)
       */
-    virtual void parse(const XMLCh* const systemId, const bool reuseValidator = false);
+    virtual void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
 
     /**
       * This method invokes the parsing process on the XML file specified by
@@ -436,11 +439,11 @@ public :
       *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing
-      *                       validator should be reused or not for this
-      *                       parsing run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       */
-    virtual void parse(const char* const systemId, const bool reuseValidator = false);
+    virtual void parse(const char* const systemId, const bool reuseGrammar = false);
 
     /**
       * This method installs the user specified SAX Document Handler
@@ -516,10 +519,9 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseValidator The flag indicating whether the existing
-      *                 validator
-      *                 should be reused or not for this parsing
-      *                  run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -534,7 +536,7 @@ public :
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -554,9 +556,9 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consIstency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseValidator The flag indicating whether the existing
-      *                 validator should be reused or not for this parsing
-      *                       run.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -571,7 +573,7 @@ public :
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -591,9 +593,9 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseValidator The flag indicating whether the existing
-      *                 validator should be reused or not for this parsing
-      *                 process.
+      * @param reuseGrammar The flag indicating whether the existing Grammar
+      *                     should be reused or not for this parsing run.
+      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -608,7 +610,7 @@ public :
     (
         const   InputSource&    source
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     /** Continue a progressive parse operation
@@ -1371,11 +1373,6 @@ protected :
     //      The scanner being used by this parser. It is created internally
     //      during construction.
     //
-    //  fValidator
-    //      The validator that is installed. If none is provided, we will
-    //      create and install a DTD validator. We install this on the
-    //      scanner we create, which it will use to do validation. We set
-    //      ourself on it as the error reporter for validity errors.
     // -----------------------------------------------------------------------
     VecAttrListImpl         fAttrList;
     DocumentHandler*        fDocHandler;
@@ -1388,7 +1385,6 @@ protected :
     unsigned int            fAdvDHListSize;
     bool                    fParseInProgress;
     XMLScanner*             fScanner;
-    XMLValidator*           fValidator;
 };
 
 

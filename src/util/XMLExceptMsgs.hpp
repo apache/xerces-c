@@ -144,11 +144,12 @@ public :
       , Parser_Descape4                    = 133
       , Parser_Descape5                    = 134
       , Parser_Process1                    = 135
-      , E_HighBounds                       = 136
-      , W_LowBounds                        = 137
-      , W_HighBounds                       = 138
-      , V_LowBounds                        = 139
-      , V_HighBounds                       = 140
+      , Gen_NoSchemaValidator              = 136
+      , E_HighBounds                       = 137
+      , W_LowBounds                        = 138
+      , W_HighBounds                       = 139
+      , V_LowBounds                        = 140
+      , V_HighBounds                       = 141
     };
 
 };

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2001/03/21 21:56:33  tng
+# Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+#
 # Revision 1.2  2001/03/21 21:39:19  knoaman
 # Schema symbols and Datatype validator part I
 #
@@ -85,7 +88,9 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SchemaAttDef.hpp \
 	SchemaAttDefList.hpp \
 	SchemaElementDecl.hpp \
-	SchemaSymbols.hpp
+	SchemaGrammar.hpp \
+	SchemaSymbols.hpp \
+	SchemaValidator.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
 
@@ -95,7 +100,9 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SchemaAttDef.$(TO) \
 	SchemaAttDefList.$(TO) \
 	SchemaElementDecl.$(TO) \
-	SchemaSymbols.$(TO)
+	SchemaGrammar.$(TO) \
+	SchemaSymbols.$(TO) \
+	SchemaValidator.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
 

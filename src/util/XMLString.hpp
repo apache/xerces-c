@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/03/21 21:56:13  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.16  2001/03/02 20:52:46  knoaman
  * Schema: Regular expression - misc. updates for error messages,
  * and additions of new functions to XMLString class.
@@ -152,6 +155,7 @@
 #define XMLSTRING_HPP
 
 #include <util/XercesDefs.hpp>
+#include <util/RefVectorOf.hpp>
 
 class XMLLCPTranscoder;
 
@@ -385,8 +389,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareIString
     (
@@ -401,8 +405,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareIString
     (
@@ -421,8 +425,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareNString
     (
@@ -441,8 +445,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareNString
     (
@@ -462,8 +466,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareNIString
     (
@@ -483,8 +487,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareNIString
     (
@@ -502,8 +506,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareString
     (
@@ -519,8 +523,8 @@ public:
       * @return The return value indicates the relation of <code>str1</code> to
       * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
-      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
-      *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
+      *  Equal to 0 means <code>str1</code> is identical to <code>str2</code>
+      *  Greater than 0 means <code>str1</code> is more than <code>str2</code>
       */
     static int compareString
     (
@@ -528,7 +532,7 @@ public:
         , const XMLCh* const    str2
     );
 
-	/** Lexicographically compares <code>str1</code> and <code>str2</code> 
+	/** Lexicographically compares <code>str1</code> and <code>str2</code>
 	  * regions and returns true if they are equal, otherwise false.
 	  *
       * A substring of <code>str1</code> is compared to a substring of
@@ -550,9 +554,9 @@ public:
       * @param str2 Null-terminated string to compare
 	  * @param offset2 Starting offset of str2
 	  * @param charsCount The number of characters to compare
-      * @return true if the specified subregion of <code>str1</code> exactly 
-	  *  matches the specified subregion of <code>str2></code>; false 
-	  *  otherwise. 
+      * @return true if the specified subregion of <code>str1</code> exactly
+	  *  matches the specified subregion of <code>str2></code>; false
+	  *  otherwise.
       */
     static bool regionMatches
     (
@@ -563,8 +567,8 @@ public:
 		, const unsigned int	charCount
     );
 
-	/** Lexicographically compares <code>str1</code> and <code>str2</code> 
-	  * regions without regard to case and returns true if they are equal, 
+	/** Lexicographically compares <code>str1</code> and <code>str2</code>
+	  * regions without regard to case and returns true if they are equal,
 	  * otherwise false.
 	  *
       * A substring of <code>str1</code> is compared to a substring of
@@ -586,9 +590,9 @@ public:
       * @param str2 Null-terminated string to compare
 	  * @param offset2 Starting offset of str2
 	  * @param charsCount The number of characters to compare
-      * @return true if the specified subregion of <code>str1</code> exactly 
-	  *  matches the specified subregion of <code>str2></code>; false 
-	  *  otherwise. 
+      * @return true if the specified subregion of <code>str1</code> exactly
+	  *  matches the specified subregion of <code>str2></code>; false
+	  *  otherwise.
       */
     static bool regionIMatches
     (
@@ -828,7 +832,7 @@ public:
 	    /** @name Substring function */
     //@{
     /** Create a substring of a givend string. The substring begins at the
-      * specified beginIndex and extends to the character at index 
+      * specified beginIndex and extends to the character at index
       * endIndex - 1.
       * @param targetStr The string to copy the chars to
       * @param srcStr The string to copy the chars from
@@ -840,11 +844,11 @@ public:
                 char* const    targetStr
         , const char* const    srcStr
         , const int            startIndex
-        , const int            endIndex 
+        , const int            endIndex
     );
 
     /** Create a substring of a givend string. The substring begins at the
-      * specified beginIndex and extends to the character at index 
+      * specified beginIndex and extends to the character at index
       * endIndex - 1.
       * @param targetStr The string to copy the chars to
       * @param srcStr The string to copy the chars from
@@ -856,7 +860,7 @@ public:
                 XMLCh* const    targetStr
         , const XMLCh* const    srcStr
         , const int             startIndex
-        , const int             endIndex 
+        , const int             endIndex
     );
 
     //@}
@@ -985,7 +989,7 @@ public:
 
     /** Transcodes a string to native code-page
       *
-      * NOTE: The returned buffer is dynamically allocated and is the 
+      * NOTE: The returned buffer is dynamically allocated and is the
       * responsibility of the caller to delete it when not longer needed.
       *
       * @param toTranscode The string to be transcoded
@@ -1021,7 +1025,7 @@ public:
 
     /** Transcodes a string to native code-page
       *
-      * NOTE: The returned buffer is dynamically allocated and is the 
+      * NOTE: The returned buffer is dynamically allocated and is the
       * responsibility of the caller to delete it when not longer needed.
       *
       * @param toTranscode The string to be transcoded
@@ -1063,6 +1067,15 @@ public:
       * the trimmed string
       */
     static void trim(XMLCh* const toTrim);
+
+    /** Break a string into tokens with space as delimiter, and
+      * stored in a string vector.  The caller owns the string vector
+      * that is returned, and is responsible for deleting it.
+      * @param tokenizeStr String to be tokenized
+      * @return a vector of all the tokenized string
+      */
+    static RefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
+
     //@}
 
     /** @name Formatting functions */
@@ -1121,7 +1134,7 @@ public:
 
 
 private :
-    
+
     /** @name Constructors and Destructor */
     //@{
     /** Unimplemented default constructor */
@@ -1216,7 +1229,7 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 									  const unsigned int charsCount)
 {
 
-	if (offset1 < 0 || offset2 < 0 || 
+	if (offset1 < 0 || offset2 < 0 ||
 		(offset1 + charsCount) > XMLString::stringLen(str1) ||
 		(offset2 + charsCount) > XMLString::stringLen(str2) )
 		return false;

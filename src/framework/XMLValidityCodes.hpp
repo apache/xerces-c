@@ -54,11 +54,13 @@ public :
       , PrecisionExceeded                  = 41
       , ScaleExceeded                      = 42
       , NotFloat                           = 43
-      , V_HighBounds                       = 44
-      , W_LowBounds                        = 45
-      , W_HighBounds                       = 46
-      , E_LowBounds                        = 47
-      , E_HighBounds                       = 48
+      , SchemaRootError                    = 44
+      , WrongTargetNamespace               = 45
+      , V_HighBounds                       = 46
+      , W_LowBounds                        = 47
+      , W_HighBounds                       = 48
+      , E_LowBounds                        = 49
+      , E_HighBounds                       = 50
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

@@ -78,15 +78,14 @@
 #include <framework/LocalFileInputSource.hpp>
 #include <framework/URLInputSource.hpp>
 #include <framework/XMLDocumentHandler.hpp>
-#include <framework/XMLElementDecl.hpp>
 #include <framework/XMLErrorReporter.hpp>
-#include <framework/XMLEntityDecl.hpp>
 #include <framework/XMLEntityHandler.hpp>
 #include <framework/XMLPScanToken.hpp>
 #include <framework/XMLValidator.hpp>
 #include <framework/XMLValidityCodes.hpp>
 #include <internal/XMLScanner.hpp>
 #include <internal/EndOfEntityException.hpp>
+#include <validators/DTD/DTDScanner.hpp>
 
 
 
@@ -95,6 +94,18 @@
 // ---------------------------------------------------------------------------
 static XMLUInt32       gScannerId;
 static XMLMsgLoader*   gMsgLoader;
+
+// ---------------------------------------------------------------------------
+//  Local const data
+//
+//  These are the text for the require char refs that must always be present.
+//  We init these into the entity pool upon construction.
+// ---------------------------------------------------------------------------
+static const XMLCh gAmp[] = { chLatin_a, chLatin_m, chLatin_p, chNull };
+static const XMLCh gLT[] = { chLatin_l, chLatin_t, chNull };
+static const XMLCh gGT[] = { chLatin_g, chLatin_t, chNull };
+static const XMLCh gQuot[] = { chLatin_q, chLatin_u, chLatin_o, chLatin_t, chNull };
+static const XMLCh gApos[] = { chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNull };
 
 
 // ---------------------------------------------------------------------------
@@ -138,55 +149,86 @@ static XMLMutex& gScannerMutex()
 // ---------------------------------------------------------------------------
 //  XMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLScanner::XMLScanner(XMLValidator* const validator) :
+XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
 
     fAttrList(0)
     , fDocHandler(0)
+    , fDocTypeHandler(0)
     , fDoNamespaces(false)
     , fEntityHandler(0)
     , fErrorReporter(0)
     , fExitOnFirstFatal(true)
-    , fHaveSubset(false)
     , fIDRefList(0)
     , fInException(false)
     , fRawAttrList(0)
-    , fReuseValidator(false)
+    , fReuseGrammar(false)
     , fScannerId(0)
     , fSequenceId(0)
     , fStandalone(false)
     , fValidate(false)
-    , fValidator(validator)
+    , fValidator(valToAdopt)
+    , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fSchemaValidation(false)
+    , fEmptyNamespaceId(0)
+    , fGlobalNamespaceId(0)
+    , fUnknownNamespaceId(0)
+    , fXMLNamespaceId(0)
+    , fXMLNSNamespaceId(0)
+    , fGrammarResolver(0)
+    , fGrammar(0)
+    , fEntityDeclPool(0)
+    , fURIStringPool(0)
 {
-    commonInit();
+   commonInit();
+
+   if (fValidator) {
+       fValidatorFromUser = true;
+       initValidator();
+   }
 }
 
-XMLScanner::XMLScanner( XMLDocumentHandler* const   docHandler
-                        , XMLEntityHandler* const   entityHandler
-                        , XMLErrorReporter* const   errHandler
-                        , XMLValidator* const       validator) :
+XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
+                        , DocTypeHandler* const    docTypeHandler
+                        , XMLEntityHandler* const  entityHandler
+                        , XMLErrorReporter* const  errHandler
+                        , XMLValidator* const      valToAdopt) :
 
     fAttrList(0)
     , fDocHandler(docHandler)
+    , fDocTypeHandler(docTypeHandler)
     , fDoNamespaces(false)
     , fEntityHandler(entityHandler)
     , fErrorReporter(errHandler)
     , fExitOnFirstFatal(true)
-    , fHaveSubset(false)
     , fIDRefList(0)
     , fInException(false)
     , fRawAttrList(0)
-    , fReuseValidator(false)
+    , fReuseGrammar(false)
     , fScannerId(0)
     , fSequenceId(0)
     , fStandalone(false)
     , fValidate(false)
-    , fValidator(validator)
+    , fValidator(valToAdopt)
+    , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fSchemaValidation(false)
+    , fEmptyNamespaceId(0)
+    , fGlobalNamespaceId(0)
+    , fUnknownNamespaceId(0)
+    , fXMLNamespaceId(0)
+    , fXMLNSNamespaceId(0)
+    , fGrammarResolver(0)
+    , fGrammar(0)
+    , fEntityDeclPool(0)
+    , fURIStringPool(0)
 {
-    commonInit();
+   commonInit();
+
+   if (fValidator){
+      fValidatorFromUser = true;
+       initValidator();
+   }
 }
 
 XMLScanner::~XMLScanner()
@@ -194,6 +236,13 @@ XMLScanner::~XMLScanner()
     delete fAttrList;
     delete fIDRefList;
     delete fRawAttrList;
+    delete fValidator;
+    delete fEntityDeclPool;
+
+    //fGrammarResolver will delete the fGrammar as well
+    delete fGrammarResolver;
+
+    delete fURIStringPool;
 }
 
 
@@ -201,7 +250,7 @@ XMLScanner::~XMLScanner()
 //  XMLScanner: Main entry point to scan a document
 // ---------------------------------------------------------------------------
 void XMLScanner::scanDocument(  const   XMLCh* const    systemId
-                                , const bool            reuseValidator)
+                                , const bool            reuseGrammar)
 {
     //
     //  First we try to parse it as a URL. If that fails, we assume its
@@ -239,20 +288,20 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId
     }
 
     Janitor<InputSource> janSrc(srcToUse);
-    scanDocument(*srcToUse, reuseValidator);
+    scanDocument(*srcToUse, reuseGrammar);
 }
 
 void XMLScanner::scanDocument(  const   char* const systemId
-                                , const bool        reuseValidator)
+                                , const bool        reuseGrammar)
 {
     // We just delegate this to the XMLCh version after transcoding
     XMLCh* tmpBuf = XMLString::transcode(systemId);
     ArrayJanitor<XMLCh> janBuf(tmpBuf);
-    scanDocument(tmpBuf, reuseValidator);
+    scanDocument(tmpBuf, reuseGrammar);
 }
 
 
-void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
+void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
 {
     //
     //  Bump up the sequence id for this parser instance. This will invalidate
@@ -261,10 +310,7 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
     fSequenceId++;
 
     // Store the reuse validator flag
-    fReuseValidator = reuseValidator;
-
-    // Clear some flags for new round
-    fHaveSubset = false;
+    fReuseGrammar = reuseGrammar;
 
     try
     {
@@ -286,16 +332,6 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         scanProlog();
 
         //
-        //  At this point, we know which type of validation we are going to
-        //  use (if the plugged in validator handles either DTD or Schemas)
-        //  since we will have seen the DOCTYPE or PI that set it up. So lets
-        //  ask the validator whether it requires namespaces or not. If it
-        //  does, we have to override the namespace enablement flag.
-        //
-        if (fValidator->requiresNamespaces() && !fDoNamespaces)
-            fDoNamespaces = true;
-
-        //
         //  If we got to the end of input, then its not a valid XML file.
         //  Else, go on to scan the content.
         //
@@ -305,18 +341,6 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         }
          else
         {
-            //
-            //  Set our validation flag at this point. If the validation
-            //  scheme is not auto, then take that. Else see if we saw any
-            //  subset.
-            //
-            if (fValScheme == Val_Never)
-                fValidate = false;
-            else if (fValScheme == Val_Always)
-                fValidate = true;
-            else
-                fValidate = fHaveSubset;
-
             // Scan content, and tell it its not an external entity
             if (scanContent(false))
             {
@@ -424,7 +448,7 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
 //
 bool XMLScanner::scanFirst( const   XMLCh* const    systemId
                             ,       XMLPScanToken&  toFill
-                            , const bool            reuseValidator)
+                            , const bool            reuseGrammar)
 {
     //
     //  First we try to parse it as a URL. If that fails, we assume its
@@ -456,25 +480,25 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
     }
 
     Janitor<InputSource> janSrc(srcToUse);
-    return scanFirst(*srcToUse, toFill, reuseValidator);
+    return scanFirst(*srcToUse, toFill, reuseGrammar);
 }
 
 bool XMLScanner::scanFirst( const   char* const     systemId
                             ,       XMLPScanToken&  toFill
-                            , const bool            reuseValidator)
+                            , const bool            reuseGrammar)
 {
     // We just delegate this to the XMLCh version after transcoding
     XMLCh* tmpBuf = XMLString::transcode(systemId);
     ArrayJanitor<XMLCh> janBuf(tmpBuf);
-    return scanFirst(tmpBuf, toFill, reuseValidator);
+    return scanFirst(tmpBuf, toFill, reuseGrammar);
 }
 
 bool XMLScanner::scanFirst( const   InputSource&    src
                             ,       XMLPScanToken&  toFill
-                            , const bool            reuseValidator)
+                            , const bool            reuseGrammar)
 {
     // Store the reuse validator flag
-    fReuseValidator = reuseValidator;
+    fReuseGrammar = reuseGrammar;
 
     //
     //  Bump up the sequence id for this new scan cycle. This will invalidate
@@ -493,9 +517,6 @@ bool XMLScanner::scanFirst( const   InputSource&    src
 	if (fDocHandler)
 		fDocHandler->startDocument();
 
-    // Clear some flags for new round
-    fHaveSubset = false;
-
     try
     {
         //
@@ -504,28 +525,6 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         //  first.
         //
         scanProlog();
-
-        //
-        //  At this point, we know which type of validation we are going to
-        //  use (if the plugged in validator handles either DTD or Schemas)
-        //  since we will have seen the DOCTYPE or PI that set it up.  So lets
-        //  ask the validator whether it requires namespaces or not.  If it
-        //  does, we have to override the namespace enablement flag.
-        //
-        if (fValidator->requiresNamespaces() && !fDoNamespaces)
-            fDoNamespaces = true;
-
-        //
-        //  Set our validation flag at this point. If the validation
-        //  scheme is not auto, then take that. Else see if we saw any
-        //  subset.
-        //
-        if (fValScheme == Val_Never)
-            fValidate = false;
-        else if (fValScheme == Val_Always)
-            fValidate = true;
-        else
-            fValidate = fHaveSubset;
     }
 
     //
@@ -844,13 +843,62 @@ void XMLScanner::commonInit()
     //
     fIDRefList = new RefHashTableOf<XMLRefInfo>(109);
 
+    //  Create the EntityDeclPool
+    fEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
+
+    //  Create the GrammarResolver
+    fGrammarResolver = new GrammarResolver();
+
+    resetEntityDeclPool();
+}
+
+
+
+void XMLScanner::initValidator() {
     //
     //  Tell the validator about the stuff it needs to know in order to
     //  do its work.
     //
     fValidator->setScannerInfo(this, &fReaderMgr, &fBufMgr);
+    fValidator->setErrorReporter(fErrorReporter);
+
+    //  So lets ask the validator whether it requires namespaces or not. If it
+    //  does, we have to override the namespace enablement flag.
+    if (fValidator->requiresNamespaces() && !fDoNamespaces)
+        setDoNamespaces(true);
+
+    if (fValidator->handlesSchema())
+        ((SchemaValidator*) fValidator)->setGrammarResolver(fGrammarResolver);
 }
 
+void XMLScanner::resetEntityDeclPool() {
+
+    fEntityDeclPool->removeAll();
+    //
+    //  Add the default entity entries for the character refs that must always
+    //  be present. We indicate that they are from the internal subset. They
+    //  aren't really, but they have to look that way so that they are still
+    //  valid for use within a standalone document.
+    //
+    //  We also mark them as special char entities, which allows them to be
+    //  used in places whether other non-numeric general entities cannot.
+    //
+    fEntityDeclPool->put(new DTDEntityDecl(gAmp, chAmpersand, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gLT, chOpenAngle, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gGT, chCloseAngle, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gQuot, chDoubleQuote, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
+}
+
+void XMLScanner::resetURIPool() {
+    fURIStringPool->flushAll();
+
+    fEmptyNamespaceId   = fURIStringPool->addOrFind(XMLUni::fgZeroLenString);
+    fGlobalNamespaceId  = fURIStringPool->addOrFind(XMLUni::fgGlobalNSURIName);
+    fUnknownNamespaceId = fURIStringPool->addOrFind(XMLUni::fgUnknownURIName);
+    fXMLNamespaceId     = fURIStringPool->addOrFind(XMLUni::fgXMLURIName);
+    fXMLNSNamespaceId   = fURIStringPool->addOrFind(XMLUni::fgXMLNSURIName);
+}
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Error emitting methods
@@ -1507,17 +1555,17 @@ void XMLScanner::scanEndTag(bool& gotData)
         //  Ask the validator for the element id for the {uri}name we got. He owns
         //  the element decl pool.
         //
-        elemId = fValidator->findElemId
+        elemId = fGrammar->getElemId
         (
             uriId
             , bbName.getBuffer().getRawBuffer()
-            , bbPrefix.getBuffer().getRawBuffer()
             , qnameBuf.getRawBuffer()
+            , 0
         );
     }
      else
     {
-        elemId = fValidator->findElemId(0, 0, 0, qnameBuf.getRawBuffer());
+        elemId = fGrammar->getElemId(0, 0, qnameBuf.getRawBuffer(), 0);
     }
 
     //
@@ -1598,7 +1646,7 @@ void XMLScanner::scanEndTag(bool& gotData)
                 fValidator->emitError
                 (
                     XMLValid::EmptyNotValidForContent
-                    , topElem->fThisElement->getFormattedContentModel(*fValidator)
+                    , topElem->fThisElement->getFormattedContentModel(*fGrammar)
                 );
             }
              else if ((unsigned int)res >= topElem->fChildCount)
@@ -1606,13 +1654,13 @@ void XMLScanner::scanEndTag(bool& gotData)
                 fValidator->emitError
                 (
                     XMLValid::NotEnoughElemsForCM
-                    , topElem->fThisElement->getFormattedContentModel(*fValidator)
+                    , topElem->fThisElement->getFormattedContentModel(*fGrammar)
                 );
             }
              else
             {
                 // Find the element decl for the evil spawn
-                XMLElementDecl* decl = fValidator->getElemDecl
+                XMLElementDecl* decl = fGrammar->getElemDecl
                 (
                     topElem->fChildIds[res]
                 );
@@ -1621,7 +1669,7 @@ void XMLScanner::scanEndTag(bool& gotData)
                 (
                     XMLValid::ElementNotValidForContent
                     , decl->getFullName()
-                    , topElem->fThisElement->getFormattedContentModel(*fValidator)
+                    , topElem->fThisElement->getFormattedContentModel(*fGrammar)
                 );
             }
         }
@@ -1900,18 +1948,49 @@ void XMLScanner::scanProlog()
                 }
                  else if (fReaderMgr.skippedString(XMLUni::fgDocTypeString))
                 {
-                    //
-                    //  We have a doc type. So, ask the validator if it
-                    //  supports DTD scanning. if so, let it scan the
-                    //  DTD.
-                    //
-                    if (fValidator->handlesDTD())
-                        fValidator->scanDTD(fReuseValidator);
-                    else
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
 
-                    // Set the 'have subset' flag
-                    fHaveSubset = true;
+                    //
+                    //  We have a doc type. So, create a DTDScanner and
+                    //  store the Grammar in DTDGrammar.
+                    //
+
+                    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+                    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
+                    dtdScanner.scanDocTypeDecl(fReuseGrammar);
+
+                    //
+                    //  Since we have seen a grammar, set our validation flag
+                    //  at this point if the validation scheme is auto
+                    //
+                    if (fValScheme == Val_Auto)
+                        fValidate = true;
+
+                    //  if validating, then set up the validator
+                    if (fValidate) {
+                        if (fValidator) {
+                            if (!fValidator->handlesDTD())
+                                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                        }
+                        else {
+                            fValidator = new DTDValidator();
+                            initValidator();
+                        }
+
+                        ((DTDValidator*) fValidator)->setDTDGrammar((DTDGrammar*)fGrammar);
+                        //
+                        //  At this point, we know which type of validation we are going to
+                        //  use (if the plugged in validator handles either DTD or Schemas)
+                        //  since we will have seen the DOCTYPE or PI that set it up. So lets
+                        //  ask the validator whether it requires namespaces or not. If it
+                        //  does, we have to override the namespace enablement flag.
+                        //
+                        if (fValidator->requiresNamespaces() && !fDoNamespaces)
+                            fDoNamespaces = true;
+
+                        //  if validating, then validate the DTD scan so far
+                        fValidator->preContentValidation(fReuseGrammar);
+                    }
+
                 }
                  else
                 {
@@ -2002,13 +2081,13 @@ bool XMLScanner::scanStartTag(bool& gotData)
     //  We tell him to fault in a decl if he does not find one.
     //
     bool wasAdded;
-    XMLElementDecl* elemDecl = fValidator->findElemDecl
+    XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
     (
         0
         , 0
         , 0
         , fQNameBuf.getRawBuffer()
-        , XMLValidator::AddIfNotFound
+        , 0
         , wasAdded
     );
 
@@ -2212,7 +2291,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 {
                    // This is to tell the reuse Validator that this attribute was
                    // faulted-in, was not an attribute in the attdef originally
-                    if(!fReuseValidator)
+                    if(!fReuseGrammar)
                        attDef->setCreateReason(XMLAttDef::JustFaultIn);
 
                     fValidator->emitError
@@ -2229,7 +2308,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                // then emit an error
                if (fValidate)
                {
-                  if (fReuseValidator && attDef->getCreateReason()==XMLAttDef::JustFaultIn)
+                  if (fReuseGrammar && attDef->getCreateReason()==XMLAttDef::JustFaultIn)
                   {
                       //reset the CreateReason to avoid redundant error
                       attDef->setCreateReason(XMLAttDef::NoReason);
@@ -2316,11 +2395,14 @@ bool XMLScanner::scanStartTag(bool& gotData)
             if (!wasAdded)
             {
                 // Let the validator pass judgement on the attribute value
-                fValidator->validateAttrValue
-                (
-                    *attDef
-                    , fAttValueBuf.getRawBuffer()
-                );
+                if (fValidate)
+                {
+                    fValidator->validateAttrValue
+                    (
+                        *attDef
+                        , fAttValueBuf.getRawBuffer()
+                    );
+                }
             }
 
             //
@@ -2333,7 +2415,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             {
                 curAtt = new XMLAttr
                 (
-                    fValidator->getEmptyNamespaceId()
+                    -1
                     , fAttNameBuf.getRawBuffer()
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
@@ -2347,7 +2429,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 curAtt = fAttrList->elementAt(attCount);
                 curAtt->set
                 (
-                    fValidator->getEmptyNamespaceId()
+                    -1
                     , fAttNameBuf.getRawBuffer()
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
@@ -2459,7 +2541,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                     {
                         curAtt = new XMLAttr
                         (
-                            fValidator->getEmptyNamespaceId()
+                            -1
                             , curDef.getFullName()
                             , XMLUni::fgZeroLenString
                             , curDef.getValue()
@@ -2474,7 +2556,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                         curAtt = fAttrList->elementAt(attCount);
                         curAtt->set
                         (
-                            fValidator->getEmptyNamespaceId()
+                            -1
                             , curDef.getFullName()
                             , XMLUni::fgZeroLenString
                             , curDef.getValue()
@@ -2505,7 +2587,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 (
                     XMLValid::ElementNotValidForContent
                     , elemDecl->getFullName()
-                    , elemDecl->getFormattedContentModel(*fValidator)
+                    , elemDecl->getFormattedContentModel(*fGrammar)
                 );
             }
         }
@@ -2619,28 +2701,11 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     fElemStack.addLevel();
 
     //
-    //  Make an initial pass through the list and find any xmlns attributes.
-    //  When we find one, send it off to be used to update the element stack's
-    //  namespace mappings.
+    //  Make an initial pass through the list and find any xmlns attributes or
+    //  schema attributes.
     //
     if (attCount)
-    {
-        for (unsigned int index = 0; index < attCount; index++)
-        {
-            //
-            //  If either the key begins with "xmlns:" or its just plain
-            //  "xmlns", then use it to update the map.
-            //
-            const KVStringPair* curPair = fRawAttrList->elementAt(index);
-            if (!XMLString::compareNString( curPair->getKey()
-                                            , XMLUni::fgXMLNSColonString
-                                            , 6)
-            ||  !XMLString::compareString(curPair->getKey(), XMLUni::fgXMLNSString))
-            {
-                updateNSMap(curPair->getKey(), curPair->getValue());
-            }
-        }
-    }
+      scanRawAttrListforNameSpaces(fRawAttrList, attCount);
 
     //
     //  Resolve the qualified name to a URI and name so that we can look up
@@ -2667,13 +2732,13 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  not find it.
     //
     bool wasAdded;
-    XMLElementDecl* elemDecl = fValidator->findElemDecl
+    XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
     (
         uriId
         , fNameBuf.getRawBuffer()
         , fPrefixBuf.getRawBuffer()
         , fQNameBuf.getRawBuffer()
-        , XMLValidator::AddIfNotFound
+        , 0
         , wasAdded
     );
 
@@ -2780,7 +2845,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 (
                     XMLValid::ElementNotValidForContent
                     , elemDecl->getFullName()
-                    , elemDecl->getFormattedContentModel(*fValidator)
+                    , elemDecl->getFormattedContentModel(*fGrammar)
                 );
             }
         }
@@ -3023,3 +3088,26 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
             emitError(XMLErrs::ContradictoryEncoding, bbEncoding.getRawBuffer());
     }
 }
+
+const XMLCh* XMLScanner::getURIText(const   unsigned int    uriId) const
+{
+    // Look up the URI in the string pool and return its id
+    const XMLCh* value = fURIStringPool->getValueForId(uriId);
+    if (!value)
+        return XMLUni::fgZeroLenString;
+
+	return value;
+}
+
+bool XMLScanner::getURIText(  const   unsigned int    uriId
+                      ,       XMLBuffer&      uriBufToFill) const
+{
+    // Look up the URI in the string pool and return its id
+    const XMLCh* value = fURIStringPool->getValueForId(uriId);
+    if (!value)
+        return false;
+
+    uriBufToFill.set(value);
+    return true;
+}
+

@@ -536,6 +536,10 @@ SOURCE=..\..\..\..\..\src\util\RefHash2KeysTableOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\RefHash3KeysIdPool.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\RefHashTableOf.hpp
 # End Source File
 # Begin Source File
@@ -1595,6 +1599,18 @@ SOURCE=..\..\..\..\..\src\validators\common\DFAContentModel.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\common\Grammar.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\GrammarResolver.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\GrammarResolver.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\common\MixedContentModel.cpp
 # End Source File
 # Begin Source File
@@ -1613,6 +1629,22 @@ SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.hpp
 # Begin Group "datatype"
 
 # PROP Default_Filter "*.cpp, *.hpp"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidatorFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidatorFactory.hpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
@@ -1659,15 +1691,27 @@ SOURCE=..\..\..\..\..\src\validators\DTD\DTDEntityDecl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\DTD\DTDGrammar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\DTD\DTDGrammar.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\DTD\DTDScanner.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\DTD\DTDScanner.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator2.cpp
 # End Source File
 # End Group
 # Begin Group "schema"
@@ -1696,6 +1740,30 @@ SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaGrammar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaGrammar.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaSymbols.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaSymbols.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.hpp
 # End Source File
 # End Group
 # End Group

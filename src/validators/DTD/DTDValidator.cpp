@@ -68,7 +68,6 @@
 #include <internal/ReaderMgr.hpp>
 #include <internal/XMLScanner.hpp>
 #include <validators/DTD/DTDValidator.hpp>
-#include <validators/DTD/DocTypeHandler.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -151,71 +150,19 @@ static bool isInList(const XMLCh* const toFind, const XMLCh* const enumList)
 DTDValidator::DTDValidator(XMLErrorReporter* const errReporter) :
 
     XMLValidator(errReporter)
-    , fDocTypeHandler(0)
-    , fDumAttDef(0)
-    , fDumElemDecl(0)
-    , fDumEntityDecl(0)
-    , fElemDeclPool(0)
-    , fEntityDeclPool(0)
-    , fInternalSubset(false)
-    , fNextAttrId(1)
-    , fNotationDeclPool(0)
-    , fPEntityDeclPool(0)
-    , fRootElemId(XMLElementDecl::fgInvalidElemId)
+    , fDTDGrammar(0)
 {
-    //
-    //  Init all the pool members.
-    //
-    //  <TBD> Investigate what the optimum values would be for the various
-    //  pools.
-    //
-    fElemDeclPool = new NameIdPool<DTDElementDecl>(109);
-    fEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
-    fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
-    fPEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
-
-    //
-    //  Call our own reset method. This lets us have the pool setup stuff
-    //  done in just one place (because this stame setup stuff has to be
-    //  done every time we are reset.)
-    //
     reset();
 }
 
 DTDValidator::~DTDValidator()
 {
-    delete fDumAttDef;
-    delete fDumElemDecl;
-    delete fDumEntityDecl;
-    delete fElemDeclPool;
-    delete fEntityDeclPool;
-    delete fNotationDeclPool;
-    delete fPEntityDeclPool;
-}
-
-
-// ---------------------------------------------------------------------------
-//  DTDValidator: Pool manipulation methods
-// ---------------------------------------------------------------------------
-unsigned int DTDValidator::findElemId(const XMLCh* const qName) const
-{
-    // Look up this name in the element decl pool
-    const DTDElementDecl* decl = fElemDeclPool->getByKey(qName);
-    if (!decl)
-        return XMLElementDecl::fgInvalidElemId;
-    return decl->getId();
 }
 
 
 // ---------------------------------------------------------------------------
 //  DTDValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-int DTDValidator::addOrFindNSId(const XMLCh* const uriText)
-{
-    return fURIStringPool.addOrFind(uriText);
-}
-
-
 int DTDValidator::checkContent( const   unsigned int    elemId
                                 , const unsigned int*   childIds
                                 , const unsigned int    childCount)
@@ -224,7 +171,7 @@ int DTDValidator::checkContent( const   unsigned int    elemId
     //  Look up the element id in our element decl pool. This will get us
     //  the element decl in our own way of looking at them.
     //
-    DTDElementDecl* elemDecl = fElemDeclPool->getById(elemId);
+    DTDElementDecl* elemDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(elemId);
     if (!elemDecl)
         ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
 
@@ -262,7 +209,7 @@ int DTDValidator::checkContent( const   unsigned int    elemId
     }
 
     // Went ok, so return success
-    return XMLValidator::Success;
+    return -1;
 }
 
 
@@ -272,13 +219,13 @@ bool DTDValidator::checkRootElement(const unsigned int elemId)
     //  If the root element was never set, then there was never a DOCTYPE. So
     //  we just return false.
     //
+    unsigned int fRootElemId = fDTDGrammar->getRootElemId();
     if (fRootElemId == XMLElementDecl::fgInvalidElemId)
         return false;
 
     // Else return true if our stored root element is the same as the passed one
     return (elemId == fRootElemId);
 }
-
 
 void DTDValidator::faultInAttr(XMLAttr& toFill, const XMLAttDef& attDef) const
 {
@@ -329,219 +276,14 @@ void DTDValidator::faultInAttr(XMLAttr& toFill, const XMLAttDef& attDef) const
     }
 }
 
-
-const XMLElementDecl*
-DTDValidator::findElemDecl( const   unsigned int    uriId
-                            , const XMLCh* const    baseName
-                            , const XMLCh* const    prefix
-                            , const XMLCh* const    qName
-                            , const LookupOpts      options
-                            ,       bool&           wasAdded) const
-{
-    // See it it exists
-    DTDElementDecl* retVal = fElemDeclPool->getByKey(qName);
-
-    // If not, and they want us to add it, then fault one in
-    if (!retVal && (options == XMLValidator::AddIfNotFound))
-    {
-        retVal = new DTDElementDecl(qName, DTDElementDecl::Any);
-        const unsigned int elemId = fElemDeclPool->put(retVal);
-        retVal->setId(elemId);
-        wasAdded = true;
-    }
-      else
-    {
-        wasAdded = false;
-    }
-    return retVal;
-}
-
-
-XMLElementDecl*
-DTDValidator::findElemDecl( const   unsigned int    uriId
-                            , const XMLCh* const    baseName
-                            , const XMLCh* const    prefix
-                            , const XMLCh* const    qName
-                            , const LookupOpts      options
-                            ,       bool&           wasAdded)
-{
-    // See it it exists
-    DTDElementDecl* retVal = fElemDeclPool->getByKey(qName);
-
-    // If not, and they want us to add it, then fault one in
-    if (!retVal && (options == XMLValidator::AddIfNotFound))
-    {
-        retVal = new DTDElementDecl(qName, DTDElementDecl::Any);
-        const unsigned int elemId = fElemDeclPool->put(retVal);
-        retVal->setId(elemId);
-        wasAdded = true;
-    }
-     else
-    {
-        wasAdded = false;
-    }
-    return retVal;
-}
-
-
-const XMLEntityDecl*
-DTDValidator::findEntityDecl(const  XMLCh* const    entName
-                            , const bool            isPE) const
-{
-    if (isPE)
-        return fPEntityDeclPool->getByKey(entName);
-    return fEntityDeclPool->getByKey(entName);
-}
-
-
-XMLEntityDecl* DTDValidator::findEntityDecl(const XMLCh* const entName
-                                            , const bool       isPE)
-{
-    if (isPE)
-        return fPEntityDeclPool->getByKey(entName);
-    return fEntityDeclPool->getByKey(entName);
-}
-
-
-unsigned int
-DTDValidator::findElemId(const  unsigned int    uriId
-                        , const XMLCh* const    baseName
-                        , const XMLCh* const    prefix
-                        , const XMLCh* const    qName) const
-{
-    //
-    //  In this case, we don't return zero to mean 'not found', so we have to
-    //  map it to the official not found value if we don't find it.
-    //
-    const DTDElementDecl* decl = fElemDeclPool->getByKey(qName);
-    if (!decl)
-        return XMLElementDecl::fgInvalidElemId;
-    return decl->getId();
-}
-
-
-const XMLNotationDecl*
-DTDValidator::findNotationDecl(const XMLCh* const notName) const
-{
-    return fNotationDeclPool->getByKey(notName);
-}
-
-
-XMLNotationDecl* DTDValidator::findNotationDecl(const XMLCh* const notName)
-{
-    return fNotationDeclPool->getByKey(notName);
-}
-
-
-unsigned int DTDValidator::findNSId(const XMLCh* const uriText) const
-{
-    //
-    //  Look up the id for this one. It returns zero if not found, which is
-    //  what we want to return.
-    //
-    return fURIStringPool.getId(uriText);
-}
-
-
-const XMLElementDecl* DTDValidator::getElemDecl(const unsigned int elemId) const
-{
-    // Look up this element decl by id
-    return fElemDeclPool->getById(elemId);
-}
-
-
-XMLElementDecl* DTDValidator::getElemDecl(const unsigned int elemId)
-{
-    // Look up this element decl by id
-    return fElemDeclPool->getById(elemId);
-}
-
-
-bool DTDValidator::getURIText(  const   unsigned int    uriId
-                                ,       XMLBuffer&      uriBufToFill) const
-{
-    // Look up the URI in the string pool and return its id
-    const XMLCh* value = fURIStringPool.getValueForId(uriId);
-    if (!value)
-        return false;
-
-    uriBufToFill.set(value);
-    return true;
-}
-
-const XMLCh* DTDValidator::getURIText(const   unsigned int    uriId) const
-{
-    // Look up the URI in the string pool and return its id
-    const XMLCh* value = fURIStringPool.getValueForId(uriId);
-    if (!value)
-        return XMLUni::fgZeroLenString;
-
-	return value;
-}
-
-void DTDValidator::postParseValidation()
-{
-    //
-    //  At this time, there is nothing to do here. The scanner itself handles
-    //  ID/IDREF validation, since that is the same no matter what kind of
-    //  validator.
-    //
-}
-
-
 void DTDValidator::reset()
 {
-    //
-    //  We need to reset all of the pools and a couple of the other members.
-    //  The other stuff is not sensitive across uses of the validator.
-    //
-    fElemDeclPool->removeAll();
-    fEntityDeclPool->removeAll();
-    fInternalSubset = false;
-    fNotationDeclPool->removeAll();
-    fPEntityDeclPool->removeAll();
-    fURIStringPool.flushAll();
-    fRootElemId = XMLElementDecl::fgInvalidElemId;
-
-    // If there is a doc type handler, reset it
-    if (fDocTypeHandler)
-        fDocTypeHandler->resetDocType();
-
-    //
-    //  Add some special URIs to the URI string pool. These represent special
-    //  URIs that are predefined and don't come from the user data. We pass
-    //  the ids to our base class who will store them and make them available
-    //  to client code.
-    //
-    setBaseFields
-    (
-        fURIStringPool.addOrFind(XMLUni::fgZeroLenString)
-        , fURIStringPool.addOrFind(XMLUni::fgGlobalNSURIName)
-        , fURIStringPool.addOrFind(XMLUni::fgUnknownURIName)
-        , fURIStringPool.addOrFind(XMLUni::fgXMLURIName)
-        , fURIStringPool.addOrFind(XMLUni::fgXMLNSURIName)
-    );
-
-    //
-    //  Add the default entity entries for the character refs that must always
-    //  be present. We indicate that they are from the internal subset. They
-    //  aren't really, but they have to look that way so that they are still
-    //  valid for use within a standalone document.
-    //
-    //  We also mark them as special char entities, which allows them to be
-    //  used in places whether other non-numeric general entities cannot.
-    //
-    fEntityDeclPool->put(new DTDEntityDecl(gAmp, chAmpersand, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gLT, chOpenAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gGT, chCloseAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gQuot, chDoubleQuote, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
 }
 
 
 bool DTDValidator::requiresNamespaces() const
 {
-    // Namespaces are optional for DTDs
+    // Namespaces are not supported for DTDs
     return false;
 }
 
@@ -733,7 +475,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
             //  general entity pool. If not there, then its an error. If its
             //  not an external unparsed entity, then its an error.
             //
-            const XMLEntityDecl* decl = findEntityDecl(pszTmpVal, false);
+            const XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(pszTmpVal);
             if (decl)
             {
                 if (!decl->isUnparsed())
@@ -780,189 +522,182 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
 
 }
 
-
-// ---------------------------------------------------------------------------
-//  DTDValidator: DTD handler interface.
-// ---------------------------------------------------------------------------
-void DTDValidator::scanDTD(const bool reuseValidator)
+void DTDValidator::preContentValidation(bool reuseGrammar)
 {
     //
-    //  And now call out to the DTDValidator2.cpp file to do the actual
-    //  scanning. When we get back, we will be through the internal and
-    //  external subsets.
+    //  Lets enumerate all of the elements in the element decl pool
+    //  and put out an error for any that did not get declared.
+    //  We also check all of the attributes as well.
     //
-    scanDocTypeDecl(reuseValidator);
-
-    // If validating, then do the pre-content validation
-    if (getScanner()->getDoValidation())
+    NameIdPoolEnumerator<DTDElementDecl> elemEnum = fDTDGrammar->getElemEnumerator();
+    while (elemEnum.hasMoreElements())
     {
+        const DTDElementDecl& curElem = elemEnum.nextElement();
+        const DTDElementDecl::CreateReasons reason = curElem.getCreateReason();
+
         //
-        //  Lets enumerate all of the elements in the element decl pool
-        //  and put out an error for any that did not get declared.
-        //  We also check all of the attributes as well.
+        //  See if this element decl was ever marked as declared. If
+        //  not, then put out an error. In some cases its just
+        //  a warning, such as being referenced in a content model.
         //
-        NameIdPoolEnumerator<DTDElementDecl> elemEnum(fElemDeclPool);
-        while (elemEnum.hasMoreElements())
+        if (reason != XMLElementDecl::Declared)
         {
-            const DTDElementDecl& curElem = elemEnum.nextElement();
-            const DTDElementDecl::CreateReasons reason = curElem.getCreateReason();
-
-            //
-            //  See if this element decl was ever marked as declared. If
-            //  not, then put out an error. In some cases its just
-            //  a warning, such as being referenced in a content model.
-            //
-            if (reason != XMLElementDecl::Declared)
+            if (reason == XMLElementDecl::AttList)
             {
-                if (reason == XMLElementDecl::AttList)
-                {
-                    getScanner()->emitError
-                    (
-                        XMLErrs::UndeclaredElemInAttList
-                        , curElem.getFullName()
-                    );
-                }
-                 else if (reason == XMLElementDecl::AsRootElem)
-                {
-                    emitError
-                    (
-                        XMLValid::UndeclaredElemInDocType
-                        , curElem.getFullName()
-                    );
-                }
-                 else if (reason == XMLElementDecl::InContentModel)
-                {
-                    getScanner()->emitError
-                    (
-                        XMLErrs::UndeclaredElemInCM
-                        , curElem.getFullName()
-                    );
-                }
-                else
-                {
-                    #if defined(XERCES_DEBUG)
-                      if(reuseValidator && reason == XMLElementDecl::JustFaultIn){
-                      }
-                      else
-                    ThrowXML(RuntimeException, XMLExcepts::DTD_UnknownCreateReason);
-                    #endif
-                }
+                getScanner()->emitError
+                (
+                    XMLErrs::UndeclaredElemInAttList
+                    , curElem.getFullName()
+                );
             }
-
-            //
-            //  Check all of the attributes of the current element.
-            //  We check for:
-            //
-            //  1) Multiple ID attributes
-            //  2) That all of the default values of attributes are
-            //      valid for their type.
-            //  3) That for any notation types, that their lists
-            //      of possible values refer to declared notations.
-            //
-            XMLAttDefList& attDefList = curElem.getAttDefList();
-            bool seenId = false;
-            while (attDefList.hasMoreElements())
+             else if (reason == XMLElementDecl::AsRootElem)
             {
-                const XMLAttDef& curAttDef = attDefList.nextElement();
-
-                if (curAttDef.getType() == XMLAttDef::ID)
-                {
-                    if (seenId)
-                    {
-                        emitError
-                        (
-                            XMLValid::MultipleIdAttrs
-                            , curElem.getFullName()
-                        );
-                        break;
-                    }
-
-                    seenId = true;
-                }
-                 else if (curAttDef.getType() == XMLAttDef::Notation)
-                {
-                    //
-                    //  We need to verify that all of its possible values
-                    //  (in the enum list) refer to valid notations.
-                    //
-                    XMLCh* list = XMLString::replicate(curAttDef.getEnumeration());
-                    ArrayJanitor<XMLCh> janList(list);
-
-                    //
-                    //  Search forward for a space or a null. If a null,
-                    //  we are done. If a space, cap it and look it up.
-                    //
-                    bool    breakFlag = false;
-                    XMLCh*  listPtr = list;
-                    XMLCh*  lastPtr = listPtr;
-                    while (true)
-                    {
-                        while (*listPtr && (*listPtr != chSpace))
-                            listPtr++;
-
-                        //
-                        //  If at the end, indicate we need to break after
-                        //  this one. Else, cap it off here.
-                        //
-                        if (!*listPtr)
-                            breakFlag = true;
-                        else
-                            *listPtr = chNull;
-
-                        if (!fNotationDeclPool->getByKey(lastPtr))
-                        {
-                            emitError
-                            (
-                                XMLValid::UnknownNotRefAttr
-                                , curAttDef.getFullName()
-                                , lastPtr
-                            );
-                        }
-
-                        // Break out if we hit the end last time
-                        if (breakFlag)
-                            break;
-
-                        // Else move upwards and try again
-                        listPtr++;
-                        lastPtr = listPtr;
-                    }
-                }
-
-                // If it has a default/fixed value, then validate it
-                if (curAttDef.getValue())
-                {
-                    validateAttrValue
-                    (
-                        curAttDef
-                        , curAttDef.getValue()
-                    );
-                }
+                emitError
+                (
+                    XMLValid::UndeclaredElemInDocType
+                    , curElem.getFullName()
+                );
+            }
+             else if (reason == XMLElementDecl::InContentModel)
+            {
+                getScanner()->emitError
+                (
+                    XMLErrs::UndeclaredElemInCM
+                    , curElem.getFullName()
+                );
+            }
+            else
+            {
+                #if defined(XERCES_DEBUG)
+                  if(reuseGrammar && reason == XMLElementDecl::JustFaultIn){
+                  }
+                  else
+                      ThrowXML(RuntimeException, XMLExcepts::DTD_UnknownCreateReason);
+                #endif
             }
         }
 
         //
-        //  And enumerate all of the general entities. If any of them
-        //  reference a notation, then make sure the notation exists.
+        //  Check all of the attributes of the current element.
+        //  We check for:
         //
-        NameIdPoolEnumerator<DTDEntityDecl> entEnum(fEntityDeclPool);
-        while (entEnum.hasMoreElements())
+        //  1) Multiple ID attributes
+        //  2) That all of the default values of attributes are
+        //      valid for their type.
+        //  3) That for any notation types, that their lists
+        //      of possible values refer to declared notations.
+        //
+        XMLAttDefList& attDefList = curElem.getAttDefList();
+        bool seenId = false;
+        while (attDefList.hasMoreElements())
         {
-            const DTDEntityDecl& curEntity = entEnum.nextElement();
+            const XMLAttDef& curAttDef = attDefList.nextElement();
 
-            if (!curEntity.getNotationName())
-                continue;
-
-            // It has a notation name, so look it up
-            if (!fNotationDeclPool->getByKey(curEntity.getNotationName()))
+            if (curAttDef.getType() == XMLAttDef::ID)
             {
-                emitError
+                if (seenId)
+                {
+                    emitError
+                    (
+                        XMLValid::MultipleIdAttrs
+                        , curElem.getFullName()
+                    );
+                    break;
+                }
+
+                seenId = true;
+            }
+             else if (curAttDef.getType() == XMLAttDef::Notation)
+            {
+                //
+                //  We need to verify that all of its possible values
+                //  (in the enum list) refer to valid notations.
+                //
+                XMLCh* list = XMLString::replicate(curAttDef.getEnumeration());
+                ArrayJanitor<XMLCh> janList(list);
+
+                //
+                //  Search forward for a space or a null. If a null,
+                //  we are done. If a space, cap it and look it up.
+                //
+                bool    breakFlag = false;
+                XMLCh*  listPtr = list;
+                XMLCh*  lastPtr = listPtr;
+                while (true)
+                {
+                    while (*listPtr && (*listPtr != chSpace))
+                        listPtr++;
+
+                    //
+                    //  If at the end, indicate we need to break after
+                    //  this one. Else, cap it off here.
+                    //
+                    if (!*listPtr)
+                        breakFlag = true;
+                    else
+                        *listPtr = chNull;
+
+                    if (!fDTDGrammar->getNotationDecl(lastPtr))
+                    {
+                        emitError
+                        (
+                            XMLValid::UnknownNotRefAttr
+                            , curAttDef.getFullName()
+                            , lastPtr
+                        );
+                    }
+
+                    // Break out if we hit the end last time
+                    if (breakFlag)
+                        break;
+
+                    // Else move upwards and try again
+                    listPtr++;
+                    lastPtr = listPtr;
+                }
+            }
+
+            // If it has a default/fixed value, then validate it
+            if (curAttDef.getValue())
+            {
+                validateAttrValue
                 (
-                    XMLValid::NotationNotDeclared
-                    , curEntity.getNotationName()
+                    curAttDef
+                    , curAttDef.getValue()
                 );
             }
         }
     }
+
+    //
+    //  And enumerate all of the general entities. If any of them
+    //  reference a notation, then make sure the notation exists.
+    //
+    NameIdPoolEnumerator<DTDEntityDecl> entEnum = fDTDGrammar->getEntityEnumerator();
+    while (entEnum.hasMoreElements())
+    {
+        const DTDEntityDecl& curEntity = entEnum.nextElement();
+
+        if (!curEntity.getNotationName())
+            continue;
+
+        // It has a notation name, so look it up
+        if (!fDTDGrammar->getNotationDecl(curEntity.getNotationName()))
+        {
+            emitError
+            (
+                XMLValid::NotationNotDeclared
+                , curEntity.getNotationName()
+            );
+        }
+    }
 }
 
+void DTDValidator::postParseValidation()
+{
+    //
+    //  At this time, there is nothing to do here. The scanner itself handles
+    //  ID/IDREF validation, since that is the same no matter what kind of
+    //  validator.
+    //
+}

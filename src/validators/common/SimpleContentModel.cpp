@@ -55,8 +55,10 @@
  */
 
 /*
-/*
  * $Log$
+ * Revision 1.5  2001/03/21 21:56:29  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.4  2001/03/21 19:30:00  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -124,7 +126,7 @@ bool SimpleContentModel::getIsAmbiguous() const
 int
 SimpleContentModel::validateContent( const unsigned int*   childIds
                                   , const unsigned int    childCount
-								  , const XMLValidator   *pValidator) const
+                                  , const Grammar*        grammar) const
 {
     //
     //  According to the type of operation, we do the correct type of
@@ -246,7 +248,7 @@ SimpleContentModel::validateContent( const unsigned int*   childIds
 int
 SimpleContentModel::validateContentSpecial( const unsigned int*   childIds
                                           , const unsigned int    childCount
-								          , const XMLValidator   *pValidator) const
+                                          , const Grammar*        grammar) const
 {
 	return 0;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/03/21 21:56:08  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.5  2001/02/15 15:56:29  tng
  * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
  * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
@@ -133,6 +136,7 @@ public :
 	static const XMLCh SAX_CORE_NAMESPACES_PREFIXES[];
 	static const XMLCh SAX_XERCES_DYNAMIC[];
 	static const XMLCh SAX_XERCES_REUSEVALIDATOR[];
+	static const XMLCh SAX_XERCES_REUSEGRAMMAR[];
 	static const XMLCh SAX_XERCES_SCHEMA[];
 	
 	SAX2XMLReaderImpl() ;
@@ -538,7 +542,7 @@ public :
     * <br>http://xml.org/sax/features/namespaces (default: true)
     * <br>http://xml.org/sax/features/namespace-prefixes (default: true)
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
-    * <br>http://apache.org/xml/features/validation/reuse-validator (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     *
     * @param name The unique identifier (URI) of the feature.
@@ -983,7 +987,7 @@ public :
 	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
 	  * deleted when the XMLReader is destroyed.</b>
 	  *
-	  * @return A pointer to the validator.  An application should not deleted
+	  * @return A pointer to the validator.  An application should not delete
 	  * the object returned.
 	  *
 	  */
@@ -1017,8 +1021,9 @@ private :
 	//  fValidation
 	//      Indicates whether the 'validation' core features is on or off
 	//
-	//  freuseValidator
-	//      Tells the parser whether it should reuse the validator or not
+	//  fReuseGrammar
+	//      Tells the parser whether it should reuse the grammar or not.
+   //      If true, there cannot be any internal subset.
 	//
 	//	fStringBuffers
 	//		Any temporary strings we need are pulled out of this pool
@@ -1038,7 +1043,7 @@ private :
 	bool                       fnamespacePrefix;
 	bool                       fautoValidation;
 	bool                       fValidation;
-	bool                       freuseValidator;
+	bool                       fReuseGrammar;
 
 	XMLBufferMgr			   fStringBuffers ;
 	RefStackOf<XMLBuffer> *    fPrefixes ;
@@ -1054,7 +1059,6 @@ private :
     unsigned int               fAdvDHListSize;
     bool                       fParseInProgress;
     XMLScanner*                fScanner;
-    XMLValidator*              fValidator;
 	
 	// internal function used to set the state of validation: always, never, or auto
 	void setValidationScheme(const ValSchemes newScheme);
@@ -1094,9 +1098,5 @@ inline LexicalHandler* SAX2XMLReaderImpl::getLexicalHandler() const
    return fLexicalHandler;
 }
 
-inline XMLValidator* SAX2XMLReaderImpl::getValidator() const
-{
-	return fValidator;
-}
 
 #endif

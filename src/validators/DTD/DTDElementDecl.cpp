@@ -166,6 +166,27 @@ const XMLCh* DTDElementDecl::getBaseName() const
     return fBaseName;
 }
 
+XMLCh* DTDElementDecl::getBaseName()
+{
+    //
+    //  If the base name nas not been extraced, then do it now. Since we are
+    //  faulting it in from a const method, we have to cast off the constness.
+    //
+    if (!fBaseName)
+    {
+        //
+        //  Search for the first colon in the name. Note that, if its not
+        //  found, then it will be -1, which will still make the replicate
+        //  logic work correctly.
+        //
+        int colonPos = XMLString::indexOf(fQName, chColon);
+        ((DTDElementDecl*)this)->fBaseName = XMLString::replicate(&fQName[colonPos + 1]);
+    }
+
+    // Just return our QName
+    return fBaseName;
+}
+
 
 XMLElementDecl::CharDataOpts DTDElementDecl::getCharDataOpts() const
 {
@@ -266,7 +287,7 @@ void DTDElementDecl::addAttDef(DTDAttDef* const toAdd)
 //  DTDElementDecl: Implementation of the protected virtual interface
 // ---------------------------------------------------------------------------
 XMLCh*
-DTDElementDecl::formatContentModel(const XMLValidator& validator) const
+DTDElementDecl::formatContentModel(const Grammar& grammar) const
 {
     XMLCh* newValue = 0;
     if (fModelType == Any)
@@ -285,13 +306,13 @@ DTDElementDecl::formatContentModel(const XMLValidator& validator) const
         //  will expand to handle the more pathological ones.
         //
         XMLBuffer bufFmt;
-        fContentSpec->formatSpec(validator, bufFmt);
+        fContentSpec->formatSpec(grammar, bufFmt);
         newValue = XMLString::replicate(bufFmt.getRawBuffer());
     }
     return newValue;
 }
 
-XMLContentModel* DTDElementDecl::makeContentModel(XMLValidator* pValidator) const
+XMLContentModel* DTDElementDecl::makeContentModel(const Grammar* grammar) const
 {
     XMLContentModel* cmRet = 0;
     if (fModelType == Mixed)
@@ -311,7 +332,7 @@ XMLContentModel* DTDElementDecl::makeContentModel(XMLValidator* pValidator) cons
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel(pValidator);
+        cmRet = createChildModel(grammar);
     }
      else
     {
@@ -325,7 +346,7 @@ XMLContentModel* DTDElementDecl::makeContentModel(XMLValidator* pValidator) cons
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* DTDElementDecl::createChildModel(XMLValidator* pValidator) const
+XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
 {
     // Get the content spec node of the element
     const ContentSpecNode* specNode = getContentSpec();

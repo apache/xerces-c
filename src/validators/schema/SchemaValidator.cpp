@@ -54,70 +54,70 @@
  * <http://www.apache.org/>.
  */
 
-/**
- * $Id$
+/*
+ * $Log$
+ * Revision 1.1  2001/03/21 21:56:33  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  */
-
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <util/XMLUni.hpp>
-#include <framework/XMLElementDecl.hpp>
+#include <util/KVStringPair.hpp>
+#include <validators/schema/SchemaValidator.hpp>
 
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Public, static data
+//  SchemaValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId  = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId   = 0xFFFFFFFF;
-const XMLCh         XMLElementDecl::fgPCDataElemName[] =
+SchemaValidator::SchemaValidator(XMLErrorReporter* const errReporter) :
+
+    XMLValidator(errReporter)
+    , fGrammarResolver(0)
 {
-        chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
-    ,   chLatin_T, chLatin_A, chNull
-};
+}
 
-
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Destructor
-// ---------------------------------------------------------------------------
-XMLElementDecl::~XMLElementDecl()
+SchemaValidator::~SchemaValidator()
 {
-    delete fContentModel;
-    delete [] fFormattedModel;
 }
 
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous
+//  SchemaValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-const XMLCh*
-XMLElementDecl::getFormattedContentModel(const Grammar& grammar) const
+int SchemaValidator::checkContent (const   unsigned int    elemId
+                                 , const unsigned int*   childIds
+                                 , const unsigned int    childCount)
 {
-    //
-    //  If its not already built, then call the protected virtual method
-    //  to allow the derived class to build it (since only it knows.)
-    //  Otherwise, just return the previously formatted methods.
-    //
-    //  Since we are faulting this in, within a const getter, we have to
-    //  cast off the const-ness.
-    //
-    if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel(grammar);
-
-    return fFormattedModel;
+	return 0;
 }
 
+bool SchemaValidator::checkRootElement (const   unsigned int    elemId)
+{
+	return false;
+}
 
-// ---------------------------------------------------------------------------
-//  ElementDecl: Hidden constructors
-// ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl() :
+void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)   const
+{
+}
 
-    fContentModel(0)
-    , fCreateReason(XMLElementDecl::NoReason)
-    , fFormattedModel(0)
-    , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement (false)
+void SchemaValidator::preContentValidation(bool reuseGrammar)
+{
+}
+
+void SchemaValidator::postParseValidation()
+{
+}
+
+void SchemaValidator::reset()
+{
+}
+
+bool SchemaValidator::requiresNamespaces() const
+{
+    return true;
+}
+
+void SchemaValidator::validateAttrValue (const   XMLAttDef& attDef
+                                       , const XMLCh* const attrValue)
 {
 }

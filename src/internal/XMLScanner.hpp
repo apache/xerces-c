@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/03/21 21:56:05  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.10  2001/02/15 15:56:27  tng
  * Schema: Add setSchemaValidation and getSchemaValidation for DOMParser and SAXParser.
  * Add feature "http://apache.org/xml/features/validation/schema" for SAX2XMLReader.
@@ -119,13 +122,17 @@
 #include <framework/XMLPScanToken.hpp>
 #include <internal/ElemStack.hpp>
 #include <internal/ReaderMgr.hpp>
+#include <validators/DTD/DTDValidator.hpp>
+#include <validators/schema/SchemaValidator.hpp>
 
 class InputSource;
 class XMLDocumentHandler;
-class XMLDocumentTypeHandler;
+class DocTypeHandler;
 class XMLElementDecl;
 class XMLEntityHandler;
+class EntityResolver;
 class XMLErrorReporter;
+class ErrorHandler;
 class XMLMsgLoader;
 class XMLValidator;
 
@@ -199,14 +206,15 @@ public :
     // -----------------------------------------------------------------------
     XMLScanner
     (
-        XMLValidator* const validator
+        XMLValidator* const valToAdopt
     );
     XMLScanner
     (
-        XMLDocumentHandler* const   docHandler
-        , XMLEntityHandler* const   entityHandler
-        , XMLErrorReporter* const   errReporter
-        , XMLValidator* const       validator
+        XMLDocumentHandler* const  docHandler
+        , DocTypeHandler* const    docTypeHandler
+        , XMLEntityHandler* const  entityHandler
+        , XMLErrorReporter* const  errReporter
+        , XMLValidator* const      valToAdopt
     );
     ~XMLScanner();
 
@@ -238,6 +246,8 @@ public :
     // -----------------------------------------------------------------------
     const XMLDocumentHandler* getDocHandler() const;
     XMLDocumentHandler* getDocHandler();
+    const DocTypeHandler* getDocTypeHandler() const;
+    DocTypeHandler* getDocTypeHandler();
     bool getDoNamespaces() const;
     ValSchemes getValidationScheme() const;
     bool getSchemaValidation() const;
@@ -263,18 +273,88 @@ public :
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
+    const Grammar* getCurrentGrammar() const;
+    Grammar* getCurrentGrammar();
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+
+    /**
+      * When an attribute name has no prefix, unlike elements, it is not mapped
+      * to the global namespace. So, in order to have something to map it to
+      * for practical purposes, a id for an empty URL is created and used for
+      * such names.
+      *
+      * @return The URL pool id of the URL for an empty URL "".
+      */
+    unsigned int getEmptyNamespaceId() const;
+
+    /**
+      * When namespaces are enabled, any elements whose names have no prefix
+      * are mapped to a global namespace. This is the URL id for the URL
+      * to which those names are mapped. It has no official standard text,
+      * but the parser must use some id here.
+      *
+      * @return The URL pool id of the URL for the global namespace.
+      */
+    unsigned int getGlobalNamespaceId() const;
+
+    /**
+      * When a prefix is found that has not been mapped, an error is issued.
+      * However, if the parser has been instructed not to stop on the first
+      * fatal error, it needs to be able to continue. To do so, it will map
+      * that prefix tot his magic unknown namespace id.
+      *
+      * @return The URL pool id of the URL for the unknown prefix
+      *         namespace.
+      */
+    unsigned int getUnknownNamespaceId() const;
+
+    /**
+      * The prefix 'xml' is a magic prefix, defined by the XML spec and
+      * requiring no prior definition. This method returns the id for the
+      * intrinsically defined URL for this prefix.
+      *
+      * @return The URL pool id of the URL for the 'xml' prefix.
+      */
+    unsigned int getXMLNamespaceId() const;
+
+    /**
+      * The prefix 'xmlns' is a magic prefix, defined by the namespace spec
+      * and requiring no prior definition. This method returns the id for the
+      * intrinsically defined URL for this prefix.
+      *
+      * @return The URL pool id of the URL for the 'xmlns' prefix.
+      */
+    unsigned int getXMLNSNamespaceId() const;
+
+    /**
+      * This method find the passed URI id in its URI pool and
+      * copy the text of that URI into the passed buffer.
+      */
+    bool getURIText
+    (
+        const   unsigned int    uriId
+        ,       XMLBuffer&      uriBufToFill
+    )   const;
+
+    const XMLCh* getURIText(const   unsigned int    uriId) const;
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setDocHandler(XMLDocumentHandler* const docHandler);
+    void setDocTypeHandler(DocTypeHandler* const docTypeHandler);
     void setDoNamespaces(const bool doNamespaces);
     void setEntityHandler(XMLEntityHandler* const docTypeHandler);
+    void setEntityResolver(EntityResolver* const handler);
     void setErrorReporter(XMLErrorReporter* const errHandler);
+    void setErrorHandler(ErrorHandler* const handler);
     void setExitOnFirstFatal(const bool newValue);
     void setValidationScheme(const ValSchemes newScheme);
-    void setValidator(XMLValidator* const validator);
+    void setValidator(XMLValidator* const valToAdopt);
     void setSchemaValidation(const bool doSchema);
 
     // -----------------------------------------------------------------------
@@ -294,36 +374,36 @@ public :
     void scanDocument
     (
         const   InputSource&    src
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
     void scanDocument
     (
         const   XMLCh* const    systemId
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
     void scanDocument
     (
         const   char* const     systemId
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     bool scanFirst
     (
         const   InputSource&    src
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
     bool scanFirst
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
     bool scanFirst
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseValidator = false
+        , const bool            reuseGrammar = false
     );
 
     bool scanNext(XMLPScanToken& toFill);
@@ -342,13 +422,6 @@ private :
         , IDType_Either
     };
 
-    enum DTDSubsets
-    {
-        Subset_Internal
-        , Subset_External
-    };
-
-
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -361,6 +434,9 @@ private :
     //  Private helper methods
     // -----------------------------------------------------------------------
     void commonInit();
+    void initValidator();
+    void resetEntityDeclPool();
+    void resetURIPool();
 
 
     // -----------------------------------------------------------------------
@@ -385,6 +461,7 @@ private :
         , const XMLAttDef::AttTypes type
         ,       XMLBuffer&          toFill
     );
+
     unsigned int resolveQName
     (
         const   XMLCh* const        qName
@@ -420,6 +497,9 @@ private :
         , const XMLCh* const            fullName
         , const XMLCh* const            enumList
     );
+    void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
+    void parseSchemaLocation(const XMLCh* const schemaLocationStr);
+    void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
 
 
     // -----------------------------------------------------------------------
@@ -448,7 +528,6 @@ private :
     bool scanCharRef(XMLCh& toFill, XMLCh& second);
     void scanComment();
     bool scanContent(const bool extEntity);
-    void scanDocTypeDecl();
     void scanEndTag(bool& gotData);
     EntityExpRes scanEntityRef
     (
@@ -492,13 +571,6 @@ private :
     //      just reuse it over and over, allowing it to grow to meet the
     //      peek need.
     //
-    //  fBaseDir
-    //      This is the base directory, from which the initial XML file
-    //      was loaded. It is set after the file is successfully opened,
-    //      so we know it to be valid. If the initial file had no path
-    //      component, then this is left null. It is used to handle relative
-    //      paths of DTD and external entity system ids.
-    //
     //  fBufMgr
     //      This is a manager for temporary buffers used during scanning.
     //      For efficiency we must use a set of static buffers, but we have
@@ -508,6 +580,9 @@ private :
     //  fDocHandler
     //      The client code's document handler. If zero, then no document
     //      handler callouts are done. We don't adopt it.
+    //
+    //  fDocTypeHandler
+    //      The client code's document type handler (used by DTD Validator).
     //
     //  fDoNamespaces
     //      This flag indicates whether the client code wants us to do
@@ -522,19 +597,22 @@ private :
     //      The client code's entity handler. If zero, then no entity handler
     //      callouts are done. We don't adopt it.
     //
+    //  fEntityResolver
+    //      The client code's entity resolver.  Need to store this info for
+    //      Schema parse entity resolving.
+    //
     //  fErrorReporter
-    //      The client code's error handler. If zero, then no error handler
+    //      The client code's error reporter. If zero, then no error reporter
     //      callouts are done. We don't adopt it.
+    //
+    //  fErrorHandler
+    //      The client code's error handler.  Need to store this info for
+    //      Schema parse error handling.
     //
     //  fExitOnFirstFatal
     //      This indicates whether we bail out on the first fatal XML error
     //      or not. It defaults to true, which is the strict XML way, but it
     //      can be changed.
-    //
-    //  fHaveSubset
-    //      Indicates whether any internal/external DTD subset has been seen
-    //      so far. Its cleared before a new parse, so it is used along with
-    //      fValScheme to know whether we should validate or not.
     //
     //  fIDRefList
     //      This is a list of XMLRefInfo objects. This member lets us do all
@@ -556,11 +634,11 @@ private :
     //      methods to do specialized checking for chars, sequences of chars,
     //      skipping chars, etc...
     //
-    //  fReuseValidator
+    //  fReuseGrammar
     //      This flag is set on a per-scan basis. So its provided in the
     //      scanDocument() and scanFirst() methods, and applies for that
-    //      one pass. It indicates that the validator should not be reused
-    //      and that any external structural description should be ignored.
+    //      one pass. It indicates if the Grammar should be reused or not.
+    //      If so, then all the Grammar will be ignored.
     //      There cannot be any internal subset.
     //
     //  fScannerId
@@ -573,14 +651,16 @@ private :
     //      no, but can be overridden in the XMLDecl.
     //
     //  fValidate
-    //      Indicates whether any validation should be done. Once we reach
-    //      the point past the DOCTYPE, we check fHaveSubset and fValScheme
-    //      and use them to set this flag, which is then used to control
-    //      whether validation is done.
+    //      Indicates whether any validation should be done. This is defined
+    //      by the existence of a Grammar together with fValScheme.
     //
     //  fValidator
     //      The installed validator. We look at them via the abstract
     //      validator interface, and don't know what it actual is.
+    //
+    //  fValidatorFromUser
+    //      This flag indicates whether the validator was installed from
+    //      user.  If false, then the validator was created by the Scanner.
     //
     //  fValScheme
     //      This is the currently set validation scheme. It defaults to
@@ -601,27 +681,68 @@ private :
     //      fixed buffers for performance reasons. These are used a lot and
     //      there are a number of them, so asking the buffer manager each
     //      time for new buffers is a bit too much overhead.
+    //
+    //  fEmptyNamespaceId
+    //      This is the id of the empty namespace URI. This is a special one
+    //      because of the xmlns="" type of deal. We have to quickly sense
+    //      that its the empty namespace.
+    //
+    //  fGlobalNamespaceId
+    //      This is the id of the namespace URI which is assigned to the
+    //      global namespace. Its for debug purposes only, since there is no
+    //      real global namespace URI. Its set by the derived class.
+    //
+    //  fUnknownNamespaceId
+    //      This is the id of the namespace URI which is assigned to the
+    //      global namespace. Its for debug purposes only, since there is no
+    //      real global namespace URI. Its set by the derived class.
+    //
+    //  fXMLNamespaceId
+    //  fXMLNSNamespaceId
+    //      These are the ids of the namespace URIs which are assigned to the
+    //      'xml' and 'xmlns' special prefixes. The former is officially
+    //      defined but the latter is not, so we just provide one for debug
+    //      purposes.
+    //
+    //  fGrammarResolver
+    //      Grammar Pool that stores all the Grammar
+    //
+    //  fGrammar
+    //      Current Grammar used by the Scanner and Validator
+    //
+    //  fEntityDeclPool
+    //      This is a pool of EntityDecl objects, which contains all of the
+    //      general entities that are declared in the DTD subsets, plus the
+    //      default entities (such as &gt; &lt; ...) defined by the XML Standard.
+    //
+    //  fURIStringPool
+    //      This is a pool for URIs with unique ids assigned. We use a standard
+    //      string pool class.  This pool is going to be shared by all Grammar.
+    //      Use only if namespace is turned on.
+    //
     // -----------------------------------------------------------------------
     RefVectorOf<XMLAttr>*       fAttrList;
-    XMLCh*                      fBaseDir;
     XMLBufferMgr                fBufMgr;
     XMLDocumentHandler*         fDocHandler;
+    DocTypeHandler*             fDocTypeHandler;
     bool                        fDoNamespaces;
     ElemStack                   fElemStack;
     XMLEntityHandler*           fEntityHandler;
+    EntityResolver*             fEntityResolver;
     XMLErrorReporter*           fErrorReporter;
+    ErrorHandler*               fErrorHandler;
     bool                        fExitOnFirstFatal;
-    bool                        fHaveSubset;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
     bool                        fInException;
     RefVectorOf<KVStringPair>*  fRawAttrList;
     ReaderMgr                   fReaderMgr;
-    bool                        fReuseValidator;
+    bool                        fReuseGrammar;
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     bool                        fStandalone;
     bool                        fValidate;
     XMLValidator*               fValidator;
+    bool                        fValidatorFromUser;
     ValSchemes                  fValScheme;
     bool                        fSchemaValidation;
 
@@ -632,6 +753,17 @@ private :
     XMLBuffer                   fQNameBuf;
     XMLBuffer                   fPrefixBuf;
     XMLBuffer                   fURIBuf;
+
+    unsigned int                fEmptyNamespaceId;
+    unsigned int                fGlobalNamespaceId;
+    unsigned int                fUnknownNamespaceId;
+    unsigned int                fXMLNamespaceId;
+    unsigned int                fXMLNSNamespaceId;
+
+    GrammarResolver*            fGrammarResolver;
+    Grammar*                    fGrammar;
+    NameIdPool<DTDEntityDecl>*  fEntityDeclPool;
+    XMLStringPool*              fURIStringPool;
 };
 
 
@@ -647,6 +779,16 @@ inline const XMLDocumentHandler* XMLScanner::getDocHandler() const
 inline XMLDocumentHandler* XMLScanner::getDocHandler()
 {
     return fDocHandler;
+}
+
+inline const DocTypeHandler* XMLScanner::getDocTypeHandler() const
+{
+    return fDocTypeHandler;
+}
+
+inline DocTypeHandler* XMLScanner::getDocTypeHandler()
+{
+    return fDocTypeHandler;
 }
 
 inline bool XMLScanner::getDoNamespaces() const
@@ -724,23 +866,71 @@ inline XMLValidator* XMLScanner::getValidator()
     return fValidator;
 }
 
+inline const Grammar* XMLScanner::getCurrentGrammar() const
+{
+    return fGrammar;
+}
+
+inline Grammar* XMLScanner::getCurrentGrammar()
+{
+    return fGrammar;
+}
+
 inline bool XMLScanner::getSchemaValidation() const
 {
     return fSchemaValidation;
 }
 
+// ---------------------------------------------------------------------------
+//  XMLValidator: Getter methods
+// ---------------------------------------------------------------------------
+inline unsigned int XMLScanner::getEmptyNamespaceId() const
+{
+    return fEmptyNamespaceId;
+}
+
+inline unsigned int XMLScanner::getGlobalNamespaceId() const
+{
+    return fGlobalNamespaceId;
+}
+
+inline unsigned int XMLScanner::getUnknownNamespaceId() const
+{
+    return fUnknownNamespaceId;
+}
+
+inline unsigned int XMLScanner::getXMLNamespaceId() const
+{
+    return fXMLNamespaceId;
+}
+
+inline unsigned int XMLScanner::getXMLNSNamespaceId() const
+{
+    return fXMLNSNamespaceId;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
-inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
-{
-    fDoNamespaces = doNamespaces;
-}
-
 inline void XMLScanner::setDocHandler(XMLDocumentHandler* const docHandler)
 {
     fDocHandler = docHandler;
+}
+
+inline void XMLScanner::setDocTypeHandler(DocTypeHandler* const docTypeHandler)
+{
+    fDocTypeHandler = docTypeHandler;
+}
+
+inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
+{
+    fDoNamespaces = doNamespaces;
+    if (fDoNamespaces) {
+        if (!fURIStringPool) {
+            fURIStringPool = new XMLStringPool();
+            resetURIPool();
+        }
+    }
 }
 
 inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
@@ -748,10 +938,20 @@ inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
     fErrorReporter = errHandler;
 }
 
+inline void XMLScanner::setErrorHandler(ErrorHandler* const handler)
+{
+    fErrorHandler = handler;
+}
+
 inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)
 {
     fEntityHandler = entityHandler;
     fReaderMgr.setEntityHandler(entityHandler);
+}
+
+inline void XMLScanner::setEntityResolver(EntityResolver* const handler)
+{
+    fEntityResolver = handler;
 }
 
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)
@@ -762,11 +962,19 @@ inline void XMLScanner::setExitOnFirstFatal(const bool newValue)
 inline void XMLScanner::setValidationScheme(const ValSchemes newScheme)
 {
     fValScheme = newScheme;
+
+    // validation flag for Val_Auto is set to false by default,
+    //   and will be turned to true if a grammar is seen
+    if (fValScheme == Val_Always)
+        fValidate = true;
+    else
+        fValidate = false;
 }
 
-inline void XMLScanner::setValidator(XMLValidator* const validator)
+inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
 {
-    fValidator = validator;
+    delete fValidator;
+    fValidator = valToAdopt;
 }
 
 inline void XMLScanner::setSchemaValidation(const bool doSchema)
@@ -791,6 +999,12 @@ inline void XMLScanner::setDoValidation(const bool validate)
         fValScheme = Val_Always;
     else
         fValScheme = Val_Never;
-}
 
+    // validation flag for Val_Auto is set to false by default,
+    //   and will be turned to true if a grammar is seen
+    if (fValScheme == Val_Always)
+        fValidate = true;
+    else
+        fValidate = false;
+}
 #endif

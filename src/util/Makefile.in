@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.31  2001/03/21 21:56:11  tng
+# Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+#
 # Revision 1.30  2001/03/02 20:06:19  knoaman
 # Schema: Regular expression project and configuration file changes
 #
@@ -267,6 +270,7 @@ UTIL_CPP_PUBHEADERS = \
     QName.hpp \
     RefArrayOf.hpp \
     RefHash2KeysTableOf.hpp \
+    RefHash3KeysIdPool.hpp \
     RefHashTableOf.hpp \
     RefStackOf.hpp \
     RefVectorOf.hpp \
@@ -313,6 +317,7 @@ C_FILES = \
     NameIdPool.c \
     RefArrayOf.c \
     RefHash2KeysTableOf.c \
+    RefHash3KeysIdPool.c \
     RefHashTableOf.c \
     RefStackOf.c \
     RefVectorOf.c \

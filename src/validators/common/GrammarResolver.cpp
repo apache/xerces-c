@@ -1,7 +1,8 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +27,7 @@
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
  *    software without prior written permission. For written
- *    permission, please contact apache\@apache.org.
+ *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
@@ -47,77 +48,80 @@
  * ====================================================================
  *
  * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation, and was
+ * individuals on behalf of the Apache Software Foundation and was
  * originally based on software copyright (c) 1999, International
- * Business Machines, Inc., http://www.ibm.com .  For more information
- * on the Apache Software Foundation, please see
+ * Business Machines, Inc., http://www.apache.org.  For more
+ * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
 
-/**
- * $Id$
+/*
+ * $Log$
+ * Revision 1.1  2001/03/21 21:56:28  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  */
 
+#include <validators/common/GrammarResolver.hpp>
+#include <validators/datatype/DatatypeValidatorFactory.hpp>
 
 // ---------------------------------------------------------------------------
-//  Includes
+//  GrammarResolver: Constructor and Destructor
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <util/XMLUni.hpp>
-#include <framework/XMLElementDecl.hpp>
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Public, static data
-// ---------------------------------------------------------------------------
-const unsigned int  XMLElementDecl::fgInvalidElemId  = 0xFFFFFFFE;
-const unsigned int  XMLElementDecl::fgPCDataElemId   = 0xFFFFFFFF;
-const XMLCh         XMLElementDecl::fgPCDataElemName[] =
+GrammarResolver::GrammarResolver() :
+    fGrammarRegistry(0)
+    , fDataTypeReg(0)
 {
-        chPound, chLatin_P, chLatin_C, chLatin_D, chLatin_A
-    ,   chLatin_T, chLatin_A, chNull
-};
+   fGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+}
 
-
-
-// ---------------------------------------------------------------------------
-//  XMLElementDecl: Destructor
-// ---------------------------------------------------------------------------
-XMLElementDecl::~XMLElementDecl()
+GrammarResolver::~GrammarResolver()
 {
-    delete fContentModel;
-    delete [] fFormattedModel;
+   delete fGrammarRegistry;
+   if (fDataTypeReg)
+      delete fDataTypeReg;
 }
 
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous
+//  GrammarResolver: Getter methods
 // ---------------------------------------------------------------------------
-const XMLCh*
-XMLElementDecl::getFormattedContentModel(const Grammar& grammar) const
-{
-    //
-    //  If its not already built, then call the protected virtual method
-    //  to allow the derived class to build it (since only it knows.)
-    //  Otherwise, just return the previously formatted methods.
-    //
-    //  Since we are faulting this in, within a const getter, we have to
-    //  cast off the const-ness.
-    //
-    if (!fFormattedModel)
-        ((XMLElementDecl*)this)->fFormattedModel = formatContentModel(grammar);
 
-    return fFormattedModel;
+DatatypeValidatorFactory* GrammarResolver::getDatatypeRegistry()
+{
+   if (!fDataTypeReg) {
+      fDataTypeReg = new DatatypeValidatorFactory();
+   }
+   return fDataTypeReg;
 }
 
-
-// ---------------------------------------------------------------------------
-//  ElementDecl: Hidden constructors
-// ---------------------------------------------------------------------------
-XMLElementDecl::XMLElementDecl() :
-
-    fContentModel(0)
-    , fCreateReason(XMLElementDecl::NoReason)
-    , fFormattedModel(0)
-    , fId(XMLElementDecl::fgInvalidElemId)
-    , fExternalElement (false)
+Grammar* GrammarResolver::getGrammar( const XMLCh* const nameSpaceKey )
 {
+   return fGrammarRegistry->get( nameSpaceKey );
+}
+
+RefHashTableOfEnumerator<Grammar>
+GrammarResolver::getGrammarEnumerator() const
+{
+    return RefHashTableOfEnumerator<Grammar>(fGrammarRegistry);
+}
+
+bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
+{
+   return fGrammarRegistry->containsKey( nameSpaceKey );
+}
+
+void GrammarResolver::putGrammar( const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt ){
+   fGrammarRegistry->put( (void*) nameSpaceKey, grammarToAdopt );
+}
+
+void GrammarResolver::removeGrammar( const XMLCh* const nameSpaceKey ) {
+   if ( containsNameSpace( nameSpaceKey ) )
+          fGrammarRegistry->removeKey( nameSpaceKey );
+}
+
+void GrammarResolver::reset() {
+   fGrammarRegistry->removeAll();
+   if (fDataTypeReg) {
+      fDataTypeReg->resetRegistry();
+   }
 }

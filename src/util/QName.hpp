@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/03/21 21:56:12  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.3  2001/02/27 14:48:39  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -105,12 +108,16 @@ public :
     //  Getters
     // -----------------------------------------------------------------------
     const XMLCh* getPrefix() const;
+    XMLCh* getPrefix();
 
-	const XMLCh* getLocalPart() const;
+    const XMLCh* getLocalPart() const;
+    XMLCh* getLocalPart();
 
-	const int getURI() const;
+    const int getURI() const;
+    int getURI();
 
-	const XMLCh* getRawName() const;
+    const XMLCh* getRawName() const;
+    XMLCh* getRawName();
 
     // -----------------------------------------------------------------------
     //  Setters
@@ -192,12 +199,27 @@ inline const XMLCh* QName::getPrefix() const
 	return fPrefix;
 }
 
+inline XMLCh* QName::getPrefix()
+{
+	return fPrefix;
+}
+
 inline const XMLCh* QName::getLocalPart() const
 {
 	return fLocalPart;
 }
 
+inline XMLCh* QName::getLocalPart()
+{
+	return fLocalPart;
+}
+
 inline const int QName::getURI() const
+{
+	return fURIId;
+}
+
+inline int QName::getURI()
 {
 	return fURIId;
 }

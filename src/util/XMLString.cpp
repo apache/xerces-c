@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -564,7 +564,7 @@ void XMLString::trim(char* const toTrim)
     }
 
     // Cap off at the scrap point
-    if (scrape)
+    if (scrape != len)
         toTrim[scrape] = 0;
 
     if (skip)
@@ -592,7 +592,7 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
 	const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
-	if (startIndex > srcLen-1 || endIndex > srcLen - 1)
+	if (startIndex > srcLen-1 || endIndex > srcLen )
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
 
 	for (int i= startIndex; i < endIndex; i++) {
@@ -611,7 +611,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
                             , const unsigned int    maxChars
                             , const unsigned int    radix)
 {
-    static const XMLCh digitList[16] = 
+    static const XMLCh digitList[16] =
     {
             chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, chDigit_5
         ,   chDigit_6, chDigit_7, chDigit_8, chDigit_9, chLatin_A, chLatin_B
@@ -1143,7 +1143,7 @@ void XMLString::trim(XMLCh* const toTrim)
     }
 
     // Cap off at the scrap point
-    if (scrape)
+    if (scrape != len)
         toTrim[scrape] = 0;
 
     if (skip)
@@ -1185,7 +1185,7 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
 	const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
-	if (startIndex > srcLen-1 || endIndex > srcLen - 1)
+	if (startIndex > srcLen-1 || endIndex > srcLen )
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd);
 
 	for (int i= startIndex; i < endIndex; i++) {
@@ -1196,6 +1196,48 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
 	targetStr[copySize] = 0;
 }
 
+RefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh* const tokenizeSrc)
+{
+    XMLCh* orgText = replicate(tokenizeSrc);
+    ArrayJanitor<XMLCh> janText(orgText);
+    XMLCh* tokenizeStr = orgText;
+
+    RefVectorOf<XMLCh>* tokenStack = new RefVectorOf<XMLCh>(16, true);
+
+    unsigned int len = stringLen(tokenizeStr);
+    unsigned int skip;
+    unsigned int index = 0;
+
+    while (index != len) {
+        // find the first non-space character
+        for (skip = index; skip < len; skip++)
+        {
+            if (!XMLPlatformUtils::fgTransService->isSpace(tokenizeStr[skip]))
+                break;
+        }
+        index = skip;
+
+        // find the delimiter (space character)
+        for (; skip < len; skip++)
+        {
+            if (XMLPlatformUtils::fgTransService->isSpace(tokenizeStr[skip]))
+                break;
+        }
+
+        // we reached the end of the string
+        if (skip == index)
+            break;
+
+        // these tokens are adopted in the RefVector and will be deleted
+        // when the vector is deleted by the caller
+        XMLCh* token = new XMLCh[skip+1-index];
+
+        XMLString::subString(token, tokenizeStr, index, skip);
+        tokenStack->addElement(token);
+        index = skip;
+    }
+    return tokenStack;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods

@@ -56,112 +56,137 @@
 
 /*
  * $Log$
- * Revision 1.4  2001/03/21 21:56:04  tng
+ * Revision 1.1  2001/03/21 21:56:27  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
- * Revision 1.3  2001/02/26 19:44:15  tng
- * Schema: add utility class QName, by Pei Yong Zhang.
- *
- * Revision 1.2  2000/08/09 22:11:17  jpolast
- * changes to allow const instances of the sax2
- * Attributes class.
- *
- * Revision 1.1  2000/08/02 18:09:14  jpolast
- * initial checkin: attributes vector needed for
- * Attributes class as defined by sax2 spec
- *
  *
  */
 
 
-#if !defined(VECATTRIBUTESIMPL_HPP)
-#define VECATTRIBUTESIMPL_HPP
 
-#include <sax2/Attributes.hpp>
-#include <framework/XMLAttr.hpp>
-#include <util/RefVectorOf.hpp>
-#include <internal/XMLScanner.hpp>
-#include <framework/XMLBuffer.hpp>
+#if !defined(GRAMMAR_HPP)
+#define GRAMMAR_HPP
 
-class XMLPARSER_EXPORT VecAttributesImpl : public Attributes
+#include <framework/XMLElementDecl.hpp>
+#include <framework/XMLEntityDecl.hpp>
+#include <framework/XMLNotationDecl.hpp>
+
+//
+// This abstract class specifies the interface for a Grammar
+//
+
+class VALIDATORS_EXPORT Grammar
 {
-public :
+public:
+    enum GrammarType {
+        DTDGrammarType
+      , SchemaGrammarType
+    };
+
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    VecAttributesImpl();
-    ~VecAttributesImpl();
-
+    virtual ~Grammar(){};
 
     // -----------------------------------------------------------------------
-    //  Implementation of the attributes interface
+    //  Virtual Getter methods
     // -----------------------------------------------------------------------
-    virtual unsigned int getLength() const ;
+    virtual GrammarType getGrammarType()=0;
 
-	virtual const XMLCh* getURI(const unsigned int index) const;
-    virtual const XMLCh* getLocalName(const unsigned int index) const ;
-    virtual const XMLCh* getQName(const unsigned int index) const ;
-    virtual const XMLCh* getType(const unsigned int index) const ;
-    virtual const XMLCh* getValue(const unsigned int index) const ;
-
-	virtual int getIndex(const XMLCh* const uri, const XMLCh* const localPart ) const  ;
-	virtual int getIndex(const XMLCh* const qName ) const  ;
-
-	virtual const XMLCh* getType(const XMLCh* const uri, const XMLCh* const localPart ) const  ;
-    virtual const XMLCh* getType(const XMLCh* const qName) const ;
-
-    virtual const XMLCh* getValue(const XMLCh* const qName) const;
-	virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const  ;
-
-
-    // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setVector
+    // Element Decl
+    virtual XMLElementDecl* findOrAddElemDecl
     (
-        const   RefVectorOf<XMLAttr>* const srcVec
-        , const unsigned int                count
-		, const XMLScanner * const		scanner
-        , const bool                        adopt = false
-    );
+        const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    prefixName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+        ,       bool&           wasAdded
+    ) = 0;
 
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    VecAttributesImpl(const VecAttributesImpl&);
-    void operator=(const VecAttributesImpl&);
+    virtual unsigned int getElemId
+    (
+        const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+    )   const = 0;
 
+    virtual const XMLElementDecl* getElemDecl
+    (
+        const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+    )   const = 0;
+
+    virtual XMLElementDecl* getElemDecl
+    (
+        const   unsigned int    uriId
+        , const XMLCh* const    baseName
+        , const XMLCh* const    qName
+        , unsigned int          scope
+    ) = 0;
+
+    virtual const XMLElementDecl* getElemDecl
+    (
+        const   unsigned int    elemId
+    )   const = 0;
+
+    virtual XMLElementDecl* getElemDecl
+    (
+        const   unsigned int    elemId
+    ) = 0;
+
+    // Entity Decl
+    virtual const XMLEntityDecl* getEntityDecl
+    (
+        const   XMLCh* const    entName
+    )   const=0;
+
+    virtual XMLEntityDecl* getEntityDecl
+    (
+        const   XMLCh* const    entName
+    )=0;
+
+    // Notation
+    virtual const XMLNotationDecl* getNotationDecl
+    (
+        const   XMLCh* const    notName
+    )   const=0;
+
+    virtual XMLNotationDecl* getNotationDecl
+    (
+        const   XMLCh* const    notName
+    )=0;
 
     // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fAdopt
-    //      Indicates whether the passed vector is to be adopted or not. If
-    //      so, we destroy it when we are destroyed (and when a new vector is
-    //      set!)
-    //
-    //  fCount
-    //      The count of elements in the vector that should be considered
-    //      valid. This is an optimization to allow vector elements to be
-    //      reused over and over but a different count of them be valid for
-    //      each use.
-    //
-    //  fVector
-    //      The vector that provides the backing for the list.
-	//
-	//	fScanner
-	//		This is a pointer to the in use Scanner, so that we can resolve
-	//		namespace URIs from UriIds
-	//
-	//	fURIBuffer
-	//		A temporary buffer which is re-used when getting namespace URI's
+    //  Virtual Setter methods
     // -----------------------------------------------------------------------
-    bool                        fAdopt;
-    unsigned int                fCount;
-    const RefVectorOf<XMLAttr>* fVector;
-	const XMLScanner *		fScanner ;
-	//XMLBuffer				    fURIBuffer ;
+    virtual unsigned int putElemDecl
+    (
+        XMLElementDecl* const elemDecl
+    )   const = 0;
+
+    virtual unsigned int putEntityDecl
+    (
+        XMLEntityDecl* const entityDecl
+    )   const = 0;
+
+    virtual unsigned int putNotationDecl
+    (
+        XMLNotationDecl* const notationDecl
+    )   const=0;
+
+    // -----------------------------------------------------------------------
+    //  Virtual methods
+    // -----------------------------------------------------------------------
+    virtual void reset()=0;
+
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    Grammar() {};
 };
 
-#endif // ! VECATTRIBUTESIMPL_HPP
+#endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/03/21 21:56:33  tng
+ * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
+ *
  * Revision 1.3  2001/03/21 19:30:15  tng
  * Schema: Content Model Updates, by Pei Yong Zhang.
  *
@@ -181,6 +184,11 @@ const XMLCh* SchemaElementDecl::getBaseName() const
     return fElementName->getLocalPart();
 }
 
+XMLCh* SchemaElementDecl::getBaseName()
+{
+    return fElementName->getLocalPart();
+}
+
 
 XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
 {
@@ -279,7 +287,7 @@ void SchemaElementDecl::addAttDef(SchemaAttDef* const toAdd)
 //  SchemaElementDecl: Implementation of the protected virtual interface
 // ---------------------------------------------------------------------------
 XMLCh*
-SchemaElementDecl::formatContentModel(const XMLValidator& validator) const
+SchemaElementDecl::formatContentModel(const Grammar& grammar) const
 {
     XMLCh* newValue = 0;
     if (fModelType == Any)
@@ -298,13 +306,13 @@ SchemaElementDecl::formatContentModel(const XMLValidator& validator) const
         //  will expand to handle the more pathological ones.
         //
         XMLBuffer bufFmt;
-        fContentSpec->formatSpec(validator, bufFmt);
+        fContentSpec->formatSpec(grammar, bufFmt);
         newValue = XMLString::replicate(bufFmt.getRawBuffer());
     }
     return newValue;
 }
 
-XMLContentModel* SchemaElementDecl::makeContentModel(XMLValidator* pValidator) const
+XMLContentModel* SchemaElementDecl::makeContentModel(const Grammar* grammar) const
 {
     XMLContentModel* cmRet = 0;
     if (fModelType == Simple) {
@@ -327,7 +335,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel(XMLValidator* pValidator) c
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel(pValidator);
+        cmRet = createChildModel(grammar);
     }
      else
     {
@@ -341,7 +349,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel(XMLValidator* pValidator) c
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* SchemaElementDecl::createChildModel(XMLValidator* pValidator) const
+XMLContentModel* SchemaElementDecl::createChildModel(const Grammar* grammar) const
 {
     // Get the content spec node of the element
     const ContentSpecNode* specNode = getContentSpec();
