@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/25 21:24:31  tng
+ * Schema Fix: Ensure no invalid uri index for UPA checking.
+ *
  * Revision 1.3  2002/02/25 21:18:18  tng
  * Schema Fix: Ensure no invalid uri index for UPA checking.
  *
@@ -485,9 +488,9 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         unsigned int uri = fXsiType->getURI();
         const XMLCh* localPart = fXsiType->getLocalPart();
 
-        if (uri != XMLElementDecl::fgInvalidElemId ||
-            uri != XMLElementDecl::fgPCDataElemId ||
-            uri != XMLContentModel::gEpsilonFakeId ||
+        if (uri != XMLElementDecl::fgInvalidElemId &&
+            uri != XMLElementDecl::fgPCDataElemId &&
+            uri != XMLContentModel::gEpsilonFakeId &&
             uri != XMLContentModel::gEOCFakeId) {
             // retrieve Grammar for the uri
             const XMLCh* uriStr = getScanner()->getURIText(uri);
