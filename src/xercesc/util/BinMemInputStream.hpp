@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/10/26 14:50:49  peiyongz
+ * net getter
+ *
  * Revision 1.5  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -90,6 +93,9 @@ public :
     //  Implementation of the input stream interface
     // -----------------------------------------------------------------------
     virtual unsigned int curPos() const;
+
+    unsigned int getSize() const;
+
     virtual unsigned int readBytes
     (
                 XMLByte* const  toFill
@@ -144,6 +150,11 @@ inline void BinMemInputStream::reset()
 inline unsigned int BinMemInputStream::curPos() const
 {
     return fCurIndex;
+}
+
+inline unsigned int BinMemInputStream::getSize() const
+{
+    return fCapacity;
 }
 
 XERCES_CPP_NAMESPACE_END
