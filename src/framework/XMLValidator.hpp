@@ -56,6 +56,11 @@
 
  /*
   * $Log$
+  * Revision 1.17  2001/11/30 22:18:18  peiyongz
+  * cleanUp function made member function
+  * cleanUp object moved to file scope
+  * double mutex lock removed
+  *
   * Revision 1.16  2001/11/13 13:24:46  tng
   * Deprecate function XMLValidator::checkRootElement.
   *
@@ -422,7 +427,9 @@ public:
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitXMLValidator();
+	static void reinitMsgMutex();
+
+	static void reinitMsgLoader();
 
 protected :
     // -----------------------------------------------------------------------

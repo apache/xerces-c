@@ -56,6 +56,11 @@
 
 /**
   * $Log$
+  * Revision 1.13  2001/11/30 22:18:18  peiyongz
+  * cleanUp function made member function
+  * cleanUp object moved to file scope
+  * double mutex lock removed
+  *
   * Revision 1.12  2001/11/28 20:32:49  tng
   * Do not increment the error count if it is a warning.
   *
@@ -123,7 +128,10 @@
 //  Local static functions
 // ---------------------------------------------------------------------------
 
-static XMLMutex* validatorMutex = 0;
+static XMLMutex* sMsgMutex = 0;
+static XMLRegisterCleanup msgLoaderCleanup;
+
+static XMLMsgLoader* sMsgLoader = 0;
 static XMLRegisterCleanup validatorMutexCleanup;
 
 //
@@ -132,38 +140,43 @@ static XMLRegisterCleanup validatorMutexCleanup;
 //
 static XMLMutex& gValidatorMutex()
 {
-    if (!validatorMutex)
+    if (!sMsgMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&validatorMutex, tmpMutex, 0))
+        if (XMLPlatformUtils::compareAndSwap((void**)&sMsgMutex, tmpMutex, 0))
         {
             // Someone beat us to it, so let's clean up ours
             delete tmpMutex;
         }
         else
         {
-            validatorMutexCleanup.registerCleanup(XMLValidator::reinitXMLValidator);
+            validatorMutexCleanup.registerCleanup(XMLValidator::reinitMsgMutex);
         }
     }
 
-    return *validatorMutex;
+    return *sMsgMutex;
 }
 
 static XMLMsgLoader& getMsgLoader()
 {
-    static XMLMsgLoader* gMsgLoader = 0;
 
-    if (!gMsgLoader)
-    {
-        XMLMutexLock lockInit(&gValidatorMutex());
-        if (!gMsgLoader)
-        {
-            gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
-            if (!gMsgLoader)
-                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-        }
-    }
-    return *gMsgLoader;
+	// Lock the mutex
+	XMLMutexLock lockInit(&gValidatorMutex());
+    
+    if (!sMsgLoader)
+	{
+		sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
+		if (!sMsgLoader)
+			XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+
+        //
+        // Register this XMLMsgLoader for cleanup at Termination.
+        //
+        msgLoaderCleanup.registerCleanup(XMLValidator::reinitMsgLoader);
+	
+	}
+
+    return *sMsgLoader;
 }
 
 
@@ -190,13 +203,10 @@ void XMLValidator::emitError(const XMLValid::Codes toEmit)
         const unsigned int msgSize = 1023;
         XMLCh errText[msgSize + 1];
 
-        // Lock the mutex and load the text
-        {
-            XMLMutexLock lockInit(&gValidatorMutex());
-            if (!getMsgLoader().loadMsg(toEmit, errText, msgSize))
-            {
-                // <TBD> Probably should load a default msg here
-            }
+        // load the text
+		if (!getMsgLoader().loadMsg(toEmit, errText, msgSize))
+		{
+			// <TBD> Probably should load a default msg here
         }
 
         //
@@ -251,13 +261,10 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        // Lock the mutex and load the text
-        {
-            XMLMutexLock lockInit(&gValidatorMutex());
-            if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
-            {
-                // <TBD> Should probably load a default message here
-            }
+        // load the text
+		if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+		{
+			// <TBD> Should probably load a default message here
         }
 
         //
@@ -312,13 +319,10 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        // Lock the mutex and load the text
-        {
-            XMLMutexLock lockInit(&gValidatorMutex());
-            if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
-            {
-                // <TBD> Should probably load a default message here
-            }
+        // load the text
+		if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+		{
+			// <TBD> Should probably load a default message here
         }
 
         //
@@ -369,11 +373,17 @@ XMLValidator::XMLValidator(XMLErrorReporter* const errReporter) :
 // -----------------------------------------------------------------------
 //  Notification that lazy data has been deleted
 // -----------------------------------------------------------------------
-void XMLValidator::reinitXMLValidator() {
-
-    delete validatorMutex;
-    validatorMutex = 0;
-
+void XMLValidator::reinitMsgMutex()
+{
+    delete sMsgMutex;
+    sMsgMutex = 0;
 }
 
-
+// -----------------------------------------------------------------------
+//  Reinitialise the message loader
+// -----------------------------------------------------------------------
+void XMLValidator::reinitMsgLoader()
+{
+	delete sMsgLoader;
+	sMsgLoader = 0;
+}
