@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/17 03:36:54  rahulj
+ * Fixed a cut-paste typo in the comments.
+ *
  * Revision 1.2  2000/02/06 07:48:30  rahulj
  * Year 2K copyright swat.
  *
@@ -69,7 +72,7 @@
 
 
 // ---------------------------------------------------------------------------
-//  AIX runs in big endian mode
+//  SPARC runs in big endian mode
 // ---------------------------------------------------------------------------
 #define ENDIANMODE_BIG
 typedef void* FileHandle;
