@@ -886,7 +886,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/doc/html/apiDocs");
 
     # Build ICU if needed
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($opt_j) > 0) {    
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && !(length($opt_j) > 0))    
     {
         print("\n\nBuild ICU with \'$opt_b\' bit ...\n");
         if(length($ICUROOT) == 0) {
