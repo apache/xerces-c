@@ -57,9 +57,11 @@ CLEAN :
 	-@erase "$(INTDIR)\Base64.obj"
 	-@erase "$(INTDIR)\Base64BinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\BinFileInputStream.obj"
+	-@erase "$(INTDIR)\BinFileOutputStream.obj"
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
 	-@erase "$(INTDIR)\BMPattern.obj"
@@ -344,6 +346,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XProtoType.obj"
 	-@erase "$(INTDIR)\XSAnnotation.obj"
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
@@ -354,6 +357,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
 	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSerializeEngine.obj"
 	-@erase "$(INTDIR)\XSFacet.obj"
 	-@erase "$(INTDIR)\XSIDCDefinition.obj"
 	-@erase "$(INTDIR)\XSModel.obj"
@@ -489,6 +493,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
+	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -509,6 +514,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -524,6 +530,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -749,9 +757,11 @@ CLEAN :
 	-@erase "$(INTDIR)\Base64.obj"
 	-@erase "$(INTDIR)\Base64BinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\BinFileInputStream.obj"
+	-@erase "$(INTDIR)\BinFileOutputStream.obj"
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
 	-@erase "$(INTDIR)\BMPattern.obj"
@@ -1037,6 +1047,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XProtoType.obj"
 	-@erase "$(INTDIR)\XSAnnotation.obj"
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
@@ -1047,6 +1058,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
 	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSerializeEngine.obj"
 	-@erase "$(INTDIR)\XSFacet.obj"
 	-@erase "$(INTDIR)\XSIDCDefinition.obj"
 	-@erase "$(INTDIR)\XSModel.obj"
@@ -1183,6 +1195,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
+	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -1203,6 +1216,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -1218,6 +1232,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -1443,9 +1459,11 @@ CLEAN :
 	-@erase "$(INTDIR)\Base64.obj"
 	-@erase "$(INTDIR)\Base64BinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\BinFileInputStream.obj"
+	-@erase "$(INTDIR)\BinFileOutputStream.obj"
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
 	-@erase "$(INTDIR)\BMPattern.obj"
@@ -1731,6 +1749,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XProtoType.obj"
 	-@erase "$(INTDIR)\XSAnnotation.obj"
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
@@ -1741,6 +1760,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
 	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSerializeEngine.obj"
 	-@erase "$(INTDIR)\XSFacet.obj"
 	-@erase "$(INTDIR)\XSIDCDefinition.obj"
 	-@erase "$(INTDIR)\XSModel.obj"
@@ -1877,6 +1897,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
+	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -1897,6 +1918,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -1912,6 +1934,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -2137,9 +2161,11 @@ CLEAN :
 	-@erase "$(INTDIR)\Base64.obj"
 	-@erase "$(INTDIR)\Base64BinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\BinFileInputStream.obj"
+	-@erase "$(INTDIR)\BinFileOutputStream.obj"
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
 	-@erase "$(INTDIR)\BMPattern.obj"
@@ -2424,6 +2450,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XProtoType.obj"
 	-@erase "$(INTDIR)\XSAnnotation.obj"
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
@@ -2434,6 +2461,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
 	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSerializeEngine.obj"
 	-@erase "$(INTDIR)\XSFacet.obj"
 	-@erase "$(INTDIR)\XSIDCDefinition.obj"
 	-@erase "$(INTDIR)\XSModel.obj"
@@ -2570,6 +2598,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
 	"$(INTDIR)\XSTypeDefinition.obj" \
 	"$(INTDIR)\XSWildcard.obj" \
+	"$(INTDIR)\BinOutputStream.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -2590,6 +2619,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -2605,6 +2635,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -3625,6 +3657,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp
+
+"$(INTDIR)\BinOutputStream.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp
 
 "$(INTDIR)\LocalFileFormatTarget.obj" : $(SOURCE) "$(INTDIR)"
@@ -3745,6 +3783,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp
+
+"$(INTDIR)\BinFileOutputStream.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\DGXMLScanner.cpp
 
 "$(INTDIR)\DGXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
@@ -3832,6 +3876,18 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp
 
 "$(INTDIR)\XMLScannerResolver.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
+
+"$(INTDIR)\XProtoType.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
+
+"$(INTDIR)\XSerializeEngine.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
