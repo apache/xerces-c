@@ -106,9 +106,9 @@ are owned by implementation</li>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
-<td>Xerces-C++ 2.2: December 20, 2002</td>
+<td>Xerces-C++ 2.2: February 6, 2003</td>
 <td ALIGN=LEFT VALIGN=TOP>Modified
-<br>- add const modifier to DOMNode::compareTreePosition
+<br>- add const modifier to DOMNode::compareTreePosition, and add DOMTreePosition
 <br>- add const modifier to DOMNode::isSameNode
 <br>- add const modifier to DOMNode::isEqualNode
 <br>- add const modifier to DOMImplementation::hasFeature
@@ -1200,6 +1200,96 @@ DOMNode</font></font>
 <td><font face="Courier New,Courier"><font size=-1>NOTATION_NODE</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>= 12,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>enum</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMTreePosition {</font></font></td>
+
+<td></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_PRECEDING</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x01,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_FOLLOWING</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x02,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_ANCESTOR</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x04,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_DESCENDANT</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x08,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_EQUIVALENT</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x10,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_SAME_NODE</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x20,</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>TREE_POSITION_DISCONNECTED</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>= 0x00,</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
