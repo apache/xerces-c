@@ -308,7 +308,7 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    if (oldChild != 0 && oldChild->getParentNode() != castToNode(this))
+    if (oldChild == 0 || oldChild->getParentNode() != castToNode(this))
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 
     if (this->getOwnerDocument() !=  0  ) {

@@ -571,7 +571,7 @@ NodeImpl *AttrImpl::removeChild(NodeImpl *oldChild) {
                                  DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                  null);
         }
-        if (oldChild != null && oldChild->getParentNode() != this) {
+        if (oldChild == null || oldChild->getParentNode() != this) {
             throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
         }
     }
