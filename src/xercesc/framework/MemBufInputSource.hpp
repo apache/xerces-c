@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -165,7 +168,8 @@ public :
         const   XMLByte* const  srcDocBytes
         , const unsigned int    byteCount
         , const XMLCh* const    bufId
-        , const bool            adoptBuffer = false
+        , const bool            adoptBuffer// = false
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -178,6 +182,7 @@ public :
         , const unsigned int    byteCount
         , const char* const     bufId
         , const bool            adoptBuffer = false
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -157,8 +160,9 @@ public :
       */
     LocalFileInputSource
     (
-        const   XMLCh* const    basePath
-        , const XMLCh* const    relativePath
+        const   XMLCh* const   basePath
+        , const XMLCh* const   relativePath
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -178,7 +182,8 @@ public :
       */
     LocalFileInputSource
     (
-        const   XMLCh* const    filePath
+        const   XMLCh* const   filePath
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
 

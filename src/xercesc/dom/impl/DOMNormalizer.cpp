@@ -160,7 +160,11 @@ static XMLMsgLoader& gNormalizerMsgLoader()
 }
 
 
-DOMNormalizer::DOMNormalizer() : fDocument(0), fNewNamespaceCount(1) {
+DOMNormalizer::DOMNormalizer() 
+    : fDocument(0)
+    , fNewNamespaceCount(1)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+{
     fNSScope = new InScopeNamespaces();
 };
 
@@ -399,7 +403,7 @@ void DOMNormalizer::addOrChangeNamespaceDecl(const XMLCh* prefix, const XMLCh* u
     if (XMLString::equals(prefix, XMLUni::fgZeroLenString)) {
         element->setAttributeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString, uri);
     } else {
-        XMLBuffer buf;
+        XMLBuffer buf(1023, fMemoryManager);
         buf.set(XMLUni::fgXMLNSString);
         buf.append(chColon);
         buf.append(prefix);
@@ -408,7 +412,7 @@ void DOMNormalizer::addOrChangeNamespaceDecl(const XMLCh* prefix, const XMLCh* u
 }
 
 const XMLCh* DOMNormalizer::addCustomNamespaceDecl(const XMLCh* uri, DOMElementImpl *element) const {
-    XMLBuffer preBuf;
+    XMLBuffer preBuf(1023, fMemoryManager);
     preBuf.append(chLatin_N);
     preBuf.append(chLatin_S);
     preBuf.append(integerToXMLCh(fNewNamespaceCount));
@@ -422,7 +426,7 @@ const XMLCh* DOMNormalizer::addCustomNamespaceDecl(const XMLCh* uri, DOMElementI
         ((DOMNormalizer *)this)->fNewNamespaceCount++;
     }
     
-    XMLBuffer buf;
+    XMLBuffer buf(1023, fMemoryManager);
     buf.set(XMLUni::fgXMLNSString);
     buf.append(chColon);
     buf.append(preBuf.getRawBuffer());

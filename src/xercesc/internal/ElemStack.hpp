@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:36:57  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -216,7 +219,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ElemStack();
+    ElemStack(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ElemStack();
 
 
@@ -402,7 +405,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    WFElemStack();
+    WFElemStack(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~WFElemStack();
 
 

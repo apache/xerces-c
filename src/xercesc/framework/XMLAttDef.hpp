@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.8  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -511,8 +514,9 @@ protected :
     // -----------------------------------------------------------------------
     XMLAttDef
     (
-        const   AttTypes            type = CData
-        , const DefAttTypes         defType = Implied
+        const   AttTypes       type = CData
+        , const DefAttTypes    defType= Implied
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     XMLAttDef
     (
@@ -520,6 +524,7 @@ protected :
         , const AttTypes            type
         , const DefAttTypes         defType
         , const XMLCh* const        enumValues = 0
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
 

@@ -95,6 +95,8 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemStack(manager)
+    , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
     , fSchemaValidator(0)
@@ -134,6 +136,8 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemStack(manager)
+    , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
     , fSchemaValidator(0)
@@ -1463,7 +1467,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         if (!XMLString::startsWith(typeName, poundStr)) {
             const int comma = XMLString::indexOf(typeName, chComma);
             if (comma > 0) {
-                XMLBuffer prefixBuf(comma+1);
+                XMLBuffer prefixBuf(comma+1, fMemoryManager);
                 prefixBuf.append(typeName, comma);
                 const XMLCh* uriStr = prefixBuf.getRawBuffer();
 
@@ -2802,7 +2806,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 // The normalized data can only be as large as the
                 // original size, so this will avoid allocating way
                 // too much or too little memory.
-                XMLBuffer toFill(len+1);
+                XMLBuffer toFill(len+1, fMemoryManager);
                 toFill.set(rawBuf);
 
                 if (fNormalizeData) {
@@ -2836,7 +2840,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 // The normalized data can only be as large as the
                 // original size, so this will avoid allocating way
                 // too much or too little memory.
-                XMLBuffer toFill(len+1);
+                XMLBuffer toFill(len+1, fMemoryManager);
                 toFill.set(rawBuf);
 
                 if (fNormalizeData) {
@@ -3109,7 +3113,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 else {
                     if (fStandardUriConformant && urlTmp.hasInvalidChar())
                         ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
                 }
             }
 
@@ -3121,6 +3125,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     (
                         lastInfo.systemId
                         , expSysId.getRawBuffer()
+                        , fMemoryManager
                     );
                 else
                     throw e;
@@ -3256,7 +3261,7 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
         catch(const MalformedURLException& e)
@@ -3267,6 +3272,7 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
+                    , fMemoryManager
                 );
             else
                 throw e;

@@ -330,7 +330,7 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         XMLURL tmpURL(systemId, fMemoryManager);
         if (tmpURL.isRelative()) {
             if (!fStandardUriConformant)
-                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
+                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly
@@ -358,14 +358,14 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                 );
                 return;
             }
-            srcToUse = new (fMemoryManager) URLInputSource(tmpURL);
+            srcToUse = new (fMemoryManager) URLInputSource(tmpURL, fMemoryManager);
         }
 
     }
     catch(const MalformedURLException& e)
     {
         if (!fStandardUriConformant)
-            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
+            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
         else {
             // since this is the top of the try/catch, cannot call ThrowXML
             // emit the error directly
@@ -447,7 +447,7 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         XMLURL tmpURL(systemId, fMemoryManager);
         if (tmpURL.isRelative()) {
             if (!fStandardUriConformant)
-                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
+                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly
@@ -475,13 +475,13 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
                 );
                 return false;
             }
-            srcToUse = new (fMemoryManager) URLInputSource(tmpURL);
+            srcToUse = new (fMemoryManager) URLInputSource(tmpURL, fMemoryManager);
         }
     }
     catch(const MalformedURLException& e)
     {
         if (!fStandardUriConformant)
-            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
+            srcToUse = new (fMemoryManager) LocalFileInputSource(systemId,  fMemoryManager);
         else {
             // since this is the top of the try/catch, cannot call ThrowXML
             // emit the error directly
@@ -1575,7 +1575,7 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             if (tmpURL.isRelative())
             {
                 if (!fStandardUriConformant)
-                    srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
+                    srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
                 else {
                     // since this is the top of the try/catch, cannot call ThrowXML
                     // emit the error directly
@@ -1603,13 +1603,13 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                     );
                     return 0;
                 }
-                srcToUse = new (fMemoryManager) URLInputSource(tmpURL);
+                srcToUse = new (fMemoryManager) URLInputSource(tmpURL, fMemoryManager);
             }
         }
         catch(const MalformedURLException& e)
         {
             if (!fStandardUriConformant)
-                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
+                srcToUse = new (fMemoryManager) LocalFileInputSource(systemId, fMemoryManager);
             else {
                 // since this is the top of the try/catch, cannot call ThrowXML
                 // emit the error directly

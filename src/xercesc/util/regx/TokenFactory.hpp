@@ -136,6 +136,7 @@ public:
     Token* getDot();
 	Token* getCombiningCharacterSequence();
 	Token* getGraphemePattern();
+    MemoryManager* getMemoryManager() const;
 
 private:
     // -----------------------------------------------------------------------
@@ -183,6 +184,11 @@ private:
     Token*              fGrapheme;
     MemoryManager*      fMemoryManager;
 };
+
+inline MemoryManager* TokenFactory::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.10  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -874,7 +877,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
   RefArrayVectorOf<XMLCh>* tokenStack = tokenize(matchString, start, end, subEx);
 	  Janitor<RefArrayVectorOf<XMLCh> > janTokStack(tokenStack);
     
-  XMLBuffer result;
+  XMLBuffer result(1023, fMemoryManager);
   
   int numSubEx = 0;
   
@@ -1487,7 +1490,7 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
   
   bool notEscaped = true;                 
   
-  XMLBuffer newString;                   
+  XMLBuffer newString(1023, fMemoryManager);                   
   
   XMLCh indexStr[2]; //holds the string rep of a 
 

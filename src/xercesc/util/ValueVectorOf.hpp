@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -146,6 +149,7 @@ public :
     TElem& elementAt(const unsigned int getAt);
     unsigned int curCapacity() const;
     unsigned int size() const;
+    MemoryManager* getMemoryManager() const;
 
 
     // -----------------------------------------------------------------------

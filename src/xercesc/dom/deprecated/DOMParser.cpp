@@ -744,7 +744,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     DocumentImpl    *docImpl = (DocumentImpl *)fDocument.fImpl;
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
-        XMLBuffer buf;
+        XMLBuffer buf(1023, fMemoryManager);
         DOMString namespaceURI = 0;
         DOMString elemQName = 0;
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
@@ -1146,7 +1146,7 @@ void DOMParser::endAttList
                     DOMString qualifiedName = attr->getFullName();
                     int index = DocumentImpl::indexofQualifiedName(qualifiedName);
 
-                    XMLBuffer buf;
+                    XMLBuffer buf(1023, fMemoryManager);
                     static const XMLCh XMLNS[] = {
                         chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
 

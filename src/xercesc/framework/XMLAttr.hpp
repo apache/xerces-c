@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -188,9 +191,9 @@ public:
         , const XMLCh* const        attrName
         , const XMLCh* const        attrPrefix
         , const XMLCh* const        attrValue
-        , const XMLAttDef::AttTypes type// = XMLAttDef::CData
-        , const bool                specified// = true
-        , MemoryManager* const      manager //= XMLPlatformUtils::fgMemoryManager
+        , const XMLAttDef::AttTypes type = XMLAttDef::CData
+        , const bool                specified = true
+        , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -222,9 +225,9 @@ public:
         const unsigned int uriId
         , const XMLCh* const rawName
         , const XMLCh* const attrValue
-        , const XMLAttDef::AttTypes type// = XMLAttDef::CData
-        , const bool specified// = true
-        , MemoryManager* const manager //= XMLPlatformUtils::fgMemoryManager
+        , const XMLAttDef::AttTypes type = XMLAttDef::CData
+        , const bool specified = true
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}

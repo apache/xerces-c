@@ -88,8 +88,12 @@ public:
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
     *                      DOMInputSource. Default is true.
     */
-    Wrapper4DOMInputSource(DOMInputSource* const inputSource,
-                           const bool adoptFlag = true);
+    Wrapper4DOMInputSource
+    (
+        DOMInputSource* const inputSource
+        , const bool adoptFlag = true
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
 
   /**
     * Destructor

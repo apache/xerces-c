@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -103,41 +106,49 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  URLInputSource: Constructors and Destructor
 // ---------------------------------------------------------------------------
-URLInputSource::URLInputSource(const XMLURL& urlId) :
+URLInputSource::URLInputSource( const XMLURL&         urlId
+                              , MemoryManager* const  manager) :
 
-    fURL(urlId)
+    InputSource(manager)
+    , fURL(urlId)
 {
     setSystemId(fURL.getURLText());
 }
 
-URLInputSource::URLInputSource( const   XMLCh* const    baseId
-                                , const XMLCh* const    systemId) :
-    fURL(baseId, systemId)
+URLInputSource::URLInputSource( const XMLCh* const    baseId
+                              , const XMLCh* const    systemId
+                              , MemoryManager* const  manager) :
+    InputSource(manager)
+    , fURL(baseId, systemId)
 {
     // Create a URL that will build up the full URL and store as the system id
     setSystemId(fURL.getURLText());
 }
 
-URLInputSource::URLInputSource( const   XMLCh* const    baseId
-                                , const XMLCh* const    systemId
-                                , const XMLCh* const    publicId) :
-    InputSource(0, publicId)
+URLInputSource::URLInputSource( const XMLCh* const    baseId
+                              , const XMLCh* const    systemId
+                              , const XMLCh* const    publicId
+                              , MemoryManager* const  manager) :
+    InputSource(0, publicId, manager)
     , fURL(baseId, systemId)
 {
     setSystemId(fURL.getURLText());
 }
 
-URLInputSource::URLInputSource( const   XMLCh* const    baseId
-                                , const char* const     systemId) :
-    fURL(baseId, systemId)
+URLInputSource::URLInputSource( const XMLCh* const    baseId
+                              , const char* const     systemId
+                              , MemoryManager* const  manager) :
+    InputSource(manager)
+    , fURL(baseId, systemId)
 {
     setSystemId(fURL.getURLText());
 }
 
 URLInputSource::URLInputSource( const   XMLCh* const   baseId
                                 , const char* const    systemId
-                                , const char* const    publicId) :
-    InputSource(0, publicId)
+                                , const char* const    publicId
+                                , MemoryManager* const  manager) :
+    InputSource(0, publicId, manager)
     , fURL(baseId, systemId)
 {
     setSystemId(fURL.getURLText());

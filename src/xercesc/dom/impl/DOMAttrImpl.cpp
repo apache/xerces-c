@@ -162,7 +162,7 @@ const XMLCh * DOMAttrImpl::getValue() const
     // In such case, we have to visit each child to retrieve the text
     //
 
-    XMLBuffer buf;
+    XMLBuffer buf(1023, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
     getTextValue(fParent.fFirstChild, buf);
 
     return (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(buf.getRawBuffer());

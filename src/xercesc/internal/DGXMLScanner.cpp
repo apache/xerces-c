@@ -85,6 +85,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt, MemoryManager* const manager) :
 
     XMLScanner(valToAdopt, manager)
+    , fElemStack(manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
@@ -118,6 +119,7 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
                           , MemoryManager* const      manager) :
 
     XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
+    , fElemStack(manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
@@ -981,7 +983,7 @@ void DGXMLScanner::scanDocTypeDecl()
             //  with an external entity. Put a janitor on it to insure it gets
             //  cleaned up. The reader manager does not adopt them.
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
+            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
             declDTD->setSystemId(sysId);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -1723,7 +1725,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     //  with an external entity. Put a janitor on it to insure it gets
     //  cleaned up. The reader manager does not adopt them.
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
+    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -2316,7 +2318,7 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
         catch(const MalformedURLException& e)
@@ -2327,6 +2329,7 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
+                    , fMemoryManager
                 );
             else
                 throw e;

@@ -120,7 +120,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  LocalFileInputSource: Constructors and Destructor
 // ---------------------------------------------------------------------------
 LocalFileInputSource::LocalFileInputSource( const XMLCh* const basePath
-                                          , const XMLCh* const relativePath)
+                                          , const XMLCh* const relativePath
+                                          , MemoryManager* const manager)
+    : InputSource(manager)
 {
     //
     //  If the relative part is really relative, then weave it together
@@ -143,7 +145,9 @@ LocalFileInputSource::LocalFileInputSource( const XMLCh* const basePath
 
 }
 
-LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath)
+LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath,
+                                           MemoryManager* const manager)
+    : InputSource(manager)
 {
 
     //

@@ -185,7 +185,7 @@ private:
     DOMErrorHandler *fErrorHandler;
     InScopeNamespaces *fNSScope;
     unsigned int fNewNamespaceCount;
-
+    MemoryManager* fMemoryManager;
 };
 
 

@@ -433,7 +433,7 @@ void DOMBuilderImpl::resetDocumentPool()
 // ---------------------------------------------------------------------------
 DOMDocument* DOMBuilderImpl::parse(const DOMInputSource& source)
 {
-    Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false);
+    Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false, getMemoryManager());
 
     AbstractDOMParser::parse(isWrapper);
     if (fUserAdoptsDocument)
@@ -520,7 +520,7 @@ DOMBuilderImpl::resolveEntity(const XMLCh* const publicId,
         DOMInputSource* is = fEntityResolver->resolveEntity(publicId, systemId, baseURI);
 
         if (is)
-            return new Wrapper4DOMInputSource(is);
+            return new Wrapper4DOMInputSource(is, true, getMemoryManager());
     }
 
     return 0;
@@ -602,7 +602,7 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
     Grammar* grammar = 0;
     try
     {
-        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false);
+        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false, getMemoryManager());
 
         setParseInProgress(true);
         grammar = getScanner()->loadGrammar(isWrapper, grammarType, toCache);

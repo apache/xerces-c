@@ -151,8 +151,9 @@ XMLAttDef::~XMLAttDef()
 // ---------------------------------------------------------------------------
 //  XMLAttDef: Hidden constructors
 // ---------------------------------------------------------------------------
-XMLAttDef::XMLAttDef(const  XMLAttDef::AttTypes     type
-                    , const XMLAttDef::DefAttTypes  defType) :
+XMLAttDef::XMLAttDef( const XMLAttDef::AttTypes    type
+                    , const XMLAttDef::DefAttTypes defType
+                    , MemoryManager* const         manager) :
 
     fDefaultType(defType)
     , fType(type)
@@ -162,14 +163,15 @@ XMLAttDef::XMLAttDef(const  XMLAttDef::AttTypes     type
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
     , fEnumeration(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
 }
 
-XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
-                    , const XMLAttDef::AttTypes     type
-                    , const XMLAttDef::DefAttTypes  defType
-                    , const XMLCh* const            enumValues) :
+XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
+                    , const XMLAttDef::AttTypes    type
+                    , const XMLAttDef::DefAttTypes defType
+                    , const XMLCh* const           enumValues
+                    , MemoryManager* const         manager) :
 
     fDefaultType(defType)
     , fType(type)
@@ -179,7 +181,7 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
     , fEnumeration(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     try
     {

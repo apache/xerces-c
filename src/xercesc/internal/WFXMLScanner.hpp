@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:36:57  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -96,17 +99,17 @@ public :
     // -----------------------------------------------------------------------
     WFXMLScanner
     (
-        XMLValidator* const valToAdopt
-        , MemoryManager* const manager
+        XMLValidator* const       valToAdopt
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
     WFXMLScanner
     (
-        XMLDocumentHandler* const  docHandler
-        , DocTypeHandler* const    docTypeHandler
-        , XMLEntityHandler* const  entityHandler
-        , XMLErrorReporter* const  errReporter
-        , XMLValidator* const      valToAdopt
-        , MemoryManager* const      manager
+        XMLDocumentHandler* const docHandler
+        , DocTypeHandler* const   docTypeHandler
+        , XMLEntityHandler* const entityHandler
+        , XMLErrorReporter* const errReporter
+        , XMLValidator* const     valToAdopt
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~WFXMLScanner();
 

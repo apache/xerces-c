@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/16 21:36:58  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.13  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -258,43 +261,46 @@ public:
     // -----------------------------------------------------------------------
     XMLReader
     (
-        const   XMLCh* const                pubId
-        , const XMLCh* const                sysId
-        ,       BinInputStream* const       streamToAdopt
-        , const RefFrom                     from
-        , const Types                       type
-        , const Sources                     source
-        , const bool                        throwAtEnd = false
-        , const bool                        calculateSrcOfs = true
-        , const XMLVersion                  xmlVersion = XMLV1_0
+        const   XMLCh* const          pubId
+        , const XMLCh* const          sysId
+        ,       BinInputStream* const streamToAdopt
+        , const RefFrom               from
+        , const Types                 type
+        , const Sources               source
+        , const bool                  throwAtEnd = false
+        , const bool                  calculateSrcOfs = true
+        , const XMLVersion            xmlVersion = XMLV1_0
+        ,       MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     XMLReader
     (
-        const   XMLCh* const                pubId
-        , const XMLCh* const                sysId
-        ,       BinInputStream* const       streamToAdopt
-        , const XMLCh* const                encodingStr
-        , const RefFrom                     from
-        , const Types                       type
-        , const Sources                     source
-        , const bool                        throwAtEnd = false
-        , const bool                        calculateSrcOfs = true
-        , const XMLVersion                  xmlVersion = XMLV1_0
+        const   XMLCh* const          pubId
+        , const XMLCh* const          sysId
+        ,       BinInputStream* const streamToAdopt
+        , const XMLCh* const          encodingStr
+        , const RefFrom               from
+        , const Types                 type
+        , const Sources               source
+        , const bool                  throwAtEnd = false
+        , const bool                  calculateSrcOfs = true
+        , const XMLVersion            xmlVersion = XMLV1_0
+        ,       MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     XMLReader
     (
-        const   XMLCh* const                pubId
-        , const XMLCh* const                sysId
-        ,       BinInputStream* const       streamToAdopt
-        , XMLRecognizer::Encodings          encodingEnum
-        , const RefFrom                     from
-        , const Types                       type
-        , const Sources                     source
-        , const bool                        throwAtEnd = false
-        , const bool                        calculateSrcOfs = true
-        , const XMLVersion                  xmlVersion = XMLV1_0
+        const   XMLCh* const          pubId
+        , const XMLCh* const          sysId
+        ,       BinInputStream* const streamToAdopt
+        , XMLRecognizer::Encodings    encodingEnum
+        , const RefFrom               from
+        , const Types                 type
+        , const Sources               source
+        , const bool                  throwAtEnd = false
+        , const bool                  calculateSrcOfs = true
+        , const XMLVersion            xmlVersion = XMLV1_0
+        ,       MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~XMLReader();

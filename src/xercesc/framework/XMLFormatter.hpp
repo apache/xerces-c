@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.13  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -286,6 +289,7 @@ public:
         ,       XMLFormatTarget* const  target
         , const EscapeFlags             escapeFlags = NoEscapes
         , const UnRepFlags              unrepFlags = UnRep_Fail
+        ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
 
     XMLFormatter
@@ -295,6 +299,7 @@ public:
         ,       XMLFormatTarget* const  target
         , const EscapeFlags             escapeFlags = NoEscapes
         , const UnRepFlags              unrepFlags = UnRep_Fail
+        ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~XMLFormatter();

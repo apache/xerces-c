@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:36:59  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:27:05  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -139,9 +142,9 @@ void InputSource::setSystemId(const XMLCh* const systemId)
 // ---------------------------------------------------------------------------
 //  InputSource: Hidden Constructors
 // ---------------------------------------------------------------------------
-InputSource::InputSource() :
+InputSource::InputSource(MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fEncoding(0)
     , fPublicId(0)
     , fSystemId(0)
@@ -149,9 +152,10 @@ InputSource::InputSource() :
 {
 }
 
-InputSource::InputSource(const XMLCh* const systemId) :
+InputSource::InputSource(const XMLCh* const systemId,
+                         MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fEncoding(0)
     , fPublicId(0)
     , fSystemId(0)
@@ -160,10 +164,11 @@ InputSource::InputSource(const XMLCh* const systemId) :
     fSystemId = XMLString::replicate(systemId, fMemoryManager);
 }
 
-InputSource::InputSource(const  XMLCh* const systemId
-                        , const XMLCh* const publicId) :
+InputSource::InputSource(const  XMLCh* const   systemId
+                        , const XMLCh* const   publicId
+                        , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fEncoding(0)
     , fPublicId(0)
     , fSystemId(0)
@@ -173,9 +178,10 @@ InputSource::InputSource(const  XMLCh* const systemId
     fSystemId = XMLString::replicate(systemId, fMemoryManager);
 }
 
-InputSource::InputSource(const char* const systemId) :
+InputSource::InputSource(const char* const systemId,
+                         MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fEncoding(0)
     , fPublicId(0)
     , fSystemId(0)
@@ -185,9 +191,10 @@ InputSource::InputSource(const char* const systemId) :
 }
 
 InputSource::InputSource(const  char* const systemId
-                        , const char* const publicId) :
+                        , const char* const publicId
+                        , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fEncoding(0)
     , fPublicId(0)
     , fSystemId(0)

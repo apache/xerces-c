@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/05/16 21:36:59  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.19  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -1089,7 +1092,7 @@ void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
         XMLAttDef::DefAttTypes defAttType = attDef.getDefaultType();
         const XMLCh* defAttTypeStr = XMLUni::fgNullString;
         bool isEnumeration = (attType == XMLAttDef::Notation || attType == XMLAttDef::Enumeration);
-        XMLBuffer enumBuf(128);
+        XMLBuffer enumBuf(128, fMemoryManager);
 
         if (defAttType == XMLAttDef::Fixed ||
             defAttType == XMLAttDef::Implied ||

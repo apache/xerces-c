@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -276,7 +279,11 @@ template <class TElem> unsigned int ValueVectorOf<TElem>::size() const
     return fCurCount;
 }
 
-
+template <class TElem>
+MemoryManager* ValueVectorOf<TElem>::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  ValueVectorOf: Miscellaneous

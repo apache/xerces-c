@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -85,12 +88,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
+LocalFileFormatTarget::LocalFileFormatTarget( const XMLCh* const   fileName
+                                            , MemoryManager* const manager)
 : fSource(0)
 , fDataBuf(0)
 , fIndex(0)
 , fCapacity(1023)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
 
@@ -108,12 +112,13 @@ LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
 
 }
 
-LocalFileFormatTarget::LocalFileFormatTarget(const char* const fileName)
+LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
+                                            , MemoryManager* const manager)
 : fSource(0)
 , fDataBuf(0)
 , fIndex(0)
 , fCapacity(1023)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
 

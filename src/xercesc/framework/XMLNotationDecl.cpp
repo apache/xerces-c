@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -93,27 +96,28 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XMLNotationDecl: Constructors and operators
 // ---------------------------------------------------------------------------
-XMLNotationDecl::XMLNotationDecl() :
+XMLNotationDecl::XMLNotationDecl(MemoryManager* const manager) :
 
     fId(0)
     , fName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
 }
 
-XMLNotationDecl::XMLNotationDecl(   const   XMLCh* const    notName
-                                    , const XMLCh* const    pubId
-                                    , const XMLCh* const    sysId
-                                    , const XMLCh* const    baseURI) :
+XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
+                                , const XMLCh* const   pubId
+                                , const XMLCh* const   sysId
+                                , const XMLCh* const   baseURI
+                                , MemoryManager* const manager) :
     fId(0)
     , fName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     try
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 21:36:59  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.7  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -161,6 +164,8 @@ public :
     const XMLCh* getRawName() const;
     XMLCh* getRawName();
 
+    MemoryManager* getMemoryManager() const;
+
     // -----------------------------------------------------------------------
     //  Setters
     // -----------------------------------------------------------------------
@@ -261,6 +266,11 @@ inline XMLCh* QName::getLocalPart()
 inline unsigned int QName::getURI() const
 {
 	return fURIId;
+}
+
+inline MemoryManager* QName::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 // ---------------------------------------------------------------------------

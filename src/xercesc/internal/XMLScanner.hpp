@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/05/16 21:36:58  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.21  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -365,7 +368,7 @@ public :
     XMLScanner
     (
         XMLValidator* const valToAdopt
-        , MemoryManager* const manager// = XMLPlatformUtils::fgMemoryManager
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     XMLScanner
     (
@@ -374,7 +377,7 @@ public :
         , XMLEntityHandler* const  entityHandler
         , XMLErrorReporter* const  errReporter
         , XMLValidator* const      valToAdopt
-        , MemoryManager* const manager// = XMLPlatformUtils::fgMemoryManager
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~XMLScanner();
 

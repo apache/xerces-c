@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -84,8 +87,9 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-MemBufFormatTarget::MemBufFormatTarget(int initCapacity)
-    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+MemBufFormatTarget::MemBufFormatTarget( int                  initCapacity
+                                      , MemoryManager* const manager)
+    : fMemoryManager(manager)
     , fDataBuf(0)
     , fIndex(0)
     , fCapacity(initCapacity)

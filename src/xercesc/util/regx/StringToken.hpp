@@ -123,8 +123,8 @@ inline const XMLCh* StringToken::getString() const {
 // ---------------------------------------------------------------------------
 inline void StringToken::setString(const XMLCh* const literal) {
 
-	delete [] fString;
-	fString = XMLString::replicate(literal);
+	fMemoryManager->deallocate(fString);//delete [] fString;
+	fString = XMLString::replicate(literal, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

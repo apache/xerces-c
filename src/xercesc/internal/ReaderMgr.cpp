@@ -454,6 +454,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , false
                 , calcSrcOfs
                 , fXMLVersion
+                , fMemoryManager
                 );
         }
         else
@@ -469,6 +470,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , false
                 , calcSrcOfs
                 , fXMLVersion
+                , fMemoryManager
                 );
         }
     }
@@ -501,7 +503,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                                     , const bool                calcSrcOfs)
 {
     // Create a buffer for expanding the system id
-    XMLBuffer expSysId;
+    XMLBuffer expSysId(1023, fMemoryManager);
 
     //
     //  Allow the entity handler to expand the system id if they choose
@@ -551,7 +553,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
 
@@ -563,6 +565,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
+                    , fMemoryManager
                 );
             else
                 throw e;
@@ -610,7 +613,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                                     , const bool                calcSrcOfs)
 {
     // Create a buffer for expanding the system id
-    XMLBuffer expSysId;
+    XMLBuffer expSysId(1023, fMemoryManager);
 
     //
     //  Allow the entity handler to expand the system id if they choose
@@ -661,7 +664,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
 
@@ -673,6 +676,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
+                    , fMemoryManager
                 );
             else
                 throw e;
@@ -749,6 +753,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
         , false
         , calcSrcOfs
         , fXMLVersion
+        , fMemoryManager
     );
 
     // If it failed for any reason, then return zero.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/16 21:36:59  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.8  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -196,6 +199,7 @@ public:
     // -----------------------------------------------------------------------
     TVal* get(const void* const key);
     const TVal* get(const void* const key) const;
+    MemoryManager* getMemoryManager() const;
 
     // -----------------------------------------------------------------------
     //  Setters

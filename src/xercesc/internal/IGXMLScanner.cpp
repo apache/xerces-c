@@ -94,6 +94,8 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemStack(manager)
+    , fContent(1023, manager)
     , fRawAttrList(0)
     , fDTDValidator(0)
     , fSchemaValidator(0)
@@ -128,6 +130,8 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemStack(manager)
+    , fContent(1023, manager)
     , fRawAttrList(0)
     , fDTDValidator(0)
     , fSchemaValidator(0)
@@ -1385,7 +1389,7 @@ void IGXMLScanner::scanDocTypeDecl()
             //  with an external entity. Put a janitor on it to insure it gets
             //  cleaned up. The reader manager does not adopt them.
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
+            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
             declDTD->setSystemId(sysId);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -2376,7 +2380,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if (!XMLString::startsWith(typeName, poundStr)) {
                 const int comma = XMLString::indexOf(typeName, chComma);
                 if (comma > 0) {
-                    XMLBuffer prefixBuf(comma+1);
+                    XMLBuffer prefixBuf(comma+1, fMemoryManager);
                     prefixBuf.append(typeName, comma);
                     const XMLCh* uriStr = prefixBuf.getRawBuffer();
 
@@ -2892,7 +2896,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     //  with an external entity. Put a janitor on it to insure it gets
     //  cleaned up. The reader manager does not adopt them.
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr);
+    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     Janitor<DTDEntityDecl> janDecl(declDTD);
 

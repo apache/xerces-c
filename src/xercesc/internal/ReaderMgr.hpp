@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/16 21:36:57  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.8  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -172,7 +175,7 @@ public :
     // -----------------------------------------------------------------------
     //  Class specific types
     // -----------------------------------------------------------------------
-    struct LastExtEntityInfo
+    struct LastExtEntityInfo : public XMemory
     {
         const   XMLCh*          systemId;
         const   XMLCh*          publicId;
@@ -184,7 +187,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ReaderMgr(MemoryManager* const manager /*= XMLPlatformUtils::fgMemoryManager*/);
+    ReaderMgr(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ReaderMgr();
 
 

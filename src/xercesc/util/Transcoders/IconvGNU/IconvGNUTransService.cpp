@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.7  2003/05/15 18:47:05  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -860,6 +863,64 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retVal;
 }
 
+char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode,
+                                       MemoryManager* const manager)
+{
+    if (!toTranscode)
+        return 0;
+
+    char* retVal = 0;
+    if (*toTranscode) {
+        unsigned int  wLent = getWideCharLength(toTranscode);
+
+        // Calc needed size.
+        const size_t neededLen = calcRequiredSize (toTranscode);
+        if (neededLen == 0)
+            return 0;
+        // allocate output buffer
+        retVal = new char[neededLen + 1];
+        if (retVal == NULL)
+            return 0;
+        // prepare the original
+        char    tmpWBuff[gTempBuffArraySize];
+        char    *wideCharBuf = 0;
+        char    *wBufPtr = 0;
+        size_t  len = wLent * uChSize();
+
+        if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+            if (len > gTempBuffArraySize) {
+                wBufPtr = new char[len];
+                if (wBufPtr == NULL)
+                    return 0;
+                wideCharBuf = wBufPtr;
+            } else
+                wideCharBuf = tmpWBuff;
+            xmlToMbs (toTranscode, wLent, wideCharBuf, wLent);
+        } else
+            wideCharBuf = (char *) toTranscode;
+
+        // perform conversion
+        wLent *= uChSize();
+        char    *ptr = retVal;
+        size_t    rc = iconvTo(wideCharBuf, (size_t *) &wLent, &ptr, neededLen);
+        if (rc == (size_t)-1) {
+            if (wBufPtr)
+            delete [] wBufPtr;
+            return 0;
+        }
+        if (wBufPtr)
+            delete [] wBufPtr;
+        retVal[neededLen] = 0;
+
+    } else {
+        retVal = new char[1];
+        if (retVal == NULL)
+            return 0;
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
 
 bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
                     , char* const        toFill
@@ -916,6 +977,63 @@ bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
 
 XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode)
+{
+    if (!toTranscode)
+        return 0;
+
+    XMLCh* retVal = 0;
+    if (*toTranscode) {
+        const unsigned int wLent = calcRequiredSize(toTranscode);
+        if (wLent == 0) {
+            retVal = new XMLCh[1];
+            retVal[0] = 0;
+            return retVal;
+        }
+
+        char    tmpWBuff[gTempBuffArraySize];
+        char    *wideCharBuf = 0;
+        char    *wBufPtr = 0;
+        size_t  len = wLent * uChSize();
+
+        retVal = new XMLCh[wLent + 1];
+        if (retVal == NULL)
+            return NULL;
+        if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+            if (len > gTempBuffArraySize) {
+                wBufPtr = new char[len];
+                if (wBufPtr == NULL)
+                    return 0;
+                wideCharBuf = wBufPtr;
+            } else
+                wideCharBuf = tmpWBuff;
+        } else
+            wideCharBuf = (char *) retVal;
+
+        size_t    flen = strlen(toTranscode);
+        char    *ptr = wideCharBuf;
+        size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
+        if (rc == (size_t) -1) {
+            if (wBufPtr)
+            delete [] wBufPtr;
+            return NULL;
+        }
+        if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
+            mbsToXML (wideCharBuf, wLent, retVal, wLent);
+        if (wBufPtr)
+            delete [] wBufPtr;
+        retVal[wLent] = 0x00;
+    }
+    else {
+        retVal = new XMLCh[1];
+        if (retVal == NULL )
+            return 0;
+        retVal[0] = 0;
+    }
+    return retVal;
+}
+
+XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode,
+                                        MemoryManager* const manager)
 {
     if (!toTranscode)
         return 0;

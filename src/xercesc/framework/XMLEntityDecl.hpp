@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -137,7 +140,7 @@ public:
     /**
       *  Deafult Constructor
       */
-    XMLEntityDecl();
+    XMLEntityDecl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Constructor with a const entity name
       *
@@ -146,6 +149,7 @@ public:
     XMLEntityDecl
     (
         const   XMLCh* const    entName
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -158,6 +162,7 @@ public:
     (
         const   XMLCh* const    entName
         , const XMLCh* const    value
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -170,6 +175,7 @@ public:
     (
         const   XMLCh* const    entName
         , const XMLCh           value
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -218,8 +221,8 @@ UnionToken* TokenFactory::createUnion(const bool isConcat) {
 RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 
-	RangeToken* tmpTok = isNegRange ? new (fMemoryManager) RangeToken(Token::T_NRANGE)
-								   : new (fMemoryManager) RangeToken(Token::T_RANGE);
+	RangeToken* tmpTok = isNegRange ? new (fMemoryManager) RangeToken(Token::T_NRANGE, fMemoryManager)
+								   : new (fMemoryManager) RangeToken(Token::T_RANGE, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;

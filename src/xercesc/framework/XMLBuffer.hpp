@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -122,8 +125,8 @@ public :
 
     /** @name Constructor */
     //@{
-    XMLBuffer(int capacity = 1023,
-              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
+    XMLBuffer(int capacity = 1023
+              , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
         fUsed(false)
         , fIndex(0)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -107,7 +110,7 @@ class XMLAttDef;
  *  there are portability issues with deriving from a template class in a
  *  DLL. It does though provide a similar enumerator interface.
  */
-class XMLPARSER_EXPORT XMLAttDefList
+class XMLPARSER_EXPORT XMLAttDefList : public XMemory
 {
 public:
     // -----------------------------------------------------------------------

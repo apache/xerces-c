@@ -125,15 +125,16 @@ bool XMLReader::isPublicIdChar(const XMLCh toCheck)
 // ---------------------------------------------------------------------------
 //  XMLReader: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLReader::XMLReader(const  XMLCh* const                pubId
-                    , const XMLCh* const                sysId
-                    ,       BinInputStream* const       streamToAdopt
-                    , const RefFrom                     from
-                    , const Types                       type
-                    , const Sources                     source
-                    , const bool                        throwAtEnd
-                    , const bool                        calculateSrcOfs
-                    , const XMLVersion                  version) :
+XMLReader::XMLReader(const  XMLCh* const          pubId
+                    , const XMLCh* const          sysId
+                    ,       BinInputStream* const streamToAdopt
+                    , const RefFrom               from
+                    , const Types                 type
+                    , const Sources               source
+                    , const bool                  throwAtEnd
+                    , const bool                  calculateSrcOfs
+                    , const XMLVersion            version
+                    ,       MemoryManager* const  manager) :
     fCharIndex(0)
     , fCharsAvail(0)
     , fCurCol(1)
@@ -157,7 +158,7 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
     , fType(type)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     setXMLVersion(version);
 
@@ -203,16 +204,17 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
 }
 
 
-XMLReader::XMLReader(const  XMLCh* const            pubId
-                    , const XMLCh* const            sysId
-                    ,       BinInputStream* const   streamToAdopt
-                    , const XMLCh* const            encodingStr
-                    , const RefFrom                 from
-                    , const Types                   type
-                    , const Sources                 source
-                    , const bool                    throwAtEnd
-                    , const bool                    calculateSrcOfs
-                    , const XMLVersion              version) :
+XMLReader::XMLReader(const  XMLCh* const          pubId
+                    , const XMLCh* const          sysId
+                    ,       BinInputStream* const streamToAdopt
+                    , const XMLCh* const          encodingStr
+                    , const RefFrom               from
+                    , const Types                 type
+                    , const Sources               source
+                    , const bool                  throwAtEnd
+                    , const bool                  calculateSrcOfs
+                    , const XMLVersion            version
+                    ,       MemoryManager* const  manager) :
     fCharIndex(0)
     , fCharsAvail(0)
     , fCurCol(1)
@@ -237,7 +239,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
     , fType(type)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     setXMLVersion(version);
 
@@ -322,16 +324,17 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
 }
 
 
-XMLReader::XMLReader(const  XMLCh* const            pubId
-                    , const XMLCh* const            sysId
-                    ,       BinInputStream* const   streamToAdopt
-                    , XMLRecognizer::Encodings      encodingEnum
-                    , const RefFrom                 from
-                    , const Types                   type
-                    , const Sources                 source
-                    , const bool                    throwAtEnd
-                    , const bool                    calculateSrcOfs
-                    , const XMLVersion              version) :
+XMLReader::XMLReader(const  XMLCh* const          pubId
+                    , const XMLCh* const          sysId
+                    ,       BinInputStream* const streamToAdopt
+                    , XMLRecognizer::Encodings    encodingEnum
+                    , const RefFrom               from
+                    , const Types                 type
+                    , const Sources               source
+                    , const bool                  throwAtEnd
+                    , const bool                  calculateSrcOfs
+                    , const XMLVersion            version
+                    ,       MemoryManager* const  manager) :
     fCharIndex(0)
     , fCharsAvail(0)
     , fCurCol(1)
@@ -356,7 +359,7 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fThrowAtEnd(throwAtEnd)
     , fTranscoder(0)
     , fType(type)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     setXMLVersion(version);
 

@@ -71,7 +71,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XMLEntityDecl: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLEntityDecl::XMLEntityDecl() :
+XMLEntityDecl::XMLEntityDecl(MemoryManager* const manager) :
 
     fId(0)
     , fValueLen(0)
@@ -81,11 +81,12 @@ XMLEntityDecl::XMLEntityDecl() :
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
 }
 
-XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName) :
+XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName,
+                             MemoryManager* const manager) :
 
     fId(0)
     , fValueLen(0)
@@ -95,13 +96,14 @@ XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName) :
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     fName = XMLString::replicate(entName, fMemoryManager);
 }
 
-XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
-                            , const XMLCh* const    value) :
+XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
+                            , const XMLCh* const   value
+                            , MemoryManager* const manager) :
     fId(0)
     , fValueLen(XMLString::stringLen(value))
     , fValue(0)
@@ -110,7 +112,7 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     try
     {
@@ -123,8 +125,9 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
     }
 }
 
-XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
-                            , const XMLCh           value) :
+XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
+                            , const XMLCh          value
+                            , MemoryManager* const manager) :
     fId(0)
     , fValueLen(1)
     , fValue(0)

@@ -107,6 +107,7 @@ public :
     const TElem* elementAt(const unsigned int getAt) const;
     TElem* elementAt(const unsigned int getAt);
     unsigned int size() const;
+    MemoryManager* getMemoryManager() const;
 
 
     // -----------------------------------------------------------------------

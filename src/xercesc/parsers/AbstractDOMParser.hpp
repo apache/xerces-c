@@ -1347,6 +1347,8 @@ protected :
       */
     bool getParseInProgress() const;
 
+    MemoryManager* getMemoryManager() const;
+
     //@}
 
 
@@ -1560,6 +1562,10 @@ inline DOMNode* AbstractDOMParser::getCurrentNode()
     return fCurrentNode;
 }
 
+inline MemoryManager* AbstractDOMParser::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Protected setter methods

@@ -182,7 +182,8 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
                             , const char* const             docVersion
                             ,       XMLFormatTarget* const  target
                             , const EscapeFlags             escapeFlags
-                            , const UnRepFlags              unrepFlags)
+                            , const UnRepFlags              unrepFlags
+                            ,       MemoryManager* const    manager)
     : fEscapeFlags(escapeFlags)
     , fOutEncoding(0)
     , fTarget(target)
@@ -199,7 +200,7 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
     , fQuoteRef(0)
     , fQuoteLen(0) 
     , fIsXML11(false)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     // Transcode the encoding string
     fOutEncoding = XMLString::transcode(outEncoding, fMemoryManager);
@@ -235,7 +236,8 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
                             , const XMLCh* const            docVersion
                             ,       XMLFormatTarget* const  target
                             , const EscapeFlags             escapeFlags
-                            , const UnRepFlags              unrepFlags)
+                            , const UnRepFlags              unrepFlags
+                            ,       MemoryManager* const    manager)
     : fEscapeFlags(escapeFlags)
     , fOutEncoding(0)
     , fTarget(target)
@@ -252,7 +254,7 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
     , fQuoteRef(0)
     , fQuoteLen(0) 
     , fIsXML11(false)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     // Try to create a transcoder for this encoding
     XMLTransService::Codes resCode;

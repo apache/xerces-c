@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:36:57  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2002/11/04 14:58:18  tng
  * C++ Namespace Support.
  *
@@ -188,7 +191,7 @@ int VecAttributesImpl::getIndex(const XMLCh* const uri, const XMLCh* const local
     //  Search the vector for the attribute with the given name and return
     //  its type.
     //
-    XMLBuffer uriBuffer ;
+    XMLBuffer uriBuffer(1023, fVector->getMemoryManager()) ;
     for (unsigned int index = 0; index < fCount; index++)
     {
         const XMLAttr* curElem = fVector->elementAt(index);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 21:36:57  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.5  2003/05/15 18:26:29  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -146,7 +149,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ElemStack: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ElemStack::ElemStack() :
+ElemStack::ElemStack(MemoryManager* const manager) :
 
     fEmptyNamespaceId(0)
     , fGlobalPoolId(0)
@@ -158,7 +161,7 @@ ElemStack::ElemStack() :
     , fXMLPoolId(0)
     , fXMLNSNamespaceId(0)
     , fXMLNSPoolId(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     // Do an initial allocation of the stack and zero it out
     fStack = (StackElem**) fMemoryManager->allocate
@@ -554,7 +557,7 @@ void ElemStack::expandStack()
 // ---------------------------------------------------------------------------
 //  WFElemStack: Constructors and Destructor
 // ---------------------------------------------------------------------------
-WFElemStack::WFElemStack() :
+WFElemStack::WFElemStack(MemoryManager* const manager) :
 
     fEmptyNamespaceId(0)
     , fGlobalPoolId(0)
@@ -568,7 +571,7 @@ WFElemStack::WFElemStack() :
     , fMapCapacity(0)
     , fMap(0)
     , fStack(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     // Do an initial allocation of the stack and zero it out
     fStack = (StackElem**) fMemoryManager->allocate

@@ -79,7 +79,8 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-    RangeToken(const unsigned short tokType);
+    RangeToken(const unsigned short tokType,
+               MemoryManager* const manager);
     ~RangeToken();
 
     // -----------------------------------------------------------------------
@@ -139,6 +140,7 @@ private:
     int*         fMap;
     XMLInt32*    fRanges;
     RangeToken*  fCaseIToken;
+    MemoryManager* fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/16 03:11:30  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -95,11 +98,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  MemBufInputSource: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MemBufInputSource::MemBufInputSource(   const   XMLByte* const  srcDocBytes
-                                        , const unsigned int    byteCount
-                                        , const XMLCh* const    bufId
-                                        , const bool            adoptBuffer) :
-    InputSource(bufId)
+MemBufInputSource::MemBufInputSource( const XMLByte* const  srcDocBytes
+                                    , const unsigned int    byteCount
+                                    , const XMLCh* const    bufId
+                                    , const bool            adoptBuffer
+                                    , MemoryManager* const  manager) :
+    InputSource(bufId, manager)
     , fAdopted(adoptBuffer)
     , fByteCount(byteCount)
     , fCopyBufToStream(true)
@@ -107,11 +111,12 @@ MemBufInputSource::MemBufInputSource(   const   XMLByte* const  srcDocBytes
 {
 }
 
-MemBufInputSource::MemBufInputSource(   const   XMLByte* const  srcDocBytes
-                                        , const unsigned int    byteCount
-                                        , const char* const     bufId
-                                        , const bool            adoptBuffer) :
-    InputSource(bufId)
+MemBufInputSource::MemBufInputSource( const XMLByte* const  srcDocBytes
+                                    , const unsigned int    byteCount
+                                    , const char* const     bufId
+                                    , const bool            adoptBuffer
+                                    , MemoryManager* const  manager) :
+    InputSource(bufId, manager)
     , fAdopted(adoptBuffer)
     , fByteCount(byteCount)
     , fCopyBufToStream(true)

@@ -1026,7 +1026,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     // The normalized data can only be as large as the
                     // original size, so this will avoid allocating way
                     // too much or too little memory.
-                    XMLBuffer toFill(len+1);
+                    XMLBuffer toFill(len+1, fMemoryManager);
                     toFill.set(rawBuf);
 
                     if (fNormalizeData) {
@@ -1068,7 +1068,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     // The normalized data can only be as large as the
                     // original size, so this will avoid allocating way
                     // too much or too little memory.
-                    XMLBuffer toFill(len+1);
+                    XMLBuffer toFill(len+1, fMemoryManager);
                     toFill.set(rawBuf);
 
                     if (fNormalizeData) {
@@ -1346,7 +1346,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 else {
                     if (fStandardUriConformant && urlTmp.hasInvalidChar())
                         ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                    srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
                 }
             }
 
@@ -1358,6 +1358,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     (
                         lastInfo.systemId
                         , expSysId.getRawBuffer()
+                        , fMemoryManager
                     );
                 else
                     throw e;
@@ -1516,7 +1517,7 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             else {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXML(MalformedURLException, XMLExcepts::URL_MalformedURL);
-                srcToFill = new (fMemoryManager) URLInputSource(urlTmp);
+                srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
             }
         }
         catch(const MalformedURLException& e)
@@ -1527,6 +1528,7 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
                 (
                     lastInfo.systemId
                     , expSysId.getRawBuffer()
+                    , fMemoryManager
                 );
             else
                 throw e;

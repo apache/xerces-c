@@ -259,6 +259,12 @@ template <class TElem> void BaseRefVectorOf<TElem>::reinitialize()
 
 }
 
+template <class TElem>
+MemoryManager* BaseRefVectorOf<TElem>::getMemoryManager() const
+{
+    return fMemoryManager;
+}
+
 
 // ---------------------------------------------------------------------------
 //  BaseRefVectorOf: Getter methods

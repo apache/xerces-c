@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -82,8 +85,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Wrapper4DOMInputSource: Constructor and Destructor
 // ---------------------------------------------------------------------------
 Wrapper4DOMInputSource::Wrapper4DOMInputSource(DOMInputSource* const inputSource,
-                                               const bool adoptFlag) :
-    fAdoptInputSource(adoptFlag)
+                                               const bool adoptFlag,
+                                               MemoryManager* const  manager) :
+    InputSource(manager)
+    , fAdoptInputSource(adoptFlag)
     ,  fInputSource(inputSource)
 {
     if (!inputSource)

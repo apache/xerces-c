@@ -863,7 +863,7 @@ const XMLCh* DOMRangeImpl::toString() const
     DOMNode* node = fStartContainer;
     DOMNode* stopNode = fEndContainer;
 
-    XMLBuffer retStringBuf;
+    XMLBuffer retStringBuf(1023, ((DOMDocumentImpl *)fDocument)->getMemoryManager());
     short type = fStartContainer->getNodeType();
     if((type == DOMNode::TEXT_NODE
         || type == DOMNode::CDATA_SECTION_NODE

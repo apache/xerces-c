@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.7  2003/05/15 21:46:47  knoaman
  * Add missing include.
  *
@@ -121,7 +124,9 @@ const unsigned int RangeToken::INITIALSIZE = 16;
 // ---------------------------------------------------------------------------
 //  RangeToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
-RangeToken::RangeToken(const unsigned short tokType) : Token(tokType)
+RangeToken::RangeToken(const unsigned short tokType,
+                       MemoryManager* const manager) 
+    : Token(tokType)
     , fSorted(false)
     , fCompacted(false)
     , fNonMapIndex(0)
@@ -130,14 +135,15 @@ RangeToken::RangeToken(const unsigned short tokType) : Token(tokType)
     , fMap(0)
     , fRanges(0)
     , fCaseIToken(0)
+    , fMemoryManager(manager)
 {
 
 }
 
 RangeToken::~RangeToken() {
 
-    delete [] fMap;
-    delete[] fRanges;
+    fMemoryManager->deallocate(fMap);//delete [] fMap;
+    fMemoryManager->deallocate(fRanges);//delete[] fRanges;
 }
 
 
@@ -169,12 +175,12 @@ void RangeToken::setRangeValues(XMLInt32* const rangeValues, const unsigned int 
     if (fRanges) {
 
         if (fMap) {
-            delete [] fMap;
+            fMemoryManager->deallocate(fMap);//delete [] fMap;
             fMap = 0;
         }
 
         fElemCount = 0;
-        delete [] fRanges;
+        fMemoryManager->deallocate(fRanges);//delete [] fRanges;
         fRanges = 0;
     }
 
@@ -204,7 +210,10 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
 
     if (fRanges == 0) {
 
-        fRanges = new XMLInt32[fMaxCount];
+        fRanges = (XMLInt32*) fMemoryManager->allocate
+        (
+            fMaxCount * sizeof(XMLInt32)
+        );//new XMLInt32[fMaxCount];
         fRanges[0] = val1;
         fRanges[1] = val2;
         fElemCount = 2;
@@ -327,7 +336,10 @@ void RangeToken::mergeRanges(const Token *const tok) {
     if (fRanges == 0) {
 
         fMaxCount = rangeTok->fMaxCount;
-        fRanges = new XMLInt32[fMaxCount];
+        fRanges = (XMLInt32*) fMemoryManager->allocate
+        (
+            fMaxCount * sizeof(XMLInt32)
+        );//new XMLInt32[fMaxCount];
         for (unsigned int index = 0; index < rangeTok->fElemCount; index++) {
             fRanges[index] = rangeTok->fRanges[index];
         }
@@ -338,7 +350,10 @@ void RangeToken::mergeRanges(const Token *const tok) {
 
     unsigned int newMaxCount = (fElemCount + rangeTok->fElemCount >= fMaxCount)
                                  ? fMaxCount + rangeTok->fMaxCount : fMaxCount;
-    XMLInt32* result = new XMLInt32[newMaxCount];
+    XMLInt32* result = (XMLInt32*) fMemoryManager->allocate
+    (
+        newMaxCount * sizeof(XMLInt32)
+    );//new XMLInt32[newMaxCount];
 
     for (unsigned int i=0, j=0, k=0; i < fElemCount || j < rangeTok->fElemCount;) {
 
@@ -371,7 +386,7 @@ void RangeToken::mergeRanges(const Token *const tok) {
         }
     }
 
-    delete [] fRanges;
+    fMemoryManager->deallocate(fRanges);//delete [] fRanges;
     fElemCount += rangeTok->fElemCount;
     fRanges = result;
     fMaxCount = newMaxCount;
@@ -396,7 +411,10 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
 
     unsigned int newMax = (fElemCount + tok->fElemCount >= fMaxCount)
                              ? fMaxCount + tok->fMaxCount : fMaxCount;
-    XMLInt32* result = new XMLInt32[newMax];
+    XMLInt32* result = (XMLInt32*) fMemoryManager->allocate
+    (
+        newMax * sizeof(XMLInt32)
+    );//new XMLInt32[newMax];
     unsigned int newElemCount = 0;
     unsigned int srcCount = 0;
     unsigned int subCount = 0;
@@ -441,7 +459,7 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
             subCount += 2;
         }
         else {
-            delete [] result;
+            fMemoryManager->deallocate(result);//delete [] result;
             ThrowXML(RuntimeException, XMLExcepts::Regex_SubtractRangesError);
         }
     } //end while
@@ -452,7 +470,7 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
         result[newElemCount++] = fRanges[srcCount++];
     }
 
-    delete [] fRanges;
+    fMemoryManager->deallocate(fRanges);//delete [] fRanges;
     fRanges = result;
     fElemCount = newElemCount;
     fMaxCount = newMax;
@@ -474,7 +492,10 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
 
     unsigned int newMax = (fElemCount + tok->fElemCount >= fMaxCount)
                              ? fMaxCount + tok->fMaxCount : fMaxCount;
-    XMLInt32* result = new XMLInt32[newMax];
+    XMLInt32* result = (XMLInt32*) fMemoryManager->allocate
+    (
+        newMax * sizeof(XMLInt32)
+    );//new XMLInt32[newMax];
     unsigned int newElemCount = 0;
     unsigned int srcCount = 0;
     unsigned int tokCount = 0;
@@ -534,12 +555,12 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
         }
         else {
 
-            delete [] result;
+            fMemoryManager->deallocate(result);//delete [] result;
             ThrowXML(RuntimeException, XMLExcepts::Regex_IntersectRangesError);
         }
     } //end while
 
-    delete [] fRanges;
+    fMemoryManager->deallocate(fRanges);//delete [] fRanges;
     fRanges = result;
     fElemCount = newElemCount;
     fMaxCount = newMax;
@@ -631,11 +652,14 @@ void RangeToken::expand(const unsigned int length) {
     if (newMax < minNewMax)
         newMax = minNewMax;
 
-    XMLInt32* newList = new XMLInt32[newMax];
+    XMLInt32* newList = (XMLInt32*) fMemoryManager->allocate
+    (
+        newMax * sizeof(XMLInt32)
+    );//new XMLInt32[newMax];
     for (unsigned int index = 0; index < fElemCount; index++)
         newList[index] = fRanges[index];
 
-    delete [] fRanges;
+    fMemoryManager->deallocate(fRanges);//delete [] fRanges;
     fRanges = newList;
     fMaxCount = newMax;
 }
@@ -643,7 +667,7 @@ void RangeToken::expand(const unsigned int length) {
 void RangeToken::createMap() {
 
     int asize = MAPSIZE/32;
-    fMap = new int[asize];
+    fMap = (int*) fMemoryManager->allocate(asize * sizeof(int));//new int[asize];
     fNonMapIndex = fElemCount;
 
     for (int i = 0; i < asize; i++) {

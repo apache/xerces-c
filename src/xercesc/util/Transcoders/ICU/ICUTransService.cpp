@@ -106,13 +106,16 @@ static const XMLCh gMyServiceId[] =
 //  When XMLCh and ICU's UChar are not the same size, we have to do a temp
 //  conversion of all strings. These local helper methods make that easier.
 //
-static UChar* convertToUChar(   const   XMLCh* const    toConvert
-                                , const unsigned int    srcLen = 0)
+static UChar* convertToUChar( const   XMLCh* const    toConvert
+                            , const unsigned int    srcLen = 0
+                            , MemoryManager* const manager = 0)
 {
     const unsigned int actualLen = srcLen
                                    ? srcLen : XMLString::stringLen(toConvert);
 
-    UChar* tmpBuf = new UChar[actualLen + 1];
+    UChar* tmpBuf = (manager)
+        ? (UChar*) manager->allocate((actualLen + 1) * sizeof(UChar))
+		: new UChar[actualLen + 1];
     const XMLCh* srcPtr = toConvert;
     UChar* outPtr = tmpBuf;
     while (*srcPtr)
@@ -928,7 +931,199 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
     return retBuf;
 }
 
+char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode,
+                                  MemoryManager* const manager)
+{
+    char* retBuf = 0;
+
+    // Check for a couple of special cases
+    if (!toTranscode)
+        return retBuf;
+
+    if (!*toTranscode)
+    {
+        retBuf = new char[1];
+        retBuf[0] = 0;
+        return retBuf;
+    }
+
+    //
+    //  Get the length of the source string since we'll have to use it in
+    //  a couple places below.
+    //
+    const unsigned int srcLen = XMLString::stringLen(toTranscode);
+
+    //
+    //  If XMLCh and UChar are not the same size, then we have to make a
+    //  temp copy of the text to pass to ICU.
+    //
+    const UChar* actualSrc;
+    UChar* ncActual = 0;
+    if (sizeof(XMLCh) == sizeof(UChar))
+    {
+        actualSrc = (const UChar*)toTranscode;
+    }
+     else
+    {
+        // Allocate a non-const temp buf, but store it also in the actual
+        ncActual = convertToUChar(toTranscode);
+        actualSrc = ncActual;
+    }
+
+    // Insure that the temp buffer, if any, gets cleaned up via the nc pointer
+    ArrayJanitor<UChar> janTmp(ncActual);
+
+    // Caculate a return buffer size not too big, but less likely to overflow
+    int32_t targetLen = (int32_t)(srcLen * 1.25);
+
+    // Allocate the return buffer
+    retBuf = new char[targetLen + 1];
+
+    //
+    //  Lock now while we call the converter. Use a faux block to do the
+    //  lock so that it unlocks immediately afterwards.
+    //
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t targetCap;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , retBuf
+            , targetLen + 1
+            , actualSrc
+            , -1
+            , &err
+        );
+    }
+
+    // If targetLen is not enough then buffer overflow might occur
+    if (err == U_BUFFER_OVERFLOW_ERROR)
+    {
+        //
+        //  Reset the error, delete the old buffer, allocate a new one,
+        //  and try again.
+        //
+        err = U_ZERO_ERROR;
+        delete [] retBuf;
+        retBuf = new char[targetCap + 1];
+
+        // Lock again before we retry
+        XMLMutexLock lockConverter(&fMutex);
+        targetCap = ucnv_fromUChars
+        (
+            fConverter
+            , retBuf
+            , targetCap
+            , actualSrc
+            , -1
+            , &err
+        );
+    }
+
+    if (U_FAILURE(err))
+    {
+        delete [] retBuf;
+        return 0;
+    }
+
+    // Cap it off and return
+    retBuf[targetCap] = 0;
+    return retBuf;
+}
+
 XMLCh* ICULCPTranscoder::transcode(const char* const toTranscode)
+{
+    // Watch for a few pyscho corner cases
+    if (!toTranscode)
+        return 0;
+
+    if (!*toTranscode)
+    {
+        XMLCh* retVal = new XMLCh[1];
+        retVal[0] = 0;
+        return retVal;
+    }
+
+    //
+    //  Get the length of the string to transcode. The Unicode string will
+    //  almost always be no more chars than were in the source, so this is
+    //  the best guess as to the storage needed.
+    //
+    const int32_t srcLen = (int32_t)strlen(toTranscode);
+
+    // We need a target buffer of UChars to fill in
+    UChar* targetBuf = 0;
+
+    // Now lock while we do these calculations
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t targetCap;
+    {
+        XMLMutexLock lockConverter(&fMutex);
+
+        //
+        //  Here we don't know what the target length will be so use 0 and
+        //  expect an U_BUFFER_OVERFLOW_ERROR in which case it'd get resolved
+        //  by the correct capacity value.
+        //
+        targetCap = ucnv_toUChars
+        (
+            fConverter
+            , 0
+            , 0
+            , toTranscode
+            , srcLen
+            , &err
+        );
+
+        if (err != U_BUFFER_OVERFLOW_ERROR)
+            return 0;
+
+        err = U_ZERO_ERROR;
+        targetBuf = new UChar[targetCap + 1];
+        ucnv_toUChars
+        (
+            fConverter
+            , targetBuf
+            , targetCap
+            , toTranscode
+            , srcLen
+            , &err
+        );
+    }
+
+    if (U_FAILURE(err))
+    {
+        // Clean up if we got anything allocated
+        delete [] targetBuf;
+        return 0;
+    }
+
+    // Cap it off to make sure
+    targetBuf[targetCap] = 0;
+
+    //
+    //  If XMLCh and UChar are the same size, then we can return retVal
+    //  as is. Else, we have to allocate another buffer and copy the data
+    //  over to it.
+    //
+    XMLCh* actualRet;
+    if (sizeof(XMLCh) == sizeof(UChar))
+    {
+        actualRet = (XMLCh*)targetBuf;
+    }
+     else
+    {
+        actualRet = convertToXMLCh(targetBuf);
+        delete [] targetBuf;
+    }
+    return actualRet;
+}
+
+XMLCh* ICULCPTranscoder::transcode(const char* const toTranscode,
+                                   MemoryManager* const manager)
 {
     // Watch for a few pyscho corner cases
     if (!toTranscode)

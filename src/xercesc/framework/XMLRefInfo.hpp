@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:26:07  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -129,9 +132,10 @@ public :
     //@{
     XMLRefInfo
     (
-        const   XMLCh* const    refName
-        , const bool            fDeclared = false
-        , const bool            fUsed = false
+        const   XMLCh* const   refName
+        , const bool           fDeclared = false
+        , const bool           fUsed = false
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
 
@@ -190,13 +194,14 @@ private :
 // ---------------------------------------------------------------------------
 //  XMLRefInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
-inline XMLRefInfo::XMLRefInfo(  const   XMLCh* const    refName
-                                , const bool            declared
-                                , const bool            used) :
+inline XMLRefInfo::XMLRefInfo( const XMLCh* const   refName
+                             , const bool           declared
+                             , const bool           used
+                             , MemoryManager* const manager) :
     fDeclared(declared)
     , fUsed(used)
     , fRefName(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     fRefName = XMLString::replicate(refName, fMemoryManager);
 }

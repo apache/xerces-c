@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 21:37:00  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.4  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -135,7 +138,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
         return;
 
     if (fChildren == 0)
-        fChildren = new RefVectorOf<Token>(INITIALSIZE, false);
+        fChildren = new (tokFactory->getMemoryManager()) RefVectorOf<Token>(INITIALSIZE, false);
 
     if (getTokenType() == T_UNION) {
 
@@ -174,7 +177,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     }
 
     // Continue
-    XMLBuffer stringBuf;
+    XMLBuffer stringBuf(1023, tokFactory->getMemoryManager());
 
     if (previousType == T_CHAR) {
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 21:36:55  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -144,7 +147,11 @@ public :
       * @param  urlId   The URL which holds the system id of the entity
       *                 to parse.
       */
-    URLInputSource(const XMLURL& urlId);
+    URLInputSource
+    (
+        const XMLURL& urlId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
 
     /**
@@ -163,6 +170,7 @@ public :
     (
         const   XMLCh* const    baseId
         , const XMLCh* const    systemId
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -183,6 +191,7 @@ public :
         const   XMLCh* const    baseId
         , const XMLCh* const    systemId
         , const XMLCh* const    publicId
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
 
@@ -201,6 +210,7 @@ public :
     (
         const   XMLCh* const    baseId
         , const char* const     systemId
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /**
@@ -223,6 +233,7 @@ public :
         const   XMLCh* const    baseId
         , const char* const     systemId
         , const char* const     publicId
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}

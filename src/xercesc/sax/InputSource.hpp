@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 21:36:59  knoaman
+ * Memory manager implementation: Modify constructors to pass in the memory manager.
+ *
  * Revision 1.6  2003/05/15 18:27:05  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -306,12 +309,13 @@ protected :
     /** @name Constructors and Destructor */
     //@{
     /** Default constructor */
-    InputSource();
+    InputSource(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Constructor with a system identifier as XMLCh type.
       * @param systemId The system identifier (URI).
       */
-    InputSource(const XMLCh* const systemId);
+    InputSource(const XMLCh* const systemId,
+                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Constructor with a system and public identifiers
       * @param systemId The system identifier (URI).
@@ -319,14 +323,16 @@ protected :
       */
     InputSource
     (
-        const   XMLCh* const    systemId
-        , const XMLCh* const    publicId
+        const   XMLCh* const   systemId
+        , const XMLCh* const   publicId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Constructor witha system identifier as string
       * @param systemId The system identifier (URI).
       */
-    InputSource(const char* const systemId);
+    InputSource(const char* const systemId,
+                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Constructor witha system and public identifiers. Both as string
       * @param systemId The system identifier (URI).
@@ -336,6 +342,7 @@ protected :
     (
         const   char* const systemId
         , const char* const publicId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}
