@@ -472,7 +472,7 @@ msgloaderDefines="-DXML_USE_INMEM_MESSAGELOADER"
 
 if test $msgloader ; then
 case $msgloader in
-   icu)
+   icu | ICU)
        if test ${ICUROOT}o = "o" ; then
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
            exit ${ERROR_EXIT_CODE};
