@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/07/16 21:28:25  knoaman
+ * fix bug - no delete for the static instance in destructor.
+ *
  * Revision 1.2  2001/05/11 13:26:45  tng
  * Copyright update.
  *
@@ -91,7 +94,7 @@
 // ---------------------------------------------------------------------------
 //  Static member data initialization
 // ---------------------------------------------------------------------------
-RangeTokenMap*                     RangeTokenMap::fInstance = 0;
+RangeTokenMap* RangeTokenMap::fInstance = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -133,11 +136,10 @@ RangeTokenMap::~RangeTokenMap() {
     delete fCategories;
     fCategories = 0;
 
-    delete fInstance;
-    fInstance = 0;
-
     delete fTokenFactory;
     fTokenFactory = 0;
+
+    fInstance = 0;
 }
 
 // ---------------------------------------------------------------------------
