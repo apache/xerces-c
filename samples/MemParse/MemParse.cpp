@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/09/12 18:14:19  neilg
+ * enable MemParse to work on OS400; thanks to Jay Hansen.
+ *
  * Revision 1.15  2003/08/07 21:21:38  neilg
  * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
  *
@@ -151,6 +154,8 @@
 #ifndef MEMPARSE_ENCODING
    #if defined(OS390)
       #define MEMPARSE_ENCODING "ibm-1047-s390"
+   #elif defined(OS400)
+      #define MEMPARSE_ENCODING "ibm037"
    #else
       #define MEMPARSE_ENCODING "ascii"
    #endif
