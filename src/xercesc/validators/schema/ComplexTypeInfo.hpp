@@ -161,6 +161,9 @@ public:
     void setAttWildCard(SchemaAttDef* const toAdopt);
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
+    /**     
+     * @deprecated; not thread-safe (will not work with shared grammars)
+     */
     void setContentModel(XMLContentModel* const newModelToAdopt);
     void setLocator(XSDLocator* const aLocator);
 
@@ -420,32 +423,11 @@ inline bool ComplexTypeInfo::getAnonymous() const {
 
 inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const
 {
-    if(!fTypeLocalName) {
-        int index = XMLString::indexOf(fTypeName, chComma);
-        int length = XMLString::stringLen(fTypeName);
-        XMLCh *tName = (XMLCh*) fMemoryManager->allocate
-        (
-            (length - index + 1) * sizeof(XMLCh)
-        ); //new XMLCh[length - index + 1];
-        XMLString::subString(tName, fTypeName, index + 1, length, fMemoryManager);
-        ((ComplexTypeInfo *)this)->fTypeLocalName = tName;
-    }
-
     return fTypeLocalName;
 }
 
 inline const XMLCh* ComplexTypeInfo::getTypeUri() const
 {
-    if(!fTypeUri) {
-        int index = XMLString::indexOf(fTypeName, chComma);
-        XMLCh *uri = (XMLCh*) fMemoryManager->allocate
-        (
-            (index + 1) * sizeof(XMLCh)
-        ); //new XMLCh[index + 1];
-        XMLString::subString(uri, fTypeName, 0, index, fMemoryManager);
-        ((ComplexTypeInfo *)this)->fTypeUri = uri;
-    }
-
    return fTypeUri;
 }
 
@@ -507,10 +489,30 @@ inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
 
     fMemoryManager->deallocate(fTypeName);//delete [] fTypeName;
     fMemoryManager->deallocate(fTypeLocalName);//delete [] fTypeLocalName;
-    fMemoryManager->deallocate(fTypeUri);//delete [] fTypeUri;
-    fTypeLocalName = fTypeUri = 0;
+    fMemoryManager->deallocate(fTypeUri);//delete [] fTypeUri;    
 
-    fTypeName = XMLString::replicate(typeName, fMemoryManager);
+    if (typeName)
+    {
+        fTypeName = XMLString::replicate(typeName, fMemoryManager);
+
+        int index = XMLString::indexOf(fTypeName, chComma);
+        int length = XMLString::stringLen(fTypeName);
+        fTypeLocalName = (XMLCh*) fMemoryManager->allocate
+        (
+            (length - index + 1) * sizeof(XMLCh)
+        ); //new XMLCh[length - index + 1];
+        XMLString::subString(fTypeLocalName, fTypeName, index + 1, length, fMemoryManager);
+        
+        fTypeUri = (XMLCh*) fMemoryManager->allocate
+        (
+            (index + 1) * sizeof(XMLCh)
+        ); //new XMLCh[index + 1];
+        XMLString::subString(fTypeUri, fTypeName, 0, index, fMemoryManager);        
+    }
+    else
+    {
+        fTypeName = fTypeLocalName = fTypeUri = 0;
+    }
 }
 
 inline void
