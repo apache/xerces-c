@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.9  2001/10/09 20:52:43  peiyongz
  * init():removed
  *
@@ -194,12 +197,12 @@ private:
 // Getter methods
 // -----------------------------------------------------------------------
 
-unsigned int DecimalDatatypeValidator::getTotalDigits() const
+inline unsigned int DecimalDatatypeValidator::getTotalDigits() const
 {
     return fTotalDigits;
 }
 
-unsigned int DecimalDatatypeValidator::getFractionDigits() const
+inline unsigned int DecimalDatatypeValidator::getFractionDigits() const
 {
     return fFractionDigits;
 }
@@ -208,12 +211,12 @@ unsigned int DecimalDatatypeValidator::getFractionDigits() const
 // Setter methods
 // -----------------------------------------------------------------------
 
-void DecimalDatatypeValidator::setTotalDigits(unsigned int newTotalDigits)
+inline void DecimalDatatypeValidator::setTotalDigits(unsigned int newTotalDigits)
 {
     fTotalDigits = newTotalDigits;
 }
 
-void DecimalDatatypeValidator::setFractionDigits(unsigned int newFractionDigits)
+inline void DecimalDatatypeValidator::setFractionDigits(unsigned int newFractionDigits)
 {
     fFractionDigits = newFractionDigits;
 }

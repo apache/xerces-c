@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/22 20:23:00  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.3  2001/11/12 20:36:54  peiyongz
  * SchemaDateTimeException defined
  *
@@ -290,7 +293,7 @@ private:
 
 };
 
-void XMLDateTime::setBuffer(const XMLCh* const aString)
+inline void XMLDateTime::setBuffer(const XMLCh* const aString)
 {
     reset();
     fBuffer = XMLString::replicate(aString);
@@ -298,7 +301,7 @@ void XMLDateTime::setBuffer(const XMLCh* const aString)
 
 }
 
-void XMLDateTime::reset()
+inline void XMLDateTime::reset()
 {
     for ( int i=0; i < TOTAL_SIZE; i++ ) 
         fValue[i] = 0;
@@ -314,7 +317,7 @@ void XMLDateTime::reset()
 
 }
 
-void XMLDateTime::copy(const XMLDateTime& rhs)
+inline void XMLDateTime::copy(const XMLDateTime& rhs)
 {
     for ( int i = 0; i < TOTAL_SIZE; i++ ) 
         fValue[i] = rhs.fValue[i];
@@ -335,7 +338,7 @@ void XMLDateTime::copy(const XMLDateTime& rhs)
 
 }
 
-void XMLDateTime::assertBuffer() const
+inline void XMLDateTime::assertBuffer() const
 {
     if ( ( !fBuffer )            || 
          ( fBuffer[0] == chNull ) )
@@ -346,19 +349,19 @@ void XMLDateTime::assertBuffer() const
 
 }
 
-void XMLDateTime::initParser()
+inline void XMLDateTime::initParser()
 {
     assertBuffer();
     fStart = 0;   // to ensure scan from the very first beginning
                   // in case the pointer is updated accidentally by someone else.
 }
 
-bool XMLDateTime::isNormalized() const
+inline bool XMLDateTime::isNormalized() const
 {
     return ( fValue[utc] == UTC_STD ? true : false );
 }
 
-int XMLDateTime::getRetVal(int c1, int c2)
+inline int XMLDateTime::getRetVal(int c1, int c2)
 {
     if ((c1 == LESS_THAN    && c2 == GREATER_THAN) ||
         (c1 == GREATER_THAN && c2 == LESS_THAN)      ) 

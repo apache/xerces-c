@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/22 20:23:00  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.1  2001/08/16 21:54:01  peiyongz
  * new class creation
  *
@@ -100,7 +103,7 @@ inline unsigned int HashCMStateSet::getHashVal(const void *const key, unsigned i
 	return ((pkey->hashCode()) % mod);
 }
 
-bool HashCMStateSet::equals(const void *const key1, const void *const key2)
+inline bool HashCMStateSet::equals(const void *const key1, const void *const key2)
 {
     const CMStateSet* const pkey1 = (const CMStateSet* const) key1;
     const CMStateSet* const pkey2 = (const CMStateSet* const) key2;

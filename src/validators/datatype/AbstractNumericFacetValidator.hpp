@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.2  2001/11/12 20:37:57  peiyongz
  * SchemaDateTimeException defined
  *
@@ -179,27 +182,27 @@ private:
 // Getter methods
 // -----------------------------------------------------------------------
 
-XMLNumber* const AbstractNumericFacetValidator::getMaxInclusive() const
+inline XMLNumber* const AbstractNumericFacetValidator::getMaxInclusive() const
 {
     return fMaxInclusive;
 }
 
-XMLNumber* const AbstractNumericFacetValidator::getMaxExclusive() const
+inline XMLNumber* const AbstractNumericFacetValidator::getMaxExclusive() const
 {
     return fMaxExclusive;
 }
 
-XMLNumber* const AbstractNumericFacetValidator::getMinInclusive() const
+inline XMLNumber* const AbstractNumericFacetValidator::getMinInclusive() const
 {
     return fMinInclusive;
 }
 
-XMLNumber* const AbstractNumericFacetValidator::getMinExclusive() const
+inline XMLNumber* const AbstractNumericFacetValidator::getMinExclusive() const
 {
     return fMinExclusive;
 }
 
-RefVectorOf<XMLNumber>* AbstractNumericFacetValidator::getEnumeration() const
+inline RefVectorOf<XMLNumber>* AbstractNumericFacetValidator::getEnumeration() const
 {
     return fEnumeration;
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/11/22 20:23:00  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.7  2001/11/19 21:33:42  peiyongz
  * Reorganization: Double/Float
  *
@@ -136,8 +139,8 @@ private:
 
 };
 
-int XMLFloat::compareValues(const XMLFloat* const lValue
-                          , const XMLFloat* const rValue)
+inline int XMLFloat::compareValues(const XMLFloat* const lValue
+                                 , const XMLFloat* const rValue)
 {
     return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
                                                  (const XMLAbstractDoubleFloat* const) rValue );

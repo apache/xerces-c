@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.1  2001/10/01 16:13:56  peiyongz
  * DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
  *
@@ -111,7 +114,7 @@ private:
 
 };
 
-void AbstractNumericValidator::init(RefVectorOf<XMLCh>*  const enums)
+inline void AbstractNumericValidator::init(RefVectorOf<XMLCh>*  const enums)
 {
     AbstractNumericFacetValidator::init(enums);
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.6  2001/10/09 20:50:27  peiyongz
  * init(): take 1 arg
  *
@@ -186,7 +189,7 @@ private:
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
-void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool)
+inline void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool)
 {
     fEntityDeclPool = entityDeclPool;
 }

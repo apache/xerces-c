@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.7  2001/10/09 20:49:38  peiyongz
  * init(): take 1 arg
  *
@@ -166,7 +169,7 @@ private:
 // -----------------------------------------------------------------------
 // Validation methods
 // -----------------------------------------------------------------------
-void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
+inline void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
 {
     fIDRefList = newIDRefList;
 }

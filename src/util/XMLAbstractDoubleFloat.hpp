@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/22 20:23:00  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.1  2001/11/19 21:33:42  peiyongz
  * Reorganization: Double/Float
  *
@@ -183,7 +186,7 @@ private:
     LiteralType             fType;
 };
 
-bool XMLAbstractDoubleFloat::isSpecialValue() const
+inline bool XMLAbstractDoubleFloat::isSpecialValue() const
 {
     return (fType < SpecialTypeNum);
 }

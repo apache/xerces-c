@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.10  2001/11/15 16:08:15  peiyongz
  * checkContent() made virtual to allow ListDTV participate in the building of
  * its own (in AbstractStringValidator's init())
@@ -230,7 +233,7 @@ private:
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
-const XMLCh* const ListDatatypeValidator::getContent() const
+inline const XMLCh* const ListDatatypeValidator::getContent() const
 {
     return fContent;
 }
@@ -238,7 +241,7 @@ const XMLCh* const ListDatatypeValidator::getContent() const
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
-void ListDatatypeValidator::setContent(const XMLCh* const content)
+inline void ListDatatypeValidator::setContent(const XMLCh* const content)
 {
     fContent = content;
 }

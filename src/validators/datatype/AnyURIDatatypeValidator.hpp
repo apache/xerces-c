@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.7  2001/09/24 15:33:15  peiyongz
  * DTV Reorganization: virtual methods moved to *.cpp
  *
@@ -150,7 +153,7 @@ private:
 
 };
 
-void AnyURIDatatypeValidator::cleanUp()
+inline void AnyURIDatatypeValidator::cleanUp()
 {
     if (fTempURI)
     {

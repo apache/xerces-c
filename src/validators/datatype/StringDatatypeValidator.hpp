@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.9  2001/10/09 20:54:48  peiyongz
  * init(): removed
  *
@@ -153,7 +156,7 @@ private:
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
-void StringDatatypeValidator::setWhiteSpace(short newValue)
+inline void StringDatatypeValidator::setWhiteSpace(short newValue)
 {
     fWhiteSpace = newValue;
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/11/22 20:23:20  peiyongz
+ * _declspec(dllimport) and inline warning C4273
+ *
  * Revision 1.7  2001/11/15 16:08:15  peiyongz
  * checkContent() made virtual to allow ListDTV participate in the building of
  * its own (in AbstractStringValidator's init())
@@ -215,22 +218,22 @@ private:
 // Getter methods
 // -----------------------------------------------------------------------
 
-unsigned int AbstractStringValidator::getLength() const
+inline unsigned int AbstractStringValidator::getLength() const
 {
     return fLength;
 }
 
-unsigned int AbstractStringValidator::getMaxLength() const
+inline unsigned int AbstractStringValidator::getMaxLength() const
 {
     return fMaxLength;
 }
 
-unsigned int AbstractStringValidator::getMinLength() const
+inline unsigned int AbstractStringValidator::getMinLength() const
 {
     return fMinLength;
 }
 
-RefVectorOf<XMLCh>* AbstractStringValidator:: getEnumeration() const
+inline RefVectorOf<XMLCh>* AbstractStringValidator:: getEnumeration() const
 {
     return fEnumeration;
 }
@@ -239,22 +242,22 @@ RefVectorOf<XMLCh>* AbstractStringValidator:: getEnumeration() const
 // Setter methods
 // -----------------------------------------------------------------------
 
-void AbstractStringValidator::setLength(unsigned int newLength)
+inline void AbstractStringValidator::setLength(unsigned int newLength)
 {
     fLength = newLength;
 }
 
-void AbstractStringValidator::setMaxLength(unsigned int newMaxLength)
+inline void AbstractStringValidator::setMaxLength(unsigned int newMaxLength)
 {
     fMaxLength = newMaxLength;
 }
 
-void AbstractStringValidator::setMinLength(unsigned int newMinLength)
+inline void AbstractStringValidator::setMinLength(unsigned int newMinLength)
 {
     fMinLength = newMinLength;
 }
 
-void AbstractStringValidator::setEnumeration(RefVectorOf<XMLCh>* enums
+inline void AbstractStringValidator::setEnumeration(RefVectorOf<XMLCh>* enums
                                            , bool                inherited)
 {
     if (enums)
