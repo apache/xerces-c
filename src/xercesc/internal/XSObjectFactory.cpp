@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/01/06 15:24:42  neilg
+ * make sure locally-declared attributes have declarations in the PSVI
+ *
  * Revision 1.17  2004/01/06 03:55:26  knoaman
  * Various PSVI fixes.
  *
@@ -656,7 +659,10 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
                 SchemaAttDef& attDef = (SchemaAttDef&) attDefList.getAttDef(i);
 
                 if (attDef.getBaseAttDecl())
+                {
                     xsAttDecl = addOrFind(attDef.getBaseAttDecl(), xsModel);
+                    fXercesToXSMap->put(&attDef, xsAttDecl);
+                }
                 else
                     xsAttDecl = addOrFind(&attDef, xsModel, xsObj);
 
