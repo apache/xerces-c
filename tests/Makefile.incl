@@ -290,7 +290,7 @@ endif
 #   export LOADMOD=USERID.LOAD                                    #
 #   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the IXM4C54X definition sidedeck    #
+# to specify your LOADMOD and the IXM4C55X definition sidedeck    #
 # dataset.  							  #
 ###################################################################
 
@@ -304,14 +304,16 @@ CC = _CXX_CXXSUFFIX="cpp" c++ -W0,"langlvl(extended)" -Wc,"TMPLPARSE(NO)" -DOS39
 endif
 LINK =  ${CC} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=
-EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+EXTRA_LINK_OPTIONS=
 SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(IXM4C54X)'"
+LIBRARY_NAMES="//'${LOADEXP}(IXM4C55X)'"
+LIBRARY_DEPDOM="//'${LOADEXP}(IXMDD55X)'" 
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
+LIBRARY_DEPDOM=${LIB_DIR}/lib${LIBDEPDOM}${VER}${OS390SIDEDECK}
 endif
 LIBRARY_SEARCH_PATHS=
 endif
