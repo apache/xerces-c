@@ -82,6 +82,9 @@
 #include    <link.h>
 #include    <limits.h>
 #include    <dlfcn.h>
+#include    <sys/types.h>
+#include    <sys/stat.h>
+#include    <fcntl.h>
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/PlatformUtils.hpp>
 #include    <xercesc/util/RuntimeException.hpp>
@@ -201,7 +204,7 @@ void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 {
     // Get the current position
-    int curPos = ftell( (FILE*)theFile);
+    int curPos = tell( (int)theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetSize);
@@ -211,7 +214,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
-    if (fclose((FILE*) theFile))
+    if (close((int) theFile))
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotCloseFile);
 }
@@ -219,23 +222,23 @@ void XMLPlatformUtils::closeFile(FileHandle theFile)
 unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 {
     // Get the current position
-    long  int curPos = ftell((FILE*) theFile);
+    long  int curPos = tell((int) theFile);
     if (curPos == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
-    if (fseek( (FILE*) theFile, 0, SEEK_END) )
+    if (lseek( (int) theFile, 0, SEEK_END) == (off_t)-1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToEnd);
 
-    long int retVal = ftell((FILE*) theFile);
+    long int retVal = tell((int) theFile);
     if (retVal == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToEnd);
 
     // And put the pointer back
-    if (fseek((FILE*) theFile, curPos, SEEK_SET))
+    if (lseek((int) theFile, curPos, SEEK_SET) == (off_t)-1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToPos);
 
@@ -244,34 +247,34 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
 
 FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 {
-    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+    int retVal = open( fileName , O_RDONLY );
 
-    if (retVal == NULL)
+    if (retVal == -1)
         return 0;
-    return retVal;
+    return (FileHandle)retVal;
 }
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
     ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
-    FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
+    int retVal = open( tmpFileName , O_RDONLY );
 
-    if (retVal == NULL)
+    if (retVal == -1)
         return 0;
-    return retVal;
+    return (FileHandle)retVal;
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
     ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
-    return fopen( tmpFileName , "wb" );
+    return (FileHandle)open( tmpFileName , O_WRONLY | O_CREAT );
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
 {
-    return fopen( fileName , "wb" );
+    return (FileHandle)open( fileName , O_WRONLY | O_CREAT );
 }
 
 unsigned int
@@ -279,10 +282,10 @@ XMLPlatformUtils::readFileBuffer(FileHandle              theFile
                                , const unsigned int      toRead
                                , XMLByte* const          toFill)
 {
-    size_t noOfItemsRead =
-               fread((void*) toFill, 1, toRead, (FILE*) theFile);
+    ssize_t noOfItemsRead =
+      read((int) theFile, (void*) toFill, toRead);
 
-    if(ferror((FILE*) theFile))
+    if(noOfItemsRead == -1)
     {
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotReadFromFile);
@@ -302,13 +305,13 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
         return;
 
     const XMLByte* tmpFlush = (const XMLByte*) toFlush;
-    size_t bytesWritten = 0;
+    ssize_t bytesWritten = 0;
 
     while (true)
     {
-        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+      bytesWritten=write((int)theFile, (const void *)tmpFlush, toWrite);
 
-        if(ferror((FILE*)theFile))
+        if(bytesWritten == -1)
         {
             ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
         }
@@ -329,7 +332,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
     // Seek to the start of the file
-    if (fseek((FILE*) theFile, 0, SEEK_SET))
+    if (lseek((int) theFile, 0, SEEK_SET) == -1)
         ThrowXML(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotResetFile);
 }
@@ -664,7 +667,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
-        return (FileHandle)fdopen(dup(0), "rb");
+        return (void *)dup(0);
 }
 
 void XMLPlatformUtils::platformTerm()
