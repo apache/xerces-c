@@ -3458,7 +3458,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Process attributes if any
     // -----------------------------------------------------------------------
-    if (content != 0 && isAttrOrAttrGroup(content)) {
+    if ((content != 0 && isAttrOrAttrGroup(content)) || 
+        (content == 0 && typeInfo->getDerivedBy() == SchemaSymbols::EXTENSION)) {
         processAttributes(simpleContent, content, baseName, localPart, uri, typeInfo);
     }
 
