@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/14 02:28:16  aruna1
+ * Added L"string" support for cset compiler
+ *
  * Revision 1.4  2000/01/12 19:11:49  aruna1
  * XMLCh now defined to wchar_t
  *
@@ -77,6 +80,13 @@
 #define PLATFORM_EXPORT
 #define PLATFORM_IMPORT
 
+// ---------------------------------------------------------------------------
+//  Supports L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding. xlC_r does support this, so we define this token.
+//  If your compiler does not support it, don't define this.
+// ---------------------------------------------------------------------------
+#define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
 // Indicate that we do not support native bools
