@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/12/17 20:41:47  neilg
+ * fix a segfault and a possible buffer overflow condition
+ *
  * Revision 1.15  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -512,14 +515,26 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
     unsigned int  retBufSize = 2 * XMLString::stringLen(rawData);
 
     XMLCh* retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh));
+    retBuf[0] = 0;
     XMLCh* retBufPtr = retBuf;
 
     DatatypeValidator* itemDv = this->getItemTypeDTV();
     for (unsigned int i = 0; i < tokenVector->size(); i++)
     {
         XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), toUse);
+        unsigned int itemLen = XMLString::stringLen(itemCanRep); 
+        if(retBufPtr+itemLen+2 >= retBuf+retBufSize)
+        {
+            // need to resize
+            XMLCh * oldBuf = retBuf;
+            retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh) * 2);
+            memcpy(retBuf, oldBuf, retBufSize * sizeof(XMLCh ));
+            retBufPtr = (retBufPtr - oldBuf) + retBuf;
+            toUse->deallocate(oldBuf);
+            retBufSize <<= 1;
+        }
         XMLString::catString(retBufPtr, itemCanRep);
-        retBufPtr = retBufPtr + XMLString::stringLen(itemCanRep) + 1;
+        retBufPtr = retBufPtr + itemLen + 1;
         *(retBufPtr++) = chSpace;
         *(retBufPtr) = chNull;
         toUse->deallocate(itemCanRep);
