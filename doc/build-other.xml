@@ -309,82 +309,241 @@ gmake -e</source>
     </a>
     </faq>
 
-    <faq title="Building &XercesCName; on Macintosh using CodeWarrior">
-    <q>Building &XercesCName; on Macintosh using CodeWarrior</q>
+    <faq title="Building &XercesCName; on Macintosh">
+    <q>Building &XercesCName; on Macintosh</q>
     <a>
-        <p>The following addresses the requirements and build of
-           &XercesCName; Mactintosh using CodeWarrior.
-        </p>
+		<p>The &XercesCName; Mac port has the key following attributes:
+		</p>
+		
+		<ol>
+			<li>Built atop CoreServices APIs and a limited number of Carbon APIs;
+			supports builds for both Mac OS Classic, Carbon, and Mac OS X systems.
+			</li>
+			   
+			<li>Has a Mac OS native transcoder that utilizes the built-in Mac OS Unicode
+			converter [MacOSUnicodeConverter].
+			</li>
+			   
+			<li>Has a Mac OS native netaccessor that utilizes the built-in Mac OS URLAccess
+			routines [MacOSURLAccess].
+			</li>
+			   
+			<li>Supports builds from Metroworks CodeWarrior, Apple Project Builder,
+			and Mac OS X shell.
+			</li>
+		</ol>
+		
+		<s3 title="Using &XercesCName; with CodeWarrior">
 
-        <s3 title="Building &XercesCName; library">
-            <p>The directions in this file cover installing and building
-            &XercesCName; and ICU under the MacOS  using CodeWarrior.</p>
-            <ol>
-                <li><em>Create a folder:</em>
-                    <br/>for the &XercesCName; and ICU distributions,
-                    the "src drop" folder </li>
+			<p><em>&XercesCName; and CodeWarrior:</em>
+			</p>
+			
+			<p>&XercesCName; may be built with CodeWarrior under Mac OS Classic or Mac OS X. Since
+			the &XercesCName; code contains some files with very long names, and CodeWarrior
+			does not yet support use of files with such long names, the installation
+			in this case is somewhat involved.
+			</p>
+			
+			<p><em>Installing &XercesCName; for use with CodeWarrior:</em>
+			</p>
+			
+			<p>For compatibility with CodeWarrior, it is necessary to adjust some of the
+			file names (and referencing include statements). To do this, it is necessary
+			to perform the following steps on a unix (or Mac OS X) machine that
+			has support for long file names (a Windows machine may also work):
+			</p>
+			
+			<ul>
+				<li>Retrieve &XercesCName; from CVS, or untar a packaged build. Note that these
+				steps should not be performed in a Classic Mac OS environment, as file
+				names would then be mangled at this point!
+				</li>
+					
+				<li>&XercesCName; comes with a tool that will shorten file names as appropriate,
+				and fix up referencing include statements. Duplicate the file
+				Projects/MacOS/ShortenFiles.pl to the xercesc main directory (the same
+				directory that contains the Projects directory). Executing this perl
+				script from this location will create a new directory MacSrc that
+				contains patched up versions of files from the src direcotry.
+				</li>
+			</ul>
+			
+<source>cd &lt;xercescroot&gt;
+cp Projects/MacOS/ShortenFiles.pl .
+perl ShortenFiles.pl</source>
 
-                <li><em>Download and uncompress:</em>
-                    <br/>the ICU and &XercesCName; source distribution
-                    <br/>the ICU and &XercesCName; binary distributions,
-                    for the documentation included </li>
+			<ul>
+				<li>The source files will likely not now have proper Mac OS type/creator
+				attribution. CodeWarrior badly wants this to be correct. So set the
+				type/creator of these files somehow. The following should work from
+				Mac OS X (but if you're not going to keep building on a Mac OS X
+				machine, you may well need to perform this step in some other way once
+				you get the files onto your classic machine).
+				</li>
+			</ul>
+			
+<source>find . \( -name "*.c" -or -name "*.h" -or -name "*.cpp" -or -name "*.hpp" -or \
+-name "*.xml" \) -print0 | xargs -0 /Developer/Tools/SetFile -c CWIE -t TEXT</source>
 
-                <li><em>Move the new folders:</em>
-                    <br/>move the newly created &XercesCName; and icu124
-                    folders to the "src drop" folder.</li>
+			<ul>
+				<li>Move the entire directory structure to your Mac OS machine.
+				</li>
+			</ul>
+		
+			<p><em>Building &XercesCName; with CodeWarrior:</em>
+			</p>
+		
+			<ul>
+				<li>Run CodeWarrior (tested with latest CW Pro 6.2).
+				</li>
+				
+				<li>Import the project Projects/MacOS/CodeWarrior/XercesLib/XercesLib.mcp.xml,
+				saving it back out to the same directory as XercesLib.mcp.
+				</li>
+				
+				<li>This project contains five build targets that build all combinations of
+				classic, carbon, debug, and release versions, with an all target that
+				builds all of these. Build any or all of these.
+				</li>
+				
+				<li>Note that the Carbon targets contain an access path for a Carbon Support
+				folder in the compiler folder. Up-to-date Apple headers and libraries
+				are required. Either create a Carbon Support folder with recent headers and
+				libraries or, if your MacOS Support folder is up to date, point the
+				access path to this, or make an alias to it called "Carbon Support".
+				</li>
+			</ul>
+		
+			<p><em>Building &XercesCName; Samples with CodeWarrior:</em>
+			</p>
+			
+			<p>A CodeWarrior project is included that builds the DOMPrint sample. This may
+			be used as an example from which to build additional sample projects. Please
+			read the following important notes:
+			</p>
+			
+			<ul>
+				<li>Once again, it is required that you import the .xml version of the project
+				file, and save it back out.
+				</li>
+				
+				<li>The &XercesCName; sample programs are written to assume a command line interface.
+				To avoid making Macintosh-specific changes to these command line programs,
+				we have opted to instead require that you make a small extension to your
+				CodeWarrior runtime that supports such command line programs. Please read
+				and follow the usage notes in XercesSampleSupport/XercesSampleStartupFragment.c.
+				</li>
+			</ul>
+		
+		</s3>
+		
+		<s3 title="Building &XercesCName; with Project Builder">
+		
+			<p>Projects are included to build the &XercesCName; library and DOMPrint sample under
+			Apple's Project Builder for Mac OS X. The following notes apply:
+			</p>
+			
+			<ul>
+				<li>Since you are running under Mac OS X, and if you are not also performing
+				CodeWarrior builds, it is not necessary to shorten file names or set the
+				type/creator codes as required for CodeWarrior.
+				</li>
+				  
+				<li>The Project Builder project builds XercesLib as the framework
+				Xerces.framework. This framework, however, does not currently include a
+				correct set of public headers. Any referencing code must have an include
+				path directive that points into the &XercesCName; src directory.
+				</li>
+				
+				<li>The DOMPrint project illustrates one such usage of the Xerces.framework.
+				</li>
+			</ul>
+		</s3>
+		
+		<s3 title="Building &XercesCName; from the Mac OS X command line">
+		
+			<p>Support for Mac OS X command line builds is now included in the standard
+			"unix" &XercesCName; build infrastructure.
+			</p>
+			
+			<ul>
+				<li>In general, the Mac OS X command line build follows the generic unix
+				build instructions. You need to set your XERCESCROOT environment variable,
+				<code>./runConfigure</code>, and <code>make</code>.
+				</li>
+			</ul>
+		
+<source>setenv XERCESCROOT "&lt;directory&gt;"
+cd src
+./runConfigure -p macosx -n native
+make</source>
+			
+			<ul>
+				<li>Similar instructions apply to build the samples and tests, though the
+				<code>-n</code> flag is not used in these cases:
+				</li>
+			</ul>
+		
+<source>cd samples
+./runConfigure -p macosx
+make</source>
 
-                <li><em>Drag and drop:</em>
-                    <br/>the &XercesCName; folder into the "rename file" application located in
-                    the same folder as this readme.
-                    <br/>This is a MacPerl script that renames files that have
-                    names too long to fit in a HFS/HFS+ filesystem.
-                    It also searches through all of the source code and changes
-                    the #include statements to refer to the new file names.</li>
-
-                <li><em>Move the MacOS folder:</em>
-                    <br/>from the in the Projects folder to "src drop:&XercesCName;:Projects".</li>
-
-                <li><em>Open and build &XercesCName;:</em>
-                    <br/>open the CodeWarrior project file
-                    "src drop:&XercesCName;:Projects:MacOS:&XercesCName;:&XercesCName;"
-                    and build the &XercesCName; library.</li>
-
-                <li><em>Open and build ICU:</em>
-                    <br/>open the CodeWarrior project file
-                    "src drop:&XercesCName;:Projects:MacOS:icu:icu"
-                    and build the ICU library.</li>
-
-                <li><em>Binary distribution:</em>
-                <br/>If you wish, you can create projects for and build the rest of the tools and test
-                suites.  They are not needed if you just want to use &XercesCName;. I suggest that you
-                use the binary data files distributed with the binary distribution of ICU instead of
-                creating your own from the text data files in the ICE source distribution.</li>
-            </ol>
-
-            <p>There are some things to be aware of when creating your own
-            projects using &XercesCName;.</p>
-            <ol>
-                <li>You will need to link against both the ICU and &XercesCName; libraries.</li>
-                <li>The options "Always search user paths" and "Interpret DOS and Unix Paths" are
-                    very useful.  Some of the code won't compile without them set.</li>
-                <li>Most of the tools and test code will require slight modification to compile and run
-                    correctly (typecasts, command line parameters, etc), but it is possible to get
-                    them working correctly.</li>
-                <li>You will most likely have to set up the Access Paths.  The access paths in the
-                    &XercesCName; projects should serve as a good example.</li>
-            </ol>
-
-
-            <note>These instructions were originally contributed by
-            <jump href="mailto:jbellardo@alumni.calpoly.edu">J. Bellardo</jump>.
-            &XercesCName; has undergone many changes since these instructions
-            were written. So, these instructions are not upto date.
-            But it will give you a jump start if you are struggling to get it
-            to work for the first time. We will be glad to get your changes.
-            Please respond to the <jump href="mailto:&XercesCEmailAddress;">Xerces-C
-            mailing list</jump> with your comments and corrections.</note>
-
-        </s3>
+		</s3>
+		
+		<s3 title="Special usage information for &XercesCName; on the Macintosh">
+		
+			<p><em>File Path Specification</em></p>
+			
+			<p>Apart from the build instructions, above, the most important note
+			about use of &XercesCName; on the Macintosh is that &XercesCName; expects
+			all filename paths to be specified in unix syntax. If running natively
+			under a Mac OS X system, this path will be the standard posix path as 
+			expected by the shell. The easiest means of creating and interpreting these
+			paths will be through the routines <code>XMLCreateFullPathFromFSRef</code>
+			and <code>XMLParsePathToFSRef</code> as declared in the file
+			<code>MacOSPlatformUtils.hpp</code>.
+			</p>
+			
+			<p><em>Mac OS Version Compatibility</em></p>
+			
+			<p>&XercesCName; requires that several key components of the Mac OS
+			be relatively up to date. It should be readily compatible with any system
+			above Mac OS 9.0. Compatibility with earlier systems may perhaps be achieved
+			if you can install appropriate components.
+			</p>
+			
+			<p>Required components are:
+			</p>
+			
+			<ul>
+				<li>Unicode Converter and Text Encoding Converter. These provide the base
+				transcoding service used to support &XercesCName; transcoding requirements.
+				</li>
+				
+			</ul>
+			
+			<p>Optional components are:
+			</p>
+			
+			<ul>
+				<li>URLAccess. Provides NetAccessor support to &XercesCName; for use in
+				fetching network referenced entities. If URLAccess is not installed, any
+				such references will fail; the absense of URLAccess, however, will not
+				in itself prevent &XercesCName; from running.
+				</li>
+				
+				<li>Multiprocessing library. Provides mutual exclusion support. Once again,
+				the routines will back down gracefully if Multiprocessing support is not
+				available.
+				</li>
+				
+				<li>HFS+ APIs. If HFS+ APIs are available, all file access is performed
+				using the HFS+ fork APIs to support long file access, and to support
+				long unicode compliant file names. In the absense of HFS+ APIs, classic
+				HFS APIs are used instead.
+				</li>
+			</ul>	
+		</s3>
     </a>
     </faq>
 </faqs>
