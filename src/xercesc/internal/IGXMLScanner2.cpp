@@ -2031,6 +2031,12 @@ void IGXMLScanner::scanCDSection()
                     fContent.append(bbCData.getRawBuffer(), bbCData.getLen());
             }
 
+            // tell the schema validation about the character data for checkContent later
+            if (fValidate && fSchemaValidator)
+            {           
+                    fSchemaValidator->setDatatypeBuffer(bbCData.getRawBuffer());
+            }
+
             // If we have a doc handler, call it
             if (fDocHandler)
             {
