@@ -118,6 +118,8 @@ public:
         String,
         AnyURI,
         QName,
+        Name,
+        NCName,
         Boolean,
         Float,
         Double,
