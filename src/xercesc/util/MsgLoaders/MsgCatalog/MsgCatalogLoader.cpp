@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/12/04 18:03:13  peiyongz
+ * use $XERCESCROOT to search for msg catalog file if XERCESC_NLS_HOME
+ * undefined
+ *
  * Revision 1.8  2002/12/02 21:58:43  peiyongz
  * nls support
  *
@@ -151,6 +155,15 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     {
         strcpy(catpath, nlsHome);
         strcat(catpath, "/msg/");
+    }
+    else
+    {
+        char *altHome = getenv("XERCESCROOT");
+        if (altHome)
+        {
+            strcpy(catpath, altHome);
+            strcat(catpath, "/lib/msg/");
+        }
     }
 
     // Prepare user-specified locale specific cat file
