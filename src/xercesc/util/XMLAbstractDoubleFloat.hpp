@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2004/08/11 16:50:47  peiyongz
+ * getValue()/isDataConverted()
+ *
  * Revision 1.20  2004/01/29 11:48:46  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -204,6 +207,10 @@ public:
 
     MemoryManager*        getMemoryManager() const;
 
+    inline  bool          isDataConverted()  const;
+
+    inline  double        getValue() const;
+
     /***
      *
      * The decimal point delimiter for the schema double/float type is
@@ -287,6 +294,7 @@ private:
     //
     XMLCh*                  fFormattedString;
     MemoryManager*          fMemoryManager;
+
 };
 
 inline bool XMLAbstractDoubleFloat::isSpecialValue() const
@@ -297,6 +305,16 @@ inline bool XMLAbstractDoubleFloat::isSpecialValue() const
 inline MemoryManager* XMLAbstractDoubleFloat::getMemoryManager() const
 {
     return fMemoryManager;
+}
+
+inline bool XMLAbstractDoubleFloat::isDataConverted() const
+{
+    return fDataConverted;
+}
+
+inline double XMLAbstractDoubleFloat::getValue() const
+{
+    return fValue;
 }
 
 XERCES_CPP_NAMESPACE_END
