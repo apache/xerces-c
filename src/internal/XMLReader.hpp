@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/12/06 17:47:04  tng
+ * Performance Enhancement.  Modify the handling of the fNEL option so that it results in fgCharCharsTable being modified, instead of having all of the low-level routines check the option.  This seemed acceptable because the code appears to only permit the option to be turned on and not turned off again.   By Henry Zongaro.
+ *
  * Revision 1.17  2001/07/12 18:50:13  tng
  * Some performance modification regarding standalone check and xml decl check.
  *
@@ -161,11 +164,6 @@ const XMLByte   gWhitespaceCharMask         = 0x80;
 //
 //  This is NOT to be derived from.
 //
-//  Note: We have added support for handling 390 NEL character as a whitespace.
-//  Since the option is turned on, we will not be able to modify the
-//  corresponding value of NEL (0x85) in the fgCharCharsTable. As a result,
-//  everytime we use the fgCharChars table and the NEL option is turned on,
-//  we will use the value of chLF in the fgCharCharsTable instead.
 // ---------------------------------------------------------------------------
 class XMLPARSER_EXPORT XMLReader
 {
@@ -539,7 +537,7 @@ private:
     // -----------------------------------------------------------------------
     //  Static data members
     //
-    //  fgCharCharsTables
+    //  fgCharCharsTable
     //      The character characteristics table. Bits in each byte, represent
     //      the characteristics of each character. It is generated via some
     //      code and then hard coded into the cpp file for speed.
@@ -548,8 +546,8 @@ private:
     //      Flag to respresents whether NEL whitespace recognition is enabled
     //      or disabled
     // -----------------------------------------------------------------------
-    static const XMLByte    fgCharCharsTable[0x10000];
-    static bool             fNEL;
+    static XMLByte  fgCharCharsTable[0x10000];
+    static bool     fNEL;
 
     friend class XMLPlatformUtils;
 };
@@ -570,9 +568,7 @@ inline bool XMLReader::isNameChar(const XMLCh toCheck)
 
 inline bool XMLReader::isPlainContentChar(const XMLCh toCheck)
 {
-    return (fNEL && (toCheck == chNEL))
-        ? ((fgCharCharsTable[chLF] & gPlainContentCharMask) != 0)
-        : ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
+    return ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
 }
 
 
@@ -583,9 +579,7 @@ inline bool XMLReader::isSpecialCharDataChar(const XMLCh toCheck)
 
 inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck)
 {
-    return (fNEL && (toCheck == chNEL))
-        ? ((fgCharCharsTable[chLF] & gSpecialStartTagCharMask) != 0)
-        : ((fgCharCharsTable[toCheck] & gSpecialStartTagCharMask) != 0);
+    return ((fgCharCharsTable[toCheck] & gSpecialStartTagCharMask) != 0);
 }
 
 inline bool XMLReader::isXMLChar(const XMLCh toCheck)
@@ -601,9 +595,7 @@ inline bool XMLReader::isXMLLetter(const XMLCh toCheck)
 
 inline bool XMLReader::isWhitespace(const XMLCh toCheck)
 {
-    return (fNEL && (toCheck == chNEL))
-        ? ((fgCharCharsTable[chLF] & gWhitespaceCharMask) != 0)
-        : ((fgCharCharsTable[toCheck] & gWhitespaceCharMask) != 0);
+    return ((fgCharCharsTable[toCheck] & gWhitespaceCharMask) != 0);
 }
 
 // ---------------------------------------------------------------------------
@@ -792,7 +784,7 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
             if (fCharIndex < fCharsAvail)
             {
                 if (fCharBuf[fCharIndex] == chLF
-                    || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                    || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                     fCharIndex++;
             }
              else
@@ -800,7 +792,7 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
                 if (refreshCharBuffer())
                 {
                     if (fCharBuf[fCharIndex] == chLF
-                        || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                        || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                         fCharIndex++;
                 }
             }
@@ -814,7 +806,7 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
         fCurLine++;
     }
      else if (chGotten == chLF
-              || (fNEL && (chGotten == chNEL)))
+              || ((chGotten == chNEL) && fNEL))
     {
         chGotten = chLF;
         fCurLine++;

@@ -90,17 +90,12 @@ bool XMLReader::fNEL = false;
 bool XMLReader::isFirstNameChar(const XMLCh toCheck)
 {
     static const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
-    XMLCh toCheckCh = toCheck;
 
-    if (fNEL && (toCheckCh == chNEL)) {
-        toCheckCh = chLF;
-    }
-
-    if ((fgCharCharsTable[toCheckCh] & ourMask) != 0)
+    if ((fgCharCharsTable[toCheck] & ourMask) != 0)
         return true;
 
     // Check the two special case name start chars
-    if ((toCheckCh == chUnderscore) || (toCheckCh == chColon))
+    if ((toCheck == chUnderscore) || (toCheck == chColon))
         return true;
 
     return false;
@@ -118,12 +113,6 @@ bool XMLReader::isAllSpaces(const   XMLCh* const    toCheck
     const XMLCh* endPtr = toCheck + count;
     while (curCh < endPtr)
     {
-        if (fNEL && (fgCharCharsTable[*curCh] == chNEL)) {
-
-            *curCh++;
-            continue;
-        }
-
         if (!(fgCharCharsTable[*curCh++] & gWhitespaceCharMask))
             return false;
     }
@@ -142,10 +131,6 @@ bool XMLReader::containsWhiteSpace(const   XMLCh* const    toCheck
     const XMLCh* endPtr = toCheck + count;
     while (curCh < endPtr)
     {
-		if (fNEL && (fgCharCharsTable[*curCh] == chNEL)) {
-            return true;
-        }
-
         if (fgCharCharsTable[*curCh++] & gWhitespaceCharMask)
             return true;
     }
@@ -169,6 +154,8 @@ void XMLReader::enableNELWS() {
 
     if (!fNEL) {
         fNEL = true;
+        // When option is on, treat NEL same as LF
+        fgCharCharsTable[chNEL] = fgCharCharsTable[chLF];
     }
 }
 
@@ -543,12 +530,14 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
     //  And now we loop until we run out of data in this reader or we hit
     //  a non-name char.
     //
-    bool moreChars = true;
-    while (moreChars)
-    {
-        while (fCharIndex < fCharsAvail)
+    do {
+        unsigned int curCol = fCurCol;
+        unsigned int charIndex = fCharIndex;
+        unsigned int charsAvail = fCharsAvail;
+
+        while (charIndex < charsAvail)
         {
-            const XMLCh curCh = fCharBuf[fCharIndex];
+            const XMLCh curCh = fCharBuf[charIndex];
 
             //
             //  Check the current char and take it if its a name char. Else
@@ -556,19 +545,22 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
             //
             if (!XMLReader::isNameChar(curCh))
             {
-                moreChars = false;
+                fCharIndex  = charIndex;
+                fCurCol = curCol;
+
                 return !toFill.isEmpty();
             }
 
             toFill.append(curCh);
-            fCurCol++;
-            fCharIndex++;
+            curCol++;
+            charIndex++;
         }
 
-        // If we don't get no more, then break out.
-        if (!refreshCharBuffer())
-            break;
-    }
+        fCharIndex  = charIndex;
+        fCurCol = curCol;
+    // If we don't get no more, then break out.
+    } while (refreshCharBuffer());
+
     return !toFill.isEmpty();
 }
 
@@ -578,11 +570,7 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
     //  See if there is at least a char in the buffer. Else, do the buffer
     //  reload logic.
     //
-    if (fCharIndex < fCharsAvail)
-    {
-        chGotten = fCharBuf[fCharIndex++];
-    }
-     else
+    if (fCharIndex >= fCharsAvail)
     {
         // If fNoMore is set, then we have nothing else to give
         if (fNoMore)
@@ -598,8 +586,9 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
                 return false;
         }
 
-        chGotten = fCharBuf[fCharIndex++];
     }
+
+    chGotten = fCharBuf[fCharIndex++];
 
     // Handle end of line normalization and line/col member maintenance.
     if (chGotten == chCR)
@@ -618,20 +607,11 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
             //  Else, see if its an chLF to eat. If it is, bump the
             //  index again.
             //
-            if (fCharIndex < fCharsAvail)
+            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
             {
                 if (fCharBuf[fCharIndex] == chLF
-                    || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                    || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                     fCharIndex++;
-            }
-             else
-            {
-                if (refreshCharBuffer())
-                {
-                    if (fCharBuf[fCharIndex] == chLF
-                        || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
-                        fCharIndex++;
-                }
             }
 
             // And return just an chLF
@@ -643,7 +623,7 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
         fCurLine++;
     }
      else if (chGotten == chLF
-              || (fNEL && (chGotten == chNEL)))
+              || ((chGotten == chNEL) && fNEL))
     {
         chGotten = chLF;
         fCurLine++;
@@ -708,26 +688,17 @@ bool XMLReader::getSpaces(XMLBuffer& toFill)
                     //
                     if (fSource == Source_External)
                     {
-                        if (fCharIndex < fCharsAvail)
+                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
                         {
                             if (fCharBuf[fCharIndex] == chLF
-                                || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                                 fCharIndex++;
-                        }
-                         else
-                        {
-                            if (refreshCharBuffer())
-                            {
-                                if (fCharBuf[fCharIndex] == chLF
-                                    || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
-                                    fCharIndex++;
-                            }
                         }
                         curCh = chLF;
                     }
                 }
                  else if (curCh == chLF
-                          || (fNEL && (curCh == chNEL)))
+                          || ((curCh == chNEL) && fNEL))
                 {
                     curCh = chLF;
                     fCurCol = 1;
@@ -795,26 +766,17 @@ bool XMLReader::getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck)
                     //
                     if (fSource == Source_External)
                     {
-                        if (fCharIndex < fCharsAvail)
+                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
                         {
                             if (fCharBuf[fCharIndex] == chLF
-                                || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                                 fCharIndex++;
-                        }
-                         else
-                        {
-                            if (refreshCharBuffer())
-                            {
-                                if (fCharBuf[fCharIndex] == chLF
-                                    || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
-                                    fCharIndex++;
-                            }
                         }
                         curCh = chLF;
                     }
                 }
                  else if (curCh == chLF
-                          || (fNEL && (curCh == chNEL)))
+                          || ((curCh == chNEL) && fNEL))
                 {
                     curCh = chLF;
                     fCurCol = 1;
@@ -855,11 +817,7 @@ bool XMLReader::peekNextChar(XMLCh& chGotten)
     //  If there is something still in the buffer, get it. Else do the reload
     //  scenario.
     //
-    if (fCharIndex < fCharsAvail)
-    {
-        chGotten = fCharBuf[fCharIndex];
-    }
-     else
+    if (fCharIndex >= fCharsAvail)
     {
         // Try to refresh the buffer
         if (!refreshCharBuffer())
@@ -867,16 +825,17 @@ bool XMLReader::peekNextChar(XMLCh& chGotten)
             chGotten = chNull;
             return false;
         }
-        chGotten = fCharBuf[fCharIndex];
     }
+
+    chGotten = fCharBuf[fCharIndex];
 
     //
     //  Even though we are only peeking, we have to act the same as the
     //  normal char get method in regards to newline normalization, though
     //  its not as complicated as the actual character getting method's.
     //
-    if ((fSource == Source_External)
-        && (chGotten == chCR || (fNEL && (chGotten == chNEL))))
+    if ((chGotten == chCR || ((chGotten == chNEL) && fNEL))
+        && (fSource == Source_External))
         chGotten = chLF;
 
     return true;
@@ -947,26 +906,17 @@ bool XMLReader::skipSpaces(bool& skippedSomething)
                     //
                     if (fSource == Source_External)
                     {
-                        if (fCharIndex < fCharsAvail)
+                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
                         {
                             if (fCharBuf[fCharIndex] == chLF
-                                || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                                 fCharIndex++;
-                        }
-                         else
-                        {
-                            if (refreshCharBuffer())
-                            {
-                                if (fCharBuf[fCharIndex] == chLF
-                                    || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
-                                    fCharIndex++;
-                            }
                         }
                         curCh = chLF;
                     }
                 }
                  else if (curCh == chLF
-                          || (fNEL && (curCh == chNEL)))
+                          || ((curCh == chNEL) && fNEL))
                 {
                     curCh = chLF;
                     fCurCol = 1;
@@ -1054,25 +1004,16 @@ bool XMLReader::skippedSpace()
 
             if (fSource == Source_External)
             {
-                if (fCharIndex < fCharsAvail)
+                if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
                 {
                     if (fCharBuf[fCharIndex] == chLF
-                        || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
+                        || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
                         fCharIndex++;
-                }
-                 else
-                {
-                    if (refreshCharBuffer())
-                    {
-                        if (fCharBuf[fCharIndex] == chLF
-                            || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
-                            fCharIndex++;
-                    }
                 }
             }
         }
          else if (curCh == chLF
-                  || (fNEL && (curCh == chNEL)))
+                  || ((curCh == chNEL) && fNEL))
         {
             fCurLine++;
             fCurCol = 1;
@@ -1829,7 +1770,7 @@ static void initCharFlagTable()
     //  Write it out to a temp file to be read back into this source later.
     //
     FILE* outFl = fopen("table.out", "wt+");
-    fprintf(outFl, "const XMLByte XMLReader::fgCharCharsTable[0x10000] =\n{    ");
+    fprintf(outFl, "XMLByte XMLReader::fgCharCharsTable[0x10000] =\n{    ");
     for (unsigned int index = 0; index <= 0xFFFF; index += 16)
     {
         fprintf(outFl
@@ -1872,7 +1813,7 @@ static CharFlagKicker gKicker;
 
 
 
-const XMLByte XMLReader::fgCharCharsTable[0x10000] =
+XMLByte XMLReader::fgCharCharsTable[0x10000] =
 {     0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xD8, 0xD0, 0x00, 0x00, 0xD0, 0x00, 0x00
     , 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     , 0xD8, 0x48, 0x58, 0x48, 0x48, 0x48, 0x42, 0x58, 0x48, 0x48, 0x48, 0x48, 0x48, 0x4C, 0x4C, 0x58
