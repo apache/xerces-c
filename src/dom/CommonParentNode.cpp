@@ -232,43 +232,54 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     
     else
     {
+        NodeImpl *oldparent=newInternal->getParentNode();
+        if(oldparent!=null) {
+            oldparent->removeChild(newInternal);
+        }
+
         // Convert to internal type, to avoid repeated casting
         ChildNode *refInternal = (ChildNode *)refChild;
 
-        NodeImpl *oldparent=newInternal->getParentNode();
-        if(oldparent!=null)
-            oldparent->removeChild(newInternal);
-        
-        ChildNode *prev;
-        // Find the node we're inserting after, if any (null if
-        // inserting to head of list)
-        prev = (refInternal == null)
-            ? lastChild() : refInternal->previousSibling;
-        
         // Attach up
         newInternal->ownerNode = this;
         newInternal->isOwned(true);
         
-        // Attach after
-        newInternal->previousSibling=prev;
-        if (refInternal == firstChild) {
+        // Attach before and after
+        // Note: firstChild.previousSibling == lastChild!!
+        if (firstChild == null) {
+            // this our first and only child
             firstChild = newInternal;
-            if (refInternal != null)
-                 refInternal->isFirstChild(false);
             newInternal->isFirstChild(true);
+            newInternal->previousSibling = newInternal;
         } else {
-            prev->nextSibling = newInternal;
-        }
-
-        // Attach before
-        newInternal->nextSibling = refInternal;
-        if(refInternal == null) {
-            // store lastChild as previous sibling of first child
-            firstChild->previousSibling = newInternal;
-        } else {
-            refInternal->previousSibling = newInternal;
+            if (refInternal == null) {
+                // this is an append
+                ChildNode *lastChild = firstChild->previousSibling;
+                lastChild->nextSibling = newInternal;
+                newInternal->previousSibling = lastChild;
+                firstChild->previousSibling = newInternal;
+            } else {
+                // this is an insert
+                if (refChild == firstChild) {
+                    // at the head of the list
+                    firstChild->isFirstChild(false);
+                    newInternal->nextSibling = firstChild;
+                    newInternal->previousSibling = firstChild->previousSibling;
+                    firstChild->previousSibling = newInternal;
+                    firstChild = newInternal;
+                    newInternal->isFirstChild(true);
+                } else {
+                    // somewhere in the middle
+                    ChildNode *prev = refInternal->previousSibling;
+                    newInternal->nextSibling = refInternal;
+                    prev->nextSibling = newInternal;
+                    refInternal->previousSibling = newInternal;
+                    newInternal->previousSibling = prev;
+                }
+            }
         }
     }
+
     changed();
     
     if (this->getOwnerDocument() != null) {
@@ -322,37 +333,37 @@ NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild)
     
     ChildNode * oldInternal = (ChildNode *) oldChild;
     
-    // Patch tree past oldChild
-    ChildNode *prev = oldInternal->previousSibling;
-    ChildNode *next = oldInternal->nextSibling;
-    
-    if (oldInternal != firstChild)
-        prev->nextSibling = next;
-    else {
+    // Patch linked list around oldChild
+    // Note: lastChild == firstChild->previousSibling
+    if (oldInternal == firstChild) {
+        // removing first child
         oldInternal->isFirstChild(false);
-        firstChild = next;
-        if (next != null) {
-            next->isFirstChild(true);
-        }
-    }
-    
-    if (next != null)         // oldInternal != lastChild
-        next->previousSibling = prev;
-    else {
+        firstChild = oldInternal->nextSibling;
         if (firstChild != null) {
-            // store lastChild as previous sibling of first child
+            firstChild->isFirstChild(true);
+            firstChild->previousSibling = oldInternal->previousSibling;
+        }
+    } else {
+        ChildNode *prev = oldInternal->previousSibling;
+        ChildNode *next = oldInternal->nextSibling;
+        prev->nextSibling = next;
+        if (next == null) {
+            // removing last child
             firstChild->previousSibling = prev;
+        } else {
+            // removing some other child in the middle
+            next->previousSibling = prev;
         }
     }
-    
-    // Remove oldChild's references to tree
+
+    // Remove oldInternal's references to tree
     oldInternal->ownerNode = ownerDocument;
     oldInternal->isOwned(false);
     oldInternal->nextSibling = null;
     oldInternal->previousSibling = null;
-    
+
     changed();
-    
+
     return oldInternal;
 };
 
