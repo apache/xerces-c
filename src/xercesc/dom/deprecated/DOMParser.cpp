@@ -151,10 +151,9 @@ void DOMParser::initialize()
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    fScanner = XMLScannerResolver::getDefaultScanner(fValidator, fMemoryManager);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator, fGrammarResolver, fMemoryManager);
     fScanner->setDocHandler(this);
     fScanner->setDocTypeHandler(this);
-    fScanner->setGrammarResolver(fGrammarResolver);
     fScanner->setURIStringPool(fURIStringPool);
 
     fNodeStack = new (fMemoryManager) ValueStackOf<DOM_Node>(64, fMemoryManager, true);
@@ -403,13 +402,13 @@ void DOMParser::useScanner(const XMLCh* const scannerName)
     (
         scannerName
         , fValidator
+        , fGrammarResolver
         , fMemoryManager
     );
 
     if (tempScanner) {
 
         tempScanner->setParseSettings(fScanner);
-        tempScanner->setGrammarResolver(fGrammarResolver);
         tempScanner->setURIStringPool(fURIStringPool);
         delete fScanner;
         fScanner = tempScanner;
