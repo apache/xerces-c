@@ -1003,103 +1003,10 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 char*
 MacOSLCPTranscoder::transcode(const XMLCh* const srcText)
 {
-	if (!srcText)
-		return NULL;
-
-	ArrayJanitor<char> result(0);
-	const XMLCh* src		= srcText;
-	std::size_t srcCnt		= XMLString::stringLen(src);
-	std::size_t resultCnt	= 0;
-
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeKeepInfoMask
-		// | kUnicodeStringUnterminatedMask
-		;
-
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-		//	Convert an (internal) buffer full of text
-	    ByteCount		bytesConsumed = 0;
-	    ByteCount		bytesProduced = 0;
-		std::size_t		passCnt = 0;
-		const UniChar*	passSrc = NULL;
-		
-		//	Setup source buffer as needed to accomodate a unicode
-		//	character size mismatch.
-		TempUniBuf	iBuf;
-		if (UNICODE_SIZE_MISMATCH)
-		{
-			passCnt = std::min(srcCnt, kTempUniBufCount);
-			passSrc = CopyXMLChsToUniChars(src, iBuf, passCnt, kTempUniBufCount);
-		}
-		else
-		{
-			passCnt = srcCnt;
-			passSrc = reinterpret_cast<const UniChar*>(src);
-		}
-		
-		TempUniBuf oBuf;
-		
-	    status = ConvertFromUnicodeToText(
-	    	mUnicodeToTextInfo,
-	    	passCnt * sizeof(UniChar),	// src byte count
-	    	passSrc,			// source buffer
-	    	options,			// control flags
-	    	0,					// ioffset count
-	    	NULL,				// ioffset array
-	    	0,					// ooffset count
-	    	NULL,				// ooffset array
-	    	kTempUniBufCount * sizeof(UniChar),
-	    	&bytesConsumed,
-	    	&bytesProduced,
-	    	oBuf);
-			
-		//	Move the data to result buffer, reallocating as needed
-		if (bytesProduced > 0)
-		{
-			//	Allocate space for result
-			std::size_t newCnt = resultCnt + bytesProduced;
-			ArrayJanitor<char> newResult(new char[newCnt + 1]);
-			if (newResult.get() != NULL)
-			{
-				//	Incorporate previous result
-				if (result.get() != NULL)
-					std::memcpy(newResult.get(), result.get(), resultCnt);
-				result.reset(newResult.release());
-
-				//	Copy in new data
-				std::memcpy(result.get() + resultCnt, oBuf, bytesProduced);
-				resultCnt = newCnt;
-				
-				result[resultCnt] = '\0';					
-			}
-		}
-		
-		std::size_t charsConsumed = bytesConsumed / sizeof(UniChar);
-		src		+= charsConsumed;
-		srcCnt	-= charsConsumed;
-
-		if (status == kTECOutputBufferFullStatus)
-			status = noErr;
-
-		options |= kUnicodeKeepInfoMask;
-	}
-	
-	if (status != noErr && status != kTECPartialCharErr)
-		result.reset();
-	else if (!result.get())
-	{
-		//	No error, and no result: we probably processed a zero length
-		//	input, in which case we want a valid zero length output.
-		result.reset(new char[1]);
-		result[0] = '\0';
-	}
-	
-	return result.release();
+	//	Transcode using the static memory manaager
+	return transcode(srcText, XMLPlatformUtils::fgMemoryManager);
 }
+
 
 char*
 MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
@@ -1215,90 +1122,10 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 XMLCh*
 MacOSLCPTranscoder::transcode(const char* const srcText)
 {
-	if (!srcText)
-		return NULL;
-
-	ArrayJanitor<XMLCh> result(0);
-	const char* src			= srcText;
-	std::size_t srcCnt		= std::strlen(src);
-	std::size_t resultCnt	= 0;
-
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		// | kUnicodeKeepInfoMask
-		| kUnicodeDefaultDirectionMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeStringUnterminatedMask
-		// | kUnicodeTextRunMask
-		;
-
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-		//	Convert an (internal) buffer full of text
-	    ByteCount	bytesConsumed = 0;
-	    ByteCount	bytesProduced = 0;
-		
-		TempUniBuf buf;
-
-	    status = ConvertFromTextToUnicode(
-	    	mTextToUnicodeInfo,
-	    	srcCnt,				// src byte count
-	    	src,
-	    	options,			// control flags
-	    	0,					// ioffset count
-	    	NULL,				// ioffset array
-	    	0,					// ooffset count
-	    	NULL,				// ooffset array
-	    	kTempUniBufCount * sizeof(UniChar),	// Byte count of destination buffer
-	    	&bytesConsumed,
-	    	&bytesProduced,
-	    	buf);
-		
-		std::size_t charsProduced = bytesProduced / sizeof(UniChar);
-		
-		//	Move the data to result buffer, reallocating as needed
-		if (charsProduced > 0)
-		{
-			//	Allocate space for result
-			std::size_t newCnt = resultCnt + charsProduced;
-			ArrayJanitor<XMLCh> newResult(new XMLCh[newCnt + 1]);
-			if (newResult.get() != NULL)
-			{
-				//	Incorporate previous result
-				if (result.get() != NULL)
-					std::memcpy(newResult.get(), result.get(), resultCnt * sizeof(XMLCh));
-				result.reset(newResult.release());
-
-				//	Copy in new data, converting character formats as necessary
-				CopyUniCharsToXMLChs(buf, result.get() + resultCnt, charsProduced, charsProduced);
-				resultCnt = newCnt;
-				
-				result[resultCnt] = 0;			
-			}
-		}
-
-		src		+= bytesConsumed;
-		srcCnt  -= bytesConsumed;
-
-		if (status == kTECOutputBufferFullStatus)
-			status = noErr;
-			
-		options |= kUnicodeKeepInfoMask;
-	}
-	
-	if (status != noErr && status != kTECPartialCharErr)
-		result.reset();
-	else if (!result.get())
-	{
-		//	No error, and no result: we probably processed a zero length
-		//	input, in which case we want a valid zero length output.
-		result.reset(new XMLCh[1]);
-		result[0] = '\0';
-	}
-	
-	return result.release();
+	//	Transcode using the static memory manaager
+	return transcode(srcText, XMLPlatformUtils::fgMemoryManager);
 }
+
 
 XMLCh*
 MacOSLCPTranscoder::transcode(const char* const srcText,
