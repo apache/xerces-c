@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.13 
+# Generated automatically using autoconf version 2.13
 # Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -1421,7 +1421,12 @@ s%\[%\\&%g
 s%\]%\\&%g
 s%\$%$$%g
 EOF
+if test "$platform" != "OS390"; then
 DEFS=`sed -f conftest.defs confdefs.h | tr '\012' ' '`
+else
+# OS390 - EBCDIC NL is '\025'
+DEFS=`sed -f conftest.defs confdefs.h | tr '\025' ' '`
+fi
 rm -f conftest.defs
 
 
@@ -1663,5 +1668,5 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
 echo Still cannot resolve it? Find out if someone else had the same problem before.
-echo Go to http://xml-archive.webweaving.org/xml-archive-xerces/ 
+echo Go to http://xml-archive.webweaving.org/xml-archive-xerces/
 
