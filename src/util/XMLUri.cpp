@@ -554,7 +554,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     int index = 0;
 	int start = 0;
-    int end = XMLString::stringLen(uriSpec);
+    const int end = XMLString::stringLen(uriSpec);
 
     //
     // server = [ [ userinfo "@" ] hostport ]
@@ -562,17 +562,17 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     //
     XMLCh* userinfo = new XMLCh[end+1];
     ArrayJanitor<XMLCh> userName(userinfo);
-    index = XMLString::indexOf(uriSpec, chAt);
+    index = XMLString::indexOf(&(uriSpec[start]), chAt);
 
     if ( index != -1)
     {
-        XMLString::subString(userinfo, uriSpec, 0, index);
+        XMLString::subString(userinfo, &(uriSpec[start]), 0, index);
         index++; // skip the @
+		start += index;
     }
     else
     {
         XMLString::copyString(userinfo, XMLUni::fgZeroLenString);
-        index = 0;
     }
 
     //
@@ -581,31 +581,31 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     //
 	XMLCh* host = new XMLCh[end+1];
     ArrayJanitor<XMLCh> hostName(host);
-	start = index;
     index = XMLString::indexOf(&(uriSpec[start]), chColon);
 
     if ( index != -1)
     {
-        XMLString::subString(host, uriSpec, start, index);
+        XMLString::subString(host, &(uriSpec[start]), 0, index);
         index++;  // skip the :
+		start +=index;
     }
     else
     {
-        XMLString::subString(host, uriSpec, start, end);
+        XMLString::subString(host, &(uriSpec[start]), 0, end-start);
+		start=end;
     }
 
     // port is everything after ":"
 
     XMLCh* portStr = new XMLCh[end+1];
     ArrayJanitor<XMLCh> portName(portStr);
-    start = index;
     int port = -1;
 
     if ((XMLString::stringLen(host) > 0) &&   // non empty host
-        (start != -1)                    &&   // ":" found
+        (index != -1)                    &&   // ":" found
         (start < end)                     )   // ":" is not the last
     {
-        XMLString::subString(portStr, uriSpec, start, end);
+        XMLString::subString(portStr, &(uriSpec[start]), 0, end-start);
 
         if (XMLString::stringLen(portStr) > 0)
         {
@@ -1192,24 +1192,20 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
 	// rightmost domain label starting with digit indicates IP address
 	// since top level domain label can only start with an alpha
 	// see RFC 2396 Section 3.2.2
-    int lastPeriodPos = XMLString::lastIndexOf(addrString, chPeriod);
-    if (lastPeriodPos == -1)
-        return false;
-
     int addrStrLen = XMLString::stringLen(addrString);
+    int lastPeriodPos = XMLString::lastIndexOf(addrString, chPeriod);
 
     // if the string ends with "."
     // get the second last "."
-    if (lastPeriodPos == addrStrLen - 1)
+    if (lastPeriodPos + 1 == addrStrLen)
     {
         XMLCh* tmp2 = new XMLCh[addrStrLen];
         XMLString::subString(tmp2, addrString, 0, lastPeriodPos);
         lastPeriodPos = XMLString::lastIndexOf(tmp2, chPeriod);
         delete [] tmp2;
 
-        if (lastPeriodPos == -1)
-            return false;
-
+        if ( XMLString::isDigit(addrString[lastPeriodPos + 1]))
+			return false;
     }
 
 	if (XMLString::isDigit(addrString[lastPeriodPos + 1]))
