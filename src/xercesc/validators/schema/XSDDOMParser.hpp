@@ -64,6 +64,8 @@
 
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/validators/schema/XSDErrorReporter.hpp>
+#include <xercesc/validators/schema/XSDLocator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -111,6 +113,160 @@ public :
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Implementation of the XMLDocumentHandler interface.
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of the XMLDocumentHandler interface. */
+    //@{
+
+    /** Handle a start element event
+      *
+      * This method is used to report the start of an element. It is
+      * called at the end of the element, by which time all attributes
+      * specified are also parsed. A new DOM Element node is created
+      * along with as many attribute nodes as required. This new element
+      * is added appended as a child of the current node in the tree, and
+      * then replaces it as the current node (if the isEmpty flag is false.)
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      * @param urlId    An id referring to the namespace prefix, if
+      *                 namespaces setting is switched on.
+      * @param elemPrefix A const pointer to a Unicode string containing
+      *                 the namespace prefix for this element. Applicable
+      *                 only when namespace processing is enabled.
+      * @param attrList A const reference to the object containing the
+      *                 list of attributes just scanned for this element.
+      * @param attrCount A count of number of attributes in the list
+      *                 specified by the parameter 'attrList'.
+      * @param isEmpty  A flag indicating whether this is an empty element
+      *                 or not. If empty, then no endElement() call will
+      *                 be made.
+      * @param isRoot   A flag indicating whether this element was the
+      *                 root element.
+      * @see DocumentHandler#startElement
+      */
+    virtual void startElement
+    (
+        const   XMLElementDecl&         elemDecl
+        , const unsigned int            urlId
+        , const XMLCh* const            elemPrefix
+        , const RefVectorOf<XMLAttr>&   attrList
+        , const unsigned int            attrCount
+        , const bool                    isEmpty
+        , const bool                    isRoot
+    );
+
+    /** Handle and end of element event
+      *
+      * This method is used to indicate the end tag of an element. The
+      * DOM parser pops the current element off the top of the element
+      * stack, and make it the new current element.
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      * @param urlId    An id referring to the namespace prefix, if
+      *                 namespaces setting is switched on.
+      * @param isRoot   A flag indicating whether this element was the
+      *                 root element.
+      * @param elemPrefix A const pointer to a Unicode string containing
+      *                 the namespace prefix for this element. Applicable
+      *                 only when namespace processing is enabled.
+      */
+    virtual void endElement
+    (
+        const   XMLElementDecl& elemDecl
+        , const unsigned int    urlId
+        , const bool            isRoot
+        , const XMLCh* const    elemPrefix
+    );
+
+    /** Handle document character events
+      *
+      * This method is used to report all the characters scanned by the
+      * parser. This DOM implementation stores this data in the appropriate
+      * DOM node, creating one if necessary.
+      *
+      * @param chars   A const pointer to a Unicode string representing the
+      *                character data.
+      * @param length  The length of the Unicode string returned in 'chars'.
+      * @param cdataSection  A flag indicating if the characters represent
+      *                      content from the CDATA section.
+      */
+    virtual void docCharacters
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    length
+        , const bool            cdataSection
+    );
+
+    /** Handle a document comment event
+      *
+      * This method is used to report any comments scanned by the parser.
+      * A new comment node is created which stores this data.
+      *
+      * @param comment A const pointer to a null terminated Unicode
+      *                string representing the comment text.
+      */
+    virtual void docComment
+    (
+        const   XMLCh* const    comment
+    );
+
+    /** Handle a start entity reference event
+      *
+      * This method is used to indicate the start of an entity reference.
+      * If the expand entity reference flag is true, then a new
+      * DOM Entity reference node is created.
+      *
+      * @param entDecl A const reference to the object containing the
+      *                entity declaration information.
+      */
+    virtual void startEntityReference
+    (
+        const   XMLEntityDecl&  entDecl
+    );
+
+    /** Handle and end of entity reference event
+      *
+      * This method is used to indicate that an end of an entity reference
+      * was just scanned.
+      *
+      * @param entDecl A const reference to the object containing the
+      *                entity declaration information.
+      */
+    virtual void endEntityReference
+    (
+        const   XMLEntityDecl&  entDecl
+    );
+
+    /** Handle an ignorable whitespace vent
+      *
+      * This method is used to report all the whitespace characters, which
+      * are determined to be 'ignorable'. This distinction between characters
+      * is only made, if validation is enabled.
+      *
+      * Any whitespace before content is ignored. If the current node is
+      * already of type DOMNode::TEXT_NODE, then these whitespaces are
+      * appended, otherwise a new Text node is created which stores this
+      * data. Essentially all contiguous ignorable characters are collected
+      * in one node.
+      *
+      * @param chars   A const pointer to a Unicode string representing the
+      *                ignorable whitespace character data.
+      * @param length  The length of the Unicode string 'chars'.
+      * @param cdataSection  A flag indicating if the characters represent
+      *                      content from the CDATA section.
+      */
+    virtual void ignorableWhitespace
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    length
+        , const bool            cdataSection
+    );
+
+    //@}
 
     // -----------------------------------------------------------------------
     //  Get methods
@@ -158,9 +314,40 @@ protected :
                                             const XMLCh *qualifiedName);
 
 private:
-    bool              fSawFatal;
-    XMLErrorReporter* fUserErrorReporter;
-    XMLEntityHandler* fUserEntityHandler;
+    // -----------------------------------------------------------------------
+    //  Private Helper methods
+    // -----------------------------------------------------------------------
+    void startAnnotation
+    (
+        const   XMLElementDecl&         elemDecl
+        , const RefVectorOf<XMLAttr>&   attrList
+        , const unsigned int            attrCount
+    );
+    void startAnnotationElement
+    (
+        const   XMLElementDecl&         elemDecl
+        , const RefVectorOf<XMLAttr>&   attrList
+        , const unsigned int            attrCount
+    );
+    void endAnnotationElement
+    (
+        const XMLElementDecl& elemDecl
+        ,     bool            complete
+    );
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    // -----------------------------------------------------------------------
+    bool                         fSawFatal;
+    int                          fAnnotationDepth;
+    int                          fInnerAnnotationDepth;
+    int                          fDepth;
+    XMLErrorReporter*            fUserErrorReporter;
+    XMLEntityHandler*            fUserEntityHandler;
+    ValueVectorOf<unsigned int>* fURIs;
+    XMLBuffer                    fAnnotationBuf;
+    XSDErrorReporter             fXSDErrorReporter;
+    XSDLocator                   fXSLocator;
 };
 
 

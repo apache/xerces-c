@@ -184,7 +184,6 @@ public :
     static const XMLCh fgXMLDeclStringHTabU[];
     static const XMLCh fgXMLDeclStringLFU[];
     static const XMLCh fgXMLDeclStringCRU[];
-
     static const XMLCh fgXMLNSString[];
     static const XMLCh fgXMLNSColonString[];
     static const XMLCh fgXMLNSURIName[];
@@ -202,6 +201,8 @@ public :
     static const XMLCh fgIGXMLScanner[];
     static const XMLCh fgSGXMLScanner[];
     static const XMLCh fgDGXMLScanner[];
+    static const XMLCh fgCDataStart[];
+    static const XMLCh fgCDataEnd[];
 
     // Exception Name
     static const XMLCh fgArrayIndexOutOfBoundsException_Name[];

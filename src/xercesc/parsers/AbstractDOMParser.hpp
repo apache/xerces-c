@@ -1423,8 +1423,9 @@ private :
     void initialize();
     void cleanUp();
 
+protected:
     // -----------------------------------------------------------------------
-    //  Private data members
+    //  Protected data members
     //
     //  fCurrentNode
     //  fCurrentParent

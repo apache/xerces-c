@@ -702,6 +702,17 @@ const XMLCh XMLUni::fgDGXMLScanner[] =
     ,   chLatin_c, chLatin_a, chLatin_n, chLatin_n, chLatin_e, chLatin_r, chNull
 };
 
+const XMLCh XMLUni::fgCDataStart[] =
+{
+        chOpenAngle, chBang, chOpenSquare, chLatin_C, chLatin_D
+    ,   chLatin_A, chLatin_T, chLatin_A, chOpenSquare, chNull
+};
+
+const XMLCh XMLUni::fgCDataEnd[] =
+{
+         chCloseSquare, chCloseSquare, chCloseAngle, chNull
+};
+
 //Exception strings
 const XMLCh XMLUni::fgArrayIndexOutOfBoundsException_Name[] =
 {
