@@ -3,12 +3,26 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; Version 1.7.0: March 7, 2002">
+<s2 title="&XercesCName; Version 1.7.0: March 8, 2002">
 <table>
     <tr>
         <td>Date</td>
         <td>Contributor</td>
         <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2002-03-07</td>
+        <td>Tinny Ng</td>
+        <td>Add a keys file to store public key of committers who sign and upload packages to Apache.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-03-07</td>
+        <td>PeiYong Zhang</td>
+        <td>Call Terminate() to avoid memory tools reporting memory leak in Traversal test cases.
+        </td>
     </tr>
 
     <tr>
