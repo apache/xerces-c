@@ -473,7 +473,7 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
         <tr><td>EBCDIC: Hebrew</td><td>ebcdic-cp-he</td></tr>
         <tr><td>EBCDIC: Switzerland</td><td>ebcdic-cp-ch</td></tr>
         <tr><td>EBCDIC: Roece</td><td>ebcdic-cp-roece</td></tr>
-        <tr><td>EBCDIC: Yogoslavia</td><td>ebcdic-cp-yu</td></tr>
+        <tr><td>EBCDIC: Yugoslavia</td><td>ebcdic-cp-yu</td></tr>
         <tr><td>EBCDIC: Iceland</td><td>ebcdic-cp-is</td></tr>
         <tr><td>EBCDIC: Urdu</td><td>ebcdic-cp-ar2</td></tr>
         <tr><td>Chinese for PRC, mixed 1/2 byte</td><td>gb2312</td></tr>
