@@ -61,15 +61,36 @@
 // ---------------------------------------------------------------------------
 //  This sample program invokes the XercesDOMParser to build a DOM tree for
 //  the specified input file. It then invokes DOMWriter::writeNode() to 
-//  serialize the resultant DOM tree in to an StdOutmyFormTarget, if no error 
+//  serialize the resultant DOM tree into StdOutmyFormTarget, if no error 
 //  occurs during the parsing. 
 //
-//  Note: since any combination of characters can be the end of line sequence,
-//        the resultant XML stream may NOT be well formed any more.
 //
-//        In case a filter is specified, and which does filter out some part 
-//        of the original XML document, thus the resultant XML stream may not
-//        valid.
+//  Note: Application needs to provide its own implementation of DOMErrorHandler
+//        (in this sample, the DOMPrintErrorHandler), if it would receive 
+//        notification from the serializer in case any error occurs during
+//        the serialization.
+//
+//  Note: And application needs to provide its own implementation of DOMWriterFilter
+//        as well (in this sample, the DOMPrintFilter), if it would like to
+//        filtering out certain part of the DOM representation. but must be aware 
+//        that thus may render the resultant XML stream invalid.
+//
+//  Note: Application may choose any combination of characters as the end of line 
+//        sequence to be used in the resultant XML stream, but must be aware that
+//        thus may render the serialized XML stream ill formed.
+//
+//  Note: Application may choose a particular encoding name in which the output
+//        XML stream would be, but must be aware that if characters, unrepresentable
+//        in the encoding specified, appearing in markups, may force the serializer
+//        to terminate serialization prematurely, and thus no complete serialization
+//        be done.
+//
+//  Note: Application shall query the serializer first, before set any 
+//        feature/mode(true, false), or be ready to catch exception if this
+//        feature/mode is not supported by the serializer.
+//
+//  Note: Application needs to clean up the filter, error handler and format target
+//        objects created for the serialization.
 //
 //   Limitations:
 //      1.  The encoding="xxx" clause in the XML header should reflect
@@ -83,12 +104,14 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/dom/impl/DOMWriterImpl.hpp>
-
 #include <xercesc/util/PlatformUtils.hpp>
+
 #include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMWriter.hpp>
+
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-#include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "DOMTreeErrorReporter.hpp"
@@ -389,26 +412,25 @@ int main(int argC, char* argV[])
         try
         {
 			// get a serializer, an instance of DOMWriter
-			DOMWriter      *theSerializer = new DOMWriterImpl();
-			//DOMImplementation* impl = DOMImplementation::getImplementation();
-			//DOMWriter *theSerializer = ((DOMImplementationLS*)impl)->createWriter();
+			DOMImplementation *impl          = DOMImplementation::getImplementation();
+			DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
 
 			// set user specified end of line sequence and output encoding
 			theSerializer->setNewLine(gMyEOLSequence);
 			theSerializer->setEncoding(gOutputEncoding);
 
-			// Set user's own error handler
-			// set user's own filter 
+			// plug in user's own filter 
 			if (gUseFilter)
 			{
 				myFilter = new DOMPrintFilter; 
 				theSerializer->setFilter(myFilter);
 			}
 
-		    DOMErrorHandler *myErrorHandler = new DOMPrintErrorHandler();
+			// plug in user's own error handler
+			DOMErrorHandler *myErrorHandler = new DOMPrintErrorHandler();
 			theSerializer->setErrorHandler(myErrorHandler);
 
-			// set feature if the serializer supports the feature
+			// set feature if the serializer supports the feature/mode
 			if (theSerializer->canSetFeature(DOMWriter::SplitCdataSections, gSplitCdataSections))
 				theSerializer->setFeature(DOMWriter::SplitCdataSections, gSplitCdataSections);
 			
@@ -416,14 +438,20 @@ int main(int argC, char* argV[])
 				theSerializer->setFeature(DOMWriter::DiscardDefaultContent, gDiscardDefaultContent);
 
 			//
-			// Instantiate a format target to receive the resultant
+			// Plug in a format target to receive the resultant
 			// XML stream from the serializer.
             //
 			// StdOutFormatTarget prints the resultant XML stream
-			// to stdout once it receive any thing from the serializer.
+			// to stdout once it receives any thing from the serializer.
 			//
 			StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
+
+			// get the DOM representation
 			DOMNode                     *doc = parser->getDocument();
+
+			//
+			// do the serialization through DOMWriter::writeNode();
+			//
 			theSerializer->writeNode(myFormTarget, *doc);
 
 			delete theSerializer;
@@ -471,12 +499,4 @@ int main(int argC, char* argV[])
 
     return retval;
 }
-
-
-
-
-
-
-
-
 
