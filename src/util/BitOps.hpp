@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/17 22:49:17  aruna1
+ * Added comment on mask
+ *
  * Revision 1.3  2000/02/17 22:32:45  aruna1
  * Masking changes made due to swap of 16bit to 32 bit
  *
@@ -84,6 +87,7 @@ public:
     // -----------------------------------------------------------------------
     static inline XMLCh swapBytes(const XMLUInt16 toSwap)
     {
+        //The mask is required to overcome a compiler error on solaris 
         return XMLCh(((toSwap >> 8) | (toSwap << 8)) & 0xFFFF);
     }
 
