@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/11/28 20:06:52  tng
+ * [Bug 4544] DOM_NodeList::getLength incorrect when called twice for empty list .
+ *
  * Revision 1.7  2001/10/03 15:49:01  tng
  * [Bug 3867] IDOM_Element::getElementsByTagName() threading problem.
  *
@@ -128,38 +131,12 @@ IDDeepNodeListImpl::~IDDeepNodeListImpl()
 
 unsigned int IDDeepNodeListImpl::getLength()
 {
-    // After getting the length of the list, the most likely operation is
-    // to iterate through the list.  Therefore, it's best to cache the
-    // the first element, rather than forcing a search for it the second time.
-    //
-    // idom_revisit:  This assumes the user writes:
-    //
-    //    int len = nodeList->getLength();
-    //    for (i = 0; i < len; i++)
-    //        nodeList->item(i);
-    //
-    // If a foolish user writes the following, the cached node will be reset
-    // to zero on every iteration!  Should we account for this sloppy style?
-    //
-    //    for (i = 0; i < nodeList->getLength(); i++)
-    //        nodeList->item(i);
-    // end idom_revisit
+    // Reset cache to beginning of list
     item(0);
-    IDOM_Node *cacheFirstNode = fCurrentNode;
 
-    // item(int) stops when we run out of subtree, at which point
-    // fCurrentIndexPlus1 will point past end of list!
+    // Preload all matching elements. (Stops when we run out of subtree!)
     item(INT_MAX);
-    unsigned int length = fCurrentIndexPlus1;
-
-    // Restore cache to beginning of list
-    if (cacheFirstNode != 0)
-    {
-        fCurrentIndexPlus1 = 1;
-        fCurrentNode = cacheFirstNode;
-    }
-
-    return length;
+    return fCurrentIndexPlus1;
 }
 
 
