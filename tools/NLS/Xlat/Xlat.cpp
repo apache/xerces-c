@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2002/12/12 23:40:39  peiyongz
+ * normlize locale string.
+ *
  * Revision 1.15  2002/11/12 17:24:58  tng
  * DOM Message: add new domain for DOM Messages.
  *
@@ -503,10 +506,32 @@ extern "C" int wmain(int argC, XMLCh** argV)
             const unsigned int count = msgSetList->getLength();
 
             //
+            // Normalize locale string
+            //
+            // locale = ll[[_CC][_VARIANT]]
+            // where ll          is language code
+            //       CC          is country code
+            //       VARIANT     is variant code
+            //
+            XMLCh normalizedLocale[256];
+
+            normalizedLocale[0] = localeStr[0];
+            normalizedLocale[1] = localeStr[1];
+            normalizedLocale[2] = 0;
+            XMLString::lowerCase(normalizedLocale);
+
+            if (XMLString::stringLen(localeStr) > 2)
+            {
+                XMLString::catString(&(normalizedLocale[2]), &(localeStr[2]));
+                XMLString::upperCase(&(normalizedLocale[2]));
+            }
+
+            //
             //  Ok, its good enough to get started. So lets call the start output
             //  method on the formatter.
             //
-            formatter->startOutput(localeStr, gOutPath);
+    
+            formatter->startOutput(normalizedLocale, gOutPath);
 
             //
             //  For each message domain element, we call start and end domain
