@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.7  2000/01/13 23:24:04  abagchi
+# Changed __USE_UNIX98 to _GNU_SOURCE
+#
 # Revision 1.6  1999/12/17 01:28:55  rahulj
 # Merged in changes submitted for UnixWare 7 port. Platform
 # specific files are still missing.
@@ -115,7 +118,7 @@ ifeq (${PLATFORM}, AIX)
 endif
 ifeq (${PLATFORM}, LINUX)
     SUBMODULE = Platforms/Linux
-    CXXFLAGS += -D__USE_UNIX98 -D__USE_GNU
+    CXXFLAGS += -D_GNU_SOURCE -D__USE_GNU
     CPP_PUBHEADERS = Linux/LinuxDefs.hpp
     CPP_OBJECTS = Linux/LinuxPlatformUtils.o
 endif
