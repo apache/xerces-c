@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/12/13 23:35:28  neilg
+ * fix bug 25494; thanks to Han Ming
+ *
  * Revision 1.11  2003/12/01 20:41:47  neilg
  * do not throw an exception if there is no user-defined registry
  *
@@ -574,7 +577,7 @@ XSNamedMap <XSObject> *XSModel::getComponentsByNamespace(XSConstants::COMPONENT_
         namespaceItem = getNamespaceItem(emptyString);
     
     if (namespaceItem)
-        namespaceItem->getComponents(objectType);
+        return namespaceItem->getComponents(objectType);
 
     return 0;
 }
