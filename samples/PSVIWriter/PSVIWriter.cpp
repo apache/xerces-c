@@ -57,6 +57,9 @@
 //REVISIT
 /*
  * $Log$
+ * Revision 1.2  2004/02/09 13:23:45  cargilld
+ * Fix build problems and update usage.
+ *
  * Revision 1.1  2004/02/04 20:11:54  peiyongz
  * PSVIWriter
  *
@@ -77,8 +80,12 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#include <fstream.h>
 
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <fstream>
+#else
+#include <fstream.h>
+#endif
 // ---------------------------------------------------------------------------
 //  Local helper methods
 // ---------------------------------------------------------------------------
@@ -94,9 +101,11 @@ void usage()
 			"    -e=xxx      Output errors to file xxx (default is stdout)\n"
 			"    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].\n"
 			"    -x=XXX      Use a particular encoding for output (UTF8*).\n"
+            "    -l          Indicate the input file is a List File that has a list of xml files.\n"
+            "                Default to off (Input file is an XML file).\n"
 			"    -?          Show this help.\n\n"
 			"  * = Default if not provided explicitly.\n"
-		<< endl;
+		<< XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -190,7 +199,7 @@ int main(int argC, char* argV[])
         else
         {
             XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
-                << "', ignoring it\n" << endl;
+                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -210,7 +219,7 @@ int main(int argC, char* argV[])
         XMLPlatformUtils::Initialize();
     } catch (const XMLException& toCatch) {
         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << endl;
+            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -274,7 +283,7 @@ int main(int argC, char* argV[])
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << endl;
+        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
         return 2;
     }
 
@@ -340,14 +349,14 @@ int main(int argC, char* argV[])
         {
             XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
-                << StrX(e.getMessage()) << "\n" << endl;
+                << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
             continue;
         }
 
         catch (...)
         {
-            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n" << XERCES_STD_QUALIFIER endl;;
             errorOccurred = true;
             continue;
         }
