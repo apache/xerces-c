@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:20  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:48:03  roddey
+ * Changed to use new split of transcoder interfaces into XML transcoders and
+ * LCP transcoders, and implementation of intrinsic transcoders as pluggable
+ * transcoders, and addition of Latin1 intrinsic support.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:20  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:44:45  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -74,13 +79,18 @@
 #include <util/TranscodingException.hpp>
 #include <util/TransService.hpp>
 #include <util/UTFDataFormatException.hpp>
+#include <util/XML88591Transcoder.hpp>
+#include <util/XMLASCIITranscoder.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
+#include <util/XMLUCS4Transcoder.hpp>
+#include <util/XMLUTF8Transcoder.hpp>
+#include <util/XMLUTF16Transcoder.hpp>
 #include <sax/InputSource.hpp>
+#include <framework/XMLBuffer.hpp>
 #include <internal/CharTypeTables.hpp>
 #include <internal/XMLReader.hpp>
 #include <internal/XMLScanner.hpp>
-#include <framework/XMLBuffer.hpp>
 #include "memory.h"
 
 
@@ -159,6 +169,8 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     , fSentTrailingSpace(false)
     , fSource(source)
     , fSpareCh(0)
+    , fSrcOfsBase(0)
+    , fSrcOfsSupported(false)
     , fStream(streamToAdopt)
     , fSystemId(XMLString::replicate(sysId))
     , fSwapped(false)
@@ -188,48 +200,15 @@ XMLReader::XMLReader(const  XMLCh* const                pubId
     checkForSwapped();
 
     //
-    //  If the encoding is EBCDIC, then we have to do some special
-    //  preliminary work to create a converter and to do an initial
-    //  trancoding of the first line. We create a default EBCDIC transcoder
-    //  that should get us through the first line at least.
+    //  Create a transcoder for the encoding. This might get replaced
+    //  later when we see the encoding="" string.
     //
-    if (fEncoding == XMLRecognizer::EBCDIC)
-    {
-        //
-        //  Set the encoding string provisionally to the default EBCDIC
-        //  encoding string. This might have to be updated later when/if the
-        //  setEncoding() method gets called.
-        //
-        fEncodingStr = XMLString::replicate(XMLUni::fgDefaultEBCDICEncodingString);
-
-        XMLTransService::Codes failReason;
-        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
-        (
-            fEncodingStr
-            , failReason
-            , kCharBufSize
-        );
-
-        if (!fTranscoder)
-            ThrowXML1(RuntimeException, XML4CExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
-    }
-     else
-    {
-        //
-        //  Set the encoding string provisionally to the auto-sense encoding
-        //  that we we given. This might have to be updated later when/if the
-        //  setEncoding() method gets called.
-        //
-        fEncodingStr = XMLString::replicate
-        (
-            XMLRecognizer::nameForEncoding(fEncoding)
-        );
-    }
+    setBaseTranscoder();
 
     //
-    //  This will check to see if the first line is an XMLDecl and if
-    //  so decode that first line manually one character at a time. This
-    //  leave enough characters in the buffer that the high level code
+    //  This will check to see if the first line is an XMLDecl and, if
+    //  so, decode that first line manually one character at a time. This
+    //  leaves enough characters in the buffer that the high level code
     //  can get through the Decl and call us back with the real encoding.
     //
     doInitDecode();
@@ -260,6 +239,8 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     , fSentTrailingSpace(false)
     , fSource(source)
     , fSpareCh(0)
+    , fSrcOfsBase(0)
+    , fSrcOfsSupported(false)
     , fStream(streamToAdopt)
     , fSystemId(XMLString::replicate(sysId))
     , fSwapped(false)
@@ -276,24 +257,15 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     //  which tells us to create a transcoder based reader.
     //
     fEncoding = XMLRecognizer::encodingForName(fEncodingStr);
-    if (fEncoding == XMLRecognizer::OtherEncoding)
-    {
-        XMLTransService::Codes failReason;
-        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
-        (
-            fEncodingStr
-            , failReason
-            , kCharBufSize
-        );
 
-        if (!fTranscoder)
-            ThrowXML1(RuntimeException, XML4CExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
-    }
-     else
-    {
-        // Check whether the fSwapped flag should be set or not
-        checkForSwapped();
-    }
+    // Check whether the fSwapped flag should be set or not
+    checkForSwapped();
+
+    //
+    //  Create a transcoder for the encoding. This might get replaced
+    //  later when we see the encoding="" string.
+    //
+    setBaseTranscoder();
 
     // Do an initial load of raw bytes
     refreshRawBuffer();
@@ -307,7 +279,11 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     //  So we do here the slipping in of the leading space if required.
     //
     if ((fType == Type_PE) && (fRefFrom == RefFrom_NonLiteral))
+    {
+        // This represents no data from the source
+        fCharSizeBuf[fCharsAvail] = 0;
         fCharBuf[fCharsAvail++] = chSpace;
+    }
 }
 
 
@@ -324,11 +300,30 @@ XMLReader::~XMLReader()
 // ---------------------------------------------------------------------------
 //  XMLReader: Character buffer management methods
 // ---------------------------------------------------------------------------
+unsigned int XMLReader::getSrcOffset() const
+{
+    if (!fSrcOfsSupported)
+        ThrowXML(RuntimeException, XML4CExcepts::Reader_SrcOfsNotSupported);
+
+    //
+    //  Take the current source offset and add in the sizes that we've
+    //  eaten from the source so far.
+    //
+    unsigned int offset = fSrcOfsBase;
+    for (unsigned int index = 0; index < fCharIndex; index++)
+        offset += fCharSizeBuf[index];
+
+    return offset;
+}
+
+
 bool XMLReader::refreshCharBuffer()
 {
     // If the no more flag is set, then don't both doing anything
     if (fNoMore)
         return false;
+
+    unsigned int startInd;
 
     // See if we have any existing chars.
     const unsigned int spareChars = fCharsAvail - fCharIndex;
@@ -337,19 +332,38 @@ bool XMLReader::refreshCharBuffer()
     if (spareChars == kCharBufSize)
         return false;
 
-    // If there are spare chars, then move then down to the bottom
-    unsigned int startInd = 0;
+    //
+    //  Add the number of source bytes eaten so far to the base src
+    //  offset member.
+    //
+    for (startInd = 0; startInd < fCharIndex; startInd++)
+        fSrcOfsBase += fCharSizeBuf[startInd];
+
+    //
+    //  If there are spare chars, then move then down to the bottom. We
+    //  have to move the char sizes down also.
+    //
+    startInd = 0;
     if (spareChars)
     {
         for (unsigned int index = fCharIndex; index < fCharsAvail; index++)
-            fCharBuf[startInd++] = fCharBuf[index];
+        {
+            fCharBuf[startInd] = fCharBuf[index];
+            fCharSizeBuf[startInd] = fCharSizeBuf[index];
+            startInd++;
+        }
     }
 
     //
     //  And then get more chars, starting after any spare chars that were
     //  left over from the last time.
     //
-    fCharsAvail = xcodeMoreChars(&fCharBuf[startInd], kCharBufSize - spareChars);
+    fCharsAvail = xcodeMoreChars
+    (
+        &fCharBuf[startInd]
+        , &fCharSizeBuf[startInd]
+        , kCharBufSize - spareChars
+    );
 
     // Add back in the spare chars
     fCharsAvail += spareChars;
@@ -378,18 +392,20 @@ bool XMLReader::refreshCharBuffer()
     //  UTF-16 formats, then check the first char for the BOM and skip over
     //  it manually.
     //
-    if ((fCurLine == 1) && (fCurCol == 1))
+    if (fCharsAvail)
     {
-        if (((fEncoding == XMLRecognizer::UTF_16L)
-        ||   (fEncoding == XMLRecognizer::UTF_16B))
-        &&  !startInd
-        &&  fCharsAvail)
+        if ((fCurLine == 1) && (fCurCol == 1))
         {
-            if ((fCharBuf[startInd] == chUnicodeMarker)
-            ||  (fCharBuf[startInd] == chSwappedUnicodeMarker))
+            if (((fEncoding == XMLRecognizer::UTF_16L)
+            ||   (fEncoding == XMLRecognizer::UTF_16B))
+            &&  !startInd)
             {
-                XMLCh chTmp;
-                getNextChar(chTmp);
+                if ((fCharBuf[startInd] == chUnicodeMarker)
+                ||  (fCharBuf[startInd] == chSwappedUnicodeMarker))
+                {
+                    XMLCh chTmp;
+                    getNextChar(chTmp);
+                }
             }
         }
     }
@@ -617,8 +633,6 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
         {
             if (!refreshCharBuffer())
             {
-                // <TBD> removed the space after PE logic here, do somethign
-
                 // If still empty, then return a zero char
                 if (fCharIndex == fCharsAvail)
                 {
@@ -1158,36 +1172,37 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
 
     //
     //  Try to map the string to one of our standard encodings. If its not
-    //  one of them, then it has to be one of the transcoder based encodings.
-    //  So we just create a transcoder (cleaning up any existing one) and
-    //  return success.
+    //  one of them, then it has to be one of the non-intrinsic encodings,
+    //  in which case we have to delete our intrinsic encoder and create a
+    //  new one.
     //
-    const XMLRecognizer::Encodings theEncoding = XMLRecognizer::encodingForName
+    XMLRecognizer::Encodings newBaseEncoding = XMLRecognizer::encodingForName
     (
         fEncodingStr
     );
 
     //
-    //  If it comes back 'other', then we need to check a couple of special
-    //  cases.
+    //  If it does not come back as one of the intrinsic encodings, then
+    //  we have to possibly replace it and at least check a few things.
     //
-    if (theEncoding == XMLRecognizer::OtherEncoding)
+    if (newBaseEncoding == XMLRecognizer::OtherEncoding)
     {
         //
-        //  Check for non-endian specific UTF-16 or UCS-2. If so, and if we
-        //  are already in one of the UTF-16 encodings, then just keep it
-        //  and go on. Otherwise, its not valid.
+        //  Check for non-endian specific UTF-16 or UCS-4. If so, and if we
+        //  are already in one of the endian versions of those encodings,
+        //  then just keep it and go on. Otherwise, its not valid.
         //
-        //  <TBD> Check for USC-2 here as well!
-        //
-        if (!XMLString::compareIString(fEncodingStr, XMLUni::fgUTF16EncodingString))
+        if (!XMLString::compareIString(fEncodingStr, XMLUni::fgUTF16EncodingString)
+        ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgUTF16EncodingString2)
+        ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgUTF16EncodingString3)
+        ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgUTF16EncodingString4))
         {
             if ((fEncoding != XMLRecognizer::UTF_16L)
             &&  (fEncoding != XMLRecognizer::UTF_16B))
             {
                 return false;
             }
-            return true;
+            newBaseEncoding = fEncoding;
         }
          else if (!XMLString::compareIString(fEncodingStr, XMLUni::fgUCS4EncodingString))
         {
@@ -1196,67 +1211,83 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             {
                 return false;
             }
-            return true;
+            newBaseEncoding = fEncoding;
         }
-    }
-
-    //
-    //  If the encoding is some non-intrinsic one, then we need to create
-    //  a transcoder, getting rid of any previous one we had. If its not
-    //  'other', then we have to make sure that its a legal transition.
-    //
-    if (theEncoding == XMLRecognizer::OtherEncoding)
-    {
-        if (fTranscoder)
+         else if (!XMLString::compareIString(fEncodingStr, XMLUni::fgISO88591EncodingString)
+              ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgISO88591EncodingString2)
+              ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgISO88591EncodingString3)
+              ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgISO88591EncodingString4)
+              ||  !XMLString::compareIString(fEncodingStr, XMLUni::fgISO88591EncodingString5))
         {
+            // We handle this one internally
+            delete fTranscoder;
+            fTranscoder = new XML88591Transcoder(fEncodingStr, kCharBufSize);
+        }
+         else
+        {
+            //
+            //  Delete the initial transcoder and create a new one via the 
+            //  transcoding service.
+            //
             delete fTranscoder;
             fTranscoder = 0;
+
+            XMLTransService::Codes failReason;
+            fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+            (
+                fEncodingStr
+                , failReason
+                , kCharBufSize
+            );
+
+            if (!fTranscoder)
+                ThrowXML1(RuntimeException, XML4CExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
         }
-
-        XMLTransService::Codes failReason;
-        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
-        (
-            fEncodingStr
-            , failReason
-            , kCharBufSize
-        );
-
-        if (!fTranscoder)
-            ThrowXML1(RuntimeException, XML4CExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
-
-        // Store the new encoding and return success
-        fEncoding = theEncoding;
-        return true;
     }
-
-    //
-    //  We handled the special case of moving from an intrinsic initial
-    //  autosensed encoding to a transoder based one, or form one transcoder
-    //  based one to another. Now, lets handle any reasonable moves within
-    //  the intrinsic ones, of which there are few.
-    //
-    if ((fEncoding == XMLRecognizer::UTF_8)
-    &&  (theEncoding == XMLRecognizer::US_ASCII))
+     else if (newBaseEncoding == XMLRecognizer::EBCDIC)
     {
         //
-        //  It is legal for us to move to US-ASCII from UTF-8, since UTF-8
-        //  was what we would have auto-sensed. This will make us use the
-        //  more efficient transcoding loop.
+        //  It just happens that it was ebcdic-us, which is the default we
+        //  we used to begin with. So in this case we can just keep it.
         //
-        fEncoding = XMLRecognizer::US_ASCII;
     }
-     else if (fEncoding != theEncoding)
+     else
     {
         //
-        //  If the new encoding we got is not the same as what we
-        //  auto-sensed then its an error at this point, because this cannot
-        //  happen. It has to be an an incorrect encoding string in the file,
-        //  which does not match what the file is actually in.
+        //  Its one of our intrinsic encodings, so make sure that it does
+        //  not conflict with what we had already.
         //
-        return false;
+        if ((fEncoding == XMLRecognizer::UTF_8)
+        &&  (newBaseEncoding == XMLRecognizer::US_ASCII))
+        {
+            //
+            //  It is legal for us to move to US-ASCII from UTF-8, since UTF-8
+            //  was what we would have auto-sensed. This will make us use the
+            //  more efficient transcoding loop.
+            //
+            delete fTranscoder;
+            fTranscoder = new XMLASCIITranscoder(kCharBufSize);
+        }
+         else if (newBaseEncoding != fEncoding)
+        {
+            //
+            //  If the new encoding we got is not the same as what we
+            //  auto-sensed then its an error at this point, because this
+            //  cannot happen. It has to be an an incorrect encoding string
+            //  in the file, which does not match what the file is actually
+            //  in.
+            //
+            return false;
+        }
     }
 
-    // Otherwise, just return success
+    // Update the base encoding member with the new base encoding found
+    fEncoding = newBaseEncoding;
+
+    // Ask our new transcoder if it supports src offsets
+    fSrcOfsSupported = fTranscoder->supportsSrcOfs();
+
+    // Looks ok to us
     return true;
 }
 
@@ -1394,6 +1425,7 @@ void XMLReader::doInitDecode()
                 }
 
                 // Convert the value to an XML char and store it
+                fCharSizeBuf[fCharsAvail] = 4;
                 fCharBuf[fCharsAvail++] = XMLCh(curVal);
 
                 // Break out on the > character
@@ -1427,6 +1459,7 @@ void XMLReader::doInitDecode()
                 fRawBufIndex++;
 
                 // Looks ok, so store it
+                fCharSizeBuf[fCharsAvail] = 1;
                 fCharBuf[fCharsAvail++] = XMLCh(curCh);
 
                 // Break out on a > character
@@ -1514,6 +1547,7 @@ void XMLReader::doInitDecode()
                 //  Store it and bump the target index, implicitly converting
                 //  if UTF16Ch and XMLCh are not the same size.
                 //
+                fCharSizeBuf[fCharsAvail] = 2;
                 fCharBuf[fCharsAvail++] = curVal;
 
                 // Break out on a > char
@@ -1539,13 +1573,13 @@ void XMLReader::doInitDecode()
             //
             unsigned int    bytesEaten;
             unsigned int    count = 0;
-            const char*     asChars = (const char*)fRawByteBuf;
+            const XMLByte*  srcPtr = fRawByteBuf;
             while (1)
             {
                 // Convert the next char
                 const XMLCh chCur = fTranscoder->transcodeOne
                 (
-                    asChars++
+                    srcPtr
                     , fRawBytesAvail - count
                     , bytesEaten
                 );
@@ -1567,18 +1601,22 @@ void XMLReader::doInitDecode()
                     );
                 }
 
+                // Update the src pointer by bytes eaten this time
+                srcPtr += bytesEaten;
+
                 //
                 //  And put it into the character buffer. This stuff has to
                 //  look like it was normally transcoded.
                 //
+                fCharSizeBuf[fCharsAvail] = bytesEaten;
                 fCharBuf[fCharsAvail++] = chCur;
-                count += bytesEaten;
 
                 // If its a > char, then break out
                 if (chCur == chCloseAngle)
                     break;
 
                 // Watch for using up all input and get out
+                count += bytesEaten;
                 if (count == fRawBytesAvail)
                     break;
             }
@@ -1600,32 +1638,6 @@ void XMLReader::doInitDecode()
     //
     if ((fType == Type_PE) && (fRefFrom == RefFrom_NonLiteral))
         fCharBuf[fCharsAvail++] = chSpace;
-}
-
-
-//
-//  This method spools out bytes from the raw byte buffer and handles
-//  reloading it if required.
-//
-XMLByte XMLReader::getNextRawByte(const bool eoiOk)
-{
-    if (fRawBufIndex == fRawBytesAvail)
-    {
-        refreshRawBuffer();
-        fRawBufIndex = 0;
-
-        //
-        //  If EOF is valid here, then just return zero. Otherwise, throw
-        //  a UTF format exception.
-        //
-        if (!fRawBytesAvail)
-        {
-            if (eoiOk)
-                return XMLByte(0);
-            ThrowXML(UTFDataFormatException, XML4CExcepts::Reader_EOIInMultiSeq);
-        }
-    }
-    return fRawByteBuf[fRawBufIndex++];
 }
 
 
@@ -1673,19 +1685,128 @@ void XMLReader::refreshRawBuffer()
 
 
 //
+//  This is called to set up the basic transcoder, from the autosensed
+//  or forced encoding. Later, when the encoding="" string is seen, if
+//  the encoding wasn't forced, we may have to throw away this initial
+//  one and create a new one.
+//
+//  We assume that this point that fEncoding is set and that the fSwapped
+//  flag is set as well.
+//
+void XMLReader::setBaseTranscoder()
+{
+    //
+    //  If the encoding is EBCDIC, then we have to do some special
+    //  preliminary work to create a converter and to do an initial
+    //  trancoding of the first line. We create a default EBCDIC
+    //  transcoder that should get us through the first line at least.
+    //
+    //  Else we create one of our intrinsic encoders for the base encoding
+    //  we found.
+    //
+    if ((fEncoding == XMLRecognizer::EBCDIC)
+    ||  (fEncoding == XMLRecognizer::OtherEncoding))
+    {
+        //
+        //  Set the encoding string provisionally to the default EBCDIC
+        //  encoding string. This might have to be updated later when/if the
+        //  setEncoding() method gets called.
+        //
+        if (fEncoding == XMLRecognizer::EBCDIC)
+            fEncodingStr = XMLString::replicate(XMLUni::fgDefaultEBCDICEncodingString);
+
+        XMLTransService::Codes failReason;
+        fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
+        (
+            fEncodingStr
+            , failReason
+            , kCharBufSize
+        );
+
+        if (!fTranscoder)
+        {
+            ThrowXML1
+            (
+                RuntimeException
+                , XML4CExcepts::Reader_CantCreateCvtrFor
+                , fEncodingStr
+            );
+        }
+    }
+     else
+    {
+        //
+        //  Set the encoding string provisionally to the auto-sense encoding
+        //  that we we given. This might have to be updated later when/if the
+        //  setEncoding() method gets called.
+        //
+        fEncodingStr = XMLString::replicate
+        (
+            XMLRecognizer::nameForEncoding(fEncoding)
+        );
+
+        switch(fEncoding)
+        {
+            case XMLRecognizer::UCS_4B :
+            case XMLRecognizer::UCS_4L :
+                fTranscoder = new XMLUCS4Transcoder
+                (
+                    fEncodingStr
+                    , kCharBufSize
+                    , fSwapped
+                );
+                break;
+
+            case XMLRecognizer::US_ASCII :
+                fTranscoder = new XMLASCIITranscoder(kCharBufSize);
+                break;
+
+            case XMLRecognizer::UTF_8 :
+                fTranscoder = new XMLUTF8Transcoder(kCharBufSize);
+                break;
+
+            case XMLRecognizer::UTF_16B :
+            case XMLRecognizer::UTF_16L :
+                fTranscoder = new XMLUTF16Transcoder
+                (
+                    fEncodingStr
+                    , kCharBufSize
+                    , fSwapped
+                );
+                break;
+
+            default :
+                #if defined(XML4C_DEBUG)
+                // <TBD> Throw an exception here
+                #endif
+                break;
+        }
+    }
+
+    // Ask the transcoder if it supports src offset info
+    fSrcOfsSupported = fTranscoder->supportsSrcOfs();
+}
+
+
+
+//
 //  This method is called internally when we run out of characters in the
 //  trancoded character buffer. We transcode up to another maxChars chars
 //  from the 
 //
 unsigned int
 XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
+                            ,       unsigned char* const    charSizes
                             , const unsigned int            maxChars)
 {
     // If we are plain tuckered out, then return zero now
     if (!fRawBytesAvail)
         return 0;
 
-    // If our raw buffer is empty, then lets read another now
+    //
+    //  If our raw buffer is empty, then lets load up another batch of
+    //  raw bytes now.
+    //
     if (fRawBufIndex == fRawBytesAvail)
     {
         refreshRawBuffer();
@@ -1696,391 +1817,23 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
             return 0;
     }
 
-    //
-    //  According to the stored encoding enum, we need to either do one of
-    //  our own internal conversions, or do the conversion via ICU.
-    //
-    //  NOTE: We don't have to pass the charSizes buffer to all of them.
-    //  The ones with fixed char size encodings can assume that the prefilled
-    //  buffer is already correct.
-    //
-    unsigned int charsDone = 0;
-    switch(fEncoding)
-    {
-        case XMLRecognizer::UCS_4B :
-        case XMLRecognizer::UCS_4L :
-            charsDone = xcodeUCS(bufToFill, maxChars);
-            break;
-
-        case XMLRecognizer::US_ASCII :
-        case XMLRecognizer::UTF_8 :
-            charsDone = xcodeUTF8(bufToFill, maxChars);
-            break;
-
-        case XMLRecognizer::UTF_16B :
-        case XMLRecognizer::UTF_16L :
-            charsDone = xcodeUTF16(bufToFill, maxChars);
-            break;
-
-        default :
-            //
-            //  If its not one of the ones above, it must be a transcoder
-            //  based one. If in debug mode, insure that we do have a
-            //  transcoder here.
-            //
-            #if defined(XML4C_DEBUG)
-            if (!fTranscoder)
-                ThrowXML1(RuntimeException, XML4CExcepts::Reader_EncodingNeedsCvtr, fEncodingStr);
-            #endif
-            charsDone = xcodeOther(bufToFill, maxChars);
-            break;
-    }
-    return charsDone;
-}
-
-
-unsigned int
-XMLReader::xcodeUCS(XMLCh* const bufToFill, const unsigned int maxChars)
-{
-    unsigned int charsRead = 0;
-
-    //
-    //  Calculate how many UCS-4 characters could possibly be pulled out
-    //  of the raw buffer right now. If none, return zero. Shouldn't happen
-    //  unless an odd number of bytes is in the buffer, since an empty
-    //  buffer would have been refilled before we were called.
-    //
-    const unsigned int charsAvail = (fRawBytesAvail - fRawBufIndex) / sizeof(UCS4Ch);
-    if (!charsAvail)
-        return 0;
-
-    //
-    //  Calculate the maximum chars we can do. Its the lesser of the chars
-    //  requested and the UCS-4 chars available in the buffer.
-    //
-    const unsigned int charsToDo = (maxChars < charsAvail) ?
-                                    maxChars : charsAvail;
-
-    //
-    //  If there is a spare character, then we have to take that one first
-    //  being sure to bump the chars read.
-    //
-    if (fSpareCh)
-    {
-        bufToFill[charsRead++] = fSpareCh;
-        fSpareCh = chNull;
-    }
-
-    // Just loop until we get the max chars we need.
-    const UCS4Ch* asUCS4 = (const UCS4Ch*)&fRawByteBuf[fRawBufIndex];
-    while (charsRead < charsToDo)
-    {
-        // Get the next int out of the buffer
-        UCS4Ch nextVal = *asUCS4++;
-        fRawBufIndex += sizeof(UCS4Ch);
-
-        // If it needs to be swapped, then do it
-        if (fSwapped)
-            nextVal = BitOps::swapBytes(nextVal);
-
-        // Handle a surrogate pair if needed
-        if (nextVal & 0xFFFF0000)
-        {
-            //
-            //  Get the two surrogate values out into separate XML chars
-            //  before we try to store them.
-            //
-            const XMLCh ch1 = XMLCh(((nextVal - 0x10000) >> 10) + 0xD800);
-            const XMLCh ch2 = XMLCh(((nextVal - 0x10000) & 0x3FF) + 0xDC00);
-
-            //
-            //  If we have room for two chars, then put them both in and bump
-            //  the chars read by two. Otherwise, put one in and store the
-            //  other in the spare char for the next round.
-            //
-            if (charsRead + 1 == maxChars)
-            {
-                bufToFill[charsRead++] = ch1;
-                fSpareCh = ch2;
-            }
-             else
-            {
-                bufToFill[charsRead++] = ch1;
-                bufToFill[charsRead++] = ch2;
-            }
-        }
-         else
-        {
-            // No surrogate, so just store it and bump the count
-            bufToFill[charsRead++] = XMLCh(nextVal);
-        }
-    }
-    return charsRead;
-}
-
-
-unsigned int
-XMLReader::xcodeUTF8(XMLCh* const bufToFill, const unsigned int maxChars)
-{
-    unsigned int charsRead = 0;
-
-    // If there is a spare char from the last time, put it in up front.
-    if (fSpareCh)
-    {
-        bufToFill[charsRead++] = fSpareCh;
-        fSpareCh = 0;
-    }
-
-    //
-    //  Precalculate the maximum chars we can return, for the cases where
-    //  we have a single byte per char encoding. Its the smaller of the
-    //  bytes left in the buffer and the max chars.
-    //
-    const unsigned int charCount = (maxChars < (fRawBytesAvail - fRawBufIndex)) ?
-                                    maxChars :
-                                    fRawBytesAvail - fRawBufIndex;
-
-    // A temp pointer to the raw buffer, which we can run upwards below
-    const XMLByte* rawBufPtr = &fRawByteBuf[fRawBufIndex];
-
-    //
-    //  We have two cases here, either US-ASCII or UTF-8. For UTF-8 we try
-    //  to optimize it on the assumptions that most UTF-8 is really ASCII.
-    //
-    if (fEncoding == XMLRecognizer::US_ASCII)
-    {
-        //
-        //  This one is simple, just run up for the precalculated number of
-        //  chars and convert each one. I've tried a lot of other fancier
-        //  loops but nothing gains over this simple and stupid one.
-        //
-        for (; charsRead < charCount; charsRead++)
-            bufToFill[charsRead] = XMLCh(*rawBufPtr++);
-        fRawBufIndex += charCount;
-    }
-     else
-    {
-        //
-        //  A list of counts of trailing bytes for each initial byte
-        //  in the input.
-        //
-        static const XMLByte UTFBytes[256] =
-        {
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-            ,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-            ,   2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-            ,   3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5
-        };
-
-        //
-        //  A list of values to offset each result char type, according
-        //  to how many source bytes when into making it.
-        //
-        static const XMLUInt32 UTFOffsets[6] =
-        {
-            0, 0x3080, 0xE2080, 0x3C82080, 0xFA082080, 0x82022080
-        };
-
-        //
-        //  For the UTF-8 loop we have to loop until we either run out of
-        //  source buffer, and cannot reload any more, or we get them as
-        //  many as asked for.
-        //
-        while (charsRead < maxChars)
-        {
-            //
-            //  Refresh the raw buffer is required, then get the next
-            //  byte of the sequence.
-            //
-            if (fRawBufIndex == fRawBytesAvail)
-            {
-                refreshRawBuffer();
-                fRawBufIndex = 0;
-
-                // If no more, then we are done
-                if (!fRawBytesAvail)
-                    break;
-            }
-            const XMLByte byteOne = fRawByteBuf[fRawBufIndex];
-
-            // And see how many bytes this is going to require
-            const unsigned int encodedBytes = UTFBytes[byteOne];
-
-            //
-            //  See if there are enough bytes left in the raw buffer to
-            //  do this one. If not, then reload.
-            //
-            if (fRawBufIndex + encodedBytes > fRawBytesAvail)
-            {
-                refreshRawBuffer();
-                fRawBufIndex = 0;
-
-                // If we still don't have enough, then its a bad UTF seq
-                if (fRawBufIndex + encodedBytes > fRawBytesAvail)
-                {
-                    ThrowXML
-                    (
-                        UTFDataFormatException
-                        , XML4CExcepts::Reader_EOIInMultiSeq
-                    );
-                }
-            }
-
-            // Looks ok, so lets build up the value
-            XMLUInt32 tmpVal = 0;
-            switch(encodedBytes)
-            {
-                case 5 : tmpVal += fRawByteBuf[fRawBufIndex++]; tmpVal <<= 6;
-                case 4 : tmpVal += fRawByteBuf[fRawBufIndex++]; tmpVal <<= 6;
-                case 3 : tmpVal += fRawByteBuf[fRawBufIndex++]; tmpVal <<= 6;
-                case 2 : tmpVal += fRawByteBuf[fRawBufIndex++]; tmpVal <<= 6;
-                case 1 : tmpVal += fRawByteBuf[fRawBufIndex++]; tmpVal <<= 6;
-                case 0 : tmpVal += fRawByteBuf[fRawBufIndex++];
-            }
-            tmpVal -= UTFOffsets[encodedBytes];
-
-            //
-            //  If it will fit into a single char, then put it in. Otherwise
-            //  encode it as a surrogate pair. If its not valid, use the
-            //  replacement char.
-            //
-            if (!(tmpVal & 0xFFFF0000))
-            {
-                bufToFill[charsRead++] = XMLCh(tmpVal);
-            }
-             else if (tmpVal > 0x10FFFF)
-            {
-                //
-                //  If we've gotten any chars so far, then just break out for
-                //  now and lets process those. When we come back in here
-                //  again, we'll get no chars and throw an exception. This
-                //  way, the error will have a line and col number closer to
-                //  the real problem area.
-                //
-                if (charsRead)
-                {
-                    fRawBufIndex -= (encodedBytes + 1);
-                    break;
-                }
-                ThrowXML(UTFDataFormatException, XML4CExcepts::Reader_BadUTF8Seq);
-            }
-             else
-            {
-                // Store the leading surrogate char
-                tmpVal -= 0x10000;
-                bufToFill[charsRead++] = XMLCh((tmpVal >> 10) + 0xD800);
-
-                //
-                //  If we don't have room for the trailing one, then store
-                //  it in the spare chars. Else store it in the buffer.
-                //
-                if (charsRead >= maxChars)
-                    fSpareCh = XMLCh(tmpVal & 0x3FF) + 0xDC00;
-                else 
-                    bufToFill[charsRead++] = XMLCh(tmpVal & 0x3FF) + 0xDC00;
-            }
-        }
-    }
-    return charsRead;
-}
-
-
-unsigned int
-XMLReader::xcodeUTF16(          XMLCh* const    bufToFill
-                        , const unsigned int    maxChars)
-{
-    // See how many complete UTF-16 chars we can get from the raw buffer
-    const unsigned int charsAvail = (fRawBytesAvail - fRawBufIndex) / sizeof(UTF16Ch);
-
-    // If non, then return none
-    if (!charsAvail)
-        return 0;
-
-    //
-    //  Calculate the maximum chars we can do. Its the lesser of the chars
-    //  requested and the UTF=16 chars available in the buffer.
-    //
-    const unsigned int charsRead = (maxChars < charsAvail) ?
-                                    maxChars : charsAvail;
-
-    //
-    //  No transcoding required for this reader, so just bulk copy, being
-    //  sure to convert the toRead count to bytes! If its swapped we have
-    //  to use a loop.
-    //
-    //  Look at the byte buffer as 16 bit values chars, starting at the current
-    //  index into it.
-    //
-    const UTF16Ch* asUTF16 = (const UTF16Ch*)&fRawByteBuf[fRawBufIndex];
-    if (fSwapped)
-    {
-        //
-        //  And then do the swapping loop for the count we precalculated. Note
-        //  that this also handles size conversion as well if XMLCh is not the
-        //  same size as UTF16Char.
-        //
-        for (unsigned int index = 0; index < charsRead; index++)
-            bufToFill[index] = BitOps::swapBytes(*asUTF16++);
-    }
-     else
-    {
-        //
-        //  If the XMLCh type is the same size as a UTF16 value on this
-        //  platform, then we can do just a buffer copy straight to the target
-        //  buffer since our source chars are UTF-16 chars. If its not, then
-        //  we still have to do a loop and assign each one, in order to
-        //  implicitly convert.
-        //
-        if (sizeof(XMLCh) == sizeof(UTF16Ch))
-        {
-            //  Notice we convert char count to byte count here!!!
-            memcpy(bufToFill, &fRawByteBuf[fRawBufIndex], charsRead * sizeof(UTF16Ch));
-        }
-         else
-        {
-            for (unsigned int index = 0; index < charsRead; index++)
-                bufToFill[index] = *asUTF16++;
-        }
-    }
-
-    // Adjust the raw buffer index, accounting for bytes vs UTF-16 chars
-    fRawBufIndex += charsRead * sizeof(UTF16Ch);
-
-    return charsRead;
-}
-
-
-unsigned int
-XMLReader::xcodeOther(          XMLCh* const            bufToFill
-                        , const unsigned int            maxChars)
-{
+    // Ask the transcoder to do another batch
     unsigned int bytesEaten;
-    unsigned int retVal = fTranscoder->transcodeXML
+    const unsigned int charsDone = fTranscoder->transcodeXML
     (
-        (const char*)&fRawByteBuf[fRawBufIndex]
+        &fRawByteBuf[fRawBufIndex]
         , fRawBytesAvail - fRawBufIndex
         , bufToFill
         , maxChars
         , bytesEaten
+        , charSizes
     );
 
-    // Update our offset into the raw buffer by bytes eaten
+    // Update the raw buffer index
     fRawBufIndex += bytesEaten;
-    return retVal;
-}
 
+    return charsDone;
+}
 
 
 

@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:13  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:48:03  roddey
+ * Changed to use new split of transcoder interfaces into XML transcoders and
+ * LCP transcoders, and implementation of intrinsic transcoders as pluggable
+ * transcoders, and addition of Latin1 intrinsic support.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:13  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:56:54  droddey
  * If the main xml entity does not exist, we need to get the error handling for that
@@ -181,6 +186,7 @@ public :
         , const unsigned int        dataLen
         , const bool                copyBuf
     );
+    unsigned int getSrcOffset() const;
     bool isScanningPERefOutOfLiteral() const;
     bool pushReader
     (
@@ -282,6 +288,11 @@ private :
 inline unsigned int ReaderMgr::getCurrentReaderNum() const
 {
     return fCurReader->getReaderNum();
+}
+
+inline unsigned int ReaderMgr::getSrcOffset() const
+{
+    return fCurReader->getSrcOffset();
 }
 
 inline bool ReaderMgr::getName(XMLBuffer& toFill)

@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:22  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:48:03  roddey
+ * Changed to use new split of transcoder interfaces into XML transcoders and
+ * LCP transcoders, and implementation of intrinsic transcoders as pluggable
+ * transcoders, and addition of Latin1 intrinsic support.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:22  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:47  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -215,6 +220,7 @@ public:
     unsigned int getReaderNum() const;
     RefFrom getRefFrom() const;
     Sources getSource() const;
+    unsigned int getSrcOffset() const;
     const XMLCh* getSystemId() const;
     bool getThrowAtEnd() const;
     Types getType() const;
@@ -281,33 +287,12 @@ private:
 
     void refreshRawBuffer();
 
+    void setBaseTranscoder();
+
     unsigned int xcodeMoreChars
     (
                 XMLCh* const            bufToFill
-        , const unsigned int            maxChars
-    );
-
-    unsigned int xcodeUCS
-    (
-                XMLCh* const            bufToFill
-        , const unsigned int            maxChars
-    );
-
-    unsigned int xcodeUTF8
-    (
-                XMLCh* const            bufToFill
-        , const unsigned int            maxChars
-    );
-
-    unsigned int xcodeUTF16
-    (
-                XMLCh* const            bufToFill
-        , const unsigned int            maxChars
-    );
-
-    unsigned int xcodeOther
-    (
-                XMLCh* const            bufToFill
+        ,       unsigned char* const    charSizes
         , const unsigned int            maxChars
     );
 
@@ -325,6 +310,13 @@ private:
     //
     //  fCharsAvail
     //      The characters currently available in the character buffer.
+    //
+    //  fCharSizeBuf
+    //      This buffer is an array that contains the number of source chars
+    //      eaten to create each char in the fCharBuf buffer. So the entry
+    //      fCharSizeBuf[x] is the number of source chars that were eaten
+    //      to make the internalized char fCharBuf[x]. This only contains
+    //      useful data if fSrcOfsSupported is true.
     //
     //  fCurCol
     //  fCurLine
@@ -398,6 +390,16 @@ private:
     //      surrogate pairs. We might not be able to store both, so we store
     //      it here until the next buffer transcoding operation.
     //
+    //  fSrcOfsBase
+    //      This is the base offset within the source of this entity. Values
+    //      in the curent fCharSizeBuf array are relative to this value.
+    //
+    //  fSrcOfsSupported
+    //      This flag is set to indicate whether source byte offset info
+    //      is supported. For intrinsic encodings, its always set since we
+    //      can always support it. For transcoder based encodings, we ask
+    //      the transcoder if it supports it or not.
+    //
     //  fStream
     //      This is the input stream that provides the data for the reader.
     //      Its always treated as a raw byte stream. The derived class will
@@ -430,6 +432,7 @@ private:
     unsigned int                fCharIndex;
     XMLCh                       fCharBuf[kCharBufSize];
     unsigned int                fCharsAvail;
+    unsigned char               fCharSizeBuf[kCharBufSize];
     unsigned int                fCurCol;
     unsigned int                fCurLine;
     XMLRecognizer::Encodings    fEncoding;
@@ -445,6 +448,8 @@ private:
     bool                        fSentTrailingSpace;
     Sources                     fSource;
     XMLCh                       fSpareCh;
+    unsigned int                fSrcOfsBase;
+    bool                        fSrcOfsSupported;
     XMLCh*                      fSystemId;
     BinInputStream*             fStream;
     bool                        fSwapped;
