@@ -89,7 +89,7 @@ transcoderdef = 'XML_USE_' || transcoder~translate || '_TRANSCODER'
 here = Directory()~translate('* ', ' \')
 base = here~subword(1, here~words - 3)~strip~translate(' \', '* ')
 
-basedir = .subdirlist~new(base'\src')
+basedir = .subdirlist~new(base'\src\xercesc')
 basedir~removeAnyContaining("\CVS")
 
 /* Generate the project_options file */
@@ -107,9 +107,9 @@ projOpt = .array~of( ,
             '    opt(inline, "yes"),',                            ,
             '    opt(level, "2"),',                               ,
             '    opt(tune, "pentium"),',                          ,
-            '    incl(searchpath, BASE_DIR "\\src"),',            ,
-            '    incl(searchpath, BASE_DIR "\\src\\dom"),',       ,
-            '    incl(searchpath, BASE_DIR "\\src\\idom"),',      ,
+            '    incl(searchpath, BASE_DIR "\\src\\xercesc"),',            ,
+            '    incl(searchpath, BASE_DIR "\\src\\xercesc\\dom"),',       ,
+            '    incl(searchpath, BASE_DIR "\\src\\xercesc\\idom"),',      ,
             '    define("' || msgloaderdef || '", 1),',           ,
             '    define("' || transcoderdef || '", 1)'            )
 
@@ -185,7 +185,7 @@ DO dir OVER basedir
 END
 
 /* Generate a group for the OS/2-specific files */
-flos2 = .filelist~new(base'\src\util\*.cpp')
+flos2 = .filelist~new(base'\src\xercesc\util\*.cpp')
 flos2~removeAllBut('Platforms\OS2\')
 thisfile = 'xerces_OS2.icc'
 fl = .stream~new(thisfile)

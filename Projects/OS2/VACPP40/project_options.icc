@@ -11,8 +11,8 @@ option project_options =
     opt(inline, "yes"),
     opt(level, "2"),
     opt(tune, "pentium"),
-    incl(searchpath, BASE_DIR "\\src"),
-    incl(searchpath, BASE_DIR "\\src\\dom"),
-    incl(searchpath, BASE_DIR "\\src\\idom"),
+    incl(searchpath, BASE_DIR "\\src\\xercesc"),
+    incl(searchpath, BASE_DIR "\\src\\xercesc\\dom"),
+    incl(searchpath, BASE_DIR "\\src\\xercesc\\idom"),
     define("XML_USE_INMEMORY_MSGLOADER", 1),
     define("XML_USE_ICONV_TRANSCODER", 1)

@@ -92,6 +92,7 @@ EXIT
   CALL SysMkDir targetdir || "\bin"
   CALL SysMkDir targetdir || "\lib"
   CALL SysMkDir targetdir || "\include"
+  CALL SysMkDir targetdir || "\include\xercesc"
   CALL SysMkDir targetdir || "\samples"
   CALL SysMkDir targetdir || "\samples\Projects"
   CALL SysMkDir targetdir || "\samples\Projects\OS2"
@@ -218,17 +219,18 @@ EXIT
               "validators", ,
               "validators\common", ,
               "validators\datatype", ,
-              "validators\DTD" )
+              "validators\DTD", ,
+              "validators\schema" )
 
   DO dir OVER hdirs
-    CALL SysMkDir targetdir || "\include\" || dir
+    CALL SysMkDir targetdir || "\include\xercesc\" || dir
 
     /* Copy the *.hpp files */
-    hppSpec = sourcedir || "\src\" || dir || "\*.hpp"
+    hppSpec = sourcedir || "\src\xercesc\" || dir || "\*.hpp"
     CALL SysFileTree hppSpec, 'F.', 'FO'
     DO i = 1 TO f.0
       srcfn = f.i
-      trgfn = targetdir || "\include\" || dir || "\" || Filespec('N', f.i)
+      trgfn = targetdir || "\include\xercesc\" || dir || "\" || Filespec('N', f.i)
       IF srcfn~pos("\dom\") > 0 THEN
         IF srcfn~pos("Impl.hpp") > 0 | srcfn~pos("\dom\DS") > 0 THEN
           ITERATE
@@ -239,11 +241,11 @@ EXIT
     END
 
     /* Copy the *.c files */
-    cSpec = sourcedir || "\src\" || dir || "\*.c"
+    cSpec = sourcedir || "\src\xercesc\" || dir || "\*.c"
     CALL SysFileTree cSpec, 'F.', 'FO'
     DO i = 1 TO f.0
       srcfn = f.i
-      trgfn = targetdir || "\include\" || dir || "\" || Filespec('N', f.i)
+      trgfn = targetdir || "\include\xercesc\" || dir || "\" || Filespec('N', f.i)
       'copy' srcfn trgfn '> nul'
     END
   END

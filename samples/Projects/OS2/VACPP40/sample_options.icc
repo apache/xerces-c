@@ -6,5 +6,5 @@ option sample_options =
     opt(inline, "yes"),
     opt(level, "2"),
     opt(tune, "pentium"),
-    incl(searchpath, BASE_DIR "\\include"),
-    incl(searchpath, BASE_DIR "\\include\\dom")
+    incl(searchpath, BASE_DIR "\\include\\xercesc"),
+    incl(searchpath, BASE_DIR "\\include\\xercesc\\dom")

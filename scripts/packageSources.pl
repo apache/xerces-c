@@ -157,8 +157,6 @@ sub package_sources {
    system("$RM -rf $srctargetdir/Projects/Win32/BCB4");
    system("$RM -rf $srctargetdir/Projects/Win32/BCB5");
    system("$RM -rf $srctargetdir/Projects/Win32/VACPP40");
-   system("$RM -rf $srctargetdir/Projects/OS2");
-   system("$RM -rf $srctargetdir/samples/Projects/OS2");
    system("$RM $srctargetdir/scripts/packageSources.pl");
 
    chdir ($srctargetdir);
