@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2001/08/21 15:58:42  tng
+# Schema: New files XercesElementWildCard.
+#
 # Revision 1.15  2001/07/31 15:26:54  knoaman
 # Added support for <attributeGroup>.
 #
@@ -125,42 +128,44 @@ SUBMODULE = schema
 XML_INCL := $(XML_INCL) -I$(XERCESCROOT)/src
 
 VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
+	ComplexTypeInfo.hpp \
+	GeneralAttributeCheck.hpp \
+	NamespaceScope.hpp \
 	SchemaAttDef.hpp \
 	SchemaAttDefList.hpp \
 	SchemaElementDecl.hpp \
 	SchemaGrammar.hpp \
+	SchemaInfo.hpp \
 	SchemaSymbols.hpp \
 	SchemaValidator.hpp \
-	XUtil.hpp \
-	NamespaceScope.hpp \
-	ComplexTypeInfo.hpp \
 	SubstitutionGroupComparator.hpp \
-	SchemaInfo.hpp \
-	GeneralAttributeCheck.hpp \
-	XercesGroupInfo.hpp \
+	TraverseSchema.hpp \
 	XercesAttGroupInfo.hpp \
-	TraverseSchema.hpp
+	XercesElementWildCard.hpp \
+	XercesGroupInfo.hpp \
+	XUtil.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
 
 VALIDATORS_SCHEMA_C_FILES =
 
 VALIDATORS_SCHEMA_CPP_OBJECTS = \
+	ComplexTypeInfo.$(TO) \
+	GeneralAttributeCheck.$(TO) \
+	NamespaceScope.$(TO) \
 	SchemaAttDef.$(TO) \
 	SchemaAttDefList.$(TO) \
 	SchemaElementDecl.$(TO) \
 	SchemaGrammar.$(TO) \
+	SchemaInfo.$(TO) \
 	SchemaSymbols.$(TO) \
 	SchemaValidator.$(TO) \
-	XUtil.$(TO) \
-	NamespaceScope.$(TO) \
-	ComplexTypeInfo.$(TO) \
 	SubstitutionGroupComparator.$(TO) \
-	SchemaInfo.$(TO) \
-	GeneralAttributeCheck.$(TO) \
-	XercesGroupInfo.$(TO) \
+	TraverseSchema.$(TO) \
 	XercesAttGroupInfo.$(TO) \
-	TraverseSchema.$(TO)
+	XercesElementWildCard.$(TO) \
+	XercesGroupInfo.$(TO) \
+	XUtil.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
 
