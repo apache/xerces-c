@@ -170,7 +170,7 @@
         <p>If you are not using any of these compilers, you are taking a calculated risk
         by exploring new grounds. Your effort in making &XercesCName; work on this
         new compiler is greatly appreciated and any problems you face can be addressed
-        on the <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>.
+        on the <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.
         </p>
 
         <p><em>Differences between the UNIX platforms:</em> The description below is

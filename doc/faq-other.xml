@@ -94,9 +94,7 @@
     <a>
 
       <p>Mail it to the <jump href="mailto:&XercesCEmailAddress;">&XercesCName;
-        mailing list</jump> at Apache. (You must be a
-        subscriber to post to this list. But if you're considering changing the code
-        you really want to be a subscriber, in any case.) There are no set rules about
+        mailing list</jump>. There are no set rules about
         how or what must be included -- if you've fixed a problem or enhanced the code
         in some way, we really would like to get your changes, and will take them in
         any reasonable form.</p>

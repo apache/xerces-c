@@ -11,7 +11,7 @@
                  We consider this implementation complete except for the limitations cited below.
                </p>
 
-               <p>We would very much appreciate feedback on the package via the Xerces-C mailing list
+               <p>We would very much appreciate feedback on the package via the &XercesCName; mailing list
                  <jump href="mailto:&XercesCEmailAddress;">&XercesCEmailAddress; </jump>, and we
                  encourage the submission of bugs as described in
                  <jump href="http://xml.apache.org/xerces-c/bug-report.html">Bug-Reporting</jump> page.
@@ -46,12 +46,12 @@
        <anchor name="interpretation"/>
        <s2 title="Interpretation of Areas that are Unclear or Implementation-Dependent">
          <ul>
-            <li>We have interpreted the specs as requiring &lt;keyref&gt; Identity Constraints to refer to 
-                &lt;key&gt; or &lt;unique&gt; identity constraints within the scope of the elements to which 
-                the &lt;keyref&gt; is attached. This interpretation is at variance with the Schema Primer, which 
-                contains an example with a &lt;keyref&gt; declared on an element used inside the element of its 
+            <li>We have interpreted the specs as requiring &lt;keyref&gt; Identity Constraints to refer to
+                &lt;key&gt; or &lt;unique&gt; identity constraints within the scope of the elements to which
+                the &lt;keyref&gt; is attached. This interpretation is at variance with the Schema Primer, which
+                contains an example with a &lt;keyref&gt; declared on an element used inside the element of its
                 corresponding &lt;key&gt;.
-            </li>  
+            </li>
          </ul>
        </s2>
 
