@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/15 19:44:46  roddey
+ * Changed to use new LCP transcoder scheme.
+ *
  * Revision 1.3  1999/12/03 00:11:22  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -381,13 +384,13 @@ DOMString::DOMString(const XMLCh *data, int dataLength)
 //          codepage to Unicode that is to be used when
 //          a DOMString is constructed from a char *.
 //
-XMLTranscoder*  getDomConverter()
+XMLLCPTranscoder*  getDomConverter()
 {
-    static XMLTranscoder* gDomConverter = 0;
+    static XMLLCPTranscoder* gDomConverter = 0;
     if (!gDomConverter) 
     {
-        XMLTranscoder* transcoder =
-        XMLPlatformUtils::fgTransService->makeNewDefTranscoder();
+        XMLLCPTranscoder* transcoder =
+        XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
         if (!transcoder)
             XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoDefTranscoder
             );
@@ -411,7 +414,7 @@ DOMString::DOMString(const char *srcString)
     fHandle = 0;
     if (srcString != 0)
     {
-        XMLTranscoder*  uniConverter = getDomConverter();
+        XMLLCPTranscoder*  uniConverter = getDomConverter();
         unsigned int    len = 0;
 
         unsigned int srcLen = strlen(srcString);
@@ -430,9 +433,6 @@ DOMString::DOMString(const char *srcString)
         }
     }
 };
-
-
-
 
 
 
