@@ -1736,6 +1736,36 @@ void XMLScanner::setURIStringPool(XMLStringPool* const stringPool)
 //  XMLScanner: Private helper methods
 // ---------------------------------------------------------------------------
 
+/***
+ * In reusing grammars (cacheing grammar from parse, or use cached grammar), internal
+ * dtd is allowed conditionally.
+ *
+ * In the case of cacheing grammar from parse, it is NOT allowed.
+ *
+ * In the case of use cached grammar,
+ *   if external dtd is present and it is parsed before, then it is not allowed,
+ *   otherwise it is allowed.
+ *
+ ***/
+void XMLScanner::checkInternalDTD(bool hasExtSubset, const XMLCh* const sysId)
+{
+    if (fToCacheGrammar)
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
+
+    if (fUseCachedGrammar && hasExtSubset )
+    {
+        InputSource* sysIdSrc = resolveSystemId(sysId);
+        Janitor<InputSource> janSysIdSrc(sysIdSrc);
+        Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
+
+        if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) 
+        {
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
+        }
+    }
+
+}
+
 //  This method is called after the content scan to insure that all the
 //  ID/IDREF attributes match up (i.e. that all IDREFs refer to IDs.) This is
 //  an XML 1.0 rule, so we can do here in the core.

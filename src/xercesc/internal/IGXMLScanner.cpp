@@ -1485,9 +1485,7 @@ void IGXMLScanner::scanDocTypeDecl()
         // Eat the opening square bracket
         fReaderMgr.getNextChar();
 
-        // We can't have any internal subset if we are reusing the validator
-        if (fUseCachedGrammar || fToCacheGrammar)
-            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
+        checkInternalDTD(hasExtSubset, sysId);
 
         //  And try to scan the internal subset. If we fail, try to recover
         //  by skipping forward tot he close angle and returning.
@@ -1596,7 +1594,7 @@ void IGXMLScanner::scanDocTypeDecl()
                 const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(stringId);
 
                 fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
-                ((XMLDTDDescription*) (fGrammar->getGrammarDescription()))->setRootName(sysIdStr);
+                ((XMLDTDDescription*) (fGrammar->getGrammarDescription()))->setSystemId(sysIdStr);
                 fGrammarResolver->putGrammar(fGrammar);
             }
 
@@ -3380,7 +3378,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(sysId);
               
         fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
-        ((XMLDTDDescription*) (fGrammar->getGrammarDescription()))->setRootName(sysIdStr);
+        ((XMLDTDDescription*) (fGrammar->getGrammarDescription()))->setSystemId(sysIdStr);
         fGrammarResolver->putGrammar(fGrammar);
     }
 

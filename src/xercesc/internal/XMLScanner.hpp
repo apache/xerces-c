@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2004/04/07 14:15:12  peiyongz
+ * allow internalDTD (conditionally) with grammar reusing
+ *
  * Revision 1.32  2003/12/31 15:40:00  cargilld
  * Release memory when an error is encountered.
  *
@@ -715,6 +718,9 @@ protected:
     virtual void scanReset(const InputSource& src) = 0;
     virtual void sendCharData(XMLBuffer& toSend) = 0;
 
+    //return owned by the caller
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId) = 0;
+
     // -----------------------------------------------------------------------
     //  Protected scanning methods
     // -----------------------------------------------------------------------
@@ -729,6 +735,7 @@ protected:
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
+    void checkInternalDTD(bool hasExtSubset, const XMLCh* const sysId);
     void checkIDRefs();
     bool isLegalToken(const XMLPScanToken& toCheck);
     XMLTokens senseNextToken(unsigned int& orgReader);
