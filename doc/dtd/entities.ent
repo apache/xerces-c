@@ -3,12 +3,12 @@
 <!ENTITY XercesCFullName      "Xerces C++ Parser">            <!-- fullproductname -->
 <!ENTITY XercesCName          "Xerces-C++">                   <!-- productname -->
 <!ENTITY XercesPreCVersion    "1.4.0">                        <!-- versionnumber -->
-<!ENTITY XercesCVersion       "1.5.1">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion       "1.5.2">                        <!-- versionnumber -->
 <!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
-<!ENTITY XercesCInstallDir    "xerces-c1_5_1">                <!-- installdirname -->
-<!ENTITY XercesCSrcInstallDir "xerces-c-src1_5_1">            <!-- sourcedirectory -->
+<!ENTITY XercesCInstallDir    "xerces-c1_5_2">                <!-- installdirname -->
+<!ENTITY XercesCSrcInstallDir "xerces-c-src1_5_2">            <!-- sourcedirectory -->
 <!ENTITY XercesCWindowsLib    "xerces-c_1">                   <!-- windowslibname -->
-<!ENTITY XercesCWindowsDLL    "xerces-c_1_5_1">               <!-- windowsDLLname -->
-<!ENTITY XercesCUnixLib       "libxerces-c1_5_1">             <!-- unixlibname -->
+<!ENTITY XercesCWindowsDLL    "xerces-c_1_5_2">               <!-- windowsDLLname -->
+<!ENTITY XercesCUnixLib       "libxerces-c1_5_2">             <!-- unixlibname -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
 <!ENTITY XercesDistDir        "xml.apache.org/dist/xerces-c"> <!-- download directory -->

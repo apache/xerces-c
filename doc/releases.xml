@@ -3,8 +3,345 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; Version 1.5.1: July 18, 2001">
+<s2 title="&XercesCName; Version 1.5.2: October 19, 2001">
+<table>
+    <tr>
+        <td>Date</td>
+        <td>Contributor</td>
+        <td>Description</td>
+    </tr>
 
+    <tr>
+        <td>2001-10-19</td>
+        <td>Khaled Noaman</td>
+        <td> Schema:<br/>
+             Support group, <br/>
+             attributeGroup, <br/>
+             all, <br/>
+             any, <br/>
+             anyAttribute, <br/>
+             redefine, <br/>
+             annotation, <br/>
+             circular import. <br/>
+             Add AnySimpleTypeDatatypeValidator. <br/>
+             Add XercesGroupInfo. <br/>
+             More complex type constraint checking.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>PeiYong Zhang</td>
+        <td>DatatypeValidator:<br/>
+             Support DoubleDatatypeValidator, <br/>
+             FloatDatatypeValidator, <br/>
+             AnyURIDatatypeValidator, <br/>
+             AbstractStringValidator, <br/>
+             AbstractNumericValidator, <br/>
+             AbstractNumericFacetValidator, <br/>
+             NCNameDatatypeValidator, <br/>
+             NameDatatypeValidator. <br/>
+             Add XMLDouble, <br/>
+             XMLFloat, <br/>
+             XMLInteger, <br/>
+             XMLNumber, <br/>
+             XMLUri. <br/>
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-19</td>
+        <td>Tinny Ng</td>
+        <td> Schema:<br/>
+             Support Unique Particle Attribution Constraint Checking, <br/>
+             xsi:type, <br/>
+             anyAttribute in Scanner and Validator. <br/>
+             Add XercesElementWildCard, <br/>
+             AllContentModel, <br/>
+             XMLInternalErrorHandler. <br/>
+             Enable those derived dataype like nonPositiveinteger, negativeInteger ... etc.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-13</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 2409] undocumented XMLException in LocalFileInputSource::new().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-13</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 4133] --prefix not used properly in configure.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-10</td>
+        <td>Jason Stewart</td>
+        <td>XMLURL::parse now throws an exception if it sees a an http URL without
+            two forward slashes ('//') following the protocol.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-10</td>
+        <td>Petr Gotthard</td>
+        <td>Add "Base64::encode" for encoding binary data.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-09</td>
+        <td>Tinny Ng</td>
+        <td>Misc Memory leak fixes.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-05</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 3831]: -1 returned from getIndex() needs to be checked.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-03</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3867] IDOM_Element::getElementsByTagName() threading problem.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-02</td>
+        <td>Tinny Ng</td>
+        <td>Memory leak in IDOM, need to delete the fDocument created.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-13</td>
+        <td>Artur Klauser</td>
+        <td>Patch: Xerces 1.5 w/ libWWW for Tru64.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-13</td>
+        <td>Artur Klauser</td>
+        <td>Patch: Xerces 1.5 samples with g++ compiler.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-12</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 3565] Stream leaked in ReaderMgr.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-12</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3155] SAX2 does not offer progressive parse.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-11</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3523] SchemaElementDecl.cpp(242) : error C2202 : not all control paths return a value.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-10</td>
+        <td>Tinny Ng</td>
+        <td>Performance: Store the fGrammarType instead of calling getGrammarType all the time for faster performance.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-04</td>
+        <td>Christopher Just</td>
+        <td>Support IRIX's sproc().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-09-04</td>
+        <td>Kevin Philips</td>
+        <td>[Bug 3170] URLs with ? type fragments in them don't work.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-29</td>
+        <td>Henry Zongaro</td>
+        <td>Allowing -p as argument to -z or -l in runConfigure.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-29</td>
+        <td>Tinny Ng</td>
+        <td>Performance: Use XMLBufBid instead of XMLBuffer directly for better performance.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-29</td>
+        <td>Tinny Ng</td>
+        <td>Performance: No need to new the child QName in ElemStack addChild.  Remove it for performance gain. for BCB5.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-22</td>
+        <td>Don Mastrovito</td>
+        <td>Project files for BCB5.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-21</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 2816]Numerous datatype headers cause CC error 1144.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-21</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 3017] MSVC5.0: C2202: 'compareSpecial' : not all control paths return a value.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-17</td>
+        <td>Nick Chiang</td>
+        <td>Fix to memory leak in buildDFA().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-16</td>
+        <td>PeiYong Zhang</td>
+        <td>Performance: stateTable created to optimize the identification of new state created.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-10</td>
+        <td>PeiYong Zhang</td>
+        <td>Add isHex(), isAlphaNum(), isAllWhiteSpace() and patternMatch() in XMLString.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2947]IDOM segfault calling getElementsByTagName() using a DOM_Document().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-09</td>
+        <td>Tinny Ng</td>
+        <td>Port test case DOMTest to  IDOMTest.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-07</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2676] IDOM: pure virtual called in IDDeepNodeListImpl::item().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-07</td>
+        <td>Kari Whitcomb</td>
+        <td>IDOM: Unaligned Access warnings in IDOM samples.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-02</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1329] SAX2XMLReaderImpl leaks XMLBuffers.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-08-02</td>
+        <td>Tinny Ng</td>
+        <td>Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-31</td>
+        <td>PeiYong Zhang</td>
+        <td>Fix: memory leak in DFAContentModel::postTreeBuildInit().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-27</td>
+        <td>Tinny Ng</td>
+        <td>Fix bug in 'transcode' functions reported by Evgeniy Gabrilovich.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-27</td>
+        <td>Tinny Ng</td>
+        <td>put getScanner() back as they were there before, not to break existing apps.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-26</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2751] Several NameChar characters missing from internal tables.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-26</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 2815] util/regx/RegxParser.cpp compile fails on HP-UX 10.20 with CC A.10.40.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-24</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 2707] DFAContentModel memory leaks.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-19</td>
+        <td>Tinny Ng</td>
+        <td>Add IDOMCount, IDOMPrint, SAX2Count, and SAX2Print to samples.dsw.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-19</td>
+        <td>Tinny Ng</td>
+        <td>Add more tests in sanityTest.pl.
+        </td>
+    </tr>
+
+
+</table>
+</s2>
+
+<s2 title="&XercesCName; Version 1.5.1: July 18, 2001">
 <table>
     <tr>
         <td>Date</td>

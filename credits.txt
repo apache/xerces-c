@@ -15,7 +15,7 @@ John Bellardo
 Arundhati Bhowmick
 Edward Bortner
 Sumit Chawla
-Andy Clark
+Nick Chiang
 Chih Hsiang Chou
 Radovan Chytracek
 Hiram Clawson
@@ -28,33 +28,34 @@ Simon Fell
 Paul Ferguson
 Pierpaolo Fumagalli
 Gary Gale
-Herny Gongaro
+Petr Gotthard
 Susan Hardenbrook
 Jeff Harrell
 Andy Heninger
 William L. Hopper
 Rahul Jain
 Tom Jordahl
+Christopher Just
 Martin Kalen
 Joe Kesselman
+Artur Klauser
 Bob Kline
 Richard Ko
 Paul Kramer
 Volker Krause
 Arnaud LeHors
-Ted Leung
 Andy Levine
 Jeff Lewis
 Matt Lovett
 Sean MacRoibeaird
-Glenn Marcy
 Alberto Massari
+Don Mastrovito
 Jordan Naftolin
 Tinny Ng
 David Nickerson
 Khaled Noaman
 Michael Ottati
-Ralf Pfeiffer
+Kevin Philips
 Mike Pogue
 Joe Polastre
 John Ponzo
@@ -71,17 +72,19 @@ Christian Schuhegger
 John Smirl
 Andrei Smirnov
 Gereon Steffens
+Jason Stewart
 Rick J. Stevens
 Roman Sulzhyk
 Linda M. Swan
 Pieter Van-Dyck
-Peter A. Volchek
 Curtis Walker
 Tom Watson
 Roger Webster
 Robert Weir
+Kari Whitcomb
 Dietrich Wolf
 Kirk Wylie
+Peter A. Volchek
 Grace Yan
 PeiYong Zhang
 Henry Zongaro
