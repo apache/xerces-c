@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.7  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -193,11 +196,7 @@ bool XSSimpleTypeDefinition::isFixedFacet(FACET facetName)
 }
 
 const XMLCh *XSSimpleTypeDefinition::getLexicalFacetValue(FACET facetName)
-{
-    // REVISIT
-    // We have a vector of Facets.  To do a search is a linear operation.  Would
-    // be faster to store them in mutiple formats (vector & hashtable).  Will
-    // initially process them in just a vector...
+{ 
     unsigned int size = fXSFacetList->size();
     for (unsigned int i=0; i<size; i++) 
     {
@@ -263,8 +262,6 @@ XSTypeDefinition *XSSimpleTypeDefinition::getBaseType()
 
 bool XSSimpleTypeDefinition::derivedFromType(const XSTypeDefinition * const ancestorType)
 {
-    // REVISIT: review
-
     if (!ancestorType)
         return false;
 

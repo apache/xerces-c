@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.3  2003/11/26 16:20:37  neilg
  * more complete implementation of PSVIAttributeList; remove some problematic const-ness
  *
@@ -77,7 +80,7 @@ PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):
         fMemoryManager(manager)
         , fAttrPos(0)
 {
-    fAttrList = new (fMemoryManager) ValueVectorOf<PSVIAttribute*> (10, fMemoryManager, true);
+    fAttrList= new (fMemoryManager) RefVectorOf<PSVIAttribute> (10, true, fMemoryManager);
 }
 
 /*

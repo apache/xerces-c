@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.6  2003/11/27 16:42:00  neilg
  * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
  *
@@ -100,9 +103,8 @@ XSMultiValueFacet::XSMultiValueFacet(XSSimpleTypeDefinition::FACET facetKind,
     , fXSAnnotationList(0)
 {
     if (headAnnot)
-    {
-        // REVISIT Size
-        fXSAnnotationList = new (manager) RefVectorOf<XSAnnotation>(3, false, manager);
+    {        
+        fXSAnnotationList = new (manager) RefVectorOf<XSAnnotation>(1, false, manager);
   
         XSAnnotation* annot = headAnnot;
         do 

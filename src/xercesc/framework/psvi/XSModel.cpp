@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.12  2003/12/13 23:35:28  neilg
  * fix bug 25494; thanks to Han Ming
  *
@@ -217,8 +220,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
         namespaceItem->fHashMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->put((void *) xsAttrGroupDecl->getName(), xsAttrGroupDecl);                
     } // end of attribute group loop
         
-    // Loop through top-level model group definitions in the grammar...    
-    // REVISIT: how to see if a model group definition is global or local?
+    // Loop through top-level model group definitions in the grammar...        
     RefHashTableOfEnumerator<XercesGroupInfo> modelGroupEnum = RefHashTableOfEnumerator<XercesGroupInfo> (namespaceItem->getSchemaGrammar()->getGroupInfoRegistry());
     while (modelGroupEnum.hasMoreElements())
     {
@@ -233,9 +235,6 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     NameIdPoolEnumerator<XMLNotationDecl> notationEnum = namespaceItem->getSchemaGrammar()->getNotationEnumerator();
     while (notationEnum.hasMoreElements())
     {
-        // REVISIT: do we need to store mapping between XMLNotationDecl objects and
-        //          XSNotationDeclaration objects?  PSVIElement may need it to 
-        //          get the XSNotationDecl...
         XMLNotationDecl& notationDecl = notationEnum.nextElement();            
         XSNotationDeclaration* xsNotationDecl = fObjFactory->addOrFind(&notationDecl, this);
 
@@ -283,8 +282,7 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
 
     // Populate XSNamedMaps by going through the components
     for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
-    {
-        // REVISIT: what size & modulus
+    {        
         switch (i+1) 
         {
             case XSConstants::ATTRIBUTE_DECLARATION:
@@ -295,7 +293,7 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
             case XSConstants::NOTATION_DECLARATION:          
                 fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
                 (
-                    29,     // size
+                    20,     // size
                     29,     // modulus
                     fURIStringPool,
                     false,  // adoptElems 
@@ -315,14 +313,13 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
                 break;
         }
     }
-   
-    // Revisit: size of vector
+       
     fNamespaceStringList        = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
     fXSNamespaceItemList        = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
     fXSAnnotationList           = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
-    fElementDeclarationVector   = new (manager) RefVectorOf<XSElementDeclaration> (10, false, manager);
-    fAttributeDeclarationVector = new (manager) RefVectorOf<XSAttributeDeclaration>  (10, false, manager);
-    fHashNamespace              = new (manager) RefHashTableOf<XSNamespaceItem> (29, false, manager);
+    fElementDeclarationVector   = new (manager) RefVectorOf<XSElementDeclaration> (30, false, manager);
+    fAttributeDeclarationVector = new (manager) RefVectorOf<XSAttributeDeclaration>  (20, false, manager);
+    fHashNamespace              = new (manager) RefHashTableOf<XSNamespaceItem> (11, false, manager);
 
     // Loop through all grammars in the grammar pool to create the XSNamespaceItem's
     //  which will have access to Annotation Information which can be used later when
@@ -386,8 +383,7 @@ XSModel::XSModel( XSModel *baseModel
     unsigned int i;
     // Populate XSNamedMaps by going through the components
     for (i=0; i<XSConstants::MULTIVALUE_FACET; i++)
-    {
-        // REVISIT: what size & modulus
+    {        
         switch (i+1) 
         {
             case XSConstants::ATTRIBUTE_DECLARATION:
@@ -398,7 +394,7 @@ XSModel::XSModel( XSModel *baseModel
             case XSConstants::NOTATION_DECLARATION:          
                 fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
                 (
-                    29,     // size
+                    20,     // size
                     29,     // modulus
                     fURIStringPool,
                     false,  // adoptElems 
@@ -418,15 +414,14 @@ XSModel::XSModel( XSModel *baseModel
                 break;
         }
     }
-   
-    // Revisit: size of vector
+       
     fNamespaceStringList        = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
     fXSNamespaceItemList        = new (manager) RefVectorOf <XSNamespaceItem>(10, false, manager);
     fDeleteNamespace            = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
     fXSAnnotationList           = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
-    fElementDeclarationVector   = new (manager) RefVectorOf<XSElementDeclaration> (10, false, manager);
-    fAttributeDeclarationVector = new (manager) RefVectorOf<XSAttributeDeclaration>  (10, false, manager);
-    fHashNamespace              = new (manager) RefHashTableOf<XSNamespaceItem> (29, false, manager);
+    fElementDeclarationVector   = new (manager) RefVectorOf<XSElementDeclaration> (30, false, manager);
+    fAttributeDeclarationVector = new (manager) RefVectorOf<XSAttributeDeclaration>  (20, false, manager);
+    fHashNamespace              = new (manager) RefHashTableOf<XSNamespaceItem> (11, false, manager);
 
     if (fParent)
     {
@@ -436,7 +431,7 @@ XSModel::XSModel( XSModel *baseModel
         // Need to copy information from parent so it can be returned in this object...
         for (i=0; i<fParent->fXSNamespaceItemList->size(); i++)
         {
-            XSNamespaceItem* namespaceItem = fXSNamespaceItemList->elementAt(i);
+            XSNamespaceItem* namespaceItem = fParent->fXSNamespaceItemList->elementAt(i);
             fXSNamespaceItemList->addElement(namespaceItem);
 
             XMLCh* NameSpace = XMLString::replicate(namespaceItem->getSchemaNamespace(), manager);
@@ -607,7 +602,7 @@ XSElementDeclaration *XSModel::getElementDeclaration(const XMLCh *name
         namespaceItem = getNamespaceItem(emptyString);
     
     if (namespaceItem)
-        namespaceItem->getElementDeclaration(name);
+        return namespaceItem->getElementDeclaration(name);
 
     return 0;
 }
@@ -629,7 +624,7 @@ XSAttributeDeclaration *XSModel::getAttributeDeclaration(const XMLCh *name
         namespaceItem = getNamespaceItem(emptyString);    
     
     if (namespaceItem)
-        namespaceItem->getAttributeDeclaration(name);
+        return namespaceItem->getAttributeDeclaration(name);
 
     return 0;
 }
@@ -652,7 +647,7 @@ XSTypeDefinition *XSModel::getTypeDefinition(const XMLCh *name
         namespaceItem = getNamespaceItem(emptyString);
     
     if (namespaceItem)
-        namespaceItem->getTypeDefinition(name);
+        return namespaceItem->getTypeDefinition(name);
 
     return 0;
 }
@@ -674,7 +669,7 @@ XSAttributeGroupDefinition *XSModel::getAttributeGroup(const XMLCh *name
         namespaceItem = getNamespaceItem(emptyString);
    
     if (namespaceItem)
-        namespaceItem->getAttributeGroup(name);
+        return namespaceItem->getAttributeGroup(name);
 
     return 0;
 }
@@ -696,7 +691,7 @@ XSModelGroupDefinition *XSModel::getModelGroupDefinition(const XMLCh *name
         namespaceItem = getNamespaceItem(emptyString);
    
     if (namespaceItem)
-        namespaceItem->getModelGroupDefinition(name);
+        return namespaceItem->getModelGroupDefinition(name);
 
     return 0;
 }
@@ -718,7 +713,7 @@ XSNotationDeclaration *XSModel::getNotationDeclaration(const XMLCh *name
         namespaceItem = getNamespaceItem(emptyString);
    
     if (namespaceItem)
-        namespaceItem->getNotationDeclaration(name);
+        return namespaceItem->getNotationDeclaration(name);
 
     return 0;
 }

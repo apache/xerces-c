@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.6  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -102,8 +105,7 @@ XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
 {
     // Populate XSNamedMaps by going through the components
     for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
-    {
-        // REVISIT: what size & modulus & adopt
+    {        
         switch (i+1) 
         {
             case XSConstants::ATTRIBUTE_DECLARATION:
@@ -114,7 +116,7 @@ XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
             case XSConstants::NOTATION_DECLARATION:
                 fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
                 (
-                    29,     // size
+                    20,     // size
                     29,     // modulus
                     fXSModel->getURIStringPool(),
                     false,  // adoptElems 
@@ -142,8 +144,7 @@ XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
         }
     }
     
-    // Revisit size
-    fXSAnnotationList = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
+    fXSAnnotationList = new (manager) RefVectorOf <XSAnnotation> (5, false, manager);
 }
 
 XSNamespaceItem::~XSNamespaceItem()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.9  2003/12/02 01:27:01  knoaman
  * Properly set fAnnotation data member
  *
@@ -190,8 +193,6 @@ XSConstants::VALUE_CONSTRAINT XSElementDeclaration::getConstraintType() const
     if (fSchemaElementDecl->getMiscFlags() & SchemaSymbols::XSD_FIXED)
         return XSConstants::VC_FIXED;
 
-    // REVISIT: need to verify this... don't appear to set a DEFAULT flag so thought
-    // this might work...
     if (fSchemaElementDecl->getDefaultValue())
         return XSConstants::VC_DEFAULT;
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.7  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -119,8 +122,9 @@ bool XSTypeDefinition::isFinal(short toTest)
 
 bool XSTypeDefinition::derivedFrom(const XMLCh *typeNamespace, 
                                    const XMLCh *name)
-{
-    // REVISIT: review    
+{    
+    // REVISIT: review
+    // look up object... ask Neil...
     if (!name)
         return false;
 

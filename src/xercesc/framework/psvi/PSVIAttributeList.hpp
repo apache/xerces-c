@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/15 17:23:48  cargilld
+ * psvi updates; cleanup revisits and bug fixes
+ *
  * Revision 1.4  2003/12/02 16:21:41  neilg
  * fix for ArrayIndexOutOfBoundsException in PSVIAttributeList; thanks to Pete Lloyd
  *
@@ -201,8 +204,8 @@ private:
     //  list of PSVIAttributes contained by this object
     // fAttrPos
     //  current number of valid PSVIAttributes in fAttrList
-    MemoryManager*                  fMemoryManager;
-    ValueVectorOf<PSVIAttribute*>*  fAttrList;
+    MemoryManager*                  fMemoryManager;    
+    RefVectorOf<PSVIAttribute>*     fAttrList;
     unsigned int                    fAttrPos;
 };
 inline PSVIAttributeList::~PSVIAttributeList() 
@@ -216,7 +219,7 @@ inline PSVIAttribute *PSVIAttributeList::getPSVIAttributeToFill()
     if(fAttrPos == fAttrList->size())
     {
         retAttr = new (fMemoryManager)PSVIAttribute(fMemoryManager);
-        fAttrList->addElement(retAttr);
+        fAttrList->addElement(retAttr);        
     }
     else
     {
