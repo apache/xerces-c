@@ -291,7 +291,7 @@ DTDElementDecl::formatContentModel(const XMLValidator& validator) const
     return newValue;
 }
 
-XMLContentModel* DTDElementDecl::makeContentModel() const
+XMLContentModel* DTDElementDecl::makeContentModel(XMLValidator* pValidator) const
 {
     XMLContentModel* cmRet = 0;
     if (fModelType == Mixed)
@@ -311,7 +311,7 @@ XMLContentModel* DTDElementDecl::makeContentModel() const
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel();
+        cmRet = createChildModel(pValidator);
     }
      else
     {
@@ -325,7 +325,7 @@ XMLContentModel* DTDElementDecl::makeContentModel() const
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* DTDElementDecl::createChildModel() const
+XMLContentModel* DTDElementDecl::createChildModel(XMLValidator* pValidator) const
 {
     // Get the content spec node of the element
     const ContentSpecNode* specNode = getContentSpec();

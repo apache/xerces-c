@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/03/21 19:29:43  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.6  2001/02/26 19:29:21  tng
  * Schema: add virtual method getURI(), getContentSpec and setContenSpec in XMLElementDecl, and DTDElementDecl.
  *
@@ -156,6 +159,14 @@ public :
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);
 
+    // -----------------------------------------------------------------------
+    // Support keyed collections
+    //
+    // This method allows objects of this type be placed into one of the
+    // standard keyed collections. This method will return the full name of
+    // the element, which will vary depending upon the type of the validator.
+    // -----------------------------------------------------------------------
+    const XMLCh* getKey() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -177,7 +188,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel() const;
+    virtual XMLContentModel* makeContentModel(XMLValidator* pValidator=0) const;
     virtual XMLCh* formatContentModel
     (
         const   XMLValidator&   validator
@@ -188,7 +199,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel() const;
+    XMLContentModel* createChildModel(XMLValidator* pValidator=0) const;
     void faultInAttDefList() const;
 
 
@@ -285,6 +296,13 @@ inline const ContentSpecNode* DTDElementDecl::getContentSpec() const
     return fContentSpec;
 }
 
+// ---------------------------------------------------------------------------
+//  DTDElementDecl: Miscellaneous methods
+// ---------------------------------------------------------------------------
+inline const XMLCh* DTDElementDecl::getKey() const
+{
+    return getFullName();
+}
 
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Getter methods

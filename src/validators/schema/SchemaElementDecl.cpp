@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/03/21 19:30:15  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.2  2001/03/07 17:42:12  tng
  * fix typo
  *
@@ -301,7 +304,7 @@ SchemaElementDecl::formatContentModel(const XMLValidator& validator) const
     return newValue;
 }
 
-XMLContentModel* SchemaElementDecl::makeContentModel() const
+XMLContentModel* SchemaElementDecl::makeContentModel(XMLValidator* pValidator) const
 {
     XMLContentModel* cmRet = 0;
     if (fModelType == Simple) {
@@ -324,7 +327,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel() const
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel();
+        cmRet = createChildModel(pValidator);
     }
      else
     {
@@ -338,7 +341,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel() const
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* SchemaElementDecl::createChildModel() const
+XMLContentModel* SchemaElementDecl::createChildModel(XMLValidator* pValidator) const
 {
     // Get the content spec node of the element
     const ContentSpecNode* specNode = getContentSpec();
@@ -354,9 +357,9 @@ XMLContentModel* SchemaElementDecl::createChildModel() const
     //  According to the type of node, we will create the correct type of
     //  content model.
     //
-    if ((specNode->getType() == ContentSpecNode::Any) ||
-       (specNode->getType() == ContentSpecNode::Any_Other) ||
-       (specNode->getType() == ContentSpecNode::Any_Local)) {
+    if (((specNode->getType() & 0x0f) == ContentSpecNode::Any) ||
+       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Other) ||
+       ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Local)) {
        // let fall through to build a DFAContentModel
     }
      else if (specNode->getType() == ContentSpecNode::Leaf)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/21 19:30:17  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.1  2001/02/27 18:48:23  tng
  * Schema: Add SchemaAttDef, SchemaElementDecl, SchemaAttDefList.
  *
@@ -169,7 +172,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel() const;
+    virtual XMLContentModel* makeContentModel(XMLValidator* pValidator=0) const;
     virtual XMLCh* formatContentModel
     (
         const   XMLValidator&   validator
@@ -180,7 +183,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel() const;
+    XMLContentModel* createChildModel(XMLValidator* pValidator=0) const;
     void faultInAttDefList() const;
 
 

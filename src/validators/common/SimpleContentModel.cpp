@@ -55,7 +55,11 @@
  */
 
 /*
+/*
  * $Log$
+ * Revision 1.4  2001/03/21 19:30:00  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.3  2001/02/27 14:48:57  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -118,8 +122,9 @@ bool SimpleContentModel::getIsAmbiguous() const
 //  operation it is for.
 //
 int
-SimpleContentModel::validateContent(const   unsigned int*   childIds
-                                    , const unsigned int    childCount) const
+SimpleContentModel::validateContent( const unsigned int*   childIds
+                                  , const unsigned int    childCount
+								  , const XMLValidator   *pValidator) const
 {
     //
     //  According to the type of operation, we do the correct type of
@@ -238,13 +243,158 @@ SimpleContentModel::validateContent(const   unsigned int*   childIds
     return -1;
 }
 
+int
+SimpleContentModel::validateContentSpecial( const unsigned int*   childIds
+                                          , const unsigned int    childCount
+								          , const XMLValidator   *pValidator) const
+{
+	return 0;
+}
+
+#ifdef _feat_1526
 int SimpleContentModel::validateContentSpecial(  const   unsigned int*   childIds
                                             , const unsigned int    childCount) const
 {
-	return 0;
-};
+     if (fComparator==0) {
+        return validateContent(childIds, childCout);
+     }
+    //
+    //  According to the type of operation, we do the correct type of
+    //  content check.
+    //
+    unsigned int index;
+    switch(fOp)
+    {
+        case ContentSpecNode::Leaf :
+            //
+            //  There can only be one child and it has to be of the
+            //  element type we stored.
+            //
+            if (!childCount)
+                return 0;
+
+            if (childIds[0] != fFirstChild)
+				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild))
+                return 0;
+
+            if (childCount > 1)
+                return 1;
+            break;
+
+        case ContentSpecNode::ZeroOrOne :
+            //
+            //  If the child count is greater than one, then obviously
+            //  bad. Otherwise, if its one, then the one child must be
+            //  of the type we stored.
+            //
+            if ((childCount == 1) && (childIds[0] != fFirstChild))
+				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild))
+                return 0;
+
+            if (childCount > 1)
+                return 1;
+            break;
+
+        case ContentSpecNode::ZeroOrMore :
+            //
+            //  If the child count is zero, that's fine. If its more than
+            //  zero, then make sure that all children are of the element
+            //  type that we stored.
+            //
+            if (childCount > 0)
+            {
+                for (index = 0; index < childCount; index++)
+                {
+                    if (childIds[index] != fFirstChild)
+				        if (!fComparator.isEquivalentTo(childIds[index], fFirstChild))
+                        return index;
+                }
+            }
+            break;
+
+        case ContentSpecNode::OneOrMore :
+            //
+            //  If the child count is zero, that's an error. If its more
+            //  than zero, then make sure that all children are of the
+            //  element type that we stored.
+            //
+            if (childCount == 0)
+                return 0;
+
+            for (index = 0; index < childCount; index++)
+            {
+                if (childIds[index] != fFirstChild)
+				    if (!fComparator.isEquivalentTo(childIds[index], fFirstChild))
+                    return index;
+            }
+            break;
+
+        case ContentSpecNode::Choice :
+            //
+            //  There can only be one child, and it must be one of the
+            //  two types we stored.
+            //
+            if (!childCount)
+                return 0;
+
+            if ((childIds[0] != fFirstChild) && (childIds[0] != fSecondChild))
+				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild) &&
+			        !fComparator.isEquivalentTo(childIds[0], fSecondChild) )
+					return 0;
+
+            if (childCount > 1)
+                return 1;
+            break;
+
+        case ContentSpecNode::Sequence :
+            //
+            //  There must be two children and they must be the two values
+            //  we stored, in the stored order. So first check the obvious
+            //  problem of an empty content, which would never be valid
+            //  in this content mode.
+            //
+            if (!childCount)
+                return 0;
+
+            // If we have at least one child, its got to match our first
+            if ((childCount >= 1) && (childIds[0] != fFirstChild))
+				if (!fComparator.isEquivalentTo(childIds[0], fFirstChild))
+                return 0;
+
+            // If we hvae at least two children, its got to match our second
+            if ((childCount >= 2) && (childIds[1] != fSecondChild))
+				if (!fComparator.isEquivalentTo(childIds[1], fSecondChild))
+                return 1;
+
+            // If we only had one (and it was valid), then too few children
+            if (childCount == 1)
+                return 1;
+
+            // And finally check for too many children
+            if (childCount > 2)
+                return 2;
+
+            break;
+
+        default :
+            ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+            break;
+    }
+    return -1;
+}
+#endif
+
+#ifdef _feat_1526
+void SimpleContentModel::setEquivClassComparator(EquivClassComparator comparator)
+{
+	fComparator=comparator;
+}
+#endif
 
 ContentLeafNameTypeVector* SimpleContentModel::getContentLeafNameTypeVector() const
 {
+	// in java, it return null, so that we need
+	// to return 0
     return 0;
-};
+}
+

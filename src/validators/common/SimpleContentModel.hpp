@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/03/21 19:30:02  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.3  2001/02/27 14:48:57  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
@@ -87,7 +90,6 @@
 
 #include <framework/XMLContentModel.hpp>
 #include <validators/common/ContentSpecNode.hpp>
-#include <validators/common/ContentLeafNameTypeVector.hpp>
 
 
 //
@@ -125,6 +127,7 @@ public :
         const   unsigned int                firstChildId
         , const unsigned int                secondChildId
         , const ContentSpecNode::NodeTypes  cmOp
+		, const bool                        dtd=true
     );
 
     ~SimpleContentModel();
@@ -134,22 +137,27 @@ public :
     //  Implementation of the ContentModel virtual interface
     // -----------------------------------------------------------------------
     virtual bool getIsAmbiguous() const;
+
 	virtual int validateContent
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-    )   const;
+		, const XMLValidator   *pValidator = 0
+    ) const;
 
 	virtual int validateContentSpecial
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-	) const;
+		, const XMLValidator   *pValidator = 0
+    ) const;
 
-    virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const;
+    virtual ContentLeafNameTypeVector *getContentLeafNameTypeVector() const;
 
-//  Onhold, until EquivClassComparator is defined
-//  void setEquivClassComparator(EquivClassComparator comparator);
+#ifdef _feat_1526
+   //  Onhold, until EquivClassComparator is defined
+    void setEquivClassComparator(EquivClassComparator comparator);
+#endif
 
 private :
     // -----------------------------------------------------------------------
@@ -173,10 +181,20 @@ private :
     //      does simple contents, there is only ever a single operation
     //      involved (i.e. the children of the operation are always one or
     //      two leafs.)
+    //
+	//  fDTD
+    //      Boolean to allow DTDs to validate even with namespace support. */
+    //
+    //  fComparator
+    //      this is the EquivClassComparator object */
     // -----------------------------------------------------------------------
     unsigned int                fFirstChild;
     unsigned int                fSecondChild;
     ContentSpecNode::NodeTypes  fOp;
+	bool                        fDTD;
+#ifdef _feat_1526
+    EquivClassComparator       fComparator;
+#endif
 };
 
 
@@ -186,10 +204,13 @@ private :
 inline
 SimpleContentModel::SimpleContentModel( const   unsigned int                firstChildId
                                         , const unsigned int                secondChildId
-                                        , const ContentSpecNode::NodeTypes  cmOp) :
-    fOp(cmOp)
-    , fFirstChild(firstChildId)
+                                        , const ContentSpecNode::NodeTypes  cmOp
+										, const bool                        dtd) :
+
+    fFirstChild(firstChildId)
     , fSecondChild(secondChildId)
+    , fOp(cmOp)
+	, fDTD(dtd)
 {
 }
 

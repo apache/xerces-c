@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/03/21 19:29:55  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.3  2001/02/27 18:32:32  tng
  * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
  *
@@ -116,7 +119,9 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DFAContentModel(const XMLElementDecl& elemDecl);
+    DFAContentModel(const XMLElementDecl&  elemDecl
+		           , XMLValidator         *pValidator = 0
+				   , bool                  dtd = true);
     virtual ~DFAContentModel();
 
 
@@ -124,17 +129,20 @@ public:
     //  Implementation of the virtual content model interface
     // -----------------------------------------------------------------------
     virtual bool getIsAmbiguous() const;
+
 	virtual int validateContent
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-    )   const;
+		, const XMLValidator   *pValidator = 0
+    ) const;
 
 	virtual int validateContentSpecial
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
-	) const;
+		, const XMLValidator   *pValidator = 0
+    ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
@@ -180,6 +188,10 @@ private :
     //      of the built DFA information that must be kept around to do the
     //      actual validation.
     //
+	//  fElemMapType
+    //      This is a map of whether the element map contains information 
+    //      related to ANY models.
+    //
     //  fEmptyOk
     //      This is an optimization. While building the transition table we
     //      can see whether this content model would approve of an empty
@@ -223,6 +235,9 @@ private :
     //      pointed to by fHeadNode, so we don't have to clean them up, just
     //      the actually leaf list array itself needs cleanup.
     //
+	//  fLeafListType
+    //      Array mapping ANY types to the leaf list. 
+	//
     //  fSpecNode
     //      The content spec node for the element that this object represents
     //      the content of. This info is needed a good bit so we get it once
@@ -243,9 +258,17 @@ private :
     //
     //      fTransTableSize is the number of valid entries in the transition
     //      table, and in the other related tables such as fFinalStateFlags.
+    //
+    //  fDTD;
+    //      Boolean to allow DTDs to validate even with namespace support.
+    //
+	//  fValidator
+	//      instead of passing the validator pointer round, we save it here
+	//
     // -----------------------------------------------------------------------
     const XMLElementDecl&   fElemDecl;
     unsigned int*           fElemMap;
+	ContentSpecNode::NodeTypes  *fElemMapType;
     unsigned int            fElemMapSize;
     bool                    fEmptyOk;
     unsigned int            fEOCPos;
@@ -255,9 +278,13 @@ private :
     bool                    fIsAmbiguous;
     unsigned int            fLeafCount;
     CMLeaf**                fLeafList;
+	ContentSpecNode::NodeTypes  *fLeafListType;
     const ContentSpecNode*  fSpecNode;
     unsigned int**          fTransTable;
     unsigned int            fTransTableSize;
+    bool                    fDTD;
+	ContentLeafNameTypeVector *fLeafNameTypeVector;
+	XMLValidator           *fValidator;
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/03/21 19:29:58  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.3  2001/02/27 18:32:33  tng
  * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
  *
@@ -114,6 +117,8 @@ public :
     MixedContentModel
     (
         const   XMLElementDecl& parentElem
+		,const bool             ordered = false
+		,const bool             dtd = true
     );
 
     ~MixedContentModel();
@@ -129,16 +134,19 @@ public :
     //  Implementation of the ContentModel virtual interface
     // -----------------------------------------------------------------------
     virtual bool getIsAmbiguous() const;
+	
 	virtual int validateContent
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
+		, const XMLValidator   *pValidator = 0
     )   const;
 
 	virtual int validateContentSpecial
     (
         const   unsigned int*   childIds
         , const unsigned int    childCount
+		, const XMLValidator   *pValidator = 0
 	) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
@@ -152,10 +160,10 @@ private :
     // -----------------------------------------------------------------------
     void buildChildList
     (
-        const   ContentSpecNode&                curNode
-        ,       ValueVectorOf<unsigned int>&    toFill
-    );
-
+        const   ContentSpecNode&                           curNode
+        ,       ValueVectorOf<unsigned int>&               toFill
+		,       ValueVectorOf<ContentSpecNode::NodeTypes>& toType
+	);
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -174,9 +182,28 @@ private :
     //  fChildIds
     //      The list of possible children that we have to accept. This array
     //      is allocated as large as needed in the constructor.
+    //
+	//  fChildTypes
+	//      The type of the children to support ANY.
+    //
+	//  fOrdered
+	//      True if mixed content model is ordered. DTD mixed content models
+	//      are <em>always</em> unordered.
+	//
+	//  fDTD
+    //      Boolean to allow DTDs to validate even with namespace support.
+    //
+    //  fComparator
+    //      this is the EquivClassComparator object
     // -----------------------------------------------------------------------
     unsigned int    fCount;
-    unsigned int*   fChildIds;
+    unsigned int   *fChildIds;
+	ContentSpecNode::NodeTypes  *fChildTypes;
+    bool            fOrdered;
+    bool            fDTD;
+#ifdef _feat_1530
+	EquivClassComparator        comparator;
+#endif
 };
 
 #endif

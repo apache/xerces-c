@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/03/21 19:29:29  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.10  2001/02/26 19:29:13  tng
  * Schema: add virtual method getURI(), getContentSpec and setContenSpec in XMLElementDecl, and DTDElementDecl.
  *
@@ -112,13 +115,6 @@ class ContentSpecNode;
  *  at least this core information, i.e. they must all derive from this
  *  class. The set of info enforced at this level is driven by the needs of
  *  XML 1.0 spec validation and well formedness checks.
- *
- *  This class supports keyed collection semantics by providing the getKey()
- *  method, which extracts the key field. getKey() just calls getFullName()
- *  which is virtual so that each type of validator can have its own version
- *  of what a full name is. For the DTD validator, its element decl
- *  derivatives will return QNames in form pre:name. A Schema validator
- *  would return expanded names in the form {uri}name.
  *
  *  This class defines some special element id values for invalid elements
  *  and PCDATA elements, as well as a string for the special PCDATA element
@@ -359,14 +355,14 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @return A const pointer to the element's content model, via the basic
       * abstract content model type.
       */
-    const XMLContentModel* getContentModel() const;
+    const XMLContentModel* getContentModel(XMLValidator* pValidator=0) const;
 
     /** Get a pointer to the abstract content model
       *
       * This method is identical to the previous one, except that it is non
       * const.
       */
-    XMLContentModel* getContentModel();
+    XMLContentModel* getContentModel(XMLValidator* pValidator=0);
 
     /** Get the create reason for this element type
       *
@@ -496,16 +492,6 @@ class XMLPARSER_EXPORT XMLElementDecl
         const   XMLValidator&   validator
     )   const;
 
-    /** Support keyed collections
-      *
-      * This method allows objects of this type be placed into one of the
-      * standard keyed collections. This method will return the full name of
-      * the element, which will vary depending upon the type of the validator.
-      *
-      * @return A const pointer to teh full name of this element type.
-      */
-    const XMLCh* getKey() const;
-
     //@}
 
 
@@ -519,7 +505,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected, virtual methods
     // -----------------------------------------------------------------------
-    virtual XMLContentModel* makeContentModel() const = 0;
+    virtual XMLContentModel* makeContentModel(XMLValidator* pValidator=0) const = 0;
     virtual XMLCh* formatContentModel
     (
         const   XMLValidator&   validator
@@ -572,33 +558,20 @@ private :
 
 
 // ---------------------------------------------------------------------------
-//  XMLElementDecl: Miscellaneous methods
-// ---------------------------------------------------------------------------
-inline const XMLCh* XMLElementDecl::getKey() const
-{
-    //
-    //  We just call the virtual method, since only the derived class knows
-    //  what form the full name should take.
-    //
-    return getFullName();
-}
-
-
-// ---------------------------------------------------------------------------
 //  XMLElementDecl: Getter methods
 // ---------------------------------------------------------------------------
-inline XMLContentModel* XMLElementDecl::getContentModel()
+inline XMLContentModel* XMLElementDecl::getContentModel(XMLValidator* pValidator)
 {
     if (!fContentModel)
-        fContentModel = makeContentModel();
+        fContentModel = makeContentModel(pValidator);
     return fContentModel;
 }
 
-inline const XMLContentModel* XMLElementDecl::getContentModel() const
+inline const XMLContentModel* XMLElementDecl::getContentModel(XMLValidator* pValidator) const
 {
     // Fault in the content model (which requires a cast off of const)
     if (!fContentModel)
-        ((XMLElementDecl*)this)->fContentModel = makeContentModel();
+        ((XMLElementDecl*)this)->fContentModel = makeContentModel(pValidator);
     return fContentModel;
 }
 

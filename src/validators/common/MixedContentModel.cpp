@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/03/21 19:29:57  tng
+ * Schema: Content Model Updates, by Pei Yong Zhang.
+ *
  * Revision 1.4  2001/02/27 18:32:32  tng
  * Schema: Use XMLElementDecl instead of DTDElementDecl in Content Model.
  *
@@ -108,7 +111,14 @@
 // ---------------------------------------------------------------------------
 //  MixedContentModel: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MixedContentModel::MixedContentModel(const XMLElementDecl& parentElem)
+MixedContentModel::MixedContentModel(const XMLElementDecl& parentElem
+									 ,const bool           ordered
+									 ,const bool           dtd)
+:fCount(0),
+ fChildIds(0),
+ fChildTypes(0),
+ fOrdered(ordered),
+ fDTD(dtd)
 {
     //
     //  Create a vector of unsigned ints that will be filled in with the
@@ -116,7 +126,9 @@ MixedContentModel::MixedContentModel(const XMLElementDecl& parentElem)
     //  it an initial capacity of 64 which should be more than enough for
     //  99% of the scenarios.
     //
-    ValueVectorOf<unsigned int> childIds(64);
+
+    ValueVectorOf<unsigned int> childs(64);
+    ValueVectorOf<ContentSpecNode::NodeTypes> childTypes(64);
 
     //
     //  Get the parent element's content spec. This is the head of the tree
@@ -128,21 +140,24 @@ MixedContentModel::MixedContentModel(const XMLElementDecl& parentElem)
         ThrowXML(RuntimeException, XMLExcepts::CM_NoParentCSN);
 
     // And now call the private recursive method that iterates the tree
-    buildChildList(*curNode, childIds);
+    buildChildList(*curNode, childs, childTypes);
 
-    //
-    //  And now we know how many elements we need in our member list. So
-    //  fill them in.
-    //
-    fCount = childIds.size();
+	//
+   	//  And now we know how many elements we need in our member list. So
+	//  fill them in.
+	//
+    fCount = childs.size();
     fChildIds = new unsigned int[fCount];
-    memcpy(fChildIds, childIds.rawData(), fCount * sizeof(unsigned int));
-}
+    memcpy(fChildIds, childs.rawData(), fCount * sizeof(unsigned int));
+	fChildTypes = new ContentSpecNode::NodeTypes [fCount];
+    memcpy(fChildTypes, childTypes.rawData(), fCount * sizeof(ContentSpecNode::NodeTypes));
 
+}
 
 MixedContentModel::~MixedContentModel()
 {
-    delete [] fChildIds;
+	delete [] fChildIds;
+   	delete [] fChildTypes;
 }
 
 
@@ -220,38 +235,135 @@ bool MixedContentModel::getIsAmbiguous() const
     return false;
 }
 
+//
+//Under the XML Schema mixed model,
+//the order and number of child elements appearing in an instance
+//must agree with
+//the order and number of child elements specified in the model.
+//
 int
-MixedContentModel::validateContent( const   unsigned int*   childIds
-                                    , const unsigned int    childCount) const
+MixedContentModel::validateContent( const unsigned int*   childIds
+                                  , const unsigned int    childCount
+								  , const XMLValidator   *pValidator) const
 {
-    // Use an outer index to search the passed list of children
-    for (unsigned int outIndex = 0; outIndex < childCount; outIndex++)
-    {
-        // Get the current child out of the source index
-        const unsigned int curChild = childIds[outIndex];
+	// must match order
+	if (fOrdered) {
 
-        // If its PCDATA, then we just accept that
-        if (curChild == XMLElementDecl::fgPCDataElemId)
-            continue;
+		unsigned int inIndex = 0;
+		for (unsigned int outIndex = 0; outIndex < childCount; outIndex++) {
 
-        // Otherwise  try to find it in our list using an inner index
-        unsigned int inIndex = 0;
-        for (; inIndex < fCount; inIndex++)
-        {
-            if (curChild == fChildIds[inIndex])
-                break;
-        }
+            // Get the current child out of the source index
+            const unsigned int curChild = childIds[outIndex];
 
-        //
-        //  We did not find this one, so the validation failed. We return
-        //  the outer index, which is the index of the child that failed.
-        //
-        if (inIndex == fCount)
-            return outIndex;
-    }
+            // If its PCDATA, then we just accept that
+            if (curChild == XMLElementDecl::fgPCDataElemId)
+                continue;
 
-    // Return success
+			ContentSpecNode::NodeTypes type = fChildTypes[inIndex];
+            const unsigned int inChild = fChildIds[inIndex];
+
+			if (type == ContentSpecNode::Leaf) {
+				if (curChild != inChild)
+    				return outIndex;
+			}
+			else if (type == ContentSpecNode::Any) {
+
+				const XMLElementDecl* elemDecl = pValidator->getElemDecl(inChild);
+				const int uri = elemDecl->getURI();
+				const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);		
+				if ((uri != -1 ) &&
+					(uri != elemDecl2->getURI()))
+				{
+					return outIndex;
+				}
+			}
+			else if (type == ContentSpecNode::Any_Local) {
+
+				const XMLElementDecl* elemDecl = pValidator->getElemDecl(inChild);
+				if (elemDecl->getURI() != -1) {
+					return outIndex;
+				}
+			}
+			else if (type == ContentSpecNode::Any_Other) {
+
+				const XMLElementDecl* elemDecl = pValidator->getElemDecl(inChild);
+				const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);
+				if (elemDecl->getURI() == elemDecl2->getURI()) {
+					return outIndex;
+				}
+			}
+			
+			// advance index
+			inIndex++;
+		}
+
+		/***checking the number of childs
+		if (inIndex != fCount)
+			return outIndex;
+		***/
+	}
+
+	// can appear in any order
+	else {
+		for (unsigned int outIndex = 0; outIndex < childCount; outIndex++)
+		{
+            // Get the current child out of the source index
+            const unsigned int curChild = childIds[outIndex];
+
+            // If its PCDATA, then we just accept that
+            if (curChild == XMLElementDecl::fgPCDataElemId)
+                continue;
+
+			// And try to find it in our list
+			unsigned int inIndex = 0;
+			for (; inIndex < fCount; inIndex++)
+			{
+
+			    ContentSpecNode::NodeTypes type = fChildTypes[inIndex];
+
+				if (type == ContentSpecNode::Leaf) {
+	    			if (curChild == fChildIds[inIndex])
+            			break;
+				}
+				else if (type == ContentSpecNode::Any) {
+
+				    const XMLElementDecl* elemDecl = pValidator->getElemDecl(fChildIds[inIndex]);
+				    const int uri = elemDecl->getURI();
+				    const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);
+
+					if (uri == -1 || uri == elemDecl2->getURI()) {
+						break;
+					}
+				}
+				else if (type == ContentSpecNode::Any_Local) {
+
+				    const XMLElementDecl* elemDecl = pValidator->getElemDecl(fChildIds[inIndex]);
+					if (elemDecl->getURI() == -1) {
+						break;
+					}
+				}
+				else if (type == ContentSpecNode::Any_Other) {
+
+				    const XMLElementDecl* elemDecl = pValidator->getElemDecl(fChildIds[inIndex]);
+				    const XMLElementDecl* elemDecl2 = pValidator->getElemDecl(curChild);
+					if ( elemDecl->getURI() != elemDecl2->getURI()) {
+						break;
+					}
+				}
+				// REVISIT: What about checking for multiple ANY matches?
+				//          The content model ambiguity *could* be checked
+				//          by the caller before constructing the mixed
+				//          content model.
+			}
+				// We did not find this one, so the validation failed
+			if (inIndex == fCount)
+				return outIndex;
+		}
+	}
+
+	// Everything seems to be in order, so return success
     return XMLValidator::Success;
+
 }
 
 
@@ -260,15 +372,20 @@ MixedContentModel::validateContent( const   unsigned int*   childIds
 // ---------------------------------------------------------------------------
 void
 MixedContentModel::buildChildList(  const   ContentSpecNode&             curNode
-                                    ,       ValueVectorOf<unsigned int>& toFill)
+                                    ,       ValueVectorOf<unsigned int>& toFill
+									,       ValueVectorOf<ContentSpecNode::NodeTypes>& toType)
 {
     // Get the type of spec node our current node is
     const ContentSpecNode::NodeTypes curType = curNode.getType();
 
     // If its a leaf, then store its id in the target list
-    if (curType == ContentSpecNode::Leaf)
+    if ((curType == ContentSpecNode::Leaf)      ||
+        (curType == ContentSpecNode::Any)       ||
+        (curType == ContentSpecNode::Any_Other) ||
+        (curType == ContentSpecNode::Any_Local)   )
     {
         toFill.addElement(curNode.getElemId());
+		toType.addElement(curType);
         return;
     }
 
@@ -281,25 +398,26 @@ MixedContentModel::buildChildList(  const   ContentSpecNode&             curNode
     ||  (curType == ContentSpecNode::Sequence))
     {
         // Recurse on the left and right nodes
-        buildChildList(*leftNode, toFill);
+        buildChildList(*leftNode, toFill, toType);
 
         // The last node of a choice or sequence has a null right
         if (rightNode)
-            buildChildList(*rightNode, toFill);
+            buildChildList(*rightNode, toFill, toType);
     }
      else if ((curType == ContentSpecNode::OneOrMore)
           ||  (curType == ContentSpecNode::ZeroOrOne)
           ||  (curType == ContentSpecNode::ZeroOrMore))
     {
         // Just do the left node on this one
-        buildChildList(*leftNode, toFill);
+        buildChildList(*leftNode, toFill, toType);
     }
 }
 
 int MixedContentModel::validateContentSpecial(  const   unsigned int*   childIds
-                                            , const unsigned int    childCount) const
+                                               , const unsigned int    childCount
+								               , const XMLValidator   *pValidator) const
 {
-	return 0;
+	return validateContent(childIds, childCount, pValidator);
 };
 
 ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVector() const
