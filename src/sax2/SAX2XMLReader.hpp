@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/01/12 21:22:00  tng
+ * Documentation Enhancement: Add list of SAX2 feature strings that are supported.
+ *
  * Revision 1.4  2000/12/22 15:17:04  tng
  * SAX2-ext's LexicalHandler support added by David Bertoni.
  *
@@ -165,18 +168,20 @@ public:
     virtual LexicalHandler* getLexicalHandler() const = 0 ;
 
 	/**
-	  * This method gets a Feature as per the SAX2 spec (such as
-      * do validation)
+     * Query the current state of any feature in a SAX2 XMLReader.
 	  *
-	  * @param name The name of the feature to be set
-	  * @param value true if the feature should be enabled.
+	  * @param name The unique identifier (URI) of the feature being set.
+	  * @return The current state of the feature.
+     * @exception SAXNotRecognizedException If the requested feature is not known.
 	  */
 	virtual bool getFeature(const XMLCh* const name) const = 0;
 
 	/**
-      * Gets the value of a property.
+     * Query the current value of a property in a SAX2 XMLReader.
       *
-      * @param name The property name, which is any fully-qualified URI.
+     * @param name The unique identifier (URI) of the property being set.
+     * @return The current value of the property.
+     * @exception SAXNotRecognizedException If the requested property is not known.
       */
 	virtual void* getProperty(const XMLCh* const name) const = 0 ;
 
@@ -350,19 +355,33 @@ public:
     virtual void setLexicalHandler(LexicalHandler* const handler) = 0;
 
   /**
-	* This method sets a Feature as per the SAX2 spec (such as
-	* do validation)
+    * Set the state of any feature in a SAX2 XMLReader.
+    * Supported features in SAX2 for xerces-c are:
+    *
+    * <br>http://xml.org/sax/features/validation (default: true)
+    * <br>http://xml.org/sax/features/namespaces (default: true)
+    * <br>http://xml.org/sax/features/namespace-prefixes (default: true)
+    * <br>http://apache.org/xml/features/validation/dynamic (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-validator (default: false)
+    *
+    * @param name The unique identifier (URI) of the feature.
+    * @param value The requested state of the feature (true or false).
+    * @exception SAXNotRecognizedException If the requested feature is not known.
+    * @exception SAXNotSupportedException Property modification is not supported during parse
 	*
-	* @param name The name of the feature to be set
-	* @param value true if the feature should be enabled.
 	*/
 	virtual void setFeature(const XMLCh* const name, const bool value) = 0;
 
   /**
-	* Set the value of a property.
+    * Set the value of any property in a SAX2 XMLReader.
+    * Supported property in SAX2 for xerces-c are:
+    *
+    * <br>none
 	*
-	* @param name The property name, which is any fully-qualified URI.
+    * @param name The unique identifier (URI) of the property being set.
 	* @param value The requested value for the property.
+    * @exception SAXNotRecognizedException If the requested property is not known.
+    * @exception SAXNotSupportedException Property modification is not supported during parse
 	*/
 	virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
 
