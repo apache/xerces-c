@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/09 23:06:03  abagchi
+ * Removed fgOtherEncodingStr
+ *
  * Revision 1.6  2000/02/08 00:59:19  roddey
  * Support for new intrinsic encoder for IBM-1047 code page.
  *
@@ -260,7 +263,6 @@ public :
     static const XMLCh fgNDATAString[];
     static const XMLCh fgNmTokenString[];
     static const XMLCh fgNmTokensString[];
-    static const XMLCh fgOtherEncodingStr[];
     static const XMLCh fgPCDATAString[];
     static const XMLCh fgPIString[];
     static const XMLCh fgPubIDString[];
