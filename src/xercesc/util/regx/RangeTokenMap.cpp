@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:10:23  knoaman
+ * Add missing include.
+ *
  * Revision 1.3  2003/03/04 21:11:12  knoaman
  * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
  *
@@ -105,6 +108,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/StringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
