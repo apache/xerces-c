@@ -184,6 +184,7 @@ CLEAN :
 	-@erase "$(INTDIR)\FieldValueMap.obj"
 	-@erase "$(INTDIR)\FloatDatatypeValidator.obj"
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
+	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
@@ -317,6 +318,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescription.obj"
 	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
@@ -324,6 +326,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
@@ -332,8 +335,10 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRangeFactory.obj"
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
+	-@erase "$(INTDIR)\XMLRefInfo.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
@@ -374,6 +379,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -513,11 +519,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
 	"$(INTDIR)\XMLContentModel.obj" \
+	"$(INTDIR)\XMLDTDDescription.obj" \
 	"$(INTDIR)\XMLElementDecl.obj" \
 	"$(INTDIR)\XMLEntityDecl.obj" \
 	"$(INTDIR)\XMLFormatter.obj" \
+	"$(INTDIR)\XMLGrammarDescription.obj" \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
+	"$(INTDIR)\XMLRefInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
@@ -537,6 +547,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -553,6 +564,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ContentLeafNameTypeVector.obj" \
 	"$(INTDIR)\ContentSpecNode.obj" \
 	"$(INTDIR)\DFAContentModel.obj" \
+	"$(INTDIR)\Grammar.obj" \
 	"$(INTDIR)\GrammarResolver.obj" \
 	"$(INTDIR)\MixedContentModel.obj" \
 	"$(INTDIR)\SimpleContentModel.obj" \
@@ -890,6 +902,7 @@ CLEAN :
 	-@erase "$(INTDIR)\FieldValueMap.obj"
 	-@erase "$(INTDIR)\FloatDatatypeValidator.obj"
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
+	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
@@ -1024,6 +1037,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescription.obj"
 	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
@@ -1031,6 +1045,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
@@ -1039,8 +1054,10 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRangeFactory.obj"
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
+	-@erase "$(INTDIR)\XMLRefInfo.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
@@ -1081,6 +1098,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -1221,11 +1239,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
 	"$(INTDIR)\XMLContentModel.obj" \
+	"$(INTDIR)\XMLDTDDescription.obj" \
 	"$(INTDIR)\XMLElementDecl.obj" \
 	"$(INTDIR)\XMLEntityDecl.obj" \
 	"$(INTDIR)\XMLFormatter.obj" \
+	"$(INTDIR)\XMLGrammarDescription.obj" \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
+	"$(INTDIR)\XMLRefInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
@@ -1245,6 +1267,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -1261,6 +1284,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ContentLeafNameTypeVector.obj" \
 	"$(INTDIR)\ContentSpecNode.obj" \
 	"$(INTDIR)\DFAContentModel.obj" \
+	"$(INTDIR)\Grammar.obj" \
 	"$(INTDIR)\GrammarResolver.obj" \
 	"$(INTDIR)\MixedContentModel.obj" \
 	"$(INTDIR)\SimpleContentModel.obj" \
@@ -1598,6 +1622,7 @@ CLEAN :
 	-@erase "$(INTDIR)\FieldValueMap.obj"
 	-@erase "$(INTDIR)\FloatDatatypeValidator.obj"
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
+	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
@@ -1732,6 +1757,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescription.obj"
 	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
@@ -1739,6 +1765,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
@@ -1747,8 +1774,10 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRangeFactory.obj"
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
+	-@erase "$(INTDIR)\XMLRefInfo.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
@@ -1789,6 +1818,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -1929,11 +1959,15 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
 	"$(INTDIR)\XMLContentModel.obj" \
+	"$(INTDIR)\XMLDTDDescription.obj" \
 	"$(INTDIR)\XMLElementDecl.obj" \
 	"$(INTDIR)\XMLEntityDecl.obj" \
 	"$(INTDIR)\XMLFormatter.obj" \
+	"$(INTDIR)\XMLGrammarDescription.obj" \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
+	"$(INTDIR)\XMLRefInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
@@ -1953,6 +1987,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -1969,6 +2004,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ContentLeafNameTypeVector.obj" \
 	"$(INTDIR)\ContentSpecNode.obj" \
 	"$(INTDIR)\DFAContentModel.obj" \
+	"$(INTDIR)\Grammar.obj" \
 	"$(INTDIR)\GrammarResolver.obj" \
 	"$(INTDIR)\MixedContentModel.obj" \
 	"$(INTDIR)\SimpleContentModel.obj" \
@@ -2306,6 +2342,7 @@ CLEAN :
 	-@erase "$(INTDIR)\FieldValueMap.obj"
 	-@erase "$(INTDIR)\FloatDatatypeValidator.obj"
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
+	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
@@ -2427,6 +2464,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
 	-@erase "$(INTDIR)\XMLASCIITranscoder.obj"
 	-@erase "$(INTDIR)\XMLAttDef.obj"
+	-@erase "$(INTDIR)\XMLAttDefList.obj"
 	-@erase "$(INTDIR)\XMLAttr.obj"
 	-@erase "$(INTDIR)\XMLBigDecimal.obj"
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
@@ -2438,6 +2476,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescription.obj"
 	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
@@ -2445,6 +2484,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarDescription.obj"
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
@@ -2453,8 +2493,10 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRangeFactory.obj"
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
+	-@erase "$(INTDIR)\XMLRefInfo.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
@@ -2495,6 +2537,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -2631,16 +2674,19 @@ LINK32_OBJS= \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
 	"$(INTDIR)\XMLAttDefList.obj" \
-	-@erase "$(INTDIR)\XMLAttDefList.obj"
 	"$(INTDIR)\XMLAttr.obj" \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
 	"$(INTDIR)\XMLContentModel.obj" \
+	"$(INTDIR)\XMLDTDDescription.obj" \
 	"$(INTDIR)\XMLElementDecl.obj" \
 	"$(INTDIR)\XMLEntityDecl.obj" \
 	"$(INTDIR)\XMLFormatter.obj" \
+	"$(INTDIR)\XMLGrammarDescription.obj" \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
+	"$(INTDIR)\XMLRefInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
@@ -2660,6 +2706,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
 	"$(INTDIR)\SAXException.obj" \
@@ -2676,6 +2723,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ContentLeafNameTypeVector.obj" \
 	"$(INTDIR)\ContentSpecNode.obj" \
 	"$(INTDIR)\DFAContentModel.obj" \
+	"$(INTDIR)\Grammar.obj" \
 	"$(INTDIR)\GrammarResolver.obj" \
 	"$(INTDIR)\MixedContentModel.obj" \
 	"$(INTDIR)\SimpleContentModel.obj" \
@@ -3763,8 +3811,8 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttr.cpp
 
 "$(INTDIR)\XMLAttr.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
-	
-	
+
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBuffer.cpp
 
 "$(INTDIR)\XMLBuffer.obj" : $(SOURCE) "$(INTDIR)"
@@ -3780,6 +3828,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBufferMgr.cpp
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLContentModel.cpp
 
 "$(INTDIR)\XMLContentModel.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDTDDescription.cpp
+
+"$(INTDIR)\XMLDTDDescription.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3801,6 +3855,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLFormatter.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.cpp
+
+"$(INTDIR)\XMLGrammarDescription.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp
 
 "$(INTDIR)\XMLNotationDecl.obj" : $(SOURCE) "$(INTDIR)"
@@ -3810,6 +3870,18 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRecognizer.cpp
 
 "$(INTDIR)\XMLRecognizer.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.cpp
+
+"$(INTDIR)\XMLRefInfo.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.cpp
+
+"$(INTDIR)\XMLSchemaDescription.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3927,6 +3999,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp
+
+"$(INTDIR)\XTemplateSerializer.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\sax\Dummy.cpp
 
 "$(INTDIR)\Dummy.obj" : $(SOURCE) "$(INTDIR)"
@@ -4020,6 +4098,12 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\common\ContentSpecNode.cpp
 SOURCE=..\..\..\..\..\src\xercesc\validators\common\DFAContentModel.cpp
 
 "$(INTDIR)\DFAContentModel.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\Grammar.cpp
+
+"$(INTDIR)\Grammar.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4262,7 +4346,7 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDEntityDecl.cpp
 "$(INTDIR)\DTDEntityDecl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-	
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDGrammar.cpp
 
 "$(INTDIR)\DTDGrammar.obj" : $(SOURCE) "$(INTDIR)"
