@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/09/10 18:42:06  cargilld
+ * Performance improvement fix to more efficiently findattdef.  Fix from Dave Bertoni.
+ *
  * Revision 1.11  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -109,8 +112,13 @@ bool SchemaAttDefList::isEmpty() const
 XMLAttDef* SchemaAttDefList::findAttDef(const  unsigned long   uriID
                                     , const XMLCh* const    attName)
 {
-   QName tempAtt(attName, uriID, XMLPlatformUtils::fgMemoryManager);
-   return fList->get((void*)tempAtt.getLocalPart(), uriID);
+   const int colonInd = XMLString::indexOf(attName, chColon);
+ 
+   // An index of 0 is really an error, but the QName class doesn't check for
+   // that case either...
+   const XMLCh* const localPart = colonInd >= 0 ? attName + colonInd + 1 : attName;
+ 
+   return fList->get((void*)localPart, uriID);
 }
 
 
@@ -118,8 +126,13 @@ const XMLAttDef*
 SchemaAttDefList::findAttDef(  const   unsigned long   uriID
                             , const XMLCh* const    attName) const
 {
-   QName tempAtt(attName, uriID, XMLPlatformUtils::fgMemoryManager);
-   return fList->get((void*)tempAtt.getLocalPart(), uriID);
+   const int colonInd = XMLString::indexOf(attName, chColon);
+ 
+   // An index of 0 is really an error, but the QName class doesn't check for
+   // that case either...
+   const XMLCh* const localPart = colonInd >= 0 ? attName + colonInd + 1 : attName;
+ 
+   return fList->get((void*)localPart, uriID);
 }
 
 

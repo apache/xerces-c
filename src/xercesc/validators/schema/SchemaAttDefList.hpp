@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/09/10 18:42:06  cargilld
+ * Performance improvement fix to more efficiently findattdef.  Fix from Dave Bertoni.
+ *
  * Revision 1.8  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -93,6 +96,7 @@ public :
      * @deprecated This method is not thread-safe.
      */
     virtual bool hasMoreElements() const;
+
     virtual bool isEmpty() const;
     virtual XMLAttDef* findAttDef
     (
@@ -113,6 +117,18 @@ public :
     (
         const   XMLCh* const        attURI
         , const XMLCh* const        attName
+    )   const;
+
+    virtual XMLAttDef* findAttDefLocalPart
+    (
+        const   unsigned long       uriID
+        , const XMLCh* const        attLocalPart
+    );
+
+    virtual const XMLAttDef* findAttDefLocalPart
+    (
+        const   unsigned long       uriID
+        , const XMLCh* const        attLocalPart
     )   const;
 
     /** 
@@ -194,6 +210,18 @@ inline void SchemaAttDefList::addAttDef(SchemaAttDef *toAdd)
         fArray = newArray;
     }
     fArray[fCount++] = toAdd;
+}
+
+inline XMLAttDef* SchemaAttDefList::findAttDefLocalPart(const   unsigned long       uriID
+                                                      , const XMLCh* const        attLocalPart)
+{
+    return fList->get((void*)attLocalPart, uriID);
+}
+
+inline const XMLAttDef* SchemaAttDefList::findAttDefLocalPart(const   unsigned long       uriID
+                                                            , const XMLCh* const        attLocalPart)   const
+{
+    return fList->get((void*)attLocalPart, uriID);
 }
 
 XERCES_CPP_NAMESPACE_END
