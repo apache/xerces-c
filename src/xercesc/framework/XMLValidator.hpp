@@ -56,6 +56,10 @@
 
  /*
   * $Log$
+  * Revision 1.3  2002/07/11 18:55:44  knoaman
+  * Add a flag to the preContentValidation method to indicate whether to validate
+  * default/fixed attributes or not.
+  *
   * Revision 1.2  2002/02/20 18:17:01  tng
   * [Bug 5977] Warnings on generating apiDocs.
   *
@@ -229,7 +233,8 @@ public:
     /**
       * This method is called by the scanner after a Grammar is scanned.
       */
-    virtual void preContentValidation(bool reuseGrammar) = 0;
+    virtual void preContentValidation(bool reuseGrammar,
+                                      bool validateDefAttr = false) = 0;
 
     /**
       * This method is called by the scanner after the parse has completed. It

@@ -384,7 +384,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             //  general entity pool. If not there, then its an error. If its
             //  not an external unparsed entity, then its an error.
             //
-            const XMLEntityDecl* decl = getScanner()->getEntityDecl(pszTmpVal);
+            const XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(pszTmpVal);
             if (decl)
             {
                 if (!decl->isUnparsed())
@@ -431,7 +431,8 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
 }
 
-void DTDValidator::preContentValidation(bool reuseGrammar)
+void DTDValidator::preContentValidation(bool reuseGrammar,
+                                        bool validateDefAttr)
 {
     //
     //  Lets enumerate all of the elements in the element decl pool
@@ -569,7 +570,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar)
             }
 
             // If it has a default/fixed value, then validate it
-            if (curAttDef.getValue())
+            if (validateDefAttr && curAttDef.getValue())
             {
                 validateAttrValue
                 (
@@ -584,7 +585,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar)
     //  And enumerate all of the general entities. If any of them
     //  reference a notation, then make sure the notation exists.
     //
-    NameIdPoolEnumerator<DTDEntityDecl> entEnum = getScanner()->getEntityEnumerator();
+    NameIdPoolEnumerator<DTDEntityDecl> entEnum = fDTDGrammar->getEntityEnumerator();
     while (entEnum.hasMoreElements())
     {
         const DTDEntityDecl& curEntity = entEnum.nextElement();

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/07/11 18:55:45  knoaman
+ * Add a flag to the preContentValidation method to indicate whether to validate
+ * default/fixed attributes or not.
+ *
  * Revision 1.6  2002/06/17 18:09:29  tng
  * DOM L3: support "datatype-normalization"
  *
@@ -165,7 +169,8 @@ public:
         , const XMLAttDef&  attDef
     )   const;
 
-    virtual void preContentValidation(bool reuseGrammar);
+    virtual void preContentValidation(bool reuseGrammar,
+                                      bool validateDefAttr = false);
 
     virtual void postParseValidation();
 

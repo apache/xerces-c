@@ -56,8 +56,12 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:45  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/11 18:55:44  knoaman
+ * Add a flag to the preContentValidation method to indicate whether to validate
+ * default/fixed attributes or not.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
+ * sane_include
  *
  * Revision 1.13  2001/11/13 13:25:28  tng
  * Deprecate function XMLValidator::checkRootElement.
@@ -153,7 +157,8 @@ public:
         , const XMLAttDef&  attDef
     )   const;
 
-    virtual void preContentValidation(bool reuseGrammar);
+    virtual void preContentValidation(bool reuseGrammar,
+                                      bool validateDefAttr = false);
 
     virtual void postParseValidation();
 

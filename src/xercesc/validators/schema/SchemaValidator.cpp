@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/07/11 18:55:44  knoaman
+ * Add a flag to the preContentValidation method to indicate whether to validate
+ * default/fixed attributes or not.
+ *
  * Revision 1.12  2002/06/17 18:53:58  tng
  * DOM L3: support "datatype-normalization"
  *
@@ -535,7 +539,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                 // Check built-in simple types
                 if (!XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
-                    fXsiTypeValidator = fGrammarResolver->getDatatypeRegistry()->getDatatypeValidator(localPart);
+                    fXsiTypeValidator = fGrammarResolver->getDatatypeValidator(uriStr, localPart);
 
                     if (!fXsiTypeValidator)
                         emitError(XMLValid::BadXsiType, fXsiType->getRawName());
@@ -567,9 +571,8 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
             else {
                 // retrieve complexType registry and DatatypeValidator registry
                 RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = sGrammar->getComplexTypeRegistry();
-                DatatypeValidatorFactory* dataTypeReg = fGrammarResolver->getDatatypeRegistry();
 
-                if (!complexTypeRegistry || !dataTypeReg)
+                if (!complexTypeRegistry)
                     emitError(XMLValid::BadXsiType, fXsiType->getRawName());
                 else {
                     // retrieve the typeInfo specified in xsi:type
@@ -628,10 +631,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                     }
                     else {
                         // typeInfo not found
-                        if (!XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA))
-                            fXsiTypeValidator = dataTypeReg->getDatatypeValidator(localPart);
-                        else
-                            fXsiTypeValidator = dataTypeReg->getDatatypeValidator(aBuffer.getRawBuffer());
+                        fXsiTypeValidator = fGrammarResolver->getDatatypeValidator(uriStr, localPart);
 
                         if (!fXsiTypeValidator)
                             emitError(XMLValid::BadXsiType, fXsiType->getRawName());
@@ -689,7 +689,8 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     fTrailing = false;
 }
 
-void SchemaValidator::preContentValidation(bool reuseGrammar)
+void SchemaValidator::preContentValidation(bool reuseGrammar,
+                                           bool validateDefAttr)
 {
     //  Lets go through all the grammar in the GrammarResolver
     //    and validate those that has not been validated yet
@@ -705,10 +706,10 @@ void SchemaValidator::preContentValidation(bool reuseGrammar)
     while (grammarEnum.hasMoreElements())
     {
         SchemaGrammar& sGrammar = (SchemaGrammar&) grammarEnum.nextElement();
-        if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType || sGrammar.getUPAChecked())
+        if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType || sGrammar.getValidated())
              continue;
 
-        sGrammar.setUPAChecked(true);
+        sGrammar.setValidated(true);
 
         RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = sGrammar.getElemEnumerator();
 
@@ -837,7 +838,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar)
                     }
 
                     // If it has a default/fixed value, then validate it
-                    if (curAttDef.getValue())
+                    if (validateDefAttr && curAttDef.getValue())
                     {
                         validateAttrValue
                         (
