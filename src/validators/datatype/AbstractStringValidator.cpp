@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/09/19 18:48:27  peiyongz
+ * DTV reorganization:getLength() added, move inline to class declaration to avoid inline
+ * function interdependency.
+ *
  * Revision 1.2  2001/09/18 21:16:42  peiyongz
  * DTV reorganization: temp vars to replace repeated invocation of getFacetsDefined()
  *
@@ -69,6 +73,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/AbstractStringValidator.hpp>
+#include <validators/schema/SchemaSymbols.hpp>
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 #include <util/NumberFormatException.hpp>
@@ -90,7 +95,7 @@ AbstractStringValidator::AbstractStringValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet
-                        , const ValidatorType type)
+                        , const ValidatorType                 type)
 :DatatypeValidator(baseValidator, facets, finalSet, type)
 ,fLength(0)
 ,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
@@ -553,14 +558,13 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
     if (asBase)
         return;
 
-    unsigned int strLen = XMLString::stringLen(content);
-
     checkValueSpace(content);
+    unsigned int length = getLength(content);
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
-        (strLen > getMaxLength()))
+        (length > getMaxLength()))
     {
-        XMLString::binToText(strLen, value1, BUF_LEN, 10);
+        XMLString::binToText(length, value1, BUF_LEN, 10);
         XMLString::binToText(getMaxLength(), value2, BUF_LEN, 10);
 
         ThrowXML3(InvalidDatatypeValueException
@@ -571,9 +575,9 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
     }
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0) &&
-        (strLen < getMinLength()))
+        (length < getMinLength()))
     {
-        XMLString::binToText(strLen, value1, BUF_LEN, 10);
+        XMLString::binToText(length, value1, BUF_LEN, 10);
         XMLString::binToText(getMinLength(), value2, BUF_LEN, 10);
 
         ThrowXML3(InvalidDatatypeValueException
@@ -584,9 +588,9 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
     }
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
-        (strLen != getLength()))
+        (length != getLength()))
     {
-        XMLString::binToText(strLen, value1, BUF_LEN, 10);
+        XMLString::binToText(length, value1, BUF_LEN, 10);
         XMLString::binToText(getLength(), value2, BUF_LEN, 10);
 
         ThrowXML3(InvalidDatatypeValueException
