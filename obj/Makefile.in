@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2000/02/09 22:04:54  abagchi
+# AS/400 change
+#
 # Revision 1.10  2000/02/06 07:47:16  rahulj
 # Year 2K copyright swat.
 #
@@ -126,7 +129,11 @@ LIB=${XERCESCROOT}/lib
 ifeq (${OS390BATCH},1)
 BATCH_TARGET = "//'${LOADMOD}(XERCES11)'"
 endif
+ifneq (${PLATFORM}, OS400)
 LIBNAME=libxerces-c
+else
+LIBNAME=libxercesc
+endif
 THISLIB=${LIB}/${LIBNAME}
 VER=1_1
 

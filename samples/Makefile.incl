@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2000/02/09 22:05:52  abagchi
+# AS/400 change
+#
 # Revision 1.10  2000/02/06 07:47:16  rahulj
 # Year 2K copyright swat.
 #
@@ -88,16 +91,23 @@
 #
 
 ################## LIBRARY NAMES AND DIRECTORIES ##################
-
+ifeq (${SYSOVR},OS400)
+PLATFORM = OS400
+endif
 INCLUDES= -I. -I${XERCESCROOT}/include
 LIB_DIR=${XERCESCROOT}/lib
+ifneq (${PLATFORM},OS400)
 LIBNAME=xerces-c
+else
+LIBNAME=xercesc
+endif
 THISLIB=${LIB_DIR}/${LIBNAME}
 VER=1_1
 
 LIBRARY_NAMES=-l${LIBNAME}${VER}
 LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
 
+TO = o
 ####################### PLATFORM DEPENDENCIES #####################
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
@@ -125,6 +135,22 @@ CC=xlC_r -D${PLATFORM}
 LINK =  ${CC}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
 EXTRA_LINK_OPTIONS=-lC
+SHLIBSUFFIX=.a
+endif
+
+#=============== OS400 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OS400)
+ifeq (${SYSOVR},OS400)
+MYCC = cross compiler path here
+TO = qwobj
+else
+MYCC = icc
+LINK =  ${CC} -v  -qOPTION=*DUPPROC
+endif
+CMP= -c -DOS400 ${CXXFLAGS}
+CXX = $(MYCC) -c
+CC = $(MYCC) -c
+#INCLUDES    += -I${ICUROOT}/include
 SHLIBSUFFIX=.a
 endif
 

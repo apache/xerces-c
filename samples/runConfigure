@@ -3,38 +3,38 @@
 
 #
 # The Apache Software License, Version 1.1
-# 
+#
 # Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
 # reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer. 
-# 
+#    notice, this list of conditions and the following disclaimer.
+#
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in
 #    the documentation and/or other materials provided with the
 #    distribution.
-# 
+#
 # 3. The end-user documentation included with the redistribution,
-#    if any, must include the following acknowledgment:  
+#    if any, must include the following acknowledgment:
 #       "This product includes software developed by the
 #        Apache Software Foundation (http://www.apache.org/)."
 #    Alternately, this acknowledgment may appear in the software itself,
 #    if and wherever such third-party acknowledgments normally appear.
-# 
+#
 # 4. The names "Xerces" and "Apache Software Foundation" must
 #    not be used to endorse or promote products derived from this
-#    software without prior written permission. For written 
+#    software without prior written permission. For written
 #    permission, please contact apache\@apache.org.
-# 
+#
 # 5. Products derived from this software may not be called "Apache",
 #    nor may "Apache" appear in their name, without prior written
 #    permission of the Apache Software Foundation.
-# 
+#
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
 # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -48,16 +48,19 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # ====================================================================
-# 
+#
 # This software consists of voluntary contributions made by many
 # individuals on behalf of the Apache Software Foundation, and was
 # originally based on software copyright (c) 1999, International
 # Business Machines, Inc., http://www.ibm.com .  For more information
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
-# 
+#
 #
 # $Log$
+# Revision 1.8  2000/02/09 22:05:52  abagchi
+# AS/400 change
+#
 # Revision 1.7  2000/02/06 07:47:16  rahulj
 # Year 2K copyright swat.
 #
@@ -130,9 +133,9 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11')"
-    echo "       -c <C compiler name> (e.g. gcc or xlc)"
-    echo "       -x <C++ compiler name> (e.g. g++ or xlC)"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'os400')"
+    echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
+    echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -h (get help on the above commands)"
 }
@@ -207,7 +210,11 @@ echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
 if test $debug = "off"; then
     echo "Debug is OFF"
+    if test $platform = "os400"; then
+    debugflag="-O";
+    else
     debugflag="-w -O";
+    fi
 else
     echo "Debug is ON"
     debugflag="-g";
@@ -215,7 +222,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11)
+   aix | linux | solaris | hp-10 | hp-11 | os400)
        # platform has been recognized
        ;;
    *)
@@ -244,6 +251,8 @@ case $cppcompiler in
        LDFLAGS="-lC"; export LDFLAGS
        LIBS="-L/usr/lib -L/opt/aCC/lib"; export LIBS ;;
 
+   icc | ICC)
+       ;;
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
       ;;
@@ -257,7 +266,11 @@ echo
 rm -f config.cache
 rm -f config.log
 rm -f config.status
+if test $platform = "os400"; then
+./configure --host AS400
+else
 ./configure
+fi
 
 echo
 echo In future, you may also directly type the following commands to create the Makefiles.
