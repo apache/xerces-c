@@ -985,6 +985,18 @@
 			Name="internal"
 			Filter=".cpp,.hpp">
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\BinOutputStream.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\CharTypeTables.hpp">
 			</File>
 			<File
@@ -1084,10 +1096,22 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XObjectComparator.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp">
