@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/10/20 22:03:04  andyh
+ * DOM NodeFileter - define values for FilterAction enum to match those in the DOM spec.
+ *
  * Revision 1.9  2000/05/11 00:07:38  abagchi
  * Removed tables. It was confusing doxygen
  *
@@ -152,7 +155,10 @@ class CDOM_EXPORT DOM_NodeFilter
 	  *		</table>
       *
 	  */
-        enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
+        enum FilterAction {FILTER_ACCEPT = 1,
+                           FILTER_REJECT = 2,
+                           FILTER_SKIP   = 3};
+
         enum ShowType {
             SHOW_ALL                       = 0x0000FFFF,
             SHOW_ELEMENT                   = 0x00000001,
