@@ -650,17 +650,27 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 
             *gFormatter << XMLFormatter::NoEscapes  << gStartDoctype
                         << nodeName;
+ 
             DOMString id = doctype.getPublicId();
-
-            if (id != 0)
-                *gFormatter << XMLFormatter::NoEscapes << chSpace << gPublic
-                            << id << chDoubleQuote;
-
-            id = doctype.getSystemId();
             if (id != 0)
             {
-                *gFormatter << XMLFormatter::NoEscapes << chSpace << gSystem
-                            << id << chDoubleQuote;
+                *gFormatter << XMLFormatter::NoEscapes << chSpace << gPublic
+                    << id << chDoubleQuote;
+                id = doctype.getSystemId();
+                if (id != 0)
+                {
+                    *gFormatter << XMLFormatter::NoEscapes << chSpace 
+                       << chDoubleQuote << id << chDoubleQuote;
+                }
+            }
+            else
+            {
+                id = doctype.getSystemId();
+                if (id != 0)
+                {
+                    *gFormatter << XMLFormatter::NoEscapes << chSpace << gSystem
+                        << id << chDoubleQuote;
+                }
             }
             
             id = doctype.getInternalSubset(); 
