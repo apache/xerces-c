@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/02/16 03:42:58  rahulj
+ * Finished documenting the SAX Driver implementation.
+ *
  * Revision 1.4  2000/02/15 04:47:37  rahulj
  * Documenting the SAXParser framework. Not done yet.
  *
@@ -93,9 +96,9 @@ class XMLValidator;
 
 
 /**
-  * <p>This is the Simple API for XML (SAX) 1_0 driver for Xerces-C. It
+  * This is the Simple API for XML (SAX) 1_0 driver for Xerces-C. It
   * implements the SAX interface and allows the client program to install
-  * SAX handlers for event callbacks.</p>
+  * SAX handlers for event callbacks.
   *
   * <p>This class uses the parsers internal event interfaces and event
   * callbacks and maps them to the SAX event callbacks.  It can be
@@ -207,8 +210,8 @@ public :
     /** @name Setter methods */
     //@{
     /**
-      * This method allows one to set the parser's namespace handling
-      * capability on or off. When set to true, parser starts enforcing
+      * This method allows users to enable or disable the parser's namespace
+      * processing. When set to true, parser starts enforcing
       * all the constraints / rules specified by the NameSpace
       * specification.
       * @param newState The value specifying whether NameSpace rules should
@@ -217,8 +220,8 @@ public :
     void setDoNamespaces(const bool newState);
 
     /**
-      * This method allows one to set the parser's validation
-      * capability on or off.  
+      * This method allows users to enable or disable the parser's validation
+      * checks.
       * @param newState The value specifying whether the parser should
       *                 do validity checks or not against the DTD in the
       *                 input XML document.
@@ -226,7 +229,7 @@ public :
     void setDoValidation(const bool newState);
 
     /**
-      * This method allows one to set the parser's behaviour when it
+      * This method allows users to set the parser's behaviour when it
       * encounters the first fatal error. If set to true, the parser
       * will exit at the first fatal error. If false, then it will
       * report the error and continue processing.
@@ -249,16 +252,24 @@ public :
       * handler, thereby allowing the user to customize the processing,
       * if they choose to do so. Any number of advanced callback handlers
       * maybe installed.
+      *
+      * <p>The methods in the advanced callback interface represent
+      * Xerces-C extensions. There is no specification for this interface.</p>
+      * 
       * @param toInstall A pointer to the users advanced callback handler.
+      *
+      * @see #removeAdvDocHandler
       */
     void installAdvDocHandler(XMLDocumentHandler* const toInstall);
 
     /**
       * This method removes the 'advanced' document handler callback from
       * the underlying parser scanner. If no handler is installed, advanced
-      * callbacks are not reported by the scanner.
-      * @param toRemove A pointer to the users advanced callback handler which
+      * callbacks are not invoked by the scanner.
+      * @param toRemove A pointer to the advanced callback handler which
       *                 should be removed.
+      *
+      * @see #installAdvDocHandler
       */
     bool removeAdvDocHandler(XMLDocumentHandler* const toRemove);
     //@}
@@ -273,74 +284,87 @@ public :
     /**
       * This method invokes the parsing process on the XML file specified
       * by the InputSource parameter.
-      * @param source A const reference to the InputSource object which points
-      *               to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or removed for this parsing
-      *                       process.
-	  * @see Parser#parse(InputSource)
+      *
+      * @param source A const reference to the InputSource object which
+      *               points to the XML file to be parsed.
+      * @param reuseValidator The flag indicating whether the existing
+      *                       validator should be reused or not for this
+      *                       parsing process.
+      * @see Parser#parse(InputSource)
       */
     virtual void parse(const InputSource& source, const bool reuseValidator = false);
 
     /**
       * This method invokes the parsing process on the XML file specified by
       * the Unicode string parameter 'systemId'.
+      *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or removed for this parsing
-      *                       process.
-	  * @see Parser#parse(XMLCh*)
+      * @param reuseValidator The flag indicating whether the existing
+      *                       validator should be reused or not for this
+      *                       parsing process.
+      *
+      * @see Parser#parse(XMLCh*)
       */
     virtual void parse(const XMLCh* const systemId, const bool reuseValidator = false);
 
     /**
       * This method invokes the parsing process on the XML file specified by
       * the native char* string parameter 'systemId'.
+      *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or removed for this parsing
-      *                       process.
+      * @param reuseValidator The flag indicating whether the existing
+      *                       validator should be reused or not for this
+      *                       parsing process.
       */
     virtual void parse(const char* const systemId, const bool reuseValidator = false);
 
     /**
-      * This method installs the document handler callback function on
-      * parser.
+      * This method installs the user specified SAX Document Handler
+      * callback function on parser.
+      *
       * @param handler A pointer to the document handler to be called
       *                when the parser comes across 'document' events
       *                as per the SAX specification.
-	  * @see Parser#parse(char*)
+      *
+      * @see Parser#parse(char*)
       */
     virtual void setDocumentHandler(DocumentHandler* const handler);
 
     /**
-      * This method installs the specified DTD handler on the parser.
+      * This method installs the user specified DTD handler on the parser.
+      *
       * @param handler A pointer to the DTD handler to be called
       *                when the parser comes across 'DTD' events
       *                as per the SAX specification.
-	  * @see Parser#setDTDHandler
+      *
+      * @see Parser#setDTDHandler
       */
     virtual void setDTDHandler(DTDHandler* const handler);
 
     /**
-      * This method installs the specified error handler on the parser.
+      * This method installs the user specified error handler on
+      * the parser.
+      *
       * @param handler A pointer to the error handler to be called
       *                when the parser comes across 'error' events
       *                as per the SAX specification.
-	  * @see Parser#setErrorHandler
+      *
+      * @see Parser#setErrorHandler
       */
     virtual void setErrorHandler(ErrorHandler* const handler);
 
     /**
-      * This method installs the specified entity resolver on the
-      * parser. It allows applications to trap and redirect calls
-      * to external entities.
+      * This method installs the user specified entity resolver on the
+      * parser. It allows applications to trap and redirect calls to
+      * external entities.
+      *
       * @param handler A pointer to the entity resolver to be called
       *                when the parser comes across references to
       *                entities in the XML file.
-	  * @see Parser#setEntityResolver
+      *
+      * @see Parser#setEntityResolver
       */
     virtual void setEntityResolver(EntityResolver* const resolver);
     //@}
@@ -356,28 +380,29 @@ public :
       * <p>This method is used to start a progressive parse on a XML file.
       * To continue parsing, subsequent calls must be to the parseNext
       * method.<p>
-	  *
-	  * <p>It scans through the prolog and returns a token to be used on
+      *
+      * <p>It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
-	  * token is legal and ready for further use. If it returns false, then
-	  * the scan of the prolog failed and the token is not going to work on
-	  * subsequent scanNext() calls.</p>
-	  *
+      * token is legal and ready for further use. If it returns false, then
+      * the scan of the prolog failed and the token is not going to work on
+      * subsequent scanNext() calls.</p>
+      *
       * @param systemId A pointer to a Unicode string represting the path
       *                 to the XML file to be parsed.
-	  * @param toFill A token maintaing state information to maintain
-	  *               internal consistency between invocation of 'parseNext'
-	  *               calls.
+      * @param toFill A token maintaing state information to maintain
+      *               internal consistency between invocation of 'parseNext'
+      *               calls.
       * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or removed for this parsing
+      *                       should be reused or not for this parsing
       *                       process.
-	  * @return 'true', if successful in parsing the prolog. It indicates the
-	  *         user can go ahead with parsing the rest of the file. It returns
-	  *         'false' to indicate that the parser could not find a proper
-	  *         prolog definition.
-	  * @see #parseNext
-	  * @see #parseFirst(char*,...)
-	  * @see #parseFirst(InputSource&,...)
+      * @return 'true', if successful in parsing the prolog. It indicates the
+      *         user can go ahead with parsing the rest of the file. It returns
+      *         'false' to indicate that the parser could not find a proper
+      *         prolog definition.
+      *
+      * @see #parseNext
+      * @see #parseFirst(char*,...)
+      * @see #parseFirst(InputSource&,...)
       */
     bool parseFirst
     (
@@ -390,28 +415,30 @@ public :
       * <p>This method is used to start a progressive parse on a XML file.
       * To continue parsing, subsequent calls must be to the parseNext
       * method.<p>
-	  *
-	  * <p>It scans through the prolog and returns a token to be used on
+      *
+      * <p>It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
-	  * token is legal and ready for further use. If it returns false, then
-	  * the scan of the prolog failed and the token is not going to work on
-	  * subsequent scanNext() calls.</p>
-	  *
+      * token is legal and ready for further use. If it returns false, then
+      * the scan of the prolog failed and the token is not going to work on
+      * subsequent scanNext() calls.</p>
+      *
       * @param systemId A pointer to a regular native string represting
       *                 the path to the XML file to be parsed.
-	  * @param toFill A token maintaing state information to maintain
-	  *               internal consistency between invocation of 'parseNext'
-	  *               calls.
+      * @param toFill A token maintaing state information to maintain
+      *               internal consistency between invocation of 'parseNext'
+      *               calls.
       * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or removed for this parsing
+      *                       should be reused or not for this parsing
       *                       process.
-	  * @return 'true', if successful in parsing the prolog. It indicates the
-	  *         user can go ahead with parsing the rest of the file. It returns
-	  *         'false' to indicate that the parser could not find a proper
-	  *         prolog definition.
-	  * @see #parseNext
-	  * @see #parseFirst(XMLCh*,...)
-	  * @see #parseFirst(InputSource&,...)
+      *
+      * @return 'true', if successful in parsing the prolog. It indicates the
+      *         user can go ahead with parsing the rest of the file. It returns
+      *         'false' to indicate that the parser could not find a proper
+      *         prolog definition.
+      *
+      * @see #parseNext
+      * @see #parseFirst(XMLCh*,...)
+      * @see #parseFirst(InputSource&,...)
       */
     bool parseFirst
     (
@@ -424,28 +451,30 @@ public :
       * <p>This method is used to start a progressive parse on a XML file.
       * To continue parsing, subsequent calls must be to the parseNext
       * method.<p>
-	  *
-	  * <p>It scans through the prolog and returns a token to be used on
+      *
+      * <p>It scans through the prolog and returns a token to be used on
       * subsequent scanNext() calls. If the return value is true, then the
-	  * token is legal and ready for further use. If it returns false, then
-	  * the scan of the prolog failed and the token is not going to work on
-	  * subsequent scanNext() calls.</p>
-	  *
+      * token is legal and ready for further use. If it returns false, then
+      * the scan of the prolog failed and the token is not going to work on
+      * subsequent scanNext() calls.</p>
+      *
       * @param source A const reference to the InputSource object which
       *                 points to the XML file to be parsed.
-	  * @param toFill A token maintaing state information to maintain
-	  *               internal consistency between invocation of 'parseNext'
-	  *               calls.
+      * @param toFill A token maintaing state information to maintain
+      *               internal consistency between invocation of 'parseNext'
+      *               calls.
       * @param reuseValidator The flag indicating whether the existing validator
-      *                       should be reused or removed for this parsing
+      *                       should be reused or not for this parsing
       *                       process.
-	  * @return 'true', if successful in parsing the prolog. It indicates the
-	  *         user can go ahead with parsing the rest of the file. It returns
-	  *         'false' to indicate that the parser could not find a proper
-	  *         prolog definition.
-	  * @see #parseNext
-	  * @see #parseFirst(XMLCh*,...)
-	  * @see #parseFirst(char*,...)
+      *
+      * @return 'true', if successful in parsing the prolog. It indicates the
+      *         user can go ahead with parsing the rest of the file. It returns
+      *         'false' to indicate that the parser could not find a proper
+      *         prolog definition.
+      *
+      * @see #parseNext
+      * @see #parseFirst(XMLCh*,...)
+      * @see #parseFirst(char*,...)
       */
     bool parseFirst
     (
@@ -457,23 +486,25 @@ public :
     /**
       * <p>This method is used to continue with progressive parsing of
       * XML files started by a call to 'parseFirst' method.<p>
-	  *
-	  * <p>It parses the XML file and stops as soon as it comes across
+      *
+      * <p>It parses the XML file and stops as soon as it comes across
       * a XML token (as defined in the XML specification). Relevant
-	  * callback handlers are invoked as required by the SAX
-	  * specification.</p>
-	  *
-	  * @param token A token maintaing state information to maintain
-	  *              internal consistency between invocation of 'parseNext'
-	  *              calls.
-	  * @return 'true', if successful in parsing the next XML token.
-	  *         It indicates the user can go ahead with parsing the rest
-	  *         of the file. It returns 'false' to indicate that the parser
-	  *         could not find next token as per the XML specification
-	  *         production rule.
-	  * @see #parseFirst(XMLCh*,...)
-	  * @see #parseFirst(char*,...)
-	  * @see #parseFirst(InputSource&,...)
+      * callback handlers are invoked as required by the SAX
+      * specification.</p>
+      *
+      * @param token A token maintaing state information to maintain
+      *              internal consistency between invocation of 'parseNext'
+      *              calls.
+      *
+      * @return 'true', if successful in parsing the next XML token.
+      *         It indicates the user can go ahead with parsing the rest
+      *         of the file. It returns 'false' to indicate that the parser
+      *         could not find next token as per the XML specification
+      *         production rule.
+      *
+      * @see #parseFirst(XMLCh*,...)
+      * @see #parseFirst(char*,...)
+      * @see #parseFirst(InputSource&,...)
       */
     bool parseNext(XMLPScanToken& token);
     //@}
@@ -487,19 +518,18 @@ public :
     /** @name Implementation of the DocTypeHandler Interface */
     //@{
     /**
-      * This method is used to report back to the user, the attribute
-	  * definition just scanned successfully by the parser.
+      * This method is used to report an attribute definition.
       *
-      * <b><font color="#FF0000">This method is not implemented by this SAX
-      * driver at this time.</font></b>
-	  *
+      * <b><font color="#FF0000">This method is a no-op for this SAX
+      * driver implementation.</font></b>
+      *
       * @param elemDecl A const reference to the object containing information
-	  *                 about the element whose attribute definition was just
-	  *                 parsed.
-	  * @param attDef   A const reference to the object containing information
-	  *                 attribute definition.
+      *                 about the element whose attribute definition was just
+      *                 parsed.
+      * @param attDef   A const reference to the object containing information
+      *                 attribute definition.
       * @param ignore   The flag indicating whether this attribute definition
-	  *                 was ignored by the parser or not.
+      *                 was ignored by the parser or not.
       */
     virtual void attDef
     (
@@ -509,14 +539,13 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, the comment occurring
-	  * within the DTD which was just scanned successfully by the parser.
+      * This method is used to report a comment occurring within the DTD.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param comment  A const pointer to a Unicode string representing the
-	  *                 text of the comment just parsed.
+      *                 text of the comment just parsed.
       */
     virtual void doctypeComment
     (
@@ -524,21 +553,20 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, the DOCTYPE declaration
-	  * just scanned successfully by the parser.
+      * This method is used to report the DOCTYPE declaration.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param elemDecl A const reference to the object containing information
-	  *                 about the root element definition declaration of the
-	  *                 XML document being parsed.
+      *                 about the root element definition declaration of the
+      *                 XML document being parsed.
       * @param publicId A const pointer to a Unicode string representing the
-	  *                 public id of the DTD file.
+      *                 public id of the DTD file.
       * @param systemId A const pointer to a Unicode string representing the
-	  *                 system id of the DTD file.
+      *                 system id of the DTD file.
       * @param hasIntSubset A flag indicating if this XML file contains any
-	  *                     internal subset.
+      *                     internal subset.
       */
     virtual void doctypeDecl
     (
@@ -549,16 +577,16 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, any PI declarations
-	  * occurring inside the DTD definition block.
+      * This method is used to report any PI declarations
+      * occurring inside the DTD definition block.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param target A const pointer to a Unicode string representing the
-	  *               target of the PI declaration.
+      *               target of the PI declaration.
       * @param data   A const pointer to a Unicode string representing the
-	  *               data of the PI declaration. See the PI production rule
+      *               data of the PI declaration. See the PI production rule
       *               in the XML specification for details.
       */
     virtual void doctypePI
@@ -568,14 +596,14 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, any whitespaces
-	  * occurring inside the DTD definition block.
+      * This method is used to report any whitespaces
+      * occurring inside the DTD definition block.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param chars  A const pointer to a Unicode string representing the
-	  *               whitespace characters.
+      *               whitespace characters.
       * @param length The length of the whitespace Unicode string.
       */
     virtual void doctypeWhitespace
@@ -585,16 +613,16 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, any element declarations
-	  * successfully scanned by the parser.
+      * This method is used to report an element declarations
+      * successfully scanned by the parser.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param decl   A const reference to the object containing element
-	  *               declaration information.
-      * @param isIgnored The flag indicating whether this definition was ignored
-	  *                  by the parser or not.
+      *               declaration information.
+      * @param isIgnored The flag indicating whether this definition was
+      *                  ignored by the parser or not.
       */
     virtual void elementDecl
     (
@@ -603,14 +631,14 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, the end of an attribute
-	  * list for an element, just scanned by the parser.
+      * This method is used to report the end of an attribute
+      * list declaration for an element.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param elemDecl A const reference to the object containing element
-	  *                 declaration information.
+      *                 declaration information.
       */
     virtual void endAttList
     (
@@ -618,35 +646,34 @@ public :
     );
 
     /**
-      * This method is used to report back to the user, the end of the internal
-	  * subset that the parser just finished scanning.
+      * This method is used to report the end of the internal subset.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
       */
     virtual void endIntSubset();
 
     /**
-      * This method is used to report back to the user, the end of the external
-	  * subset that the parser just finished scanning.
+      * This method is used to report the end of the external subset.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
       */
     virtual void endExtSubset();
 
     /**
-      * This method is used to report back to the user, any entity declarations
-	  * successfully scanned by the parser. For unparsed entities, the parser
-      * will invoke the SAX DTDHandler::unparsedEntityDecl callback.
+      * This method is used to report any entity declarations.
+      * For unparsed entities, this driver will invoke the
+      * SAX DTDHandler::unparsedEntityDecl callback.
       *
-      * @param entityDecl A const reference to the object containing the entity
-	  *                   declaration information.
-      * @param isPEDecl  The flag indicating whether this was a parameter entity
-	  *                  declaration or not.
-      * @param isIgnored The flag indicating whether this definition was ignored
-	  *                  by the parser or not.
-	  * @see DTDHandler#unparsedEntityDecl
+      * @param entityDecl A const reference to the object containing
+      *                   the entity declaration information.
+      * @param isPEDecl  The flag indicating whether this was a
+      *                  parameter entity declaration or not.
+      * @param isIgnored The flag indicating whether this definition
+      *                  was ignored by the parser or not.
+      *
+      * @see DTDHandler#unparsedEntityDecl
       */
     virtual void entityDecl
     (
@@ -656,21 +683,22 @@ public :
     );
 
     /**
-      * This method allows the user installed DTD handler to reset itself.
+      * This method allows the user installed DTD handler to
+      * reset itself.
       */
     virtual void resetDocType();
 
     /**
-      * This method is used to report back to the user, any notation
-	  * declarations successfully scanned by the parser. If there is
-      * a user installed  DTDHandler method, then the parser will
+      * This method is used to report any notation declarations.
+      * If there is a user installed DTDHandler, then the driver will
       * invoke the SAX DTDHandler::notationDecl callback.
       *
       * @param notDecl A const reference to the object containing the notation
-	  *                declaration information.
+      *                declaration information.
       * @param isIgnored The flag indicating whether this definition was ignored
-	  *                  by the parser or not.
-	  * @see DTDHandler#notationDecl
+      *                  by the parser or not.
+      *
+      * @see DTDHandler#notationDecl
       */
     virtual void notationDecl
     (
@@ -682,11 +710,11 @@ public :
       * This method is used to indicate the start of an element's attribute
       * list declaration.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
+      *
       * @param elemDecl A const reference to the object containing element
-	  *                 declaration information.
+      *                 declaration information.
       */
     virtual void startAttList
     (
@@ -694,35 +722,32 @@ public :
     );
 
     /**
-      * This method is used indicate the start of the internal subset
-	  * just seen by the parser.
+      * This method is used indicate the start of the internal subset.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
       */
     virtual void startIntSubset();
 
     /**
-      * This method is used indicate the start of the external subset
-	  * just scanned by the parser.
+      * This method is used indicate the start of the external subset.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
       */
     virtual void startExtSubset();
 
     /**
-      * This method is used to report back to the user, the TextDecl
-	  * just scanned successfully by the parser. Look at the XML
-	  * specification for the syntax of a TextDecl.
+      * This method is used to report the TextDecl. Refer to the XML
+      * specification for the syntax of a TextDecl.
       *
-      * <b><font color="#FF0000">This method is no-op for this SAX driver
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
       * implementation.</font></b>
-	  *
-      * @param versionStr A const pointer to a Unicode string representing the
-	  *                   version number of the 'version' clause.
-      * @param encodingStr A const pointer to a Unicode string representing the
-	  *                    encoding name of the 'encoding' clause.
+      *
+      * @param versionStr A const pointer to a Unicode string representing
+      *                   the version number of the 'version' clause.
+      * @param encodingStr A const pointer to a Unicode string representing
+      *                    the encoding name of the 'encoding' clause.
       */
     virtual void TextDecl
     (
@@ -739,6 +764,19 @@ public :
     /** @name Implementation of the XMLDocumentHandler Interface. */
     //@{
     /**
+      * This method is used to report all the characters scanned
+      * by the parser. The driver will invoke the 'characters'
+      * method of the user installed SAX Document Handler.
+      *
+      * <p>If any advanced callback handlers are installed, the
+      * corresponding 'docCharacters' method will also be invoked.</p>
+      *
+      * @param chars   A const pointer to a Unicode string representing the
+      *                character data.
+      * @param length  The length of the Unicode string returned in 'chars'.
+      * @param cdataSection  A flag indicating if the characters represent
+      *                      content from the CDATA section.
+      * @see DocumentHandler#characters
       */
     virtual void docCharacters
     (
@@ -747,19 +785,74 @@ public :
         , const bool            cdataSection
     );
 
+    /**
+      * This method is used to report any comments scanned by the parser.
+      * This method is a no-op unless, unless an advanced callback handler
+      * is installed, in which case the corresponding 'docComment' method
+      * is invoked.
+      *
+      * @param comment A const pointer to a null terminated Unicode
+      *                string representing the comment text.
+      */
     virtual void docComment
     (
         const   XMLCh* const    comment
     );
 
+    /**
+      * This method is used to report any PI scanned by the parser.
+      *
+      * <p>Any PI's occurring before any 'content' are not reported
+      * to any SAX handler as per the specification. However, all
+      * PI's within content are reported via the SAX Document Handler's
+      * 'processingInstruction' method.
+      *
+      * <p>If any advanced callback handlers are installed, the
+      * corresponding 'docPI' method will be invoked.</p>
+      *
+      * @param target A const pointer to a Unicode string representing the
+      *               target of the PI declaration.
+      * @param data   A const pointer to a Unicode string representing the
+      *               data of the PI declaration. See the PI production rule
+      *               in the XML specification for details.
+      *
+      * @see DocumentHandler#processingInstruction
+      */
     virtual void docPI
     (
         const   XMLCh* const    target
         , const XMLCh* const    data
     );
 
+    /**
+      * This method is used to indicate the end of root element
+      * was just scanned by the parser. Corresponding 'endDocument'
+      * method of the user installed SAX Document Handler will also
+      * be invoked.
+      *
+      * <p>In addition, if any advanced callback handlers are installed,
+      * the corresponding 'endDocument' method is invoked.</p>
+      *
+      * @see DocumentHandler#endDocument
+      */
     virtual void endDocument();
 
+    /**
+      * This method is used to indicate the end tag of an element.
+      * The driver will invoke the corresponding 'endElement' method of
+      * the SAX Document Handler interface.
+      *
+      * <p>If any advanced callback handlers are installed, the
+      * corresponding 'endElement' method is also invoked.</p>
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      * @param urlId    An id referring to the namespace prefix, if
+      *                 namespaces setting is switched on.
+      * @param isRoot   A flag indicating whether this element was the
+      *                 root element.
+      * @see DocumentHandler#endElement
+      */
     virtual void endElement
     (
         const   XMLElementDecl& elemDecl
@@ -767,11 +860,40 @@ public :
         , const bool            isRoot
     );
 
+    /**
+      * This method is used to indicate that an end of an entity reference
+      * was just scanned.
+      *
+      * <p>If any advanced callback handlers are installed, the
+      * corresponding 'endEnityReference' method is invoked.</p>
+      *
+      * @param entDecl A const reference to the object containing the
+      *                entity declaration information.
+      */
     virtual void endEntityReference
     (
         const   XMLEntityDecl&  entDecl
     );
 
+    /**
+      * This method is used to report all the whitespace characters,
+      * which are determined to be 'ignorable'. This distinction
+      * between characters is only made, if validation is enabled.
+      * Corresponding 'ignorableWhitespace' method of the user installed
+      * SAX Document Handler interface is called.
+      *
+      * <p>Any whitespace before content is not reported to the SAX
+      * Document Handler method, as per the SAX specification.
+      * However, if any advanced callback handlers are installed, the
+      * corresponding 'ignorableWhitespace' method is invoked.</p>
+      *
+      * @param chars   A const pointer to a Unicode string representing the
+      *                ignorable whitespace character data.
+      * @param length  The length of the Unicode string 'chars'.
+      * @param cdataSection  A flag indicating if the characters represent
+      *                      content from the CDATA section.
+      * @see DocumentHandler#ignorableWhitespace
+      */
     virtual void ignorableWhitespace
     (
         const   XMLCh* const    chars
@@ -779,10 +901,50 @@ public :
         , const bool            cdataSection
     );
 
+    /**
+      * This method allows the user installed Document Handler and
+      * any advanced callback handlers to 'reset' themselves.
+      */
     virtual void resetDocument();
 
+    /**
+      * This method is used to report the start of the parsing process.
+      * The corresponding user installed SAX Document Handler's method
+      * 'startDocument' is invoked.
+      * 
+      * <p>If any advanced callback handlers are installed, then the
+      * corresponding 'startDocument' method is also called.</p>
+      *
+      * @see DocumentHandler#startDocument
+      */
     virtual void startDocument();
 
+    /**
+      * This method is used to report the start of an element. It is
+      * called at the end of the element, by which time all attributes
+      * specified are also parsed. The corresponding user installed
+      * SAX Document Handler's method 'startElement' is invoked.
+      * 
+      * <p>If any advanced callback handlers are installed, then the
+      * corresponding 'startElement' method is also called.</p>
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      * @param urlId    An id referring to the namespace prefix, if
+      *                 namespaces setting is switched on.
+      * @param elemPrefix A const pointer to a Unicode string containing
+      *                   the namespace prefix for this element. Applicable
+      *                   only when namespace processing is enabled.
+      * @param attrList  A const reference to the object containing the
+      *                  list of attributes just scanned for this element.
+      * @param attrCount A count of number of attributes in the list
+      *                  specified by the parameter 'attrList'.
+      * @param isEmpty  A flag indicating whether this is an empty element
+      *                 or not.
+      * @param isRoot   A flag indicating whether this element was the
+      *                 root element.
+      * @see DocumentHandler#startElement
+      */
     virtual void startElement
     (
         const   XMLElementDecl&         elemDecl
@@ -794,11 +956,37 @@ public :
         , const bool                    isRoot
     );
 
+    /**
+      * This method is used to indicate the start of an entity reference.
+      *
+      * <p>If any advanced callback handlers are installed, the
+      * corresponding 'endEnityReference' method is invoked.</p>
+      *
+      * @param entDecl A const reference to the object containing the
+      *                entity declaration information.
+      */
     virtual void startEntityReference
     (
         const   XMLEntityDecl&  entDecl
     );
 
+    /**
+      * This method is used to report the XML decl scanned by the parser.
+      * Refer to the XML specification to see the meaning of parameters.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param versionStr A const pointer to a Unicode string representing
+      *                   version string value.
+      * @param encodingStr A const pointer to a Unicode string representing
+      *                    the encoding string value.
+      * @param standaloneStr A const pointer to a Unicode string
+      *                      representing the standalone string value.
+      * @param actualEncodingStr A const pointer to a Unicode string
+      *                          representing the actual encoding string
+      *                          value.
+      */
     virtual void XMLDecl
     (
         const   XMLCh* const    versionStr
@@ -812,6 +1000,32 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the XMLErrorReporter interface
     // -----------------------------------------------------------------------
+
+    /** @name Implementation of the XMLErrorReporter Interface. */
+    //@{
+    /**
+      * This method is used to report back errors found while parsing the
+      * XML file. The driver will call the corresponding user installed
+      * SAX Error Handler methods: 'fatal', 'error', 'warning' depending
+      * on the severity of the error. This classification is defined by
+      * the XML specification.
+      *
+      * @param errCode An integer code for the error.
+      * @param msgDomain A const pointer to an Unicode string representing
+      *                  the message domain to use.
+      * @param errType An enumeration classifying the severity of the error.
+      * @param errorText A const pointer to an Unicode string representing
+      *                  the text of the error message.
+      * @param systemId  A const pointer to an Unicode string representing
+      *                  the system id of the XML file where this error
+      *                  was discovered.
+      * @param publicId  A const pointer to an Unicode string representing
+      *                  the public id of the XML file where this error
+      *                  was discovered.
+      * @param lineNum   The line number where the error occurred.
+      * @param colNum    The column number where the error occurred.
+      * @see ErrorHandler
+      */
     virtual void error
     (
         const   unsigned int                errCode
@@ -824,29 +1038,99 @@ public :
         , const unsigned int                colNum
     );
 
+    /**
+      * This method allows the user installed Error Handler
+      * callback to 'reset' itself.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      */
     virtual void resetErrors();
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Implementation of the XMLEntityHandler interface
     // -----------------------------------------------------------------------
+
+    /** @name Implementation of the XMLEntityHandler Interface. */
+    //@{
+    /**
+      * This method is used to indicate the end of parsing of an external
+      * entity file.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param inputSource A const reference to the InputSource object
+      *                    which points to the XML file being parsed.
+      * @see InputSource
+      */
     virtual void endInputSource(const InputSource& inputSource);
 
+    /**
+      * This method allows an installed XMLEntityHandler to further
+      * process any system id's of enternal entities encountered in
+      * the XML file being parsed, such as redirection etc.
+      *
+      * <b><font color="#FF0000">This method always returns 'false'
+      * for this SAX driver implementation.</font></b>
+      *
+      * @param systemId  A const pointer to an Unicode string representing
+      *                  the system id scanned by the parser.
+      * @param toFill    A pointer to a buffer in which the application
+      *                  processed system id is stored.
+      * @return 'true', if any processing is done, 'false' otherwise. 
+      */
     virtual bool expandSystemId
     (
         const   XMLCh* const    systemId
         ,       XMLBuffer&      toFill
     );
 
+    /**
+      * This method allows the installed XMLEntityHandler to reset
+      * itself.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
     virtual void resetEntities();
 
+    /**
+      * This method allows a user installed entity handler to further
+      * process any pointers to external entities. The applications
+      * can implement 'redirection' via this callback. The driver
+      * should call the SAX EntityHandler 'resolveEntity' method.
+      *
+      * @param publicId A const pointer to a Unicode string representing the
+      *                 public id of the entity just parsed.
+      * @param systemId A const pointer to a Unicode string representing the
+      *                 system id of the entity just parsed.
+      * @return The value returned by the SAX resolveEntity method or
+      *         NULL otherwise to indicate no processing was done.
+      * @see EntityResolver
+      */
     virtual InputSource* resolveEntity
     (
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
     );
 
+    /**
+      * This method is used to indicate the start of parsing an
+      * external entity file.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param inputSource A const reference to the InputSource object
+      *                    which points to the external entity 
+      *                    being parsed.
+      */
     virtual void startInputSource(const InputSource& inputSource);
+    //@}
 
 
 private :
