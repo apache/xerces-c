@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/07 19:38:31  peiyongz
+ * API for Template_Class Object Serialization/Deserialization
+ *
  * Revision 1.3  2003/09/25 22:22:00  peiyongz
  * Introduction of readString/writeString
  *
@@ -357,6 +360,47 @@ public:
                                    , int&           bufferLen    = defaultBufferLen
                                    , int&           dataLen      = defaultDataLen
                                    , bool           toReadBufLen = false);
+
+
+    /***
+      *
+      *  Check if the template object has been stored or not
+      *
+      *  Param
+      *    objectPtr:     the template object pointer
+      *
+      *  Return:          true  : the object has NOT been stored yet
+      *                   false : otherwise
+      *
+      ***/
+           bool           needToWriteTemplateObject(void*       objectToWrite);
+
+    /***
+      *
+      *  Check if the template object has been loaded or not
+      *
+      *  Param
+      *    objectPtr:     the address of the template object pointer
+      *
+      *  Return:          true  : the object has NOT been loaded yet
+      *                   false : otherwise
+      *
+      ***/
+           bool           needToReadTemplateObject(void**       objectToRead);
+
+    /***
+      *
+      *  In the case of needToReadTemplateObject() return true, the client
+      *  application needs to instantiate an expected template object, and
+      *  register the address to the engine.
+      *
+      *  Param
+      *    objectPtr:     the template object pointer newly instantiated
+      *
+      *  Return:  
+      *
+      ***/
+           void           registerTemplateObject(void*          const objectToRegister);
 
     static const bool toReadBufferLen;
 

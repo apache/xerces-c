@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/10/07 19:38:31  peiyongz
+ * API for Template_Class Object Serialization/Deserialization
+ *
  * Revision 1.5  2003/09/25 22:22:00  peiyongz
  * Introduction of readString/writeString
  *
@@ -94,8 +97,9 @@ static const int noDataFollowed = -1;
 
 static const XSerializeEngine::XSerializedObjectId_t fgNullObjectTag  = 0;           // indicating null ptrs
 static const XSerializeEngine::XSerializedObjectId_t fgNewClassTag    = 0xFFFFFFFF;  // indicating new class
+static const XSerializeEngine::XSerializedObjectId_t fgTemplateObjTag = 0xFFFFFFFE;  // indicating template object
 static const XSerializeEngine::XSerializedObjectId_t fgClassMask      = 0x80000000;  // indicates class tag
-static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFFFE;  
+static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFFFD;  
 
 static XMLCh value1[16];
 static XMLCh value2[16];
@@ -985,6 +989,81 @@ inline void XSerializeEngine::ensureBufferLen(int bufferLen) const
                    , XMLExcepts::XSer_Inv_Buffer_Len
                    )
 
+}
+
+// ---------------------------------------------------------------------------
+//  Template object
+// ---------------------------------------------------------------------------
+/***
+ *
+ *  Search the store pool to see if the address has been seen before or not.
+ *
+ *  If yes, write the corresponding object Tag to the internal buffer
+ *  and return true.
+ *
+ *  Otherwise, add the address to the store pool and return false
+ *  to notifiy the client application code to store the template object.
+ *
+ ***/
+bool XSerializeEngine::needToWriteTemplateObject(void* const  templateObjectToWrite)
+{
+    ensureStoring(); //don't ensurePointer here !!!
+
+    XSerializedObjectId_t   objIndex = 0;
+
+	if (!templateObjectToWrite)  
+	{
+		*this << fgNullObjectTag; // null pointer
+        return false;
+	}
+    else if (objIndex = lookupStorePool(templateObjectToWrite))
+	{
+        *this << objIndex;         // write an object reference tag
+        return false;
+	}
+	else
+	{
+        *this << fgTemplateObjTag;            // write fgTemplateObjTag to denote that actual
+                                              // template object follows
+        addStorePool(templateObjectToWrite); // put the address into StorePool
+        return true;
+	}
+
+}
+
+bool XSerializeEngine::needToReadTemplateObject(void**  templateObjectToRead)
+{
+    ensureLoading();
+
+	XSerializedObjectId_t obTag;
+
+    *this >> obTag;
+  
+	if (obTag == fgTemplateObjTag)
+	{
+        /***
+         * what follows fgTemplateObjTag is the actual template object
+         * We need the client application to create a template object
+         * and register it through registerTemplateObject(), and deserialize
+         * template object
+         ***/
+        return true;
+	}
+	else
+	{
+        /***
+         * We hava a reference to an existing template object, get it.
+         */
+        *templateObjectToRead = lookupLoadPool(obTag);
+        return false;
+   }
+
+}
+
+void XSerializeEngine::registerTemplateObject(void*  const templateObjectToRegister)
+{
+    ensureLoading();
+    addLoadPool(templateObjectToRegister);
 }
 
 XERCES_CPP_NAMESPACE_END
