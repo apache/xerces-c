@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/02/07 16:19:40  knoaman
+ * sane_include update.
+ *
  * Revision 1.9  2002/02/01 23:48:37  peiyongz
  * sane_include
  *
@@ -127,7 +130,7 @@
 //      This is the path, relative to the given input source root, to the
 //      input file. The given local suffix must also be added to it.
 // ---------------------------------------------------------------------------
-static XMLCh* const     gRelativeInputPath  = L"src/NLS/";
+static XMLCh* const     gRelativeInputPath  = L"src/xercesc/NLS/";
 
 
 // ---------------------------------------------------------------------------
