@@ -76,6 +76,7 @@ class DocumentImpl;
 
 class CDOM_EXPORT NotationImpl: public NodeImpl {
 private:
+    DOMString name;
     DOMString publicId;
     DOMString systemId;
     
@@ -86,6 +87,7 @@ public:
     virtual ~NotationImpl();
     
     virtual NodeImpl *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual NodeImpl * getParentNode();
 

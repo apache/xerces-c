@@ -79,6 +79,7 @@ class DeepNodeListImpl;
 
 class CDOM_EXPORT ElementImpl: public NodeContainer {
 protected:
+    DOMString name;
     NamedNodeMapImpl *attributes;
     
 public:
@@ -88,6 +89,7 @@ public:
     
     virtual bool isElementImpl();
     virtual NodeImpl * cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual DOMString getAttribute(const DOMString &name);
     virtual AttrImpl *getAttributeNode(const DOMString &name);

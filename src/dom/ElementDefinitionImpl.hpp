@@ -75,6 +75,7 @@
 
 class CDOM_EXPORT ElementDefinitionImpl: public NodeImpl {
 private:
+    DOMString name;
     NamedNodeMapImpl *attributes;
     
 public:
@@ -83,6 +84,7 @@ public:
     
     virtual                 ~ElementDefinitionImpl();
     virtual NodeImpl        *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual NamedNodeMapImpl *getAttributes();
 };

@@ -78,11 +78,9 @@ static DOMString *s_xmlns = null;
 static DOMString *s_xmlnsURI = null;
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
-                   const DOMString &nam,
                    const DOMString &initValue)
 {
     this->ownerDocument=ownerDoc;
-    this->name=nam.clone();
     this->value=initValue.clone();
     
     this->changes = 0;
@@ -100,7 +98,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 NodeImpl::NodeImpl(const NodeImpl &other) {
-    this->name  = other.name.clone();
     this->value = other.value.clone();
     this->readOnly = false;
     this->ownerDocument = other.ownerDocument;
@@ -220,11 +217,6 @@ NodeImpl * NodeImpl::getNextSibling() {
 
 
 
-DOMString NodeImpl::getNodeName() {
-    return name;
-};
-
-
 DOMString NodeImpl::getNodeValue()
 {
     return value;
@@ -239,7 +231,7 @@ DocumentImpl *NodeImpl::getOwnerDocument()
 
 NodeImpl * NodeImpl::getParentNode()
 {
-    return ownerNode;
+    return ownerNode;           // typical case, overridden in some subclasses
 };  
 
 

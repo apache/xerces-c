@@ -69,14 +69,16 @@
 #define null 0
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
-:  NodeContainer (ownerDoc, aName, DOMString())
+    : NodeContainer (ownerDoc, DOMString())
 {
+    name = aName.clone();
     specified = true;
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
-: NodeContainer(other)
+    : NodeContainer(other)
 {
+    name = other.name.clone();
     specified = false;
     if (deep)
       cloneChildren(other);
@@ -93,6 +95,11 @@ NodeImpl * AttrImpl::cloneNode(bool deep)
 };
 
 
+DOMString AttrImpl::getNodeName() {
+    return name;
+};
+
+
 short AttrImpl::getNodeType() {
     return DOM_Node::ATTRIBUTE_NODE;
 };
@@ -102,7 +109,6 @@ DOMString AttrImpl::getName()
 {
     return name;
 };
-
 
 
 DOMString AttrImpl::getNodeValue()

@@ -64,14 +64,16 @@
 
 
 EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
-    : NodeContainer(ownerDoc, eName, null)
+    : NodeContainer(ownerDoc, null)
 {
+    name = eName.clone();
 };
 
 
 EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     : NodeContainer(other)
 {
+    name = other.name.clone();
     if (deep)
         cloneChildren(other);
     publicId = other.publicId.clone();
@@ -90,13 +92,17 @@ NodeImpl *EntityImpl::cloneNode(bool deep)
 };
 
 
+DOMString EntityImpl::getNodeName() {
+    return name;
+};
+
+
 short EntityImpl::getNodeType() {
     return DOM_Node::ENTITY_NODE;
 };
 
 
-// parentNode is used to store the ownerNode (so that we know when it's in use)
-// but Notation nodes do not actually have a parent
+// Notation nodes do not have a parent
 NodeImpl * EntityImpl::getParentNode()
 {
     return 0;

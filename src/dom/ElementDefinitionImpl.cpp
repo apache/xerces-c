@@ -63,16 +63,21 @@
 #include "NodeImpl.hpp"
 
 
-ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc, const DOMString &nam):
-      NodeImpl(ownerDoc, nam, null) 
+ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc,
+                                             const DOMString &nam)
+    : NodeImpl(ownerDoc, null) 
 {
-     attributes = 0;    
+    name = name.clone();
+    attributes = 0;
 };
 
 
-ElementDefinitionImpl::ElementDefinitionImpl(const ElementDefinitionImpl& other, bool deep)
-: NodeImpl(other)
+ElementDefinitionImpl::ElementDefinitionImpl(
+                                            const ElementDefinitionImpl& other,
+                                            bool deep)
+    : NodeImpl(other)
 {
+    name = other.name.clone();
     // NamedNodeMap must be explicitly replicated to avoid sharing
     attributes = 0;
     if (other.attributes)
@@ -88,6 +93,11 @@ ElementDefinitionImpl::~ElementDefinitionImpl()
 NodeImpl *ElementDefinitionImpl::cloneNode(bool deep)
 {
     return new ElementDefinitionImpl(*this, deep);
+};
+
+
+DOMString ElementDefinitionImpl::getNodeName() {
+    return name;
 };
 
 

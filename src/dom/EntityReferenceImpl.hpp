@@ -76,6 +76,7 @@
 class CDOM_EXPORT EntityReferenceImpl: public NodeContainer
 {
 private:
+    DOMString name;
     int entityChanges;
     
 public:
@@ -83,6 +84,7 @@ public:
     EntityReferenceImpl(const EntityReferenceImpl &other, bool deep=false);
     virtual ~EntityReferenceImpl();
     virtual NodeImpl * cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual NodeListImpl *getChildNodes();
     virtual NodeImpl *getFirstChild();

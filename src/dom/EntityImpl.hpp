@@ -75,6 +75,7 @@
 
 class CDOM_EXPORT EntityImpl: public NodeContainer {
 private:
+    DOMString name;
     DOMString publicId;
     DOMString systemId;
     DOMString notationName;
@@ -85,6 +86,7 @@ public:
     virtual ~EntityImpl();
     
     virtual NodeImpl    *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual NodeImpl * getParentNode();
     virtual DOMString   getPublicId();

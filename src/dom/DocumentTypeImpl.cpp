@@ -67,9 +67,10 @@
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dtName) 
-    : NodeContainer(ownerDoc,dtName,null),
+    : NodeContainer(ownerDoc,null),
     publicId(null), systemId(null)	//DOM Level 2
 {
+    name = dtName.clone();
     entities = new NamedNodeMapImpl(this, null);
     notations= new NamedNodeMapImpl(this, null);
     
@@ -81,11 +82,12 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
-    : NodeContainer(null, qualifiedName, null),
+    : NodeContainer(null, null),
     publicId(fPublicId), systemId(fSystemId)
 {
+    name = qualifiedName.clone();
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     entities = new NamedNodeMapImpl(this, null);
     notations= new NamedNodeMapImpl(this, null);
@@ -98,6 +100,7 @@ DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
 DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
 : NodeContainer(other)
 {
+    name = other.name.clone();
     if (deep)
         cloneChildren(other);
     entities = other.entities->cloneMap();
@@ -138,6 +141,12 @@ DocumentTypeImpl::~DocumentTypeImpl()
 NodeImpl *DocumentTypeImpl::cloneNode(bool deep)
 {
     return new DocumentTypeImpl(*this, deep);
+};
+
+
+DOMString DocumentTypeImpl::getNodeName()
+{
+    return name;
 };
 
 

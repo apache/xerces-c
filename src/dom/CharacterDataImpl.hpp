@@ -78,8 +78,7 @@
 class CDOM_EXPORT CharacterDataImpl: public NodeImpl
 {
 public:
-    CharacterDataImpl(DocumentImpl *ownerDocument, const DOMString &name,
-        const DOMString &data);
+    CharacterDataImpl(DocumentImpl *ownerDocument, const DOMString &data);
     CharacterDataImpl(const CharacterDataImpl &other, bool deep = false);
     virtual ~CharacterDataImpl();
     virtual void appendData(const DOMString &data);

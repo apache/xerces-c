@@ -86,14 +86,16 @@
 * @since  PR-DOM-Level-1-19980818.
 */
 
-NotationImpl::NotationImpl(DocumentImpl *ownerDoc, const DOMString &notationName) :
-NodeImpl(ownerDoc, notationName, null)
+NotationImpl::NotationImpl(DocumentImpl *ownerDoc, const DOMString &nName)
+    : NodeImpl(ownerDoc, null)
 {
+    name = nName.clone();
 };
 
 NotationImpl::NotationImpl(const NotationImpl &other, bool deep)
-: NodeImpl(other)
+    : NodeImpl(other)
 {
+    name = other.name.clone();
 };
 
 
@@ -108,13 +110,17 @@ NodeImpl *NotationImpl::cloneNode(bool deep)
 };
 
 
+DOMString NotationImpl::getNodeName() {
+    return name;
+};
+
+
 short NotationImpl::getNodeType() {
     return DOM_Node::NOTATION_NODE;
 };
 
 
-// parentNode is used to store the ownerNode (so that we know when it's in use)
-// but Notation nodes do not actually have a parent
+// Notation nodes do not have a parent
 NodeImpl * NotationImpl::getParentNode()
 {
     return 0;

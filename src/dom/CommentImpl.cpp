@@ -72,17 +72,14 @@
 #include "DocumentImpl.hpp"
 #include "DStringPool.hpp"
 
-static DOMString *gComment;   // will be lazily initialized to point to "#comment"
-
-CommentImpl::CommentImpl(DocumentImpl *ownerDoc, const DOMString &data) :
-CharacterDataImpl(ownerDoc,
-                  DStringPool::getStaticString("#comment", &gComment), data)
+CommentImpl::CommentImpl(DocumentImpl *ownerDoc, const DOMString &data)
+    : CharacterDataImpl(ownerDoc, data)
 {
 };
 
 
 CommentImpl::CommentImpl(const CommentImpl &other, bool deep)
-: CharacterDataImpl(other, deep)
+    : CharacterDataImpl(other, deep)
 {
 };
 
@@ -94,9 +91,14 @@ CommentImpl::~CommentImpl() {
 
 NodeImpl * CommentImpl::cloneNode(bool deep)
 {
-        return new CommentImpl(*this, deep);
+    return new CommentImpl(*this, deep);
 };
 
+
+DOMString CommentImpl::getNodeName() {
+    static DOMString *gComment = 0; // will be lazily initialized to "#comment"
+    return DStringPool::getStaticString("#comment", &gComment);
+}
 
 short CommentImpl::getNodeType() {
     return DOM_Node::COMMENT_NODE;

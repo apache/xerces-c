@@ -88,9 +88,6 @@
 #include "NodeIteratorImpl.hpp"
 #include "DOM_Document.hpp"
 
-static DOMString *nam = 0;  // Will be lazily initialized to "#document"
-
-
 // ---------------------------------------------------------------------------
 //  StringPool::PoolElem: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -116,7 +113,7 @@ const XMLCh* DocumentImpl::PoolElem::getKey() const
 
 
 DocumentImpl::DocumentImpl()
-  : NodeContainer(null, DStringPool::getStaticString("#document", &nam), null)
+    : NodeContainer(null, null)
 {
     docType=null;
     docElement=null;
@@ -131,11 +128,11 @@ DocumentImpl::DocumentImpl()
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName,
                            DocumentTypeImpl *doctype)
-  : NodeContainer(null, DStringPool::getStaticString("#document", &nam), null)
+    : NodeContainer(null, null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
-        throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
-        DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+	// a doctype can belong to only one DocumentImpl
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     docType=null;
     if (doctype != null) {
         doctype -> setOwnerDocument(this);
@@ -191,6 +188,13 @@ NodeImpl *DocumentImpl::cloneNode(bool deep) {
 	}
     return newdoc;
 };
+
+
+DOMString DocumentImpl::getNodeName() {
+    static DOMString *nam = 0;  // will be lazily initialized to "#document"
+    return DStringPool::getStaticString("#document", &nam);
+}
+
 
 short DocumentImpl::getNodeType() {
     return DOM_Node::DOCUMENT_NODE;

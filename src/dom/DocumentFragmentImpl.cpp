@@ -67,9 +67,7 @@
 static DOMString *nam;   // Will be lazily initialized to "#document-fragment"
 
 DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc)
-    : NodeContainer(masterDoc,
-                    DStringPool::getStaticString("#document-fragment", &nam),
-                    null)
+    : NodeContainer(masterDoc, null)
 {
 };
         
@@ -93,6 +91,11 @@ NodeImpl *DocumentFragmentImpl::cloneNode(bool deep)
 {
     return new DocumentFragmentImpl(*this, deep);
 };
+
+
+DOMString DocumentFragmentImpl::getNodeName() {
+    return DStringPool::getStaticString("#document-fragment", &nam);
+}
 
 
 short DocumentFragmentImpl::getNodeType() {

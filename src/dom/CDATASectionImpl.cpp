@@ -63,18 +63,15 @@
 #include "DocumentImpl.hpp"
 #include "DStringPool.hpp"
 
-CDATASectionImpl::CDATASectionImpl(DocumentImpl *ownerDoc, const DOMString &data) :
-                TextImpl(ownerDoc,data)
+CDATASectionImpl::CDATASectionImpl(DocumentImpl *ownerDoc,
+                                   const DOMString &data)
+    : TextImpl(ownerDoc,data)
 {
-        static DOMString *gcdata_section = 0;   // will be lazily initialized
-
-        // Overwrite Text's type information to reflect the subclass:
-        name=DStringPool::getStaticString("#cdata-section", &gcdata_section);
 };
 
 
 CDATASectionImpl::CDATASectionImpl(const CDATASectionImpl &other, bool deep)
-: TextImpl(other, deep)
+    : TextImpl(other, deep)
 {
 };
 
@@ -88,6 +85,12 @@ NodeImpl  *CDATASectionImpl::cloneNode(bool deep)
 {
     return new CDATASectionImpl(*this, deep);
 };  
+
+
+DOMString CDATASectionImpl::getNodeName() {
+    static DOMString *gcdata_section = 0;   // will be lazily initialized
+    return DStringPool::getStaticString("#cdata-section", &gcdata_section);
+};
 
 
 short CDATASectionImpl::getNodeType() {

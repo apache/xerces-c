@@ -81,6 +81,7 @@ public:
         CommentImpl(const CommentImpl &other, bool deep);
         virtual ~CommentImpl();
         virtual NodeImpl * cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
 };
 

@@ -65,16 +65,20 @@
 #include "DOM_Node.hpp"
 
 ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *ownerDoc,
-                                                     const DOMString &target, const DOMString &data) :
-NodeImpl(ownerDoc,target,data)
+                                                     const DOMString &target,
+                                                     const DOMString &data)
+    : NodeImpl(ownerDoc,data)
 {
+    name = target.clone();
 };
 
 
 ProcessingInstructionImpl::ProcessingInstructionImpl(
-                                                     const ProcessingInstructionImpl &other, bool deep)
-                                                     : NodeImpl(other)
+                                        const ProcessingInstructionImpl &other,
+                                        bool deep)
+    : NodeImpl(other)
 {
+    name = other.name.clone();
 };
 
 
@@ -86,6 +90,12 @@ ProcessingInstructionImpl::~ProcessingInstructionImpl()
 NodeImpl *ProcessingInstructionImpl::cloneNode(bool deep)
 {
     return new ProcessingInstructionImpl(*this, deep);
+};
+
+
+DOMString ProcessingInstructionImpl::getNodeName()
+{
+    return name;
 };
 
 

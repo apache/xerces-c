@@ -79,6 +79,7 @@ class NamedNodeMapImpl;
 
 class CDOM_EXPORT DocumentTypeImpl: public NodeContainer {
 private:
+    DOMString name;
     NamedNodeMapImpl *entities;
     NamedNodeMapImpl *notations;
     NamedNodeMapImpl *elements;
@@ -92,6 +93,7 @@ public:
     virtual bool isDocumentTypeImpl();
     
     virtual NodeImpl *         cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual NamedNodeMapImpl * getElements();
     virtual NamedNodeMapImpl * getEntities();

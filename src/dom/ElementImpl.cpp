@@ -69,11 +69,12 @@
 #include "NodeVector.hpp"
 
 
-ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
-NodeContainer(ownerDoc, nam, null)
+ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
+    : NodeContainer(ownerDoc, null)
 {
+    name = eName.clone();
     
-    // If there is an ElementDefintion, set its Attributes up as
+    // If there is an ElementDefinition, set its Attributes up as
     // shadows behind our own.
     NamedNodeMapImpl *defaultAttrs = null;
     DocumentTypeImpl *doctype = (DocumentTypeImpl*)ownerDocument->getDoctype();
@@ -89,8 +90,9 @@ NodeContainer(ownerDoc, nam, null)
 
 
 ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
-: NodeContainer(other)
+    : NodeContainer(other)
 {
+    name = other.name.clone();
     if (deep)
         cloneChildren(other);
     attributes = other.attributes->cloneMap();
@@ -110,6 +112,11 @@ ElementImpl::~ElementImpl()
 NodeImpl *ElementImpl::cloneNode(bool deep)
 {
     return new ElementImpl(*this, deep);
+};
+
+
+DOMString ElementImpl::getNodeName() {
+    return name;
 };
 
 

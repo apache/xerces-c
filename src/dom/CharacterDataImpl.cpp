@@ -62,14 +62,14 @@
 #include "DOM_DOMException.hpp"
 
 
-CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc, const DOMString &nam,
-                                     const DOMString &data) :
-NodeImpl(ownerDoc, nam, data)
+CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc,
+                                     const DOMString &data)
+    : NodeImpl(ownerDoc, data)
 {
 };
 
 CharacterDataImpl::CharacterDataImpl(const CharacterDataImpl &other, bool deep)
-: NodeImpl(other)
+    : NodeImpl(other)
 {
 };
 

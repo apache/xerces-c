@@ -83,6 +83,7 @@ private:
 public:
     virtual ~DocumentFragmentImpl();
     virtual NodeImpl *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual bool isDocumentFragmentImpl();
     virtual void setNodeValue(const DOMString &);

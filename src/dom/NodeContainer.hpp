@@ -88,11 +88,6 @@ public:
 
 public:
     NodeContainer(DocumentImpl *ownerDocument,
-                  const DOMString &name,
-                  const DOMString &initValue);
-    NodeContainer(DocumentImpl *ownerDocument,   //Introduced in DOM Level 2
-                  const DOMString &namespaceURI,
-                  const DOMString &qualifiedName,
                   const DOMString &initValue);
     NodeContainer(const NodeContainer &other);
     

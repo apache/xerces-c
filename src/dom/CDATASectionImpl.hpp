@@ -81,6 +81,7 @@ public:
     
     virtual             ~CDATASectionImpl();
     virtual NodeImpl    *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual bool        isCDATASectionImpl();
 };

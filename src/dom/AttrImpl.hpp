@@ -81,6 +81,7 @@ class ElementImpl;
 class CDOM_EXPORT AttrImpl: public NodeContainer {
     
 public:
+    DOMString name;
     bool specified;
 
 public:
@@ -88,6 +89,7 @@ public:
     AttrImpl(const AttrImpl &other, bool deep=false);
     virtual ~AttrImpl();
     virtual NodeImpl *cloneNode(bool deep=false);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual DOMString getName();
     virtual DOMString getNodeValue();

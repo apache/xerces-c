@@ -81,6 +81,7 @@ public:
     TextImpl(const TextImpl &other, bool deep=false);
     virtual ~TextImpl();
     virtual NodeImpl *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual bool isTextImpl();
     virtual TextImpl *splitText(unsigned int offset);

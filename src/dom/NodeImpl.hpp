@@ -99,7 +99,6 @@ const int null = 0;
 
 class CDOM_EXPORT NodeImpl: public NodeListImpl {
 public:
-    DOMString               name;                   // Name of this node or node type
     DOMString               value;                  // String value (not used in all nodes)
     bool                    readOnly;
     DocumentImpl            *ownerDocument;         // Document this node belongs to
@@ -114,7 +113,6 @@ public:
 
 public:
     NodeImpl(DocumentImpl *ownerDocument,
-        const DOMString &name,
         const DOMString &initValue);
     NodeImpl(const NodeImpl &other);
     virtual ~NodeImpl();
@@ -139,7 +137,7 @@ public:
     virtual NodeImpl * getLastChild();
     virtual unsigned int getLength();
     virtual NodeImpl * getNextSibling();
-    virtual DOMString getNodeName();
+    virtual DOMString getNodeName() = 0;
     virtual short getNodeType() = 0;
     virtual DOMString getNodeValue();
     virtual DocumentImpl * getOwnerDocument();

@@ -138,6 +138,7 @@ public:
     virtual bool isDocumentImpl();   // RTTI replacement function
 
     virtual NodeImpl            *cloneNode(bool deep);
+    virtual DOMString getNodeName();
     virtual short getNodeType();
     virtual AttrImpl            *createAttribute(const DOMString &name);
     virtual CDATASectionImpl    *createCDATASection(const DOMString &data);

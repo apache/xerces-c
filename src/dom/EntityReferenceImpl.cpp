@@ -122,9 +122,9 @@
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
                                          const DOMString &entityName)
-    : NodeContainer(ownerDoc, entityName, null)
+    : NodeContainer(ownerDoc, null)
 {
-    
+    name = entityName.clone();
     // EntityReference behaves as a read-only node, since its contents
     // reflect the Entity it refers to -- but see setNodeName().
     readOnly = true;
@@ -137,6 +137,7 @@ EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other,
                                          bool deep)
     : NodeContainer(other)
 {
+    name = other.name.clone();
     if (deep)
         cloneChildren(other);
     entityChanges = other.entityChanges;
@@ -156,6 +157,12 @@ NodeImpl *EntityReferenceImpl::cloneNode(bool deep)
     synchronize();
     return new EntityReferenceImpl(*this, deep);
 }
+
+
+DOMString EntityReferenceImpl::getNodeName()
+{
+    return name;
+};
 
 
 short EntityReferenceImpl::getNodeType() {

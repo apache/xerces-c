@@ -68,15 +68,14 @@
 static DOMString *gText;   // will be lazily initialized to point to "#text"
 
 
-TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &data) :
-CharacterDataImpl(ownerDoc, DStringPool::getStaticString("#text", &gText),
-                  data)
-, fIgnorableWhitespace(false)
+TextImpl::TextImpl(DocumentImpl *ownerDoc, const DOMString &data)
+    : CharacterDataImpl(ownerDoc, data),
+    fIgnorableWhitespace(false)
 {
 };
 
 TextImpl::TextImpl(const TextImpl &other, bool deep)
-: CharacterDataImpl(other, deep)
+    : CharacterDataImpl(other, deep)
 {
 };
 
@@ -96,6 +95,10 @@ NodeImpl *TextImpl::cloneNode(bool deep)
     return ownerDocument->createTextNode(value);
 };
 
+
+DOMString TextImpl::getNodeName() {
+    return DStringPool::getStaticString("#text", &gText);
+}
 
 short TextImpl::getNodeType() {
     return DOM_Node::TEXT_NODE;
