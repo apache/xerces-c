@@ -60,6 +60,7 @@
 DOMMemTest_DIR=DOM/DOMMemTest
 DeprecatedDOMCount_DIR=DOM/DeprecatedDOMCount
 DOMTest_DIR=DOM/DOMTest
+DOMTypeInfo_DIR=DOM/TypeInfo
 Traversal_DIR=DOM/Traversal
 ThreadTest_DIR=ThreadTest
 EncodingTest_DIR=EncodingTest
@@ -83,10 +84,10 @@ ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
       all::	bindir threadtest encodingtest traversal
   else
-      all::	bindir dommemtest deprecateddomcount domtest threadtest encodingtest traversal rangetest inittermtest
+      all::	bindir dommemtest deprecateddomcount domtest domtypeinfo threadtest encodingtest traversal rangetest inittermtest
   endif
 else
-    all::	bindir dommemtest deprecateddomcount domtest encodingtest traversal rangetest inittermtest
+    all::	bindir dommemtest deprecateddomcount domtest domtypeinfo encodingtest traversal rangetest inittermtest
   ifneq (${THREADS},none)
     all::	threadtest
   endif
@@ -106,6 +107,10 @@ deprecateddomcount::
 domtest::
 	@echo Building "DOMTest"
 	${MAKE} -C $(DOMTest_DIR) $(MAKE_FLAGS)
+
+domtypeinfo::
+	@echo Building "DOMTypeInfo"
+	${MAKE} -C $(DOMTypeInfo_DIR) $(MAKE_FLAGS)
 
 threadtest::
 	@echo Building "ThreadTest"
@@ -131,6 +136,7 @@ clean::
 	${MAKE} -C $(DOMMemTest_DIR) $@
 	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
 	${MAKE} -C $(DOMTest_DIR) $@
+	${MAKE} -C $(DOMTypeInfo_DIR) $@
 	${MAKE} -C $(ThreadTest_DIR) $@
 	${MAKE} -C $(EncodingTest_DIR) $@
 	${MAKE} -C $(Traversal_DIR) $@
@@ -141,6 +147,7 @@ distclean::
 	${MAKE} -C $(DOMMemTest_DIR) $@
 	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
 	${MAKE} -C $(DOMTest_DIR) $@
+	${MAKE} -C $(DOMTypeInfo_DIR) $@
 	${MAKE} -C $(ThreadTest_DIR) $@
 	${MAKE} -C $(EncodingTest_DIR) $@
 	${MAKE} -C $(Traversal_DIR) $@

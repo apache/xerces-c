@@ -1473,6 +1473,7 @@ DOM/DeprecatedDOMCount/Makefile \
 DOM/DOMTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
+DOM/TypeInfo/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \
@@ -1577,6 +1578,7 @@ DOM/DeprecatedDOMCount/Makefile \
 DOM/DOMTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
+DOM/TypeInfo/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 InitTermTest/Makefile \

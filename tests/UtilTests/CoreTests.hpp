@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/01/29 20:14:49  gareth
+ * updated for DOMTypeInfo tests.
+ *
  * Revision 1.6  2002/11/05 21:47:36  tng
  * Explicit code using namespace in application.
  *
@@ -85,7 +88,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
-#include <iostream>
+#include <iostream.h>
 
 XERCES_CPP_NAMESPACE_USE
 
