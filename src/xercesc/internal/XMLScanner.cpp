@@ -2259,7 +2259,7 @@ void XMLScanner::scanProlog()
                     // skip for performance
                     if (fValidate && !fGrammar->getValidated()) {
                         //  validate the DTD scan so far
-                        fValidator->preContentValidation(fUseCachedGrammar);
+                        fValidator->preContentValidation(fUseCachedGrammar, true);
                     }
                 }
                  else
