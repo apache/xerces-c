@@ -74,7 +74,7 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLUniDefs.hpp>
-#include <idom/IDOM_range.hpp>
+#include <idom/IDOM_Range.hpp>
 #include <idom/IDOM_XMLDecl.hpp>
 
 
