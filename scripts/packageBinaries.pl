@@ -103,6 +103,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     mkdir ($targetdir . "/samples/Projects/Win32", "0644");
     mkdir ($targetdir . "/samples/data", "0644");
     mkdir ($targetdir . "/samples/SAXCount", "0644");
+    mkdir ($targetdir . "/samples/SAX2Count", "0644");
     mkdir ($targetdir . "/samples/SAXPrint", "0644");
 	mkdir ($targetdir . "/samples/SAX2Print", "0644");
     mkdir ($targetdir . "/samples/DOMCount", "0644");
@@ -261,6 +262,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     
     system("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
     system("rm -f $targetdir/samples/SAXCount/Makefile");
+    system("cp -Rfv $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
+    system("rm -f $targetdir/samples/SAX2Count/Makefile");
     system("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
     system("rm -f $targetdir/samples/SAXPrint/Makefile");
 	system("cp -Rfv $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
@@ -422,6 +425,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system ("mkdir $targetdir/samples");
     system ("mkdir $targetdir/samples/data");
     system ("mkdir $targetdir/samples/SAXCount");
+    system ("mkdir $targetdir/samples/SAX2Count");
     system ("mkdir $targetdir/samples/SAXPrint");
 	system ("mkdir $targetdir/samples/SAX2Print");
     system ("mkdir $targetdir/samples/DOMCount");
@@ -576,6 +580,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");
     system("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
     system("rm -f $targetdir/samples/SAXCount/Makefile");
+    system("cp -Rf $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
+    system("rm -f $targetdir/samples/SAX2Count/Makefile");
     system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
     system("rm -f $targetdir/samples/SAXPrint/Makefile");
 	system("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");

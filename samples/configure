@@ -1450,6 +1450,7 @@ ac_given_INSTALL="$INSTALL"
 
 trap 'rm -fr `echo "Makefile \
 SAXCount/Makefile \
+SAX2Count/Makefile \
 DOMCount/Makefile \
 SAXPrint/Makefile \
 SAX2Print/Makefile \
@@ -1551,6 +1552,7 @@ cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"Makefile \
 SAXCount/Makefile \
+SAX2Count/Makefile \
 DOMCount/Makefile \
 SAXPrint/Makefile \
 SAX2Print/Makefile \
