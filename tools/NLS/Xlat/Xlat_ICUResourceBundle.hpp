@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- *
+ * 
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
+ *    notice, this list of conditions and the following disclaimer. 
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- *
+ * 
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ *    if any, must include the following acknowledgment:  
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- *
+ * 
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written
+ *    software without prior written permission. For written 
  *    permission, please contact apache\@apache.org.
- *
+ * 
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- *
+ * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -55,72 +55,90 @@
  */
 
 /*
+ * $Id$
  * $Log$
- * Revision 1.7  2002/09/30 22:09:58  peiyongz
+ * Revision 1.1  2002/09/30 22:09:28  peiyongz
  * To generate icu resource file (in text) for error message.
  *
- * Revision 1.6  2002/07/04 17:40:07  tng
- * Use new DOM in Xlat.
- *
- * Revision 1.5  2002/02/01 23:48:37  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/05/03 19:09:38  knoaman
- * Support Warning/Error/FatalError messaging.
- * Validity constraints errors are treated as errors, with the ability by user to set
- * validity constraints as fatal errors.
- *
- * Revision 1.3  2000/03/02 19:55:53  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:41  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:01:14  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:42:05  rahul
- * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
+#ifndef ICU_RESBUND_FORMATTER_H
+#define ICU_RESBUND_FORMATTER_H
 
-// ---------------------------------------------------------------------------
-//  Some globally used types
-// ---------------------------------------------------------------------------
-enum MsgTypes
+class ICUResBundFormatter : public XlatFormatter
 {
-    MsgType_Warning
-    , MsgType_Error
-    , MsgType_FatalError
+public :
+    // -----------------------------------------------------------------------
+    //  Public Constructors and Destructor
+    // -----------------------------------------------------------------------
+    ICUResBundFormatter();
+    virtual ~ICUResBundFormatter();
 
-    , MsgTypes_Count
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the formatter interface
+    // -----------------------------------------------------------------------
+    virtual void endDomain
+    (
+        const XMLCh* const    domainName
+      , const unsigned int    msgCount
+    );
+
+    virtual void endMsgType
+    (
+        const   MsgTypes        type
+    );
+
+    virtual void endOutput();
+
+    virtual void nextMessage
+    (
+          const XMLCh* const    msgText
+        , const XMLCh* const    msgId
+        , const unsigned int    messageId
+        , const unsigned int    curId
+    );
+
+    virtual void startDomain
+    (
+          const XMLCh* const    domainName
+        , const XMLCh* const    nameSpace
+    );
+
+    virtual void startMsgType
+    (
+        const   MsgTypes        type
+    );
+
+    virtual void startOutput
+    (
+          const XMLCh* const locale
+        , const XMLCh* const outPath
+    );
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ICUResBundFormatter(const ICUResBundFormatter&);
+    void operator=(const ICUResBundFormatter&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fOutFl
+    //      This is the current output file for the message catalog contents.
+    //
+    //  fTranscoder
+    //      This is our transcoder. We transcode to the local code page in
+    //      order to output Unicode based text to the message catalog.
+    // -----------------------------------------------------------------------
+    FILE*               fOutFl;
+    XMLLCPTranscoder*   fTranscoder;
 };
 
+#endif
 
-// ---------------------------------------------------------------------------
-//  Includes
-// ---------------------------------------------------------------------------
-#include <stdio.h>
-
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/TransService.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOM.hpp>
-#include "Xlat_ErrHandler.hpp"
-#include "Xlat_Types.hpp"
-#include "Xlat_Formatter.hpp"
-#include "Xlat_CppSrc.hpp"
-#include "Xlat_Win32RC.hpp"
-#include "Xlat_MsgCatalog.hpp"
-#include "Xlat_ICUResourceBundle.hpp"
-
-
-// ---------------------------------------------------------------------------
-//  Some const global data
-// ---------------------------------------------------------------------------
-extern const XMLCh* typePrefixes[MsgTypes_Count];

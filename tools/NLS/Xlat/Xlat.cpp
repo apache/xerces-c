@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/09/30 22:09:58  peiyongz
+ * To generate icu resource file (in text) for error message.
+ *
  * Revision 1.12  2002/07/04 17:40:07  tng
  * Use new DOM in Xlat.
  *
@@ -456,9 +459,13 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 case OutFormat_MsgCatalog :
                     formatter = new MsgCatFormatter;
                     break;
+                
+                case OutFormat_ResBundle:
+                    formatter = new ICUResBundFormatter;
+                    break;
 
                 default :
-                    wprintf(L"Uknown formatter type enum\n\n");
+                    wprintf(L"Unknown formatter type enum\n\n");
                     throw ErrReturn_Internal;
             }
 
