@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/23 21:05:40  peiyongz
+ * remove debugging code
+ *
  * Revision 1.2  2002/09/23 21:03:06  peiyongz
  * Build MsgCatalog on Solaris
  *
@@ -120,7 +123,6 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
     &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
     {
-        char* msgDom = XMLString::transcode(msgDomain);
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
 
