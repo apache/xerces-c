@@ -207,7 +207,7 @@ void DOMElementImpl::removeAttribute(const XMLCh *nam)
         throw DOMException(
              DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    XMLSize_t i = fAttributes->findNamePoint(nam);
+    XMLSSize_t i = fAttributes->findNamePoint(nam);
     if (i >= 0)
     {
         DOMNode *att = fAttributes->removeNamedItemAt(i);
@@ -227,7 +227,7 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
 
     // Since there is no removeAttributeNodeNS, check if this oldAttr has NS or not
     const XMLCh* localName = oldAttr->getLocalName();
-    XMLSize_t i = 0;
+    XMLSSize_t i = 0;
     if (localName)
         i = fAttributes->findNamePoint(oldAttr->getNamespaceURI(), localName);
     else
@@ -335,7 +335,7 @@ void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    XMLSize_t i = fAttributes->findNamePoint(fNamespaceURI, fLocalName);
+    XMLSSize_t i = fAttributes->findNamePoint(fNamespaceURI, fLocalName);
     if (i >= 0)
     {
         DOMNode *att = fAttributes->removeNamedItemAt(i);
