@@ -19,6 +19,8 @@ CFG=SEnumVal - Win32 Debug
 !MESSAGE 
 !MESSAGE "SEnumVal - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "SEnumVal - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "SEnumVal - Win64 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "SEnumVal - Win64 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -79,12 +81,69 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "SEnumVal - Win64 Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "SEnumVal___Win32_64Debug"
+# PROP BASE Intermediate_Dir "SEnumVal___Win32_64Debug"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "..\..\..\..\..\Build\Win64\VC6\Debug"
+# PROP Intermediate_Dir "..\..\..\..\..\Build\Win64\VC6\Debug\obj"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# SUBTRACT BASE CPP /Fr
+# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /version:1.0 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# SUBTRACT LINK32 /nologo /pdb:none
+
+!ELSEIF  "$(CFG)" == "SEnumVal - Win64 Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "SEnumVal___Win32_64Release"
+# PROP BASE Intermediate_Dir "SEnumVal___Win32_64Release"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\..\..\..\Build\Win64\VC6\Release"
+# PROP Intermediate_Dir "..\..\..\..\..\Build\Win64\VC6\Release\obj"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FR /FD /c
+# ADD CPP /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FR /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib /nologo /subsystem:console /incremental:yes /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /machine:I386 /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
+# SUBTRACT LINK32 /nologo /pdb:none
+
 !ENDIF 
 
 # Begin Target
 
 # Name "SEnumVal - Win32 Release"
 # Name "SEnumVal - Win32 Debug"
+# Name "SEnumVal - Win64 Debug"
+# Name "SEnumVal - Win64 Release"
 # Begin Source File
 
 SOURCE=..\..\..\..\..\samples\SEnumVal\SEnumVal.cpp
