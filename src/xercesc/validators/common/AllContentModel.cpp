@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/20 18:09:18  knoaman
+ * Store a copy of each child, instead of a reference, as the content spec node
+ * tree is not guaranteed to be persistent.
+ *
  * Revision 1.5  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -139,13 +143,15 @@ AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
     fChildren = (QName**) fMemoryManager->allocate(fCount * sizeof(QName*)); //new QName*[fCount];
     fChildOptional = (bool*) fMemoryManager->allocate(fCount * sizeof(bool)); //new bool[fCount];
     for (unsigned int index = 0; index < fCount; index++) {
-        fChildren[index] = children.elementAt(index);
+        fChildren[index] = new (fMemoryManager) QName(*(children.elementAt(index)));
         fChildOptional[index] = childOptional.elementAt(index);
     }
 }
 
 AllContentModel::~AllContentModel()
 {
+    for (unsigned int index = 0; index < fCount; index++)
+        delete fChildren[index];
     fMemoryManager->deallocate(fChildren); //delete [] fChildren;
     fMemoryManager->deallocate(fChildOptional); //delete [] fChildOptional;
 }
