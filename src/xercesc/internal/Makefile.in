@@ -103,7 +103,7 @@ INTERNAL_C_FILES =
 
 INTERNAL_CPP_OBJECTS = \
 	DGXMLScanner.$(TO) \
-	ElemStack.$(TO) \	
+	ElemStack.$(TO) \
 	IGXMLScanner.$(TO) \
 	IGXMLScanner2.$(TO) \
 	MemoryManagerImpl.$(TO) \
