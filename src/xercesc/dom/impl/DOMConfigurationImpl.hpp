@@ -175,6 +175,12 @@ public:
     static const XMLCh fgSCHEMA_TYPE[];
     static const XMLCh fgSCHEMA_LOCATION[];
 
+    // The default values for the boolean parameters
+    // from CANONICAL_FORM to WHITESPACE_IN_ELEMENT_CONTENT
+    // 10010110010110 = 0x2596
+    static const unsigned short fDEFAULT_VALUES = 0x2596;
+    
+
 private:
     // implements a simple map between the name and its enum value
     DOMConfigurationFeature getFeatureFlag(const XMLCh* name) const;
