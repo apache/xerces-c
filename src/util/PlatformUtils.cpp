@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/10/24 19:59:49  peiyongz
+ * [Bug 3975] gInitFlag problem
+ *
  * Revision 1.14  2001/10/23 23:09:32  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -131,6 +134,7 @@
 #include <internal/XMLReader.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/XMLRegisterCleanup.hpp>
+#include <limits.h>
 
 
 // ---------------------------------------------------------------------------
@@ -142,7 +146,7 @@
 // ---------------------------------------------------------------------------
 static XMLMutex*                gSyncMutex = 0;
 static RefVectorOf<XMLDeleter>* gLazyData;
-static short                    gInitFlag = 0;
+static long                     gInitFlag = 0;
 
 // ---------------------------------------------------------------------------
 //  Global data
@@ -174,6 +178,18 @@ XMLTransService*    XMLPlatformUtils::fgTransService = 0;
 void XMLPlatformUtils::Initialize()
 {
     //
+    //  Effects of overflow:
+    //  . resouce re-allocations
+    //  . consequently resource leaks
+    //  . potentially terminate() may never get executed
+    //
+    //  We got to prevent overflow from happening.
+    //  no error or exception
+    //  
+    if (gInitFlag == LONG_MAX)
+        return;
+
+    //
     //  Make sure we haven't already been initialized. Note that this is not
     //  thread safe and is not intended for that. Its more for those COM
     //  like processes that cannot keep up with whether they have initialized
@@ -196,7 +212,7 @@ void XMLPlatformUtils::Initialize()
     gSyncMutex = new XMLMutex;
 
 	// Create the mutex for the static data cleanup list
-	gXMLCleanupListMutex = new XMLMutex;
+    gXMLCleanupListMutex = new XMLMutex;
 
     // Create the array for saving lazily allocated objects to be deleted at termination
     gLazyData= new RefVectorOf<XMLDeleter>(512);
@@ -213,6 +229,7 @@ void XMLPlatformUtils::Initialize()
     //  If we cannot make one, then we call panic to end the process.
     //
     fgTransService = makeTransService();
+
     if (!fgTransService)
         panic(Panic_NoTransService);
 
@@ -240,6 +257,14 @@ void XMLPlatformUtils::Initialize()
 
 void XMLPlatformUtils::Terminate()
 {
+    //
+    // To prevent it from running underflow.
+    // otherwise we come to delete non-existing resources.
+    //
+    //  no error or exception
+    //  
+    if (gInitFlag == 0)
+        return;
 
 	gInitFlag--;
 	
