@@ -323,7 +323,7 @@ sub change_documentation_entities()
                 $line =~ s/"xerces-c-1_1_0"/"xml4c-3_1_0"/g;
                 $line =~ s/"xerces-c-src-1_1_0"/"xml4c-src-3_1_0"/g;
                 $line =~ s/"xerces-c_1"/"xerces-c_1"/g;
-                $line =~ s/xerces-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
+                $line =~ s/xerces-c-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
                 $line =~ s/xml\.apache\.org\/dist/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
                 print FIZZLEOUT $line;
         }
