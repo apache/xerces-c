@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/06/17 18:09:29  tng
+ * DOM L3: support "datatype-normalization"
+ *
  * Revision 1.5  2002/05/22 20:54:14  knoaman
  * Prepare for DOM L3 :
  * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
@@ -144,6 +147,7 @@ public:
     void setNillable(bool isNil);
     void setErrorReporter(XMLErrorReporter* const errorReporter);
     void setExitOnFirstFatal(const bool newValue);
+    void setDatatypeBuffer(const XMLCh* const value);
 
     // -----------------------------------------------------------------------
     //  Implementation of the XMLValidator interface
@@ -274,18 +278,18 @@ private:
                                         ContentSpecNode* const baseSpecNode);
     void checkRecurseUnordered(SchemaGrammar* const currentGrammar,
                                const ContentSpecNode* const derivedSpecNode,
-                               ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                               ValueVectorOf<ContentSpecNode*>* const derivedNodes,
                                const int derivedScope,
-                               ContentSpecNode* const baseSpecNode, 
-                               ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                               ContentSpecNode* const baseSpecNode,
+                               ValueVectorOf<ContentSpecNode*>* const baseNodes,
                                const int baseScope,
                                const ComplexTypeInfo* const baseInfo);
     void checkMapAndSum(SchemaGrammar* const currentGrammar,
                         const ContentSpecNode* const derivedSpecNode,
-                        ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                        ValueVectorOf<ContentSpecNode*>* const derivedNodes,
                         const int derivedScope,
-                        ContentSpecNode* const baseSpecNode, 
-                        ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                        ContentSpecNode* const baseSpecNode,
+                        ValueVectorOf<ContentSpecNode*>* const baseNodes,
                         const int baseScope,
                         const ComplexTypeInfo* const baseInfo);
 
@@ -321,7 +325,7 @@ private:
     //      Report schema process errors
     //
     //  fTypeStack
-    //      Stack of complex type declarations. 
+    //      Stack of complex type declarations.
     // -----------------------------------------------------------------------
     SchemaGrammar* fSchemaGrammar;
     GrammarResolver* fGrammarResolver;
@@ -359,6 +363,11 @@ inline void SchemaValidator::setNillable(bool isNil) {
 inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {
 
     fSchemaErrorReporter.setExitOnFirstFatal(newValue);
+}
+
+inline void SchemaValidator::setDatatypeBuffer(const XMLCh* const value)
+{
+    fDatatypeBuffer.append(value);
 }
 
 // ---------------------------------------------------------------------------
@@ -403,7 +412,7 @@ SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
                                      const int min2, const int max2) {
 
     if (min1 >= min2 &&
-        (max2 == SchemaSymbols::UNBOUNDED || 
+        (max2 == SchemaSymbols::UNBOUNDED ||
          (max1 != SchemaSymbols::UNBOUNDED && max1 <= max2))) {
         return true;
     }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/06/17 18:09:29  tng
+ * DOM L3: support "datatype-normalization"
+ *
  * Revision 1.10  2002/05/23 21:27:21  knoaman
  * Fix "Array Bound Read" problem reported by Purify.
  *
@@ -503,7 +506,6 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             throw;
         }
     }
-    fDatatypeBuffer.reset();
     fTrailing = false;
 }
 
@@ -587,7 +589,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         ComplexTypeInfo* tempType = typeInfo;
                         if (destType) {
 
-                            while (tempType) {                                 
+                            while (tempType) {
                                 if (!XMLString::compareString(tempType->getTypeName(), destType->getTypeName()))
                                     break;
                                 tempType = tempType->getBaseComplexTypeInfo();
@@ -680,7 +682,6 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
     }
 
-    fDatatypeBuffer.reset();
     fTrailing = false;
 }
 
@@ -977,9 +978,6 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         // Add this char to the target buffer
         toFill.append(nextCh);
 
-        // stored the content for validation later
-        //fDatatypeBuffer.append(nextCh);
-
         // And move up to the next character in the source
         srcPtr++;
     }
@@ -988,7 +986,6 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     if (XMLReader::isWhitespace(nextCh))
         fTrailing = true;
 
-    fDatatypeBuffer.append(toFill.getRawBuffer());
 }
 
 

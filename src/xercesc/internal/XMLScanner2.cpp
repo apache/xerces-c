@@ -1091,6 +1091,9 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                         toFill.set(tempBuf.getRawBuffer());
                     }
 
+                    // tell the schema validation about the character data for checkContent later
+                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
+
                     // call all active identity constraints
                     unsigned int count = fMatcherStack->getMatcherCount();
 
@@ -1134,6 +1137,9 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                         ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, toFill.getRawBuffer(),  tempBuf);
                         toFill.set(tempBuf.getRawBuffer());
                     }
+
+                    // tell the schema validation about the character data for checkContent later
+                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                     // call all active identity constraints
                     unsigned int count = fMatcherStack->getMatcherCount();
