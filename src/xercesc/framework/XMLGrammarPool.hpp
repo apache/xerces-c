@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/07/31 17:02:42  peiyongz
+ * Grammar embed GrammarDescription
+ *
  * Revision 1.1  2003/06/20 18:37:39  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -101,12 +104,10 @@ public :
     /**
       * cacheGrammar
       *
-      * @param gramDesc:    the grammar description
       * @param gramToCache: the Grammar to be cached in the grammar pool
 	  *
       */
-    virtual void           cacheGrammar(XMLGrammarDescription* const gramDesc 
-                                      , Grammar* const               gramToCache) = 0;
+    virtual void           cacheGrammar(Grammar* const               gramToCache) = 0;
     
     /**
       * retrieveGrammar
@@ -123,11 +124,10 @@ public :
       *
 	  * grammar removed from the grammar pool and owned by the caller
       *
-      * @param gramDesc: the Grammar Description used to search for grammar
-	  *                  cached in the grammar pool
+      * @param nameSpaceKey: Key sed to search for grammar in the grammar pool
 	  *
       */
-    virtual Grammar*       orphanGrammar(XMLGrammarDescription* const gramDesc) = 0;  
+    virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey) = 0;  
 
     /**
       * clear
