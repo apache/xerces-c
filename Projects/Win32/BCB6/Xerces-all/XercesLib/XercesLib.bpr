@@ -66,6 +66,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLException.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLFloat.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1140Transcoder.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLMsgLoader.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLNumber.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLString.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLStringTokenizer.obj
@@ -403,6 +404,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLException.cpp" FORMNAME="" UNITNAME="XMLException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLFloat.cpp" FORMNAME="" UNITNAME="XMLFloat" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1140Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLMsgLoader.cpp" FORMNAME="" UNITNAME="XMLMsgLoader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLNumber.cpp" FORMNAME="" UNITNAME="XMLNumber" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLString.cpp" FORMNAME="" UNITNAME="XMLString" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLStringTokenizer.cpp" FORMNAME="" UNITNAME="XMLStringTokenizer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

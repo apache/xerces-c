@@ -76,6 +76,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLException.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLFloat.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1140Transcoder.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLMsgLoader.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLNumber.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLString.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLStringTokenizer.obj \
