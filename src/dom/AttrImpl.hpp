@@ -73,12 +73,12 @@
 
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "NodeContainer.hpp"
 #include "DOM_Node.hpp"
 
 class ElementImpl;
 
-class CDOM_EXPORT AttrImpl: public NodeImpl {
+class CDOM_EXPORT AttrImpl: public NodeContainer {
     
 public:
     bool specified;

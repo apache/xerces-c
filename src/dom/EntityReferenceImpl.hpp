@@ -71,9 +71,9 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "NodeContainer.hpp"
 
-class CDOM_EXPORT EntityReferenceImpl: public NodeImpl
+class CDOM_EXPORT EntityReferenceImpl: public NodeContainer
 {
 private:
     int entityChanges;

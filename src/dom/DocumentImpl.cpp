@@ -113,9 +113,8 @@ const XMLCh* DocumentImpl::PoolElem::getKey() const
 
 
 
-DocumentImpl::DocumentImpl(): NodeImpl(null,
-                                       DStringPool::getStaticString("#document", &nam),
-                                       null)
+DocumentImpl::DocumentImpl()
+  : NodeContainer(null, DStringPool::getStaticString("#document", &nam), null)
 {
     docType=null;
     docElement=null;
@@ -128,8 +127,9 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
 
 //DOM Level 2
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
-                           const DOMString &qualifiedName, DocumentTypeImpl *doctype)
-                           : NodeImpl(null, DStringPool::getStaticString("#document", &nam), null)
+                           const DOMString &qualifiedName,
+                           DocumentTypeImpl *doctype)
+  : NodeContainer(null, DStringPool::getStaticString("#document", &nam), null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
@@ -391,7 +391,7 @@ NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
         )
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
 
-    NodeImpl::insertBefore(newChild,refChild);
+    NodeContainer::insertBefore(newChild,refChild);
 
     // If insert succeeded, cache the kid appropriately
     if(newChild->isElementImpl())
@@ -440,7 +440,7 @@ void DocumentImpl::referenced()
 
 NodeImpl *DocumentImpl::removeChild(NodeImpl *oldChild)
 {
-    NodeImpl::removeChild(oldChild);
+    NodeContainer::removeChild(oldChild);
 
     // If remove succeeded, un-cache the kid appropriately
     if(oldChild->isElementImpl())

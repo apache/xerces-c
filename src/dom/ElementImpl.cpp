@@ -70,7 +70,7 @@
 
 
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
-NodeImpl(ownerDoc, nam, null)
+NodeContainer(ownerDoc, nam, null)
 {
     
     // If there is an ElementDefintion, set its Attributes up as
@@ -90,7 +90,7 @@ NodeImpl(ownerDoc, nam, null)
 //DOM Level 2
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc,
     const DOMString &fNamespaceURI, const DOMString &qualifiedName) :
-NodeImpl(ownerDoc, qualifiedName, null)
+NodeContainer(ownerDoc, qualifiedName, null)
 {
     DOMString xmlns = getXmlnsString();
     DOMString xmlnsURI = getXmlnsURIString();
@@ -125,7 +125,7 @@ NodeImpl(ownerDoc, qualifiedName, null)
 
     
 ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
-: NodeImpl(other)
+: NodeContainer(other)
 {
     if (deep)
         cloneChildren(other);
@@ -296,7 +296,7 @@ void ElementImpl::setNodeValue(const DOMString &x)
 
 void ElementImpl::setReadOnly(bool readOnl, bool deep)
 {
-    NodeImpl::setReadOnly(readOnl,deep);
+    NodeContainer::setReadOnly(readOnl,deep);
     attributes->setReadOnly(readOnl,true);
 };
 

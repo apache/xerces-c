@@ -1,5 +1,5 @@
-#ifndef NodeImpl_HEADER_GUARD_
-#define NodeImpl_HEADER_GUARD_
+#ifndef NodeContainer_HEADER_GUARD_
+#define NodeContainer_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -57,10 +57,6 @@
  * <http://www.apache.org/>.
  */
 
-/*
- * $Id$
- */
-
 //
 //  This file is part of the internal implementation of the C++ XML DOM.
 //  It should NOT be included or used directly by application programs.
@@ -70,117 +66,53 @@
 //  name is substituded for the *.
 //
 
+/*
+ * $Id$
+ */
+
 /**
- * A NodeImpl doesn't have any children, and can therefore only be directly
- * inherited by classes of nodes that never have any, such as Text nodes. For
- * other types, such as Element, classes must inherit from NodeContainer.
+ * NodeContainer inherits from NodeImpl and adds the capability of having child
+ * nodes. Not every node in the DOM can have children, so only nodes that can
+ * should inherit from this class and pay the price for it.
  **/
 
 #include <util/XercesDefs.hpp>
-#include "NodeListImpl.hpp"
+#include "NodeImpl.hpp"
 #include "DOMString.hpp"
 
 
-class NamedNodeMapImpl;
-class NodeListImpl;
-class DocumentImpl;
-
-//  define 'null' is used extensively in the DOM implementation code, 
-//  as a consequence of its Java origins.
-//  MSVC 5.0 compiler has problems with overloaded function resolution
-//	when using the const int definition.
-//
-#if defined(XML_CSET)
-const int null = 0;
-#else
-#define null 0
-#endif
-
-
-class CDOM_EXPORT NodeImpl: public NodeListImpl {
+class CDOM_EXPORT NodeContainer: public NodeImpl {
 public:
-    DOMString               name;                   // Name of this node or node type
-    DOMString               value;                  // String value (not used in all nodes)
-    bool                    readOnly;
-    bool                    owned;                  // True if there is a reference to this
-                                                    //  node in a named node list.  Applies to
-                                                    //  attributes, notations, entities.
-    DocumentImpl            *ownerDocument;         // Document this node belongs to
-    NodeImpl                *previousSibling;
-    NodeImpl                *nextSibling;
-    NodeImpl                *parentNode;
-    int changes;
-    void *userData;
+    NodeImpl                *firstChild;
+    NodeImpl                *lastChild;
 
-    static int              gLiveNodeImpls;         // Counters for debug & tuning.
-    static int              gTotalNodeImpls;
-
-    //Introduced in DOM Level 2
-    DOMString		    namespaceURI;	    //namespace URI of this node
-    DOMString		    prefix;		    //namespace prefix of this node
-    DOMString		    localName;		    //local part of qualified name
-    
 public:
-    NodeImpl(DocumentImpl *ownerDocument,
-        const DOMString &name,
-        const DOMString &initValue);
-    NodeImpl(const NodeImpl &other);
-    virtual ~NodeImpl();
+    NodeContainer(DocumentImpl *ownerDocument,
+                  const DOMString &name,
+                  const DOMString &initValue);
+    NodeContainer(DocumentImpl *ownerDocument,   //Introduced in DOM Level 2
+                  const DOMString &namespaceURI,
+                  const DOMString &qualifiedName,
+                  const DOMString &initValue);
+    NodeContainer(const NodeContainer &other);
     
-    // Dynamic Cast replacement functions.
-    virtual bool isAttrImpl();
-    virtual bool isCDATASectionImpl();
-    virtual bool isDocumentFragmentImpl();
-    virtual bool isDocumentImpl();
-    virtual bool isDocumentTypeImpl();
-    virtual bool isElementImpl();
-    virtual bool isEntityReference();
-    virtual bool isTextImpl();
-
     virtual NodeImpl *appendChild(NodeImpl *newChild);
-    virtual void changed();
-    virtual NodeImpl * cloneNode(bool deep) = 0;
-    static void deleteIf(NodeImpl *thisNode);
-    virtual NamedNodeMapImpl * getAttributes();
     virtual NodeListImpl *getChildNodes();
     virtual NodeImpl * getFirstChild();
     virtual NodeImpl * getLastChild();
     virtual unsigned int getLength();
-    virtual NodeImpl * getNextSibling();
-    virtual DOMString getNodeName();
-    virtual short getNodeType() = 0;
-    virtual DOMString getNodeValue();
-    virtual DocumentImpl * getOwnerDocument();
-    virtual NodeImpl * getParentNode();
-    virtual NodeImpl*  getPreviousSibling();
-    virtual void *getUserData();
     virtual bool        hasChildNodes();
     virtual NodeImpl    *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
     static  bool        isKidOK(NodeImpl *parent, NodeImpl *child);
     virtual NodeImpl    *item(unsigned int index);
-    virtual void        referenced();
     virtual NodeImpl    * removeChild(NodeImpl *oldChild);
     virtual NodeImpl    *replaceChild(NodeImpl *newChild, NodeImpl *oldChild);
-    virtual void        setNodeValue(const DOMString &value);
     virtual void        setReadOnly(bool readOnly, bool deep);
-    virtual void        setUserData(void *value);
-    virtual DOMString   toString();
-    virtual void        unreferenced();
 
     //Introduced in DOM Level 2
     virtual void	normalize();
-    virtual bool	supports(const DOMString &feature, const DOMString &version);
-    virtual DOMString	getNamespaceURI();
-    virtual DOMString   getPrefix();
-    virtual DOMString   getLocalName();
-    virtual void        setPrefix(const DOMString &prefix);
-
 protected:
-    //Utility, not part of DOM Level 2 API
-    static const DOMString&	mapPrefix(const DOMString &prefix,
-	const DOMString &namespaceURI, short nType);
-    DOMString getXmlnsString();
-    DOMString getXmlnsURIString();
+    void cloneChildren(const NodeImpl &other);
 };
 
 

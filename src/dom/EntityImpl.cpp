@@ -63,14 +63,14 @@
 #include "EntityImpl.hpp"
 
 
-EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName) :
-NodeImpl(ownerDoc, eName, null)
+EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
+    : NodeContainer(ownerDoc, eName, null)
 {
 };
 
 
 EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
-: NodeImpl(other)
+    : NodeContainer(other)
 {
     if (deep)
         cloneChildren(other);

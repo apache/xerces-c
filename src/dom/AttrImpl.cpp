@@ -69,7 +69,7 @@
 #define null 0
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
-:  NodeImpl (ownerDoc, aName, DOMString())
+:  NodeContainer (ownerDoc, aName, DOMString())
 {
     specified = true;
 };
@@ -77,7 +77,7 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
 //DOM Level 2
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
     const DOMString &fNamespaceURI, const DOMString &qualifiedName)
-:  NodeImpl (ownerDoc, qualifiedName, DOMString())
+:  NodeContainer (ownerDoc, qualifiedName, DOMString())
 {
     DOMString xmlns = getXmlnsString();
     DOMString xmlnsURI = getXmlnsURIString();
@@ -106,7 +106,7 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
-: NodeImpl(other)
+: NodeContainer(other)
 {
     specified = false;
     if (deep)

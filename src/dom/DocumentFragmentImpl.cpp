@@ -59,7 +59,6 @@
  */
 
 #include "DocumentFragmentImpl.hpp"
-#include "NodeImpl.hpp"
 #include "DOM_Node.hpp"
 #include "DOM_DOMException.hpp"
 #include "DStringPool.hpp"
@@ -67,15 +66,17 @@
 
 static DOMString *nam;   // Will be lazily initialized to "#document-fragment"
 
-DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc) :
-NodeImpl(masterDoc, DStringPool::getStaticString("#document-fragment", &nam),
-         null)
+DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc)
+    : NodeContainer(masterDoc,
+                    DStringPool::getStaticString("#document-fragment", &nam),
+                    null)
 {
 };
         
 
-DocumentFragmentImpl::DocumentFragmentImpl(const DocumentFragmentImpl &other, bool deep)
-: NodeImpl(other)
+DocumentFragmentImpl::DocumentFragmentImpl(const DocumentFragmentImpl &other,
+                                           bool deep)
+    : NodeContainer(other)
 {
     if (deep)
         cloneChildren(other);

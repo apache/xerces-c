@@ -71,9 +71,9 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "NodeContainer.hpp"
 
-class CDOM_EXPORT EntityImpl: public NodeImpl {
+class CDOM_EXPORT EntityImpl: public NodeContainer {
 private:
     DOMString publicId;
     DOMString systemId;

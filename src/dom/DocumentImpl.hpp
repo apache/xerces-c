@@ -71,7 +71,7 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "NodeContainer.hpp"
 #include "DOM_Node.hpp"
 #include "DOM_Element.hpp"
 #include "util/RefVectorOf.hpp"
@@ -102,7 +102,7 @@ typedef RefVectorOf<NodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<TreeWalkerImpl> TreeWalkers;
 
 
-class CDOM_EXPORT DocumentImpl: public NodeImpl {
+class CDOM_EXPORT DocumentImpl: public NodeContainer {
 private:
 private:
     // -----------------------------------------------------------------------

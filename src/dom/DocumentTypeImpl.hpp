@@ -73,11 +73,11 @@
 
 
 #include <util/XercesDefs.hpp>
-#include "NodeImpl.hpp"
+#include "NodeContainer.hpp"
 
 class NamedNodeMapImpl;
 
-class CDOM_EXPORT DocumentTypeImpl: public NodeImpl {
+class CDOM_EXPORT DocumentTypeImpl: public NodeContainer {
 private:
     NamedNodeMapImpl *entities;
     NamedNodeMapImpl *notations;

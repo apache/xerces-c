@@ -118,12 +118,11 @@
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
 #include "NamedNodeMapImpl.hpp"
-#include "NodeImpl.hpp"
 
 
-
-EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc, const DOMString &entityName) :
-NodeImpl(ownerDoc, entityName, null)
+EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
+                                         const DOMString &entityName)
+    : NodeContainer(ownerDoc, entityName, null)
 {
     
     // EntityReference behaves as a read-only node, since its contents
@@ -134,8 +133,9 @@ NodeImpl(ownerDoc, entityName, null)
 
 
 
-EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other, bool deep)
-: NodeImpl(other)
+EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other,
+                                         bool deep)
+    : NodeContainer(other)
 {
     if (deep)
         cloneChildren(other);
@@ -171,7 +171,7 @@ short EntityReferenceImpl::getNodeType() {
 NodeListImpl *EntityReferenceImpl::getChildNodes()
 {
     synchronize();
-    return NodeImpl::getChildNodes();
+    return NodeContainer::getChildNodes();
 }
 
 
@@ -183,7 +183,7 @@ NodeListImpl *EntityReferenceImpl::getChildNodes()
 NodeImpl *EntityReferenceImpl::getFirstChild()
 {
     synchronize();
-    return NodeImpl::getFirstChild();
+    return NodeContainer::getFirstChild();
 }
 
 
@@ -195,7 +195,7 @@ NodeImpl *EntityReferenceImpl::getFirstChild()
 NodeImpl *EntityReferenceImpl::getLastChild() 
 {
     synchronize();
-    return NodeImpl::getLastChild();
+    return NodeContainer::getLastChild();
 }
 
 
@@ -208,7 +208,7 @@ NodeImpl *EntityReferenceImpl::getLastChild()
 */
 unsigned int EntityReferenceImpl::getLength()
 {
-    unsigned int length = NodeImpl::getLength();
+    unsigned int length = NodeContainer::getLength();
     
 #if (0)                 // Till we add entity nodes to the doc root element.
     
@@ -266,7 +266,7 @@ bool EntityReferenceImpl::isEntityReference()
 */
 NodeImpl *EntityReferenceImpl::item(unsigned int index) {
     synchronize();
-    return NodeImpl::item(index);
+    return NodeContainer::item(index);
 }
 
 
@@ -292,7 +292,7 @@ void EntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
     if(readOnl==false)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
-    NodeImpl::setReadOnly(readOnl,deep);
+    NodeContainer::setReadOnly(readOnl,deep);
 }
 
 
@@ -341,11 +341,12 @@ void EntityReferenceImpl::synchronize()
         // (See discussion above.)
         // Note that we have to use the superclass to avoid recursion
         // through Synchronize.
+        bool oldReadOnly = readOnly;
         readOnly=false;
         if(null==entDef || !entDef->hasChildNodes() || entDef->changes!=entityChanges)
         {
             NodeImpl *kid;
-            while ((kid=NodeImpl::getFirstChild()) != null)
+            while ((kid=NodeContainer::getFirstChild()) != null)
             {
                 removeChild(kid);
                 // Adding and removing a reference will cause the node to
@@ -373,6 +374,6 @@ void EntityReferenceImpl::synchronize()
             }
             entityChanges=entDef->changes;
         }
-        readOnly=true;
+        readOnly=oldReadOnly;
     }
 }

@@ -73,11 +73,11 @@
 
 #include <util/XercesDefs.hpp>
 #include "AttrImpl.hpp"
-#include "NodeImpl.hpp"
+#include "NodeContainer.hpp"
 
 class DeepNodeListImpl;
 
-class CDOM_EXPORT ElementImpl: public NodeImpl {
+class CDOM_EXPORT ElementImpl: public NodeContainer {
 protected:
     NamedNodeMapImpl *attributes;
     

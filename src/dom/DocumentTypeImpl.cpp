@@ -59,15 +59,15 @@
  */
 
 #include "DocumentTypeImpl.hpp"
-#include "NodeImpl.hpp"
 #include "DOM_Node.hpp"
 #include "NamedNodeMapImpl.hpp"
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 
 
-DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtName) 
-: NodeImpl(ownerDoc,dtName,null),
+DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
+                                   const DOMString &dtName) 
+    : NodeContainer(ownerDoc,dtName,null),
     publicId(null), systemId(null)	//DOM Level 2
 {
     entities = new NamedNodeMapImpl(ownerDoc,null);
@@ -81,7 +81,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtNa
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
-: NodeImpl(null, qualifiedName, null),
+    : NodeContainer(null, qualifiedName, null),
     publicId(fPublicId), systemId(fSystemId)
 {
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
@@ -96,7 +96,7 @@ DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
 
 
 DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
-: NodeImpl(other)
+: NodeContainer(other)
 {
     if (deep)
         cloneChildren(other);
@@ -185,7 +185,7 @@ void DocumentTypeImpl::setNodeValue(const DOMString &val)
 
 void DocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
 {
-    NodeImpl::setReadOnly(readOnl,deep);
+    NodeContainer::setReadOnly(readOnl,deep);
     entities->setReadOnly(readOnl,true);
     notations->setReadOnly(readOnl,true);
 };
