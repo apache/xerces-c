@@ -22,9 +22,6 @@ Xerces-C++ makes it easy to give your application the ability to read and
 write XML data. A shared library is provided for parsing, generating, 
 manipulating, and validating XML documents. 
 
-Xerces-C++ is faithful to the XML 1.0 recommendation and many associated
-standards.
-
 The parser provides high performance, modularity, and scalability. Source 
 code, samples and API documentation are provided with the parser. For 
 portability, care has been taken to make minimal use of templates, no RTTI, 
@@ -87,6 +84,6 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Sep 03 2002  <thomas@linux.de>
 - fixed missing DESTDIR in Makefile.util.submodule
+
 * Mon Sep 02 2002  <thomas@linux.de>
 - Initial build.
-
