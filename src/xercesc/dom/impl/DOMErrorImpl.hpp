@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/15 19:25:49  tng
+ * DOM L3:  declare a dummy DOMError::set/getRelatedException
+ *
  * Revision 1.2  2002/05/30 19:26:00  knoaman
  * documentation update
  *
@@ -92,7 +95,7 @@ public:
         , const XMLCh* const message
         , DOMLocator* const location
     );
-               
+
     /** Desctructor */
     virtual ~DOMErrorImpl();
 
@@ -121,6 +124,16 @@ public:
     * Get the location of the error
     */
     virtual DOMLocator* getLocation() const;
+
+    /**
+     * The related platform dependent exception if any.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see   setRelatedException
+     * @since DOM Level 3
+     */
+    virtual void* getRelatedException() const;
 
     //@}
 
@@ -165,12 +178,23 @@ public:
     */
     void setAdoptLocation(const bool value);
 
+    /**
+     * The related platform dependent exception if any.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param exception the related exception to set.
+     * @see   getRelatedException
+     * @since DOM Level 3
+     */
+    virtual void setRelatedException(void* exception) const;
+
     //@}
 
 
 private :
     /* Unimplemented constructors and operators */
-    
+
     /* Copy constructor */
     DOMErrorImpl(const DOMErrorImpl&);
 
@@ -214,6 +238,11 @@ inline const XMLCh* DOMErrorImpl::getMessage() const
 inline DOMLocator* DOMErrorImpl::getLocation() const
 {
     return fLocation;
+}
+
+inline void* DOMErrorImpl::getRelatedException() const
+{
+    return 0;
 }
 
 // ---------------------------------------------------------------------------

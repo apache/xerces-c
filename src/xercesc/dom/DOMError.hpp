@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/07/15 19:25:25  tng
+ * DOM L3:  declare a dummy DOMError::set/getRelatedException
+ *
  * Revision 1.4  2002/06/06 21:01:21  tng
  * [Bug 9639] enum_mem in DOMError clashes with constant.
  *
@@ -169,6 +172,16 @@ public:
      */
     virtual DOMLocator* getLocation() const = 0;
 
+    /**
+     * The related platform dependent exception if any.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see   setRelatedException
+     * @since DOM Level 3
+     */
+    virtual void* getRelatedException() const = 0;
+
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -204,6 +217,17 @@ public:
      * @since DOM Level 3
      */
     virtual void setLocation(DOMLocator* const location) = 0;
+
+    /**
+     * The related platform dependent exception if any.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param exception the related exception to set.
+     * @see   getRelatedException
+     * @since DOM Level 3
+     */
+    virtual void setRelatedException(void* exception) const = 0;
 
     //@}
 
