@@ -517,11 +517,11 @@ inline int RegularExpression::matchUnion(Context* const context,
 
         ret = match(context, op->elementAt(i), offset, direction);
 
-        if (ret > 0)
-            break;
+        if (ret == context->fLimit)
+            return ret;
     }
 
-    return ret;
+    return -1;
 }
 
 inline int RegularExpression::matchModifier(Context* const context,
