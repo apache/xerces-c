@@ -56,6 +56,19 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/09 22:16:12  jpolast
+ * many conformance & stability changes:
+ *   - ContentHandler::resetDocument() removed
+ *   - attrs param of ContentHandler::startDocument() made const
+ *   - SAXExceptions thrown now have msgs
+ *   - removed duplicate function signatures that had 'const'
+ *       [ eg: getContentHander() ]
+ *   - changed getFeature and getProperty to apply to const objs
+ *   - setProperty now takes a void* instead of const void*
+ *   - SAX2XMLReaderImpl does not inherit from SAXParser anymore
+ *   - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented
+ *   - Features & Properties now read-only during parse
+ *
  * Revision 1.2  2000/08/07 22:53:44  jpolast
  * fixes for when 'namespaces' feature is turned off:
  *   * namespaces-prefixes only used when namespaces is on
@@ -146,9 +159,50 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC[] = {
 		chLatin_m, chLatin_i, chLatin_c, chNull
 };
 
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_f, chLatin_e, chLatin_a,
+		chLatin_t, chLatin_u, chLatin_r,
+		chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_v, chLatin_a, chLatin_l,
+		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
+		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
+		chLatin_r, chLatin_e, chLatin_u, chLatin_s,
+		chLatin_e, chDash, chLatin_v, 
+		chLatin_a, chLatin_l,
+		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
+		chLatin_o, chLatin_r, chNull
+};
+
+
 SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
-	fDocHandler(0)
+    fDocHandler(0)
+    , fDTDHandler(0)
+    , fElemDepth(0)
+    , fEntityResolver(0)
+    , fErrorHandler(0)
+    , fAdvDHCount(0)
+    , fAdvDHList(0)
+    , fAdvDHListSize(32)
+    , fParseInProgress(false)
+    , fScanner(0)
+    , fValidator(0)
 {
+    // Create the validator if one was not provided.
+    if (!fValidator)
+        fValidator = new DTDValidator;
+
+    // Create our scanner and tell it what validator to use
+    fScanner = new XMLScanner(fValidator);
+
+    // Create the initial advanced handler list array and zero it out
+    fAdvDHList = new XMLDocumentHandler*[fAdvDHListSize];
+    memset(fAdvDHList, 0, sizeof(void*) * fAdvDHListSize);
+	
 	// SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
 	setDoNamespaces(true) ;
 
@@ -158,6 +212,9 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	// SAX2 default: validation on, auto-validation off
 	fValidation = true;
 	fautoValidation = false;
+
+	// default: reuseValidator is off
+	freuseValidator = false;
 	
 	fPrefixes    = new RefStackOf<XMLBuffer> (10, false) ;
 	tempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
@@ -166,9 +223,23 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 
 SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
 {
+    delete [] fAdvDHList;
+    delete fScanner;
+    delete fValidator;
 	delete fPrefixes;
 	delete tempAttrVec;
 	delete prefixCounts ;
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl Validator functions
+// ---------------------------------------------------------------------------
+void SAX2XMLReaderImpl::setValidator(XMLValidator* valueToAdopt)
+{
+	if (fValidator)
+		delete fValidator;
+	fValidator = valueToAdopt;
 }
 
 // ---------------------------------------------------------------------------
@@ -198,41 +269,113 @@ void SAX2XMLReaderImpl::setContentHandler(ContentHandler* const handler)
 
 }
 
-inline void SAX2XMLReaderImpl::setDTDHandler(DTDHandler* const handler) 
+void SAX2XMLReaderImpl::setDTDHandler(DTDHandler* const handler)
 {
-	SAXParser::setDTDHandler(handler) ;
+    //
+    //  <TBD>
+    //  This gets tricky. We can only set this if its a DTD validator, but it
+    //  might not be. We'll have to think about this one once there is more
+    //  than a DTD validator available.
+    //
+    fDTDHandler = handler;
+    if (fDTDHandler)
+        ((DTDValidator*)fValidator)->setDocTypeHandler(this);
+    else
+        ((DTDValidator*)fValidator)->setDocTypeHandler(0);
 }
 
-inline void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver) 
+
+void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler)
 {
-	SAXParser::setEntityResolver(resolver) ;
+    //
+    //  Store the handler. Then either install or deinstall us as the
+    //  error reporter on the scanner and validator.
+    //
+    fErrorHandler = handler;
+    if (fErrorHandler)
+    {
+        fScanner->setErrorReporter(this);
+        fValidator->setErrorReporter(this);
+    }
+     else
+    {
+        fScanner->setErrorReporter(0);
+        fValidator->setErrorReporter(0);
+    }
 }
 
-inline void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler) 
+
+void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver)
 {
-	SAXParser::setErrorHandler(handler) ;
+    fEntityResolver = resolver;
+    if (fEntityResolver)
+        fScanner->setEntityHandler(this);
+    else
+        fScanner->setEntityHandler(0);
 }
 
-inline void SAX2XMLReaderImpl::parse( const   InputSource&    source
-									, const bool            reuseValidator )
+void SAX2XMLReaderImpl::parse (const   InputSource&    source)
 {
-	SAXParser::parse( source, reuseValidator ) ;
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    try
+    {
+        fParseInProgress = true;
+        fScanner->scanDocument(source, freuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch (...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
-inline void SAX2XMLReaderImpl::parse (const   XMLCh* const    systemId
-									, const bool            reuseValidator  )  
+void SAX2XMLReaderImpl::parse (const   XMLCh* const    systemId)
 {
-	SAXParser::parse(systemId, reuseValidator) ;
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    try
+    {
+        fParseInProgress = true;
+        fScanner->scanDocument(systemId, freuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch (...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
-inline void SAX2XMLReaderImpl::parse( const   char* const     systemId
-									, const bool            reuseValidator  ) 
+void SAX2XMLReaderImpl::parse (const   char* const     systemId)
 {
-	SAXParser::parse(systemId, reuseValidator ) ;
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    try
+    {
+        fParseInProgress = true;
+        fScanner->scanDocument(systemId, freuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch (...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
 // ---------------------------------------------------------------------------
-//  SAXParser: Overrides of the XMLDocumentHandler interface
+//  SAX2XMLReaderImpl: Overrides of the XMLDocumentHandler interface
 // ---------------------------------------------------------------------------
 void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
                                 , const unsigned int    length
@@ -343,10 +486,6 @@ void SAX2XMLReaderImpl::ignorableWhitespace(const   XMLCh* const    chars
 
 void SAX2XMLReaderImpl::resetDocument()
 {
-    // Just map to the SAX document handler
-    if (fDocHandler)
-        fDocHandler->resetDocument();
-
     //
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
@@ -578,8 +717,231 @@ void SAX2XMLReaderImpl::startEntityReference(const XMLEntityDecl& entityDecl)
         fAdvDHList[index]->startEntityReference(entityDecl);
 }
 
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Overrides of the DocTypeHandler interface
+// ---------------------------------------------------------------------------
+void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
+                        , const DTDAttDef&      attDef
+                        , const bool            ignoring)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::doctypeComment(const XMLCh* const)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::doctypeDecl(const   DTDElementDecl& elemDecl
+                            , const XMLCh* const    publicId
+                            , const XMLCh* const    systemId
+                            , const bool            hasIntSubset)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::doctypePI(  const   XMLCh* const
+                            , const XMLCh* const)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::doctypeWhitespace(  const   XMLCh* const    chars
+                                    , const unsigned int    length)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::elementDecl(const DTDElementDecl&, const bool)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::endAttList(const DTDElementDecl&)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::endIntSubset()
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::endExtSubset()
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::entityDecl( const   DTDEntityDecl&  entityDecl
+                            , const bool            isPEDecl
+                            , const bool            isIgnored)
+{
+    //
+    //  If we have a DTD handler, and this entity is not ignored, and
+    //  its an unparsed entity, then send this one.
+    //
+    if (fDTDHandler && !isIgnored)
+    {
+        if (entityDecl.isUnparsed())
+        {
+            fDTDHandler->unparsedEntityDecl
+            (
+                entityDecl.getName()
+                , entityDecl.getPublicId()
+                , entityDecl.getSystemId()
+                , entityDecl.getNotationName()
+            );
+        }
+    }
+}
+
+
+void SAX2XMLReaderImpl::resetDocType()
+{
+    // Just map to the DTD handler
+    if (fDTDHandler)
+        fDTDHandler->resetDocType();
+}
+
+
+void SAX2XMLReaderImpl::notationDecl(   const   XMLNotationDecl&    notDecl
+                                , const bool                isIgnored)
+{
+    if (fDTDHandler && !isIgnored)
+    {
+        fDTDHandler->notationDecl
+        (
+            notDecl.getName()
+            , notDecl.getPublicId()
+            , notDecl.getSystemId()
+        );
+    }
+}
+
+
+void SAX2XMLReaderImpl::startAttList(const DTDElementDecl&)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::startIntSubset()
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::startExtSubset()
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+void SAX2XMLReaderImpl::TextDecl(   const  XMLCh* const
+                            , const XMLCh* const)
+{
+    // Unused by SAX DTDHandler interface at this time
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Handlers for the XMLEntityHandler interface
+// ---------------------------------------------------------------------------
+void SAX2XMLReaderImpl::endInputSource(const InputSource&)
+{
+}
+
+bool SAX2XMLReaderImpl::expandSystemId(const XMLCh* const, XMLBuffer&)
+{
+    return false;
+}
+
+
+void SAX2XMLReaderImpl::resetEntities()
+{
+    // Nothing to do for this one
+}
+
+
+InputSource* SAX2XMLReaderImpl::resolveEntity(   const   XMLCh* const    publicId
+                                               , const   XMLCh* const    systemId)
+{
+    // Just map to the SAX entity resolver handler
+    if (fEntityResolver)
+        return fEntityResolver->resolveEntity(publicId, systemId);
+    return 0;
+}
+
+
+void SAX2XMLReaderImpl::startInputSource(const InputSource&)
+{
+    // Nothing to do for this one
+}
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Overrides of the XMLErrorReporter interface
+// ---------------------------------------------------------------------------
+void SAX2XMLReaderImpl::resetErrors()
+{
+    if (fErrorHandler)
+        fErrorHandler->resetErrors();
+}
+
+
+void SAX2XMLReaderImpl::error(  const   unsigned int                code
+                        , const XMLCh* const                msgDomain
+                        , const XMLErrorReporter::ErrTypes  errType
+                        , const XMLCh* const                errorText
+                        , const XMLCh* const                systemId
+                        , const XMLCh* const                publicId
+                        , const unsigned int                lineNum
+                        , const unsigned int                colNum)
+{
+    SAXParseException toThrow = SAXParseException
+    (
+        errorText
+        , publicId
+        , systemId
+        , lineNum
+        , colNum
+    );
+
+    if (!fErrorHandler)
+    {
+        if (errType == XMLErrorReporter::ErrType_Fatal)
+            throw toThrow;
+        else
+            return;
+    }
+
+    if (errType == XMLErrorReporter::ErrType_Warning)
+        fErrorHandler->warning(toThrow);
+    else if (errType == XMLErrorReporter::ErrType_Fatal)
+        fErrorHandler->fatalError(toThrow);
+    else
+        fErrorHandler->error(toThrow);
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Features and Properties
+// ---------------------------------------------------------------------------
+
 void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 {
+
+	if (fParseInProgress)
+		throw SAXNotSupportedException("Feature modification is not supported during parse.");
+	
 	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES) == 0)
 	{
 		setDoNamespaces(value);
@@ -620,10 +982,16 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 		return;
 	}
 
-	throw SAXNotSupportedException();
+	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
+	{
+		freuseValidator = value;
+		return;
+	}
+
+	throw SAXNotRecognizedException("Unknown Feature");
 }
 
-const bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name)
+bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 {
 	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES) == 0)
 		return getDoNamespaces();
@@ -633,25 +1001,34 @@ const bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name)
 		return fnamespacePrefix;
 	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
 		return fautoValidation;
+	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
+        return freuseValidator;
 
-	throw SAXNotSupportedException();
+	throw SAXNotRecognizedException("Unknown Feature");
 	return false;
 }
 
-void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, const void* const value)
+void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 {
-	throw SAXNotSupportedException();
+	if (fParseInProgress)
+		throw SAXNotSupportedException("Property modification is not supported during parse.");
+
+	throw SAXNotRecognizedException("Unknown Property");
 	// unimplemented
 }
 
 
-const void* const SAX2XMLReaderImpl::getProperty(const XMLCh* const name)
+void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
 {
-	throw SAXNotSupportedException();
+	throw SAXNotRecognizedException("Unknown Property");
 	// unimplemented 
 	return 0;
 }
 
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Private getters and setters for conveniences
+// ---------------------------------------------------------------------------
 
 void SAX2XMLReaderImpl::setValidationScheme(const ValSchemes newScheme)
 {
@@ -663,3 +1040,12 @@ void SAX2XMLReaderImpl::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
+void SAX2XMLReaderImpl::setDoNamespaces(const bool newState)
+{
+    fScanner->setDoNamespaces(newState);
+}
+
+bool SAX2XMLReaderImpl::getDoNamespaces() const
+{
+    return fScanner->getDoNamespaces();
+}

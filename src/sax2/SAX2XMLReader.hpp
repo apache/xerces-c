@@ -56,6 +56,19 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/09 22:19:29  jpolast
+ * many conformance & stability changes:
+ *   - ContentHandler::resetDocument() removed
+ *   - attrs param of ContentHandler::startDocument() made const
+ *   - SAXExceptions thrown now have msgs
+ *   - removed duplicate function signatures that had 'const'
+ *       [ eg: getContentHander() ]
+ *   - changed getFeature and getProperty to apply to const objs
+ *   - setProperty now takes a void* instead of const void*
+ *   - SAX2XMLReaderImpl does not inherit from SAXParser anymore
+ *   - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented
+ *   - Features & Properties now read-only during parse
+ *
  * Revision 1.2  2000/08/07 18:21:27  jpolast
  * change SAX_EXPORT module to SAX2_EXPORT
  *
@@ -72,6 +85,7 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/XMLUniDefs.hpp>
+#include <framework/XMLValidator.hpp>
 
 class ContentHandler ;
 class DTDHandler;
@@ -83,6 +97,12 @@ class SAX2_EXPORT SAX2XMLReader
 {
 public:
 
+    enum ValSchemes
+    {
+        Val_Never
+        , Val_Always
+        , Val_Auto
+    };
 
     /** @name Constructors and Destructor */
     // -----------------------------------------------------------------------
@@ -105,57 +125,33 @@ public:
     /** @name The XMLReader interfaces */
     //@{
 
-	/**
-	  * This method returns the installed content handler. Suitable
-	  * for 'lvalue' usages.
-	  *
-	  * @return The pointer to the installed content handler object.
-	  */
-    virtual ContentHandler* getContentHandler() = 0 ;
+    /**
+      * This method returns the installed content handler.
+      *
+      * @return A pointer to the installed content handler object.
+      */
+    virtual ContentHandler* getContentHandler() const = 0 ;
 
     /**
-      * This method returns the installed content handler. Suitable
-      * only for 'rvalue' usages.
+      * This method returns the installed DTD handler.
       *
-      * @return A const pointer to the installed content handler object.
+      * @return A pointer to the installed DTD handler object.
       */
-    virtual const ContentHandler* getContentHandler() const = 0 ;
-
-    virtual DTDHandler* getDTDHandler() = 0;
-
-    virtual const DTDHandler* getDTDHandler() const = 0;
+    virtual DTDHandler* getDTDHandler() const = 0;
 
     /**
-      * This method returns the installed entity resolver. Suitable
-      * for 'lvalue' usages.
+      * This method returns the installed entity resolver. 
       *
-      * @return The pointer to the installed entity resolver object.
+      * @return A pointer to the installed entity resolver object.
       */
-    virtual EntityResolver* getEntityResolver() = 0 ;
+    virtual EntityResolver* getEntityResolver() const = 0 ;
 
     /**
-      * This method returns the installed entity resolver. Suitable
-      * for 'rvalue' usages.
+      * This method returns the installed error handler. 
       *
-      * @return A const pointer to the installed entity resolver object.
+      * @return A pointer to the installed error handler object.
       */
-    virtual const EntityResolver* getEntityResolver() const = 0 ;
-
-    /**
-      * This method returns the installed error handler. Suitable
-      * for 'lvalue' usages.
-      *
-      * @return The pointer to the installed error handler object.
-      */
-    virtual ErrorHandler* getErrorHandler() = 0 ;
-
-    /**
-      * This method returns the installed error handler. Suitable
-      * for 'rvalue' usages.
-      *
-      * @return A const pointer to the installed error handler object.
-      */
-    virtual const ErrorHandler* getErrorHandler() const = 0 ;
+    virtual ErrorHandler* getErrorHandler() const = 0 ;
 
 	/**
 	  * This method gets a Feature as per the SAX2 spec (such as
@@ -164,14 +160,14 @@ public:
 	  * @param name The name of the feature to be set
 	  * @param value true if the feature should be enabled.
 	  */
-	virtual const bool getFeature(const XMLCh* const name) = 0 ;
+	virtual bool getFeature(const XMLCh* const name) const = 0;
 
 	/**
       * Gets the value of a property.
       *
       * @param name The property name, which is any fully-qualified URI.
       */
-	virtual const void* const getProperty(const XMLCh* const name) = 0 ;
+	virtual void* getProperty(const XMLCh* const name) const = 0 ;
 
 
   /**
@@ -189,9 +185,6 @@ public:
     *
     * @param source The input source for the top-level of the
     *               XML document.
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -205,7 +198,6 @@ public:
     virtual void parse
     (
         const   InputSource&    source
-        , const bool            reuseValidator = false
     ) = 0;
 
   /**
@@ -221,9 +213,6 @@ public:
     * by the application before it is passed to the parser.
     *
     * @param systemId The system identifier (URI).
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -233,7 +222,6 @@ public:
     virtual void parse
     (
         const   XMLCh* const    systemId
-        , const bool            reuseValidator = false
     ) = 0;
 
   /**
@@ -249,9 +237,6 @@ public:
     * by the application before it is passed to the parser.
     *
     * @param systemId The system identifier (URI).
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -261,7 +246,6 @@ public:
     virtual void parse
     (
         const   char* const     systemId
-        , const bool            reuseValidator = false
     ) = 0;
 	
   /**
@@ -351,10 +335,38 @@ public:
 	* @param name The property name, which is any fully-qualified URI.
 	* @param value The requested value for the property.
 	*/
-	virtual void setProperty(const XMLCh* const name, const void* const value) = 0 ;
+	virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Validator: setters and getters
+    // -----------------------------------------------------------------------
+    /** @name Validator: setters and getters (Xerces-C specific) */
+    //@{
+    /**
+	  * This method is used to set a validator.
+	  *
+	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+	  * deleted when the XMLReader is destroyed.</b>
+	  *
+	  * @param valueToAdopt A pointer to the validator that the reader should use.
+	  *
+	  */
+	virtual void setValidator(XMLValidator* valueToAdopt) = 0;
+
+    /**
+	  * This method is used to get the current validator.
+	  *
+	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+	  * deleted when the XMLReader is destroyed.</b>
+	  *
+	  * @return A pointer to the validator.  An application should not deleted
+	  * the object returned.
+	  *
+	  */
+	virtual XMLValidator* getValidator() const = 0;
+    //@}
 
 private :
     /* The copy constructor, you cannot call this directly */

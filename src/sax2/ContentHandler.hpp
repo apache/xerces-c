@@ -56,6 +56,19 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/09 22:19:29  jpolast
+ * many conformance & stability changes:
+ *   - ContentHandler::resetDocument() removed
+ *   - attrs param of ContentHandler::startDocument() made const
+ *   - SAXExceptions thrown now have msgs
+ *   - removed duplicate function signatures that had 'const'
+ *       [ eg: getContentHander() ]
+ *   - changed getFeature and getProperty to apply to const objs
+ *   - setProperty now takes a void* instead of const void*
+ *   - SAX2XMLReaderImpl does not inherit from SAXParser anymore
+ *   - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented
+ *   - Features & Properties now read-only during parse
+ *
  * Revision 1.2  2000/08/07 18:21:27  jpolast
  * change SAX_EXPORT module to SAX2_EXPORT
  *
@@ -240,15 +253,6 @@ public:
         , const XMLCh* const    data
     ) = 0;
 
-    /**
-    * Reset the Docuemnt object on its reuse
-    *
-    * <p>This method helps in reseting the document implementational
-    * defaults each time the document is begun.</p>
-    *
-    */
-    virtual void resetDocument() = 0;
-
   /**
     * Receive an object for locating the origin of SAX document events.
     *
@@ -318,8 +322,8 @@ public:
     (
         const   XMLCh* const    uri,
         const   XMLCh* const    localname,
-        const   XMLCh* const    qname
-        ,       Attributes&		attrs
+        const   XMLCh* const    qname,
+        const   Attributes&     attrs
     ) = 0;
 
   /**

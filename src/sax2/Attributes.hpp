@@ -56,6 +56,19 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/09 22:19:28  jpolast
+ * many conformance & stability changes:
+ *   - ContentHandler::resetDocument() removed
+ *   - attrs param of ContentHandler::startDocument() made const
+ *   - SAXExceptions thrown now have msgs
+ *   - removed duplicate function signatures that had 'const'
+ *       [ eg: getContentHander() ]
+ *   - changed getFeature and getProperty to apply to const objs
+ *   - setProperty now takes a void* instead of const void*
+ *   - SAX2XMLReaderImpl does not inherit from SAXParser anymore
+ *   - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented
+ *   - Features & Properties now read-only during parse
+ *
  * Revision 1.2  2000/08/07 18:21:26  jpolast
  * change SAX_EXPORT module to SAX2_EXPORT
  *
@@ -171,7 +184,7 @@ public:
     *         if the index is out of range.
     * @see #getLength 
     */
-	virtual const XMLCh* getURI(const unsigned int index)  = 0;
+	virtual const XMLCh* getURI(const unsigned int index) const = 0;
 
   /**
     * Return the local name of an attribute in this list (by position).

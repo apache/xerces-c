@@ -56,6 +56,19 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/09 22:16:13  jpolast
+ * many conformance & stability changes:
+ *   - ContentHandler::resetDocument() removed
+ *   - attrs param of ContentHandler::startDocument() made const
+ *   - SAXExceptions thrown now have msgs
+ *   - removed duplicate function signatures that had 'const'
+ *       [ eg: getContentHander() ]
+ *   - changed getFeature and getProperty to apply to const objs
+ *   - setProperty now takes a void* instead of const void*
+ *   - SAX2XMLReaderImpl does not inherit from SAXParser anymore
+ *   - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented
+ *   - Features & Properties now read-only during parse
+ *
  * Revision 1.2  2000/08/02 20:46:32  aruna1
  * sax2 changes
  *
@@ -97,9 +110,12 @@ class ContentHandler;
   */
 
 class PARSERS_EXPORT SAX2XMLReaderImpl :
-
 	public SAX2XMLReader
-    , public SAXParser
+//    , public Parser
+    , public XMLDocumentHandler
+    , public XMLErrorReporter
+    , public XMLEntityHandler
+    , public DocTypeHandler
 {
 public :
 
@@ -107,14 +123,8 @@ public :
 	static const XMLCh SAX_CORE_NAMESPACES[];
 	static const XMLCh SAX_CORE_NAMESPACES_PREFIXES[];
 	static const XMLCh SAX_XERCES_DYNAMIC[];
+	static const XMLCh SAX_XERCES_REUSEVALIDATOR[];
 	
-    enum ValSchemes
-    {
-        Val_Never
-        , Val_Always
-        , Val_Auto
-    };
-
 	SAX2XMLReaderImpl() ;
 	~SAX2XMLReaderImpl() ;
 
@@ -363,147 +373,63 @@ public :
 
     /** @name Getter methods */
     //@{
-    /**
-      * This method returns the installed document handler. Suitable
-      * for 'lvalue' usages.
-      *
-      * @return The pointer to the installed document handler object.
-      */
-    virtual ContentHandler* getContentHandler();
 
     /**
-      * This method returns the installed document handler. Suitable
-      * only for 'rvalue' usages.
+      * This method returns the installed content handler. 
       *
-      * @return A const pointer to the installed document handler object.
+      * @return A pointer to the installed content handler object.
       */
-    virtual const ContentHandler* getContentHandler() const;
-
-    virtual DTDHandler* getDTDHandler() ;
-
-    virtual const DTDHandler* getDTDHandler() const ;
+    virtual ContentHandler* getContentHandler() const;
 
     /**
-      * This method returns the installed entity resolver. Suitable
-      * for 'lvalue' usages.
+      * This method returns the installed DTD handler. 
       *
-      * @return The pointer to the installed entity resolver object.
+      * @return A pointer to the installed DTD handler object.
       */
-    virtual EntityResolver* getEntityResolver()  ;
+    virtual DTDHandler* getDTDHandler() const ;
 
     /**
-      * This method returns the installed entity resolver. Suitable
-      * for 'rvalue' usages.
+      * This method returns the installed entity resolver. 
       *
-      * @return A const pointer to the installed entity resolver object.
+      * @return A pointer to the installed entity resolver object.
       */
-    virtual const EntityResolver* getEntityResolver() const  ;
+    virtual EntityResolver* getEntityResolver() const  ;
 
     /**
-      * This method returns the installed error handler. Suitable
-      * for 'lvalue' usages.
+      * This method returns the installed error handler. 
       *
-      * @return The pointer to the installed error handler object.
+      * @return A pointer to the installed error handler object.
       */
-    virtual ErrorHandler* getErrorHandler() ;
+    virtual ErrorHandler* getErrorHandler() const ;
+
+    /** @name Implementation of SAX 2.0 interface's. */
+    //@{
+    /**
+      * This method invokes the parsing process on the XML file specified
+      * by the InputSource parameter.
+      *
+      * @param source A const reference to the InputSource object which
+      *               points to the XML file to be parsed.
+      */
+    virtual void parse(const InputSource& source);
 
     /**
-      * This method returns the installed error handler. Suitable
-      * for 'rvalue' usages.
+      * This method invokes the parsing process on the XML file specified by
+      * the Unicode string parameter 'systemId'.
       *
-      * @return A const pointer to the installed error handler object.
+      * @param systemId A const XMLCh pointer to the Unicode string which
+      *                 contains the path to the XML file to be parsed.
       */
-    virtual const ErrorHandler* getErrorHandler() const ;
+    virtual void parse(const XMLCh* const systemId);
 
-  /**
-    * Parse an XML document.
-    *
-    * The application can use this method to instruct the SAX parser
-    * to begin parsing an XML document from any valid input
-    * source (a character stream, a byte stream, or a URI).
-    *
-    * Applications may not invoke this method while a parse is in
-    * progress (they should create a new Parser instead for each
-    * additional XML document).  Once a parse is complete, an
-    * application may reuse the same Parser object, possibly with a
-    * different input source.
-    *
-    * @param source The input source for the top-level of the
-    *               XML document.
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
-    * @exception SAXException Any SAX exception, possibly
-    *            wrapping another exception.
-    * @exception XMLException An exception from the parser or client
-    *            handler code.
-    * @see InputSource#InputSource
-    * @see #setEntityResolver
-    * @see #setDTDHandler
-    * @see #setDocumentHandler
-    * @see #setErrorHandler
-    */
-    virtual void parse
-    (
-        const   InputSource&    source
-        , const bool            reuseValidator = false
-    ) ;
-
-  /**
-    * Parse an XML document from a system identifier (URI).
-    *
-    * This method is a shortcut for the common case of reading a
-    * document from a system identifier.  It is the exact equivalent
-    * of the following:
-    *
-    * parse(new URLInputSource(systemId));
-    *
-    * If the system identifier is a URL, it must be fully resolved
-    * by the application before it is passed to the parser.
-    *
-    * @param systemId The system identifier (URI).
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
-    * @exception SAXException Any SAX exception, possibly
-    *            wrapping another exception.
-    * @exception XMLException An exception from the parser or client
-    *            handler code.
-    * @see #parse(InputSource)
-    */
-    virtual void parse
-    (
-        const   XMLCh* const    systemId
-        , const bool            reuseValidator = false
-    ) ;
-
-  /**
-    * Parse an XML document from a system identifier (URI).
-    *
-    * This method is a shortcut for the common case of reading a
-    * document from a system identifier.  It is the exact equivalent
-    * of the following:
-    *
-    * parse(new URLInputSource(systemId));
-    *
-    * If the system identifier is a URL, it must be fully resolved
-    * by the application before it is passed to the parser.
-    *
-    * @param systemId The system identifier (URI).
-    * @param reuseValidator Indicates whether the validator should be
-    *               reused, ignoring any external subset. If true, there
-    *               cannot be any internal subset.
-    * @exception SAXException Any SAX exception, possibly
-    *            wrapping another exception.
-    * @exception XMLException An exception from the parser or client
-    *            handler code.
-    * @see #parse(InputSource)
-    */
-    virtual void parse
-    (
-        const   char* const     systemId
-        , const bool            reuseValidator = false
-    ) ;
+    /**
+      * This method invokes the parsing process on the XML file specified by
+      * the native char* string parameter 'systemId'.
+      *
+      * @param systemId A const char pointer to a native string which
+      *                 contains the path to the XML file to be parsed.
+      */
+    virtual void parse(const char* const systemId);
 
     /**
       * This method installs the user specified SAX Document Handler
@@ -512,8 +438,6 @@ public :
       * @param handler A pointer to the document handler to be called
       *                when the parser comes across 'document' events
       *                as per the SAX specification.
-      *
-      * @see Parser#parse(char*)
       */
     virtual void setContentHandler(ContentHandler* const handler);
 
@@ -587,7 +511,7 @@ public :
 	  * @param name The name of the feature to be set
 	  * @param value true if the feature should be enabled.
 	  */
-	virtual const bool getFeature(const XMLCh* const name);
+	virtual bool getFeature(const XMLCh* const name) const;
 
 	/**
 	  * Set the value of a property.
@@ -595,15 +519,424 @@ public :
 	  * @param name The property name, which is any fully-qualified URI.
 	  * @param value The requested value for the property.
 	  */
-	virtual void setProperty(const XMLCh* const name, const void* const value);
+	virtual void setProperty(const XMLCh* const name, void* value);
 
 	/**
 	  * Gets the value of a property.
 	  *
 	  * @param name The property name, which is any fully-qualified URI.
 	  */
-	virtual const void* const getProperty(const XMLCh* const name);
+	virtual void* getProperty(const XMLCh* const name) const;
+	//@}
 
+    // -----------------------------------------------------------------------
+    //  Implementation of the XMLErrorReporter interface
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of the XMLErrorReporter Interface. */
+    //@{
+    /**
+      * This method is used to report back errors found while parsing the
+      * XML file. The driver will call the corresponding user installed
+      * SAX Error Handler methods: 'fatal', 'error', 'warning' depending
+      * on the severity of the error. This classification is defined by
+      * the XML specification.
+      *
+      * @param errCode An integer code for the error.
+      * @param msgDomain A const pointer to an Unicode string representing
+      *                  the message domain to use.
+      * @param errType An enumeration classifying the severity of the error.
+      * @param errorText A const pointer to an Unicode string representing
+      *                  the text of the error message.
+      * @param systemId  A const pointer to an Unicode string representing
+      *                  the system id of the XML file where this error
+      *                  was discovered.
+      * @param publicId  A const pointer to an Unicode string representing
+      *                  the public id of the XML file where this error
+      *                  was discovered.
+      * @param lineNum   The line number where the error occurred.
+      * @param colNum    The column number where the error occurred.
+      * @see ErrorHandler
+      */
+    virtual void error
+    (
+        const   unsigned int                errCode
+        , const XMLCh* const                msgDomain
+        , const XMLErrorReporter::ErrTypes  errType
+        , const XMLCh* const                errorText
+        , const XMLCh* const                systemId
+        , const XMLCh* const                publicId
+        , const unsigned int                lineNum
+        , const unsigned int                colNum
+    );
+
+    /**
+      * This method allows the user installed Error Handler
+      * callback to 'reset' itself.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      */
+    virtual void resetErrors();
+    //@}
+
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the XMLEntityHandler interface
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of the XMLEntityHandler Interface. */
+    //@{
+    /**
+      * This method is used to indicate the end of parsing of an external
+      * entity file.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param inputSource A const reference to the InputSource object
+      *                    which points to the XML file being parsed.
+      * @see InputSource
+      */
+    virtual void endInputSource(const InputSource& inputSource);
+
+    /**
+      * This method allows an installed XMLEntityHandler to further
+      * process any system id's of enternal entities encountered in
+      * the XML file being parsed, such as redirection etc.
+      *
+      * <b><font color="#FF0000">This method always returns 'false'
+      * for this SAX driver implementation.</font></b>
+      *
+      * @param systemId  A const pointer to an Unicode string representing
+      *                  the system id scanned by the parser.
+      * @param toFill    A pointer to a buffer in which the application
+      *                  processed system id is stored.
+      * @return 'true', if any processing is done, 'false' otherwise. 
+      */
+    virtual bool expandSystemId
+    (
+        const   XMLCh* const    systemId
+        ,       XMLBuffer&      toFill
+    );
+
+    /**
+      * This method allows the installed XMLEntityHandler to reset
+      * itself.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void resetEntities();
+
+    /**
+      * This method allows a user installed entity handler to further
+      * process any pointers to external entities. The applications
+      * can implement 'redirection' via this callback. The driver
+      * should call the SAX EntityHandler 'resolveEntity' method.
+      *
+      * @param publicId A const pointer to a Unicode string representing the
+      *                 public id of the entity just parsed.
+      * @param systemId A const pointer to a Unicode string representing the
+      *                 system id of the entity just parsed.
+      * @return The value returned by the SAX resolveEntity method or
+      *         NULL otherwise to indicate no processing was done.
+      * @see EntityResolver
+      */
+    virtual InputSource* resolveEntity
+    (
+        const   XMLCh* const    publicId
+        , const XMLCh* const    systemId
+    );
+
+    /**
+      * This method is used to indicate the start of parsing an
+      * external entity file.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param inputSource A const reference to the InputSource object
+      *                    which points to the external entity 
+      *                    being parsed.
+      */
+    virtual void startInputSource(const InputSource& inputSource);
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the DocTypeHandler Interface
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of the DocTypeHandler Interface */
+    //@{
+    /**
+      * This method is used to report an attribute definition.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX
+      * driver implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing information
+      *                 about the element whose attribute definition was just
+      *                 parsed.
+      * @param attDef   A const reference to the object containing information
+      *                 attribute definition.
+      * @param ignore   The flag indicating whether this attribute definition
+      *                 was ignored by the parser or not.
+      */
+    virtual void attDef
+    (
+        const   DTDElementDecl& elemDecl
+        , const DTDAttDef&      attDef
+        , const bool            ignoring
+    );
+
+    /**
+      * This method is used to report a comment occurring within the DTD.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param comment  A const pointer to a Unicode string representing the
+      *                 text of the comment just parsed.
+      */
+    virtual void doctypeComment
+    (
+        const   XMLCh* const    comment
+    );
+
+    /**
+      * This method is used to report the DOCTYPE declaration.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing information
+      *                 about the root element definition declaration of the
+      *                 XML document being parsed.
+      * @param publicId A const pointer to a Unicode string representing the
+      *                 public id of the DTD file.
+      * @param systemId A const pointer to a Unicode string representing the
+      *                 system id of the DTD file.
+      * @param hasIntSubset A flag indicating if this XML file contains any
+      *                     internal subset.
+      */
+    virtual void doctypeDecl
+    (
+        const   DTDElementDecl& elemDecl
+        , const XMLCh* const    publicId
+        , const XMLCh* const    systemId
+        , const bool            hasIntSubset
+    );
+
+    /**
+      * This method is used to report any PI declarations
+      * occurring inside the DTD definition block.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param target A const pointer to a Unicode string representing the
+      *               target of the PI declaration.
+      * @param data   A const pointer to a Unicode string representing the
+      *               data of the PI declaration. See the PI production rule
+      *               in the XML specification for details.
+      */
+    virtual void doctypePI
+    (
+        const   XMLCh* const    target
+        , const XMLCh* const    data
+    );
+
+    /**
+      * This method is used to report any whitespaces
+      * occurring inside the DTD definition block.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param chars  A const pointer to a Unicode string representing the
+      *               whitespace characters.
+      * @param length The length of the whitespace Unicode string.
+      */
+    virtual void doctypeWhitespace
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    length
+    );
+
+    /**
+      * This method is used to report an element declarations
+      * successfully scanned by the parser.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param decl   A const reference to the object containing element
+      *               declaration information.
+      * @param isIgnored The flag indicating whether this definition was
+      *                  ignored by the parser or not.
+      */
+    virtual void elementDecl
+    (
+        const   DTDElementDecl& decl
+        , const bool            isIgnored
+    );
+
+    /**
+      * This method is used to report the end of an attribute
+      * list declaration for an element.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      */
+    virtual void endAttList
+    (
+        const   DTDElementDecl& elemDecl
+    );
+
+    /**
+      * This method is used to report the end of the internal subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void endIntSubset();
+
+    /**
+      * This method is used to report the end of the external subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void endExtSubset();
+
+    /**
+      * This method is used to report any entity declarations.
+      * For unparsed entities, this driver will invoke the
+      * SAX DTDHandler::unparsedEntityDecl callback.
+      *
+      * @param entityDecl A const reference to the object containing
+      *                   the entity declaration information.
+      * @param isPEDecl  The flag indicating whether this was a
+      *                  parameter entity declaration or not.
+      * @param isIgnored The flag indicating whether this definition
+      *                  was ignored by the parser or not.
+      *
+      * @see DTDHandler#unparsedEntityDecl
+      */
+    virtual void entityDecl
+    (
+        const   DTDEntityDecl&  entityDecl
+        , const bool            isPEDecl
+        , const bool            isIgnored
+    );
+
+    /**
+      * This method allows the user installed DTD handler to
+      * reset itself.
+      */
+    virtual void resetDocType();
+
+    /**
+      * This method is used to report any notation declarations.
+      * If there is a user installed DTDHandler, then the driver will
+      * invoke the SAX DTDHandler::notationDecl callback.
+      *
+      * @param notDecl A const reference to the object containing the notation
+      *                declaration information.
+      * @param isIgnored The flag indicating whether this definition was ignored
+      *                  by the parser or not.
+      *
+      * @see DTDHandler#notationDecl
+      */
+    virtual void notationDecl
+    (
+        const   XMLNotationDecl&    notDecl
+        , const bool                isIgnored
+    );
+
+    /**
+      * This method is used to indicate the start of an element's attribute
+      * list declaration.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param elemDecl A const reference to the object containing element
+      *                 declaration information.
+      */
+    virtual void startAttList
+    (
+        const   DTDElementDecl& elemDecl
+    );
+
+    /**
+      * This method is used indicate the start of the internal subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void startIntSubset();
+
+    /**
+      * This method is used indicate the start of the external subset.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      */
+    virtual void startExtSubset();
+
+    /**
+      * This method is used to report the TextDecl. Refer to the XML
+      * specification for the syntax of a TextDecl.
+      *
+      * <b><font color="#FF0000">This method is a no-op for this SAX driver
+      * implementation.</font></b>
+      *
+      * @param versionStr A const pointer to a Unicode string representing
+      *                   the version number of the 'version' clause.
+      * @param encodingStr A const pointer to a Unicode string representing
+      *                    the encoding name of the 'encoding' clause.
+      */
+    virtual void TextDecl
+    (
+        const   XMLCh* const    versionStr
+        , const XMLCh* const    encodingStr
+    );
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Validator: setters and getters
+    // -----------------------------------------------------------------------
+    /** @name Validator: setters and getters (Xerces-C specific) */
+    //@{
+    /**
+	  * This method is used to set a validator.
+	  *
+	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+	  * deleted when the XMLReader is destroyed.</b>
+	  *
+	  * @param valueToAdopt A pointer to the validator that the reader should use.
+	  *
+	  */
+	virtual void setValidator(XMLValidator* valueToAdopt);
+
+    /**
+	  * This method is used to get the current validator.
+	  *
+	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+	  * deleted when the XMLReader is destroyed.</b>
+	  *
+	  * @return A pointer to the validator.  An application should not deleted
+	  * the object returned.
+	  *
+	  */
+	virtual XMLValidator* getValidator() const;
+    //@}
 
 private :
     // -----------------------------------------------------------------------
@@ -621,10 +954,19 @@ private :
     //      event to allow SAX-like access to the element attributes.
     //
     //  fDocHandler
-    //      The installed SAX doc handler, if any. Null if none.
+    //      The installed SAX content handler, if any. Null if none.
     //
 	//  fnamespacePrefix
 	//      Indicates whether the namespace-prefix feature is on or off.
+	//  
+	//  fautoValidation
+	//      Indicates whether automatic validation is on or off
+	//
+	//  fValidation
+	//      Indicates whether the 'validation' core features is on or off
+	//
+	//  freuseValidator
+	//      Tells the parser whether it should reuse the validator or not
 	//
 	//	fStringBuffers
 	//		Any temporary strings we need are pulled out of this pool
@@ -644,13 +986,27 @@ private :
 	bool                       fnamespacePrefix;
 	bool                       fautoValidation;
 	bool                       fValidation;
+	bool                       freuseValidator;
 
 	XMLBufferMgr			   fStringBuffers ;
 	RefStackOf<XMLBuffer> *    fPrefixes ;
 	ValueStackOf<unsigned int> * prefixCounts ;
 
+    DTDHandler*                fDTDHandler;
+    unsigned int               fElemDepth;
+    EntityResolver*            fEntityResolver;
+    ErrorHandler*              fErrorHandler;
+    unsigned int               fAdvDHCount;
+    XMLDocumentHandler**       fAdvDHList;
+    unsigned int               fAdvDHListSize;
+    bool                       fParseInProgress;
+    XMLScanner*                fScanner;
+    XMLValidator*              fValidator;
+	
 	// internal function used to set the state of validation: always, never, or auto
-	virtual void setValidationScheme(const ValSchemes newScheme);
+	void setValidationScheme(const ValSchemes newScheme);
+    void setDoNamespaces(const bool newState);
+    bool getDoNamespaces() const;
 
 };
 
@@ -658,44 +1014,29 @@ private :
 // ---------------------------------------------------------------------------
 //  SAX2XMLReader: Getter methods
 // ---------------------------------------------------------------------------
-inline ContentHandler* SAX2XMLReaderImpl::getContentHandler()
+inline ContentHandler* SAX2XMLReaderImpl::getContentHandler() const
 {
     return fDocHandler;
 }
 
-inline const ContentHandler* SAX2XMLReaderImpl::getContentHandler() const
-{
-    return fDocHandler;
-}
-
-inline DTDHandler* SAX2XMLReaderImpl::getDTDHandler()
+inline DTDHandler* SAX2XMLReaderImpl::getDTDHandler() const 
 {
 	return fDTDHandler ;
 }
 
-inline const DTDHandler* SAX2XMLReaderImpl::getDTDHandler() const 
+inline EntityResolver* SAX2XMLReaderImpl::getEntityResolver() const  
 {
-	return fDTDHandler ;
+	return fEntityResolver;
 }
 
-inline EntityResolver* SAX2XMLReaderImpl::getEntityResolver() 
+inline ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() const
 {
-	return SAXParser::getEntityResolver() ;
+	return fErrorHandler;
 }
 
-inline const EntityResolver* SAX2XMLReaderImpl::getEntityResolver() const  
+inline XMLValidator* SAX2XMLReaderImpl::getValidator() const
 {
-	return SAXParser::getEntityResolver() ;
-}
-
-inline ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() 
-{
-	return SAXParser::getErrorHandler() ;
-}
-
-inline const ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() const
-{
-	return SAXParser::getErrorHandler() ;
+	return fValidator;
 }
 
 #endif 
