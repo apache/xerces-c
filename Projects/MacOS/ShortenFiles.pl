@@ -7,9 +7,12 @@
 
 #
 #	$Log$
+#	Revision 1.5  2001/06/10 19:37:40  jberry
+#	Neaten formatting of output.
+#
 #	Revision 1.4  2000/09/06 21:55:40  jberry
 #	Allow ShortenFiles to work even when the destination directory already exists
-#
+#	
 #
 
 use Config;
@@ -148,7 +151,7 @@ sub Copy
 	if (exists $gBadMap{$srcName})
 	{
 		$dstName = $gBadMap{$srcName};
-		print "Renaming file $srcName --> $dstName\n";
+		print "Renaming file $srcName\n\t--> $dstName\n";
 	}
 		
 	$srcPath = $File::Find::name;
@@ -158,7 +161,7 @@ sub Copy
 	$dstPath =~ s/$srcName$/$dstName/;
 	$dstPath =~ s/^$gSrcBase/$gDstBase/;
 	
-#print "srcName $srcName, dstName $dstName, srcPath $srcPath, dstPath $dstPath\n";
+	#print "srcName $srcName, dstName $dstName, srcPath $srcPath, dstPath $dstPath\n";
 	
 	if (-d $srcPath)
 	{
@@ -201,7 +204,7 @@ sub Copy
 					$sub = $gBadMap{$was};
 					
 					s/^(.*)include(.*)$was(.*)/$1include$2$sub$3/;
-					print "file $srcName: changed include $includePath --> $_";
+					print "file $srcName: changed include $includePath\n\t--> $_";
 					#print "Change $dup to $_";
 				}
 			}
