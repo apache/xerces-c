@@ -187,7 +187,7 @@ InputSource* RedirectHandlers::resolveEntity(const   XMLCh* const    publicId
     //  We cannot assume that the XMLCh type is ok to pass to wcscmp(), so
     //  just do a comparison ourselves.
     //
-    const XMLCh* s1 = publicId;
+    const XMLCh* s1 = gFileToTrap;
     const XMLCh* s2 = systemId;
     while (true)
     {
