@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/19 14:57:28  knoaman
+ * Add an adoptFlag parameter to the constructor and remove the setter method.
+ * Documentation update.
+ *
  * Revision 1.2  2002/07/15 18:26:46  tng
  * DOM L3: For consistency, add release() to DOMInputSource and thus Wrapper4InputSource.
  *
@@ -76,8 +80,9 @@
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Constructor and Destructor
 // ---------------------------------------------------------------------------
-Wrapper4InputSource::Wrapper4InputSource(InputSource* const inputSource) :
-    fAdoptInputSource(true)
+Wrapper4InputSource::Wrapper4InputSource(InputSource* const inputSource,
+                                         const bool adoptFlag) :
+    fAdoptInputSource(adoptFlag)
     ,  fInputSource(inputSource)
 {
     if (!inputSource)

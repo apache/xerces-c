@@ -78,8 +78,16 @@ public:
 
   /**
     * Constructor
+    *  
+    * Wrap a SAX InputSource and pretend it to be a DOMInputSource.
+    * By default, the wrapper will adopt the SAX InputSource that is wrapped.
+    *
+    * @param  inputSource  The SAX InputSource to be wrapped 
+    * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
+    *                      SAX InputSource. Default is true.
     */
-    Wrapper4InputSource(InputSource* const inputSource);
+    Wrapper4InputSource(InputSource* const inputSource,
+                        const bool adoptFlag = true);
 
   /**
     * Destructor
@@ -97,10 +105,8 @@ public:
     *
     * Makes the byte stream for this input source.
     *
-    * <p>The derived class must create and return a binary input stream of an
-    * appropriate type for its kind of data source. The returned stream must
-    * be dynamically allocated and becomes the parser's property.
-    * </p>
+    * <p>The function will call the makeStream of the wrapped input source. 
+    * The returned stream becomes the parser's property.</p>
     *
     * @see BinInputStream
     */
@@ -116,8 +122,9 @@ public:
     *
     * An input source can be set to force the parser to assume a particular
     * encoding for the data that input source reprsents, via the setEncoding()
-    * method. This method returns name of the encoding that is to be forced.
-    * If the encoding has never been forced, it returns a null pointer.
+    * method. This method will delegate to the wrapped input source to return
+    * name of the encoding that is to be forced. If the encoding has never
+    * been forced, it returns a null pointer.
     *
     * @return The forced encoding, or null if none was supplied.
     * @see #setEncoding
@@ -128,7 +135,8 @@ public:
   /**
     * <p><b>"Experimental - subject to change"</b></p>
     *
-    * Get the public identifier for this input source.
+    * Get the public identifier for this input source. Delegated to the
+    * wrapped input source object.
     *
     * @return The public identifier, or null if none was supplied.
     * @see #setPublicId
@@ -139,7 +147,8 @@ public:
   /**
     * <p><b>"Experimental - subject to change"</b></p>
     *
-    * Get the system identifier for this input source.
+    * Get the system identifier for this input source. Delegated to the
+    * wrapped input source object.
     *
     * <p>If the system ID is a URL, it will be fully resolved.</p>
     *
@@ -151,7 +160,8 @@ public:
    /**
      * Get the base URI to be used for resolving relative URIs to absolute
      * URIs. If the baseURI is itself a relative URI, the behavior is
-     * implementation dependent.
+     * implementation dependent. Delegated to the wrapped intput source
+     * object.
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
@@ -165,7 +175,7 @@ public:
     * <p><b>"Experimental - subject to change"</b></p>
     *
     * Get the flag that indicates if the parser should issue fatal error if this input source
-    * is not found.
+    * is not found. Delegated to the wrapped input source object.
     *
     * @return True if the parser should issue fatal error if this input source is not found.
     *         False if the parser issue warning message instead.
@@ -184,7 +194,8 @@ public:
     * <p><b>"Experimental - subject to change"</b></p>
     *
     * Set the encoding which will be required for use with the XML text read
-    * via a stream opened by this input source.
+    * via a stream opened by this input source. This will update the wrapped
+    * input source object.
     *
     * <p>This is usually not set, allowing the encoding to be sensed in the
     * usual XML way. However, in some cases, the encoding in the file is known
@@ -199,7 +210,8 @@ public:
   /**
     * <p><b>"Experimental - subject to change"</b></p>
     *
-    * Set the public identifier for this input source.
+    * Set the public identifier for this input source. This will update the
+    * wrapped input source object.
     *
     * <p>The public identifier is always optional: if the application writer
     * includes one, it will be provided as part of the location information.</p>
@@ -214,7 +226,8 @@ public:
   /**
     * <p><b>"Experimental - subject to change"</b></p>
     *
-    * Set the system identifier for this input source.
+    * Set the system identifier for this input source. This will update the
+    * wrapped input source object.
     *
     * <p>The system id is always required. The public id may be used to map
     * to another system id, but the system id must always be present as a fall
@@ -230,50 +243,42 @@ public:
     void setSystemId(const XMLCh* const systemId);
 
    /**
-     * Set the base URI to be used for resolving relative URIs to absolute
-     * URIs. If the baseURI is itself a relative URI, the behavior is
-     * implementation dependent.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param baseURI The base URI.
-     * @see #getBaseURI
-     * @since DOM Level 3
-     */
+    * Set the base URI to be used for resolving relative URIs to absolute
+    * URIs. If the baseURI is itself a relative URI, the behavior is
+    * implementation dependent. This will update the wrapped input source
+    * object.
+    *
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
+    * @param baseURI The base URI.
+    * @see #getBaseURI
+    * @since DOM Level 3
+    */
     void setBaseURI(const XMLCh* const baseURI);
 
   /**
     * <p><b>"Experimental - subject to change"</b></p>
     *
     * Indicates if the parser should issue fatal error if this input source
-    * is not found.  If set to false, the parser issue warning message instead.
+    * is not found.  If set to false, the parser issue warning message
+    * instead. This will update the wrapped input source object.
     *
-    * @param  flag True if the parser should issue fatal error if this input source is not found.
-    *               If set to false, the parser issue warning message instead.  (Default: true)
+    * @param flag  True if the parser should issue fatal error if this input
+    *              source is not found.
+    *              If set to false, the parser issue warning message instead.
+    *              (Default: true)
     *
     * @see #getIssueFatalErrorIfNotFound
     */
     void setIssueFatalErrorIfNotFound(const bool flag);
 
-    /**
-     * Called to indicate that this DOMInputSource is no longer in use
-     * and that the implementation may relinquish any resources associated with it.
-     *
-     * Access to a released object will lead to unexpected result.
-     */
-    void              release();
-
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
+   /**
+    * Called to indicate that this DOMInputSource is no longer in use
+    * and that the implementation may relinquish any resources associated with it.
     *
-    * Indicates if the parser should own the input source.
-    * If set to true, the parser will delete the input source.
-    *
-    * @param flag if the parser should delete the input source or not.
-    *             (Default: true)
-    *
+    * Access to a released object will lead to unexpected result.
     */
-    void setAdoptInputSource(const bool flag);
+    void              release();
 
     //@}
 
@@ -304,11 +309,6 @@ inline const XMLCh* Wrapper4InputSource::getBaseURI() const
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Setter methods
 // ---------------------------------------------------------------------------
-inline void Wrapper4InputSource::setAdoptInputSource(const bool flag)
-{
-    fAdoptInputSource = flag;
-}
-
 inline void Wrapper4InputSource::setBaseURI(const XMLCh* const baseURI)
 {
 }

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/07/19 14:57:28  knoaman
+ * Add an adoptFlag parameter to the constructor and remove the setter method.
+ * Documentation update.
+ *
  * Revision 1.1  2002/06/18 20:00:22  knoaman
  * Initial checkin.
  *
@@ -73,8 +77,9 @@
 // ---------------------------------------------------------------------------
 //  Wrapper4DOMInputSource: Constructor and Destructor
 // ---------------------------------------------------------------------------
-Wrapper4DOMInputSource::Wrapper4DOMInputSource(DOMInputSource* const inputSource) :
-    fAdoptInputSource(true)
+Wrapper4DOMInputSource::Wrapper4DOMInputSource(DOMInputSource* const inputSource,
+                                               const bool adoptFlag) :
+    fAdoptInputSource(adoptFlag)
     ,  fInputSource(inputSource)
 {
     if (!inputSource)
