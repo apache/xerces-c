@@ -53,10 +53,10 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>[Bug 5854 &amp; 6095] Modify .so name to have version number</td>
+        <td>[Bug 6095] Modify .so name to have version number</td>
         <td>PeiYong Zhang</td>
         <td>April</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>

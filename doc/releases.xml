@@ -12,6 +12,20 @@
     </tr>
 
     <tr>
+        <td>2002-04-09</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 7706] XMLString::lowerCase() does not work.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-04-09</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 6095] Modify .so name to have version number.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-04-08</td>
         <td>Tinny Ng</td>
         <td>ICU 2.0.2 Update.
@@ -49,7 +63,7 @@
     <tr>
         <td>2002-04-02</td>
         <td>Khaled Noaman</td>
-        <td>Modiy QName comparison (operator=).
+        <td>Modiy QName comparison (operator==).
         </td>
     </tr>
 
