@@ -110,7 +110,7 @@ ifeq (${CXX},CC)
         CPP_OBJECTS = SCOCCDefs.$(TO)
     endif
 endif
-ifeq (xlC_r,$(findstring xlC_r,${CXX}))
+ifeq (xlC,$(findstring xlC,${CXX}))
     CPP_OBJECTS = CSetDefs.$(TO)
 endif
 ifeq (${CXX},g++)

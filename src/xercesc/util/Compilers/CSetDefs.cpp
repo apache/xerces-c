@@ -56,8 +56,12 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:18  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/02 20:17:47  peiyongz
+ * Bug# 7555: Enable AIX build with newer xlC versions,
+ * patch from Martin Kalen (martin.kalen@todaysystems.com.au )
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:18  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/03/02 19:55:07  roddey
  * This checkin includes many changes done while waiting for the
@@ -79,7 +83,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#if defined (XML_IBMVAW32) || (XML_IBMVAOS2)
+#if defined(XML_IBMVAW32) || defined(XML_IBMVAOS2)
 
 #include <string.h>
 
@@ -88,17 +92,16 @@
 #include <xercesc/util/Compilers/CSetDefs.hpp>
 #include <strings.h>
 
-
-int stricmp(const char* const str1, const char* const  str2) 
+int stricmp(const char* const str1, const char* const str2) 
 {
-        return strcasecmp(str1, str2);
+	return strcasecmp(str1, str2);
 }
 
-int strnicmp(const char* const str1, const char* const  str2, const unsigned int count)
+int strnicmp(const char* const str1, const char* const str2, const unsigned int count)
 {
-        if (count == 0)
-                return 0;
+	if (count == 0)
+		return 0;
 
-        return strncasecmp( str1, str2, (size_t)count);
+	return strncasecmp( str1, str2, (size_t)count);
 }
 #endif
