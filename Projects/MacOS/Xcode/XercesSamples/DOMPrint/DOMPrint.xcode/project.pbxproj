@@ -181,7 +181,7 @@
 			);
 			buildSettings = {
 				BUILD_SETTING = "";
-				FRAMEWORK_SEARCH_PATHS = "../../../../../lib/ /Volumes/Rock/Users/jberry/Projects/xml-apache/xml-xerces/c/Projects/MacOS/Xcode/XercesLib/build";
+				FRAMEWORK_SEARCH_PATHS = ../../XercesLib/build;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../xerces_sample_prefix.h;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;

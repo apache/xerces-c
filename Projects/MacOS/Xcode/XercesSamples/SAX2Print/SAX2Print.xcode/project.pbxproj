@@ -38,21 +38,12 @@
 //024
 		0249A662FF388D9811CA2CEA = {
 			children = (
-				0249A663FF388D9811CA2CEA,
-				F58FFD7402C67EF401A80065,
+				90153B7D0573CA6700DAD394,
 			);
 			isa = PBXGroup;
 			name = "External Frameworks and Libraries";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		0249A663FF388D9811CA2CEA = {
-			expectedFileType = archive.ar;
-			isa = PBXFileReference;
-			name = "libstdc++.a";
-			path = "/usr/lib/libstdc++.a";
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 //020
 //021
@@ -145,7 +136,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = ../../../../../lib/;
+				FRAMEWORK_SEARCH_PATHS = ../../XercesLib/build;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../xerces_sample_prefix.h;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -223,23 +214,10 @@
 		900E8AA8055B217D000AC26D = {
 			buildActionMask = 2147483647;
 			files = (
-				900E8AA9055B217D000AC26D,
-				900E8AAA055B217D000AC26D,
+				90153B7E0573CA6700DAD394,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		900E8AA9055B217D000AC26D = {
-			fileRef = 0249A663FF388D9811CA2CEA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		900E8AAA055B217D000AC26D = {
-			fileRef = F58FFD7402C67EF401A80065;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		900E8AAB055B217D000AC26D = {
 			buildActionMask = 2147483647;
@@ -249,12 +227,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		900E8AAD055B217D000AC26D = {
-			expectedFileType = "compiled.mach-o.executable";
+			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = SAX2Print;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		90153B7D0573CA6700DAD394 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Xerces.framework;
+			path = ../../XercesLib/build/Xerces.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		90153B7E0573CA6700DAD394 = {
+			fileRef = 90153B7D0573CA6700DAD394;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //900
 //901
@@ -267,42 +259,42 @@
 //F53
 //F54
 		F52345FA03AE621701A80065 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = xerces_sample_prefix.h;
 			path = ../xerces_sample_prefix.h;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F54F8B8B00F8F37F01000001 = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			path = SAX2Print.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F54F8B8C00F8F37F01000001 = {
-			expectedFileType = sourcecode.cpp.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.h;
 			path = SAX2Print.hpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F54F8B8D00F8F37F01000001 = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			path = SAX2PrintHandlers.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F54F8B8E00F8F37F01000001 = {
-			expectedFileType = sourcecode.cpp.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.h;
 			path = SAX2PrintHandlers.hpp;
 			refType = 4;
 			sourceTree = "<group>";
@@ -325,15 +317,6 @@
 			};
 			isa = PBXBuildStyle;
 			name = "Deployment GCC3";
-		};
-		F58FFD7402C67EF401A80065 = {
-			expectedFileType = wrapper.framework;
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			name = Xerces.framework;
-			path = ../../../../../lib/Xerces.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
 		};
 	};
 	rootObject = 08FB7793FE84155DC02AAC07;
