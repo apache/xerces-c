@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/12/10 22:13:21  peiyongz
+ * swap checking to avoid "dangling pointer" reported by BoundsChecker
+ *
  * Revision 1.4  2001/11/12 20:37:57  peiyongz
  * SchemaDateTimeException defined
  *
@@ -116,16 +119,16 @@ const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 // ---------------------------------------------------------------------------
 AbstractNumericFacetValidator::~AbstractNumericFacetValidator()
 {
-    if (fMaxInclusive && !fMaxInclusiveInherited)
+    if (!fMaxInclusiveInherited && fMaxInclusive)
         delete fMaxInclusive;
 
-    if (fMaxExclusive && !fMaxExclusiveInherited)
+    if (!fMaxExclusiveInherited && fMaxExclusive)
         delete fMaxExclusive;
 
-    if (fMinInclusive && !fMinInclusiveInherited)
+    if (!fMinInclusiveInherited && fMinInclusive)
         delete fMinInclusive;
 
-    if (fMinExclusive && !fMinExclusiveInherited)
+    if (!fMinExclusiveInherited && fMinExclusive)
         delete fMinExclusive;
 
     //~RefVectorOf will delete all adopted elements
