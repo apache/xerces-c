@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/04/17 20:18:08  tng
+ * [Bug 7493] The word "occured" is misspelled and it is a global error.
+ *
  * Revision 1.9  2002/02/13 16:11:06  knoaman
  * Update samples to use SAX2 features/properties constants from XMLUni.
  *
@@ -325,7 +328,7 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        cerr << "\nAn error occured\n  Error: "
+        cerr << "\nAn error occurred\n  Error: "
              << StrX(toCatch.getMessage())
              << "\n" << endl;
         XMLPlatformUtils::Terminate();

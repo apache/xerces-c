@@ -188,7 +188,7 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
                                                                   \
     if (errorHandler.getSawErrors())                              \
     {                                                             \
-        cout << "\nErrors occured, no output available\n" << endl;\
+        cout << "\nErrors occurred, no output available\n" << endl;\
         errorOccurred = true;                                     \
     }                                                             \
                                                                   \

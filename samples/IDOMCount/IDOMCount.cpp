@@ -315,7 +315,7 @@ int main(int argC, char* argV[])
         //
         if (errorHandler.getSawErrors())
         {
-            cout << "\nErrors occured, no output available\n" << endl;
+            cout << "\nErrors occurred, no output available\n" << endl;
             errorOccurred = true;
         }
          else
@@ -327,7 +327,7 @@ int main(int argC, char* argV[])
                 // test getElementsByTagName and getLength
                 XMLCh xa[] = {chAsterisk, chNull};
                 if (elementCount != doc->getElementsByTagName(xa)->getLength()) {
-                    cout << "\nErrors occured, element count is wrong\n" << endl;
+                    cout << "\nErrors occurred, element count is wrong\n" << endl;
                     errorOccurred = true;
                 }
             }

@@ -284,7 +284,7 @@ int main(int argC, char* argV[])
         //
         if (errorHandler.getSawErrors())
         {
-            cout << "\nErrors occured, no output available\n" << endl;
+            cout << "\nErrors occurred, no output available\n" << endl;
             errorOccurred = true;
         }
          else

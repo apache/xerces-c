@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2002/04/17 20:18:08  tng
+ * [Bug 7493] The word "occured" is misspelled and it is a global error.
+ *
  * Revision 1.16  2002/02/01 22:35:51  peiyongz
  * sane_include
  *
@@ -339,7 +342,7 @@ int main(int argC, char* argV[])
         }
     }
     else
-        cout << "\nErrors occured, no output available\n" << endl;
+        cout << "\nErrors occurred, no output available\n" << endl;
 
     //
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.

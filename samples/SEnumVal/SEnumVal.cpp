@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2002/04/17 20:18:08  tng
+ * [Bug 7493] The word "occured" is misspelled and it is a global error.
+ *
  * Revision 1.8  2002/02/20 20:30:11  peiyongz
  * Make the code compilable on Solaris 2.6's CC
  *
@@ -227,7 +230,7 @@ void process(char* const xmlFile)
 
     if (parser.getErrorCount())
 	{
-        cout << "\nErrors occured, no output available\n" << endl;
+        cout << "\nErrors occurred, no output available\n" << endl;
 		return;
 	}
 

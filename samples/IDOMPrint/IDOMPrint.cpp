@@ -450,7 +450,7 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& e)
     {
-        cerr << "An error occured during parsing\n   Message: "
+        cerr << "An error occurred during parsing\n   Message: "
              << StrX(e.getMessage()) << endl;
         errorsOccured = true;
     }
@@ -458,14 +458,14 @@ int main(int argC, char* argV[])
 
     catch (const IDOM_DOMException& e)
     {
-       cerr << "A DOM error occured during parsing\n   DOMException code: "
+       cerr << "A DOM error occurred during parsing\n   DOMException code: "
              << e.code << endl;
         errorsOccured = true;
     }
 
     catch (...)
     {
-        cerr << "An error occured during parsing\n " << endl;
+        cerr << "An error occurred during parsing\n " << endl;
         errorsOccured = true;
     }
 

@@ -302,7 +302,7 @@ public:                               //  This is the API used by the rest of th
     int parse(int fileNum);           // Parse the specified file.  fileNum is an index
                                       //   into the gRunInfo.files array.
                                       //  return the XML checksum, or
-                                      //  0 if a parse error occured.
+                                      //  0 if a parse error occurred.
 
     int reCheck();                    // Try to compute the checksum again.
                                       //  for DOM, re-walk the tree.
@@ -1195,7 +1195,7 @@ int main (int argc, char **argv)
 
         if (cksum == 0)
         {
-            fprintf(stderr, "An error occured while initially parsing %s\n",
+            fprintf(stderr, "An error occurred while initially parsing %s\n",
                 fileName);
             errors = true;
         };

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2002/04/17 20:18:08  tng
+ * [Bug 7493] The word "occured" is misspelled and it is a global error.
+ *
  * Revision 1.13  2002/02/01 22:37:38  peiyongz
  * sane_include
  *
@@ -341,7 +344,7 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-        cerr << "\nAn error occured: '" << xmlFile << "'\n"
+        cerr << "\nAn error occurred: '" << xmlFile << "'\n"
              << "Exception message is: \n"
              << StrX(toCatch.getMessage())
              << "\n" << endl;

@@ -147,7 +147,7 @@ static DOM_Document parseFile(char *fileName)
 
     catch (const XMLException& e )
     {
-		fprintf(stderr, "Exception Occured \"%s\".  \n",
+		fprintf(stderr, "Exception Occurred \"%s\".  \n",
 			XMLString::transcode(e.getMessage()));
 		fprintf(stderr, "File being parsed is \"%s\".\n", fileName);
         return DOM_Document();  // A null document.
