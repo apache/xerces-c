@@ -242,17 +242,17 @@ endif
 
 	@echo Populate the include output directory
 	@echo Copying headers files ...
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/sax/*.hpp ${BINTARGETDIR}/include/xercesc/sax
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/sax2/*.hpp ${BINTARGETDIR}/include/xercesc/sax2
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/framework/*.hpp ${BINTARGETDIR}/include/xercesc/framework
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/dom/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/idom/IDOM*.hpp ${BINTARGETDIR}/include/xercesc/idom
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/internal/*.hpp ${BINTARGETDIR}/include/xercesc/internal
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/internal/*.c ${BINTARGETDIR}/include/xercesc/internal
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/parsers/*.hpp ${BINTARGETDIR}/include/xercesc/parsers
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/util/*.hpp ${BINTARGETDIR}/include/xercesc/util
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/util/*.c ${BINTARGETDIR}/include/xercesc/util
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/validators/*.hpp ${BINTARGETDIR}/include/xercesc/validators
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/sax/*.hpp ${BINTARGETDIR}/include/xercesc/sax
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/sax2/*.hpp ${BINTARGETDIR}/include/xercesc/sax2
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/framework/*.hpp ${BINTARGETDIR}/include/xercesc/framework
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/dom/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/idom/IDOM*.hpp ${BINTARGETDIR}/include/xercesc/idom
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/internal/*.hpp ${BINTARGETDIR}/include/xercesc/internal
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/internal/*.c ${BINTARGETDIR}/include/xercesc/internal
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/parsers/*.hpp ${BINTARGETDIR}/include/xercesc/parsers
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/util/*.hpp ${BINTARGETDIR}/include/xercesc/util
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/util/*.c ${BINTARGETDIR}/include/xercesc/util
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/validators/*.hpp ${BINTARGETDIR}/include/xercesc/validators
 	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/unicode
 
 	@echo Populate the binary output directory
