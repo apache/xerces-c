@@ -22,6 +22,7 @@ group xerces_validators =
     BASE_DIR "\\src\\validators\\datatype\\QNameDatatypeValidator.cpp",
     BASE_DIR "\\src\\validators\\datatype\\ListDatatypeValidator.cpp",
     BASE_DIR "\\src\\validators\\datatype\\UnionDatatypeValidator.cpp",
+    BASE_DIR "\\src\\validators\\datatype\\DoubleDatatypeValidator.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDAttDef.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDAttDefList.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDElementDecl.cpp",

@@ -680,6 +680,14 @@ SOURCE=..\..\..\..\..\src\util\XMLDeleterFor.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLDouble.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLDouble.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLEBCDICTranscoder.cpp
 # End Source File
 # Begin Source File
@@ -1724,6 +1732,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DoubleDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\DoubleDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 

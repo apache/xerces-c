@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2001/07/24 13:59:03  peiyongz
+# DoubleDTV
+#
 # Revision 1.14  2001/07/13 14:10:37  peiyongz
 # UnionDTV
 #
@@ -137,6 +140,7 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	QNameDatatypeValidator.hpp \
 	ListDatatypeValidator.hpp \
 	UnionDatatypeValidator.hpp \
+	DoubleDatatypeValidator.hpp \
 	IDREFDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
@@ -157,6 +161,7 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	QNameDatatypeValidator.$(TO) \
 	ListDatatypeValidator.$(TO) \
 	UnionDatatypeValidator.$(TO) \
+	DoubleDatatypeValidator.$(TO) \
 	IDREFDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)

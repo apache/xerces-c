@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/07/24 13:59:03  peiyongz
+ * DoubleDTV
+ *
  * Revision 1.17  2001/07/19 17:46:42  tng
  * Enable those derived dataype like nonPositiveinteger, negativeInteger ... etc.
  *
@@ -132,6 +135,7 @@
 #include <validators/datatype/QNameDatatypeValidator.hpp>
 #include <validators/datatype/ListDatatypeValidator.hpp>
 #include <validators/datatype/UnionDatatypeValidator.hpp>
+#include <validators/datatype/DoubleDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -394,11 +398,11 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new HexBinaryDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,
                        new Base64BinaryDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,
+                       new DoubleDatatypeValidator());
 /*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,
                        new FloatDatatypeValidator());
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,
-                       new DoubleDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,
                        new AnyURIDatatypeValidator());
 */
