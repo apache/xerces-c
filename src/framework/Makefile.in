@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2000/04/04 21:10:09  abagchi
+# Added XMLFormatter
+#
 # Revision 1.8  2000/03/01 22:30:02  abagchi
 # Object files are now created directly under obj directory
 #
@@ -125,6 +128,7 @@ FRAMEWORK_CPP_PUBHEADERS = \
 	XMLEntityHandler.hpp \
 	XMLErrorCodes.hpp \
 	XMLErrorReporter.hpp \
+	XMLFormatter.hpp \
 	XMLNotationDecl.hpp \
 	XMLPScanToken.hpp \
 	XMLRecognizer.hpp \
@@ -148,6 +152,7 @@ FRAMEWORK_CPP_OBJECTS = \
 	XMLContentModel.$(TO) \
 	XMLElementDecl.$(TO) \
 	XMLEntityDecl.$(TO) \
+	XMLFormatter.$(TO) \
 	XMLNotationDecl.$(TO) \
 	XMLRecognizer.$(TO) \
 	XMLValidator.$(TO)
