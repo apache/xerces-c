@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.5  2000/02/08 02:19:12  abagchi
- * Fixed misplaced if statement
+ * Revision 1.6  2000/02/08 02:35:19  abagchi
+ * Changed panic function
+ *
+ * Revision 1.4  2000/02/06 07:48:29  rahulj
+ * Year 2K copyright swat.
  *
  * Revision 1.3  2000/01/21 22:17:57  abagchi
  * OS390 Change: updates for Version 3.1.0
