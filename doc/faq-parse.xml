@@ -55,12 +55,12 @@
 
       <table>
         <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
-        <tr><td>Windows NT SP5/98</td><td>MSVC 6.0</td></tr>
-        <tr><td>Redhat Linux 6.0</td><td>gcc</td></tr>
-        <tr><td>AIX 4.1.4  and higher</td><td>xlC 3.1</td></tr>
-        <tr><td>Solaris 2.6</td><td>CC version 4.2</td></tr>
-        <tr><td>HP-UX B10.2</td><td>aCC and CC</td></tr>
-        <tr><td>HP-UX B11</td><td>aCC and CC</td></tr>
+        <tr><td>Windows NT 4.0 SP5/98</td><td>MSVC 6.0 SP3</td></tr>
+        <tr><td>Redhat Linux 6.1</td><td>egcs-2.91.66 and glibc-2.1.2-11</td></tr>
+        <tr><td>AIX 4.2.1  and higher</td><td>xlC 3.6.4</td></tr>
+        <tr><td>Solaris 2.6</td><td>CC Workshop 4.2</td></tr>
+        <tr><td>HP-UX 10.2</td><td>CC A.10.36</td></tr>
+        <tr><td>HP-UX 11.0</td><td>aCC A.03.13 with pthreads</td></tr>
       </table>
     </a>
   </faq>
