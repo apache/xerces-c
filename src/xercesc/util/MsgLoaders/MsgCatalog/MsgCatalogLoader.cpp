@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/06 16:49:47  peiyongz
+ * $XERCESCROOT/msg created as home directory for message files.
+ *
  * Revision 1.9  2002/12/04 18:03:13  peiyongz
  * use $XERCESCROOT to search for msg catalog file if XERCESC_NLS_HOME
  * undefined
@@ -154,7 +157,7 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     if (nlsHome)
     {
         strcpy(catpath, nlsHome);
-        strcat(catpath, "/msg/");
+        strcat(catpath, "/");
     }
     else
     {
@@ -162,7 +165,7 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
         if (altHome)
         {
             strcpy(catpath, altHome);
-            strcat(catpath, "/lib/msg/");
+            strcat(catpath, "/msg/");
         }
     }
 

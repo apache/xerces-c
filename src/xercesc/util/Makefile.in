@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.22  2002/12/06 16:52:39  peiyongz
+# $XERCESCROOT/msg created as home directory for message files.
+#
 # Revision 1.21  2002/12/02 21:49:16  peiyongz
 # Synchronize default message catalog file name with default locale
 #
@@ -377,7 +380,7 @@ else
   else
    ifeq (${MESSAGELOADER},ICONV)
       MESSAGELOADERMODULE=MsgCatalog
-      MSG_DIR=${XERCESCROOT}/lib/msg
+      MSG_DIR=${XERCESCROOT}/msg
    else
       MESSAGELOADERMODULE=InMemory
    endif
