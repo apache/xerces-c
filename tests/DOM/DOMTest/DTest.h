@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/09/23 20:09:23  tng
+ * DOM L3: Test baseURI with different parser's setting.
+ *
  * Revision 1.8  2002/09/23 18:27:48  tng
  * DOM L3: Test baseURI.   Added by Gareth Reakes and Thomas Ford.
  *
@@ -88,6 +91,8 @@
 
 //  define null for compatibility with original Java source code.
 #define null 0
+
+class XercesDOMParser;
 
 class DOMTest {
 public:
@@ -154,7 +159,7 @@ bool testPI(DOMDocument* document);
 bool testText(DOMDocument* document);
 bool treeCompare(DOMNode* node, DOMNode* node2);
 
-bool testBaseURI(void);
+bool testBaseURI(XercesDOMParser* parser);
 
 };
 

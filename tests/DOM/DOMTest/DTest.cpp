@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2002/09/23 20:09:23  tng
+ * DOM L3: Test baseURI with different parser's setting.
+ *
  * Revision 1.31  2002/09/23 18:27:48  tng
  * DOM L3: Test baseURI.   Added by Gareth Reakes and Thomas Ford.
  *
@@ -1016,8 +1019,25 @@ int main(int argc, char **argv)
         // Test baseURI. BaseURI is set on nodes at parse time so we
         // cannot use the docBuilder document above
 
-        OK = test.testBaseURI();
+        //Setup parser
 
+        XercesDOMParser *parser = new XercesDOMParser;
+        parser->setValidationScheme(XercesDOMParser::Val_Auto);
+        parser->setDoNamespaces(true);
+        parser->setDoSchema(true);
+        parser->setCreateEntityReferenceNodes(true);
+
+        OK = test.testBaseURI(parser);
+
+        parser->setCreateEntityReferenceNodes(false);
+        OK = test.testBaseURI(parser);
+
+        parser->setDoNamespaces(false);
+        parser->setDoSchema(false);
+        OK = test.testBaseURI(parser);
+
+        parser->setCreateEntityReferenceNodes(true);
+        OK = test.testBaseURI(parser);
     };
 
     XMLPlatformUtils::Terminate();
@@ -4370,242 +4390,215 @@ bool DOMTest::testText(DOMDocument* document)
  *
  */
 
-bool DOMTest::testBaseURI(void) {
+bool DOMTest::testBaseURI(XercesDOMParser* parser) {
 
     bool OK;
 
-    //Run tests using both setDoNamespaces(true) and (false)
+    try {
+        // this one assumes executing in samples/data where personal-schema.xml resides
+        // please modify if this is not correct
+        parser->parse("personal-schema.xml");
+    }
 
-    const char *namespaceResolver;
-    bool namespaceRes = true;
-    bool doSchemaRes = true;
+    catch (...) {
+        fprintf(stderr, "parsing personal-schema.xml failed at line %i\n", __LINE__);
+        return false;
+    }
 
-    do {
+    // test only if there is no error
+    if (!parser->getErrorCount()) {
 
-        //Setup parser
+        //Setup testing strings
+        XMLCh *fileSchema = XMLString::transcode("file://");
+        XMLCh *filePath = XMLString::transcode("samples/data/personal-schema.xml");
 
-        XercesDOMParser *parser = new XercesDOMParser;
-        parser->setValidationScheme(XercesDOMParser::Val_Auto);
-        parser->setDoNamespaces(namespaceRes);
-        parser->setDoSchema(doSchemaRes);
-        parser->setCreateEntityReferenceNodes(true);
+        //Test document baseURI
+        DOMDocument *document = parser->getDocument();
 
-        if(namespaceRes) {
-            namespaceResolver = "setDoNamespaces(true)";
-        }
-        else {
-            namespaceResolver = "setDoNamespaces(false)";
-        }
+        //The baseURI should contain `file://' and `samples/data/personal-schema.xml'
+        const XMLCh *docBaseURI = document->getBaseURI();
 
-        try {
-            // this one assumes executing in samples/data where personal-schema.xml resides
-            // please modify if this is not correct
-            parser->parse("personal-schema.xml");
-        }
-
-        catch (...) {
-            fprintf(stderr, "parsing personal-schema.xml failed at line %i\n", __LINE__);
-            return false;
+        if(XMLString::patternMatch(docBaseURI, fileSchema) == -1) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n", __LINE__);
         }
 
-        // test only if there is no error
-        if (!parser->getErrorCount()) {
+        if(XMLString::patternMatch(docBaseURI, filePath) == -1) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n", __LINE__);
+        }
 
-            //Setup testing strings
-            XMLCh *fileSchema = XMLString::transcode("file://");
-            XMLCh *filePath = XMLString::transcode("samples/data/personal-schema.xml");
+        //Create relative paths from document baseURI
 
-            //Test document baseURI
-            DOMDocument *document = parser->getDocument();
+        XMLCh *docBaseURIRoot = new XMLCh [ XMLString::stringLen(docBaseURI) ];
+        XMLString::copyNString(docBaseURIRoot, docBaseURI, XMLString::lastIndexOf(docBaseURI, chForwardSlash) + 1);
 
-            //The baseURI should contain `file://' and `samples/data/personal-schema.xml'
-            const XMLCh *docBaseURI = document->getBaseURI();
+        XMLCh *base_foobar = new XMLCh [ XMLString::stringLen(docBaseURIRoot) + 8];
+        XMLString::copyString(base_foobar, docBaseURIRoot);
+        XMLCh *foobar = XMLString::transcode("foo/bar");
+        XMLString::catString(base_foobar, foobar);
 
-            if(XMLString::patternMatch(docBaseURI, fileSchema) == -1) {
-                OK = false;
-                fprintf(stderr, "checking baseURI failed at line %i\n", __LINE__);
-            }
+        XMLCh *base_foobarbar = new XMLCh [ XMLString::stringLen(docBaseURIRoot) + 12];
+        XMLString::copyString(base_foobarbar, docBaseURIRoot);
+        XMLCh *foobarbar = XMLString::transcode("foo/bar/bar");
+        XMLString::catString(base_foobarbar, foobarbar);
 
-            if(XMLString::patternMatch(docBaseURI, filePath) == -1) {
-                OK = false;
-                fprintf(stderr, "checking baseURI failed at line %i\n", __LINE__);
-            }
+        XMLCh *base_foocarbar = new XMLCh [ XMLString::stringLen(docBaseURIRoot) + 12];
+        XMLString::copyString(base_foocarbar, docBaseURIRoot);
+        XMLCh *foocarbar = XMLString::transcode("foo/car/bar");
+        XMLString::catString(base_foocarbar, foocarbar);
 
-            //Create relative paths from document baseURI
+        XMLCh *file_autobar = XMLString::transcode("file:///auto/bar");
+        XMLCh *file_carfoo = XMLString::transcode("file:///car/foo/");
+        XMLCh *file_carfoobarbar = XMLString::transcode("file:///car/foo/bar/bar");
 
-            XMLCh *docBaseURIRoot = new XMLCh [ XMLString::stringLen(docBaseURI) ];
-            XMLString::copyNString(docBaseURIRoot, docBaseURI, XMLString::lastIndexOf(docBaseURI, chForwardSlash) + 1);
+        XMLCh *http_carcar = XMLString::transcode("http://www.example.com/car/car");
+        XMLCh *http_barfoo = XMLString::transcode("http://www.example.com/bar/foo/");
+        XMLCh *http_barfoofoobar = XMLString::transcode("http://www.example.com/bar/foo/foo/bar");
 
-            XMLCh *base_foobar = new XMLCh [ XMLString::stringLen(docBaseURIRoot) + 8];
-            XMLString::copyString(base_foobar, docBaseURIRoot);
-            XMLCh *foobar = XMLString::transcode("foo/bar");
-            XMLString::catString(base_foobar, foobar);
+        //Processing instruction before Document Element (has document baseURI)
 
-            XMLCh *base_foobarbar = new XMLCh [ XMLString::stringLen(docBaseURIRoot) + 12];
-            XMLString::copyString(base_foobarbar, docBaseURIRoot);
-            XMLCh *foobarbar = XMLString::transcode("foo/bar/bar");
-            XMLString::catString(base_foobarbar, foobarbar);
-
-            XMLCh *base_foocarbar = new XMLCh [ XMLString::stringLen(docBaseURIRoot) + 12];
-            XMLString::copyString(base_foocarbar, docBaseURIRoot);
-            XMLCh *foocarbar = XMLString::transcode("foo/car/bar");
-            XMLString::catString(base_foocarbar, foocarbar);
-
-            XMLCh *file_autobar = XMLString::transcode("file:///auto/bar");
-            XMLCh *file_carfoo = XMLString::transcode("file:///car/foo/");
-            XMLCh *file_carfoobarbar = XMLString::transcode("file:///car/foo/bar/bar");
-
-            XMLCh *http_carcar = XMLString::transcode("http://www.example.com/car/car");
-            XMLCh *http_barfoo = XMLString::transcode("http://www.example.com/bar/foo/");
-            XMLCh *http_barfoofoobar = XMLString::transcode("http://www.example.com/bar/foo/foo/bar");
-
-            //Processing instruction before Document Element (has document baseURI)
-
-            DOMNode *node = document->getFirstChild();
-            while(node->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
-                node = node->getNextSibling();
-
-            if(XMLString::compareString(node->getBaseURI(), docBaseURI) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
-
-            //Document Element baseURI (same as document)
-
-            node = document->getDocumentElement();
-
-            if(XMLString::compareString(node->getBaseURI(), docBaseURI) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s), failed at line %i\n", namespaceResolver, __LINE__);
-            }
-
-            // <level 1>
-
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
-
-            DOMNode *level1 = node;
-
-            // <one>
-
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
-
-            if(XMLString::compareString(node->getBaseURI(), base_foobar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
-
-            // <inner1>
-
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
-
-            if(XMLString::compareString(node->getBaseURI(), base_foobarbar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
-
-            // <inner2>
-
+        DOMNode *node = document->getFirstChild();
+        while(node->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
             node = node->getNextSibling();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
 
-            if(XMLString::compareString(node->getBaseURI(), base_foocarbar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        if(XMLString::compareString(node->getBaseURI(), docBaseURI) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            // <?proc-inst-2?>
+        //Document Element baseURI (same as document)
 
+        node = document->getDocumentElement();
+
+        if(XMLString::compareString(node->getBaseURI(), docBaseURI) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI, failed at line %i\n", __LINE__);
+        }
+
+        // <level 1>
+
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
             node = node->getNextSibling();
-            while(node->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
-                node = node->getNextSibling();
 
-            if(XMLString::compareString(node->getBaseURI(), base_foobar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        DOMNode *level1 = node;
 
-            // <level2>
+        // <one>
 
-            node = level1->getNextSibling();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
 
-            DOMNode *level2 = node;
+        if(XMLString::compareString(node->getBaseURI(), base_foobar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            if(XMLString::compareString(node->getBaseURI(), file_autobar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        // <inner1>
 
-            // <two>
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
 
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
+        if(XMLString::compareString(node->getBaseURI(), base_foobarbar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            if(XMLString::compareString(node->getBaseURI(), file_carfoo) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        // <inner2>
 
-            // <inner1>
+        node = node->getNextSibling();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
 
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
+        if(XMLString::compareString(node->getBaseURI(), base_foocarbar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            if(XMLString::compareString(node->getBaseURI(), file_carfoobarbar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        // <?proc-inst-2?>
 
-            // <level3>
+        node = node->getNextSibling();
+        while(node->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
+            node = node->getNextSibling();
 
-            node = level2->getNextSibling();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
+        if(XMLString::compareString(node->getBaseURI(), base_foobar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            if(XMLString::compareString(node->getBaseURI(), http_carcar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        // <level2>
 
-            // <three>
+        node = level1->getNextSibling();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
 
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
+        DOMNode *level2 = node;
 
-            if(XMLString::compareString(node->getBaseURI(), http_barfoo) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        if(XMLString::compareString(node->getBaseURI(), file_autobar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            // <inner1>
+        // <two>
 
-            node = node->getFirstChild();
-            while(node->getNodeType() != DOMNode::ELEMENT_NODE)
-                node = node->getNextSibling();
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
 
-            if(XMLString::compareString(node->getBaseURI(), http_barfoofoobar) != 0) {
-                OK = false;
-                fprintf(stderr, "checking baseURI (%s) failed at line %i\n", namespaceResolver, __LINE__);
-            }
+        if(XMLString::compareString(node->getBaseURI(), file_carfoo) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
 
-            namespaceRes = !namespaceRes;
+        // <inner1>
 
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
+
+        if(XMLString::compareString(node->getBaseURI(), file_carfoobarbar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
+
+        // <level3>
+
+        node = level2->getNextSibling();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
+
+        if(XMLString::compareString(node->getBaseURI(), http_carcar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
+
+        // <three>
+
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
+
+        if(XMLString::compareString(node->getBaseURI(), http_barfoo) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
+        }
+
+        // <inner1>
+
+        node = node->getFirstChild();
+        while(node->getNodeType() != DOMNode::ELEMENT_NODE)
+            node = node->getNextSibling();
+
+        if(XMLString::compareString(node->getBaseURI(), http_barfoofoobar) != 0) {
+            OK = false;
+            fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
         }
         else {
             printf("baseURI test was not carried out\n");
         }
-    } while(namespaceRes == false);
+    }
 
     return OK;
 }
