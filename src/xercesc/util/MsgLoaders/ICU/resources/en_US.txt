@@ -291,6 +291,8 @@ en_US {
 		"The schemaLocation attribute does not contain pairs of values. " ,
 		"Internal error: don't have a GrammarResolver for TraverseSchema " ,
 		"Fatal error encountered during schema scan " ,
+		"Reference to external entity declaration '{0}' is not allowed in a standalone document. " ,
+		"Partial markup in parameter entity replacement text in a complete declaration. " ,
 		"F End " ,
 		} 
 
@@ -298,7 +300,7 @@ en_US {
 	 // an array 
 	XMLValidity { 
 		"E Start " , 
-		"en_US, Unknown element '{0}' " ,
+		"Unknown element '{0}' " ,
 		"Attribute '{0}' not defined " ,
 		"Notation '{0}' was referenced but never declared " ,
 		"Root element different from DOCTYPE " ,
@@ -765,6 +767,31 @@ en_US {
 		"MapAndSum: There is not a complete functional mapping between the particles " ,
 		"Particle derivation: Invalid content spec node type " ,
 		"NodeIDMap overflows and exceeds the largest available size " ,
+		"F End " ,
+		} 
+
+
+	 // an array 
+	XMLDOMMsg { 
+		"F Start " , 
+		"The index or size is negative, or greater than the allowed value " ,
+		"The specified range of text does not fit into the String " ,
+		"An attempt was made to insert a node where it is not permitted " ,
+		"A node is used in a different document than the one that created it " ,
+		"An invalid or illegal XML character is specified " ,
+		"Data is specified for a node which does not support data " ,
+		"An attempt is made to modify an object where modifications are not allowed " ,
+		"An attempt is made to reference a node in a context where it does not exist " ,
+		"The implementation does not support the requested type of object or operation " ,
+		"An attempt is made to add an attribute that is already in use elsewhere " ,
+		"A parameter or an operation is not supported by the underlying object " ,
+		"An invalid or illegal string is specified " ,
+		"An attempt is made to modify the type of the underlying object " ,
+		"An attempt is made to create or change an object in a way which is incorrect with regard to namespaces " ,
+		"An attempt is made to use an object that is not, or is no longer, usable " ,
+		"A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar " ,
+		"The container of a boundary-point of a Range is being set to either a node of an invalid type or a node with an ancestor of an invalid type " ,
+		"The boundary-points of a Range do not meet specific requirements " ,
 		"F End " ,
 		} 
 

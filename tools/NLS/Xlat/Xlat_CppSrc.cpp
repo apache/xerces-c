@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/12 17:24:58  tng
+ * DOM Message: add new domain for DOM Messages.
+ *
  * Revision 1.6  2002/11/04 15:24:50  tng
  * C++ Namespace Support.
  *
@@ -193,6 +196,10 @@ void CppSrcFormatter::startDomain(  const   XMLCh* const    domainName
      else if (!XMLString::compareString(XMLUni::fgValidityDomain, domainName))
     {
         fCurDomainName = L"gXMLValidityArray";
+    }
+     else if (!XMLString::compareString(XMLUni::fgXMLDOMMsgDomain, domainName))
+    {
+        fCurDomainName = L"gXMLDOMMsgArray";
     }
      else
     {

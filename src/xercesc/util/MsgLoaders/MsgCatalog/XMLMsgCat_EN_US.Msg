@@ -752,3 +752,24 @@ $set 3
 356  NodeIDMap overflows and exceeds the largest available size
 
 
+$set 4
+2  The index or size is negative, or greater than the allowed value
+3  The specified range of text does not fit into the String
+4  An attempt was made to insert a node where it is not permitted
+5  A node is used in a different document than the one that created it
+6  An invalid or illegal XML character is specified
+7  Data is specified for a node which does not support data
+8  An attempt is made to modify an object where modifications are not allowed
+9  An attempt is made to reference a node in a context where it does not exist
+10  The implementation does not support the requested type of object or operation
+11  An attempt is made to add an attribute that is already in use elsewhere
+12  A parameter or an operation is not supported by the underlying object
+13  An invalid or illegal string is specified
+14  An attempt is made to modify the type of the underlying object
+15  An attempt is made to create or change an object in a way which is incorrect with regard to namespaces
+16  An attempt is made to use an object that is not, or is no longer, usable
+17  A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar
+18  The container of a boundary-point of a Range is being set to either a node of an invalid type or a node with an ancestor of an invalid type
+19  The boundary-points of a Range do not meet specific requirements
+
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/12 17:26:53  tng
+ * DOM Message: add new domain for DOM Messages.
+ *
  * Revision 1.4  2002/11/04 15:10:40  tng
  * C++ Namespace Support.
  *
@@ -114,6 +117,7 @@ InMemMsgLoader::InMemMsgLoader(const XMLCh* const msgDomain)
 {
     if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)
+    &&  !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
@@ -166,6 +170,13 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
             return false;
          else
              srcPtr = gXMLValidityArray[msgToLoad - 1];
+    }
+     else if (XMLString::equals(fMsgDomain, XMLUni::fgXMLDOMMsgDomain))
+    {
+         if ( msgToLoad > gXMLDOMMsgArraySize)
+            return false;
+         else
+             srcPtr = gXMLDOMMsgArray[msgToLoad - 1];
     }
 
      while (*srcPtr && (outPtr < endPtr))

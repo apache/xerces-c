@@ -1202,5 +1202,20 @@ const XMLCh XMLUni::fgDOMWRTWhitespaceInElementContent[] =
 // en_US
 const char XMLUni::fgXercescDefaultLocale[] = "en_US";
 
+// DOM Message Domain
+const XMLCh XMLUni::fgXMLDOMMsgDomain[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c
+    ,   chLatin_h, chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g
+    ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chForwardSlash
+    ,   chLatin_m, chLatin_e, chLatin_s, chLatin_s, chLatin_a, chLatin_g
+    ,   chLatin_e, chLatin_s, chForwardSlash, chLatin_X, chLatin_M, chLatin_L
+    ,   chLatin_D, chLatin_O, chLatin_M, chLatin_M, chLatin_s, chLatin_g
+    ,   chNull
+};
+
+
+
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/12 17:27:12  tng
+ * DOM Message: add new domain for DOM Messages.
+ *
  * Revision 1.6  2002/11/05 16:54:46  peiyongz
  * Using XERCESC_NLS_HOME
  *
@@ -131,6 +134,7 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
 {
     if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)
+    &&  !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain)
     &&  !XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
@@ -166,6 +170,8 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
         fMsgSet = CatId_XMLExcepts;
     else if (XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
         fMsgSet = CatId_XMLValid;
+    else if (XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain))
+        fMsgSet = CatId_XMLDOMMsg;
 }
 
 MsgCatalogLoader::~MsgCatalogLoader()

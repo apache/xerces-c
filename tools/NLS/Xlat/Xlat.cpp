@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/11/12 17:24:58  tng
+ * DOM Message: add new domain for DOM Messages.
+ *
  * Revision 1.14  2002/11/04 15:24:50  tng
  * C++ Namespace Support.
  *
@@ -547,6 +550,11 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 {
                     headerName = L"XMLExceptMsgs.hpp";
                     errNameSpace = L"XMLExcepts";
+                }
+                 else if (!XMLString::compareString(domainStr, XMLUni::fgXMLDOMMsgDomain))
+                {
+                    headerName = L"XMLDOMMsg.hpp";
+                    errNameSpace = L"XMLDOMMsg";
                 }
                  else
                 {

@@ -768,26 +768,28 @@
             <Message Id="NodeIDMap_GrowErr" Text="NodeIDMap overflows and exceeds the largest available size"/>
         </FatalError>
     </MsgDomain>
-    <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
+    <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">
         <FatalError>
-            <Message Id="BadMajorCode" Text="The majorCode parameter to createMessage was out of bounds"/>
-            <Message Id="MessageFormatFailure" Text="An internal error occurred while formatting the following message:"/>
-            <Message Id="UnterminatedPEReference" Text="The parameter entity reference must end with the ';' delimiter."/>
-            <Message Id="ExternalIDRequired" Text="The external entity declaration must begin with either SYSTEM or PUBLIC"/>
-            <Message Id="RecursiveReference" Text="Recursive reference {0} (Reference path: '{1}')"/>
-            <Message Id="ImproperDeclarationNesting" Text="The replacement text of parameter entity '{0}' must be properly nested"/>
-            <Message Id="ErrorMessageAvailable" Text="There is a message available for this error."/>
-            <Message Id="IncompleteContent" Text="The content is not complete for element '{0}'"/>
-            <Message Id="UnterminatedSystemID" Text="Expected a termination character for the system id."/>
-            <Message Id="UnterminatedPublicID" Text="Expected a termination character for the public id."/>
-            <Message Id="UnterminatedEnumeration" Text="Expected a termination character for the enumeration."/>
-            <Message Id="CDEndInContent" Text="Expected a CD end in the content section."/>
-            <Message Id="TwoColonsInQName" Text="Expected two colons, '::', in the Q Name."/>
-            <Message Id="MarkupNotRecognized" Text="Markup tags are not recognized."/>
-            <Message Id="URIFragmentInSystemId" Text="URI Fragment found in System Id"/>
-            <Message Id="ElementTypeReqInElementDecl" Text="Expected a element type in the element declaration."/>
-            <Message Id="UnterminatedAttributeValue" Text="Expected a termination character for the attribute value."/>
-            <Message Id="MaximumCodeReached" Text="The maximum size for code has been reached."/>
+<!--The following are DOMException error text, same order as DOMException::ExceptionCode enum -->
+            <Message Id="INDEX_SIZE_ERR" Text="The index or size is negative, or greater than the allowed value"/>
+            <Message Id="DOMSTRING_SIZE_ERR" Text="The specified range of text does not fit into the String"/>
+            <Message Id="HIERARCHY_REQUEST_ERR" Text="An attempt was made to insert a node where it is not permitted"/>
+            <Message Id="WRONG_DOCUMENT_ERR" Text="A node is used in a different document than the one that created it"/>
+            <Message Id="INVALID_CHARACTER_ERR" Text="An invalid or illegal XML character is specified"/>
+            <Message Id="NO_DATA_ALLOWED_ERR" Text="Data is specified for a node which does not support data"/>
+            <Message Id="NO_MODIFICATION_ALLOWED_ERR" Text="An attempt is made to modify an object where modifications are not allowed"/>
+            <Message Id="NOT_FOUND_ERR" Text="An attempt is made to reference a node in a context where it does not exist"/>
+            <Message Id="NOT_SUPPORTED_ERR" Text="The implementation does not support the requested type of object or operation"/>
+            <Message Id="INUSE_ATTRIBUTE_ERR" Text="An attempt is made to add an attribute that is already in use elsewhere"/>
+            <Message Id="INVALID_STATE_ERR " Text="A parameter or an operation is not supported by the underlying object"/>
+            <Message Id="SYNTAX_ERR" Text="An invalid or illegal string is specified"/>
+            <Message Id="INVALID_MODIFICATION_ERR" Text="An attempt is made to modify the type of the underlying object"/>
+            <Message Id="NAMESPACE_ERR" Text="An attempt is made to create or change an object in a way which is incorrect with regard to namespaces"/>
+            <Message Id="INVALID_ACCESS_ERR" Text="An attempt is made to use an object that is not, or is no longer, usable"/>
+            <Message Id="VALIDATION_ERR" Text="A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar"/>
+<!--The following are DOMRangeException error text, reverse order as DOMRangeException::RangeExceptionCode enum -->
+            <Message Id="INVALID_NODE_TYPE_ERR" Text="The container of a boundary-point of a Range is being set to either a node of an invalid type or a node with an ancestor of an invalid type"/>
+            <Message Id="BAD_BOUNDARYPOINTS_ERR" Text="The boundary-points of a Range do not meet specific requirements"/>
         </FatalError>
     </MsgDomain>
 </MsgFile>

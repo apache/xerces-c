@@ -206,15 +206,17 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     int size = 0;
     if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
     {
-	if(msgToLoad < 7)	// Warning messages
-	    msgId = Warnings[msgToLoad - 2];
-	else			// Fatal Errors
-	    msgId = Errors[msgToLoad - 9];
+        if(msgToLoad < 7)	// Warning messages
+            msgId = Warnings[msgToLoad - 2];
+        else               // Fatal Errors
+            msgId = Errors[msgToLoad - 9];
     }
     else if (XMLString::equals(fMsgDomain, XMLUni::fgExceptDomain))
         msgId = Exceptions[msgToLoad - 2];
     else if (XMLString::equals(fMsgDomain, XMLUni::fgValidityDomain))
-	msgId = Invalid[msgToLoad - 2];
+        msgId = Invalid[msgToLoad - 2];
+    else if (XMLString::equals(fMsgDomain, XMLUni::fgXMLDOMMsgDomain))
+        msgId = DOMMsg[msgToLoad - 2];
 
     if (!localMsg(msgId, toFill, maxChars, repTexts, size))
         return false;
@@ -236,15 +238,17 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     char* repTexts = PackingRepText(repText1, repText2, repText3, repText4, size);
     if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
     {
-	if(msgToLoad < 7)
-	    msgId = Warnings[msgToLoad - 2];
-	else
-	    msgId = Errors[msgToLoad - 9];
+        if(msgToLoad < 7)
+            msgId = Warnings[msgToLoad - 2];
+        else
+            msgId = Errors[msgToLoad - 9];
     }
     else if (XMLString::equals(fMsgDomain, XMLUni::fgExceptDomain))
         msgId = Exceptions[msgToLoad - 2];
     else if (XMLString::equals(fMsgDomain, XMLUni::fgValidityDomain))
-	msgId = Invalid[msgToLoad - 2];
+        msgId = Invalid[msgToLoad - 2];
+    else if (XMLString::equals(fMsgDomain, XMLUni::fgXMLDOMMsgDomain))
+        msgId = DOMMsg[msgToLoad - 2];
 
     // Call the other version to load up the message
     if (!localMsg(msgId, toFill, maxChars, repTexts, size))

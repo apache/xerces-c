@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/12 17:27:49  tng
+ * DOM Message: add new domain for DOM Messages.
+ *
  * Revision 1.6  2002/11/04 22:24:43  peiyongz
  * Locale setting for message loader
  *
@@ -140,6 +143,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     ***/
     if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)    &&
         !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)    &&
+        !XMLString::equals(msgDomain, XMLUni::fgXMLDOMMsgDomain)    &&
         !XMLString::equals(msgDomain, XMLUni::fgValidityDomain)   )
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
@@ -157,8 +161,8 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 
 	     REVISIT: another approach would be: through some system API
 		          which returns the directory of the XercescLib and
-		          that directory would be used to locate the 
-		 		  resource bundle    
+		          that directory would be used to locate the
+		 		  resource bundle
     ***/
     char locationBuf[1024];
     memset(locationBuf, 0, sizeof locationBuf);
@@ -188,7 +192,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 	***/
 	err = U_ZERO_ERROR;
 	fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
- 
+
 	if (!U_SUCCESS(err) || fDomainBundle == NULL)
 	{
          XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
