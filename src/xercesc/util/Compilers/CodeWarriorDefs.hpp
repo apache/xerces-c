@@ -64,8 +64,8 @@
 // ---------------------------------------------------------------------------
 //  Include some runtime files that will be needed product wide
 // ---------------------------------------------------------------------------
-#include <sys/types.h>  // for size_t and ssize_t
-#include <limits.h>  // for MAX of size_t and ssize_t
+//#include <sys/types.h>  // for size_t and ssize_t
+//#include <limits.h>  // for MAX of size_t and ssize_t
 
 
 // ---------------------------------------------------------------------------
