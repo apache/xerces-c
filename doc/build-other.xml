@@ -364,7 +364,7 @@ gmake -e</source>
 				Projects/MacOS/ShortenFiles.pl to the xercesc main directory (the same
 				directory that contains the Projects directory). Executing this perl
 				script from this location will create a new directory MacSrc that
-				contains patched up versions of files from the src direcotry.
+				contains patched up versions of files from the src directory.
 				</li>
 			</ul>
 			
@@ -501,7 +501,8 @@ make</source>
 			expected by the shell. The easiest means of creating and interpreting these
 			paths will be through the routines <code>XMLCreateFullPathFromFSRef</code>
 			and <code>XMLParsePathToFSRef</code> as declared in the file
-			<code>MacOSPlatformUtils.hpp</code>.
+			<code>MacOSPlatformUtils.hpp</code>. FSSpec variants of these routines are
+			also supplied.
 			</p>
 			
 			<p><em>Mac OS Version Compatibility</em></p>
@@ -528,7 +529,7 @@ make</source>
 			<ul>
 				<li>URLAccess. Provides NetAccessor support to &XercesCName; for use in
 				fetching network referenced entities. If URLAccess is not installed, any
-				such references will fail; the absense of URLAccess, however, will not
+				such references will fail; the absence of URLAccess, however, will not
 				in itself prevent &XercesCName; from running.
 				</li>
 				
@@ -539,7 +540,7 @@ make</source>
 				
 				<li>HFS+ APIs. If HFS+ APIs are available, all file access is performed
 				using the HFS+ fork APIs to support long file access, and to support
-				long unicode compliant file names. In the absense of HFS+ APIs, classic
+				long unicode compliant file names. In the absence of HFS+ APIs, classic
 				HFS APIs are used instead.
 				</li>
 			</ul>	
