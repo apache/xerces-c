@@ -1,6 +1,6 @@
 ; xml4com.def : Declares the module parameters.
 
-LIBRARY      "xerces-c_1_1.dll"
+LIBRARY      "xerces-com.dll"
 
 EXPORTS
 	DllCanUnloadNow     @1 PRIVATE
