@@ -613,6 +613,21 @@
             </table>
             <p/>         
             
+            <anchor name="XercesIgnoreCachedDTD"/>
+            <table>            
+                <tr><th colspan="2"><em>setIgnoreCachedDTD</em></th></tr>
+                <tr><th><em>true:</em></th><td> Ignore a cached DTD when an XML document contains both an 
+                								internal and external DTD, and the use cached grammar from parse option
+                								is enabled. Currently, we do not allow using cached DTD grammar when an
+                								internal subset is present in the document. This option will only affect
+                								the behavior of the parser when an internal and external DTD both exist 
+                								in a document (i.e. no effect if document has no internal subset).</td></tr>
+                <tr><th><em>false:</em></th><td> Don't ignore cached DTD. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>see:</em></th><td>
+                <link anchor="use-cached">useCachedGrammarInParse</link></td></tr>
+            </table>
+                        
             <anchor name="CreateSchemaInfo"/>
             <table>
                 <tr><th colspan="2"><em>setCreateSchemaInfo</em></th></tr>
@@ -1320,7 +1335,25 @@
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidateAnnotations </td></tr>
                 <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
-            <p/>                                    
+            <p/>
+            
+            <anchor name="builder-IgnoreCachedDTD"/>
+            <table>            
+                <tr><th colspan="2"><em>http://apache.org/xml/features/validation/ignoreCachedDTD</em></th></tr>
+                <tr><th><em>true:</em></th><td> Ignore a cached DTD when an XML document contains both an 
+                								internal and external DTD, and the use cached grammar from parse option
+                								is enabled. Currently, we do not allow using cached DTD grammar when an
+                								internal subset is present in the document. This option will only affect
+                								the behavior of the parser when an internal and external DTD both exist 
+                								in a document (i.e. no effect if document has no internal subset).</td></tr>
+                <tr><th><em>false:</em></th><td> Don't ignore cached DTD. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIgnoreCachedDTD </td></tr>
+                <tr><th><em>see:</em></th><td>                
+                <link anchor="builder-use-cached">http://apache.org/xml/features/validation/use-cachedGrammarInParse</link>
+                </td></tr>
+            </table>
+            <p/>              
             
             <anchor name="builder-DOMHasPsviInfo"/>
             <table>
