@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/12 16:29:30  peiyongz
+ * loadAMsgSet() added
+ *
  * Revision 1.3  2002/11/04 15:13:01  tng
  * C++ Namespace Support.
  *
@@ -101,6 +104,14 @@
 #include    <sys/timeb.h>
 #include    <string.h>
 
+#if defined (XML_USE_ICU_MESSAGELOADER)
+    #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+    #include <xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
+#else   // use In-memory message loader
+    #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#endif
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -110,6 +121,30 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
+//
+//  This method is called by the platform independent part of this class
+//  when client code asks to have one of the supported message sets loaded.
+//  In our case, we use the ICU based message loader mechanism.
+//
+XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
+{
+    XMLMsgLoader* retVal;
+    try
+    {
+#if defined (XML_USE_ICU_MESSAGELOADER)
+        retVal = new ICUMsgLoader(msgDomain);
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+        retVal = new MsgCatalogLoader(msgDomain);
+#else
+        retVal = new InMemMsgLoader(msgDomain);
+#endif
+    }
+    catch(...)
+    {
+        panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+    }
+    return retVal;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
