@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2002/11/27 21:27:14  peiyongz
+ * Schema Errat E2-24 Duration 'T': allow to catch SchemaDateTimeException
+ *
  * Revision 1.19  2002/11/26 21:20:09  tng
  * Schema Fix: List can have Union, and Union can have List.  So need to check its items for ID/IDREF/Entity.
  *
@@ -209,6 +212,7 @@
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <xercesc/util/SchemaDateTimeException.hpp>
 #include <xercesc/validators/datatype/ListDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/ENTITYDatatypeValidator.hpp>
@@ -470,10 +474,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             fCurrentDV->validate(value);
                     }
                 }
-            } catch (InvalidDatatypeValueException& idve) {
-                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
-            catch (InvalidDatatypeFacetException& idve) {
+            catch (XMLException& idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
             catch (...) {
