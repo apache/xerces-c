@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/09/21 18:03:50  jberry
+ * Change a couple of routine names to make them more orthagonal.
+ *
  * Revision 1.1  2000/07/18 18:26:11  andyh
  * Mac OS update.
  * Contributed by James Berry <jberry@criticalpath.com>
@@ -104,8 +107,8 @@ class XMLMacFile : public XMLMacAbstractFile
 
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!
-XMLCh*	XMLCreateFullPathFromRef(const FSRef& startingRef);
-XMLCh*	XMLCreateFullPathFromSpec(const FSSpec& startingSpec);
+XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);
+XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec);
 
 //	Convert from path to FSRef/FSSpec
 bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref);

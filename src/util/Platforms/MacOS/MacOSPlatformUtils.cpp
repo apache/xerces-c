@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/09/21 18:03:50  jberry
+ * Change a couple of routine names to make them more orthagonal.
+ *
  * Revision 1.12  2000/09/06 23:51:21  jberry
  * Add support for new compile time options defined in prefix file. These
  * control the selection of the msgloader, transcoder, and netaccessor.
@@ -470,13 +473,13 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     if (gHasHFSPlusAPIs)
     {
         FSRef ref;
-        if (!XMLParsePathToFSRef(srcPath, ref) || (path = XMLCreateFullPathFromRef(ref)) == NULL)
+        if (!XMLParsePathToFSRef(srcPath, ref) || (path = XMLCreateFullPathFromFSRef(ref)) == NULL)
             path = XMLString::replicate(srcPath);
     }
     else
     {
         FSSpec spec;
-        if (!XMLParsePathToFSSpec(srcPath, spec) || (path = XMLCreateFullPathFromSpec(spec)) == NULL)
+        if (!XMLParsePathToFSSpec(srcPath, spec) || (path = XMLCreateFullPathFromFSSpec(spec)) == NULL)
             path = XMLString::replicate(srcPath);
     }
     
@@ -1087,7 +1090,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
 
 
 XMLCh*
-XMLCreateFullPathFromRef(const FSRef& startingRef)
+XMLCreateFullPathFromFSRef(const FSRef& startingRef)
 {
     OSErr err = noErr;
     FSCatalogInfo catalogInfo;
@@ -1174,7 +1177,7 @@ XMLCreateFullPathFromRef(const FSRef& startingRef)
 
 
 XMLCh*
-XMLCreateFullPathFromSpec(const FSSpec& startingSpec)
+XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec)
 {
     OSErr err = noErr;
     FSSpec spec = startingSpec;
