@@ -190,13 +190,16 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
 
 
     // Prevent cycles in the tree
-    bool treeSafe=true;
-    for(DOMNode *a=castToNode(this)->getParentNode();
-        treeSafe && a!=0;
-        a=a->getParentNode())
-        treeSafe=(newChild!=a);
-    if(!treeSafe)
-        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+    //only need to do this if the node has children
+    if(newChild->hasChildNodes()) {
+        bool treeSafe=true;
+        for(DOMNode *a=castToNode(this)->getParentNode();
+            treeSafe && a!=0;
+            a=a->getParentNode())
+            treeSafe=(newChild!=a);
+        if(!treeSafe)
+            throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
+    }
 
     // refChild must in fact be a child of this node (or 0)
     if (refChild!=0 && refChild->getParentNode() != castToNode(this))
