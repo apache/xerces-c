@@ -299,6 +299,7 @@ public:
     const XMLCh*                 getPooledString(const XMLCh *src);
     void                         deleteHeap();
     void                         release(DOMNode* object, NodeObjectType type);
+    void                         releaseDocNotifyUserData(DOMNode* object);
     void                         releaseBuffer(DOMBuffer* buffer);
     DOMBuffer*                   popBuffer();
 

@@ -385,8 +385,8 @@ void DOMDocumentTypeImpl::release()
 {
     if (fNode.isOwned()) {
         if (fNode.isToBeReleased()) {
+            // we are calling from documnet.release() which will notify the user data handler
             if (fIsCreatedFromHeap) {
-                fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
                 DOMDocumentType* docType = this;
                 delete docType;
             }

@@ -1212,7 +1212,10 @@ void DOMDocumentImpl::release()
     DOMDocument* doc = (DOMDocument*) this;
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
 
-    // release the docType as well
+    // notify userdatahandler first
+    releaseDocNotifyUserData(this);
+
+    // release the docType in case it was created from heap
     if (fDocType) {
         castToNodeImpl(fDocType)->isToBeReleased(true);
         fDocType->release();
@@ -1221,6 +1224,21 @@ void DOMDocumentImpl::release()
     // delete the document memory pool
     delete doc;
 };
+
+void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
+{
+    DOMNode *child = object->getFirstChild();
+    if (child != 0)
+    {
+        while( child != 0)
+        {
+            releaseDocNotifyUserData(child);
+            child = child->getNextSibling();
+        }
+    }
+    else
+        castToNodeImpl(object)->callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
+}
 
 void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2002/08/16 16:03:02  tng
+ * [Bug 11360] Release user data using handler.
+ *
  * Revision 1.26  2002/08/16 13:49:56  tng
  * [Bug 11360] Release user data using handler.
  *
@@ -781,7 +784,11 @@ int main(int argc, char **argv)
          DOMTest::testDocumentFragmentNode = 0;
          DOMTest::testNotationNode = 0;
 
-         d->release();
+        // we couldn't really test the user data handler call as the userhandler is already
+        // deleted when the release() is done, but still set it to test the code internally
+        d->setUserData(tempStr, (void*) tempStr, &userhandler);
+        d->release();
+
 
     };
 
