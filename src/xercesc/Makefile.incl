@@ -466,8 +466,8 @@ ifeq (${PLATFORM}, AIX)
 
     #
     # LINK_NAME=libxerces-c.so
-    # SO_NAME  =libxerces-c17.so
-    # REAL_NAME=libxerces-c17.0.so
+    # SO_NAME  =libxerces-c20.so
+    # REAL_NAME=libxerces-c20.0.so
     #
 
     LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
@@ -478,8 +478,8 @@ else
 
     #
     # LINK_NAME=libxerces-c.so
-    # SO_NAME  =libxerces-c.so.17
-    # REAL_NAME=libxerces-c.so.17.0
+    # SO_NAME  =libxerces-c.so.20
+    # REAL_NAME=libxerces-c.so.20.0
     #
     LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
     SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}

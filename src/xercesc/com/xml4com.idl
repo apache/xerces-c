@@ -69,8 +69,8 @@ import "oaidl.idl";
 	//  Format for version is major.minor
 	//  no support for additional parts (like 1.5.2)
 	//  Use 1.60 for subsequent release
-	version(1.70),
-	helpstring("Xerces XML Parser 1.7.0")
+	version(2.00),
+	helpstring("Xerces XML Parser 2.0.0")
 ]
 library Xerces
 {
