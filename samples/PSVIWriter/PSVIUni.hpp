@@ -72,6 +72,7 @@ public :
     static const XMLCh fgAttributeUses[];
     static const XMLCh fgAttributeWildcard[];
     static const XMLCh fgBaseTypeDefinition[];
+    static const XMLCh fgCanonicalRepresentation[];
     static const XMLCh fgComplexTypeDefinition[];
     static const XMLCh fgCompositor[];
     static const XMLCh fgContentType[];

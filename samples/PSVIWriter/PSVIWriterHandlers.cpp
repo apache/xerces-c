@@ -87,6 +87,12 @@ static const XMLCh gDataValue[] = { chLatin_d, chLatin_a, chLatin_t, chLatin_a, 
                                    chLatin_a, chLatin_l,  chLatin_u, chLatin_e, chNull };
 static const XMLCh gCommentStart[] = { chOpenAngle, chBang, chDash, chDash, chLF, chNull};
 static const XMLCh gCommentEnd[] = { chDash, chDash, chCloseAngle, chLF, chNull};
+
+static const XMLCh gPartialElementPSVI[] = 
+{ chLatin_p, chLatin_a, chLatin_r, chLatin_t, chLatin_i, chLatin_t, chLatin_i, chLatin_a, chLatin_l, 
+  chLatin_E, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t, 
+  chLatin_P, chLatin_S, chLatin_V, chLatin_I, chNull };
+
 // ---------------------------------------------------------------------------
 //  PSVIWriterHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -365,6 +371,7 @@ void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const localName,
 	//processSchemaErrorCode(elementInfo->getErrorCodes());
 	sendElementEmpty(PSVIUni::fgSchemaErrorCode);
 	sendElementValue(PSVIUni::fgSchemaNormalizedValue, elementInfo->getSchemaNormalizedValue());
+	sendElementValue(PSVIUni::fgCanonicalRepresentation, elementInfo->getCanonicalRepresentation());
 	sendElementValue(PSVIUni::fgSchemaSpecified,
 		(elementInfo->getIsSchemaSpecified() ? PSVIUni::fgSchema : PSVIUni::fgInfoset));
 	sendElementValue(PSVIUni::fgSchemaDefault, elementInfo->getSchemaDefault());
@@ -376,6 +383,66 @@ void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const localName,
 	sendElementEmpty(PSVIUni::fgIdIdrefTable);
 	sendElementEmpty(PSVIUni::fgIdentityConstraintTable);
 	sendUnindentedElement(PSVIUni::fgElement);
+
+}
+
+/***
+ *
+ *  <partialElementPSVI>
+ *        getValidity()
+ *        getValidationAttemped()
+ *        getValidationContext()
+ *        getIsSchemaSpecified()
+ *        getElementDeclaration()
+ *        getTypeDefinition()
+ *        getMemberTypeDefinition()
+ *        getSchemaInformation()
+ *        getSchemaDefault()
+ *        getSchemaNormalizedValue()
+ *        getCanonicalRepresentation()
+ *        getNotationDeclaration()
+ *  </partialElementPSVI>
+ *
+ ***/
+void 
+PSVIWriterHandlers::handlePartialElementPSVI( const XMLCh*       const localName, 
+                                              const XMLCh*       const uri,
+                                                    PSVIElement*       elementInfo ) 
+{
+
+    writeString(gCommentStart);
+    incIndent();
+    writeOpen(gPartialElementPSVI);
+    incIndent();
+
+	processSchemaInformation(elementInfo->getSchemaInformation());
+	sendElementValue(PSVIUni::fgValidationAttempted
+                   , translateValidationAttempted(elementInfo->getValidationAttempted()));
+	sendElementValue(PSVIUni::fgValidationContext
+                   , elementInfo->getValidationContext());
+    sendElementValue(PSVIUni::fgValidity
+                   , translateValidity(elementInfo->getValidity()));
+	sendElementValue(PSVIUni::fgSchemaNormalizedValue
+                   , elementInfo->getSchemaNormalizedValue());
+	sendElementValue(PSVIUni::fgCanonicalRepresentation
+                   , elementInfo->getCanonicalRepresentation());
+	sendElementValue(PSVIUni::fgSchemaSpecified
+                  , (elementInfo->getIsSchemaSpecified() ? PSVIUni::fgSchema : PSVIUni::fgInfoset));
+    sendElementValue(PSVIUni::fgSchemaDefault
+                   , elementInfo->getSchemaDefault());
+    processTypeDefinitionRef(PSVIUni::fgTypeDefinition
+                           , elementInfo->getTypeDefinition());
+	processTypeDefinitionRef(PSVIUni::fgMemberTypeDefinition
+                           , elementInfo->getMemberTypeDefinition());
+    processElementDeclarationRef(PSVIUni::fgDeclaration
+                               , elementInfo->getElementDeclaration());
+    sendReference(PSVIUni::fgNotation
+                , elementInfo->getNotationDeclaration());
+
+    decIndent();
+    writeClose(gPartialElementPSVI);
+    decIndent();
+    writeString(gCommentEnd);
 
 }
 

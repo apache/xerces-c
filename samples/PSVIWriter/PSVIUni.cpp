@@ -53,6 +53,13 @@ const XMLCh PSVIUni::fgBaseURI[] =
 	chLatin_b, chLatin_a, chLatin_s, chLatin_e, chLatin_U, chLatin_R, chLatin_I, chNull
 };
 
+const XMLCh PSVIUni::fgCanonicalRepresentation[] =
+{
+    chLatin_p, chLatin_s, chLatin_v, chColon, chLatin_c, chLatin_a, chLatin_n, chLatin_o, chLatin_n, chLatin_i, chLatin_c, chLatin_a,
+    chLatin_l, chLatin_R, chLatin_e, chLatin_p, chNull
+
+};
+
 const XMLCh PSVIUni::fgCharacter[] =
 {
 	chLatin_c, chLatin_h, chLatin_a, chLatin_r, chLatin_a, chLatin_c, chLatin_t, chLatin_e, chLatin_r, chNull
