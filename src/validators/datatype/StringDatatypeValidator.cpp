@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/09/25 15:58:14  peiyongz
+ * Check baseValidator in assignAdditinoalFacet() and inheritAdditionalFacet()
+ *
  * Revision 1.14  2001/09/24 15:31:13  peiyongz
  * DTV Reorganization: inherit from AbstractStringValidator
  *
@@ -178,6 +181,9 @@ void StringDatatypeValidator::inheritAdditionalFacet()
 {
     StringDatatypeValidator *pBaseValidator = (StringDatatypeValidator*) getBaseValidator();
 
+    if (!pBaseValidator)
+        return;
+
     // inherit whitespace
     if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) !=0) &&
         ((getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) == 0))
@@ -191,6 +197,10 @@ void StringDatatypeValidator::checkAdditionalFacetConstraints() const
 {
 
     StringDatatypeValidator *pBaseValidator = (StringDatatypeValidator*) getBaseValidator();
+
+    if (!pBaseValidator)
+        return;
+   
     short    thisWSFacet = getWSFacet();
     short    baseWSFacet = pBaseValidator->getWSFacet();
 
