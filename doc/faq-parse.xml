@@ -938,8 +938,8 @@ catch (const XMLException&amp; toCatch) {
           to the standard.
        </p>
 
-       <p>See <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev&amp;m=100195657723339&amp;w=2">
-          Mail Archive "XercesC under FreeBSD..." </jump> for earlier discussion and work around.
+       <p>See <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">Mail Archive "XercesC under
+          FreeBSD... Dated October 1, 2001"</jump> for earlier discussion and work around.
        </p>
 
        <p>Or you can use ICU transcoder (configure with -t icu) instead of the native transcoder on FreeBSD.
