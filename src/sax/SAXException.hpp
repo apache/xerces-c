@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:47  twl
- * Initial revision
+ * Revision 1.2  1999/12/18 00:21:23  roddey
+ * Fixed a small reported memory leak
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:47  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:02  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -90,8 +93,11 @@
   * SAXParseException subclass.</p>
   *
   * $Log$
-  * Revision 1.1  1999/11/09 01:07:47  twl
-  * Initial revision
+  * Revision 1.2  1999/12/18 00:21:23  roddey
+  * Fixed a small reported memory leak
+  *
+  * Revision 1.1.1.1  1999/11/09 01:07:47  twl
+  * Initial checkin
   *
   * Revision 1.2  1999/11/08 20:45:02  rahul
   * Swat for adding in Product name and CVS comment log variable.
@@ -128,15 +134,33 @@ public:
     {
     }
 
+    SAXException(const SAXException& toCopy) :
+
+        fMsg(XMLString::replicate(toCopy.fMsg))
+    {
+    }
 
     /** Destructor */
     virtual ~SAXException()
     {
+        delete [] fMsg;
     }
 
     //@}
 
 
+    /** @name Public Operators */
+    SAXException& operator=(const SAXException& toCopy)
+    {
+        if (this == &toCopy)
+            return *this;
+
+        delete [] fMsg;
+        fMsg = XMLString::replicate(toCopy.fMsg);
+        return *this;
+    }
+
+    /** @name Getter Methods */
     const XMLCh* getMessage() const
     {
         return fMsg;
@@ -144,7 +168,13 @@ public:
 
 
 private :
-    XMLCh* fMsg;
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fMsg
+    //      This is the text of the error that is being thrown.
+    // -----------------------------------------------------------------------
+    XMLCh*  fMsg;
 };
 
 #endif

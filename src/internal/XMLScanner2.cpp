@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:20:24  roddey
+ * Fixed a small reported memory leak
+ *
  * Revision 1.2  1999/12/08 00:15:07  roddey
  * Some small last minute fixes to get into the 3.0.1 build that is going to be
  * going out anyway for platform fixes.
@@ -769,7 +772,9 @@ void XMLScanner::scanReset(const InputSource& src)
         //  Its a valid URL so its assumed to be fully qualified. Get the
         //  base part of the path part of the URL.
         //
-        fReaderMgr.setBasePath(XMLPlatformUtils::getBasePath(tmpURL.getPath()));
+        XMLCh* basePath = XMLPlatformUtils::getBasePath(tmpURL.getPath());
+        ArrayJanitor<XMLCh> pathJan(basePath);
+        fReaderMgr.setBasePath(basePath);
     }
 
     catch(const MalformedURLException&)
@@ -778,7 +783,9 @@ void XMLScanner::scanReset(const InputSource& src)
         //  Its not a URL, so assume its just a plain file path and could
         //  be partial, so get the complete path.
         //
-        fReaderMgr.setBasePath(XMLPlatformUtils::getBasePath(src.getSystemId()));
+        XMLCh* basePath = XMLPlatformUtils::getBasePath(src.getSystemId());
+        ArrayJanitor<XMLCh> pathJan(basePath);
+        fReaderMgr.setBasePath(basePath);
     }
 }
 
