@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/12/21 16:32:52  cargilld
+ * Attempt to fix various apidoc problems.
+ *
  * Revision 1.9  2004/12/21 16:02:51  cargilld
  * Attempt to fix various apidoc problems.
  *
@@ -124,6 +127,7 @@ class XMLUTIL_EXPORT XMLResourceIdentifier
 {
 public:
 
+    /** @name Public Contants */
     //@{
     enum ResourceIdentifierType {
         SchemaGrammar = 0,
@@ -133,9 +137,10 @@ public:
         ExternalEntity,
         UnKnown = 255    
     };
-
+    //@}
+   
     /** @name Constructors and Destructor */
-
+    //@{
     /** Constructor */
 
     XMLResourceIdentifier(const ResourceIdentifierType resourceIdentitiferType
@@ -154,6 +159,8 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    /** @name Public Methods */
+    //@{
     ResourceIdentifierType getResourceIdentifierType() const;
     const XMLCh* getPublicId()          const;
     const XMLCh* getSystemId()          const;
