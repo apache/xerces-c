@@ -79,6 +79,7 @@ include ../Makefile.incl
 MODULE = internal
 
 INTERNAL_CPP_PUBHEADERS = \
+	BinFileOutputStream.hpp \
 	CharTypeTables.hpp \
 	DGXMLScanner.hpp \
 	ElemStack.hpp \
@@ -96,13 +97,17 @@ INTERNAL_CPP_PUBHEADERS = \
 	XMLInternalErrorHandler.hpp \
 	XMLReader.hpp \
 	XMLScanner.hpp \
-	XMLScannerResolver.hpp
-
+	XMLScannerResolver.hpp \
+	XProtoType.hpp \
+	XSerializable.hpp \
+	XSerializeEngine.hpp
+			
 INTERNAL_CPP_PRIVHEADERS =
 
 INTERNAL_C_FILES =
 
 INTERNAL_CPP_OBJECTS = \
+	BinFileOutputStream.$(TO) \
 	DGXMLScanner.$(TO) \
 	ElemStack.$(TO) \
 	IGXMLScanner.$(TO) \
@@ -117,7 +122,9 @@ INTERNAL_CPP_OBJECTS = \
 	XMLGrammarPoolImpl.$(TO) \
 	XMLReader.$(TO) \
 	XMLScanner.$(TO) \
-	XMLScannerResolver.$(TO)
+	XMLScannerResolver.$(TO) \
+	XProtoType.$(TO) \
+	XSerializeEngine.$(TO)
 
 all::	includes $(INTERNAL_CPP_OBJECTS)
 
