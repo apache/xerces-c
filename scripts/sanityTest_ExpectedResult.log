@@ -180,7 +180,7 @@ Options:
     -s          Disable schema processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -i          Disable identity constraint checking. Defaults to on.
-                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.                
+                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -locale=ll_CC specify the locale, default: en_US.
     -?          Show this help.
 
