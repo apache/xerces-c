@@ -1337,35 +1337,35 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.24.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.24.0 .");
-        psystem("ln -s libxerces-c.so.24.0 libxerces-c.so.24 ");
-        psystem("ln -s libxerces-c.so.24   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.25.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.25.0 .");
+        psystem("ln -s libxerces-c.so.25.0 libxerces-c.so.25 ");
+        psystem("ln -s libxerces-c.so.25   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.24.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.24.0 .");
-        psystem("ln -s libxerces-c.sl.24.0 libxerces-c.sl.24 ");
-        psystem("ln -s libxerces-c.sl.24   libxerces-c.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.25.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.25.0 .");
+        psystem("ln -s libxerces-c.sl.25.0 libxerces-c.sl.25 ");
+        psystem("ln -s libxerces-c.sl.25   libxerces-c.sl    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c24.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c24.0.so .");
-        psystem("ln -s libxerces-c24.0.so libxerces-c24.so  ");
-        psystem("ln -s libxerces-c24.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c25.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c25.0.so .");
+        psystem("ln -s libxerces-c25.0.so libxerces-c25.so  ");
+        psystem("ln -s libxerces-c25.so   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c24.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c24.0.a . ");
-        psystem("ln -s libxerces-c24.0.a  libxerces-c24.a ");
-        psystem("ln -s libxerces-c24.a    libxerces-c.a ");         
+    if ((-e "$XERCESCROOT/lib/libxerces-c25.0.a" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c25.0.a . ");
+        psystem("ln -s libxerces-c25.0.a  libxerces-c25.a ");
+        psystem("ln -s libxerces-c25.a    libxerces-c.a ");         
     }
         
 	# Mac OS X
-    if ((-e "$XERCESCROOT/lib/libxerces-c.24.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.24.0.dylib .");
-        psystem("ln -s libxerces-c.24.0.dylib libxerces-c.24.dylib ");
-        psystem("ln -s libxerces-c.24.dylib   libxerces-c.dylib    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.25.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.25.0.dylib .");
+        psystem("ln -s libxerces-c.25.0.dylib libxerces-c.25.dylib ");
+        psystem("ln -s libxerces-c.25.dylib   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files
@@ -1433,23 +1433,23 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
             print ("\n\nCopying ICU message bundles ...\n");        	
             psystem("cp -f $XERCESCROOT/msg/XercesMessages*.res $targetdir/msg");
            
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages24.0.so .");
-            psystem("find . -name 'libXercesMessages24.0.so' -exec ln -s {} libXercesMessages24.so \\;");
-            psystem("find . -name 'libXercesMessages24.so'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages25.0.so .");
+            psystem("find . -name 'libXercesMessages25.0.so' -exec ln -s {} libXercesMessages25.so \\;");
+            psystem("find . -name 'libXercesMessages25.so'   -exec ln -s {} libXercesMessages.so \\;");
                     
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.24.0 .");
-            psystem("find . -name 'libXercesMessages.so.24.0' -exec ln -s {} libXercesMessages.so.24 \\;");
-            psystem("find . -name 'libXercesMessages.so.24'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.25.0 .");
+            psystem("find . -name 'libXercesMessages.so.25.0' -exec ln -s {} libXercesMessages.so.25 \\;");
+            psystem("find . -name 'libXercesMessages.so.25'   -exec ln -s {} libXercesMessages.so \\;");
             
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.24.0 .");
-            psystem("find . -name 'libXercesMessages.sl.24.0' -exec ln -s {} libXercesMessages.sl.24 \\;");
-            psystem("find . -name 'libXercesMessages.sl.24'   -exec ln -s {} libXercesMessages.sl \\;");            
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.25.0 .");
+            psystem("find . -name 'libXercesMessages.sl.25.0' -exec ln -s {} libXercesMessages.sl.25 \\;");
+            psystem("find . -name 'libXercesMessages.sl.25'   -exec ln -s {} libXercesMessages.sl \\;");            
 
             # on AIX            
             if ( $platform eq "aix") {
-                psystem("cp -f $XERCESCROOT/lib/libXercesMessages24.0.a .");
-                psystem("ln -s libXercesMessages24.0.a libXercesMessages24.a ");
-                psystem("ln -s libXercesMessages24.a   libXercesMessages.a   ");
+                psystem("cp -f $XERCESCROOT/lib/libXercesMessages25.0.a .");
+                psystem("ln -s libXercesMessages25.0.a libXercesMessages25.a ");
+                psystem("ln -s libXercesMessages25.a   libXercesMessages.a   ");
             }        
                     
         }        	
