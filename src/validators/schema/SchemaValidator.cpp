@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/08/30 15:47:46  tng
+ * Schema: xsi:type fixes
+ *
  * Revision 1.15  2001/08/29 20:52:35  tng
  * Schema: xsi:type support
  *
@@ -560,6 +563,8 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             }
         }
     }
+    fDatatypeBuffer.reset();
+    fTrailing = false;
 }
 
 void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
@@ -654,7 +659,12 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                                 // the type is derived from ancestor
                                 if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::RESTRICTION)
                                     emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                                if (elemDef->hasAttDefs()) {
+                                    // if we have an attribute but xsi:type's type is simple, we have a problem...
+                                    emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                }
                             }
+
                         }
                     }
                 }
@@ -694,6 +704,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     }
 
     fDatatypeBuffer.reset();
+    fTrailing = false;
 }
 
 void SchemaValidator::preContentValidation(bool reuseGrammar)
