@@ -120,6 +120,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "EnumVal"=".\EnumVal\EnumVal.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "StdInParse"=".\StdInParse\StdInParse.dsp" - Package Owner=<4>
 
 Package=<5>
