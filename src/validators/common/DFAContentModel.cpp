@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/07/24 20:00:33  peiyongz
+ * Memory Leak fix: Bugzilla #2707 reported by Francois Rioux
+ *
+ * + |                              DESCRIPTION                                   |
+ * + There are some memory leaks in the buildDFA method :
+ * +    the first QName allocated object
+ * +    the nodeOrgContent
+ * +    fHeadNode
+ *
  * Revision 1.15  2001/07/09 15:22:36  knoaman
  * complete <any> declaration.
  *
@@ -828,8 +837,24 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  DFA build.
     //
 
-    // the CMBinary will be released by fLeafList[]
-    //delete fHeadNode;
+    //
+    // Note on memory leak: Bugzilla#2707:
+    // ===================================
+    // The CMBinary, pointed to by fHeadNode, will be released by 
+    // delete fLeafList[index], which in turn, release the objects 
+    // pointed to by nodeOrgContent and nodeEOC repectively.
+    //
+    // But the qname needs to be released any way.
+    //
+    // Adding any of the following three deletes will
+    // cause "Unexpected exception during parsing ..." error.
+    //
+    // delete fHeadNode;  
+    // delete nodeOrgContent;
+    // delete nodeEOC;
+    //
+
+    delete qname;
     fHeadNode = 0;
 
     for (index = 0; index < fLeafCount; index++)
