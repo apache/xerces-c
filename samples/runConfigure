@@ -58,6 +58,10 @@
 # 
 #
 # $Log$
+# Revision 1.6  2000/02/05 01:07:29  rahulj
+# Under Solaris for some unknown reason test -e did not work.
+# Changed it to test -x.
+#
 # Revision 1.5  2000/02/01 18:49:08  aruna1
 # updated instructions
 #
@@ -153,7 +157,11 @@ if test $1 = "-h"; then
 fi
 
 # Get the command line parameters
+if test -x /usr/bin/getopt; then
 set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+else
+set -- `getopts p:c:x:dm:n:t:r:l:z:h `$*``
+fi
 if [ $? != 0 ]
    then
    usage
