@@ -597,21 +597,41 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     #
     if (length($ICUROOT) > 0) {
         pchdir ("$XERCESCROOT/lib");
+
+        #
+        # copy icudata dll
+        # on AIX/Solaris, it is called libicudt20b.so
+        # on HP, it is called libicudt20b.sl
+        # on Linux, it is called libicudt20l.so
+        #
         psystem("cp -f $ICUROOT/source/data/libicudt20*.* .");
         psystem("rm -f libicudata*");
         psystem("find . -name 'libicudt20*.so' -exec ln -s {} libicudata.so \\;");
         psystem("find . -name 'libicudt20*.sl' -exec ln -s {} libicudata.sl \\;");
 
-        psystem("cp -f $ICUROOT/lib/libicuuc.so.20.0  .");
-        psystem("cp -f $ICUROOT/lib/libicuuc.sl.20.0  .");
+        #
+        # copy icuuc dll
+        # on AIX, it is called libicuuc20.2.so
+        # on Solaris/Linux, it is called libicuuc.so.20.2
+        # on HP, it is called libicuuc.sl.20.2
+        #
+        psystem("cp -f $ICUROOT/lib/libicuuc20.2.so");
+        psystem("cp -f $ICUROOT/lib/libicuuc.so.20.2  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.sl.20.2  .");
         psystem("rm -f libicuuc.so");
+        psystem("rm -f libicuuc20.so");
         psystem("rm -f libicuuc.so.20");
         psystem("rm -f libicuuc.sl");
         psystem("rm -f libicuuc.sl.20");
-        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so.20 \\;");
-        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl \\;");
-        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl.20 \\;");
+
+        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so.20 \\;");
+
+        psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so.20 \\;");
+
+        psystem("find . -name 'libicuuc.sl.20.2' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.20.2' -exec ln -s {} libicuuc.sl.20 \\;");
     }
 
     # Now build the samples
@@ -698,18 +718,38 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     #
     if (length($ICUROOT) > 0) {
         pchdir ("$targetdir/lib");
+
+        #
+        # copy icudata dll
+        # on AIX/Solaris, it is called libicudt20b.so
+        # on HP, it is called libicudt20b.sl
+        # on Linux, it is called libicudt20l.so
+        #
         psystem("rm -f libicudata*");
         psystem("find . -name 'libicudt20*.so' -exec ln -s {} libicudata.so \\;");
         psystem("find . -name 'libicudt20*.sl' -exec ln -s {} libicudata.sl \\;");
 
+        #
+        # copy icuuc dll
+        # on AIX, it is called libicuuc20.2.so
+        # on Solaris/Linux, it is called libicuuc.so.20.2
+        # on HP, it is called libicuuc.sl.20.2
+        #
         psystem("rm -f libicuuc.so");
+        psystem("rm -f libicuuc20.so");
         psystem("rm -f libicuuc.so.20");
         psystem("rm -f libicuuc.sl");
         psystem("rm -f libicuuc.sl.20");
-        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so.20 \\;");
-        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl \\;");
-        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl.20 \\;");
+
+        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so.20 \\;");
+
+        psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so.20 \\;");
+
+        psystem("find . -name 'libicuuc.sl.20.2' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.20.2' -exec ln -s {} libicuuc.sl.20 \\;");
+
     }
 
     # Populate the etc output directory like config.status and the map file
