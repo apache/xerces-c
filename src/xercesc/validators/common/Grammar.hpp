@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/29 16:19:47  peiyongz
+ * storeGrammar()/loadGrammar added
+ *
  * Revision 1.8  2003/10/14 15:19:24  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -140,6 +143,7 @@ public:
     enum GrammarType {
         DTDGrammarType
       , SchemaGrammarType
+      , UnKnown
     };
 
     enum {
@@ -257,6 +261,11 @@ public:
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(Grammar)
+
+	static void     storeGrammar(XSerializeEngine&        serEng
+                               , Grammar* const           grammar);
+
+	static Grammar* loadGrammar(XSerializeEngine& serEng);
 
 protected :
     // -----------------------------------------------------------------------

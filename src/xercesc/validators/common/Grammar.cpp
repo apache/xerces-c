@@ -58,12 +58,22 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/10/29 16:19:47  peiyongz
+ * storeGrammar()/loadGrammar added
+ *
  * Revision 1.1  2003/10/14 15:19:24  peiyongz
  * Implementation of Serialization/Deserialization
  *
  */
 
 #include <xercesc/validators/common/Grammar.hpp>
+
+//since we need to dynamically created each and every derivatives 
+//during deserialization by XSerializeEngine>>Derivative, we got
+//to include all hpp
+
+#include <xercesc/validators/DTD/DTDGrammar.hpp>
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -76,6 +86,49 @@ IMPL_XSERIALIZABLE_NOCREATE(Grammar)
 void Grammar::serialize(XSerializeEngine& serEng)
 {
     //no data
+}
+
+void Grammar::storeGrammar(XSerializeEngine&   serEng
+                         , Grammar*  const     grammar)
+{
+    if (grammar)
+    {
+        serEng<<(int) grammar->getGrammarType();
+        serEng<<grammar;
+    }
+    else
+    {
+        serEng<<(int) UnKnown;
+    }
+
+}
+
+Grammar* Grammar::loadGrammar(XSerializeEngine& serEng)
+{
+
+    int type;
+    serEng>>type;
+
+    switch((GrammarType)type)
+    {
+    case DTDGrammarType: 
+        DTDGrammar* dtdGrammar;
+        serEng>>dtdGrammar;
+        return dtdGrammar;
+        break;
+    case SchemaGrammarType:
+        SchemaGrammar* schemaGrammar;
+        serEng>>schemaGrammar;
+        return schemaGrammar;
+        break;
+    case UnKnown:
+        return 0;
+        break;
+    default: //we treat this same as UnKnown
+        return 0;
+        break;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END
