@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:04:45  twl
- * Initial revision
+ * Revision 1.2  1999/12/02 19:42:35  roddey
+ * Got rid of attempts to fancy/schmanzy lazy eval mutex implementation and just
+ * force anyone who needs a global/static mutex to lazy eval that themselves.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:04:45  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:09  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -82,6 +86,8 @@ XMLMutex::XMLMutex() :
 
     fHandle(0)
 {
+    // Ask the per-platform driver to make us a mutex
+    fHandle = XMLPlatformUtils::makeMutex();
 }
 
 
@@ -100,12 +106,6 @@ XMLMutex::~XMLMutex()
 // ---------------------------------------------------------------------------
 void XMLMutex::lock()
 {
-    if (!fHandle)
-    {
-        void* tmpHandle = XMLPlatformUtils::makeMutex();
-        if (XMLPlatformUtils::compareAndSwap(&fHandle, tmpHandle, 0) != 0)
-            XMLPlatformUtils::closeMutex(tmpHandle);
-    }
     XMLPlatformUtils::lockMutex(fHandle);
 }
 
