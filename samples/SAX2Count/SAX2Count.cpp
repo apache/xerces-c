@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.8  2001/08/03 15:08:17  tng
+* close the list file.
+*
 * Revision 1.7  2001/08/02 17:10:29  tng
 * Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
 *
@@ -256,17 +259,9 @@ int main(int argC, char* argV[])
     bool more = true;
     ifstream fin;
 
-    if (doList) {
-
-        // the input is a list file
+    // the input is a list file
+    if (doList)
         fin.open(argV[argInd]);
-        if ( fin.is_open() == 0)
-        {
-            cerr << "Error opening list file: " << argV[argInd] << endl;
-            XMLPlatformUtils::Terminate();
-            return 1;
-        }
-    }
 
     while (more)
     {
@@ -327,6 +322,9 @@ int main(int argC, char* argV[])
                 << handler.getCharacterCount() << " chars)" << endl;
         }
     }
+
+    if (doList)
+        fin.close();
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

@@ -248,17 +248,9 @@ int main(int argC, char* argV[])
     bool more = true;
     ifstream fin;
 
-    if (doList) {
-
-        // the input is a list file
+    // the input is a list file
+    if (doList)
         fin.open(argV[argInd]);
-        if ( fin.is_open() == 0)
-        {
-            cerr << "Error opening list file: " << argV[argInd] << endl;
-            XMLPlatformUtils::Terminate();
-            return 1;
-        }
-    }
 
     while (more)
     {
@@ -338,6 +330,9 @@ int main(int argC, char* argV[])
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
+
+    if (doList)
+        fin.close();
 
     if (errorOccurred)
         return 4;
