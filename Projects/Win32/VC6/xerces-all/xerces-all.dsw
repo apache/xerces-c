@@ -48,6 +48,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "DOMNormalizerTest"=".\DOMNormalizerTest\DOMNormalizerTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "DOMPrint"=".\DOMPrint\DOMPrint.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -94,21 +109,6 @@ Package=<4>
 ###############################################################################
 
 Project: "DOMTypeInfoTest"=".\DOMTypeInfoTest\DOMTypeInfoTest.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "DOMNormalizerTest"=".\DOMNormalizerTest\DOMNormalizerTest.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -183,6 +183,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "MemHandlerTest"=".\MemHandlerTest\MemHandlerTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "MemParse"=".\MemParse\MemParse.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -199,6 +214,21 @@ Package=<4>
 ###############################################################################
 
 Project: "PParse"=".\PParse\PParse.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "PSVIWriter"=".\PSVIWriter\PSVIWriter.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -363,21 +393,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "MemHandlerTest"=".\MemHandlerTest\MemHandlerTest.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "XercesLib"=".\XercesLib\XercesLib.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -457,7 +472,7 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XSerializerTest
-    End Project Dependency    
+    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name MemHandlerTest
     End Project Dependency
@@ -475,6 +490,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name DOMNormalizerTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PSVIWriter
     End Project Dependency
 }}}
 
