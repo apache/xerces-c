@@ -111,6 +111,7 @@ util/MsgLoaders/ICU/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
+validators/datatype/Makefile \
 validators/DTD/Makefile \
 framework/Makefile \
 dom/Makefile \

@@ -55,6 +55,11 @@
 #
 #
 # $Log$
+# Revision 1.26  2001/02/15 18:41:41  tng
+# Schema: Exception Handling added by Pei Yong Zhang.  Add NumberFormatException, ParseException,
+# InvalidDatatypeFacetException, and InvalidDatatypeValueException.  The associated
+# Makefile.in and configure.in are updated.
+#
 # Revision 1.25  2000/07/25 22:28:15  aruna1
 # Char definitions in XMLUni moved to XMLUniDefs
 #
@@ -226,6 +231,8 @@ UTIL_CPP_PUBHEADERS = \
     NoDefTranscoderException.hpp \
     NoSuchElementException.hpp \
     NullPointerException.hpp \
+    NumberFormatException.hpp \
+    ParseException.hpp \
     PlatformUtils.hpp \
     RefArrayOf.hpp \
     RefHashTableOf.hpp \
@@ -260,7 +267,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLURL.hpp \
     XMLUTF16Transcoder.hpp \
     XMLUTF8Transcoder.hpp \
-	XMLUniDefs.hpp \
+    XMLUniDefs.hpp \
     XMLUni.hpp \
     XMLWin1252Transcoder.hpp
 
