@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/08/19 19:38:17  tng
+ * [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
+ *
  * Revision 1.6  2002/07/15 21:53:04  peiyongz
  * CouldNotWriteToFile
  *
@@ -189,6 +192,8 @@
 
 #if defined(XML_USE_ICU_TRANSCODER)
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
+#elif defined (XML_USE_GNU_TRANSCODER)
+    #include <xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.hpp>
 #else
     // Use native transcoder. Same as -DXML_USE_NATIVE_TRANSCODER
     #include <xercesc/util/Transcoders/Iconv/IconvTransService.hpp>
@@ -262,9 +267,11 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     // Use ICU transcoding services.
     // same as -DXML_USE_ICU_MESSAGELOADER
     return new ICUTransService;
+#elif defined (XML_USE_GNU_TRANSCODER)
+    return new IconvGNUTransService;
 #else
     // Use native transcoding services.
-    // same as -DXML_USE_INMEM_MESSAGELOADER
+    // same as -DXML_USE_NATIVE_TRANSCODER
     return new IconvTransService;
 
 #endif
@@ -401,7 +408,7 @@ XMLPlatformUtils::readFileBuffer( FileHandle          theFile
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)                                   
+                                   , const XMLByte* const  toFlush)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||

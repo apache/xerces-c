@@ -92,7 +92,7 @@ usage()
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD', 'IconvGNU' or 'native'"
     echo "       -r <thread option> can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'"
     echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
@@ -444,6 +444,9 @@ case $transcoder in
    IconvFBSD)
        TRANSCODER=IconvFBSD ;
        transcodingDefines="-DXML_USE_LIBICONV -I/usr/local/include" ;;
+   IconvGNU)
+       TRANSCODER=IconvGNU ;
+       transcodingDefines="-DXML_USE_GNU_TRANSCODER -I/usr/local/include" ;;
    native)
  	if test $platform = "cygwin"; then
  	    TRANSCODER=Cygwin ;

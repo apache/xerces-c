@@ -1445,6 +1445,7 @@ util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
 util/Transcoders/IconvFBSD/Makefile \
+util/Transcoders/IconvGNU/Makefile \
 util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
@@ -1595,6 +1596,7 @@ util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
 util/Transcoders/IconvFBSD/Makefile \
+util/Transcoders/IconvGNU/Makefile \
 util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
