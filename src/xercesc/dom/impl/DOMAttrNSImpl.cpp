@@ -238,8 +238,14 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
             delete[] newName;
     }
 
-    const XMLCh * URI = xmlnsAlone ?
-                xmlnsURI : DOMNodeImpl::mapPrefix(fPrefix, namespaceURI, DOMNode::ATTRIBUTE_NODE);
+    // DOM Level 3: namespace URI is never empty string.
+    const XMLCh * URI = xmlnsAlone ? xmlnsURI
+        : DOMNodeImpl::mapPrefix
+          (
+              fPrefix, 
+              (XMLString::stringLen(namespaceURI) == 0) ? 0 : namespaceURI,
+              DOMNode::ATTRIBUTE_NODE
+          );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
 };
 

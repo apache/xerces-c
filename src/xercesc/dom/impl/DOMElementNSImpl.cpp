@@ -215,8 +215,14 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
         if (index >= 3999)
             delete[] newName;
     }
-
-    const XMLCh * URI = DOMNodeImpl::mapPrefix(fPrefix, namespaceURI, DOMNode::ELEMENT_NODE);
+ 
+    // DOM Level 3: namespace URI is never empty string.
+    const XMLCh * URI = DOMNodeImpl::mapPrefix
+        (
+            fPrefix, 
+            (XMLString::stringLen(namespaceURI) == 0) ? 0 : namespaceURI,
+            DOMNode::ELEMENT_NODE
+        );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
 };
 
