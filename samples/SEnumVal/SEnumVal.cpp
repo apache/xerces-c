@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2002/06/25 15:30:46  peiyongz
+ * Bug#10067: SEnumVal bugs found when porting to Visual Studio .NET
+ *                     projects, patch from Robert Buck (rbuck@mathworks.com )
+ *
  * Revision 1.10  2002/05/08 18:18:46  knoaman
  * Fix bor bug 8301: INFINITY used as enum member.
  *
@@ -313,13 +317,13 @@ void process(char* const xmlFile)
 			cout << "Misc. Flags:\t";
 		}
 
-        if ( mflags & SchemaSymbols::NILLABLE  != 0 )
+        if ( mflags & SchemaSymbols::NILLABLE )
 			cout << "Nillable ";
 
-		if ( mflags & SchemaSymbols::ABSTRACT  != 0 )
+		if ( mflags & SchemaSymbols::ABSTRACT )
 			cout << "Abstract ";
 
-		if ( mflags & SchemaSymbols::FIXED     != 0 )
+		if ( mflags & SchemaSymbols::FIXED )
 			cout << "Fixed ";
 
 		if( mflags !=0 )
