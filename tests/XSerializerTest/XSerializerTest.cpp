@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.6  2003/12/17 00:02:41  peiyongz
+* Always display Serialization/Deserialization error
+*
 * Revision 1.5  2003/12/16 22:59:39  peiyongz
 * compilation error fix
 *
@@ -103,7 +106,6 @@ static bool                         namespacePrefixes  = false;
 static bool                         errorOccurred      = false;
 static bool                         recognizeNEL       = false;
 
-static bool                         showSerializationError = false;
 static char                         localeStr[64];
 
 // ---------------------------------------------------------------------------
@@ -211,7 +213,7 @@ static BinInputStream* getInputStream()
     //make it to refer to the binary data saved in the myOut
     //but the data still belong to myOut
     myIn = new BinMemInputStream( ((BinMemOutputStream*)myOut)->getRawBuffer()
-                                , BufSize
+                                , ((BinMemOutputStream*)myOut)->getSize()
                                 , BinMemInputStream::BufOpt_Reference
                                 );
     return myIn;
@@ -294,11 +296,9 @@ static bool getAndSaveGrammar(const char* const xmlFile)
     catch(const XSerializationException& e)
     {
         //do emit error here so that we know serialization failure
-        if (showSerializationError)
-        {
-            XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
-             << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-        }
+        XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
+            << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+
         retVal = false;
     }
 
@@ -317,11 +317,8 @@ static bool restoreGrammar()
     }
     catch(const XSerializationException& e)
     {
-        if (showSerializationError)
-        {
-            XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
+        XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
                 << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-        }
 
         destroyParser();
         retVal = false;
