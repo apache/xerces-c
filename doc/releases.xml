@@ -56,6 +56,13 @@
 
     <tr>
         <td>2001-12-06</td>
+        <td>Erik Rydgren</td>
+        <td>[Bug 2174] Bug in NamedNodeMapImpl.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
         <td>Henry Zongaro</td>
         <td>Performance Enhancement.  Added setNPrefix and setNLocalPart methods in QName that
             allow code to take advantage of the fact that it knows the length of the prefix and
