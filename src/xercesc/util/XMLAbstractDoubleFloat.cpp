@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.27  2004/08/23 16:06:49  peiyongz
+ * Fix to memory leakage in getCanRep
+ *
  * Revision 1.26  2004/01/29 11:48:46  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -517,126 +520,122 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
 {
     // before anything, let's look for special tokens since that
     // breaks the calls to parse below.
-    if(XMLString::equals(rawData, XMLUni::fgNegINFString)
-            || XMLString::equals(rawData, XMLUni::fgPosINFString)
-            || XMLString::equals(rawData, XMLUni::fgNaNString))
+    if(XMLString::equals(rawData, XMLUni::fgNegINFString) || 
+       XMLString::equals(rawData, XMLUni::fgPosINFString) || 
+       XMLString::equals(rawData, XMLUni::fgNaNString)     )
     {
         return XMLString::replicate(rawData, memMgr);
     }
 
     try 
     {
+        int    strLen = XMLString::stringLen(rawData);
+        XMLCh* manStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
+        ArrayJanitor<XMLCh> janManStr(manStr, memMgr);
+        XMLCh* manBuf = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
+        ArrayJanitor<XMLCh> janManBuf(manBuf, memMgr);
+        XMLCh* expStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
+        ArrayJanitor<XMLCh> janExpStr(expStr, memMgr);
+        XMLCh* retBuffer = (XMLCh*) memMgr->allocate((strLen + 8) * sizeof(XMLCh));
+        ArrayJanitor<XMLCh> janRetBuffer(retBuffer, memMgr);
+        retBuffer[0] = 0;
 
-    int    strLen = XMLString::stringLen(rawData);
-    XMLCh* manStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
-    ArrayJanitor<XMLCh> janManStr(manStr, memMgr);
-    XMLCh* manBuf = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
-    ArrayJanitor<XMLCh> janManBuf(manBuf, memMgr);
+        int sign, totalDigits, fractDigits, expValue = 0;
 
-    XMLCh* expStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
-    ArrayJanitor<XMLCh> janExp(expStr, memMgr);
+        const XMLCh* ePosition = XMLString::findAny(rawData, expSign);
 
-    XMLCh* retBuffer = (XMLCh*) memMgr->allocate((strLen + 8) * sizeof(XMLCh));
-    retBuffer[0] = 0;
-
-    int sign, totalDigits, fractDigits;
-    int expValue = 0;
-
-    const XMLCh* ePosition = XMLString::findAny(rawData, expSign);
-
-    /***
-     *  parse mantissa and exp separately
-     ***/
-    if (!ePosition)
-    {
-        XMLBigDecimal::parseDecimal(rawData, manBuf, sign, totalDigits, fractDigits, memMgr);
-        expValue = 0;
-    }
-    else
-    {
-        int    manLen = ePosition - rawData;
-        XMLString::copyNString(manStr, rawData, manLen);
-        *(manStr + manLen) = chNull;
-        XMLBigDecimal::parseDecimal(manStr, manBuf, sign, totalDigits, fractDigits, memMgr);
-
-        int    expLen = strLen - manLen - 1;
-        ePosition++;
-        XMLString::copyNString(expStr, ePosition, expLen);
-        *(expStr + expLen) = chNull;
-        expValue = XMLString::parseInt(expStr); 
-    }
-
-    if ( (sign == 0) || (totalDigits == 0) )
-    {
-        retBuffer[0] = chDigit_0;
-        retBuffer[1] = chPeriod;
-        retBuffer[2] = chDigit_0;
-        retBuffer[3] = chLatin_E;
-        retBuffer[4] = chDigit_0;
-        retBuffer[5] = chNull;
-    }
-    else
-    {
-        XMLCh* retPtr = retBuffer;
-
-        if (sign == -1)
+        /***
+         *  parse mantissa and exp separately
+        ***/
+        if (!ePosition)
         {
-            *retPtr++ = chDash;
-        }
-
-        *retPtr++ = manBuf[0];
-        *retPtr++ = chPeriod;
-
-        //XMLBigDecimal::parseDecimal() will eliminate trailing zeros
-        // iff there is a decimal points
-        // eg. 56.7800e0  -> manBuf = 5678, totalDigits = 4, fractDigits = 2
-        // we print it as 5.678e1
-        //
-        // but it wont remove trailing zeros if there is no decimal point.
-        // eg.  567800e0 -> manBuf = 567800, totalDigits = 6, fractDigits = 0
-        // we print it 5.67800e5
-        //
-        // for the latter, we need to print it as 5.678e5 instead
-        //
-        XMLCh* endPtr = manBuf + totalDigits;
-
-        if (fractDigits == 0)
-        {
-            while(*(endPtr - 1) == chDigit_0)
-                endPtr--;
-        }
-
-        int remainLen = endPtr - &(manBuf[1]);
-
-        if (remainLen)
-        {
-            XMLString::copyNString(retPtr, &(manBuf[1]), remainLen);
-            retPtr += remainLen;
+            XMLBigDecimal::parseDecimal(rawData, manBuf, sign, totalDigits, fractDigits, memMgr);
+            expValue = 0;
         }
         else
         {
-            *retPtr++ = chDigit_0;
+            int    manLen = ePosition - rawData;
+            XMLString::copyNString(manStr, rawData, manLen);
+            *(manStr + manLen) = chNull;
+            XMLBigDecimal::parseDecimal(manStr, manBuf, sign, totalDigits, fractDigits, memMgr);
+
+            int    expLen = strLen - manLen - 1;
+            ePosition++;
+            XMLString::copyNString(expStr, ePosition, expLen);
+            *(expStr + expLen) = chNull;
+            expValue = XMLString::parseInt(expStr); 
         }
 
-        /***
-         * 
-         *  . adjust expValue
-         *   
-         *  new_fractDigits = totalDigits - 1  
-         *  new_expValue = old_expValue + (new_fractDigits - fractDigits)
-         *
-         ***/
-        expValue += (totalDigits - 1) - fractDigits ;
-        XMLString::binToText(expValue, expStr, strLen, 10, memMgr);
-        *retPtr++  = chLatin_E;
-        *retPtr = chNull;
+        if ( (sign == 0) || (totalDigits == 0) )
+        {
+            retBuffer[0] = chDigit_0;
+            retBuffer[1] = chPeriod;
+            retBuffer[2] = chDigit_0;
+            retBuffer[3] = chLatin_E;
+            retBuffer[4] = chDigit_0;
+            retBuffer[5] = chNull;
+        }
+        else
+        {
+            XMLCh* retPtr = retBuffer;
 
+            if (sign == -1)
+            {
+                *retPtr++ = chDash;
+            }
 
-        XMLString::catString(&(retBuffer[0]), expStr);
+            *retPtr++ = manBuf[0];
+            *retPtr++ = chPeriod;
 
-    }
+            //XMLBigDecimal::parseDecimal() will eliminate trailing zeros
+            // iff there is a decimal points
+            // eg. 56.7800e0  -> manBuf = 5678, totalDigits = 4, fractDigits = 2
+            // we print it as 5.678e1
+            //
+            // but it wont remove trailing zeros if there is no decimal point.
+            // eg.  567800e0 -> manBuf = 567800, totalDigits = 6, fractDigits = 0
+            // we print it 5.67800e5
+            //
+            // for the latter, we need to print it as 5.678e5 instead
+            //
+            XMLCh* endPtr = manBuf + totalDigits;
 
-    return retBuffer;
+            if (fractDigits == 0)
+            {
+                while(*(endPtr - 1) == chDigit_0)
+                    endPtr--;
+            }
+
+            int remainLen = endPtr - &(manBuf[1]);
+
+            if (remainLen)
+            {
+                XMLString::copyNString(retPtr, &(manBuf[1]), remainLen);
+                retPtr += remainLen;
+            }
+            else
+            {
+                *retPtr++ = chDigit_0;
+            }
+
+            /***
+             * 
+             *  . adjust expValue
+             *   
+             *  new_fractDigits = totalDigits - 1  
+             *  new_expValue = old_expValue + (new_fractDigits - fractDigits)
+             *
+             ***/
+            expValue += (totalDigits - 1) - fractDigits ;
+            XMLString::binToText(expValue, expStr, strLen, 10, memMgr);
+            *retPtr++  = chLatin_E;
+            *retPtr = chNull;
+
+            XMLString::catString(&(retBuffer[0]), expStr);
+        }
+
+        janRetBuffer.release();
+        return retBuffer;
 
     } //try
 

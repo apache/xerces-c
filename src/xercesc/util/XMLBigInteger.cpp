@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/08/23 16:06:49  peiyongz
+ * Fix to memory leakage in getCanRep
+ *
  * Revision 1.12  2004/08/17 21:09:04  peiyongz
  * canRep for nonPositivieInteger
  *
@@ -135,6 +138,7 @@ XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawD
     try 
     {
         XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData) + 2) * sizeof(XMLCh));
+        ArrayJanitor<XMLCh> jan(retBuf, memMgr);
         int    sign = 0;
 
         XMLBigInteger::parseBigInteger(rawData, retBuf, sign);
@@ -158,10 +162,10 @@ XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawD
             XMLCh* retBuffer = (XMLCh*) memMgr->allocate( (XMLString::stringLen(retBuf) + 2) * sizeof(XMLCh));
             retBuffer[0] = chDash;
             XMLString::copyString(&(retBuffer[1]), retBuf);
-            memMgr->deallocate(retBuf);
             return retBuffer;
         }
 
+        jan.release();
         return retBuf;
 
     }//
