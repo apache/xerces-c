@@ -529,11 +529,16 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     //  the rep char. Remember the old one so we can put it back.
     //
     UErrorCode  err = U_ZERO_ERROR;
-    UConverterFromUCallback oldCB = ucnv_setFromUCallBack
+    UConverterFromUCallback oldCB = NULL;
+    void* orgContent;
+    ucnv_setFromUCallBack
     (
         (UConverter*)&fConverter
         , (options == UnRep_Throw) ? UCNV_FROM_U_CALLBACK_STOP
                                    : UCNV_FROM_U_CALLBACK_SUBSTITUTE
+        , NULL
+        , &oldCB
+        , &orgContent
         , &err
     );
 
@@ -561,7 +566,9 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
 
     // Put the old handler back
     err = U_ZERO_ERROR;
-    ucnv_setFromUCallBack(fConverter, oldCB, &err);
+    UConverterFromUCallback orgAction = NULL;
+    
+    ucnv_setFromUCallBack(fConverter, oldCB, NULL, &orgAction, &orgContent, &err);
 
     if (!res)
     {
@@ -608,13 +615,19 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
     //  Set the callback so that it will fail instead of using the rep char.
     //  Remember the old one so we can put it back.
     //
-    UErrorCode  err = U_ZERO_ERROR;
-    UConverterFromUCallback oldCB = ucnv_setFromUCallBack
-    (
-        (UConverter*)&fConverter
-        , UCNV_FROM_U_CALLBACK_STOP
-        , &err
-    );
+     UErrorCode  err = U_ZERO_ERROR;
+     UConverterFromUCallback oldCB = NULL;
+     void* orgContent;
+     
+     ucnv_setFromUCallBack
+         (
+         (UConverter*)&fConverter
+         , UCNV_FROM_U_CALLBACK_STOP
+         , NULL
+         , &oldCB
+         , &orgContent
+         , &err
+         );
 
     // Set upa temp buffer to format into. Make it more than big enough
     char            tmpBuf[64];
@@ -636,11 +649,13 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
 
     // Save the result before we overight the error code
     const bool res = (err == U_ZERO_ERROR);
-
+    
     // Put the old handler back
     err = U_ZERO_ERROR;
-    ucnv_setFromUCallBack(fConverter, oldCB, &err);
-
+    UConverterFromUCallback orgAction = NULL;
+    
+    ucnv_setFromUCallBack(fConverter, oldCB, NULL, &orgAction, &orgContent, &err);
+    
     return res;
 }
 
@@ -693,6 +708,7 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
                 , 0
                 , 0
                 , (const UChar*)srcText
+                , -1
                 , &err
             );
         }
@@ -713,6 +729,7 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
                 , 0
                 , 0
                 , tmpBuf
+                , -1
                 , &err
             );
         }
@@ -816,6 +833,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
             , retBuf
             , targetLen + 1
             , actualSrc
+            , -1
             , &err
         );
     }
@@ -839,6 +857,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
             , retBuf
             , targetCap
             , actualSrc
+            , -1
             , &err
         );
     }
@@ -1066,6 +1085,7 @@ bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
             , toFill
             , maxChars
             , actualSrc
+            , -1
             , &err
         );
     }
