@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<?codewarrior exportversion="1.0.1" ideversion="4.1" ?>
+<?codewarrior exportversion="1.0.1" ideversion="4.2" ?>
 
 <!DOCTYPE PROJECT [
 <!ELEMENT PROJECT (TARGETLIST, TARGETORDER, GROUPLIST, DESIGNLIST?)>
 <!ELEMENT TARGETLIST (TARGET+)>
-<!ELEMENT TARGET (NAME, SETTINGLIST, FILELIST?, LINKORDER?, SEGMENTLIST?, OVERLAYGROUPLIST?, SUBTARGETLIST?, SUBPROJECTLIST?)>
+<!ELEMENT TARGET (NAME, SETTINGLIST, FILELIST?, LINKORDER?, SEGMENTLIST?, OVERLAYGROUPLIST?, SUBTARGETLIST?, SUBPROJECTLIST?, FRAMEWORKLIST)>
 <!ELEMENT NAME (#PCDATA)>
 <!ELEMENT USERSOURCETREETYPE (#PCDATA)>
 <!ELEMENT PATH (#PCDATA)>
@@ -37,6 +37,10 @@
 <!ELEMENT SUBPROJECT (FILEREF, SUBPROJECTTARGETLIST)>
 <!ELEMENT SUBPROJECTTARGETLIST (SUBPROJECTTARGET*)>
 <!ELEMENT SUBPROJECTTARGET (TARGETNAME, ATTRIBUTES?, FILEREF?)>
+<!ELEMENT FRAMEWORKLIST (FRAMEWORK+)>
+<!ELEMENT FRAMEWORK (FILEREF, LIBRARYFILE?, VERSION?)>
+<!ELEMENT LIBRARYFILE (FILEREF)>
+<!ELEMENT VERSION (#PCDATA)>
 <!ELEMENT TARGETORDER (ORDEREDTARGET|ORDEREDDESIGN)*>
 <!ELEMENT ORDEREDTARGET (NAME)>
 <!ELEMENT ORDEREDDESIGN (NAME, ORDEREDTARGET+)>
@@ -59,6 +63,7 @@
                 <!-- Settings for "Access Paths" panel -->
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>RequireFrameworkStyleIncludes</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
@@ -67,6 +72,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -76,6 +82,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -85,6 +92,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -94,15 +102,17 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>::::::obj:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>::::::lib:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                 </SETTING>
@@ -114,6 +124,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -123,15 +134,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
-                        <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
-                    </SETTING>
-                    <SETTING>
-                        <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:</VALUE></SETTING>
-                            <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
-                            <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
-                        </SETTING>
-                        <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -141,6 +144,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                 </SETTING>
@@ -173,6 +177,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>APPL</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -182,6 +187,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>Appl</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -191,6 +197,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MMLB</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Lib Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -200,6 +207,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MPLF</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Lib Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -209,6 +217,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MWCD</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -218,6 +227,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>RSRC</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -227,6 +237,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.arr</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -236,6 +247,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.bh</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Balloon Help</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -245,6 +257,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.c</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -254,6 +267,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.c++</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -263,6 +277,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.cc</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -272,6 +287,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.cp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -281,6 +297,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.cpp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -290,6 +307,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.exp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -299,6 +317,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.h</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -308,6 +327,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.hpp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -317,6 +337,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.pch</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -326,6 +347,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.pch++</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -335,6 +357,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.pl</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW Perl</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -344,6 +367,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.r</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Rez</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -353,6 +377,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.s</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>PPCAsm</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -362,6 +387,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>XCOF</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>XCOFF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -371,6 +397,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>docu</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -380,6 +407,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>rsrc</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -389,6 +417,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>shlb</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>PEF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -398,6 +427,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>stub</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>PEF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -406,6 +436,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.doc</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -414,6 +445,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.o</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>XCOFF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -422,6 +454,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.ppob</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -430,6 +463,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.rsrc</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -443,7 +477,17 @@
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>CacheSubprojects</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UseThirdPartyDebugger</NAME><VALUE>false</VALUE></SETTING>
-                <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DebuggerAppPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>DebuggerCmdLineArgs</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DebuggerWorkingDir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
+                </SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>false</VALUE></SETTING>
@@ -460,37 +504,17 @@
                 <SETTING><NAME>StopAtTempBPOnLaunch</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>CacheSymbolics</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>TempBPFunctionName</NAME><VALUE>main</VALUE></SETTING>
-                <SETTING><NAME>TempBPType</NAME><VALUE>false</VALUE></SETTING>
-                <PANELDATA><NAME>Remote Debug</NAME><VALUE>
-                    0003000000000000807C001805EE6C3005F23A00000000000000030005B309E8
-                    4082FFF41C7800283863000105EE6C30600000007C781B782818000041820118
-                    807C00187F1BC3788343000048000054807A00084BF03D99600000007C771B78
-                    4BC24D35804100147C761B787F63DB783881003838A000084BC24D3580410014
-                    3B7B00087F63DB787EE4BB787EC5B3784BC24D1D804100147F7BB214835A0000
-                    281A00004082FFAC38000000981B00007FA3EB787F05C378388000024BD3209D
-                    600000007F03C3784BC60BE1600000007FA3EB7838BF0180388000034BD3207D
-                    60000000480000407FA3EB7838BF0058388000014BDC4019600000007FA3EB78
-                    38BF0058008000024BDC4005600000007FA3EB7838BF0058388000034BDC3FF1
-                    600000008082076C7F23CB7880BE00007FA6EB787F87E3784BD320C960000000
-                    7FA3EB784BDC376D60000000386000004800006C281D0000418200107FA3EB78
-                    4BDC375160000000281C000041820038807C0018280300004182000C4BC60685
-                    60000000807C0004280300004182000C4BC60B19600000007F83E3784BC60B0D
-                    60000000281B0000418200107F63DB784BC60AF9600000003860FFFF80010088
-                    382100807C0803A6BA61FFCC4E8000207C0802A6BF01FFE0900100089421FFA0
-                    7C7E1B787C9823787CB92B787CDA337883FE00103BA00000281A00018382D134
-                    93BF001C000000E0281A0080408200708062D138806300004BD31D1D60000000
-                    7C7B1B78281B000041820054807C00004BC2EC11600000007C651B787F63DB78
-                    7FA4EB784BD31F1560000000807E00047F66DB788082077C7FA7EB7880BC0000
-                    4BD31FA1600000007F63DB784BDC36456000000038600001480001C4281A0004
-                    40820164806207F47F04C3787F25CB78386301764BDC3F61600000007C7B1B78
-                    281B000041820054807F0018838300004800002C807C00084BF03B3560000000
-                    7C641B787F63DB784BC26431804100142C03000041820010839C0000281C0000
-                    4082FFD4807C00084BC6049D60000000907F001C4800001C807F001880630000
-                    806300084BC6
-                </VALUE></PANELDATA>
-                <PANELDATA><NAME>Auto-target</NAME><VALUE>
-                    00010000
-                </VALUE></PANELDATA>
+                <SETTING><NAME>TempBPType</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "Remote Debug" panel -->
+                <SETTING><NAME>Enabled</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>ConnectionName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DownloadPath</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>LaunchRemoteApp</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>RemoteAppPath</NAME><VALUE></VALUE></SETTING>
+
+                <!-- Settings for "Auto-target" panel -->
+                <SETTING><NAME>OtherExecutables</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Custom Keywords" panel -->
                 <SETTING><NAME>CustomColor1</NAME>
@@ -513,72 +537,6 @@
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
                     <SETTING><NAME>Blue</NAME><VALUE>0</VALUE></SETTING>
                 </SETTING>
-
-                <!-- Settings for "68K CodeGen" panel -->
-                <SETTING><NAME>MWCodeGen_68K_codesize</NAME><VALUE>Large</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_structalignment</NAME><VALUE>MC68K</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fp_mode</NAME><VALUE>SANE</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_code68020</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_profiler</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_mpwc</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fourbyteints</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_IEEEdoubles</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fardata</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_farvtables</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_farstrings</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_pcrelstrings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_macsbug</NAME><VALUE>New</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_a6frames</NAME><VALUE>1</VALUE></SETTING>
-
-                <!-- Settings for "68K Disassembler" panel -->
-                <SETTING><NAME>MWDisassembler_68K_showcode</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_mix</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_nohex</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showdata</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showexceptions</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showsym</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_shownames</NAME><VALUE>1</VALUE></SETTING>
-
-                <!-- Settings for "68K Global Optimizer" panel -->
-                <SETTING><NAME>GlobalOptimizer_68K_optimizationlevel</NAME><VALUE>Level0</VALUE></SETTING>
-                <SETTING><NAME>GlobalOptimizer_68K_optfor</NAME><VALUE>Speed</VALUE></SETTING>
-
-                <!-- Settings for "68K Linker" panel -->
-                <SETTING><NAME>MWLinker_68K_linksym</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_symfullpath</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_linksingle</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_fastlink</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_generateMap</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_nolinkwarnings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_glueintosegone</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_dontdeadstripinitcode</NAME><VALUE>0</VALUE></SETTING>
-
-                <!-- Settings for "68K Project" panel -->
-                <SETTING><NAME>MWProject_68K_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_outfile</NAME><VALUE>Std C++ Console 68K</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_symfilename</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_size</NAME><VALUE>512</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_flags</NAME><VALUE>22720</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcheader</NAME><VALUE>Standard</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrctype</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcid</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcmulti</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcstore</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcmerge</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcflags</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_a4</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_minsize</NAME><VALUE>512</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcsegtype</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_cfm68kcodegen</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_stacksize</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_thedebugger</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrc_custom</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_is_rseg_app</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_is_pilot_lib</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_pilot_main_entry</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "C/C++ Compiler" panel -->
                 <SETTING><NAME>MWFrontEnd_C_cplusplus</NAME><VALUE>1</VALUE></SETTING>
@@ -623,24 +581,10 @@
                 <SETTING><NAME>MWWarning_C_warn_notinlined</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWWarning_C_warn_structclass</NAME><VALUE>0</VALUE></SETTING>
 
-                <!-- Settings for "CFM68K" panel -->
-                <SETTING><NAME>MWCFM68K_exports</NAME><VALUE>None</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_olddefversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_oldimpversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_currentversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_farthreshold</NAME><VALUE>256</VALUE></SETTING>
-                <SETTING><NAME>PCFM68K_sharedata</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_fragmentname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_initname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_mainname</NAME><VALUE>__start</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_termname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_libfolder</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_alignment</NAME><VALUE>Align_2</VALUE></SETTING>
-
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>265ivpfi65nxw62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>2632kjfi636ns62p'&#140;&#133;&#194;(&#191;&#255;&#217;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -654,6 +598,12 @@
                 <!-- Settings for "Java Command Line" panel -->
                 <SETTING><NAME>MWCommandLine_Java_clsName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWCommandLine_Java_args</NAME><VALUE></VALUE></SETTING>
+
+                <!-- Settings for "PJavaDebugging" panel -->
+                <SETTING><NAME>MWVJavaDebugging_Protocol</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_JDKVersion</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_TimeOut</NAME><VALUE>10</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_SupportSlowDevices</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "Java Language" panel -->
                 <SETTING><NAME>MWJava_Language_optimize</NAME><VALUE>false</VALUE></SETTING>
@@ -728,6 +678,7 @@
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_vmarguments</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_vmName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_simPropFile</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "JavaDoc Project" panel -->
                 <SETTING><NAME>MWJavaDoc_Proj_Version</NAME><VALUE>1</VALUE></SETTING>
@@ -748,11 +699,18 @@
                 <!-- Settings for "MacOS Merge Panel" panel -->
                 <SETTING><NAME>MWMerge_MacOS_projectType</NAME><VALUE>Application</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_outputName</NAME><VALUE>Merge Out</VALUE></SETTING>
-                <SETTING><NAME>MWMerge_MacOS_outputCreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWMerge_MacOS_outputType</NAME><VALUE>1095782476</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_outputCreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_outputType</NAME><VALUE>APPL</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_suppressWarning</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_copyFragments</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_copyResources</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flattenResource</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flatFileName</NAME><VALUE>a.rsrc</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flatFileOutputPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
                 <SETTING><NAME>MWMerge_MacOS_skipResources</NAME>
                     <SETTING><VALUE>DLGX</VALUE></SETTING>
                     <SETTING><VALUE>ckid</VALUE></SETTING>
@@ -773,57 +731,24 @@
                 <SETTING><NAME>HasBeenInited</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>Label</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>Comments</NAME><VALUE></VALUE></SETTING>
-                <PANELDATA><NAME>Packager Panel</NAME><VALUE>
-                    000100003F3F3F3F4150504C06490001004980C0000000000000061006D51AB0
-                    9421FFC04180000C2C1E000606497AD03860FFFF480000708062901457C0103A
-                    7C6302148403FFFC280000017C1F03784182000C3800000090030000281F0001
-                    41820014281F0000408200142C1E00014082000C386000004800002C281F0000
-                    40820010386000004BFFB7F960000000387E0000399F000048003E2D80410014
-                    38600000800100487C0803A63821004083E1FFFC83C1FFF84E8000203880FFFF
-                    3863FFFF8C03000138840001280000004082FFF47C8323784E8000203884FFFF
-                    38A3FFFF8C040001280000009C0500014082FFF44E8000203884FFFF38C3FFFF
-                    38A500014800002C8C04000128000000000600014082001C3800000048000008
-                    9C06000134A5FFFF4082FFF84E80002034A5FFFF4082FFD44E8000203884FFFF
-                    38A3FFFF8C050001280000004082FFF838A5FFFF8C040001280000009C050001
-                    4082FFF44E8000203884FFFF38C3FFFF8C060001280000004082FFF838C6FFFF
-                    38A500014800001C8C040001280000009C0600014082000C38C6FFFF4800000C
-                    34A5FFFF4082FFE438000000980600014E8000203863FFFF3884FFFF48000014
-                    280000004082000C386000004E8000208C0300018CA400017C0028404182FFE4
-                    7C6500504E8000203863FFFF3884FFFF38C50001480000248C0300018CA40001
-                    7C0028404182000C7C6500504E800020280000004182000C34C6FFFF4082FFDC
-                    386000004E8000203863FFFF5480063E4800000C7C0400404D8200208C830001
-                    280400004082FFF0280000004D820020386000004E80002038A3FFFF5480063E
-                    38600000480000107C040040408200087CA32B788C850001280400004082FFEC
-                    280300004C820020280000004182000C386000004E8000207CA32B784E800020
-                    38E24D263904FFFF808700008007000438C1FFE09081FFE09001FFE480A70008
-                    8007000C3880000190A1FFE89001FFEC80A700108007001490A1FFF09001FFF4
-                    80A700188007001C90A1FFF89001FFFC4800001C7C071E705400077E7CA638AE
-                    7C8000307CA003787C0639AE8C0800012C0000010082FFE03863FFFF48000020
-                    7C051E705400077E7CA628AE7C8000307CA00039418200104E80002038C1FFE0
-                    388000018C0300012C0000004082FFD4386000004E80002038E24D463904FFFF
-                    80A700008007000438C1FFE090A1FFE09001FFE4808700088007000C9081FFE8
-                    9001FFEC80A70010800700143880000190A1FFF09001FFF480A700188007001C
-                    90A1FFF89001FFFC4800001C7C071E705400077E7CA638AE7C8000307CA00378
-                    7C0639AE8C0800012C0000004082FFE038E3FFFF38C1FFE0388000014800001C
-                    7C051E705400077E7CA628AE7C8000307CA00039418200108C0700012C000000
-                    4082FFE07C6338504E80002038E24D663904FFFF00A700008007000438C1FFE0
-                    90A1FFE09001FFE4808700088007000C9081FFE89001FFEC80A7001080070014
-                    3880000190A1FFF09001FFF480A700188007001C90A1FFF89001FFFC4800001C
-                    7C071E705400077E7CA638AE7C8000307CA003787C0639AE8C0800012C000000
-                    4082FFE038E3FFFF38C1FFE0388000014800001C7C051E705400077E7CA628AE
-                    7C8000307CA00039408200108C0700012C0000004082FFE07C6338504E800020
-                    2804000038A3FFFF3884FFFF4D8200208CC4000128060000408200404E800020
-                    7C0030404082003438E5FFFF3904FFFF8C0700018C6800017C0018404082000C
-                    280000004082FFEC280300004082000C7CA32B784E8000208C05000128000000
-                    4082FFC0386000004E800020BE61FFCC7C0802A6900100089421FF9038000000
-                    900900007C7C1B793AE247BE3B2900003AA800003AC400003BA500003BC60000
-                    3A870000900800003B0000013BE000003B6000003B4000004180001C2C1C0001
-                    418200142C1C00244181000C2C1600014080000C3B00004048000024387E0000
-                    399D00003BE000013880000038A0000048003915804100147C731B782C1C0000
-                    418202483800FFFF7F40E3964800023C281800104181023438624D885700103A
-                    7C63002E7C6903A64E8004205660063E7C1700AE5400077D41820028387E0000
-                    399D00003880000038A000003BFF0001480038B5
-                </VALUE></PANELDATA>
+
+                <!-- Settings for "Packager Panel" panel -->
+                <SETTING><NAME>MWMacOSPackager_UsePackager</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_FolderToPackage</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWMacOSPackager_CreateClassicAlias</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_ClassicAliasMethod</NAME><VALUE>UseTargetOutput</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_ClassicAliasPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWMacOSPackager_CreatePkgInfo</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_PkgCreatorType</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_PkgFileType</NAME><VALUE>APPL</VALUE></SETTING>
 
                 <!-- Settings for "PPC CodeGen" panel -->
                 <SETTING><NAME>MWCodeGen_PPC_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
@@ -839,6 +764,21 @@
                 <SETTING><NAME>MWCodeGen_PPC_altivec</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vectortocdata</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vrsave</NAME><VALUE>1</VALUE></SETTING>
+
+                <!-- Settings for "PPC CodeGen Mach-O" panel -->
+                <SETTING><NAME>MWCodeGen_MachO_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_tracebacktables</NAME><VALUE>None</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_processor</NAME><VALUE>Generic</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_readonlystrings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_profiler</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_fpcontract</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_schedule</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_peephole</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_processorspecific</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_altivec</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_vrsave</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_common</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_implicit_templates</NAME><VALUE>1</VALUE></SETTING>
 
                 <!-- Settings for "PPC Disassembler" panel -->
                 <SETTING><NAME>MWDisassembler_PPC_showcode</NAME><VALUE>1</VALUE></SETTING>
@@ -866,6 +806,40 @@
                 <SETTING><NAME>MWLinker_PPC_mainname</NAME><VALUE>__start_ccommand</VALUE></SETTING>
                 <SETTING><NAME>MWLinker_PPC_termname</NAME><VALUE></VALUE></SETTING>
 
+                <!-- Settings for "PPC Mach-O Linker" panel -->
+                <SETTING><NAME>MWLinker_MachO_exports</NAME><VALUE>None</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_mainname</NAME><VALUE>start</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_currentversion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_compatibleversion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_symfullpath</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_supresswarnings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_multisymerror</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_prebind</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_deadstrip</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_objectivecsemantics</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_whichfileloaded</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_whyfileloaded</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_readonlyrelocs</NAME><VALUE>Errors</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_undefinedsymbols</NAME><VALUE>Errors</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_twolevelnamespace</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_stripdebugsymbols</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "PPC Mach-O Target" panel -->
+                <SETTING><NAME>MWProject_MachO_type</NAME><VALUE>Executable</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_outfile</NAME><VALUE>a.exe</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_filecreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_filetype</NAME><VALUE>MEXE</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_stacksize</NAME><VALUE>64</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_stackaddress</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrc</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrcfilename</NAME><VALUE>a.rsrc</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrcoutputdir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWProject_MachO_installpath</NAME><VALUE>./</VALUE></SETTING>
+
                 <!-- Settings for "PPC PEF" panel -->
                 <SETTING><NAME>MWPEF_exports</NAME><VALUE>None</VALUE></SETTING>
                 <SETTING><NAME>MWPEF_libfolder</NAME><VALUE>0</VALUE></SETTING>
@@ -881,8 +855,8 @@
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>DOMPrint.Carbon</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>APPL</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>2048</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_minsize</NAME><VALUE>2048</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_stacksize</NAME><VALUE>128</VALUE></SETTING>
@@ -890,11 +864,18 @@
                 <SETTING><NAME>MWProject_PPC_symfilename</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcname</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcheader</NAME><VALUE>Native</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_rsrctype</NAME><VALUE>1061109567</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_rsrctype</NAME><VALUE>????</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcid</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcflags</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcstore</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcmerge</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrc</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrcoutputdir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrcfilename</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "PPCAsm Panel" panel -->
                 <SETTING><NAME>MWAssembler_PPC_auxheader</NAME><VALUE>0</VALUE></SETTING>
@@ -1004,27 +985,6 @@
             <FILELIST>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C.Carbon.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C++.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL SIOUX.Carbon.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>CarbonLib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
@@ -1060,35 +1020,20 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL RuntimePPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>CarbResource.r</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>MSL_All_Carbon.Lib</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Library</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C.Carbon.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C++.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL SIOUX.Carbon.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>CarbonLib</PATH>
@@ -1116,12 +1061,12 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL RuntimePPC.Lib</PATH>
+                    <PATH>CarbResource.r</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>CarbResource.r</PATH>
+                    <PATH>MSL_All_Carbon.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -1136,6 +1081,7 @@
                 <!-- Settings for "Access Paths" panel -->
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>RequireFrameworkStyleIncludes</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
@@ -1144,6 +1090,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -1153,6 +1100,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -1162,6 +1110,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -1171,24 +1120,17 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>::::::obj:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>::::::lib:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
-                        <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
-                    </SETTING>
-                    <SETTING>
-                        <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:CarbonLib:</VALUE></SETTING>
-                            <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
-                            <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
-                        </SETTING>
-                        <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                 </SETTING>
@@ -1200,6 +1142,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -1209,6 +1152,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                     <SETTING>
@@ -1218,6 +1162,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                 </SETTING>
@@ -1250,6 +1195,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>APPL</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1259,6 +1205,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>Appl</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1268,6 +1215,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MMLB</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Lib Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1277,6 +1225,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MPLF</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Lib Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1286,6 +1235,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MWCD</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1295,6 +1245,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>RSRC</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1304,6 +1255,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.arr</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1313,6 +1265,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.bh</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Balloon Help</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1322,6 +1275,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.c</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1331,6 +1285,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.c++</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1340,6 +1295,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.cc</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1349,6 +1305,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.cp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1358,6 +1315,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.cpp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1367,6 +1325,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.exp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1376,6 +1335,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.h</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1385,6 +1345,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.hpp</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1394,6 +1355,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.pch</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1403,6 +1365,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.pch++</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW C/C++ PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1412,6 +1375,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.pl</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>MW Perl</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1421,6 +1385,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.r</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>Rez</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1430,6 +1395,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>TEXT</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.s</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>PPCAsm</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1439,6 +1405,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>XCOF</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>XCOFF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1448,6 +1415,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>docu</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1457,6 +1425,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>rsrc</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1466,6 +1435,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>shlb</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>PEF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1475,6 +1445,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>stub</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>PEF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1483,6 +1454,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.doc</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1491,6 +1463,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.o</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE>XCOFF Import PPC</VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -1499,6 +1472,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.ppob</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1507,6 +1481,7 @@
                     <SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE>.rsrc</VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>true</VALUE></SETTING>
@@ -1520,7 +1495,17 @@
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>CacheSubprojects</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UseThirdPartyDebugger</NAME><VALUE>false</VALUE></SETTING>
-                <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DebuggerAppPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>DebuggerCmdLineArgs</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DebuggerWorkingDir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
+                </SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>false</VALUE></SETTING>
@@ -1537,37 +1522,17 @@
                 <SETTING><NAME>StopAtTempBPOnLaunch</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>CacheSymbolics</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>TempBPFunctionName</NAME><VALUE>main</VALUE></SETTING>
-                <SETTING><NAME>TempBPType</NAME><VALUE>false</VALUE></SETTING>
-                <PANELDATA><NAME>Remote Debug</NAME><VALUE>
-                    0003000000000000807C001805EE6C3005F23A00000000000000030005B309E8
-                    4082FFF41C7800283863000105EE6C30600000007C781B782818000041820118
-                    807C00187F1BC3788343000048000054807A00084BF03D99600000007C771B78
-                    4BC24D35804100147C761B787F63DB783881003838A000084BC24D3580410014
-                    3B7B00087F63DB787EE4BB787EC5B3784BC24D1D804100147F7BB214835A0000
-                    281A00004082FFAC38000000981B00007FA3EB787F05C378388000024BD3209D
-                    600000007F03C3784BC60BE1600000007FA3EB7838BF0180388000034BD3207D
-                    60000000480000407FA3EB7838BF0058388000014BDC4019600000007FA3EB78
-                    38BF0058008000024BDC4005600000007FA3EB7838BF0058388000034BDC3FF1
-                    600000008082076C7F23CB7880BE00007FA6EB787F87E3784BD320C960000000
-                    7FA3EB784BDC376D60000000386000004800006C281D0000418200107FA3EB78
-                    4BDC375160000000281C000041820038807C0018280300004182000C4BC60685
-                    60000000807C0004280300004182000C4BC60B19600000007F83E3784BC60B0D
-                    60000000281B0000418200107F63DB784BC60AF9600000003860FFFF80010088
-                    382100807C0803A6BA61FFCC4E8000207C0802A6BF01FFE0900100089421FFA0
-                    7C7E1B787C9823787CB92B787CDA337883FE00103BA00000281A00018382D134
-                    93BF001C000000E0281A0080408200708062D138806300004BD31D1D60000000
-                    7C7B1B78281B000041820054807C00004BC2EC11600000007C651B787F63DB78
-                    7FA4EB784BD31F1560000000807E00047F66DB788082077C7FA7EB7880BC0000
-                    4BD31FA1600000007F63DB784BDC36456000000038600001480001C4281A0004
-                    40820164806207F47F04C3787F25CB78386301764BDC3F61600000007C7B1B78
-                    281B000041820054807F0018838300004800002C807C00084BF03B3560000000
-                    7C641B787F63DB784BC26431804100142C03000041820010839C0000281C0000
-                    4082FFD4807C00084BC6049D60000000907F001C4800001C807F001880630000
-                    806300084BC6
-                </VALUE></PANELDATA>
-                <PANELDATA><NAME>Auto-target</NAME><VALUE>
-                    00010000
-                </VALUE></PANELDATA>
+                <SETTING><NAME>TempBPType</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "Remote Debug" panel -->
+                <SETTING><NAME>Enabled</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>ConnectionName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DownloadPath</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>LaunchRemoteApp</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>RemoteAppPath</NAME><VALUE></VALUE></SETTING>
+
+                <!-- Settings for "Auto-target" panel -->
+                <SETTING><NAME>OtherExecutables</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Custom Keywords" panel -->
                 <SETTING><NAME>CustomColor1</NAME>
@@ -1590,72 +1555,6 @@
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
                     <SETTING><NAME>Blue</NAME><VALUE>0</VALUE></SETTING>
                 </SETTING>
-
-                <!-- Settings for "68K CodeGen" panel -->
-                <SETTING><NAME>MWCodeGen_68K_codesize</NAME><VALUE>Large</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_structalignment</NAME><VALUE>MC68K</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fp_mode</NAME><VALUE>SANE</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_code68020</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_profiler</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_mpwc</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fourbyteints</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_IEEEdoubles</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fardata</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_farvtables</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_farstrings</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_pcrelstrings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_macsbug</NAME><VALUE>New</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_a6frames</NAME><VALUE>1</VALUE></SETTING>
-
-                <!-- Settings for "68K Disassembler" panel -->
-                <SETTING><NAME>MWDisassembler_68K_showcode</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_mix</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_nohex</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showdata</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showexceptions</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showsym</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_shownames</NAME><VALUE>1</VALUE></SETTING>
-
-                <!-- Settings for "68K Global Optimizer" panel -->
-                <SETTING><NAME>GlobalOptimizer_68K_optimizationlevel</NAME><VALUE>Level0</VALUE></SETTING>
-                <SETTING><NAME>GlobalOptimizer_68K_optfor</NAME><VALUE>Speed</VALUE></SETTING>
-
-                <!-- Settings for "68K Linker" panel -->
-                <SETTING><NAME>MWLinker_68K_linksym</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_symfullpath</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_linksingle</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_fastlink</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_generateMap</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_nolinkwarnings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_glueintosegone</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_dontdeadstripinitcode</NAME><VALUE>0</VALUE></SETTING>
-
-                <!-- Settings for "68K Project" panel -->
-                <SETTING><NAME>MWProject_68K_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_outfile</NAME><VALUE>Std C++ Console 68K</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_symfilename</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_size</NAME><VALUE>512</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_flags</NAME><VALUE>22720</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcheader</NAME><VALUE>Standard</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrctype</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcid</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcmulti</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcstore</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcmerge</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcflags</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_a4</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_minsize</NAME><VALUE>512</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcsegtype</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_cfm68kcodegen</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_stacksize</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_thedebugger</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrc_custom</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_is_rseg_app</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_is_pilot_lib</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_pilot_main_entry</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "C/C++ Compiler" panel -->
                 <SETTING><NAME>MWFrontEnd_C_cplusplus</NAME><VALUE>1</VALUE></SETTING>
@@ -1700,24 +1599,10 @@
                 <SETTING><NAME>MWWarning_C_warn_notinlined</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWWarning_C_warn_structclass</NAME><VALUE>0</VALUE></SETTING>
 
-                <!-- Settings for "CFM68K" panel -->
-                <SETTING><NAME>MWCFM68K_exports</NAME><VALUE>None</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_olddefversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_oldimpversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_currentversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_farthreshold</NAME><VALUE>256</VALUE></SETTING>
-                <SETTING><NAME>PCFM68K_sharedata</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_fragmentname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_initname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_mainname</NAME><VALUE>__start</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_termname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_libfolder</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_alignment</NAME><VALUE>Align_2</VALUE></SETTING>
-
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>264kmjfi64qps62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>2632kjfi636ns62p'&#140;&#133;&#194;(&#191;&#255;&#217;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -1731,6 +1616,12 @@
                 <!-- Settings for "Java Command Line" panel -->
                 <SETTING><NAME>MWCommandLine_Java_clsName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWCommandLine_Java_args</NAME><VALUE></VALUE></SETTING>
+
+                <!-- Settings for "PJavaDebugging" panel -->
+                <SETTING><NAME>MWVJavaDebugging_Protocol</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_JDKVersion</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_TimeOut</NAME><VALUE>10</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_SupportSlowDevices</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "Java Language" panel -->
                 <SETTING><NAME>MWJava_Language_optimize</NAME><VALUE>false</VALUE></SETTING>
@@ -1805,6 +1696,7 @@
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_vmarguments</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_vmName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_simPropFile</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "JavaDoc Project" panel -->
                 <SETTING><NAME>MWJavaDoc_Proj_Version</NAME><VALUE>1</VALUE></SETTING>
@@ -1825,11 +1717,18 @@
                 <!-- Settings for "MacOS Merge Panel" panel -->
                 <SETTING><NAME>MWMerge_MacOS_projectType</NAME><VALUE>Application</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_outputName</NAME><VALUE>Merge Out</VALUE></SETTING>
-                <SETTING><NAME>MWMerge_MacOS_outputCreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWMerge_MacOS_outputType</NAME><VALUE>1095782476</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_outputCreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_outputType</NAME><VALUE>APPL</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_suppressWarning</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_copyFragments</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_copyResources</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flattenResource</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flatFileName</NAME><VALUE>a.rsrc</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flatFileOutputPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
                 <SETTING><NAME>MWMerge_MacOS_skipResources</NAME>
                     <SETTING><VALUE>DLGX</VALUE></SETTING>
                     <SETTING><VALUE>ckid</VALUE></SETTING>
@@ -1850,57 +1749,24 @@
                 <SETTING><NAME>HasBeenInited</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>Label</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>Comments</NAME><VALUE></VALUE></SETTING>
-                <PANELDATA><NAME>Packager Panel</NAME><VALUE>
-                    000100003F3F3F3F4150504C06490001004980C0000000000000061006D51AB0
-                    9421FFC04180000C2C1E000606497AD03860FFFF480000708062901457C0103A
-                    7C6302148403FFFC280000017C1F03784182000C3800000090030000281F0001
-                    41820014281F0000408200142C1E00014082000C386000004800002C281F0000
-                    40820010386000004BFFB7F960000000387E0000399F000048003E2D80410014
-                    38600000800100487C0803A63821004083E1FFFC83C1FFF84E8000203880FFFF
-                    3863FFFF8C03000138840001280000004082FFF47C8323784E8000203884FFFF
-                    38A3FFFF8C040001280000009C0500014082FFF44E8000203884FFFF38C3FFFF
-                    38A500014800002C8C04000128000000000600014082001C3800000048000008
-                    9C06000134A5FFFF4082FFF84E80002034A5FFFF4082FFD44E8000203884FFFF
-                    38A3FFFF8C050001280000004082FFF838A5FFFF8C040001280000009C050001
-                    4082FFF44E8000203884FFFF38C3FFFF8C060001280000004082FFF838C6FFFF
-                    38A500014800001C8C040001280000009C0600014082000C38C6FFFF4800000C
-                    34A5FFFF4082FFE438000000980600014E8000203863FFFF3884FFFF48000014
-                    280000004082000C386000004E8000208C0300018CA400017C0028404182FFE4
-                    7C6500504E8000203863FFFF3884FFFF38C50001480000248C0300018CA40001
-                    7C0028404182000C7C6500504E800020280000004182000C34C6FFFF4082FFDC
-                    386000004E8000203863FFFF5480063E4800000C7C0400404D8200208C830001
-                    280400004082FFF0280000004D820020386000004E80002038A3FFFF5480063E
-                    38600000480000107C040040408200087CA32B788C850001280400004082FFEC
-                    280300004C820020280000004182000C386000004E8000207CA32B784E800020
-                    38E24D263904FFFF808700008007000438C1FFE09081FFE09001FFE480A70008
-                    8007000C3880000190A1FFE89001FFEC80A700108007001490A1FFF09001FFF4
-                    80A700188007001C90A1FFF89001FFFC4800001C7C071E705400077E7CA638AE
-                    7C8000307CA003787C0639AE8C0800012C0000010082FFE03863FFFF48000020
-                    7C051E705400077E7CA628AE7C8000307CA00039418200104E80002038C1FFE0
-                    388000018C0300012C0000004082FFD4386000004E80002038E24D463904FFFF
-                    80A700008007000438C1FFE090A1FFE09001FFE4808700088007000C9081FFE8
-                    9001FFEC80A70010800700143880000190A1FFF09001FFF480A700188007001C
-                    90A1FFF89001FFFC4800001C7C071E705400077E7CA638AE7C8000307CA00378
-                    7C0639AE8C0800012C0000004082FFE038E3FFFF38C1FFE0388000014800001C
-                    7C051E705400077E7CA628AE7C8000307CA00039418200108C0700012C000000
-                    4082FFE07C6338504E80002038E24D663904FFFF00A700008007000438C1FFE0
-                    90A1FFE09001FFE4808700088007000C9081FFE89001FFEC80A7001080070014
-                    3880000190A1FFF09001FFF480A700188007001C90A1FFF89001FFFC4800001C
-                    7C071E705400077E7CA638AE7C8000307CA003787C0639AE8C0800012C000000
-                    4082FFE038E3FFFF38C1FFE0388000014800001C7C051E705400077E7CA628AE
-                    7C8000307CA00039408200108C0700012C0000004082FFE07C6338504E800020
-                    2804000038A3FFFF3884FFFF4D8200208CC4000128060000408200404E800020
-                    7C0030404082003438E5FFFF3904FFFF8C0700018C6800017C0018404082000C
-                    280000004082FFEC280300004082000C7CA32B784E8000208C05000128000000
-                    4082FFC0386000004E800020BE61FFCC7C0802A6900100089421FF9038000000
-                    900900007C7C1B793AE247BE3B2900003AA800003AC400003BA500003BC60000
-                    3A870000900800003B0000013BE000003B6000003B4000004180001C2C1C0001
-                    418200142C1C00244181000C2C1600014080000C3B00004048000024387E0000
-                    399D00003BE000013880000038A0000048003915804100147C731B782C1C0000
-                    418202483800FFFF7F40E3964800023C281800104181023438624D885700103A
-                    7C63002E7C6903A64E8004205660063E7C1700AE5400077D41820028387E0000
-                    399D00003880000038A000003BFF0001480038B5
-                </VALUE></PANELDATA>
+
+                <!-- Settings for "Packager Panel" panel -->
+                <SETTING><NAME>MWMacOSPackager_UsePackager</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_FolderToPackage</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWMacOSPackager_CreateClassicAlias</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_ClassicAliasMethod</NAME><VALUE>UseTargetOutput</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_ClassicAliasPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWMacOSPackager_CreatePkgInfo</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_PkgCreatorType</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_PkgFileType</NAME><VALUE>APPL</VALUE></SETTING>
 
                 <!-- Settings for "PPC CodeGen" panel -->
                 <SETTING><NAME>MWCodeGen_PPC_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
@@ -1916,6 +1782,21 @@
                 <SETTING><NAME>MWCodeGen_PPC_altivec</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vectortocdata</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vrsave</NAME><VALUE>1</VALUE></SETTING>
+
+                <!-- Settings for "PPC CodeGen Mach-O" panel -->
+                <SETTING><NAME>MWCodeGen_MachO_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_tracebacktables</NAME><VALUE>None</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_processor</NAME><VALUE>Generic</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_readonlystrings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_profiler</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_fpcontract</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_schedule</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_peephole</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_processorspecific</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_altivec</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_vrsave</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_common</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_implicit_templates</NAME><VALUE>1</VALUE></SETTING>
 
                 <!-- Settings for "PPC Disassembler" panel -->
                 <SETTING><NAME>MWDisassembler_PPC_showcode</NAME><VALUE>1</VALUE></SETTING>
@@ -1943,6 +1824,40 @@
                 <SETTING><NAME>MWLinker_PPC_mainname</NAME><VALUE>__start_ccommand</VALUE></SETTING>
                 <SETTING><NAME>MWLinker_PPC_termname</NAME><VALUE></VALUE></SETTING>
 
+                <!-- Settings for "PPC Mach-O Linker" panel -->
+                <SETTING><NAME>MWLinker_MachO_exports</NAME><VALUE>None</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_mainname</NAME><VALUE>start</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_currentversion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_compatibleversion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_symfullpath</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_supresswarnings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_multisymerror</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_prebind</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_deadstrip</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_objectivecsemantics</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_whichfileloaded</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_whyfileloaded</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_readonlyrelocs</NAME><VALUE>Errors</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_undefinedsymbols</NAME><VALUE>Errors</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_twolevelnamespace</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_stripdebugsymbols</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "PPC Mach-O Target" panel -->
+                <SETTING><NAME>MWProject_MachO_type</NAME><VALUE>Executable</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_outfile</NAME><VALUE>a.exe</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_filecreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_filetype</NAME><VALUE>MEXE</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_stacksize</NAME><VALUE>64</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_stackaddress</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrc</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrcfilename</NAME><VALUE>a.rsrc</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrcoutputdir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWProject_MachO_installpath</NAME><VALUE>./</VALUE></SETTING>
+
                 <!-- Settings for "PPC PEF" panel -->
                 <SETTING><NAME>MWPEF_exports</NAME><VALUE>None</VALUE></SETTING>
                 <SETTING><NAME>MWPEF_libfolder</NAME><VALUE>0</VALUE></SETTING>
@@ -1958,8 +1873,8 @@
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>DOMPrint.Classic</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>APPL</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>2048</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_minsize</NAME><VALUE>2048</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_stacksize</NAME><VALUE>128</VALUE></SETTING>
@@ -1967,11 +1882,18 @@
                 <SETTING><NAME>MWProject_PPC_symfilename</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcname</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcheader</NAME><VALUE>Native</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_rsrctype</NAME><VALUE>1061109567</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_rsrctype</NAME><VALUE>????</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcid</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcflags</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcstore</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcmerge</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrc</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrcoutputdir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrcfilename</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "PPCAsm Panel" panel -->
                 <SETTING><NAME>MWAssembler_PPC_auxheader</NAME><VALUE>0</VALUE></SETTING>
@@ -2081,20 +2003,6 @@
             <FILELIST>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C++.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL RuntimePPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>DOMPrint.cpp</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
@@ -2123,20 +2031,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL SIOUX.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Library</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>InterfaceLib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
@@ -2198,18 +2092,15 @@
                     <FILEKIND>Library</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>MSL_All_PPC.Lib</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Library</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C++.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL RuntimePPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
                     <PATH>DOMPrint.cpp</PATH>
@@ -2232,16 +2123,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL C.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>MSL SIOUX.PPC.Lib</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>InterfaceLib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -2285,6 +2166,11 @@
                     <PATH>CarbonAccessors.o</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>MSL_All_PPC.Lib</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -2297,6 +2183,7 @@
                 <!-- Settings for "Access Paths" panel -->
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>RequireFrameworkStyleIncludes</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
@@ -2305,6 +2192,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                 </SETTING>
@@ -2316,6 +2204,7 @@
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>FrameworkPath</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
                     </SETTING>
                 </SETTING>
@@ -2348,6 +2237,7 @@
                         <SETTING><NAME>FileType</NAME><VALUE>MMPr</VALUE></SETTING>
                         <SETTING><NAME>FileExtension</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Compiler</NAME><VALUE></VALUE></SETTING>
+                        <SETTING><NAME>EditLanguage</NAME><VALUE></VALUE></SETTING>
                         <SETTING><NAME>Precompile</NAME><VALUE>false</VALUE></SETTING>
                         <SETTING><NAME>Launchable</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>ResourceFile</NAME><VALUE>false</VALUE></SETTING>
@@ -2361,7 +2251,17 @@
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>CacheSubprojects</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UseThirdPartyDebugger</NAME><VALUE>false</VALUE></SETTING>
-                <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DebuggerAppPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>DebuggerCmdLineArgs</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DebuggerWorkingDir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
+                </SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>true</VALUE></SETTING>
@@ -2378,37 +2278,17 @@
                 <SETTING><NAME>StopAtTempBPOnLaunch</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>CacheSymbolics</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>TempBPFunctionName</NAME><VALUE>main</VALUE></SETTING>
-                <SETTING><NAME>TempBPType</NAME><VALUE>false</VALUE></SETTING>
-                <PANELDATA><NAME>Remote Debug</NAME><VALUE>
-                    00030000000000000000000004E71D8004E7240000000000000003000637DEF0
-                    00000000000000000000000004E71D8000000000000000000000000000000000
-                    00000000000050000000000000002E6F00000000000000000000000000000000
-                    00000000000000000000000000004D505720496D706F72742036384B00000000
-                    04E7218000000000015039A00637DEF00000000000002E70706F620004E6EC80
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000060000000000000002E72
-                    7372630000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000006000
-                    00004D61634F53204D6572676500000004E7242000000000015038F00637DEF0
-                    00000008000000000000000004E6FFA004E71C1010000000015038D00637DEF0
-                    4150504C000000000000000004E71C1000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    00000000600000004170706C0000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000006000000052535243000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    000000000000000000000000000000000000000060000000544558542E626800
-                    0000000000000000000000000000000000000000000000000000000042616C6C
-                    6F6F6E2048656C70000000000000000000000000000000000000000000000000
-                    544558542E720000000000000000000000000000000000000000000000000000
-                    0000000052657A00000000000000000000000000000000000000000000000000
-                    0000000000000000617070650000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    000000000000
-                </VALUE></PANELDATA>
-                <PANELDATA><NAME>Auto-target</NAME><VALUE>
-                    00010000
-                </VALUE></PANELDATA>
+                <SETTING><NAME>TempBPType</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "Remote Debug" panel -->
+                <SETTING><NAME>Enabled</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>ConnectionName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>DownloadPath</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>LaunchRemoteApp</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>RemoteAppPath</NAME><VALUE></VALUE></SETTING>
+
+                <!-- Settings for "Auto-target" panel -->
+                <SETTING><NAME>OtherExecutables</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Custom Keywords" panel -->
                 <SETTING><NAME>CustomColor1</NAME>
@@ -2431,72 +2311,6 @@
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
                     <SETTING><NAME>Blue</NAME><VALUE>0</VALUE></SETTING>
                 </SETTING>
-
-                <!-- Settings for "68K CodeGen" panel -->
-                <SETTING><NAME>MWCodeGen_68K_codesize</NAME><VALUE>Small</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_structalignment</NAME><VALUE>MC68K</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fp_mode</NAME><VALUE>SANE</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_code68020</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_profiler</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_mpwc</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fourbyteints</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_IEEEdoubles</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_fardata</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_farvtables</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_farstrings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_pcrelstrings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_macsbug</NAME><VALUE>New</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_68K_a6frames</NAME><VALUE>1</VALUE></SETTING>
-
-                <!-- Settings for "68K Disassembler" panel -->
-                <SETTING><NAME>MWDisassembler_68K_showcode</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_mix</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_nohex</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showdata</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showexceptions</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_showsym</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWDisassembler_68K_shownames</NAME><VALUE>1</VALUE></SETTING>
-
-                <!-- Settings for "68K Global Optimizer" panel -->
-                <SETTING><NAME>GlobalOptimizer_68K_optimizationlevel</NAME><VALUE>Level0</VALUE></SETTING>
-                <SETTING><NAME>GlobalOptimizer_68K_optfor</NAME><VALUE>Speed</VALUE></SETTING>
-
-                <!-- Settings for "68K Linker" panel -->
-                <SETTING><NAME>MWLinker_68K_linksym</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_symfullpath</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_linksingle</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_fastlink</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_generateMap</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_nolinkwarnings</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_glueintosegone</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWLinker_68K_dontdeadstripinitcode</NAME><VALUE>0</VALUE></SETTING>
-
-                <!-- Settings for "68K Project" panel -->
-                <SETTING><NAME>MWProject_68K_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_outfile</NAME><VALUE>a.out</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_symfilename</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_size</NAME><VALUE>384</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_flags</NAME><VALUE>22720</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcheader</NAME><VALUE>Standard</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrctype</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcid</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcmulti</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcstore</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcmerge</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcflags</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_a4</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_minsize</NAME><VALUE>384</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrcsegtype</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_cfm68kcodegen</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_stacksize</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_thedebugger</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_rsrc_custom</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_is_rseg_app</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_is_pilot_lib</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWProject_68K_pilot_main_entry</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "C/C++ Compiler" panel -->
                 <SETTING><NAME>MWFrontEnd_C_cplusplus</NAME><VALUE>0</VALUE></SETTING>
@@ -2541,24 +2355,10 @@
                 <SETTING><NAME>MWWarning_C_warn_notinlined</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWWarning_C_warn_structclass</NAME><VALUE>0</VALUE></SETTING>
 
-                <!-- Settings for "CFM68K" panel -->
-                <SETTING><NAME>MWCFM68K_exports</NAME><VALUE>None</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_olddefversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_oldimpversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_currentversion</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_farthreshold</NAME><VALUE>256</VALUE></SETTING>
-                <SETTING><NAME>PCFM68K_sharedata</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_fragmentname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_initname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_mainname</NAME><VALUE>__start</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_termname</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_libfolder</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCFM68K_alignment</NAME><VALUE>Align_2</VALUE></SETTING>
-
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>264kmjfi64qps62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>2632kjfi636ns62p'&#140;&#133;&#194;(&#191;&#255;&#217;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -2572,6 +2372,12 @@
                 <!-- Settings for "Java Command Line" panel -->
                 <SETTING><NAME>MWCommandLine_Java_clsName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWCommandLine_Java_args</NAME><VALUE></VALUE></SETTING>
+
+                <!-- Settings for "PJavaDebugging" panel -->
+                <SETTING><NAME>MWVJavaDebugging_Protocol</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_JDKVersion</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_TimeOut</NAME><VALUE>10</VALUE></SETTING>
+                <SETTING><NAME>MWVJavaDebugging_SupportSlowDevices</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "Java Language" panel -->
                 <SETTING><NAME>MWJava_Language_optimize</NAME><VALUE>false</VALUE></SETTING>
@@ -2646,6 +2452,7 @@
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_vmarguments</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_vmName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_simPropFile</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "JavaDoc Project" panel -->
                 <SETTING><NAME>MWJavaDoc_Proj_Version</NAME><VALUE>1</VALUE></SETTING>
@@ -2666,11 +2473,18 @@
                 <!-- Settings for "MacOS Merge Panel" panel -->
                 <SETTING><NAME>MWMerge_MacOS_projectType</NAME><VALUE>Application</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_outputName</NAME><VALUE>Merge Out</VALUE></SETTING>
-                <SETTING><NAME>MWMerge_MacOS_outputCreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWMerge_MacOS_outputType</NAME><VALUE>1095782476</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_outputCreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_outputType</NAME><VALUE>APPL</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_suppressWarning</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_copyFragments</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWMerge_MacOS_copyResources</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flattenResource</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flatFileName</NAME><VALUE>a.rsrc</VALUE></SETTING>
+                <SETTING><NAME>MWMerge_MacOS_flatFileOutputPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
                 <SETTING><NAME>MWMerge_MacOS_skipResources</NAME>
                     <SETTING><VALUE>DLGX</VALUE></SETTING>
                     <SETTING><VALUE>ckid</VALUE></SETTING>
@@ -2692,57 +2506,24 @@
                 <SETTING><NAME>HasBeenInited</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>Label</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>Comments</NAME><VALUE></VALUE></SETTING>
-                <PANELDATA><NAME>Packager Panel</NAME><VALUE>
-                    000100003F3F3F3F4150504C04E7000100E76E9000000000000006100637DEF0
-                    656173653A4A617661204C6104E768A06765005865726365734C696220436C61
-                    737369632052656C656173653A4A617661204D524A4170704275696C64657200
-                    5865726365734C696220436C61737369632052656C656173653A4A617661204F
-                    7574707574005865726365734C696220436C61737369632052656C656173653A
-                    4A6176612050726F6A656374005865726365734C696220436C61737369632052
-                    656C656173653A4A617661446F632050726F6A656374005865726365734C6962
-                    20436C61737369632052656C656173653A4D61634F53204D657267652050616E
-                    656C005865726365734C696220436C61007369632052656C656173653A4F7574
-                    70757420466C616773005865726365734C696220436C61737369632052656C65
-                    6173653A5061636B616765722050616E656C005865726365734C696220436C61
-                    737369632052656C656173653A50504320436F646547656E005865726365734C
-                    696220436C61737369632052656C656173653A50504320446973617373656D62
-                    6C6572005865726365734C696220436C61737369632052656C656173653A5050
-                    4320476C6F62616C204F7074696D697A6572005865726365734C696220436C61
-                    737369632052656C656173653A505043204C696E6B6572005865726365734C69
-                    6220436C61737369632052656C656173653A5050432050454600586572636573
-                    4C696220436C61737369632052656C656173653A5050432050726F6A65637400
-                    5865726365734C696220436C61737369632052656C656173653A50504341736D
-                    2050616E656C005865726365734C696220436C61737369632052656C65617365
-                    3A52657A20436F6D70696C6572005865726365734C696220436C617373696320
-                    52656C656173653A57696E524320436F6D70696C6572005865726365734C6962
-                    20436C61737369632052656C656173653A78383620436F646547656E00586572
-                    6365734C696220436C61737369632052656C656173653A783836204578636570
-                    74696F6E732050616E656C0058657263657300010020436C6173736963205265
-                    6C656173653A78383620476C6F62616C204F7074696D697A6572005865726365
-                    734C696220436C61737369632052656C656173653A783836204C696E6B657200
-                    5865726365734C696220436C61737369632052656C656173653A783836205072
-                    6F6A656374000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000
-                </VALUE></PANELDATA>
+
+                <!-- Settings for "Packager Panel" panel -->
+                <SETTING><NAME>MWMacOSPackager_UsePackager</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_FolderToPackage</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWMacOSPackager_CreateClassicAlias</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_ClassicAliasMethod</NAME><VALUE>UseTargetOutput</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_ClassicAliasPath</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWMacOSPackager_CreatePkgInfo</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_PkgCreatorType</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWMacOSPackager_PkgFileType</NAME><VALUE>APPL</VALUE></SETTING>
 
                 <!-- Settings for "PPC CodeGen" panel -->
                 <SETTING><NAME>MWCodeGen_PPC_structalignment</NAME><VALUE>MC68K</VALUE></SETTING>
@@ -2758,6 +2539,21 @@
                 <SETTING><NAME>MWCodeGen_PPC_altivec</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vectortocdata</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vrsave</NAME><VALUE>1</VALUE></SETTING>
+
+                <!-- Settings for "PPC CodeGen Mach-O" panel -->
+                <SETTING><NAME>MWCodeGen_MachO_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_tracebacktables</NAME><VALUE>None</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_processor</NAME><VALUE>Generic</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_readonlystrings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_profiler</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_fpcontract</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_schedule</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_peephole</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_processorspecific</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_altivec</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_vrsave</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_common</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_MachO_implicit_templates</NAME><VALUE>1</VALUE></SETTING>
 
                 <!-- Settings for "PPC Disassembler" panel -->
                 <SETTING><NAME>MWDisassembler_PPC_showcode</NAME><VALUE>1</VALUE></SETTING>
@@ -2785,6 +2581,40 @@
                 <SETTING><NAME>MWLinker_PPC_mainname</NAME><VALUE>__start</VALUE></SETTING>
                 <SETTING><NAME>MWLinker_PPC_termname</NAME><VALUE></VALUE></SETTING>
 
+                <!-- Settings for "PPC Mach-O Linker" panel -->
+                <SETTING><NAME>MWLinker_MachO_exports</NAME><VALUE>None</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_mainname</NAME><VALUE>start</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_currentversion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_compatibleversion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_symfullpath</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_supresswarnings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_multisymerror</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_prebind</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_deadstrip</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_objectivecsemantics</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_whichfileloaded</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_whyfileloaded</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_readonlyrelocs</NAME><VALUE>Errors</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_undefinedsymbols</NAME><VALUE>Errors</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_twolevelnamespace</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWLinker_MachO_stripdebugsymbols</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "PPC Mach-O Target" panel -->
+                <SETTING><NAME>MWProject_MachO_type</NAME><VALUE>Executable</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_outfile</NAME><VALUE>a.exe</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_filecreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_filetype</NAME><VALUE>MEXE</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_stacksize</NAME><VALUE>64</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_stackaddress</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrc</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrcfilename</NAME><VALUE>a.rsrc</VALUE></SETTING>
+                <SETTING><NAME>MWProject_MachO_flatrsrcoutputdir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWProject_MachO_installpath</NAME><VALUE>./</VALUE></SETTING>
+
                 <!-- Settings for "PPC PEF" panel -->
                 <SETTING><NAME>MWPEF_exports</NAME><VALUE>None</VALUE></SETTING>
                 <SETTING><NAME>MWPEF_libfolder</NAME><VALUE>0</VALUE></SETTING>
@@ -2800,8 +2630,8 @@
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>a.out</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>????</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>APPL</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>384</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_minsize</NAME><VALUE>384</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_stacksize</NAME><VALUE>64</VALUE></SETTING>
@@ -2809,11 +2639,18 @@
                 <SETTING><NAME>MWProject_PPC_symfilename</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcname</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcheader</NAME><VALUE>Native</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_rsrctype</NAME><VALUE>1061109567</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_rsrctype</NAME><VALUE>????</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcid</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcflags</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcstore</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_rsrcmerge</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrc</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrcoutputdir</NAME>
+                    <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                    <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
+                </SETTING>
+                <SETTING><NAME>MWProject_PPC_flatrsrcfilename</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "PPCAsm Panel" panel -->
                 <SETTING><NAME>MWAssembler_PPC_auxheader</NAME><VALUE>0</VALUE></SETTING>
@@ -2972,41 +2809,17 @@
             <FILEREF>
                 <TARGETNAME>DOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>MSL C.Carbon.Lib</PATH>
+                <PATH>MSL_All_Carbon.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
                 <TARGETNAME>DOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>MSL C.PPC.Lib</PATH>
-                <PATHFORMAT>MacOS</PATHFORMAT>
-            </FILEREF>
-            <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
-                <PATHTYPE>Name</PATHTYPE>
-                <PATH>MSL SIOUX.Carbon.Lib</PATH>
-                <PATHFORMAT>MacOS</PATHFORMAT>
-            </FILEREF>
-            <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
-                <PATHTYPE>Name</PATHTYPE>
-                <PATH>MSL SIOUX.PPC.Lib</PATH>
-                <PATHFORMAT>MacOS</PATHFORMAT>
-            </FILEREF>
-            <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
-                <PATHTYPE>Name</PATHTYPE>
-                <PATH>MSL C++.PPC.Lib</PATH>
+                <PATH>MSL_All_PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
         </GROUP>
         <GROUP><NAME>Mac Libraries</NAME>
-            <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
-                <PATHTYPE>Name</PATHTYPE>
-                <PATH>MSL RuntimePPC.Lib</PATH>
-                <PATHFORMAT>MacOS</PATHFORMAT>
-            </FILEREF>
             <FILEREF>
                 <TARGETNAME>DOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
