@@ -390,6 +390,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
        <p>The behavior of the SAX2XMLReader is dependant on the values of the following properties.
        All of the properties below can be set using the function <code>SAX2XMLReader::setProperty(const XMLCh* const, void*)</code>.
+       It takes a void pointer as the property value.  Application is required to initialize this void
        pointer to a correct type.  Please check the column "Value Type" below
        to learn exactly what type of property value each property expects for processing.
        Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
