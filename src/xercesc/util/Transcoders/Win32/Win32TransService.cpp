@@ -417,7 +417,9 @@ Win32TransService::Win32TransService()
                 if (aliasedEntry)
                 {
                     const unsigned int srcLen = strlen(nameBuf);
-                    const unsigned int targetLen = ::mbstowcs(0, nameBuf, srcLen);
+                    const unsigned charLen = ::mblen(nameBuf, MB_CUR_MAX);
+                    const unsigned int targetLen = srcLen/charLen;
+                    
                     XMLCh* uniName = new XMLCh[targetLen + 1];
                     ::mbstowcs(uniName, nameBuf, srcLen);
                     uniName[targetLen] = 0;
@@ -849,7 +851,15 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     if (!srcText)
         return 0;
 
-    const unsigned int retVal = ::wcstombs(0, srcText, 0);
+    unsigned int retVal = -1;
+    
+    #if defined(XML_METROWERKS)
+    	const unsigned int srcLen = ::wcslen(srcText);
+    	retVal = ::wcsmbslen(srcText, srcLen);
+    #else
+     	retVal = ::wcstombs(0, srcText, 0);
+    #endif
+    
     if (retVal == (unsigned int)-1)
         return 0;
     return retVal;
