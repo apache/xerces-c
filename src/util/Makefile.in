@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.35  2001/05/16 15:25:40  tng
+# Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
+#
 # Revision 1.34  2001/05/11 13:26:27  tng
 # Copyright update.
 #
@@ -251,6 +254,7 @@ include ../Makefile.incl
 UTIL_CPP_PUBHEADERS = \
     ArrayIndexOutOfBoundsException.hpp \
     AutoSense.hpp \
+    Base64.hpp \
     BinFileInputStream.hpp \
     BinInputStream.hpp \
     BinMemInputStream.hpp \
@@ -262,6 +266,7 @@ UTIL_CPP_PUBHEADERS = \
     HashBase.hpp \
     HashXMLCh.hpp \
     HashPtr.hpp \
+    HexBin.hpp \
     IOException.hpp \
     IllegalArgumentException.hpp \
     InvalidCastException.hpp \
@@ -340,6 +345,7 @@ C_FILES = \
     XMLDeleterFor.c
 
 UTIL_CPP_OBJECTS = \
+    Base64.$(TO) \
     BinFileInputStream.$(TO) \
     BinInputStream.$(TO) \
     BinMemInputStream.$(TO) \
@@ -347,6 +353,7 @@ UTIL_CPP_OBJECTS = \
     HashXMLCh.$(TO) \
     HashPtr.$(TO) \
     HeaderDummy.$(TO) \
+    HexBin.$(TO) \
     KVStringPair.$(TO) \
     Mutexes.$(TO) \
     PlatformUtils.$(TO) \

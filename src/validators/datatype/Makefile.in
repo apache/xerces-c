@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2001/05/16 15:24:44  tng
+# Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
+#
 # Revision 1.5  2001/05/11 13:27:29  tng
 # Copyright update.
 #
@@ -97,8 +100,10 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	InvalidDatatypeValueException.hpp \
 	DatatypeValidator.hpp \
 	DatatypeValidatorFactory.hpp \
+	Base64BinaryDatatypeValidator.hpp \
 	BooleanDatatypeValidator.hpp \
 	DecimalDatatypeValidator.hpp \
+	HexBinaryDatatypeValidator.hpp \
 	StringDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
@@ -108,8 +113,10 @@ VALIDATORS_DATATYPE_C_FILES =
 VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	DatatypeValidator.$(TO) \
 	DatatypeValidatorFactory.$(TO) \
+	Base64BinaryDatatypeValidator.$(TO) \
 	BooleanDatatypeValidator.$(TO) \
 	DecimalDatatypeValidator.$(TO) \
+	HexBinaryDatatypeValidator.$(TO) \
 	StringDatatypeValidator.$(TO)
 
 

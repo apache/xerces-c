@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/16 15:24:42  tng
+ * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
+ *
  * Revision 1.6  2001/05/15 21:59:19  knoaman
  * TraverseSchema: add attribute checking + some fixes + more error messages.
  * More attribute cheking to come.
@@ -88,6 +91,8 @@
 #include <validators/datatype/StringDatatypeValidator.hpp>
 #include <validators/datatype/BooleanDatatypeValidator.hpp>
 #include <validators/datatype/DecimalDatatypeValidator.hpp>
+#include <validators/datatype/HexBinaryDatatypeValidator.hpp>
+#include <validators/datatype/Base64BinaryDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -354,15 +359,15 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new BooleanDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,
                        new DecimalDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY,
+                       new HexBinaryDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,
+                       new Base64BinaryDatatypeValidator());
 /*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_FLOAT,
                        new FloatDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DOUBLE,
                        new DoubleDatatypeValidator());
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_HEXBINARY,
-                       new HexBinaryDatatypeValidator());
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BASE64BINARY,
-                       new Base64BinaryDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,
                        new AnyURIDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME,

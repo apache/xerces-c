@@ -230,7 +230,8 @@ public :
     static const XMLCh fgDT_CENTURY[];
     static const XMLCh fgDT_RECURRINGDATE[];
     static const XMLCh fgDT_TIMEDURATION[];
-    static const XMLCh fgDT_BINARY[];
+    static const XMLCh fgDT_BASE64BINARY[];
+    static const XMLCh fgDT_HEXBINARY[];
     static const XMLCh fgDT_FLOAT[];
     static const XMLCh fgDT_DOUBLE[];
     static const XMLCh fgDT_URIREFERENCE[];

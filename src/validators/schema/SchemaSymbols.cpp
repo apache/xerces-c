@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/16 15:24:51  tng
+ * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
+ *
  * Revision 1.7  2001/05/15 21:59:34  knoaman
  * TraverseSchema: add attribute checking + some fixes + more error messages.
  * More attribute cheking to come.
@@ -993,9 +996,16 @@ const XMLCh SchemaSymbols::fgDT_TIMEDURATION[] =
     chLatin_r, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
-const XMLCh SchemaSymbols::fgDT_BINARY[] =
+const XMLCh SchemaSymbols::fgDT_BASE64BINARY[] =
 {
-    chLatin_b, chLatin_i, chLatin_n, chLatin_a, chLatin_r, chLatin_y, chNull
+    chLatin_b, chLatin_a, chLatin_s, chLatin_e, chDigit_6, chDigit_4,
+    chLatin_B, chLatin_i, chLatin_n, chLatin_a, chLatin_r, chLatin_y, chNull
+};
+
+const XMLCh SchemaSymbols::fgDT_HEXBINARY[] =
+{
+    chLatin_h, chLatin_e, chLatin_x,
+    chLatin_B, chLatin_i, chLatin_n, chLatin_a, chLatin_r, chLatin_y, chNull
 };
 
 const XMLCh SchemaSymbols::fgDT_FLOAT[] =
