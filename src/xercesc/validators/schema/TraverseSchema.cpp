@@ -5003,17 +5003,19 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
     // be modified as this element desires.
 
     // if substitution element has any as content model type, return true
-    ComplexTypeInfo* subsTypeInfo = subsElemDecl->getComplexTypeInfo();
-    if (subsElemDecl->getModelType() == SchemaElementDecl::Any) {
-        return true;
-    }
-
     bool subsRestricted = false;
+    if (subsElemDecl->getModelType() == SchemaElementDecl::Any) {
 
+        if ((subsElemDecl->getFinalSet() & SchemaSymbols::XSD_RESTRICTION) == 0
+            || (typeInfo == 0 && validator == 0))
+            return true;
+        else
+            subsRestricted = true;
+    }
     // Check for type relationship;
     // that is, make sure that the type we're deriving has some relatoinship
     // to substitutionGroupElt's type.
-    if (typeInfo) { // do complexType case ...need testing
+    else if (typeInfo) { // do complexType case ...need testing
 
         int derivationMethod = typeInfo->getDerivedBy();
 
@@ -5033,6 +5035,7 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
         }
         else { // complex content
 
+            ComplexTypeInfo* subsTypeInfo = subsElemDecl->getComplexTypeInfo();
             const ComplexTypeInfo* elemTypeInfo = typeInfo;
 
             for (; elemTypeInfo && elemTypeInfo != subsTypeInfo;
