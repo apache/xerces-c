@@ -112,6 +112,16 @@ const XMLCh XMLUri::USERINFO_CHARACTERS[] =
     chDollarSign, chPeriod, chNull
 };
 
+//
+//      reg_name     = 1*( unreserved | escaped | "$" | "," |
+//                         ";" | ":" | "@" | "&" | "=" | "+" )
+//
+const XMLCh XMLUri::REG_NAME_CHARACTERS[] =
+{
+    chDollarSign, chComma, chSemiColon, chColon, chAt,
+    chAmpersand, chEqual, chPlus, chNull
+};
+
 //      pchar plus ';' and '/'.
 //      pchar         = unreserved | escaped |
 //                      ":" | "@" | "&" | "=" | "+" | "$" | ","
@@ -135,6 +145,7 @@ static XMLCh value1[BUF_LEN+1];
 // "UserInfo"
 // "Host"
 // "Port"
+// "RegName"
 // "Path"
 // "Query"
 // "Fragment"
@@ -173,6 +184,12 @@ static const XMLCh errMsg_HOST[] =
 static const XMLCh errMsg_PORT[] =
 {
     chLatin_P, chLatin_o, chLatin_r, chLatin_t, chNull
+};
+
+static const XMLCh errMsg_REGNAME[] =
+{
+    chLatin_R, chLatin_e, chLatin_g, 
+    chLatin_N, chLatin_a, chLatin_m, chLatin_e, chNull
 };
 
 static const XMLCh errMsg_PATH[] =
@@ -256,6 +273,7 @@ XMLUri::XMLUri(const XMLCh* const uriSpec,
 , fUserInfo(0)
 , fHost(0)
 , fPort(-1)
+, fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
 , fFragment(0)
@@ -284,6 +302,7 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 , fUserInfo(0)
 , fHost(0)
 , fPort(-1)
+, fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
 , fFragment(0)
@@ -310,6 +329,7 @@ XMLUri::XMLUri(const XMLUri& toCopy)
 , fUserInfo(0)
 , fHost(0)
 , fPort(-1)
+, fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
 , fFragment(0)
@@ -363,6 +383,9 @@ void XMLUri::cleanUp()
 
     if (fHost)
         fMemoryManager->deallocate(fHost);//delete[] fHost;
+        
+    if (fRegAuth)
+        fMemoryManager->deallocate(fRegAuth);//delete[] fRegAuth;
 
     if (fPath)
         fMemoryManager->deallocate(fPath);//delete[] fPath;
@@ -384,12 +407,13 @@ void XMLUri::initialize(const XMLUri& toCopy)
     //
     fMemoryManager = toCopy.fMemoryManager;
     fScheme = XMLString::replicate(toCopy.fScheme, fMemoryManager);
-	fUserInfo = XMLString::replicate(toCopy.fUserInfo, fMemoryManager);
-	fHost = XMLString::replicate(toCopy.fHost, fMemoryManager);
-	fPort = toCopy.fPort;
-	fPath = XMLString::replicate(toCopy.fPath, fMemoryManager);
-	fQueryString = XMLString::replicate(toCopy.fQueryString, fMemoryManager);
-	fFragment = XMLString::replicate(toCopy.fFragment, fMemoryManager);
+    fUserInfo = XMLString::replicate(toCopy.fUserInfo, fMemoryManager);
+    fHost = XMLString::replicate(toCopy.fHost, fMemoryManager);
+    fPort = toCopy.fPort;
+    fRegAuth = XMLString::replicate(toCopy.fRegAuth, fMemoryManager);
+    fPath = XMLString::replicate(toCopy.fPath, fMemoryManager);
+    fQueryString = XMLString::replicate(toCopy.fQueryString, fMemoryManager);
+    fFragment = XMLString::replicate(toCopy.fFragment, fMemoryManager);
 }
 
 void XMLUri::initialize(const XMLUri* const baseURI
@@ -528,13 +552,14 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // identified this as a bug in the RFC
         if ((!fPath || !*fPath) &&
             fScheme == 0 &&
-            fHost == 0)
+            fHost == 0 && fRegAuth == 0)
         {
             fScheme = XMLString::replicate(baseURI->getScheme(), fMemoryManager);
             fMemoryManager->deallocate(fUserInfo);//delete [] fUserInfo;
             fUserInfo = XMLString::replicate(baseURI->getUserInfo(), fMemoryManager);
             fHost = XMLString::replicate(baseURI->getHost(), fMemoryManager);
             fPort = baseURI->getPort();
+            fRegAuth = XMLString::replicate(baseURI->getRegBasedAuthority(), fMemoryManager);
             fMemoryManager->deallocate(fPath);//delete [] fPath;
             fPath = XMLString::replicate(baseURI->getPath(), fMemoryManager);
 
@@ -558,12 +583,13 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // check for authority - RFC 2396 5.2 #4
         // if we found a host, then we've got a network path, so we're done
-        if (fHost == 0)
+        if (fHost == 0 && fRegAuth == 0)
         {
             fMemoryManager->deallocate(fUserInfo);//delete [] fUserInfo;
             fUserInfo = XMLString::replicate(baseURI->getUserInfo(), fMemoryManager);
             fHost = XMLString::replicate(baseURI->getHost(), fMemoryManager);
             fPort = baseURI->getPort();
+            fRegAuth = XMLString::replicate(baseURI->getRegBasedAuthority(), fMemoryManager);
         }
         else
         {
@@ -628,7 +654,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // path segment not equal to ".."
         index = -1;
         int segIndex = -1;
-		int offset = 1;
+        int offset = 1;
 
         while ((index = XMLString::patternMatch(&(path[offset]), SLASH_DOTDOT_SLASH)) != -1)
         {
@@ -803,11 +829,23 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
         }
     } // if > 0
 
-    // The order is important, do not change
-    //
-    setHost(host);
-    setPort(port);
-    setUserInfo(userinfo);
+    // Check if we have server based authority.
+    if (isValidServerBasedAuthority(host, port, userinfo))
+    {
+        if (fHost)
+            fMemoryManager->deallocate(fHost);//delete [] fHost;
+        
+        if (fUserInfo)
+            fMemoryManager->deallocate(fUserInfo);//delete[] fUserInfo;
+            
+        fHost = XMLString::replicate(host, fMemoryManager);
+        fPort = port;
+        fUserInfo = XMLString::replicate(userinfo, fMemoryManager);
+        
+        return;
+    }
+    // This must be registry based authority or the URI is malformed.
+    setRegBasedAuthority(uriSpec);
 }
 
 // scheme = alpha *( alpha | digit | "+" | "-" | "." )
@@ -1169,6 +1207,7 @@ void XMLUri::setHost(const XMLCh* const newHost)
     }
 
     fHost = XMLString::replicate(newHost, fMemoryManager);
+    setRegBasedAuthority(0);
 }
 
 void XMLUri::setPort(int newPort)
@@ -1193,7 +1232,33 @@ void XMLUri::setPort(int newPort)
     }
 
     fPort = newPort;
+}
 
+void XMLUri::setRegBasedAuthority(const XMLCh* const newRegAuth)
+{
+    if ( !newRegAuth )
+    {
+        if (getRegBasedAuthority())
+            fMemoryManager->deallocate(fRegAuth);//delete [] fRegAuth;
+        
+        fRegAuth = 0;
+        return;
+    }
+    // reg_name = 1*( unreserved | escaped | "$" | "," | 
+    //            ";" | ":" | "@" | "&" | "=" | "+" )
+    else if ( !*newRegAuth || !isValidRegistryBasedAuthority(newRegAuth) ) 
+    {    
+        ThrowXML2(MalformedURLException
+                , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
+                , errMsg_REGNAME
+                , newRegAuth);
+    }
+    
+    if (getRegBasedAuthority())
+        fMemoryManager->deallocate(fRegAuth);//delete [] fRegAuth;
+    
+    fRegAuth = XMLString::replicate(newRegAuth, fMemoryManager);
+    setHost(0);
 }
 
 //
@@ -1382,6 +1447,143 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
     } //while
 
     return;
+}
+
+bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host,
+                                         const int hostLen,
+                                         const int port,
+                                         const XMLCh* const userinfo,
+                                         const int userLen)
+{
+    // The order is important, do not change
+    if (!isWellFormedAddress(host, hostLen))
+        return false;
+
+    // check port number
+    if ((port > 65535) || (port < 0 && port != -1))
+        return false;
+
+    // check userinfo
+    int index = 0;
+    while (index < userLen)
+    {
+        if (isUnreservedCharacter(userinfo[index]) ||
+            (XMLString::indexOf(USERINFO_CHARACTERS, userinfo[index]) != -1))
+        {
+            index++;
+        }
+        else if (userinfo[index] == chPercent)               // '%'
+        {
+            if (XMLString::isHex(userinfo[index+1]) &&     // 1st hex
+                XMLString::isHex(userinfo[index+2])  )     // 2nd hex
+                index +=3;
+            else
+                return false;
+        }
+        else
+            return false;
+    } //while
+
+    return true;
+}
+
+bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host,
+                                         const int port,
+                                         const XMLCh* const userinfo)
+{
+    // The order is important, do not change
+    if (!isWellFormedAddress(host))
+        return false;
+
+    // check port number
+    if ((port > 65535) || (port < 0 && port != -1))
+        return false;
+    
+    // check userinfo
+    if (!userinfo)
+        return false;
+        
+    const XMLCh* tmpStr = userinfo;
+    while (*tmpStr)
+    {
+        if ( isUnreservedCharacter(*tmpStr) ||
+            (XMLString::indexOf(USERINFO_CHARACTERS, *tmpStr) != -1))
+        {
+            tmpStr++;
+        }
+        else if (*tmpStr == chPercent)               // '%'
+        {
+            if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
+                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
+            {
+                tmpStr+=3;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    } //while
+    
+    return true;
+}
+
+bool XMLUri::isValidRegistryBasedAuthority(const XMLCh* const authority,
+                                           const int authLen)
+{
+    // check authority
+    int index = 0;
+    while (index < authLen)
+    {
+        if (isUnreservedCharacter(authority[index]) ||
+            (XMLString::indexOf(REG_NAME_CHARACTERS, authority[index]) != -1))
+        {
+            index++;
+        }
+        else if (authority[index] == chPercent)               // '%'
+        {
+            if (XMLString::isHex(authority[index+1]) &&     // 1st hex
+                XMLString::isHex(authority[index+2])  )     // 2nd hex
+                index +=3;
+            else
+                return false;
+        }
+        else
+            return false;
+    } //while
+
+    return true;
+}
+
+bool XMLUri::isValidRegistryBasedAuthority(const XMLCh* const authority)
+{
+    // check authority
+    if (!authority)
+        return false;
+        
+    const XMLCh* tmpStr = authority;
+    while (*tmpStr)
+    {
+        if (isUnreservedCharacter(*tmpStr) ||
+            (XMLString::indexOf(REG_NAME_CHARACTERS, *tmpStr) != -1))
+        {
+            tmpStr++;
+        }
+        else if (*tmpStr == chPercent)               // '%'
+        {
+            if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
+                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
+            {
+                tmpStr+=3;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    } //while
+    
+    return true;
 }
 
 //
@@ -1731,11 +1933,11 @@ bool XMLUri::isGenericURI()
 //  never required.
 //
 void XMLUri::buildFullText()
-{
+{   
     // Calculate the worst case size of the buffer required
     unsigned int bufSize = XMLString::stringLen(fScheme) + 1
                            + XMLString::stringLen(fFragment) + 1
-                           + XMLString::stringLen(fHost) + 2
+                           + XMLString::stringLen(fHost ? fHost : fRegAuth) + 2
                            + XMLString::stringLen(fPath)
                            + XMLString::stringLen(fQueryString) + 1
                            + XMLString::stringLen(fUserInfo) + 1
@@ -1752,47 +1954,48 @@ void XMLUri::buildFullText()
         XMLString::catString(fURIText, getScheme());
         outPtr += XMLString::stringLen(fURIText);
         *outPtr++ = chColon;
+    }
+
+    // Authority
+    if (fHost || fRegAuth)
+    {
         *outPtr++ = chForwardSlash;
         *outPtr++ = chForwardSlash;
-    }
-
-    if (fUserInfo)
-    {
-        XMLString::copyString(outPtr, fUserInfo);
-        outPtr += XMLString::stringLen(fUserInfo);
-
-
-        /*REVISIT dont have password field in uri - is this right??
-        if (fPassword)
+        
+        // Server based authority.
+        if (fHost)
         {
-            *outPtr++ = chColon;
-            XMLString::copyString(outPtr, fPassword);
-            outPtr += XMLString::stringLen(fPassword);
+            if (fUserInfo)
+            {
+                XMLString::copyString(outPtr, fUserInfo);
+                outPtr += XMLString::stringLen(fUserInfo);
+                *outPtr++ = chAt;
+            }
+            
+            XMLString::copyString(outPtr, fHost);
+            outPtr += XMLString::stringLen(fHost);
+            
+            //
+            //  If the port is -1, then we don't put it in. Else we need
+            //  to because it was explicitly provided.
+            //
+            if (fPort != -1)
+            {
+                *outPtr++ = chColon;
+
+                XMLCh tmpBuf[16];
+                XMLString::binToText(fPort, tmpBuf, 16, 10);
+                XMLString::copyString(outPtr, tmpBuf);
+                outPtr += XMLString::stringLen(tmpBuf);
+            }
         }
-        */
-        *outPtr++ = chAt;
-    }
-
-    if (fHost)
-    {
-        XMLString::copyString(outPtr, fHost);
-        outPtr += XMLString::stringLen(fHost);
-
-        //
-        //  If the port is -1, then we don't put it in. Else we need
-        //  to because it was explicitly provided.
-        //
-        if (fPort != -1)
-        {
-            *outPtr++ = chColon;
-
-            XMLCh tmpBuf[16];
-            XMLString::binToText(fPort, tmpBuf, 16, 10);
-            XMLString::copyString(outPtr, tmpBuf);
-            outPtr += XMLString::stringLen(tmpBuf);
+        // Registry based authority.
+        else {
+            XMLString::copyString(outPtr, fRegAuth);
+            outPtr += XMLString::stringLen(fRegAuth);
         }
     }
-
+    
     if (fPath)
     {
         XMLString::copyString(outPtr, fPath);
@@ -1909,10 +2112,10 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
         }
     }
 
-    // we need to check if index has exceed the lenght or not
+    // we need to check if index has exceed the length or not
     if (index < trimedUriSpecLen)
     {
-	    if (!processPath(trimedUriSpec + index, trimedUriSpecLen - index, foundScheme))
+        if (!processPath(trimedUriSpec + index, trimedUriSpecLen - index, foundScheme))
             return false;
     }
 
@@ -2114,37 +2317,9 @@ bool XMLUri::processAuthority( const XMLCh* const authSpec
         
         }
     }
-
-    // The order is important, do not change
-    if (!isWellFormedAddress(host, hostLen))
-        return false;
-
-    // check port number
-    if ((port > 65535) || (port < 0 && port != -1))
-        return false;
-
-    // check userinfo
-    index = 0;
-	while (index < userInfoLen)
-    {
-        if (isUnreservedCharacter(userinfo[index]) ||
-            (XMLString::indexOf(USERINFO_CHARACTERS, userinfo[index]) != -1))
-        {
-            index++;
-        }
-        else if (userinfo[index] == chPercent)               // '%'
-        {
-            if (XMLString::isHex(userinfo[index+1]) &&     // 1st hex
-                XMLString::isHex(userinfo[index+2])  )     // 2nd hex
-                index +=3;
-            else
-                return false;
-        }
-        else
-            return false;
-    } //while
-
-    return true;
+    
+    return isValidServerBasedAuthority(host, hostLen, port, userinfo, userInfoLen)
+        || isValidRegistryBasedAuthority(authSpec, authLen);
 }
 
 bool XMLUri::processPath(const XMLCh* const pathStr,
@@ -2236,6 +2411,7 @@ void XMLUri::serialize(XSerializeEngine& serEng)
 
         serEng<<fPort;
 
+        serEng.writeString(fRegAuth);
         serEng.writeString(fPath);
         serEng.writeString(fQueryString);
         serEng.writeString(fFragment);
@@ -2249,6 +2425,7 @@ void XMLUri::serialize(XSerializeEngine& serEng)
 
         serEng>>fPort;
 
+        serEng.readString(fRegAuth);
         serEng.readString(fPath);
         serEng.readString(fQueryString);
         serEng.readString(fFragment);
@@ -2262,6 +2439,7 @@ XMLUri::XMLUri(MemoryManager* const manager)
 , fUserInfo(0)
 , fHost(0)
 , fPort(-1)
+, fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
 , fFragment(0)

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/12/11 22:21:25  neilg
+ * fixes for the URI implementation to take registry names into account; much thanks to Michael Glavassevich
+ *
  * Revision 1.13  2003/12/02 17:50:21  neilg
  * additional fix for bug 25118; once again, thanks to Jeroen Whitmond
  *
@@ -255,6 +258,13 @@ public:
      * @return the port for this URI (-1 if not specified).
      */
      int getPort() const;
+     
+    /**
+     * Get the registry based authority for this URI.
+     * 
+     * @return the registry based authority (null if not specified).
+     */
+     const XMLCh* getRegBasedAuthority() const;
 
     /**
      * Get the path for this URI. Note that the value returned is the path
@@ -308,6 +318,9 @@ public:
      * Set the host for this URI. If null is passed in, the userinfo
      * field is also set to null and the port is set to -1.
      *
+     * Note: This method overwrites registry based authority if it
+     * previously existed in this URI.
+     *
      * @param newHost the host for this URI
      *
      */
@@ -323,6 +336,16 @@ public:
      *
      */
      void setPort(int newPort);
+     
+    /**
+     * Sets the registry based authority for this URI.
+     * 
+     * Note: This method overwrites server based authority
+     * if it previously existed in this URI.
+     * 
+     * @param newRegAuth the registry based authority for this URI
+     */
+     void setRegBasedAuthority(const XMLCh* const newRegAuth);
 
     /**
      * Set the path for this URI.
@@ -398,6 +421,7 @@ private:
     static const XMLCh MARK_CHARACTERS[];
     static const XMLCh SCHEME_CHARACTERS[];
     static const XMLCh USERINFO_CHARACTERS[];
+    static const XMLCh REG_NAME_CHARACTERS[];
     static const XMLCh PATH_CHARACTERS[];
 
     //helper method for getUriText
@@ -443,6 +467,50 @@ private:
      * @return true if the scheme is conformant, false otherwise
      */
     static void isConformantUserInfo(const XMLCh* const userInfo);
+    
+    /**
+     * Determines whether the components host, port, and user info
+     * are valid as a server authority.
+     *
+     * @return true if the given host, port, and userinfo compose
+     * a valid server authority
+     */
+    static bool isValidServerBasedAuthority(const XMLCh* const host
+                                           , const int hostLen
+                                           , const int port
+                                           , const XMLCh* const userinfo
+                                           , const int userLen);
+                                           
+    /**
+     * Determines whether the components host, port, and user info
+     * are valid as a server authority.
+     *
+     * @return true if the given host, port, and userinfo compose
+     * a valid server authority
+     */
+    static bool isValidServerBasedAuthority(const XMLCh* const host
+                                           , const int port
+                                           , const XMLCh* const userinfo);
+      
+   /**
+    * Determines whether the given string is a registry based authority.
+    * 
+    * @param authority the authority component of a URI
+    * 
+    * @return true if the given string is a registry based authority
+    */
+    static bool isValidRegistryBasedAuthority(const XMLCh* const authority
+                                             , const int authLen);
+
+   /**
+    * Determines whether the given string is a registry based authority.
+    * 
+    * @param authority the authority component of a URI
+    * 
+    * @return true if the given string is a registry based authority
+    */
+    static bool isValidRegistryBasedAuthority(const XMLCh* const authority);
+
     /**
      * Determine whether a string is syntactically capable of representing
      * a valid IPv4 address, IPv6 reference or the domain name of a network host.
@@ -593,6 +661,7 @@ private:
     XMLCh*          fUserInfo;
     XMLCh*          fHost;
     int             fPort;
+    XMLCh*          fRegAuth;
     XMLCh*          fPath;
     XMLCh*          fQueryString;
     XMLCh*          fFragment;
@@ -621,6 +690,11 @@ inline const XMLCh* XMLUri::getHost() const
 inline int XMLUri::getPort() const
 {
 	return fPort;
+}
+
+inline const XMLCh* XMLUri::getRegBasedAuthority() const
+{
+	return fRegAuth;
 }
 
 inline const XMLCh* XMLUri::getPath() const
