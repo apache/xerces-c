@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/06/27 18:46:53  tng
+ * API Documentation Update.
+ *
  * Revision 1.3  2002/06/17 15:39:49  tng
  * To be consistent, SAX2 is updated with:
  * 1. the progressive parse methods should use the fReuseGrammar flag set from setFeature instead of using parameter
@@ -159,18 +162,32 @@ class XMLDocumentHandler;
 class SAX2_EXPORT SAX2XMLReader
 {
 public:
+    // -----------------------------------------------------------------------
+    //  Class types
+    // -----------------------------------------------------------------------
+    /** @name Public constants */
+    //@{
 
+    /** ValScheme enum used in setValidationScheme
+      *    Val_Never:  Do not report validation errors.
+      *    Val_Always: The parser will always report validation errors.
+      *    Val_Auto:   The parser will report validation errors only if a grammar is specified.
+      *
+      * @see #setValidationScheme
+      */
     enum ValSchemes
     {
         Val_Never
         , Val_Always
         , Val_Auto
     };
+    //@}
 
-    /** @name Constructors and Destructor */
+
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+    /** @name Constructors and Destructor */
     //@{
     /** The default constructor */
     SAX2XMLReader()
@@ -185,20 +202,8 @@ public:
     //-----------------------------------------------------------------------
     // The XMLReader interface
     //-----------------------------------------------------------------------
-    /** @name The XMLReader interfaces */
+    /** @name Implementation of SAX 2.0 XMLReader interface's. */
     //@{
-
-    /** Get error count from the last parse operation.
-      *
-      * This method returns the error count from the last parse
-      * operation. Note that this count is actually stored in the
-      * scanner, so this method simply returns what the
-      * scanner reports.
-      *
-      * @return number of errors encountered during the latest
-      *			parse operation.
-      */
-    virtual int getErrorCount() const = 0 ;
 
     /**
       * This method returns the installed content handler.
@@ -227,20 +232,6 @@ public:
       * @return A pointer to the installed error handler object.
       */
     virtual ErrorHandler* getErrorHandler() const = 0 ;
-
-	/**
-      * This method returns the installed lexical handler.
-      *
-      * @return A pointer to the installed lexical handler object.
-      */
-    virtual LexicalHandler* getLexicalHandler() const = 0 ;
-
-    /**
-      * This method returns the installed declaration handler.
-      *
-      * @return A pointer to the installed declaration handler object.
-      */
-    virtual DeclHandler* getDeclarationHandler() const = 0 ;
 
 	/**
      * Query the current state of any feature in a SAX2 XMLReader.
@@ -272,37 +263,127 @@ public:
      */
 	virtual void* getProperty(const XMLCh* const name) const = 0 ;
 
-    /**
-      * This method returns the state of the parser's
-      * exit-on-First-Fatal-Error flag.
-      *
-      * <p>Or you can query the feature "http://apache.org/xml/features/continue-after-fatal-error"
-      * which indicates the opposite state.</p>
-      *
-      * @return true, if the parser is currently configured to
-      *         exit on the first fatal error, false otherwise.
-      *
-      * @see #setExitOnFirstFatalError
-      * @see #getFeature
-      */
-    virtual bool getExitOnFirstFatalError() const = 0;
+  /**
+    * Allow an application to register a document event handler.
+    *
+    * If the application does not register a document handler, all
+    * document events reported by the SAX parser will be silently
+    * ignored (this is the default behaviour implemented by
+    * HandlerBase).
+    *
+    * Applications may register a new or different handler in the
+    * middle of a parse, and the SAX parser must begin using the new
+    * handler immediately.
+    *
+    * @param handler The document handler.
+    * @see DocumentHandler#DocumentHandler
+    * @see HandlerBase#HandlerBase
+    */
+    virtual void setContentHandler(ContentHandler* const handler) = 0;
 
-    /**
-      * This method returns the state of the parser's
-      * validation-constraint-fatal flag.
-      *
-      * <p>Or you can query the feature "http://apache.org/xml/features/validation-error-as-fatal"
-      * which means the same thing.
-      *
-      * @return true, if the parser is currently configured to
-      *         set validation constraint errors as fatal, false
-      *         otherwise.
-      *
-      * @see #setValidationContraintFatal
-      * @see #getFeature
-      */
-    virtual bool getValidationConstraintFatal() const = 0;
+  /**
+    * Allow an application to register a DTD event handler.
+    *
+    * If the application does not register a DTD handler, all DTD
+    * events reported by the SAX parser will be silently ignored (this
+    * is the default behaviour implemented by HandlerBase).
+    *
+    * Applications may register a new or different handler in the middle
+    * of a parse, and the SAX parser must begin using the new handler
+    * immediately.
+    *
+    * @param handler The DTD handler.
+    * @see DTDHandler#DTDHandler
+    * @see HandlerBase#HandlerBase
+    */
+    virtual void setDTDHandler(DTDHandler* const handler) = 0;
 
+  /**
+    * Allow an application to register a custom entity resolver.
+    *
+    * If the application does not register an entity resolver, the
+    * SAX parser will resolve system identifiers and open connections
+    * to entities itself (this is the default behaviour implemented in
+    * DefaultHandler).
+    *
+    * Applications may register a new or different entity resolver
+    * in the middle of a parse, and the SAX parser must begin using
+    * the new resolver immediately.
+    *
+    * @param resolver The object for resolving entities.
+    * @see EntityResolver#EntityResolver
+    * @see DefaultHandler#DefaultHandler
+    */
+    virtual void setEntityResolver(EntityResolver* const resolver) = 0;
+
+  /**
+    * Allow an application to register an error event handler.
+    *
+    * If the application does not register an error event handler,
+    * all error events reported by the SAX parser will be silently
+    * ignored, except for fatalError, which will throw a SAXException
+    * (this is the default behaviour implemented by HandlerBase).
+    *
+    * Applications may register a new or different handler in the
+    * middle of a parse, and the SAX parser must begin using the new
+    * handler immediately.
+    *
+    * @param handler The error handler.
+    * @see ErrorHandler#ErrorHandler
+    * @see SAXException#SAXException
+    * @see HandlerBase#HandlerBase
+    */
+    virtual void setErrorHandler(ErrorHandler* const handler) = 0;
+
+  /**
+    * Set the state of any feature in a SAX2 XMLReader.
+    * Supported features in SAX2 for xerces-c are:
+    * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Features for detail description).
+    *
+    * <br>http://xml.org/sax/features/validation (default: true)
+    * <br>http://xml.org/sax/features/namespaces (default: true)
+    * <br>http://xml.org/sax/features/namespace-prefixes (default: false)
+    * <br>http://apache.org/xml/features/validation/dynamic (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
+    * <br>http://apache.org/xml/features/validation/schema (default: true)
+    * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
+    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
+    * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
+    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-validator (Deprecated) (default: false)
+    *
+    * @param name The unique identifier (URI) of the feature.
+    * @param value The requested state of the feature (true or false).
+    * @exception SAXNotRecognizedException If the requested feature is not known.
+    * @exception SAXNotSupportedException Feature modification is not supported during parse
+    *
+    */
+	virtual void setFeature(const XMLCh* const name, const bool value) = 0;
+
+  /**
+    * Set the value of any property in a SAX2 XMLReader.
+    * Supported properties in SAX2 for xerces-c are:
+    * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties for detail description).
+    *
+    * <br>http://apache.org/xml/properties/schema/external-schemaLocation
+    * <br>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation.
+    *
+    * It takes a void pointer as the property value.  Application is required to initialize this void
+    * pointer to a correct type.  See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties
+    * to learn exactly what type of property value each property expects for processing.
+    * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+    * If the same property is set more than once, the last one takes effect.
+    *
+    * @param name The unique identifier (URI) of the property being set.
+    * @param value The requested value for the property.  See
+    *            http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties to learn
+    *            exactly what type of property value each property expects for processing.
+    *            Passing a void pointer that was initialized with a wrong type will lead
+    *            to unexpected result.
+    * @exception SAXNotRecognizedException If the requested property is not known.
+    * @exception SAXNotSupportedException Property modification is not supported during parse
+    */
+	virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
 
   /**
     * Parse an XML document.
@@ -382,77 +463,44 @@ public:
         const   char* const     systemId
     ) = 0;
 	
-  /**
-    * Allow an application to register a document event handler.
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  SAX 2.0-ext
+    // -----------------------------------------------------------------------
+    /** @name SAX 2.0-ext */
+    //@{
+    /**
+      * This method returns the installed declaration handler.
+      *
+      * @return A pointer to the installed declaration handler object.
+      */
+    virtual DeclHandler* getDeclarationHandler() const = 0 ;
+
+	/**
+      * This method returns the installed lexical handler.
+      *
+      * @return A pointer to the installed lexical handler object.
+      */
+    virtual LexicalHandler* getLexicalHandler() const = 0 ;
+
+   /**
+    * Allow an application to register a declaration event handler.
     *
-    * If the application does not register a document handler, all
-    * document events reported by the SAX parser will be silently
-    * ignored (this is the default behaviour implemented by
-    * HandlerBase).
+    * If the application does not register a declaration handler,
+    * all events reported by the SAX parser will be silently
+    * ignored. (this is the default behaviour implemented by DefaultHandler).
     *
     * Applications may register a new or different handler in the
     * middle of a parse, and the SAX parser must begin using the new
     * handler immediately.
     *
-    * @param handler The document handler.
-    * @see DocumentHandler#DocumentHandler
-    * @see HandlerBase#HandlerBase
-    */
-    virtual void setContentHandler(ContentHandler* const handler) = 0;
-
-  /**
-    * Allow an application to register a DTD event handler.
-    *
-    * If the application does not register a DTD handler, all DTD
-    * events reported by the SAX parser will be silently ignored (this
-    * is the default behaviour implemented by HandlerBase).
-    *
-    * Applications may register a new or different handler in the middle
-    * of a parse, and the SAX parser must begin using the new handler
-    * immediately.
-    *
-    * @param handler The DTD handler.
-    * @see DTDHandler#DTDHandler
-    * @see HandlerBase#HandlerBase
-    */
-    virtual void setDTDHandler(DTDHandler* const handler) = 0;
-
-  /**
-    * Allow an application to register a custom entity resolver.
-    *
-    * If the application does not register an entity resolver, the
-    * SAX parser will resolve system identifiers and open connections
-    * to entities itself (this is the default behaviour implemented in
-    * DefaultHandler).
-    *
-    * Applications may register a new or different entity resolver
-    * in the middle of a parse, and the SAX parser must begin using
-    * the new resolver immediately.
-    *
-    * @param resolver The object for resolving entities.
-    * @see EntityResolver#EntityResolver
+    * @param handler The DTD declaration handler.
+    * @see DeclHandler#DeclHandler
+    * @see SAXException#SAXException
     * @see DefaultHandler#DefaultHandler
     */
-    virtual void setEntityResolver(EntityResolver* const resolver) = 0;
-
-  /**
-    * Allow an application to register an error event handler.
-    *
-    * If the application does not register an error event handler,
-    * all error events reported by the SAX parser will be silently
-    * ignored, except for fatalError, which will throw a SAXException
-    * (this is the default behaviour implemented by HandlerBase).
-    *
-    * Applications may register a new or different handler in the
-    * middle of a parse, and the SAX parser must begin using the new
-    * handler immediately.
-    *
-    * @param handler The error handler.
-    * @see ErrorHandler#ErrorHandler
-    * @see SAXException#SAXException
-    * @see HandlerBase#HandlerBase
-    */
-    virtual void setErrorHandler(ErrorHandler* const handler) = 0;
+    virtual void setDeclarationHandler(DeclHandler* const handler) = 0;
 
    /**
     * Allow an application to register a lexical event handler.
@@ -472,23 +520,85 @@ public:
     */
     virtual void setLexicalHandler(LexicalHandler* const handler) = 0;
 
-   /**
-    * Allow an application to register a declaration event handler.
-    *
-    * If the application does not register a declaration handler,
-    * all events reported by the SAX parser will be silently
-    * ignored. (this is the default behaviour implemented by DefaultHandler).
-    *
-    * Applications may register a new or different handler in the
-    * middle of a parse, and the SAX parser must begin using the new
-    * handler immediately.
-    *
-    * @param handler The DTD declaration handler.
-    * @see DeclHandler#DeclHandler
-    * @see SAXException#SAXException
-    * @see DefaultHandler#DefaultHandler
-    */
-    virtual void setDeclarationHandler(DeclHandler* const handler) = 0;
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Getter Methods
+    // -----------------------------------------------------------------------
+    /** @name Getter Methods (Xerces-C specific) */
+    //@{
+    /**
+	  * This method is used to get the current validator.
+	  *
+	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+	  * deleted when the XMLReader is destroyed.</b>
+	  *
+	  * @return A pointer to the validator.  An application should not deleted
+	  * the object returned.
+	  *
+	  */
+	virtual XMLValidator* getValidator() const = 0;
+    //@}
+
+    /** Get error count from the last parse operation.
+      *
+      * This method returns the error count from the last parse
+      * operation. Note that this count is actually stored in the
+      * scanner, so this method simply returns what the
+      * scanner reports.
+      *
+      * @return number of errors encountered during the latest
+      *			parse operation.
+      */
+    virtual int getErrorCount() const = 0 ;
+
+    /**
+      * This method returns the state of the parser's
+      * exit-on-First-Fatal-Error flag.
+      *
+      * <p>Or you can query the feature "http://apache.org/xml/features/continue-after-fatal-error"
+      * which indicates the opposite state.</p>
+      *
+      * @return true, if the parser is currently configured to
+      *         exit on the first fatal error, false otherwise.
+      *
+      * @see #setExitOnFirstFatalError
+      * @see #getFeature
+      */
+    virtual bool getExitOnFirstFatalError() const = 0;
+
+    /**
+      * This method returns the state of the parser's
+      * validation-constraint-fatal flag.
+      *
+      * <p>Or you can query the feature "http://apache.org/xml/features/validation-error-as-fatal"
+      * which means the same thing.
+      *
+      * @return true, if the parser is currently configured to
+      *         set validation constraint errors as fatal, false
+      *         otherwise.
+      *
+      * @see #setValidationContraintFatal
+      * @see #getFeature
+      */
+    virtual bool getValidationConstraintFatal() const = 0;
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Setter Methods
+    // -----------------------------------------------------------------------
+    /** @name Setter Methods (Xerces-C specific) */
+    //@{
+    /**
+	  * This method is used to set a validator.
+	  *
+	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+	  * deleted when the XMLReader is destroyed.</b>
+	  *
+	  * @param valueToAdopt A pointer to the validator that the reader should use.
+	  *
+	  */
+	virtual void setValidator(XMLValidator* valueToAdopt) = 0;
 
     /**
       * This method allows users to set the parser's behaviour when it
@@ -539,58 +649,8 @@ public:
       * @see #setFeature
       */
     virtual void setValidationConstraintFatal(const bool newState) = 0;
-
-  /**
-    * Set the state of any feature in a SAX2 XMLReader.
-    * Supported features in SAX2 for xerces-c are:
-    * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Features for detail description).
-    *
-    * <br>http://xml.org/sax/features/validation (default: true)
-    * <br>http://xml.org/sax/features/namespaces (default: true)
-    * <br>http://xml.org/sax/features/namespace-prefixes (default: false)
-    * <br>http://apache.org/xml/features/validation/dynamic (default: false)
-    * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
-    * <br>http://apache.org/xml/features/validation/schema (default: true)
-    * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
-    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
-    * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
-    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)
-    * <br>http://apache.org/xml/features/validation/reuse-validator (Deprecated) (default: false)
-    *
-    * @param name The unique identifier (URI) of the feature.
-    * @param value The requested state of the feature (true or false).
-    * @exception SAXNotRecognizedException If the requested feature is not known.
-    * @exception SAXNotSupportedException Feature modification is not supported during parse
-    *
-    */
-	virtual void setFeature(const XMLCh* const name, const bool value) = 0;
-
-  /**
-    * Set the value of any property in a SAX2 XMLReader.
-    * Supported properties in SAX2 for xerces-c are:
-    * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties for detail description).
-    *
-    * <br>http://apache.org/xml/properties/schema/external-schemaLocation
-    * <br>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation.
-    *
-    * It takes a void pointer as the property value.  Application is required to initialize this void
-    * pointer to a correct type.  See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties
-    * to learn exactly what type of property value each property expects for processing.
-    * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
-    * If the same property is set more than once, the last one takes effect.
-    *
-    * @param name The unique identifier (URI) of the property being set.
-    * @param value The requested value for the property.  See
-    *            http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties to learn
-    *            exactly what type of property value each property expects for processing.
-    *            Passing a void pointer that was initialized with a wrong type will lead
-    *            to unexpected result.
-    * @exception SAXNotRecognizedException If the requested property is not known.
-    * @exception SAXNotSupportedException Property modification is not supported during parse
-    */
-	virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
-
     //@}
+
 
     // -----------------------------------------------------------------------
     //  Progressive scan methods
@@ -749,35 +809,6 @@ public:
 
     //@}
 
-
-    // -----------------------------------------------------------------------
-    //  Validator: setters and getters
-    // -----------------------------------------------------------------------
-    /** @name Validator: setters and getters (Xerces-C specific) */
-    //@{
-    /**
-	  * This method is used to set a validator.
-	  *
-	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
-	  * deleted when the XMLReader is destroyed.</b>
-	  *
-	  * @param valueToAdopt A pointer to the validator that the reader should use.
-	  *
-	  */
-	virtual void setValidator(XMLValidator* valueToAdopt) = 0;
-
-    /**
-	  * This method is used to get the current validator.
-	  *
-	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
-	  * deleted when the XMLReader is destroyed.</b>
-	  *
-	  * @return A pointer to the validator.  An application should not deleted
-	  * the object returned.
-	  *
-	  */
-	virtual XMLValidator* getValidator() const = 0;
-    //@}
 
     // -----------------------------------------------------------------------
     //  Advanced document handler list maintenance methods
