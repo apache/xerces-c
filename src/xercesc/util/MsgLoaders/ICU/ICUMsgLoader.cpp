@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/11/04 18:38:44  peiyongz
+ * udata_setAppData and ures_open refer to the same pkgname
+ *
  * Revision 1.23  2004/09/30 18:52:59  peiyongz
  * XercesC2_6_0 updates
  *
@@ -148,11 +151,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  will then  be able to fetch resources from the data.
  */
 
-#if defined(_WIN32) || defined(WIN32)
 extern "C" void U_IMPORT *XercesMessages2_6_0_dat;
-#else
-extern "C" void U_IMPORT *XercesMessages_dat;
-#endif
 
 /* 
  *  Tell ICU where our resource data is located in memory. The data lives in the XercesMessages dll, and we just
@@ -172,11 +171,8 @@ static void setAppData()
     {
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
-#if defined(_WIN32) || defined(WIN32)
-        udata_setAppData("XercesMessages", &XercesMessages2_6_0_dat, &err);
-#else
-        udata_setAppData("XercesMessages", &XercesMessages_dat, &err);
-#endif        
+        udata_setAppData("XercesMessages2_6_0", &XercesMessages2_6_0_dat, &err);
+
         if (U_SUCCESS(err))
         {
     	    setAppDataOK = true;
@@ -263,22 +259,25 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     /***
 	Open the locale-specific resource bundle
     ***/
-    strcat(locationBuf, "XercesMessages");
+    strcat(locationBuf, "XercesMessages2_6_0");
+
     UErrorCode err = U_ZERO_ERROR;
     uloc_setDefault("en_US", &err);   // in case user-specified locale unavailable
     err = U_ZERO_ERROR;
     fLocaleBundle = ures_open(locationBuf, XMLMsgLoader::getLocale(), &err);
+
     if (!U_SUCCESS(err) || fLocaleBundle == NULL)
     {
     	/***
     	   in case user specified location does not work
     	   try the dll
         ***/
-        if (strcmp(locationBuf, "XercesMessages") !=0 )
+        if (strcmp(locationBuf, "XercesMessages2_6_0") !=0 )
         {    	     	   
             setAppData();        	
             err = U_ZERO_ERROR;
-            fLocaleBundle = ures_open("XercesMessages", XMLMsgLoader::getLocale(), &err);
+            fLocaleBundle = ures_open("XercesMessages2_6_0", XMLMsgLoader::getLocale(), &err);        
+
             if (!U_SUCCESS(err) || fLocaleBundle == NULL)
             {
                  XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
