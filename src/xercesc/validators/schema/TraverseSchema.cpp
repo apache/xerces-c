@@ -2157,8 +2157,6 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
-    const XMLCh* fixed = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
-    const XMLCh* deflt = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
     bool         nameEmpty = (!name || !*name) ? true : false;
     bool         refEmpty = (!ref || !*ref) ? true : false;
 
@@ -2172,17 +2170,28 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         return 0;
     }
 
+    if (topLevel) {
+
+        if (fSchemaGrammar->getElemDecl(fTargetNSURI, name, 0, Grammar::TOP_LEVEL_SCOPE) != 0) {
+            return new QName(name, fTargetNSURI);
+        }
+    }
+
     // ------------------------------------------------------------------
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_ElementGlobal
 		                              : (refEmpty) ? GeneralAttributeCheck::E_ElementLocal
                                                    : GeneralAttributeCheck::E_ElementRef;
+
     fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
 
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
+    const XMLCh* fixed = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
+    const XMLCh* deflt = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
+
     if((fixed && *fixed) && (deflt && *deflt)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault);
     }
@@ -2218,17 +2227,6 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     ComplexTypeInfo*              subGroupTypeInfo = 0;
     ContentSpecNode*              contentSpecNode = 0;
     SchemaElementDecl::ModelTypes contentSpecType = SchemaElementDecl::Any;
-
-    if (topLevel) {
-
-        if (!refEmpty) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::GlobalElementWithRef, name);
-        }
-
-        if (fSchemaGrammar->getElemDecl(fTargetNSURI, name, 0, Grammar::TOP_LEVEL_SCOPE) != 0) {
-            return new QName(name, fTargetNSURI);
-        }
-    }
 
     // Create element decl
     bool isDuplicate = false;
