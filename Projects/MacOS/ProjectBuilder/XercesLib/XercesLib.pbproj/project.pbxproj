@@ -1071,8 +1071,13 @@
 		02058E25FF8AF8CD7F000001 = {
 			children = (
 				02058E26FF8AF8CD7F000001,
-				02058E27FF8AF8CD7F000001,
 				02058E28FF8AF8CD7F000001,
+				02058E27FF8AF8CD7F000001,
+				90796E510407DF740095DDBF,
+				90796E490407DAAC0095DDBF,
+				90796E4A0407DAAC0095DDBF,
+				90796E4D0407DAE20095DDBF,
+				90796E4E0407DAE20095DDBF,
 			);
 			isa = PBXGroup;
 			path = MacOS;
@@ -3402,6 +3407,9 @@
 				90E0251403E9F54A00136FE6,
 				90E0251803E9F61700136FE6,
 				90E0251B03E9FE2200136FE6,
+				90796E4B0407DAAC0095DDBF,
+				90796E4F0407DAE20095DDBF,
+				90796E520407DF740095DDBF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3709,6 +3717,8 @@
 				F52345E803AE522201A80065,
 				90A75CE303DDAE6E00F3A4A6,
 				90E0251703E9F61700136FE6,
+				90796E4C0407DAAC0095DDBF,
+				90796E500407DAE20095DDBF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4539,6 +4549,66 @@
 //902
 //903
 //904
+		90796E490407DAAC0095DDBF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MacCarbonFile.hpp;
+			refType = 4;
+		};
+		90796E4A0407DAAC0095DDBF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MacCarbonFile.cpp;
+			refType = 4;
+		};
+		90796E4B0407DAAC0095DDBF = {
+			fileRef = 90796E490407DAAC0095DDBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90796E4C0407DAAC0095DDBF = {
+			fileRef = 90796E4A0407DAAC0095DDBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90796E4D0407DAE20095DDBF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MacPosixFile.hpp;
+			refType = 4;
+		};
+		90796E4E0407DAE20095DDBF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MacPosixFile.cpp;
+			refType = 4;
+		};
+		90796E4F0407DAE20095DDBF = {
+			fileRef = 90796E4D0407DAE20095DDBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90796E500407DAE20095DDBF = {
+			fileRef = 90796E4E0407DAE20095DDBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90796E510407DF740095DDBF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MacAbstractFile.hpp;
+			refType = 4;
+		};
+		90796E520407DF740095DDBF = {
+			fileRef = 90796E510407DF740095DDBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		90A75CE103DDAE6E00F3A4A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
