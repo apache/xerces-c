@@ -700,6 +700,14 @@ SOURCE=..\..\..\..\..\src\internal\ReaderMgr.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\internal\VecAttributesImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\internal\VecAttributesImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\internal\VecAttrListImpl.cpp
 # End Source File
 # Begin Source File
@@ -797,6 +805,14 @@ SOURCE=..\..\..\..\..\src\parsers\DOMParser.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\parsers\DOMParser.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\parsers\SAX2XMLReaderImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\parsers\SAX2XMLReaderImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -1397,6 +1413,34 @@ SOURCE=..\..\..\..\..\src\validators\DTD\SimpleContentModel.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\DTD\SimpleContentModel.hpp
+# End Source File
+# End Group
+# Begin Group "sax2"
+
+# PROP Default_Filter ".cpp,.hpp"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\sax2\Attributes.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\sax2\ContentHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\sax2\DefaultHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\sax2\sax2Dummy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\sax2\SAX2XMLReader.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\sax2\XMLReaderFactory.hpp
 # End Source File
 # End Group
 # Begin Source File
