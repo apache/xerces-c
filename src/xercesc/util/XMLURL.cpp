@@ -519,7 +519,9 @@ BinInputStream* XMLURL::makeNewStream() const
             //  style fully qualified path, we have to toss the leading /
             //  character.
             //
-            const XMLCh* realPath = fPath;
+            XMLCh* realPath = XMLString::replicate(fPath);
+            ArrayJanitor<XMLCh> basePathName(realPath);
+
             if (*fPath == chForwardSlash)
             {
                 if (XMLString::stringLen(fPath) > 3)
@@ -543,6 +545,42 @@ BinInputStream* XMLURL::makeNewStream() const
                     }
                 }
             }
+
+            //
+            // Need to manually replace any character reference %xx first
+            // HTTP protocol will be done automatically by the netaccessor
+            //
+            int end = XMLString::stringLen(realPath);
+            int percentIndex = XMLString::indexOf(realPath, chPercent, 0);
+
+            while (percentIndex != -1) {
+
+                if (percentIndex+2 >= end ||
+                    !isHexDigit(realPath[percentIndex+1]) ||
+                    !isHexDigit(realPath[percentIndex+2]))
+                {
+                    XMLCh value1[4];
+                    XMLString::moveChars(value1, &(realPath[percentIndex]), 3);
+                    value1[3] = chNull;
+                    ThrowXML2(MalformedURLException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                            , realPath
+                            , value1);
+                }
+
+                unsigned int value = (xlatHexDigit(realPath[percentIndex+1]) * 16) + xlatHexDigit(realPath[percentIndex+2]);
+
+                realPath[percentIndex] = XMLCh(value);
+
+                int i =0;
+                for (i = percentIndex + 1; i < end - 2 ; i++)
+                    realPath[i] = realPath[i+2];
+                realPath[i] = chNull;
+                end = i;
+
+                percentIndex = XMLString::indexOf(realPath, chPercent, percentIndex);
+            }
+
 
             BinFileInputStream* retStrm = new BinFileInputStream(realPath);
             if (!retStrm->getIsOpen())
@@ -955,11 +993,10 @@ void XMLURL::parse(const XMLCh* const urlText)
 	    // we didn't get them, so throw an exception
 	    //
 	if (fProtocol == HTTP) {
-                ThrowXML1
+                ThrowXML
                 (
                     MalformedURLException
                     , XMLExcepts::URL_ExpectingTwoSlashes
-                    , "Found 'http' protocol"
                 );
 	}
     }
