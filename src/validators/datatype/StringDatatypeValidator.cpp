@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/23 15:45:25  tng
+ * Schema: NormalizedString fix.  By Pei Yong Zhang.
+ *
  * Revision 1.6  2001/05/18 13:36:48  tng
  * Schema: Catch RegularExpression exception and NumberFormatException
  *
@@ -582,6 +585,24 @@ void StringDatatypeValidator::checkContent( const XMLCh* const content, bool asB
 
         if (i == enumLength)
             ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+    }
+
+    //
+    // check WhiteSpace
+    //
+    if ((getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) != 0 )
+    {
+        if ( getWSFacet() == DatatypeValidator::REPLACE )
+        {
+            if (!XMLString::isWSReplaced(content))
+                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_WS_replaced, content);
+        }
+        else if ( getWSFacet() == DatatypeValidator::COLLAPSE )
+        {
+            if (!XMLString::isWSCollapsed(content))
+                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_WS_collapsed, content);
+        }
+
     }
 
 }

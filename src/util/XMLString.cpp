@@ -1174,8 +1174,7 @@ int XMLString::parseInt(const XMLCh* const toConvert)
     // If no string, then its a failure
     if ((!toConvert) ||
         (!*toConvert))
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
 
     // Scan past any whitespace. If we hit the end, then return failure
     const XMLCh* startPtr = toConvert;
@@ -1212,8 +1211,7 @@ int XMLString::parseInt(const XMLCh* const toConvert)
     {
         // If not valid decimal digit, then an error
         if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-            //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
         const unsigned int nextVal = (unsigned int)(*startPtr - chDigit_0);
         tmpVal = (tmpVal * 10) + nextVal;
@@ -1394,6 +1392,172 @@ bool XMLString::isInList(const XMLCh* const toFind, const XMLCh* const enumList)
 
     // We never found it
     return false;
+}
+
+//
+// a string is whitespace:replaced, is having no
+//    #xD  Carriage Return
+//    #xA  Line Feed
+//    #x9  TAB
+//
+bool XMLString::isWSReplaced(const XMLCh* const toCheck)
+{
+    // If no string, then its a OK
+    if (( !toCheck ) || ( !*toCheck ))
+        true;
+
+    const XMLCh* startPtr = toCheck;
+    while ( *startPtr )
+    {
+        if ( ( *startPtr == chCR) ||
+             ( *startPtr == chLF) ||
+             ( *startPtr == chHTab))
+        return false;
+
+        startPtr++;
+    }
+
+    return true;
+}
+
+//
+//   to replace characters listed below to #x20
+//    #xD  Carriage Return
+//    #xA  Line Feed
+//    #x9  TAB
+//
+void XMLString::replaceWS(XMLCh* const toConvert)
+{
+    // If no string, then its a failure
+    if (( !toConvert ) || ( !*toConvert ))
+        return;
+
+    int strLen = XMLString::stringLen(toConvert);
+    XMLCh* retBuf = new XMLCh[strLen+1];
+    XMLCh* retPtr = &(retBuf[0]);
+    XMLCh* startPtr = toConvert;
+
+    while ( *startPtr )
+    {
+        if ( ( *startPtr == chCR) ||
+             ( *startPtr == chLF) ||
+             ( *startPtr == chHTab))
+            *retPtr = chSpace;
+        else
+            *retPtr = *startPtr;
+
+        retPtr++;
+        startPtr++;
+    }
+
+    retBuf[strLen] = chNull;
+
+    XMLString::moveChars(toConvert, retBuf, strLen);
+    delete[] retBuf;
+    return;
+}
+
+//
+// a string is whitespace:collapsed, is whitespace::replaced
+// and no
+//    leading space (#x20)
+//    trailing space
+//    no contiguous sequences of spaces
+//
+bool XMLString::isWSCollapsed(const XMLCh* const toCheck)
+{
+    // shall be whitespace::replaced first
+    if ( !isWSReplaced(toCheck) )
+        return false;
+
+    // no leading or trailing space
+    if ((*toCheck == chSpace) ||
+        (toCheck[XMLString::stringLen(toCheck)-1] == chSpace))
+        return false;
+
+    const XMLCh* startPtr = toCheck;
+    XMLCh theChar;
+    bool  inSpace = false;
+    while ( theChar = *startPtr )
+    {
+        if ( theChar == chSpace) 
+        {
+            if (inSpace)
+                return false;
+            else
+                inSpace = true;
+        }
+        else
+            inSpace = false;
+
+        startPtr++;
+
+    }
+
+    return true;
+}
+
+//
+// no leading and/or trailing spaces
+// no continuous sequences of spaces
+//
+void XMLString::collapseWS(XMLCh* const toConvert)
+{
+    // If no string, then its a failure
+    if (( !toConvert ) || ( !*toConvert ))
+        return;
+
+    // replace whitespace first
+    replaceWS(toConvert);
+
+    // remove leading spaces
+    const XMLCh* startPtr = toConvert;
+    while ( *startPtr == chSpace )
+        startPtr++;
+
+    if (!*startPtr)
+        return;
+
+    // remove trailing spaces
+    const XMLCh* endPtr = toConvert + stringLen(toConvert);
+    while (*(endPtr - 1) == chSpace)
+        endPtr--;
+
+    //
+    //  Work through what remains and chop continuous spaces
+    //
+    XMLCh* retBuf = new XMLCh[endPtr - startPtr + 1];
+    XMLCh* retPtr = &(retBuf[0]);
+    bool  inSpace = false;
+    while (startPtr < endPtr)
+    {
+        if ( *startPtr == chSpace) 
+        {
+            if (inSpace)
+            {
+                //discard it;
+            }
+            else
+            {
+                inSpace = true;
+                *retPtr = chSpace;  //copy the first chSpace
+                retPtr++;
+            }
+        }
+        else
+        {
+            inSpace = false;
+            *retPtr = *startPtr;
+            retPtr++;
+        }
+
+        startPtr++;
+    }
+
+    *retPtr = chNull;
+    XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
+    delete[] retBuf;
+    return;
 }
 
 // ---------------------------------------------------------------------------

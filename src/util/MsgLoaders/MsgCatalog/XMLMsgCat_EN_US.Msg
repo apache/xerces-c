@@ -517,26 +517,28 @@ $set 3
 209  Value '{0}' must be less than MaxExclusive '{1}' 
 210  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
 211  Value '{0}' must be greater than MinExclusive '{1}' 
-212   Empty string encountered.
-213   String contains whitespaces only.
-214   More than one decimal points encountered.
-215   Invalid chars encountered.
-216   Null pointer encountered.
-217  A result is not set.
-218  CompactRanges - Internal Error
-219  Merge Ranges - Mismatched type
-220  SubtractRanges - Internal Error
-221  IntersectRanges - Internal Error
-222  ComplementRanges - Argument must be a RangeToken
-223  Invalid category name: {0}
-224  Keyword '{0}' not found
-225  Reference no must be more than zero
-226  Unknown option: {0}
-227  Unknown token type
-228  Failed to get RangeToken for: {0}
-229  Not supported
-230  Invalid child index
-231  Enabling the NEL option can only be called once per process.
-232  {0}
+212  Value '{0}' is not whitespace replaced 
+213  Value '{0}' is not whitespace collapsed 
+214   Empty string encountered.
+215   String contains whitespaces only.
+216   More than one decimal points encountered.
+217   Invalid chars encountered.
+218   Null pointer encountered.
+219  A result is not set.
+220  CompactRanges - Internal Error
+221  Merge Ranges - Mismatched type
+222  SubtractRanges - Internal Error
+223  IntersectRanges - Internal Error
+224  ComplementRanges - Argument must be a RangeToken
+225  Invalid category name: {0}
+226  Keyword '{0}' not found
+227  Reference no must be more than zero
+228  Unknown option: {0}
+229  Unknown token type
+230  Failed to get RangeToken for: {0}
+231  Not supported
+232  Invalid child index
+233  Enabling the NEL option can only be called once per process.
+234  {0}
 
 

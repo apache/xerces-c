@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/05/23 15:44:51  tng
+ * Schema: NormalizedString fix.  By Pei Yong Zhang.
+ *
  * Revision 1.21  2001/05/11 13:26:31  tng
  * Copyright update.
  *
@@ -1187,6 +1190,28 @@ public:
       *        On return, this buffer also holds the converted lowercase string
       */
     static void lowerCase(XMLCh* const toLowerCase);
+
+	/** Check if string is WhiteSpace:replace
+      * @param toCheck The string which needs to be checked.
+      */
+    static bool isWSReplaced(const XMLCh* const toCheck);
+
+	/** Check if string is WhiteSpace:collapse
+      * @param toCheck The string which needs to be checked.
+      */
+    static bool isWSCollapsed(const XMLCh* const toCheck);
+
+	/** Replace whitespace
+      * @param toCheck The string which needs to be whitespace replaced.
+      *        On return , this buffer also holds the converted string
+      */
+    static void replaceWS(XMLCh* const toConvert);
+
+	/** Collapse whitespace
+      * @param toConvert The string which needs to be whitespace collapsed.
+      *        On return , this buffer also holds the converted string
+      */       
+    static void collapseWS(XMLCh* const toConvert);
     //@}
 
 

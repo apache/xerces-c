@@ -531,6 +531,8 @@
             <Message Id="VALUE_exceed_maxExcl" Text="Value '{0}' must be less than MaxExclusive '{1}' "/>
             <Message Id="VALUE_exceed_minIncl" Text="Value '{0}' must be greater than or equal to MinInclusive '{1}' "/>
             <Message Id="VALUE_exceed_minExcl" Text="Value '{0}' must be greater than MinExclusive '{1}' "/>
+            <Message Id="VALUE_WS_replaced" Text="Value '{0}' is not whitespace replaced "/>
+            <Message Id="VALUE_WS_collapsed" Text="Value '{0}' is not whitespace collapsed "/>
             <Message Id="XMLNUM_emptyString" Text=" Empty string encountered."/>
             <Message Id="XMLNUM_WSString" Text=" String contains whitespaces only."/>
             <Message Id="XMLNUM_2ManyDecPoint" Text=" More than one decimal points encountered."/>
