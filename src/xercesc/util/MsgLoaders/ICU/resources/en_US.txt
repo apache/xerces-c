@@ -1,4 +1,4 @@
-en { 
+en_US { 
 
 	 // an array 
 	XMLErrors { 
@@ -298,7 +298,7 @@ en {
 	 // an array 
 	XMLValidity { 
 		"E Start " , 
-		"Unknown element '{0}' " ,
+		"en_US, Unknown element '{0}' " ,
 		"Attribute '{0}' not defined " ,
 		"Notation '{0}' was referenced but never declared " ,
 		"Root element different from DOCTYPE " ,

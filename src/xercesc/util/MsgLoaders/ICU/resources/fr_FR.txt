@@ -1,4 +1,4 @@
-fr { 
+fr_FR { 
 
 	 // an array 
 	XMLErrors { 
@@ -298,7 +298,7 @@ fr {
 	 // an array 
 	XMLValidity { 
 		"E Start " , 
-		"fr, Unknown element '{0}' " ,
+		"fr_FR, Unknown element '{0}' " ,
 		"Attribute '{0}' not defined " ,
 		"Notation '{0}' was referenced but never declared " ,
 		"Root element different from DOCTYPE " ,
