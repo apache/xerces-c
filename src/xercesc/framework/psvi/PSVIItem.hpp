@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/27 17:58:59  neilg
+ * fix compilation error
+ *
  * Revision 1.6  2003/11/27 16:44:59  neilg
  * implement isSpecified; thanks to Pete Lloyd
  *
@@ -342,12 +345,13 @@ inline PSVIItem::VALIDITY_STATE PSVIItem::getValidity() const
 {
     return fValidityState;
 }
-inline PSVIItem::ASSESSMENT_TYPE PSVIItem::getValidationAttempted() const
+
 inline bool PSVIItem::getIsSchemaSpecified() const
 {
     return fIsSpecified;
 }
 
+inline PSVIItem::ASSESSMENT_TYPE PSVIItem::getValidationAttempted() const
 {
     return fAssessmentType;
 }
