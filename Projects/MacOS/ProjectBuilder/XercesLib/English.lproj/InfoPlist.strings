@@ -1,0 +1,6 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleName = "Xerces";
+CFBundleShortVersionString = "XercesLib version 1.3.1d1";
+CFBundleGetInfoString = "XercesLib version 1.3.1d1";
+NSHumanReadableCopyright = "Copyright";
