@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/12/12 14:48:16  tng
+ * More bug fixes in IconvFBSD Transcoder.  By Max Gotlib.
+ *
  * Revision 1.2  2001/12/11 15:10:14  tng
  * More changes to IconvFBSDTransService.  Allow using "old" TransServece implementation (via '-t native' option to runConfigure) or
  * to employ libiconv (it is a part of FreeBSD ports-collection) services.  By Max Gotlib.
@@ -259,11 +262,11 @@ static size_t fbsd_mbstowcs(wchar_t *dest, const char *src, size_t n)
 
 static wint_t fbsd_towupper(wint_t ch)
 {
-    if (ch < 0x7F)
+    if (ch <= 0x7F)
 	return toupper(ch);
     char	buf[16];
     wchar_t	wc = wchar_t(ch);
-    wcstombs(buf, &wc, 1);
+    wcstombs(buf, &wc, 16);
     return toupper(*buf);
 }
 
@@ -348,7 +351,7 @@ void	IconvFBSDCD::xmlChToMbc (XMLCh xch, char *mbc) const
 // Return uppercase equivalent for XMLCh
 XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
 {
-    if (ch < 0x7F)
+    if (ch <= 0x7F)
 	return toupper(ch);
     
     char	wcbuf[fUChSize * 2];
@@ -365,7 +368,7 @@ XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
 	if (::iconv (fCDTo, (const char**) &ptr, &len,
 		     &pTmpArr, &bLen) == (size_t) -1)
 	    return 0;
-	tmpArr[1] = ::toupper (*tmpArr);
+	tmpArr[1] = toupper (*tmpArr);
 	*tmpArr = tmpArr[1]; 
 	len = 1;
 	pTmpArr = wcbuf;
@@ -382,8 +385,8 @@ XMLCh	IconvFBSDCD::toUpper (const XMLCh ch) const
 // Check if passed characters belongs to the :space: class
 bool	IconvFBSDCD::isSpace(const XMLCh toCheck) const
 {
-    if (toCheck < 0x7F)
-	return toupper(toCheck);
+    if (toCheck <= 0x7F)
+	return isspace(toCheck);
     char	wcbuf[fUChSize * 2];
     char	tmpArr[4];
     xmlChToMbc (toCheck, wcbuf);
@@ -655,15 +658,16 @@ int IconvFBSDTransService::compareIString(const XMLCh* const	comp1
 
 #else /* XML_USE_LIBICONV */
 
-    XMLCh	c1 = 0;
-    XMLCh	c2 = 0;
+    XMLCh	c1 = toUpper(*cptr1);
+    XMLCh	c2 = toUpper(*cptr2);
     while ( (*cptr1 != 0) && (*cptr2 != 0) ) {
-	c1 = toUpper(*cptr1);
-	c2 = toUpper(*cptr2);
         if (c1 != c2)
             break;
         cptr1++;
-        cptr2++;
+        cptr2++;  
+	c1 = toUpper(*(++cptr1));
+	c2 = toUpper(*(++cptr2));
+
     }    
     return (int) ( c1 - c2 );
     
@@ -744,11 +748,11 @@ const XMLCh* IconvFBSDTransService::getId() const
 bool IconvFBSDTransService::isSpace(const XMLCh toCheck) const
 {
 #ifndef XML_USE_LIBICONV
-    if (toCheck < 0x7F)
-	return toupper(toCheck);
+    if (toCheck <= 0x7F)
+	return isspace(toCheck);
     char buf[16];
     wchar_t	wc = wchar_t(toCheck);
-    mbstowcs( &wc, buf, 1 );
+    wcstombs( buf, &wc, 16 );
     return (isspace(*buf) != 0);
 #else /* XML_USE_LIBICONV */
     return IconvFBSDCD::isSpace(toCheck);
