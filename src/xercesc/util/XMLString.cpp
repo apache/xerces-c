@@ -1224,11 +1224,13 @@ unsigned int XMLString::hashN(  const   XMLCh* const    tohash
 
 int XMLString::indexOf(const XMLCh* const toSearch, const XMLCh ch)
 {
-    const unsigned int len = stringLen(toSearch);
-    for (unsigned int i = 0; i < len; i++)
+    const XMLCh* srcPtr = toSearch;
+    while (*srcPtr)
     {
-        if (toSearch[i] == ch)
-            return i;
+        if (ch == *srcPtr)
+            return (int)(srcPtr - toSearch);
+
+        srcPtr++;
     }
     return -1;
 }
