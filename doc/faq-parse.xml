@@ -207,22 +207,22 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-	<faq title="Why does my multi-threaded application crash on Solaris?">
-		<q>Why does my multi-threaded application crash on Solaris?</q>
-		<a>
-			<p>The problem appears because the throw call on Solaris 2.6 
-			is not multi-thread safe. Sun Microsystems provides a patch to 
-			solve this problem. To get the latest patch for solving this 
-			problem, go to <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump> 
-			and get the appropriate patch for your operating system. 
-			For Intel machines running Solaris, you need to get Patch ID 104678. 
-			For SPARC machines you need to get Patch ID #105591.</p>
-		</a>
-	</faq>	
-	
-	<faq title="How do I find out what version of &XercesCProjectName; I am using?">
-		<q>How do I find out what version of &XercesCProjectName; I am using?</q>
-		<a>
+    <faq title="Why does my multi-threaded application crash on Solaris?">
+        <q>Why does my multi-threaded application crash on Solaris?</q>
+        <a>
+            <p>The problem appears because the throw call on Solaris 2.6 
+            is not multi-thread safe. Sun Microsystems provides a patch to 
+            solve this problem. To get the latest patch for solving this 
+            problem, go to <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump> 
+            and get the appropriate patch for your operating system. 
+            For Intel machines running Solaris, you need to get Patch ID 104678. 
+            For SPARC machines you need to get Patch ID #105591.</p>
+        </a>
+    </faq>  
+    
+    <faq title="How do I find out what version of &XercesCProjectName; I am using?">
+        <q>How do I find out what version of &XercesCProjectName; I am using?</q>
+        <a>
       <p>The version string for &XercesCProjectName; happens to be in one of
         the source files. Look inside the file
         <code>src/util/XML4CDefs.hpp</code> and find out what the
@@ -378,16 +378,19 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
     </a>
   </faq>
 
-  <faq title="What encodings are supported by &XercesCProjectName;?">
-    <q>What encodings are supported by &XercesCProjectName;?</q>
+  <faq title="What encodings are supported by Xerces-C / XML4C?">
+    <q>What encodings are supported by Xerces-C / XML4C?</q>
     <a>
-      <p>&XercesCProjectName; uses a subset of IBM's International Classes for 
-	  Unicode (ICU) for encoding &amp; Unicode support. &XercesCFullName; is 
-	  Unicode 3.0 compliant. Please note that <em>these encodings are supported 
-	  only if you build &XercesCName; with ICU library</em>, not as a 
-	  standalone library using native encoding support.</p>
 
-      <p>Besides ASCII, the following encodings are currrently supported:</p>
+      <p>Xerces-C uses has intrinsic support for ASCII, UTF-8, UTF-16
+      (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC-US and
+      ISO-8859-1 (aka Latin1) encodings. This means that it can parse
+      input XML files in these above mentioned encodings.</p>
+
+      <p>XML4C uses IBM's International Components for Unicode (ICU)
+      for encoding &amp; Unicode support. ICU (1.4.0 and higher) is
+      Unicode 3.0 compliant. ICU supports over 100 different encodings,
+      of which some of them are listed below:</p>
 
       <table>
         <tr><td><em>Common Name</em></td><td><em>Use this MIME/IANA name in XML</em></td></tr>
@@ -428,8 +431,8 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
         <tr><td>Korean: iso-2022-kr</td><td>iso-2022-kr</td></tr>
         <tr><td>Cyrillic</td><td>koi8-r</td></tr>
       </table>
-			
-	<!-- <ul>
+            
+    <!-- <ul>
         <li>UTF-8</li>
         <li>UTF-16 Big Endian, UTF-16 Little Endian</li>
         <li>IBM-1208</li>
@@ -665,10 +668,10 @@ e:\>domcount file:://localhost/d:/abc.xml</source>
     and ibm-970
 
   </p>
-	-->
+    -->
 
-</a>
-</faq>
+    </a>
+  </faq>
 
 </faqs>
 

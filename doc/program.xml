@@ -2,7 +2,36 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Programming Guide">
+
+  <p>This page has sections on the following topics:</p>
+  <ul>
+    <li><link anchor="SAXProgGuide">SAX Programming Guide</link></li>
+    <ul>
+      <li><link anchor="ConstructParser">Constructing a parser</link></li>
+      <li><link anchor="UsingSAXAPI">Using the SAX API</link></li>
+    </ul>
+    <li><link anchor="DOMProgGuide">DOM Programming Guide</link></li>
+    <ul>
+      <li><link anchor="JAVAandCPP">Comparision of Java and C++ DOM's</link></li>
+      <ul>
+        <li><link anchor="AccessAPI">Accessing the API from application code</link></li>
+        <li><link anchor="ClassNames">Class Names</link></li>
+        <li><link anchor="ObjMemMgmt">Objects and Memory Management</link></li>
+      </ul>
+      <li><link anchor="DOMString">DOMString</link></li>
+      <ul>
+        <li><link anchor="EqualityTesting">Equality Testing</link></li>
+      </ul>
+      <li><link anchor="Downcasting">Downcasting</link></li>
+      <li><link anchor="Subclassing">Subclassing</link></li>
+    </ul>
+  </ul>
+
+
+  <anchor name="SAXProgGuide"/>
   <s2 title="SAX Programming Guide">
+
+    <anchor name="ConstructParser"/>
     <s3 title="Constructing a parser">
       <p>In order to use &XercesCName; to parse XML files, you will
         need to create an instance of the SAXParser class. The example
@@ -44,6 +73,8 @@ int main (int argc, char* args[]) {
 }
         ]]></source>
     </s3>
+
+    <anchor name="UsingSAXAPI"/>
     <s3 title="Using the SAX API">
       <p>The SAX API for XML parsers was originally developed for
         Java.  Please be aware that there is no standard SAX API for
@@ -120,7 +151,11 @@ MySAXHandler::fatalError(const SAXParseException& exception)
     </s3>
   </s2>
 
+
+  <anchor name="DOMProgGuide"/>
   <s2 title="DOM Programming Guide">
+
+    <anchor name="JAVAandCPP"/>
     <s3 title="Java and C++ DOM comparisons">
       <p>The C++ DOM API is very similar in design and use, to the
         Java DOM API bindings. As a consequence, conversion of
@@ -132,6 +167,7 @@ MySAXHandler::fatalError(const SAXParseException& exception)
       </p>
     </s3>
 
+    <anchor name="AccessAPI"/>
     <s3 title="Accessing the API from application code">
 
 <source><![CDATA[
@@ -148,6 +184,7 @@ import org.w3c.dom.*]]></source>
     </s3>
 
 
+    <anchor name="ClassNames"/>
     <s3 title="Class Names">
       <p>The C++ class names are prefixed with "DOM_". The intent is
         to prevent conflicts between DOM class names and other names
@@ -183,6 +220,7 @@ Node       aNode;]]></source>
     </s3>
 
 
+    <anchor name="ObjMemMgmt"/>
     <s3 title="Objects and Memory Management">
       <p>The C++ DOM implementation uses automatic memory management,
         implemented using reference counting.  As a result, the C++
@@ -264,6 +302,7 @@ docRootNode.AppendChild(aNode);]]></source>
 
     </s3>
 
+    <anchor name="DOMString"/>
     <s3 title="DOMString">
       <p>Class DOMString provides the mechanism for passing string
         data to and from the DOM API. DOMString is not intended to be
@@ -303,6 +342,7 @@ docRootNode.AppendChild(aNode);]]></source>
 
     </s3>
 
+    <anchor name="EqualityTesting"/>
     <s3 title="Equality Testing">
       <p>The DOMString equality operators (and all of the rest of the
         DOM class conventions) are modeled after the Java
@@ -338,6 +378,7 @@ if (a.equals(c))      // false.  a is "Hello World";
         ]]></source>
     </s3>
 
+    <anchor name="Downcasting"/>
     <s3 title="Downcasting">
       <p>Application code sometimes must cast an object reference from
         DOM_Node to one of the classes deriving from DOM_Node,
@@ -372,6 +413,7 @@ else
 
     </s3>
 
+    <anchor name="Subclassing"/>
     <s3 title="Subclassing">
       <p>The C++ DOM classes, DOM_Node, DOM_Attr, DOM_Document, etc.,
         are not designed to be subclassed by an application

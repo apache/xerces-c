@@ -10,25 +10,27 @@
   <document id="build"       label="Build"        source="build.xml"      />
   
   <separator/>
+  <external href="http://&XercesDistDir;/"     label="Downloads"    />
+  <separator/>
   <document id="api"         label="API Docs"     source="apidocs.xml"    />
   <document id="samples"     label="Samples"      source="samples.xml"    />
-  			<hidden id="saxcount"	source="saxcount.xml"/>
-  			<hidden id="saxprint"	source="saxprint.xml"/>
-  			<hidden id="domcount"	source="domcount.xml"/>
-  			<hidden id="domprint"	source="domprint.xml"/>
-  			<hidden id="memparse"	source="memparse.xml"/>
-  			<hidden id="redirect"	source="redirect.xml"/>
-  			<hidden id="pparse"		source="pparse.xml"/>
-  			<hidden id="stdinparse"	source="stdinparse.xml"/>
-  			<hidden id="enumval"	source="enumval.xml"/>
-  			<hidden id="createdoc"	source="createdoc.xml"/>
-			
+            <hidden id="saxcount"   source="saxcount.xml"/>
+            <hidden id="saxprint"   source="saxprint.xml"/>
+            <hidden id="domcount"   source="domcount.xml"/>
+            <hidden id="domprint"   source="domprint.xml"/>
+            <hidden id="memparse"   source="memparse.xml"/>
+            <hidden id="redirect"   source="redirect.xml"/>
+            <hidden id="pparse"     source="pparse.xml"/>
+            <hidden id="stdinparse" source="stdinparse.xml"/>
+            <hidden id="enumval"    source="enumval.xml"/>
+            <hidden id="createdoc"  source="createdoc.xml"/>
+            
   <document id="program"     label="Programming"  source="program.xml"    />
   
   <group    id="faqs"        label="FAQs">
     <entry  id="faq-distrib"                      source="faq-distrib.xml"/>
     <entry  id="faq-parse"                        source="faq-parse.xml"  />
-    <entry  id="faq-migrate"                      source="faq-migrate.xml" />
+    <entry  id="faq-migrate"                      source="faq-migrate.xml"/>
     <entry  id="faq-other"                        source="faq-other.xml"  />
   </group>
   
