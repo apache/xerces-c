@@ -118,7 +118,8 @@ const XMLByte        XMLRecognizer::fgUCS4LPre[]  =
 };
 const unsigned int   XMLRecognizer::fgUCS4PreLen = 24;
 
-
+const char           XMLRecognizer::fgUTF8BOM[] = {(char)0xEF, (char)0xBB, (char)0xBF};
+const unsigned int   XMLRecognizer::fgUTF8BOMLen = 3;
 
 // ---------------------------------------------------------------------------
 //  XMLRecognizer: Encoding recognition methods

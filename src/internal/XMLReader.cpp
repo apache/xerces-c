@@ -1331,11 +1331,24 @@ void XMLReader::doInitDecode()
             break;
         }
 
-        case XMLRecognizer::US_ASCII :
         case XMLRecognizer::UTF_8 :
         {
+            // If there's a utf-8 BOM  (0xEF 0xBB 0xBF), skip past it.
+            //   Don't move to char buf - no one wants to see it.
+            //   Note: this causes any encoding= declaration to override
+            //         the BOM's attempt to say that the encoding is utf-8.
+ 
             // Look at the raw buffer as short chars
             const char* asChars = (const char*)fRawByteBuf;
+
+            if (fRawBytesAvail > XMLRecognizer::fgUTF8BOMLen &&
+                XMLString::compareNString(  asChars
+                                            , XMLRecognizer::fgUTF8BOM
+                                            , XMLRecognizer::fgUTF8BOMLen) == 0)
+            {
+                fRawBufIndex += XMLRecognizer::fgUTF8BOMLen;
+                asChars      += XMLRecognizer::fgUTF8BOMLen;
+            }
 
             //
             //  First check that there are enough bytes to even see the

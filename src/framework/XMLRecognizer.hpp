@@ -55,29 +55,7 @@
  */
 
 /*
- *  $Log$
- *  Revision 1.6  2000/02/24 20:00:23  abagchi
- *  Swat for removing Log from API docs
- *
- *  Revision 1.5  2000/02/15 01:21:31  roddey
- *  Some initial documentation improvements. More to come...
- *
- *  Revision 1.4  2000/02/06 07:47:48  rahulj
- *  Year 2K copyright swat.
- *
- *  Revision 1.3  1999/12/18 00:19:03  roddey
- *  More changes to support the new, completely orthagonal, support for
- *  intrinsic encodings.
- *
- *  Revision 1.2  1999/11/23 01:49:27  rahulj
- *  Cannot use class qualifier in class defn. CC under HPUX is happy.
- *
- *  Revision 1.1.1.1  1999/11/09 01:08:37  twl
- *  Initial checkin
- *
- *  Revision 1.2  1999/11/08 20:44:40  rahul
- *  Swat for adding in Product name and CVS comment log variable.
- *
+ *  $Id$
  */
 
 #if !defined(XMLRECOGNIZER_HPP)
@@ -154,6 +132,8 @@ public :
     static const XMLByte        fgUCS4BPre[];
     static const XMLByte        fgUCS4LPre[];
     static const unsigned int   fgUCS4PreLen;
+    static const char           fgUTF8BOM[];
+    static const unsigned int   fgUTF8BOMLen;
 
 
     // -----------------------------------------------------------------------
