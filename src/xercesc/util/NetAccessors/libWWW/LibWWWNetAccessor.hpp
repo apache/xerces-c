@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2004/05/11 13:39:35  amassari
+ * The net accessor input source now can be used to get data using PUT or POST, as well as GET
+ *
  * Revision 1.3  2003/03/07 18:15:50  tng
  * Return a reference instead of void for operator=
  *
@@ -119,7 +122,7 @@ public :
     LibWWWNetAccessor();
     ~LibWWWNetAccessor();
 
-    BinInputStream* makeNew(const XMLURL&  urlSource);
+    BinInputStream* makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     const XMLCh* getId() const;
 
 private :

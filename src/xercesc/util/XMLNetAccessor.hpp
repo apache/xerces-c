@@ -68,6 +68,53 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class BinInputStream;
 
+//  This class holds advanced informations about the HTTP connection
+class XMLUTIL_EXPORT XMLNetHTTPInfo
+{
+public:
+    XMLNetHTTPInfo();
+
+    typedef enum {
+        GET,
+        PUT,
+        POST,
+    } HTTPMethod;
+
+    // -----------------------------------------------------------------------
+    //  Data members
+    //
+    //  fHTTPMethod
+    //      The type of the HTTP request
+    //
+    //  fHeaders
+    //      The extra headers that will be sent as part of the request; the format is
+    //      Header1: Value\r\nHeader2: Value\r\n
+    //
+    //  fHeadersLen
+    //      The length of the string pointed by fHeaders, in bytes
+    //
+    //  fPayload
+    //      The extra data that will be sent after the headers; in the case of a PUT
+    //      operation, this is the content of the resource being posted. It can be binary data
+    //
+    //  fPayloadLen
+    //      The length of the binary buffer pointed by fPayload, in bytes
+    //
+    HTTPMethod      fHTTPMethod;
+    const char*     fHeaders;
+    int             fHeadersLen;
+    const char*     fPayload;
+    int             fPayloadLen;
+};
+
+inline XMLNetHTTPInfo::XMLNetHTTPInfo()
+:fHTTPMethod(XMLNetHTTPInfo::GET),
+ fHeaders(0),
+ fHeadersLen(0),
+ fPayload(0),
+ fPayloadLen(0)
+{
+}
 
 
 //
@@ -101,7 +148,8 @@ public :
 
     virtual BinInputStream* makeNew
     (
-        const   XMLURL&                 urlSrc
+        const   XMLURL&                 urlSrc,
+        const   XMLNetHTTPInfo*         httpInfo=0
     ) = 0;
 
 

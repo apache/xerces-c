@@ -88,7 +88,7 @@ SocketNetAccessor::~SocketNetAccessor()
 }
 
 
-BinInputStream* SocketNetAccessor::makeNew(const XMLURL&  urlSource)
+BinInputStream* SocketNetAccessor::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
 {
     XMLURL::Protocols  protocol = urlSource.getProtocol();
     switch(protocol)
@@ -96,7 +96,7 @@ BinInputStream* SocketNetAccessor::makeNew(const XMLURL&  urlSource)
         case XMLURL::HTTP:
         {
             UnixHTTPURLInputStream* retStrm =
-                new (urlSource.getMemoryManager()) UnixHTTPURLInputStream(urlSource);
+                new (urlSource.getMemoryManager()) UnixHTTPURLInputStream(urlSource, httpInfo);
             return retStrm;            
         }
 

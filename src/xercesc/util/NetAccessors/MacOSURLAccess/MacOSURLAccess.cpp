@@ -95,8 +95,10 @@ MacOSURLAccess::~MacOSURLAccess()
 
 
 BinInputStream*
-MacOSURLAccess::makeNew(const XMLURL&  urlSource)
+MacOSURLAccess::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
 {
+	if(httpInfo!=0 && httpInfo->fHTTPMethod!=XMLNetHTTPInfo::GET)
+		ThrowXML(NetAccessorException, XMLExcepts::NetAcc_UnsupportedMethod);
 	//	We just go ahead and try to create a URLAccess stream
 	//	from this source. That's the correct place to verify
 	//	whether or not we can really handle this URL type...

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/05/11 13:39:35  amassari
+ * The net accessor input source now can be used to get data using PUT or POST, as well as GET
+ *
  * Revision 1.16  2004/02/11 12:42:22  cargilld
  * Fix for bug 25541.
  *
@@ -165,7 +168,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
+UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
       : fSocket(0)
       , fBytesProcessed(0)
       , fMemoryManager(urlSource.getMemoryManager())
@@ -180,6 +183,16 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         chLatin_G, chLatin_E, chLatin_T, chSpace, chNull
     };
 
+    const char PUT[] =
+    {
+        chLatin_P, chLatin_U, chLatin_T, chSpace, chNull
+    };
+
+    const char POST[] =
+    {
+        chLatin_P, chLatin_O, chLatin_S, chLatin_T, chSpace, chNull
+    };
+
     const char HTTP[] =
     {
         chLatin_H, chLatin_T, chLatin_T, chLatin_P, chNull
@@ -188,6 +201,11 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     const char HTTP10[] =
     {
         chSpace, chLatin_H, chLatin_T, chLatin_T, chLatin_P, chForwardSlash, chDigit_1, chPeriod, chDigit_0, chCR, chLF, chNull
+    };
+
+    const char CRLF[] =
+    {
+        chCR, chLF, chNull
     };
 
     const char CRLF2X[] =
@@ -353,14 +371,22 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     // Build up the http GET command to send to the server.
     // To do:  We should really support http 1.1.  This implementation
     //         is weak.
-    strcpy(fBuffer, GET);
+    if(httpInfo==0)
+      strcpy(fBuffer, GET);
+    else
+      switch(httpInfo->fHTTPMethod)
+      {
+        case XMLNetHTTPInfo::GET:   strcpy(fBuffer, GET); break;
+        case XMLNetHTTPInfo::PUT:   strcpy(fBuffer, PUT); break;
+        case XMLNetHTTPInfo::POST:  strcpy(fBuffer, POST); break;
+      }
     if (pathAsASCII != 0)
     {
          strcat(fBuffer, pathAsASCII);
     }
 
     if (queryAsASCII != 0)
-    {		
+    {
         size_t n = strlen(fBuffer);
         fBuffer[n] = chQuestion;
         fBuffer[n+1] = chNull;
@@ -380,7 +406,12 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         strcat(fBuffer,COLON);
         strcat(fBuffer,portAsASCII);
     }
-    strcat(fBuffer, CRLF2X);
+    strcat(fBuffer, CRLF);
+
+    if(httpInfo!=0 && httpInfo->fHeaders!=0)
+        strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
+
+    strcat(fBuffer, CRLF);
 
     // Send the http request
     int lent = strlen(fBuffer);
@@ -390,6 +421,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     {
         ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+    }
+
+    if(httpInfo!=0 && httpInfo->fPayload!=0) {
+        int  aLent = 0;
+        if ((aLent = write(s, (void *) httpInfo->fPayload, httpInfo->fPayloadLen)) != httpInfo->fPayloadLen)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+        }
     }
 
     //

@@ -92,7 +92,7 @@ WinSockNetAccessor::~WinSockNetAccessor()
 }
 
 
-BinInputStream* WinSockNetAccessor::makeNew(const XMLURL&  urlSource)
+BinInputStream* WinSockNetAccessor::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo /*=0*/)
 {
     XMLURL::Protocols  protocol = urlSource.getProtocol();
     switch(protocol)
@@ -100,7 +100,7 @@ BinInputStream* WinSockNetAccessor::makeNew(const XMLURL&  urlSource)
         case XMLURL::HTTP:
         {
             BinHTTPURLInputStream* retStrm =
-                new (urlSource.getMemoryManager()) BinHTTPURLInputStream(urlSource);
+                new (urlSource.getMemoryManager()) BinHTTPURLInputStream(urlSource, httpInfo);
             return retStrm;
             break;
         }

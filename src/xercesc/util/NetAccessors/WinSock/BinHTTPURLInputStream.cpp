@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/05/11 13:39:35  amassari
+ * The net accessor input source now can be used to get data using PUT or POST, as well as GET
+ *
  * Revision 1.7  2003/12/17 13:58:02  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -296,7 +299,7 @@ int BinHTTPURLInputStream::closesocket(unsigned int socket)
 }
 
 
-BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
+BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo /*=0*/)
       : fSocketHandle(0)
       , fBytesProcessed(0)
 {
@@ -402,7 +405,15 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
 
     memset(fBuffer, 0, sizeof(fBuffer));
 
-    strcpy(fBuffer, "GET ");
+    if(httpInfo==0)
+        strcpy(fBuffer, "GET ");
+    else {
+        switch(httpInfo->fHTTPMethod) {
+        case XMLNetHTTPInfo::GET:   strcpy(fBuffer, "GET "); break;
+        case XMLNetHTTPInfo::PUT:   strcpy(fBuffer, "PUT "); break;
+        case XMLNetHTTPInfo::POST:  strcpy(fBuffer, "POST "); break;
+        }
+    }
     strcat(fBuffer, pathAsCharStar);
 
     if (queryAsCharStar != 0)
@@ -427,7 +438,12 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
         int i = strlen(fBuffer);
         _itoa(portNumber, fBuffer+i, 10);
     }
-    strcat(fBuffer, "\r\n\r\n");
+    strcat(fBuffer, "\r\n");
+
+    if(httpInfo!=0 && httpInfo->fHeaders!=0)
+        strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
+
+    strcat(fBuffer, "\r\n");
 
     // Send the http request
     int lent = strlen(fBuffer);
@@ -439,6 +455,15 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
                  XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
     }
 
+    if(httpInfo!=0 && httpInfo->fPayload!=0) {
+        int  aLent = 0;
+        if ((aLent = send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
+        {
+            // Call WSAGetLastError() to get the error number.
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+        }
+    }
 
     //
     // get the response, check the http header for errors from the server.

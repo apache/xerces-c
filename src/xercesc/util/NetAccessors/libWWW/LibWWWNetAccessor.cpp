@@ -106,13 +106,15 @@ LibWWWNetAccessor::~LibWWWNetAccessor()
 }
 
 
-BinInputStream* LibWWWNetAccessor::makeNew(const XMLURL&  urlSource)
+BinInputStream* LibWWWNetAccessor::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
 {
     XMLURL::Protocols  protocol = urlSource.getProtocol();
     switch(protocol)
     {
         case XMLURL::HTTP:
         {
+            if(httpInfo!=0 && httpInfo->fHTTPMethod!=XMLNetHTTPInfo::GET)
+                ThrowXML(NetAccessorException, XMLExcepts::NetAcc_UnsupportedMethod);
             BinURLInputStream* retStrm =
                 new (urlSource.getMemoryManager()) BinURLInputStream(urlSource);
             return retStrm;

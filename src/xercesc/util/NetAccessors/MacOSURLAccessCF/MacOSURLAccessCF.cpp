@@ -92,8 +92,10 @@ MacOSURLAccessCF::~MacOSURLAccessCF()
 
 
 BinInputStream*
-MacOSURLAccessCF::makeNew(const XMLURL&  urlSource)
+MacOSURLAccessCF::makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
 {
+	if(httpInfo!=0 && httpInfo->fHTTPMethod!=XMLNetHTTPInfo::GET)
+		ThrowXML(NetAccessorException, XMLExcepts::NetAcc_UnsupportedMethod);
 	BinInputStream* result = new (urlSource.getMemoryManager()) URLAccessCFBinInputStream(urlSource);
 	return result;
 }

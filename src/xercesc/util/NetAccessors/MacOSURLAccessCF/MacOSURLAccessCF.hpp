@@ -86,7 +86,7 @@ public :
     MacOSURLAccessCF();
     ~MacOSURLAccessCF();
 
-    BinInputStream* makeNew(const XMLURL&  urlSource);
+    BinInputStream* makeNew(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     const XMLCh* getId() const;
 
 private :

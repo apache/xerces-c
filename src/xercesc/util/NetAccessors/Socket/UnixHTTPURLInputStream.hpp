@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/05/11 13:39:35  amassari
+ * The net accessor input source now can be used to get data using PUT or POST, as well as GET
+ *
  * Revision 1.6  2004/01/29 11:51:20  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -101,6 +104,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/util/XMLNetAccessor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -112,7 +116,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XMLUTIL_EXPORT UnixHTTPURLInputStream : public BinInputStream
 {
 public :
-    UnixHTTPURLInputStream(const XMLURL&  urlSource);
+    UnixHTTPURLInputStream(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     ~UnixHTTPURLInputStream();
 
     unsigned int curPos() const;
