@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 6: Redirect">
+<s1 title="Sample: Redirect">
 
     <s2 title="Redirect">
         <p>Redirect uses the SAX EntityResolver handler to redirect the

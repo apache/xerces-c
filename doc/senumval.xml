@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 9: SEnumVal">
+<s1 title="Sample: SEnumVal">
 
     <s2 title="SEnumVal">
         <p>SEnumVal shows how to enumerate the markup decls in a Schema Grammar.</p>

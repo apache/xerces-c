@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 7: PParse">
+<s1 title="Sample: PParse">
 
     <s2 title="PParse">
         <p>PParse demonstrates progressive parsing.</p>

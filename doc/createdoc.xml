@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 10: CreateDOMDocument">
+<s1 title="Sample: CreateDOMDocument">
 
     <s2 title="CreateDOMDocument">
         <p> CreateDOMDocument, illustrates how you can create a DOM tree in

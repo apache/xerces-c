@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 12: SAX2Print">
+<s1 title="Sample: SAX2Print">
 
     <s2 title="SAX2Print">
         <p>SAX2Print uses the SAX2 APIs to parse an XML file and print

@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 5: MemParse">
+<s1 title="Sample: MemParse">
 
     <s2 title="MemParse">
         <p>MemParse uses the Validating SAX Parser to parse a memory buffer containing
