@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.43  2003/11/10 17:52:58  amassari
+ * Fixed memory leak
+ *
  * Revision 1.42  2003/10/01 16:32:37  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -701,7 +704,7 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
     }
 
     fEncoding = tempEncoding;
-    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer()) : 0);
+    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), fMemoryManager) : 0);
 }
 
 void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
