@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/07/11 18:22:13  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.7  2002/06/17 16:13:01  tng
  * DOM L3: Add the flag fNormalizeData so that datatype normalization defined by schema is done only if asked.
  *
@@ -389,16 +392,6 @@ public :
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
     int getErrorCount();
-    const DTDEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    )   const;
-
-    DTDEntityDecl* getEntityDecl
-    (
-        const   XMLCh* const    entName
-    );
-    NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
     NameIdPool<DTDEntityDecl>* getEntityDeclPool();
     const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const;
     const XMLStringPool* getURIStringPool() const;
@@ -408,6 +401,9 @@ public :
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
     bool getLoadExternalDTD() const;
     bool getNormalizeData() const;
+    bool isCachingGrammarFromParse() const;
+    bool isUsingCachedGrammarInParse() const;
+    Grammar* getRootGrammar() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -479,6 +475,8 @@ public :
         , const ElemStack::MapModes mode
     );
 
+    Grammar* getGrammar(const XMLCh* const nameSpaceKey);
+
     /* tell if the validator comes from user */
     bool isValidatorFromUser();
 
@@ -499,6 +497,8 @@ public :
     void setDoSchema(const bool doSchema);
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
     void setHasNoDTD(const bool hasNoDTD);
+    void cacheGrammarFromParse(const bool newValue);
+    void useCachedGrammarInParse(const bool newValue);
     void setRootElemName(XMLCh* rootElemName);
     void setExternalSchemaLocation(const XMLCh* const schemaLocation);
     void setExternalNoNamespaceSchemaLocation(const XMLCh* const noNamespaceSchemaLocation);
@@ -529,36 +529,30 @@ public :
     void scanDocument
     (
         const   InputSource&    src
-        , const bool            reuseGrammar = false
     );
     void scanDocument
     (
         const   XMLCh* const    systemId
-        , const bool            reuseGrammar = false
     );
     void scanDocument
     (
         const   char* const     systemId
-        , const bool            reuseGrammar = false
     );
 
     bool scanFirst
     (
         const   InputSource&    src
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
     bool scanFirst
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
     bool scanFirst
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     bool scanNext(XMLPScanToken& toFill);
@@ -566,6 +560,33 @@ public :
     void scanReset(XMLPScanToken& toFill);
 
     bool checkXMLDecl(bool startWithAngle);
+
+    // -----------------------------------------------------------------------
+    //  Grammar preparsing methods
+    // -----------------------------------------------------------------------
+    Grammar* loadGrammar
+    (
+        const   InputSource&    src
+        , const short           grammarType
+        , const bool            toCache = false
+    );
+    Grammar* loadGrammar
+    (
+        const   XMLCh* const    systemId
+        , const short           grammarType
+        , const bool            toCache = false
+    );
+    Grammar* loadGrammar
+    (
+        const   char* const     systemId
+        , const short           grammarType
+        , const bool            toCache = false
+    );
+
+    // -----------------------------------------------------------------------
+    //  Reset pool of cached grammars
+    // -----------------------------------------------------------------------
+    void resetCachedGrammarPool();
 
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
@@ -588,8 +609,8 @@ private :
     // -----------------------------------------------------------------------
     void commonInit();
     void initValidator(XMLValidator* theValidator);
-    void resetEntityDeclPool();
     void resetURIStringPool();
+    InputSource* resolveSystemId(const XMLCh* const sysId); // return owned by caller
 
 
     // -----------------------------------------------------------------------
@@ -642,7 +663,6 @@ private :
     void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
-    bool switchGrammar(unsigned int newGrammarNameSpaceIndex);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,
@@ -708,6 +728,12 @@ private :
     //  IdentityConstraints Activation methods
     // -----------------------------------------------------------------------
     void activateSelectorFor(IdentityConstraint* const ic);
+
+    // -----------------------------------------------------------------------
+    //  Grammar preparsing methods
+    // -----------------------------------------------------------------------
+    Grammar* loadXMLSchemaGrammar(const InputSource& src, const bool toCache = false);
+    Grammar* loadDTDGrammar(const InputSource& src, const bool toCache = false);
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -781,13 +807,6 @@ private :
     //      manages the reader stack for us, and provides a lot of convenience
     //      methods to do specialized checking for chars, sequences of chars,
     //      skipping chars, etc...
-    //
-    //  fReuseGrammar
-    //      This flag is set on a per-scan basis. So its provided in the
-    //      scanDocument() and scanFirst() methods, and applies for that
-    //      one pass. It indicates if the Grammar should be reused or not.
-    //      If so, then all the Grammar will be ignored.
-    //      There cannot be any internal subset.
     //
     //  fScannerId
     //  fSequenceId
@@ -878,19 +897,20 @@ private :
     //      wildcard validation
     //
     //  fGrammarResolver
-    //      Grammar Pool that stores all the Grammar
+    //      Grammar Pool that stores all the grammars. Key is namespace for
+    //      schema and system id for external DTD. When caching a grammar, if
+    //      a grammar is already in the pool, it will be replaced with the
+    //      new parsed one.
     //
     //  fGrammar
     //      Current Grammar used by the Scanner and Validator
     //
+    //  fRootGrammar
+    //      The grammar where the root element is declared.
+    //
     //  fGrammarType
     //      Current Grammar Type.  Store this value instead of calling getGrammarType
     //      all the time for faster performance.
-    //
-    //  fEntityDeclPool
-    //      This is a pool of EntityDecl objects, which contains all of the
-    //      general entities that are declared in the DTD subsets, plus the
-    //      default entities (such as &gt; &lt; ...) defined by the XML Standard.
     //
     //  fURIStringPool
     //      This is a pool for URIs with unique ids assigned. We use a standard
@@ -935,7 +955,6 @@ private :
     bool                        fExitOnFirstFatal;
     bool                        fValidationConstraintFatal;
     bool                        fInException;
-    bool                        fReuseGrammar;
     bool                        fStandalone;
     bool                        fHasNoDTD;
     bool                        fValidate;
@@ -943,6 +962,8 @@ private :
     bool                        fDoSchema;
     bool                        fSchemaFullChecking;
     bool                        fSeeXsi;
+    bool                        fToCacheGrammar;
+    bool                        fUseCachedGrammar;
     int                         fErrorCount;
     unsigned int                fEmptyNamespaceId;
     unsigned int                fUnknownNamespaceId;
@@ -977,8 +998,9 @@ private :
     XMLBuffer                   fURIBuf;
     GrammarResolver*            fGrammarResolver;
     Grammar*                    fGrammar;
+    Grammar*                    fRootGrammar;
+    DTDGrammar*                 fDTDGrammar;
     Grammar::GrammarType        fGrammarType;
-    NameIdPool<DTDEntityDecl>*  fEntityDeclPool;
     XMLStringPool*              fURIStringPool;
     XPathMatcherStack*          fMatcherStack;
     ValueStoreCache*            fValueStoreCache;
@@ -1140,30 +1162,14 @@ inline unsigned int XMLScanner::getXMLNSNamespaceId() const
     return fXMLNSNamespaceId;
 }
 
-inline NameIdPoolEnumerator<DTDEntityDecl>
-XMLScanner::getEntityEnumerator() const
-{
-    return NameIdPoolEnumerator<DTDEntityDecl>(fEntityDeclPool);
-}
-
-inline const DTDEntityDecl* XMLScanner::getEntityDecl(const  XMLCh* const    entName) const
-{
-    return fEntityDeclPool->getByKey(entName);
-}
-
-inline DTDEntityDecl* XMLScanner::getEntityDecl(const XMLCh* const entName)
-{
-    return fEntityDeclPool->getByKey(entName);
-}
-
 inline NameIdPool<DTDEntityDecl>* XMLScanner::getEntityDeclPool()
 {
-    return fEntityDeclPool;
+    return fDTDGrammar->getEntityDeclPool();
 }
 
 inline const NameIdPool<DTDEntityDecl>* XMLScanner::getEntityDeclPool() const
 {
-    return fEntityDeclPool;
+    return fDTDGrammar->getEntityDeclPool();
 }
 
 inline const XMLStringPool* XMLScanner::getURIStringPool() const
@@ -1199,6 +1205,26 @@ inline bool XMLScanner::getLoadExternalDTD() const
 inline bool XMLScanner::getNormalizeData() const
 {
     return fNormalizeData;
+}
+
+inline bool XMLScanner::isCachingGrammarFromParse() const
+{
+    return fToCacheGrammar;
+}
+
+inline bool XMLScanner::isUsingCachedGrammarInParse() const
+{
+    return fUseCachedGrammar;
+}
+
+inline Grammar* XMLScanner::getRootGrammar() const
+{
+    return fRootGrammar;
+}
+
+inline Grammar* XMLScanner::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return fGrammarResolver->getGrammar(nameSpaceKey);
 }
 
 // ---------------------------------------------------------------------------
@@ -1328,6 +1354,16 @@ inline void XMLScanner::setLoadExternalDTD(const bool loadDTD)
 inline void XMLScanner::setNormalizeData(const bool normalizeData)
 {
     fNormalizeData = normalizeData;
+}
+
+inline void XMLScanner::cacheGrammarFromParse(const bool newValue)
+{
+    fToCacheGrammar = newValue;
+}
+
+inline void XMLScanner::useCachedGrammarInParse(const bool newValue)
+{
+    fUseCachedGrammar = newValue;
 }
 
 

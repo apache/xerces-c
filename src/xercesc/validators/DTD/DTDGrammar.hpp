@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/11 18:19:28  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.2  2002/07/05 17:08:10  tng
  * [Bug 10119] Grammar::getGrammarType need a const modifier
  *
@@ -89,6 +92,7 @@
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
+#include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 
 //
 // This class stores the DTD information
@@ -169,6 +173,8 @@ public:
         const   XMLCh* const    notName
     );
 
+    virtual bool getValidated() const;
+
     virtual XMLElementDecl* putElemDecl
     (
         const   unsigned int    uriId
@@ -176,11 +182,13 @@ public:
         , const XMLCh* const    prefixName
         , const XMLCh* const    qName
         , unsigned int          scope
+        , const bool            notDeclared = false
     );
 
     virtual unsigned int putElemDecl
     (
         XMLElementDecl* const elemDecl
+        , const bool          notDeclared = false
     )   const;
 
     virtual unsigned int putNotationDecl
@@ -188,30 +196,55 @@ public:
         XMLNotationDecl* const notationDecl
     )   const;
 
+    virtual void setValidated(const bool newState);
+
     virtual void reset();
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     unsigned int getRootElemId();
+    const DTDEntityDecl* getEntityDecl(const XMLCh* const entName) const;
+    DTDEntityDecl* getEntityDecl(const XMLCh* const entName);
+    NameIdPool<DTDEntityDecl>* getEntityDeclPool();
+    const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const;
     NameIdPoolEnumerator<DTDElementDecl> getElemEnumerator() const;
+    NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
     NameIdPoolEnumerator<XMLNotationDecl> getNotationEnumerator() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setRootElemId(unsigned int rootElemId);
+    
+    // -----------------------------------------------------------------------
+    //  Content management methods
+    // -----------------------------------------------------------------------
+    unsigned int putEntityDecl(DTDEntityDecl* const entityDecl) const;    
 
 private:
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void resetEntityDeclPool();
+
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fElemDeclPool
     //      This is the element decl pool. It contains all of the elements
-    //      declared in the DTD (and their associated attributes.) When in
-    //      non-validating mode, its just populated as new elements are seen
-    //      and they are given default characteristics.
+    //      declared in the DTD (and their associated attributes.)
+    //
+    //  fElemNonDeclPool
+    //      This is the element decl pool that is is populated as new elements
+    //      are seen in the XML document (not declared in the DTD), and they
+    //      are given default characteristics.
+    //
+    //  fEntityDeclPool
+    //      This is a pool of EntityDecl objects, which contains all of the
+    //      general entities that are declared in the DTD subsets, plus the
+    //      default entities (such as &gt; &lt; ...) defined by the XML Standard.
     //
     //  fNotationDeclPool
     //      This is a pool of NotationDecl objects, which contains all of the
@@ -221,10 +254,18 @@ private:
     //      The id of the root element that we found in the DOCTYPE statement.
     //      Its initialized to ContentModel::fgInvalidElemId, so that its
     //      invalid unless we have a DOCTYPE.
+    //
+    //  fValidated
+    //      Indicates if the content of the Grammar has been pre-validated
+    //      or not. When using a cached grammar, no need for pre content
+    //      validation.
     // -----------------------------------------------------------------------
     NameIdPool<DTDElementDecl>*     fElemDeclPool;
+    NameIdPool<DTDElementDecl>*     fElemNonDeclPool;
+    NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
     NameIdPool<XMLNotationDecl>*    fNotationDeclPool;
     unsigned int                    fRootElemId;
+    bool                            fValidated;                  
 };
 
 
@@ -245,10 +286,38 @@ DTDGrammar::getElemEnumerator() const
     return NameIdPoolEnumerator<DTDElementDecl>(fElemDeclPool);
 }
 
+inline NameIdPoolEnumerator<DTDEntityDecl>
+DTDGrammar::getEntityEnumerator() const
+{
+    return NameIdPoolEnumerator<DTDEntityDecl>(fEntityDeclPool);
+}
+
 inline NameIdPoolEnumerator<XMLNotationDecl>
 DTDGrammar::getNotationEnumerator() const
 {
     return NameIdPoolEnumerator<XMLNotationDecl>(fNotationDeclPool);
+}
+
+inline const DTDEntityDecl*
+DTDGrammar::getEntityDecl(const XMLCh* const entName) const
+{
+    return fEntityDeclPool->getByKey(entName);
+}
+
+inline DTDEntityDecl* DTDGrammar::getEntityDecl(const XMLCh* const entName)
+{
+    return fEntityDeclPool->getByKey(entName);
+}
+
+
+inline NameIdPool<DTDEntityDecl>* DTDGrammar::getEntityDeclPool()
+{
+    return fEntityDeclPool;
+}
+
+inline const NameIdPool<DTDEntityDecl>* DTDGrammar::getEntityDeclPool() const
+{
+    return fEntityDeclPool;
 }
 
 // -----------------------------------------------------------------------
@@ -257,6 +326,12 @@ DTDGrammar::getNotationEnumerator() const
 inline void DTDGrammar::setRootElemId(unsigned int rootElemId) {
     fRootElemId = rootElemId;
 }
+
+inline unsigned int DTDGrammar::putEntityDecl(DTDEntityDecl* const entityDecl)   const
+{
+    return fEntityDeclPool->put(entityDecl);
+}
+
 
 // ---------------------------------------------------------------------------
 //  DTDGrammar: Virtual methods
@@ -290,7 +365,12 @@ inline const XMLElementDecl* DTDGrammar::getElemDecl( const   unsigned int  uriI
                                               , const XMLCh* const    qName
                                               , unsigned int          scope )   const
 {
-    return fElemDeclPool->getByKey(qName);
+    const XMLElementDecl* elemDecl = fElemDeclPool->getByKey(qName);
+
+    if (!elemDecl)
+        elemDecl = fElemNonDeclPool->getByKey(qName);
+
+    return elemDecl;
 }
 
 inline XMLElementDecl* DTDGrammar::getElemDecl (const   unsigned int  uriId
@@ -298,7 +378,12 @@ inline XMLElementDecl* DTDGrammar::getElemDecl (const   unsigned int  uriId
                                               , const XMLCh* const    qName
                                               , unsigned int          scope )
 {
-    return fElemDeclPool->getByKey(qName);
+    XMLElementDecl* elemDecl = fElemDeclPool->getByKey(qName);
+
+    if (!elemDecl)
+        elemDecl = fElemNonDeclPool->getByKey(qName);
+
+    return elemDecl;
 }
 
 inline const XMLElementDecl* DTDGrammar::getElemDecl(const unsigned int elemId) const
@@ -313,8 +398,13 @@ inline XMLElementDecl* DTDGrammar::getElemDecl(const unsigned int elemId)
     return fElemDeclPool->getById(elemId);
 }
 
-inline unsigned int DTDGrammar::putElemDecl (XMLElementDecl* const elemDecl)   const
+inline unsigned int
+DTDGrammar::putElemDecl(XMLElementDecl* const elemDecl,
+                        const bool notDeclared) const
 {
+    if (notDeclared)
+        return fElemNonDeclPool->put((DTDElementDecl*) elemDecl);
+
     return fElemDeclPool->put((DTDElementDecl*) elemDecl);
 }
 
@@ -332,6 +422,16 @@ inline XMLNotationDecl* DTDGrammar::getNotationDecl(const XMLCh* const notName)
 inline unsigned int DTDGrammar::putNotationDecl(XMLNotationDecl* const notationDecl)   const
 {
     return fNotationDeclPool->put(notationDecl);
+}
+
+inline bool DTDGrammar::getValidated() const
+{
+    return fValidated;
+}
+
+inline void DTDGrammar::setValidated(const bool newState)
+{
+    fValidated = newState;
 }
 
 #endif

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:08  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/11 18:29:09  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/05/11 13:26:24  tng
  * Copyright update.
@@ -234,9 +237,6 @@ public:
     *
     * @param source The input source for the top-level of the
     *               XML document.
-    * @param reuseGrammar The flag indicating whether the existing Grammar
-    *                     should be reused or not for this parsing run.
-    *                     If true, there cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -250,7 +250,6 @@ public:
     virtual void parse
     (
         const   InputSource&    source
-        , const bool            reuseGrammar = false
     ) = 0;
 
   /**
@@ -266,9 +265,6 @@ public:
     * by the application before it is passed to the parser.
     *
     * @param systemId The system identifier (URI).
-    * @param reuseGrammar The flag indicating whether the existing Grammar
-    *                     should be reused or not for this parsing run.
-    *                     If true, there cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -278,7 +274,6 @@ public:
     virtual void parse
     (
         const   XMLCh* const    systemId
-        , const bool            reuseGrammar = false
     ) = 0;
 
   /**
@@ -294,9 +289,6 @@ public:
     * by the application before it is passed to the parser.
     *
     * @param systemId The system identifier (URI).
-    * @param reuseGrammar The flag indicating whether the existing Grammar
-    *                     should be reused or not for this parsing run.
-    *                     If true, there cannot be any internal subset.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
@@ -306,7 +298,6 @@ public:
     virtual void parse
     (
         const   char* const     systemId
-        , const bool            reuseGrammar = false
     ) = 0;
     //@}
 

@@ -57,8 +57,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:38  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/11 18:17:43  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/08/28 19:20:54  tng
  * Schema: xsi:type support
@@ -78,21 +81,27 @@
  */
 
 #include <xercesc/validators/common/GrammarResolver.hpp>
-#include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Constructor and Destructor
 // ---------------------------------------------------------------------------
 GrammarResolver::GrammarResolver() :
-    fGrammarRegistry(0)
+    fCacheGrammar(false)
+    , fUseCachedGrammar(false)
+    , fGrammarRegistry(0)
+    , fCachedGrammarRegistry(0)
     , fDataTypeReg(0)
 {
-   fGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+    fGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
 }
 
 GrammarResolver::~GrammarResolver()
 {
    delete fGrammarRegistry;
+   delete fCachedGrammarRegistry;
    if (fDataTypeReg)
       delete fDataTypeReg;
 }
@@ -100,13 +109,39 @@ GrammarResolver::~GrammarResolver()
 // ---------------------------------------------------------------------------
 //  GrammarResolver: Getter methods
 // ---------------------------------------------------------------------------
+DatatypeValidator*
+GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
+                                      const XMLCh* const localPartStr) {
 
-DatatypeValidatorFactory* GrammarResolver::getDatatypeRegistry()
-{
-   if (!fDataTypeReg) {
-      fDataTypeReg = new DatatypeValidatorFactory();
-   }
-   return fDataTypeReg;
+    DatatypeValidator* dv = 0;
+
+    if (XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
+
+        if (!fDataTypeReg) {
+
+            fDataTypeReg = new DatatypeValidatorFactory();
+            fDataTypeReg->expandRegistryToFullSchemaSet();
+        }
+
+        dv = fDataTypeReg->getDatatypeValidator(localPartStr);
+    }
+    else {
+
+        Grammar* grammar = getGrammar(uriStr);
+
+        if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
+
+            XMLBuffer nameBuf(128);
+
+            nameBuf.set(uriStr);
+            nameBuf.append(chComma);
+            nameBuf.append(localPartStr);
+
+            dv = ((SchemaGrammar*) grammar)->getDatatypeRegistry()->getDatatypeValidator(nameBuf.getRawBuffer());
+        }
+    }
+
+    return dv;
 }
 
 Grammar* GrammarResolver::getGrammar( const XMLCh* const nameSpaceKey )
@@ -115,7 +150,12 @@ Grammar* GrammarResolver::getGrammar( const XMLCh* const nameSpaceKey )
         return 0;
     }
 
-    return fGrammarRegistry->get( nameSpaceKey );
+    Grammar* aGrammar = fGrammarRegistry->get(nameSpaceKey);
+
+    if (!aGrammar && fUseCachedGrammar && fCachedGrammarRegistry)
+        aGrammar = fCachedGrammarRegistry->get(nameSpaceKey);
+
+    return aGrammar;
 }
 
 RefHashTableOfEnumerator<Grammar>
@@ -130,18 +170,69 @@ bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
 }
 
 void GrammarResolver::putGrammar( const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt ){
+
+   if (fCacheGrammar)
+       fCachedGrammarRegistry->put((void*) nameSpaceKey, grammarToAdopt);
+
    fGrammarRegistry->put( (void*) nameSpaceKey, grammarToAdopt );
 }
 
-void GrammarResolver::removeGrammar( const XMLCh* const nameSpaceKey ) {
-   if ( containsNameSpace( nameSpaceKey ) )
-          fGrammarRegistry->removeKey( nameSpaceKey );
-}
 
+// ---------------------------------------------------------------------------
+//  GrammarResolver: methods
+// ---------------------------------------------------------------------------
 void GrammarResolver::reset() {
    fGrammarRegistry->removeAll();
-   fStringPool.flushAll();
-   if (fDataTypeReg) {
-      fDataTypeReg->resetRegistry();
-   }
+}
+
+void GrammarResolver::resetCachedGrammar()
+{
+    if (fCachedGrammarRegistry)
+        fCachedGrammarRegistry->removeAll();
+}
+
+void GrammarResolver::cacheGrammars()
+{
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    ValueVectorOf<XMLCh*> keys(8);
+    unsigned int keyCount = 0;
+
+    //Check if a grammar has already been cached.
+    while (grammarEnum.hasMoreElements()) {
+
+        XMLCh* grammarKey = (XMLCh*) grammarEnum.nextElementKey();
+
+        if (fCachedGrammarRegistry && fCachedGrammarRegistry->containsKey(grammarKey)) {
+            ThrowXML(RuntimeException, XMLExcepts::Regex_NotSupported); //Revisit - add proper exception
+        }
+
+        keys.addElement(grammarKey);
+        keyCount++;
+    }
+ 
+    if (!fCachedGrammarRegistry)
+        fCachedGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+
+    // Cache
+    for (unsigned int i=0; i<keyCount; i++) {
+
+        XMLCh* grammarKey = keys.elementAt(i);
+        Grammar* grammar = fGrammarRegistry->orphanKey(grammarKey);
+        fCachedGrammarRegistry->put((void*) grammarKey, grammar);
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+//  GrammarResolver: Setter methods
+// ---------------------------------------------------------------------------
+void GrammarResolver::cacheGrammarFromParse(const bool aValue) {
+
+    if (aValue && !fCachedGrammarRegistry) {
+        fCachedGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
+    }
+
+    fCacheGrammar = aValue;
+    fGrammarRegistry->removeAll();
+    fGrammarRegistry->setAdoptElements(!fCacheGrammar);
 }

@@ -626,9 +626,6 @@ public :
       *
       * @param source A const reference to the InputSource object which
       *               points to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       * @exception SAXException Any SAX exception, possibly
       *            wrapping another exception.
       * @exception XMLException An exception from the parser or client
@@ -636,7 +633,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       * @see InputSource#InputSource
       */
-    void parse(const InputSource& source, const bool reuseGrammar = false);
+    void parse(const InputSource& source);
 
     /** Parse via a file path or URL
       *
@@ -646,9 +643,6 @@ public :
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @exception SAXException Any SAX exception, possibly
       *            wrapping another exception.
@@ -657,7 +651,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       * @see #parse(InputSource,...)
       */
-    void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
+    void parse(const XMLCh* const systemId);
 
     /** Parse via a file path or URL (in the local code page)
       *
@@ -666,9 +660,6 @@ public :
       *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @exception SAXException Any SAX exception, possibly
       *            wrapping another exception.
@@ -677,7 +668,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       * @see #parse(InputSource,...)
       */
-    void parse(const char* const systemId, const bool reuseGrammar = false);
+    void parse(const char* const systemId);
 
     /** Begin a progressive parse operation
       *
@@ -696,9 +687,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing process.
-      *                     If true, there cannot be any internal subset.
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
       *         returns 'false' to indicate that the parser could not parse
@@ -712,7 +700,6 @@ public :
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -732,9 +719,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -749,7 +733,6 @@ public :
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -769,9 +752,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing process.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -786,7 +766,6 @@ public :
     (
         const   InputSource&    source
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Continue a progressive parse operation
@@ -1284,6 +1263,14 @@ protected :
       * @param toSet The new DOM Document node for this XML document.
       */
     void setDocument(DOMDocument* toSet);
+
+    /** Set the parse in progress flag
+      *
+      * This method sets the parse in progress flag to true or false.
+      *
+      * @param toSet The value of the flag to be set.
+      */
+    void setParseInProgress(const bool toSet);
     //@}
 
     // -----------------------------------------------------------------------
@@ -1448,6 +1435,11 @@ inline void AbstractDOMParser::setCurrentNode(DOMNode* toSet)
 inline void AbstractDOMParser::setDocument(DOMDocument* toSet)
 {
     fDocument = (DOMDocumentImpl *)toSet;
+}
+
+inline void AbstractDOMParser::setParseInProgress(const bool toSet)
+{
+    fParseInProgress = toSet;
 }
 
 #endif

@@ -144,7 +144,7 @@ AbstractDOMParser::~AbstractDOMParser()
 
 
 // ---------------------------------------------------------------------------
-//  XercesDOMParser: Utilities
+//  AbstractDOMParser: Utilities
 // ---------------------------------------------------------------------------
 void AbstractDOMParser::reset()
 {
@@ -327,7 +327,7 @@ void AbstractDOMParser::setLoadExternalDTD(const bool newState)
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Parsing methods
 // ---------------------------------------------------------------------------
-void AbstractDOMParser::parse(const InputSource& source, const bool reuseGrammar)
+void AbstractDOMParser::parse(const InputSource& source)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -336,7 +336,7 @@ void AbstractDOMParser::parse(const InputSource& source, const bool reuseGrammar
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, reuseGrammar);
+        fScanner->scanDocument(source);
         fParseInProgress = false;
     }
 
@@ -347,7 +347,7 @@ void AbstractDOMParser::parse(const InputSource& source, const bool reuseGrammar
     }
 }
 
-void AbstractDOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
+void AbstractDOMParser::parse(const XMLCh* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -356,7 +356,7 @@ void AbstractDOMParser::parse(const XMLCh* const systemId, const bool reuseGramm
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -367,7 +367,7 @@ void AbstractDOMParser::parse(const XMLCh* const systemId, const bool reuseGramm
     }
 }
 
-void AbstractDOMParser::parse(const char* const systemId, const bool reuseGrammar)
+void AbstractDOMParser::parse(const char* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -376,7 +376,7 @@ void AbstractDOMParser::parse(const char* const systemId, const bool reuseGramma
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -393,8 +393,7 @@ void AbstractDOMParser::parse(const char* const systemId, const bool reuseGramma
 //  AbstractDOMParser: Progressive parse methods
 // ---------------------------------------------------------------------------
 bool AbstractDOMParser::parseFirst( const XMLCh* const    systemId
-                                   ,       XMLPScanToken&  toFill
-                                   , const bool            reuseGrammar)
+                                   ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -403,12 +402,11 @@ bool AbstractDOMParser::parseFirst( const XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool AbstractDOMParser::parseFirst( const char* const         systemId
-                                   ,       XMLPScanToken&      toFill
-                                   , const bool                reuseGrammar)
+                                   ,       XMLPScanToken&      toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -417,12 +415,11 @@ bool AbstractDOMParser::parseFirst( const char* const         systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool AbstractDOMParser::parseFirst( const InputSource& source
-                                   ,       XMLPScanToken&  toFill
-                                   , const bool            reuseGrammar)
+                                   ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -431,7 +428,7 @@ bool AbstractDOMParser::parseFirst( const InputSource& source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, reuseGrammar);
+    return fScanner->scanFirst(source, toFill);
 }
 
 bool AbstractDOMParser::parseNext(XMLPScanToken& token)
@@ -720,7 +717,8 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
     const XMLCh * entName = entDecl.getName();
     DOMNamedNodeMap *entities = fDocumentType->getEntities();
     DOMEntityImpl* entity = (DOMEntityImpl*)entities->getNamedItem(entName);
-    entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
+    if (entity)
+        entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
     fCurrentEntity = entity;
 
     if (fCreateEntityReferenceNodes == true)
@@ -740,7 +738,8 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         // We'd decide later whether the entity nodes should be created by a
         // separated method in parser or not. For now just stick it in if
         // the ref nodes are created
-        entity->setEntityRef(er);
+        if (entity)
+            entity->setEntityRef(er);
     }
 }
 

@@ -67,6 +67,7 @@
 
 class EntityResolver;
 class ErrorHandler;
+class Grammar;
 
 
  /**
@@ -150,6 +151,53 @@ public :
       */
     const EntityResolver* getEntityResolver() const;
 
+    /** Get the 'Grammar caching' flag
+      *
+      * This method returns the state of the parser's grammar caching when
+      * parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         cache grammars, false otherwise.
+      *
+      * @see #cacheGrammarFromParse
+      */
+    bool isCachingGrammarFromParse() const;
+
+    /** Get the 'Use cached grammar' flag
+      *
+      * This method returns the state of the parser's use of cached grammar
+      * when parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         use cached grammars, false otherwise.
+      *
+      * @see #useCachedGrammarInParse
+      */
+    bool isUsingCachedGrammarInParse() const;
+
+    /**
+     * Retrieve the grammar that is associated with the specified namespace key
+     *
+     * @param  nameSpaceKey Namespace key
+     * @return Grammar associated with the Namespace key.
+     */
+    Grammar* getGrammar(const XMLCh* const nameSpaceKey);
+
+    /**
+     * Retrieve the grammar where the root element is declared.
+     *
+     * @return Grammar where root element declared
+     */
+    Grammar* getRootGrammar();
+
+    /**
+     * Returns the string corresponding to a URI id from the URI string pool.
+     *
+     * @param uriId id of the string in the URI string pool.
+     * @return URI string corresponding to the URI id.
+     */    
+    const XMLCh* getURIText(unsigned int uriId);
+
     //@}
 
 
@@ -191,6 +239,45 @@ public :
       * @see #getEntityResolver
       */
     void setEntityResolver(EntityResolver* const handler);
+
+    /** Set the 'Grammar caching' flag
+      *
+      * This method allows users to enable or disable caching of grammar when
+      * parsing XML documents. When set to true, the parser will cache the
+      * resulting grammar for use in subsequent parses.
+      *
+      * If the flag is set to true, the 'Use cached grammar' flag will also be
+      * set to true.
+      *
+      * The parser's default state is: false.
+      *
+      * @param newState The value specifying whether we should cache grammars
+      *                 or not.
+      *
+      * @see #isCachingGrammarFromParse
+      * @see #useCachedGrammarInParse
+      */
+    void cacheGrammarFromParse(const bool newState);
+
+    /** Set the 'Use cached grammar' flag
+      *
+      * This method allows users to enable or disable the use of cached
+      * grammars.  When set to true, the parser will use the cached grammar,
+      * instead of building the grammar from scratch, to validate XML
+      * documents.
+      *
+      * If the 'Grammar caching' flag is set to true, this mehod ignore the
+      * value passed in.
+      *
+      * The parser's default state is: false.
+      *
+      * @param newState The value specifying whether we should use the cached
+      *                 grammar or not.
+      *
+      * @see #isUsingCachedGrammarInParse
+      * @see #cacheGrammarFromParse
+      */
+    void useCachedGrammarInParse(const bool newState);
 
     //@}
 
@@ -375,6 +462,107 @@ public :
       *                    being parsed.
       */
     virtual void startInputSource(const InputSource& inputSource);
+
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Grammar preparsing interface
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of Grammar preparsing interface's. */
+    //@{
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via an input source
+      * object.
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the SAX InputSource parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param source A const reference to the SAX InputSource object which
+      *               points to the schema grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      *
+      * @see InputSource#InputSource
+      */
+    Grammar* loadGrammar(const InputSource& source,
+                         const short grammarType,
+                         const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const XMLCh pointer to the Unicode string which
+      *                 contains the path to the XML grammar file to be
+      *                 preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    Grammar* loadGrammar(const XMLCh* const systemId,
+                         const short grammarType,
+                         const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const char pointer to a native string which contains
+      *                 the path to the XML grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    Grammar* loadGrammar(const char* const systemId,
+                         const short grammarType,
+                         const bool toCache = false);
+
+    /**
+      * This method allows the user to reset the pool of cached grammars.
+      */
+    void resetCachedGrammarPool();
 
     //@}
 

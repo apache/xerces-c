@@ -98,10 +98,14 @@ public:
     /** @name Getter methods */
     //@{
     /**
-     * Retrieve the DatatypeValidatorFactory Registry
-     * @return the DatatypeValidatorFactory Registry
+     * Retrieve the DatatypeValidator
+     *
+     * @param uriStr the namespace URI
+     * @param typeName the type name
+     * @return the DatatypeValidator associated with namespace & type name
      */
-     DatatypeValidatorFactory* getDatatypeRegistry();
+    DatatypeValidator* getDatatypeValidator(const XMLCh* const uriStr,
+                                            const XMLCh* const typeName);
 
     /**
      * Retrieve the grammar that is associated with the specified namespace key
@@ -137,6 +141,22 @@ public:
 
     //@}
 
+    /** @name Setter methods */
+    //@{
+
+    /**
+      * Set the 'Grammar caching' flag
+      */
+    void cacheGrammarFromParse(const bool newState);
+
+    /**
+      * Set the 'Use cached grammar' flag
+      */
+    void useCachedGrammarInParse(const bool newState);
+
+    //@}
+
+
     /** @name GrammarResolver methods */
     //@{
     /**
@@ -149,16 +169,26 @@ public:
     void putGrammar(const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt );
 
     /**
-     * Remove the Grammar with Namespace Key associated from the Grammar Pool
+     * Returns the Grammar with Namespace Key associated from the Grammar Pool
+     * The Key entry is removed from the table (grammar is not deleted if
+     * adopted - now owned by caller).
      *
      * @param  nameSpaceKey    Key to associate with Grammar abstraction
      */
-    void removeGrammar( const XMLCh* const nameSpaceKey );
+    Grammar* orphanGrammar(const XMLCh* const nameSpaceKey);
+
+    /**
+     * Cache the grammars in fGrammarRegistry to fCachedGrammarRegistry.
+     * If a grammar with the same key is already cached, an exception is
+     * thrown and none of the grammars will be cached.
+     */
+    void cacheGrammars();
 
     /**
      * Reset internal Namespace/Grammar registry.
      */
     void reset();
+    void resetCachedGrammar();
 
     //@}
 
@@ -166,22 +196,43 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fStringPool          The string pool used by TraverseSchema to store
-    //                       element/attribute names and prefixes.
+    //  fStringPool            The string pool used by TraverseSchema to store
+    //                         element/attribute names and prefixes.
     //
-    //  fGrammarRegistry     The Grammar Pool.  It represents a mapping
-    //                       between Namespace and a Grammar
-    //  fDataTypeReg         DatatypeValidatorFactory register
+    //  fGrammarRegistry       The parsed Grammar Pool, if no caching option.
+    //
+    //  fCachedGrammarRegistry The cached Grammar Pool.  It represents a
+    //                         mapping between Namespace and a Grammar
+    //
+    //  fDataTypeReg           DatatypeValidatorFactory registery
     //
     // -----------------------------------------------------------------------
-    XMLStringPool                fStringPool;
-    RefHashTableOf<Grammar>*     fGrammarRegistry;
-    DatatypeValidatorFactory*    fDataTypeReg;
+    bool                       fCacheGrammar;
+    bool                       fUseCachedGrammar;
+    XMLStringPool              fStringPool;
+    RefHashTableOf<Grammar>*   fGrammarRegistry;
+    RefHashTableOf<Grammar>*   fCachedGrammarRegistry;
+    DatatypeValidatorFactory*  fDataTypeReg;
 };
 
 inline XMLStringPool* GrammarResolver::getStringPool() {
 
     return &fStringPool;
+}
+
+
+inline void GrammarResolver::useCachedGrammarInParse(const bool aValue)
+{
+    fUseCachedGrammar = aValue;
+}
+
+inline Grammar*
+GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey) {
+
+    if (fCacheGrammar)
+        return fCachedGrammarRegistry->orphanKey(nameSpaceKey);
+
+    return fGrammarRegistry->orphanKey(nameSpaceKey);
 }
 
 #endif

@@ -206,6 +206,31 @@ XMLCh* DOMParser::getExternalNoNamespaceSchemaLocation() const
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
+bool DOMParser::isCachingGrammarFromParse() const
+{
+    return fScanner->isCachingGrammarFromParse();
+}
+
+bool DOMParser::isUsingCachedGrammarInParse() const
+{
+    return fScanner->isUsingCachedGrammarInParse();
+}
+
+Grammar* DOMParser::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return fScanner->getGrammar(nameSpaceKey);
+}
+
+Grammar* DOMParser::getRootGrammar()
+{
+    return fScanner->getRootGrammar();
+}
+
+const XMLCh* DOMParser::getURIText(unsigned int uriId)
+{
+    return fScanner->getURIText(uriId);
+}
+
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
@@ -287,11 +312,25 @@ void DOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespa
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
 }
 
+void DOMParser::cacheGrammarFromParse(const bool newState)
+{
+    fScanner->cacheGrammarFromParse(newState);
+
+    if (newState)
+        fScanner->useCachedGrammarInParse(newState);
+}
+
+void DOMParser::useCachedGrammarInParse(const bool newState)
+{
+    if (newState || !fScanner->isCachingGrammarFromParse())
+        fScanner->useCachedGrammarInParse(newState);
+}
+
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Parsing methods
 // ---------------------------------------------------------------------------
-void DOMParser::parse(const InputSource& source, const bool reuseGrammar)
+void DOMParser::parse(const InputSource& source)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -300,7 +339,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseGrammar)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, reuseGrammar);
+        fScanner->scanDocument(source);
         fParseInProgress = false;
     }
 
@@ -311,7 +350,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseGrammar)
     }
 }
 
-void DOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
+void DOMParser::parse(const XMLCh* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -320,7 +359,7 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -331,7 +370,7 @@ void DOMParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
     }
 }
 
-void DOMParser::parse(const char* const systemId, const bool reuseGrammar)
+void DOMParser::parse(const char* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -340,7 +379,7 @@ void DOMParser::parse(const char* const systemId, const bool reuseGrammar)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -357,8 +396,7 @@ void DOMParser::parse(const char* const systemId, const bool reuseGrammar)
 //  DOMParser: Progressive parse methods
 // ---------------------------------------------------------------------------
 bool DOMParser::parseFirst( const   XMLCh* const    systemId
-                           ,       XMLPScanToken&  toFill
-                           , const bool            reuseGrammar)
+                           ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -367,12 +405,11 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool DOMParser::parseFirst( const   char* const         systemId
-                           ,       XMLPScanToken&      toFill
-                           , const bool                reuseGrammar)
+                           ,       XMLPScanToken&      toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -381,12 +418,11 @@ bool DOMParser::parseFirst( const   char* const         systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool DOMParser::parseFirst( const   InputSource&    source
-                           ,       XMLPScanToken&  toFill
-                           , const bool            reuseGrammar)
+                           ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -395,7 +431,7 @@ bool DOMParser::parseFirst( const   InputSource&    source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, reuseGrammar);
+    return fScanner->scanFirst(source, toFill);
 }
 
 bool DOMParser::parseNext(XMLPScanToken& token)
@@ -1218,3 +1254,88 @@ void DOMParser::TextDecl
 )
 {
 }
+
+
+// ---------------------------------------------------------------------------
+//  DOMParser: Grammar preparsing methods
+// ---------------------------------------------------------------------------
+Grammar* DOMParser::loadGrammar(const char* const systemId,
+                                const short grammarType,
+                                const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* DOMParser::loadGrammar(const XMLCh* const systemId,
+                                const short grammarType,
+                                const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* DOMParser::loadGrammar(const InputSource& source,
+                                const short grammarType,
+                                const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+   Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(source, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+void DOMParser::resetCachedGrammarPool()
+{
+    fScanner->resetCachedGrammarPool();
+}
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/07/11 18:27:04  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.11  2002/06/27 18:47:32  tng
  * API Documentation Update.
  *
@@ -609,6 +612,30 @@ public :
       * @see #getFeature
       */
     virtual bool getValidationConstraintFatal() const ;
+
+    /**
+      * Retrieve the grammar that is associated with the specified namespace key
+      *
+      * @param  nameSpaceKey Namespace key
+      * @return Grammar associated with the Namespace key.
+      */
+    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey);
+
+    /**
+      * Retrieve the grammar where the root element is declared.
+      *
+      * @return Grammar where root element declared
+      */
+    virtual Grammar* getRootGrammar();
+
+    /**
+      * Returns the string corresponding to a URI id from the URI string pool.
+      *
+      * @param uriId id of the string in the URI string pool.
+      * @return URI string corresponding to the URI id.
+      */    
+    virtual const XMLCh* getURIText(unsigned int uriId);
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -833,6 +860,101 @@ public :
       *              calls.
       */
     virtual void parseReset(XMLPScanToken& token) ;
+
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the grammar preparsing interface
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of Grammar preparsing interface's. */
+    //@{
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via an input source
+      * object.
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the SAX InputSource parameter.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param source A const reference to the SAX InputSource object which
+      *               points to the schema grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      *
+      * @see InputSource#InputSource
+      */
+    virtual Grammar* loadGrammar(const InputSource& source,
+                                 const short grammarType,
+                                 const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const XMLCh pointer to the Unicode string which
+      *                 contains the path to the XML grammar file to be
+      *                 preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    virtual Grammar* loadGrammar(const XMLCh* const systemId,
+                                 const short grammarType,
+                                 const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const char pointer to a native string which contains
+      *                 the path to the XML grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    virtual Grammar* loadGrammar(const char* const systemId,
+                                 const short grammarType,
+                                 const bool toCache = false);
+
+    /**
+      * Clear the cached grammar pool
+      */
+    virtual void resetCachedGrammarPool();
 
     //@}
 
@@ -1595,7 +1717,6 @@ private :
 	bool                       fnamespacePrefix;
 	bool                       fautoValidation;
 	bool                       fValidation;
-	bool                       fReuseGrammar;
 
 	XMLBufferMgr			   fStringBuffers ;
 	RefStackOf<XMLBuffer> *    fPrefixes ;
@@ -1667,6 +1788,21 @@ inline bool SAX2XMLReaderImpl::getExitOnFirstFatalError() const
 inline bool SAX2XMLReaderImpl::getValidationConstraintFatal() const
 {
     return fScanner->getValidationConstraintFatal();
+}
+
+inline Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return fScanner->getGrammar(nameSpaceKey);
+}
+
+inline Grammar* SAX2XMLReaderImpl::getRootGrammar()
+{
+    return fScanner->getRootGrammar();
+}
+
+inline const XMLCh* SAX2XMLReaderImpl::getURIText(unsigned int uriId)
+{
+    return fScanner->getURIText(uriId);
 }
 
 #endif

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:43  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/11 18:19:28  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
@@ -81,12 +84,27 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 
+// ---------------------------------------------------------------------------
+//  Local const data
+//
+//  These are the text for the require char refs that must always be present.
+//  We init these into the entity pool upon construction.
+// ---------------------------------------------------------------------------
+static const XMLCh gAmp[] = { chLatin_a, chLatin_m, chLatin_p, chNull };
+static const XMLCh gLT[] = { chLatin_l, chLatin_t, chNull };
+static const XMLCh gGT[] = { chLatin_g, chLatin_t, chNull };
+static const XMLCh gQuot[] = { chLatin_q, chLatin_u, chLatin_o, chLatin_t, chNull };
+static const XMLCh gApos[] = { chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNull };
+
 //---------------------------------------------------------------------------
 //  DTDGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
 DTDGrammar::DTDGrammar() :
     fElemDeclPool(0)
+    , fElemNonDeclPool(0)
+    , fEntityDeclPool(0)
     , fNotationDeclPool(0)
+    , fValidated(false)
 {
     //
     //  Init all the pool members.
@@ -95,6 +113,8 @@ DTDGrammar::DTDGrammar() :
     //  pools.
     //
     fElemDeclPool = new NameIdPool<DTDElementDecl>(109);
+    fElemNonDeclPool = new NameIdPool<DTDElementDecl>(29);
+    fEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
     fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
 
     //
@@ -108,6 +128,8 @@ DTDGrammar::DTDGrammar() :
 DTDGrammar::~DTDGrammar()
 {
     delete fElemDeclPool;
+    delete fElemNonDeclPool;
+    delete fEntityDeclPool;
     delete fNotationDeclPool;
 }
 
@@ -122,13 +144,13 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
         ,       bool&           wasAdded )
 {
     // See it it exists
-    DTDElementDecl* retVal = fElemDeclPool->getByKey(qName);
+    DTDElementDecl* retVal = (DTDElementDecl*) getElemDecl(uriId, baseName, qName, scope);
 
     // if not, then add this in
     if (!retVal)
     {
         retVal = new DTDElementDecl(qName, uriId, DTDElementDecl::Any);
-        const unsigned int elemId = fElemDeclPool->put(retVal);
+        const unsigned int elemId = fElemNonDeclPool->put(retVal);
         retVal->setId(elemId);
         wasAdded = true;
     }
@@ -143,10 +165,12 @@ XMLElementDecl* DTDGrammar::putElemDecl (const   unsigned int    uriId
         , const XMLCh* const    baseName
         , const XMLCh* const    prefixName
         , const XMLCh* const    qName
-        , unsigned int          scope)
+        , unsigned int          scope
+        , const bool            notDeclared)
 {
     DTDElementDecl* retVal = new DTDElementDecl(qName, uriId, DTDElementDecl::Any);
-    const unsigned int elemId = fElemDeclPool->put(retVal);
+    const unsigned int elemId = (notDeclared) ? fElemNonDeclPool->put(retVal)
+                                              : fElemDeclPool->put(retVal);
     retVal->setId(elemId);
     return retVal;
 }
@@ -157,5 +181,27 @@ void DTDGrammar::reset()
     //  We need to reset all of the pools.
     //
     fElemDeclPool->removeAll();
+    fElemNonDeclPool->removeAll();
     fNotationDeclPool->removeAll();
+    resetEntityDeclPool();
+    fValidated = false;
+}
+
+void DTDGrammar::resetEntityDeclPool() {
+
+    fEntityDeclPool->removeAll();
+    //
+    //  Add the default entity entries for the character refs that must always
+    //  be present. We indicate that they are from the internal subset. They
+    //  aren't really, but they have to look that way so that they are still
+    //  valid for use within a standalone document.
+    //
+    //  We also mark them as special char entities, which allows them to be
+    //  used in places whether other non-numeric general entities cannot.
+    //
+    fEntityDeclPool->put(new DTDEntityDecl(gAmp, chAmpersand, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gLT, chOpenAngle, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gGT, chCloseAngle, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gQuot, chDoubleQuote, true, true));
+    fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
 }

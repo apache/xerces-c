@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/07/11 18:27:03  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.11  2002/06/27 18:48:04  tng
  * API Documentation Update and move getScanner as protected
  *
@@ -186,6 +189,7 @@ class EntityResolver;
 class XMLPScanToken;
 class XMLScanner;
 class XMLValidator;
+class Grammar;
 
 
 /**
@@ -440,6 +444,52 @@ public :
       */
     bool getLoadExternalDTD() const;
 
+    /** Get the 'Grammar caching' flag
+      *
+      * This method returns the state of the parser's grammar caching when
+      * parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         cache grammars, false otherwise.
+      *
+      * @see #cacheGrammarFromParse
+      */
+    bool isCachingGrammarFromParse() const;
+
+    /** Get the 'Use cached grammar' flag
+      *
+      * This method returns the state of the parser's use of cached grammar
+      * when parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         use cached grammars, false otherwise.
+      *
+      * @see #useCachedGrammarInParse
+      */
+    bool isUsingCachedGrammarInParse() const;
+
+    /**
+     * Retrieve the grammar that is associated with the specified namespace key
+     *
+     * @param  nameSpaceKey Namespace key
+     * @return Grammar associated with the Namespace key.
+     */
+    Grammar* getGrammar(const XMLCh* const nameSpaceKey);
+
+    /**
+     * Retrieve the grammar where the root element is declared.
+     *
+     * @return Grammar where root element declared
+     */
+    Grammar* getRootGrammar();
+
+    /**
+     * Returns the string corresponding to a URI id from the URI string pool.
+     *
+     * @param uriId id of the string in the URI string pool.
+     * @return URI string corresponding to the URI id.
+     */    
+    const XMLCh* getURIText(unsigned int uriId);
 
     //@}
 
@@ -632,6 +682,45 @@ public :
       */
     void setLoadExternalDTD(const bool newState);
 
+    /** Set the 'Grammar caching' flag
+      *
+      * This method allows users to enable or disable caching of grammar when
+      * parsing XML documents. When set to true, the parser will cache the
+      * resulting grammar for use in subsequent parses.
+      *
+      * If the flag is set to true, the 'Use cached grammar' flag will also be
+      * set to true.
+      *
+      * The parser's default state is: false.
+      *
+      * @param newState The value specifying whether we should cache grammars
+      *                 or not.
+      *
+      * @see #isCachingGrammarFromParse
+      * @see #useCachedGrammarInParse
+      */
+    void cacheGrammarFromParse(const bool newState);
+
+    /** Set the 'Use cached grammar' flag
+      *
+      * This method allows users to enable or disable the use of cached
+      * grammars.  When set to true, the parser will use the cached grammar,
+      * instead of building the grammar from scratch, to validate XML
+      * documents.
+      *
+      * If the 'Grammar caching' flag is set to true, this mehod ignore the
+      * value passed in.
+      *
+      * The parser's default state is: false.
+      *
+      * @param newState The value specifying whether we should use the cached
+      *                 grammar or not.
+      *
+      * @see #isUsingCachedGrammarInParse
+      * @see #cacheGrammarFromParse
+      */
+    void useCachedGrammarInParse(const bool newState);
+
 
     //@}
 
@@ -694,9 +783,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -711,7 +797,6 @@ public :
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -731,9 +816,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consIstency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -748,7 +830,6 @@ public :
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -768,9 +849,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -785,7 +863,6 @@ public :
     (
         const   InputSource&    source
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Continue a progressive parse operation
@@ -839,6 +916,107 @@ public :
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Grammar preparsing interface
+    // -----------------------------------------------------------------------
+
+    /** @name Implementation of Grammar preparsing interface's. */
+    //@{
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via an input source
+      * object.
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the SAX InputSource parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param source A const reference to the SAX InputSource object which
+      *               points to the schema grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      *
+      * @see InputSource#InputSource
+      */
+    Grammar* loadGrammar(const InputSource& source,
+                         const short grammarType,
+                         const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const XMLCh pointer to the Unicode string which
+      *                 contains the path to the XML grammar file to be
+      *                 preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    Grammar* loadGrammar(const XMLCh* const systemId,
+                         const short grammarType,
+                         const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const char pointer to a native string which contains
+      *                 the path to the XML grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    Grammar* loadGrammar(const char* const systemId,
+                         const short grammarType,
+                         const bool toCache = false);
+
+    /**
+      * This method allows the user to reset the pool of cached grammars.
+      */
+    void resetCachedGrammarPool();
+
+    //@}
+
 
     // -----------------------------------------------------------------------
     //  Implementation of the SAX Parser interface
@@ -852,13 +1030,10 @@ public :
       *
       * @param source A const reference to the InputSource object which
       *               points to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @see Parser#parse(InputSource)
       */
-    virtual void parse(const InputSource& source, const bool reuseGrammar = false);
+    virtual void parse(const InputSource& source);
 
     /**
       * This method invokes the parsing process on the XML file specified by
@@ -866,13 +1041,10 @@ public :
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @see Parser#parse(XMLCh*)
       */
-    virtual void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
+    virtual void parse(const XMLCh* const systemId);
 
     /**
       * This method invokes the parsing process on the XML file specified by
@@ -880,11 +1052,8 @@ public :
       *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       */
-    virtual void parse(const char* const systemId, const bool reuseGrammar = false);
+    virtual void parse(const char* const systemId);
 
     /**
       * This method installs the user specified SAX Document Handler

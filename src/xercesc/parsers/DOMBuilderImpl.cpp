@@ -91,7 +91,6 @@ AbstractDOMParser(valToAdopt)
 , fErrorHandler(0)
 , fEntityResolver(0)
 , fFilter(0)
-, fReuseGrammar(false)
 , fCharsetOverridesXMLEncoding(true)
 {
     // dom spec has different default from scanner's default, so set explicitly
@@ -193,35 +192,43 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
         if (!state)
             throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0)
-    {
-        fReuseGrammar = state;
-    }
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
     {
-    	  setDoSchema(state);
+        setDoSchema(state);
     }
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
     {
-    	  setValidationSchemaFullChecking(state);
+        setValidationSchemaFullChecking(state);
     }
     else if ((XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) && state)
     {
-    	  adoptDocument();
+        adoptDocument();
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
-    	  setLoadExternalDTD(state);
+        setLoadExternalDTD(state);
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
-         setExitOnFirstFatalError(!state);
+        setExitOnFirstFatalError(!state);
     }
     else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
     {
-         setValidationConstraintFatal(state);
+        setValidationConstraintFatal(state);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    {
+        getScanner()->cacheGrammarFromParse(state);
+
+        if (state)
+            getScanner()->useCachedGrammarInParse(state);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    {
+        if (state || !getScanner()->isCachingGrammarFromParse())
+         getScanner()->useCachedGrammarInParse(state);
     }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -263,32 +270,36 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name)
              XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
         return true;
     }
-    else if (XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0)
-    {
-        return fReuseGrammar;
-    }
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
     {
-    	  return getDoSchema();
+        return getDoSchema();
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
     {
-    	  return getValidationSchemaFullChecking();
+        return getValidationSchemaFullChecking();
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
     {
-    	  return getLoadExternalDTD();
+        return getLoadExternalDTD();
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
-         return !getExitOnFirstFatalError();
+        return !getExitOnFirstFatalError();
     }
     else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
     {
-         return getValidationConstraintFatal();
+        return getValidationConstraintFatal();
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    {
+        return getScanner()->isCachingGrammarFromParse();
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    {
+        return getScanner()->isUsingCachedGrammarInParse();
     }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -321,12 +332,13 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state)
         if (state)
             return true;
     }
-    else if ((XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0) ||
+    else if ((XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0) ||
              (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0) ||
              (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0) ||
              (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0) ||
-             (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)) {
+             (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0) ||
+             (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0) ||
+             (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)) {
         return true;
     }
     return false;
@@ -383,19 +395,19 @@ DOMDocument* DOMBuilderImpl::parse(const DOMInputSource& source)
     Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source);
 
     isWrapper.setAdoptInputSource(false);
-    AbstractDOMParser::parse(isWrapper, fReuseGrammar);
+    AbstractDOMParser::parse(isWrapper);
     return getDocument();
 }
 
 DOMDocument* DOMBuilderImpl::parseURI(const XMLCh* const systemId)
 {
-    AbstractDOMParser::parse(systemId, fReuseGrammar);
+    AbstractDOMParser::parse(systemId);
     return getDocument();
 }
 
 DOMDocument* DOMBuilderImpl::parseURI(const char* const systemId)
 {
-    AbstractDOMParser::parse(systemId, fReuseGrammar);
+    AbstractDOMParser::parse(systemId);
     return getDocument();
 }
 
@@ -461,5 +473,124 @@ DOMBuilderImpl::resolveEntity(const XMLCh* const publicId,
     }
 
     return 0;
+}
+
+// ---------------------------------------------------------------------------
+//  DOMBuilderImpl: Grammar preparsing methods
+// ---------------------------------------------------------------------------
+Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
+                                     const short grammarType,
+                                     const bool toCache)
+{
+    // Avoid multiple entrance
+    if (getParseInProgress())
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+	Grammar* grammar = 0;
+    try
+    {
+        setParseInProgress(true);
+        grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
+
+        // Release DOM tree - DTD
+        DOMDocument* doc = adoptDocument();
+        if (doc)
+            doc->release();
+
+        setParseInProgress(false);
+    }
+
+    catch(...)
+    {
+        setParseInProgress(false);
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
+                                     const short grammarType,
+                                     const bool toCache)
+{
+    // Avoid multiple entrance
+    if (getParseInProgress())
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        setParseInProgress(true);
+        grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
+
+        // Release DOM tree - DTD
+        DOMDocument* doc = adoptDocument();
+        if (doc) 
+            doc->release();
+
+        setParseInProgress(false);
+    }
+
+    catch(...)
+    {
+        setParseInProgress(false);
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
+                                     const short grammarType,
+                                     const bool toCache)
+{
+    // Avoid multiple entrance
+    if (getParseInProgress())
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source);
+
+        isWrapper.setAdoptInputSource(false);
+        setParseInProgress(true);
+        grammar = getScanner()->loadGrammar(isWrapper, grammarType, toCache);
+
+        // Release DOM tree - DTD
+        DOMDocument* doc = adoptDocument();
+        if (doc)
+            doc->release();
+
+        setParseInProgress(false);
+    }
+
+    catch(...)
+    {
+        setParseInProgress(false);
+        throw;
+    }
+
+    return grammar;
+}
+
+void DOMBuilderImpl::resetCachedGrammarPool()
+{
+    getScanner()->resetCachedGrammarPool();
+}
+
+Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return getScanner()->getGrammar(nameSpaceKey);
+}
+
+Grammar* DOMBuilderImpl::getRootGrammar()
+{
+    return getScanner()->getRootGrammar();
+}
+
+const XMLCh* DOMBuilderImpl::getURIText(unsigned int uriId)
+{
+    return getScanner()->getURIText(uriId);
 }
 

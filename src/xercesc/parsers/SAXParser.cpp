@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/07/11 18:27:04  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.6  2002/05/30 16:20:09  tng
  * Add feature to optionally ignore external DTD.
  *
@@ -375,6 +378,30 @@ bool SAXParser::getLoadExternalDTD() const
     return fScanner->getLoadExternalDTD();
 }
 
+bool SAXParser::isCachingGrammarFromParse() const
+{
+    return fScanner->isCachingGrammarFromParse();
+}
+
+bool SAXParser::isUsingCachedGrammarInParse() const
+{
+    return fScanner->isUsingCachedGrammarInParse();
+}
+
+Grammar* SAXParser::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return fScanner->getGrammar(nameSpaceKey);
+}
+
+Grammar* SAXParser::getRootGrammar()
+{
+    return fScanner->getRootGrammar();
+}
+
+const XMLCh* SAXParser::getURIText(unsigned int uriId)
+{
+    return fScanner->getURIText(uriId);
+}
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
@@ -440,11 +467,25 @@ void SAXParser::setLoadExternalDTD(const bool newState)
     fScanner->setLoadExternalDTD(newState);
 }
 
+void SAXParser::cacheGrammarFromParse(const bool newState)
+{
+    fScanner->cacheGrammarFromParse(newState);
+
+    if (newState)
+        fScanner->useCachedGrammarInParse(newState);
+}
+
+void SAXParser::useCachedGrammarInParse(const bool newState)
+{
+    if (newState || !fScanner->isCachingGrammarFromParse())
+        fScanner->useCachedGrammarInParse(newState);
+}
+
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Overrides of the SAX Parser interface
 // ---------------------------------------------------------------------------
-void SAXParser::parse(const InputSource& source, const bool reuseGrammar)
+void SAXParser::parse(const InputSource& source)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -453,7 +494,7 @@ void SAXParser::parse(const InputSource& source, const bool reuseGrammar)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, reuseGrammar);
+        fScanner->scanDocument(source);
         fParseInProgress = false;
     }
 
@@ -464,7 +505,7 @@ void SAXParser::parse(const InputSource& source, const bool reuseGrammar)
     }
 }
 
-void SAXParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
+void SAXParser::parse(const XMLCh* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -473,7 +514,7 @@ void SAXParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -484,7 +525,7 @@ void SAXParser::parse(const XMLCh* const systemId, const bool reuseGrammar)
     }
 }
 
-void SAXParser::parse(const char* const systemId, const bool reuseGrammar)
+void SAXParser::parse(const char* const systemId)
 {
     // Avoid multiple entrance
     if (fParseInProgress)
@@ -493,7 +534,7 @@ void SAXParser::parse(const char* const systemId, const bool reuseGrammar)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, reuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -573,8 +614,7 @@ void SAXParser::setEntityResolver(EntityResolver* const resolver)
 //  SAXParser: Progressive parse methods
 // ---------------------------------------------------------------------------
 bool SAXParser::parseFirst( const   XMLCh* const    systemId
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -583,12 +623,11 @@ bool SAXParser::parseFirst( const   XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool SAXParser::parseFirst( const   char* const     systemId
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -597,12 +636,11 @@ bool SAXParser::parseFirst( const   char* const     systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool SAXParser::parseFirst( const   InputSource&    source
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -611,7 +649,7 @@ bool SAXParser::parseFirst( const   InputSource&    source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, reuseGrammar);
+    return fScanner->scanFirst(source, toFill);
 }
 
 bool SAXParser::parseNext(XMLPScanToken& token)
@@ -1128,4 +1166,88 @@ void SAXParser::setDoValidation(const bool newState)
     (
         newState ? XMLScanner::Val_Always : XMLScanner::Val_Never
     );
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAXParser: Grammar preparsing methods
+// ---------------------------------------------------------------------------
+Grammar* SAXParser::loadGrammar(const char* const systemId,
+                                const short grammarType,
+                                const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* SAXParser::loadGrammar(const XMLCh* const systemId,
+                                const short grammarType,
+                                const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* SAXParser::loadGrammar(const InputSource& source,
+                                const short grammarType,
+                                const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(source, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+void SAXParser::resetCachedGrammarPool()
+{
+    fScanner->resetCachedGrammarPool();
 }

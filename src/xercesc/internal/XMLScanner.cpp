@@ -181,7 +181,6 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
     , fInException(false)
-    , fReuseGrammar(false)
     , fStandalone(false)
     , fHasNoDTD(true)
     , fValidate(false)
@@ -189,6 +188,8 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fDoSchema(false)
     , fSchemaFullChecking(false)
     , fSeeXsi(false)
+    , fToCacheGrammar(false)
+    , fUseCachedGrammar(false)
     , fErrorCount(0)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
@@ -213,7 +214,8 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fValScheme(Val_Never)
     , fGrammarResolver(0)
     , fGrammar(0)
-    , fEntityDeclPool(0)
+    , fRootGrammar(0)
+    , fDTDGrammar(0)
     , fURIStringPool(0)
     , fMatcherStack(0)
     , fValueStoreCache(0)
@@ -246,7 +248,6 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
     , fInException(false)
-    , fReuseGrammar(false)
     , fStandalone(false)
     , fHasNoDTD(true)
     , fValidate(false)
@@ -254,6 +255,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fDoSchema(false)
     , fSchemaFullChecking(false)
     , fSeeXsi(false)
+    , fToCacheGrammar(false)
+    , fUseCachedGrammar(false)
     , fErrorCount(0)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
@@ -278,7 +281,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fValScheme(Val_Never)
     , fGrammarResolver(0)
     , fGrammar(0)
-    , fEntityDeclPool(0)
+    , fRootGrammar(0)
+    , fDTDGrammar(0)
     , fURIStringPool(0)
     , fMatcherStack(0)
     , fValueStoreCache(0)
@@ -313,8 +317,6 @@ XMLScanner::~XMLScanner()
     delete fDTDValidator;
     delete fSchemaValidator;
 
-    delete fEntityDeclPool;
-
     //fGrammarResolver will delete the fGrammar as well
     delete fGrammarResolver;
 
@@ -333,8 +335,7 @@ XMLScanner::~XMLScanner()
 // ---------------------------------------------------------------------------
 //  XMLScanner: Main entry point to scan a document
 // ---------------------------------------------------------------------------
-void XMLScanner::scanDocument(  const   XMLCh* const    systemId
-                                , const bool            reuseGrammar)
+void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
 {
     //
     //  First we try to parse it as a URL. If that fails, we assume its
@@ -403,29 +404,25 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId
     }
 
     Janitor<InputSource> janSrc(srcToUse);
-    scanDocument(*srcToUse, reuseGrammar);
+    scanDocument(*srcToUse);
 }
 
-void XMLScanner::scanDocument(  const   char* const systemId
-                                , const bool        reuseGrammar)
+void XMLScanner::scanDocument(  const   char* const systemId)
 {
     // We just delegate this to the XMLCh version after transcoding
     XMLCh* tmpBuf = XMLString::transcode(systemId);
     ArrayJanitor<XMLCh> janBuf(tmpBuf);
-    scanDocument(tmpBuf, reuseGrammar);
+    scanDocument(tmpBuf);
 }
 
 
-void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
+void XMLScanner::scanDocument(const InputSource& src)
 {
     //
     //  Bump up the sequence id for this parser instance. This will invalidate
     //  any previous progressive scan tokens.
     //
     fSequenceId++;
-
-    // Store the reuse validator flag
-    fReuseGrammar = reuseGrammar;
 
     try
     {
@@ -570,8 +567,7 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseGrammar)
 //  going to work on subsequent scanNext() calls.
 //
 bool XMLScanner::scanFirst( const   XMLCh* const    systemId
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  First we try to parse it as a URL. If that fails, we assume its
@@ -639,26 +635,21 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
     }
 
     Janitor<InputSource> janSrc(srcToUse);
-    return scanFirst(*srcToUse, toFill, reuseGrammar);
+    return scanFirst(*srcToUse, toFill);
 }
 
 bool XMLScanner::scanFirst( const   char* const     systemId
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     // We just delegate this to the XMLCh version after transcoding
     XMLCh* tmpBuf = XMLString::transcode(systemId);
     ArrayJanitor<XMLCh> janBuf(tmpBuf);
-    return scanFirst(tmpBuf, toFill, reuseGrammar);
+    return scanFirst(tmpBuf, toFill);
 }
 
 bool XMLScanner::scanFirst( const   InputSource&    src
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
-    // Store the reuse validator flag
-    fReuseGrammar = reuseGrammar;
-
     //
     //  Bump up the sequence id for this new scan cycle. This will invalidate
     //  any previous tokens we've returned.
@@ -1061,13 +1052,8 @@ void XMLScanner::commonInit()
     //
     fIDRefList = new RefHashTableOf<XMLRefInfo>(109);
 
-    //  Create the EntityDeclPool
-    fEntityDeclPool = new NameIdPool<DTDEntityDecl>(109);
-
     //  Create the GrammarResolver
     fGrammarResolver = new GrammarResolver();
-
-    resetEntityDeclPool();
 
     //  Create the Validator and init them
     fDTDValidator = new DTDValidator();
@@ -1097,25 +1083,6 @@ void XMLScanner::initValidator(XMLValidator* theValidator) {
         ((SchemaValidator*) theValidator)->setGrammarResolver(fGrammarResolver);
         ((SchemaValidator*) theValidator)->setExitOnFirstFatal(fExitOnFirstFatal);
     }
-}
-
-void XMLScanner::resetEntityDeclPool() {
-
-    fEntityDeclPool->removeAll();
-    //
-    //  Add the default entity entries for the character refs that must always
-    //  be present. We indicate that they are from the internal subset. They
-    //  aren't really, but they have to look that way so that they are still
-    //  valid for use within a standalone document.
-    //
-    //  We also mark them as special char entities, which allows them to be
-    //  used in places whether other non-numeric general entities cannot.
-    //
-    fEntityDeclPool->put(new DTDEntityDecl(gAmp, chAmpersand, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gLT, chOpenAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gGT, chCloseAngle, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gQuot, chDoubleQuote, true, true));
-    fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
 }
 
 void XMLScanner::resetURIStringPool() {
@@ -2290,9 +2257,9 @@ void XMLScanner::scanProlog()
 
                     // if reusing grammar, this has been validated already in first scan
                     // skip for performance
-                    if (!fReuseGrammar && fValidate) {
+                    if (fValidate && !fGrammar->getValidated()) {
                         //  validate the DTD scan so far
-                        fValidator->preContentValidation(fReuseGrammar);
+                        fValidator->preContentValidation(fUseCachedGrammar);
                     }
                 }
                  else
@@ -2358,27 +2325,10 @@ void XMLScanner::scanProlog()
 
 void XMLScanner::scanDocTypeDecl()
 {
-    if (!fReuseGrammar && fValidatorFromUser && !fValidator->handlesDTD())
-    {
-        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
-    }
-
     //
-    //  We have a doc type. So, create a DTDScanner and
-    //  switch the Grammar to the emptyNamespace one.
+    //  We have a doc type. So, switch the Grammar.
     //
-
-    if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate)
-    {
-        fValidator->emitError
-        (
-            XMLValid::GrammarNotFound
-          , XMLUni::fgZeroLenString
-        );
-    }
-
-    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fEntityDeclPool, fDocTypeHandler);
-    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
+    switchGrammar(XMLUni::fgDTDEntityString);
 
     if (fDocTypeHandler)
         fDocTypeHandler->resetDocType();
@@ -2422,36 +2372,11 @@ void XMLScanner::scanDocTypeDecl()
     //  Only do this if we are not reusing the validator! If we are reusing,
     //  then look it up instead. It has to exist!
     //
-    DTDElementDecl* rootDecl;
-    Janitor<DTDElementDecl> janSrc(0);
+    DTDElementDecl* rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
 
-    if (fReuseGrammar)
-    {
-        if (fGrammar->getGrammarType() == Grammar::DTDGrammarType) {
-            rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
-            if (rootDecl)
-                ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
-            else {
-                rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
-                rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
-                rootDecl->setExternalElemDeclaration(true);
-                ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
-            }
-        }
-        else {
-            rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
-            rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
-            rootDecl->setExternalElemDeclaration(true);
-            janSrc.reset(rootDecl);
-        }
-    }
-     else
-    {
-        rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
-        rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
-        rootDecl->setExternalElemDeclaration(true);
-        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
-    }
+    rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+    rootDecl->setExternalElemDeclaration(true);
+    ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
 
     // Skip any spaces after the name
     fReaderMgr.skipPastSpaces();
@@ -2472,16 +2397,16 @@ void XMLScanner::scanDocTypeDecl()
     }
 
     // either internal/external subset
-    if(!fReuseGrammar) {
-        if (fValScheme == Val_Auto && !fValidate)
-            fValidate = true;
-    }
-
+    if (fValScheme == Val_Auto && !fValidate)
+        fValidate = true;
 
     bool    hasIntSubset = false;
     bool    hasExtSubset = false;
     XMLCh*  sysId = 0;
     XMLCh*  pubId = 0;
+
+    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
 
     //
     //  If the next character is '[' then we have no external subset cause
@@ -2544,7 +2469,7 @@ void XMLScanner::scanDocTypeDecl()
         fReaderMgr.getNextChar();
 
         // We can't have any internal subset if we are reusing the validator
-        if (fReuseGrammar)
+        if (fUseCachedGrammar || fToCacheGrammar)
             ThrowXML(RuntimeException, XMLExcepts::Val_CantHaveIntSS);
 
         //
@@ -2596,50 +2521,88 @@ void XMLScanner::scanDocTypeDecl()
     //  If we had an external subset, then we need to deal with that one
     //  next. If we are reusing the validator, then don't scan it.
     //
-    if (hasExtSubset && !fReuseGrammar && (fLoadExternalDTD || fValidate))
-    {
-        // And now create a reader to read this entity
-        InputSource* srcUsed;
-        XMLReader* reader = fReaderMgr.createReader
-        (
-            sysId
-            , pubId
-            , false
-            , XMLReader::RefFrom_NonLiteral
-            , XMLReader::Type_General
-            , XMLReader::Source_External
-            , srcUsed
-        );
+    if (hasExtSubset) {
 
-        // Put a janitor on the input source
-        Janitor<InputSource> janSrc(srcUsed);
+        if (fUseCachedGrammar)
+        {
+            InputSource* sysIdSrc = resolveSystemId(sysId);
+            Janitor<InputSource> janSysIdSrc(sysIdSrc);
+            Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
 
-        //
-        //  If it failed then throw an exception
-        //
-        if (!reader)
-            ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId());
+            if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
 
-        //
-        //  In order to make the processing work consistently, we have to
-        //  make this look like an external entity. So create an entity
-        //  decl and fill it in and push it with the reader, as happens
-        //  with an external entity. Put a janitor on it to insure it gets
-        //  cleaned up. The reader manager does not adopt them.
-        //
-        const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-        DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
-        declDTD->setSystemId(sysId);
-        Janitor<DTDEntityDecl> janDecl(declDTD);
+                fDTDGrammar = (DTDGrammar*) grammar;
+                fGrammar = fDTDGrammar;
+                fValidator->setGrammar(fGrammar);
+                rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
 
-        // Mark this one as a throw at end
-        reader->setThrowAtEnd(true);
+                if (rootDecl)
+                    ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
+                else {
+                    rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+                    rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+                    rootDecl->setExternalElemDeclaration(true);
+                    ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+                }
 
-        // And push it onto the stack, with its pseudo name
-        fReaderMgr.pushReader(reader, declDTD);
+                return;
+            }
+        }
 
-        // Tell it its not in an include section
-        dtdScanner.scanExtSubsetDecl(false);
+        if (fLoadExternalDTD || fValidate)
+        {
+            // And now create a reader to read this entity
+            InputSource* srcUsed;
+            XMLReader* reader = fReaderMgr.createReader
+            (
+                sysId
+                , pubId
+                , false
+                , XMLReader::RefFrom_NonLiteral
+                , XMLReader::Type_General
+                , XMLReader::Source_External
+                , srcUsed
+            );
+
+            // Put a janitor on the input source
+            Janitor<InputSource> janSrc(srcUsed);
+
+            //
+            //  If it failed then throw an exception
+            //
+            if (!reader)
+                ThrowXML1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId());
+
+            if (fToCacheGrammar) {
+
+                unsigned int stringId = fGrammarResolver->getStringPool()->addOrFind(srcUsed->getSystemId());
+                const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(stringId);
+
+                fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
+                fGrammarResolver->putGrammar(sysIdStr, fGrammar);
+            }
+
+            //
+            //  In order to make the processing work consistently, we have to
+            //  make this look like an external entity. So create an entity
+            //  decl and fill it in and push it with the reader, as happens
+            //  with an external entity. Put a janitor on it to insure it gets
+            //  cleaned up. The reader manager does not adopt them.
+            //
+            const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
+            DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+            declDTD->setSystemId(sysId);
+            Janitor<DTDEntityDecl> janDecl(declDTD);
+
+            // Mark this one as a throw at end
+            reader->setThrowAtEnd(true);
+
+            // And push it onto the stack, with its pseudo name
+            fReaderMgr.pushReader(reader, declDTD);
+
+            // Tell it its not in an include section
+            dtdScanner.scanExtSubsetDecl(false);
+        }
     }
 }
 
@@ -2734,6 +2697,8 @@ bool XMLScanner::scanStartTag(bool& gotData)
     //
     if (isRoot)
     {
+        fRootGrammar = fGrammar;
+
         if (fValidate)
         {
             //  If a DocType exists, then check if it matches the root name there.
@@ -3125,6 +3090,16 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 if ((defType == XMLAttDef::Default)
                 ||  (defType == XMLAttDef::Fixed))
                 {
+                    // Let the validator pass judgement on the attribute value
+                    if (fValidate)
+                    {
+                        fValidator->validateAttrValue
+                        (
+                            &curDef
+                            , curDef.getValue()
+                        );
+                    }
+
                     XMLAttr* curAtt;
                     if (attCount >= curAttListSize)
                     {
@@ -3316,7 +3291,6 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  go through them first before scanning those specified in the instance document
     if (isRoot
         && fDoSchema
-        && !fReuseGrammar
         && (fExternalSchemaLocation || fExternalNoNamespaceSchemaLocation)) {
 
         if (fExternalSchemaLocation)
@@ -3468,7 +3442,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                         , nameRawBuf
                         , fPrefixBuf.getRawBuffer()
                         , qnameRawBuf
-                        , currentScope);
+                        , currentScope
+                        , true);
             wasAdded = true;
         }
     }
@@ -3556,7 +3531,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                         , nameRawBuf
                         , fPrefixBuf.getRawBuffer()
                         , qnameRawBuf
-                        , currentScope);
+                        , currentScope
+                        , true);
             wasAdded = true;
         }
     }
@@ -3617,6 +3593,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     fElemStack.setElement(elemDecl, fReaderMgr.getCurrentReaderNum());
     fElemStack.setCurrentURI(uriId);
 
+    if (isRoot)
+        fRootGrammar = fGrammar;
+
     //  Validate the element
     if (fValidate)
         fValidator->validateElement(elemDecl);
@@ -3631,7 +3610,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             const XMLCh poundStr[] = {chPound, chNull};
             if (!XMLString::startsWith(typeName, poundStr)) {
                 const int comma = XMLString::indexOf(typeName, chComma);
-                if (comma != -1) {
+                if (comma > 0) {
                     XMLBuffer prefixBuf(comma+1);
                     prefixBuf.append(typeName, comma);
                     const XMLCh* uriStr = prefixBuf.getRawBuffer();
@@ -4289,3 +4268,291 @@ void XMLScanner::activateSelectorFor(IdentityConstraint* const ic) {
     matcher->startDocumentFragment();
 }
 
+// ---------------------------------------------------------------------------
+//  XMLScanner: Grammar preparsing
+// ---------------------------------------------------------------------------
+Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
+                                 , const short        grammarType
+                                 , const bool         toCache)
+{
+    InputSource* srcToUse = 0;
+
+    if (fEntityHandler){
+        srcToUse = fEntityHandler->resolveEntity(XMLUni::fgZeroLenString, systemId);
+    }
+
+    //
+    //  First we try to parse it as a URL. If that fails, we assume its
+    //  a file and try it that way.
+    //
+    if (!srcToUse) {
+
+        try
+        {
+            //
+            //  Create a temporary URL. Since this is the primary document,
+            //  it has to be fully qualified. If not, then assume we are just
+            //  mistaking a file for a URL.
+            //
+            XMLURL tmpURL(systemId);
+            if (tmpURL.isRelative()) {
+                srcToUse = new LocalFileInputSource(systemId);
+            }
+            else
+            {
+                srcToUse = new URLInputSource(tmpURL);
+            }
+        }
+        catch(const MalformedURLException&)
+        {
+            srcToUse = new LocalFileInputSource(systemId);
+        }
+        catch(...)
+        {
+            // Just rethrow this, since its not our problem
+            throw;
+        }
+    }
+
+    Janitor<InputSource> janSrc(srcToUse);
+    return loadGrammar(*srcToUse, grammarType, toCache);
+}
+
+Grammar* XMLScanner::loadGrammar(const   char* const systemId
+                                 , const short       grammarType
+                                 , const bool        toCache)
+{
+    // We just delegate this to the XMLCh version after transcoding
+    XMLCh* tmpBuf = XMLString::transcode(systemId);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    return loadGrammar(tmpBuf, grammarType, toCache);
+}
+
+
+Grammar* XMLScanner::loadGrammar(const   InputSource& src
+                                 , const short        grammarType
+                                 , const bool         toCache)
+{
+    try
+    {
+        fGrammarResolver->cacheGrammarFromParse(false);
+        fGrammarResolver->useCachedGrammarInParse(false);
+        fRootGrammar = 0;
+
+        if (fValScheme == Val_Auto) {
+            fValidate = true;
+        }
+
+        // Reset some status flags
+        fInException = false;
+        fStandalone = false;
+        fErrorCount = 0;
+        fHasNoDTD = true;
+        fSeeXsi = false;
+
+        if (grammarType == Grammar::SchemaGrammarType) {
+            return loadXMLSchemaGrammar(src, toCache);
+        }
+        else if (grammarType == Grammar::DTDGrammarType) {
+            return loadDTDGrammar(src, toCache);
+        }
+
+        // Reset the reader manager to close all files, sockets, etc...
+        fReaderMgr.reset();
+    }
+
+    //
+    //  NOTE:
+    //
+    //  In all of the error processing below, the emitError() call MUST come
+    //  before the flush of the reader mgr, or it will fail because it tries
+    //  to find out the position in the XML source of the error.
+    //
+    catch(const XMLErrs::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
+    }
+
+    catch(const XMLValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
+       
+    }
+
+    catch(const XMLException& excToCatch)
+    {
+        //
+        //  Emit the error and catch any user exception thrown from here. Make
+        //  sure in all cases we flush the reader manager.
+        //
+        fInException = true;
+        try
+        {
+            if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
+                emitError
+                (
+                    XMLErrs::XMLException_Warning
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
+                emitError
+                (
+                    XMLErrs::XMLException_Fatal
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+            else
+                emitError
+                (
+                    XMLErrs::XMLException_Error
+                    , excToCatch.getType()
+                    , excToCatch.getMessage()
+                );
+        }
+
+        catch(...)
+        {
+            // Flush the reader manager and rethrow user's error
+            fReaderMgr.reset();
+            throw;
+        }
+
+        // If it returned, then reset the reader manager and fall through
+        fReaderMgr.reset();
+    }
+
+    catch(...)
+    {
+        // Reset and rethrow
+        fReaderMgr.reset();
+        throw;
+    }
+
+    return 0;
+}
+
+Grammar* XMLScanner::loadDTDGrammar(const InputSource& src,
+                                    const bool toCache)
+{
+   // Reset the validators
+    fDTDValidator->reset();
+    if (fValidatorFromUser)
+        fValidator->reset();
+
+    if (!fValidator->handlesDTD()) {
+        if (fValidatorFromUser && fValidate)
+            ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+        else {
+            fValidator = fDTDValidator;
+        }
+    }
+
+    fDTDGrammar = new DTDGrammar();
+    fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
+    fGrammar = fDTDGrammar;
+    fGrammarType = fGrammar->getGrammarType();
+    fValidator->setGrammar(fGrammar);
+
+    //
+    //  And for all installed handlers, send reset events. This gives them
+    //  a chance to flush any cached data.
+    //
+    if (fDocHandler)
+        fDocHandler->resetDocument();
+    if (fEntityHandler)
+        fEntityHandler->resetEntities();
+    if (fErrorReporter)
+        fErrorReporter->resetErrors();
+
+    // Clear out the id reference list
+    fIDRefList->removeAll();
+
+    if (toCache) {
+
+        unsigned int sysId = fGrammarResolver->getStringPool()->addOrFind(src.getSystemId());
+        const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(sysId);
+
+        fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
+        fGrammarResolver->putGrammar(sysIdStr, fGrammar);
+    }
+
+    //
+    //  Handle the creation of the XML reader object for this input source.
+    //  This will provide us with transcoding and basic lexing services.
+    //
+    XMLReader* newReader = fReaderMgr.createReader
+    (
+        src
+        , false
+        , XMLReader::RefFrom_NonLiteral
+        , XMLReader::Type_General
+        , XMLReader::Source_External
+    );
+    if (!newReader) {
+        if (src.getIssueFatalErrorIfNotFound())
+            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource, src.getSystemId());
+        else
+            ThrowXML1(RuntimeException, XMLExcepts::Scan_CouldNotOpenSource_Warning, src.getSystemId());
+    }
+
+    //
+    //  In order to make the processing work consistently, we have to
+    //  make this look like an external entity. So create an entity
+    //  decl and fill it in and push it with the reader, as happens
+    //  with an external entity. Put a janitor on it to insure it gets
+    //  cleaned up. The reader manager does not adopt them.
+    //
+    const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
+    DTDEntityDecl* declDTD = new DTDEntityDecl(gDTDStr);
+    declDTD->setSystemId(src.getSystemId());
+    Janitor<DTDEntityDecl> janDecl(declDTD);
+
+    // Mark this one as a throw at end
+    newReader->setThrowAtEnd(true);
+
+    // And push it onto the stack, with its pseudo name
+    fReaderMgr.pushReader(newReader, declDTD);
+
+    //
+    //  If we have a doc type handler and advanced callbacks are enabled,
+    //  call the doctype event.
+    //
+    if (fDocTypeHandler) {
+
+        // Create a dummy root
+        DTDElementDecl* rootDecl = new DTDElementDecl(gDTDStr, fEmptyNamespaceId);
+        rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+        rootDecl->setExternalElemDeclaration(true);
+        Janitor<DTDElementDecl> janSrc(rootDecl);
+
+        fDocTypeHandler->doctypeDecl(*rootDecl, src.getPublicId(), src.getSystemId(), false);
+    }
+
+    // Create DTDScanner
+    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
+
+    // Tell it its not in an include section
+    dtdScanner.scanExtSubsetDecl(false);
+
+    if (fValidate) {
+        //  validate the DTD scan so far
+        fValidator->preContentValidation(false, true);
+    }
+
+    if (toCache)
+        fGrammarResolver->cacheGrammars();
+
+    return fDTDGrammar;
+}
+
+// ---------------------------------------------------------------------------
+//  XMLScanner: Rest pool of cached grammars
+// ---------------------------------------------------------------------------
+void XMLScanner::resetCachedGrammarPool()
+{
+    fGrammarResolver->resetCachedGrammar();
+}

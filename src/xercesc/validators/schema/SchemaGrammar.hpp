@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/11 18:21:20  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.2  2002/07/05 17:08:10  tng
  * [Bug 10119] Grammar::getGrammarType need a const modifier
  *
@@ -117,6 +120,7 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 
 //
 // This class stores the Schema information
@@ -130,7 +134,6 @@
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
-class DatatypeValidatorFactory;
 class ComplexTypeInfo;
 class NamespaceScope;
 class XercesGroupInfo;
@@ -211,6 +214,8 @@ public:
         const   XMLCh* const    notName
     );
 
+    virtual bool getValidated() const;
+
     virtual XMLElementDecl* putElemDecl
     (
         const   unsigned int    uriId
@@ -218,17 +223,21 @@ public:
         , const XMLCh* const    prefixName
         , const XMLCh* const    qName
         , unsigned int          scope
+        , const bool            notDeclared = false
     );
 
     virtual unsigned int putElemDecl
     (
         XMLElementDecl* const elemDecl
+        , const bool          notDeclared = false
     )   const;
 
     virtual unsigned int putNotationDecl
     (
         XMLNotationDecl* const notationDecl
     )   const;
+
+    virtual void setValidated(const bool newState);
 
     virtual void reset();
 
@@ -240,11 +249,10 @@ public:
     RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
     RefHashTableOf<XercesGroupInfo>* getGroupInfoRegistry() const;
     RefHashTableOf<XercesAttGroupInfo>* getAttGroupInfoRegistry() const;
-    DatatypeValidatorFactory* getDatatypeRegistry() const;
+    DatatypeValidatorFactory* getDatatypeRegistry();
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
     RefHashTableOf<XMLRefInfo>* getIDRefList() const;
-    bool getUPAChecked() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -254,10 +262,8 @@ public:
     void setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other);
     void setGroupInfoRegistry(RefHashTableOf<XercesGroupInfo>* const other);
     void setAttGroupInfoRegistry(RefHashTableOf<XercesAttGroupInfo>* const other);
-    void setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry);
     void setNamespaceScope(NamespaceScope* const nsScope);
     void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
-    void setUPAChecked(bool newState);
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -270,13 +276,21 @@ public:
 private:
 
     // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    void cleanUp();
+
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fElemDeclPool
     //      This is the element decl pool. It contains all of the elements
-    //      declared in the Schema (and their associated attributes.) When in
-    //      non-validating mode, its just populated as new elements are seen
-    //      and they are given default characteristics.
+    //      declared in the Schema (and their associated attributes.) 
+    //
+    //  fElemNonDeclPool
+    //      This is the element decl pool that is is populated as new elements
+    //      are seen in the XML document (not declared in the Schema), and they
+    //      are given default characteristics.
     //
     //  fGroupElemDeclPool
     //      This is the element decl pool for elements in a group that are
@@ -315,23 +329,25 @@ private:
     //      List of ids of schema declarations extracted during schema grammar
     //      traversal
     //
-    //  fUPAChecked
-    //      Indicates if this Grammar has already been validated for
-    //      schema unique particle attribute constraint checking.
+    //  fValidated
+    //      Indicates if the content of the Grammar has been pre-validated
+    //      or not (UPA checking, etc.). When using a cached grammar, no need
+    //      for pre content validation.
     // -----------------------------------------------------------------------
     XMLCh*                                 fTargetNamespace;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
     RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
     NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
     RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
     RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
     RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
-    DatatypeValidatorFactory*              fDatatypeRegistry;
+    DatatypeValidatorFactory               fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
     RefHashTableOf<XMLRefInfo>*            fIDRefList;
-    bool                                   fUPAChecked;
+    bool                                   fValidated;
 };
 
 
@@ -367,9 +383,9 @@ SchemaGrammar::getAttGroupInfoRegistry() const {
     return fAttGroupInfoRegistry;
 }
 
-inline DatatypeValidatorFactory* SchemaGrammar::getDatatypeRegistry() const {
+inline DatatypeValidatorFactory* SchemaGrammar::getDatatypeRegistry() {
 
-    return fDatatypeRegistry;
+    return &fDatatypeRegistry;
 }
 
 inline NamespaceScope* SchemaGrammar::getNamespaceScope() const {
@@ -381,10 +397,6 @@ inline RefHash2KeysTableOf<ElemVector>*
 SchemaGrammar::getValidSubstitutionGroups() const {
 
     return fValidSubstitutionGroups;
-}
-
-inline bool SchemaGrammar::getUPAChecked() const {
-    return fUPAChecked;
 }
 
 inline RefHashTableOf<XMLRefInfo>* SchemaGrammar::getIDRefList() const {
@@ -424,12 +436,6 @@ SchemaGrammar::setAttGroupInfoRegistry(RefHashTableOf<XercesAttGroupInfo>* const
     fAttGroupInfoRegistry = other;
 }
 
-inline void
-SchemaGrammar::setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry) {
-
-    fDatatypeRegistry = dvRegistry;
-}
-
 inline void SchemaGrammar::setNamespaceScope(NamespaceScope* const nsScope) {
 
     fNamespaceScope = nsScope;
@@ -441,9 +447,6 @@ SchemaGrammar::setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const
     fValidSubstitutionGroups = other;
 }
 
-inline void SchemaGrammar::setUPAChecked(bool newState) {
-    fUPAChecked = newState;
-}
 
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Virtual methods
@@ -484,8 +487,13 @@ inline const XMLElementDecl* SchemaGrammar::getElemDecl( const   unsigned int  u
 {
     const SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
 
-    if (!decl)
+    if (!decl) {
+
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
+
+        if (!decl)
+            decl = fElemNonDeclPool->getByKey(baseName, uriId, scope);
+    }
 
     return decl;
 }
@@ -497,8 +505,13 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl (const   unsigned int  uriId
 {
     SchemaElementDecl* decl = fElemDeclPool->getByKey(baseName, uriId, scope);
 
-    if (!decl)
+    if (!decl) {
+
         decl = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
+
+        if (!decl)
+            decl = fElemNonDeclPool->getByKey(baseName, uriId, scope);
+    }
 
     return decl;
 }
@@ -525,8 +538,13 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
     return decl;
 }
 
-inline unsigned int SchemaGrammar::putElemDecl (XMLElementDecl* const elemDecl)   const
+inline unsigned int
+SchemaGrammar::putElemDecl(XMLElementDecl* const elemDecl,
+                           const bool notDeclared) const
 {
+    if (notDeclared)
+        return fElemNonDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
+
     return fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
 }
 
@@ -549,6 +567,16 @@ inline XMLNotationDecl* SchemaGrammar::getNotationDecl(const XMLCh* const notNam
 inline unsigned int SchemaGrammar::putNotationDecl(XMLNotationDecl* const notationDecl)   const
 {
     return fNotationDeclPool->put(notationDecl);
+}
+
+inline bool SchemaGrammar::getValidated() const
+{
+    return fValidated;
+}
+
+inline void SchemaGrammar::setValidated(const bool newState)
+{
+    fValidated = newState;
 }
 
 #endif

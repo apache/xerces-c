@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/11 18:17:43  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.2  2002/07/05 17:08:10  tng
  * [Bug 10119] Grammar::getGrammarType need a const modifier
  *
@@ -133,6 +136,7 @@ public:
     // -----------------------------------------------------------------------
     virtual GrammarType getGrammarType() const =0;
     virtual const XMLCh* getTargetNamespace() const =0;
+    virtual bool getValidated() const = 0;
 
     // Element Decl
     virtual XMLElementDecl* findOrAddElemDecl
@@ -200,17 +204,21 @@ public:
         , const XMLCh* const    prefixName
         , const XMLCh* const    qName
         , unsigned int          scope
+        , const bool            notDeclared = false
     ) = 0;
 
     virtual unsigned int putElemDecl
     (
         XMLElementDecl* const elemDecl
+        , const bool          notDeclared = false
     )   const = 0;
 
     virtual unsigned int putNotationDecl
     (
         XMLNotationDecl* const notationDecl
     )   const=0;
+
+    virtual void setValidated(const bool newState) = 0;
 
     // -----------------------------------------------------------------------
     //  Virtual methods

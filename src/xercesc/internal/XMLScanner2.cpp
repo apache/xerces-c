@@ -532,6 +532,16 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if ((defType == XMLAttDef::Default)
                 ||  (defType == XMLAttDef::Fixed))
                 {
+                    // Let the validator pass judgement on the attribute value
+                    if (fValidate)
+                    {
+                        fValidator->validateAttrValue
+                        (
+                            &curDef
+                            , curDef.getValue()
+                        );
+                    }
+
                     XMLAttr* curAtt;
                     if (retCount >= curAttListSize)
                     {
@@ -892,61 +902,33 @@ void XMLScanner::scanReset(const InputSource& src)
     //  This call implicitly tells us that we are going to reuse the scanner
     //  if it was previously used. So tell the validator to reset itself.
     //
-    //  But, if the fReuseGrammar flag is set, then don't reset it.
+    //  But, if the fUseCacheGrammar flag is set, then don't reset it.
     //
     //  NOTE:   The ReaderMgr is flushed on the way out, because that is
     //          required to insure that files are closed.
     //
-    if (!fReuseGrammar) {
-        fGrammarResolver->reset();
+    fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
+    fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-        resetEntityDeclPool();
-        if (fDoNamespaces)
-            resetURIStringPool();
+    fDTDGrammar = new DTDGrammar();
+    fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
+    fGrammar = fDTDGrammar;
+    fGrammarType = fGrammar->getGrammarType();
+    fRootGrammar = 0;
 
-        // create a default grammar first
-        fGrammar = new DTDGrammar();
-
-        //
-        if (fValidatorFromUser) {
-            if (fValidator->handlesDTD())
-                fValidator->setGrammar(fGrammar);
-        }
-        else {
-            // set fValidator as fDTDValidator
-            fValidator = fDTDValidator;
+    if (fValidatorFromUser) {
+        if (fValidator->handlesDTD())
             fValidator->setGrammar(fGrammar);
-        }
-
-        fGrammarType = fGrammar->getGrammarType();
-        fGrammarResolver->putGrammar(XMLUni::fgZeroLenString, fGrammar);
-
-        if (fValScheme == Val_Auto) {
-            fValidate = false;
-        }
     }
     else {
-        // reusing grammar, thus the fGrammar must pre-exist already
-        // make sure the validator handles this reuse grammar type
-        if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
-            if (fValidatorFromUser)
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-            else {
-                fValidator = fSchemaValidator;
-            }
-        }
-        else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
-            if (fValidatorFromUser)
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
-            else {
-                fValidator = fDTDValidator;
-            }
-        }
-
-        if (!fValidator->getGrammar())
-            fValidator->setGrammar(fGrammar);
+        // set fValidator as fDTDValidator
+        fValidator = fDTDValidator;
+        fValidator->setGrammar(fGrammar);
     }
-
+ 
+    if (fValScheme == Val_Auto) {
+        fValidate = false;
+    }
 
     //
     //  And for all installed handlers, send reset events. This gives them
@@ -1379,12 +1361,10 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
                 const XMLCh* valuePtr = curPair->getValue();
                 const XMLCh* suffPtr = attName.getLocalPart();
 
-                if (!fReuseGrammar) {
-                    if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
-                        parseSchemaLocation(valuePtr);
-                    else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
-                        resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
-                }
+                if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
+                    parseSchemaLocation(valuePtr);
+                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
+                    resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
 
                 if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_TYPE)) {
                         fXsiType.set(valuePtr);
@@ -1547,7 +1527,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                     }
 
                     grammar = new SchemaGrammar();
-                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityHandler, fErrorReporter);
+                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, srcToFill->getSystemId(), fEntityHandler, fErrorReporter);
 
                     if (fGrammarType == Grammar::DTDGrammarType) {
                         fGrammar = grammar;
@@ -1555,9 +1535,9 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                         fValidator->setGrammar(fGrammar);
                     }
 
-                    if (!fReuseGrammar && fValidate) {
+                    if (fValidate) {
                         //  validate the Schema scan so far
-                        fValidator->preContentValidation(fReuseGrammar);
+                        fValidator->preContentValidation(false);
                     }
                 }
             }
@@ -1592,6 +1572,135 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
     }
 }
+
+InputSource* XMLScanner::resolveSystemId(const XMLCh* const sysId)
+{
+    // Create a buffer for expanding the system id
+    XMLBufBid bbSys(&fBufMgr);
+    XMLBuffer& expSysId = bbSys.getBuffer();
+
+    //
+    //  Allow the entity handler to expand the system id if they choose
+    //  to do so.
+    //
+    InputSource* srcToFill = 0;
+    if (fEntityHandler)
+    {
+        if (!fEntityHandler->expandSystemId(sysId, expSysId))
+            expSysId.set(sysId);
+
+        srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
+                                                 , expSysId.getRawBuffer());
+    }
+    else
+    {
+        expSysId.set(sysId);
+    }
+
+    //
+    //  If they didn't create a source via the entity handler, then we
+    //  have to create one on our own.
+    //
+    if (!srcToFill)
+    {
+        ReaderMgr::LastExtEntityInfo lastInfo;
+        fReaderMgr.getLastExtEntityInfo(lastInfo);
+
+        try
+        {
+            XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+            if (urlTmp.isRelative())
+            {
+                ThrowXML
+                (
+                    MalformedURLException
+                    , XMLExcepts::URL_NoProtocolPresent
+                );
+            }
+            srcToFill = new URLInputSource(urlTmp);
+        }
+
+        catch(const MalformedURLException&)
+        {
+            // Its not a URL, so lets assume its a local file name.
+            srcToFill = new LocalFileInputSource
+            (
+                lastInfo.systemId
+                , expSysId.getRawBuffer()
+            );
+        }
+    }
+
+    return srcToFill;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLScanner: Private grammar preparsing methods
+// ---------------------------------------------------------------------------
+Grammar* XMLScanner::loadXMLSchemaGrammar(const InputSource& src,
+                                          const bool toCache)
+{
+   // Reset the validators
+    fSchemaValidator->reset();
+    if (fValidatorFromUser)
+        fValidator->reset();
+
+    if (!fValidator->handlesSchema()) {
+        if (fValidatorFromUser && fValidate)
+            ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+        else {
+            fValidator = fSchemaValidator;
+        }
+    }
+
+    XSDDOMParser parser;
+
+    parser.setValidationScheme(XercesDOMParser::Val_Never);
+    parser.setDoNamespaces(true);
+    parser.setUserEntityHandler(fEntityHandler);
+    parser.setUserErrorReporter(fErrorReporter);
+
+    // Should just issue warning if the schema is not found
+    const bool flag = src.getIssueFatalErrorIfNotFound();
+    ((InputSource&) src).setIssueFatalErrorIfNotFound(false);
+
+    parser.parse(src);
+
+    // Reset the InputSource
+    ((InputSource&) src).setIssueFatalErrorIfNotFound(flag);
+
+    if (parser.getSawFatal() && fExitOnFirstFatal)
+        emitError(XMLErrs::SchemaScanFatalError);
+
+    DOMDocument* document = parser.getDocument(); //Our Grammar
+
+    if (document != 0) {
+
+        DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
+        if (root != 0)
+        {
+            SchemaGrammar* grammar = new SchemaGrammar();
+            TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, src.getSystemId(), fEntityHandler, fErrorReporter);
+
+            if (fValidate) {
+                //  validate the Schema scan so far
+                fValidator->setGrammar(grammar);
+                fValidator->preContentValidation(false, true);
+            }
+
+            if (toCache) {
+                fGrammarResolver->cacheGrammars();
+            }
+
+            return grammar;
+        }
+    }
+
+    return 0;
+}
+
+
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Private parsing methods
@@ -2759,7 +2868,7 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         emitError(XMLErrs::PartialMarkupInEntity);
 
     // Look up the name in the general entity pool
-    XMLEntityDecl* decl = fEntityDeclPool->getByKey(bbName.getRawBuffer());
+    XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(bbName.getRawBuffer());
 
     // If it does not exist, then obviously an error
     if (!decl)
@@ -2915,47 +3024,14 @@ XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
     return toFill.getLen();
 }
 
-bool XMLScanner::switchGrammar(unsigned int newGrammarNameSpaceIndex)
-{
-    XMLBufBid bbURI(&fBufMgr);
-    XMLBuffer& bufURI = bbURI.getBuffer();
-    getURIText(newGrammarNameSpaceIndex, bufURI);
-    Grammar* tempGrammar = fGrammarResolver->getGrammar(bufURI.getRawBuffer());
-    if (!tempGrammar) {
-        // This is a case where namespaces is on with a DTD grammar.
-        tempGrammar = fGrammarResolver->getGrammar(XMLUni::fgZeroLenString);
-    }
-    if (!tempGrammar)
-        return false;
-    else {
-        fGrammar = tempGrammar;
-        fGrammarType = fGrammar->getGrammarType();
-        if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
-            if (fValidatorFromUser)
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-            else {
-                fValidator = fSchemaValidator;
-            }
-        }
-        else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
-            if (fValidatorFromUser)
-                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
-            else {
-                fValidator = fDTDValidator;
-            }
-        }
-
-        fValidator->setGrammar(fGrammar);
-        return true;
-    }
-}
 
 bool XMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 {
     Grammar* tempGrammar = fGrammarResolver->getGrammar(newGrammarNameSpace);
+
     if (!tempGrammar) {
         // This is a case where namespaces is on with a DTD grammar.
-        tempGrammar = fGrammarResolver->getGrammar(XMLUni::fgZeroLenString);
+        tempGrammar = fDTDGrammar;
     }
     if (!tempGrammar)
         return false;

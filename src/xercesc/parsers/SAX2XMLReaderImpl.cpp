@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/07/11 18:27:20  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
  * Revision 1.8  2002/06/17 15:41:15  tng
  * To be consistent, SAX2 is updated with:
  * 1. the progressive parse methods should use the fReuseGrammar flag set from setFeature instead of using parameter
@@ -263,9 +266,6 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	// SAX2 default: validation on, auto-validation off
 	fValidation = true;
 	fautoValidation = false;
-
-	// default: reuseValidator is off
-	fReuseGrammar = false;
 
 	// default: schema is on
 	setDoSchema(true);
@@ -494,7 +494,7 @@ void SAX2XMLReaderImpl::parse (const   InputSource&    source)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(source, fReuseGrammar);
+        fScanner->scanDocument(source);
         fParseInProgress = false;
     }
 
@@ -514,7 +514,7 @@ void SAX2XMLReaderImpl::parse (const   XMLCh* const    systemId)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, fReuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -534,7 +534,7 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     try
     {
         fParseInProgress = true;
-        fScanner->scanDocument(systemId, fReuseGrammar);
+        fScanner->scanDocument(systemId);
         fParseInProgress = false;
     }
 
@@ -558,7 +558,7 @@ bool SAX2XMLReaderImpl::parseFirst( const   XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, fReuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool SAX2XMLReaderImpl::parseFirst( const   char* const     systemId
@@ -571,7 +571,7 @@ bool SAX2XMLReaderImpl::parseFirst( const   char* const     systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, fReuseGrammar);
+    return fScanner->scanFirst(systemId, toFill);
 }
 
 bool SAX2XMLReaderImpl::parseFirst( const   InputSource&    source
@@ -584,7 +584,7 @@ bool SAX2XMLReaderImpl::parseFirst( const   InputSource&    source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, fReuseGrammar);
+    return fScanner->scanFirst(source, toFill);
 }
 
 bool SAX2XMLReaderImpl::parseNext(XMLPScanToken& token)
@@ -1315,109 +1315,104 @@ void SAX2XMLReaderImpl::error(  const   unsigned int                code
 void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 {
 
-	if (fParseInProgress)
-		throw SAXNotSupportedException("Feature modification is not supported during parse.");
+    if (fParseInProgress)
+        throw SAXNotSupportedException("Feature modification is not supported during parse.");
 	
-	if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
-	{
-		setDoNamespaces(value);
-	}
+    if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
+    {
+        setDoNamespaces(value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
+    {
+        fValidation = value;
+        if (fValidation)
+            if (fautoValidation)
+                setValidationScheme(Val_Auto);
+            else
+                setValidationScheme(Val_Always);
+        else
+            setValidationScheme(Val_Never);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
+    {
+        fnamespacePrefix = value;
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
+    {
+        fautoValidation = value;
+        // for auto validation, the sax2 core validation feature must also be enabled.
+        if (fValidation)
+            if (fautoValidation)
+                setValidationScheme(Val_Auto);
+            else
+                setValidationScheme(Val_Always);
+        else
+            setValidationScheme(Val_Never);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
+    {
+        setDoSchema(value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    {
+        fScanner->setValidationSchemaFullChecking(value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    {
+        fScanner->setLoadExternalDTD(value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    {
+        fScanner->setExitOnFirstFatal(!value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    {
+        fScanner->setValidationConstraintFatal(value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    {
+        fScanner->cacheGrammarFromParse(value);
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
-	{
-		fValidation = value;
-		if (fValidation)
-			if (fautoValidation)
-				setValidationScheme(Val_Auto);
-			else
-				setValidationScheme(Val_Always);
-		else
-			setValidationScheme(Val_Never);
-	}
-
-
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
-	{
-		fnamespacePrefix = value;
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
-	{
-		fautoValidation = value;
-		// for auto validation, the sax2 core validation feature must also be enabled.
-		if (fValidation)
-			if (fautoValidation)
-				setValidationScheme(Val_Auto);
-			else
-				setValidationScheme(Val_Always);
-		else
-			setValidationScheme(Val_Never);
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseValidator) == 0)
-	{
-		fReuseGrammar = value;
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0)
-	{
-		fReuseGrammar = value;
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
-	{
-		setDoSchema(value);
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
-	{
-		fScanner->setValidationSchemaFullChecking(value);
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
-	{
-		fScanner->setLoadExternalDTD(value);
-	}
-
-	else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
-	{
-      fScanner->setExitOnFirstFatal(!value);
-	}
-	else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
-	{
-      fScanner->setValidationConstraintFatal(value);
-	}
-   else
+        if (value)
+            fScanner->useCachedGrammarInParse(value);
+    }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    {
+        if (value || !fScanner->isCachingGrammarFromParse())
+            fScanner->useCachedGrammarInParse(value);
+    }
+    else
        throw SAXNotRecognizedException("Unknown Feature");
 }
 
 bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 {
-	if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
-		return getDoNamespaces();
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
-		return fValidation;
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
-		return fnamespacePrefix;
-	else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
-		return fautoValidation;
-	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseValidator) == 0)
-        return fReuseGrammar;
-	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0)
-        return fReuseGrammar;
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
+    if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
+        return getDoNamespaces();
+    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
+        return fValidation;
+    else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
+        return fnamespacePrefix;
+    else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
+        return fautoValidation;
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
         return getDoSchema();
-	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
         return fScanner->getValidationSchemaFullChecking();
-	else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
         return fScanner->getLoadExternalDTD();
-	else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
         return !fScanner->getExitOnFirstFatal();
-	else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
         return fScanner->getValidationConstraintFatal();
-   else
+    else if (XMLString::compareIString(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+        return fScanner->isCachingGrammarFromParse();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+        return fScanner->isUsingCachedGrammarInParse();
+    else
        throw SAXNotRecognizedException("Unknown Feature");
-	return false;
+
+    return false;
 }
 
 void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
@@ -1484,4 +1479,88 @@ void SAX2XMLReaderImpl::setDoSchema(const bool newState)
 bool SAX2XMLReaderImpl::getDoSchema() const
 {
     return fScanner->getDoSchema();
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Grammar preparsing
+// ---------------------------------------------------------------------------
+Grammar* SAX2XMLReaderImpl::loadGrammar(const char* const systemId,
+                                        const short grammarType,
+                                        const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* SAX2XMLReaderImpl::loadGrammar(const XMLCh* const systemId,
+                                        const short grammarType,
+                                        const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* SAX2XMLReaderImpl::loadGrammar(const InputSource& source,
+                                        const short grammarType,
+                                        const bool toCache)
+{
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        fParseInProgress = true;
+        grammar = fScanner->loadGrammar(source, grammarType, toCache);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
+
+    return grammar;
+}
+
+void SAX2XMLReaderImpl::resetCachedGrammarPool()
+{
+    fScanner->resetCachedGrammarPool();
 }

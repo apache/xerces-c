@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/11 18:21:20  knoaman
+ * Grammar caching/preparsing - initial implementation.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.11  2002/01/02 15:20:22  tng
  * Schema Fix: should not store a temp value as the key in the element pool and the attribute pool.
@@ -113,17 +116,17 @@
 SchemaGrammar::SchemaGrammar() :
     fTargetNamespace(0)
     , fElemDeclPool(0)
+    , fElemNonDeclPool(0)
     , fGroupElemDeclPool(0)
     , fNotationDeclPool(0)
     , fAttributeDeclRegistry(0)
     , fComplexTypeRegistry(0)
     , fGroupInfoRegistry(0)
     , fAttGroupInfoRegistry(0)
-    , fDatatypeRegistry(0)
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
     , fIDRefList(0)
-    , fUPAChecked(false)
+    , fValidated(false)
 {
     //
     //  Init all the pool members.
@@ -132,31 +135,31 @@ SchemaGrammar::SchemaGrammar() :
     //  pools.
     //
     fElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109);
-    fGroupElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109, false);
-    fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
-    fIDRefList = new RefHashTableOf<XMLRefInfo>(29);
 
-    //
-    //  Call our own reset method. This lets us have the pool setup stuff
-    //  done in just one place (because this stame setup stuff has to be
-    //  done every time we are reset.)
-    //
-    reset();
+    try {
+        fElemNonDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(29);
+        fGroupElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109, false);
+        fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
+        fIDRefList = new RefHashTableOf<XMLRefInfo>(29);
+        fDatatypeRegistry.expandRegistryToFullSchemaSet();
+
+        //
+        //  Call our own reset method. This lets us have the pool setup stuff
+        //  done in just one place (because this stame setup stuff has to be
+        //  done every time we are reset.)
+        //
+        reset();
+    }
+    catch(...) {
+
+        cleanUp();
+        throw;
+    }
 }
 
 SchemaGrammar::~SchemaGrammar()
 {
-    delete fElemDeclPool;
-    delete fGroupElemDeclPool;
-    delete fNotationDeclPool;
-    delete [] fTargetNamespace;
-    delete fAttributeDeclRegistry;
-    delete fComplexTypeRegistry;
-    delete fGroupInfoRegistry;
-    delete fAttGroupInfoRegistry;
-    delete fNamespaceScope;
-    delete fValidSubstitutionGroups;
-    delete fIDRefList;
+    cleanUp();
 }
 
 
@@ -171,17 +174,13 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
         ,       bool&           wasAdded )
 {
     // See it it exists
-    SchemaElementDecl* retVal = fElemDeclPool->getByKey(baseName, uriId, scope);
-
-    if (!retVal) {
-        retVal = fGroupElemDeclPool->getByKey(baseName, uriId, scope);
-    }
+    SchemaElementDecl* retVal = (SchemaElementDecl*) getElemDecl(uriId, baseName, qName, scope);
 
     // if not, then add this in
     if (!retVal)
     {
         retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
-        const unsigned int elemId = fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
+        const unsigned int elemId = fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
         retVal->setId(elemId);
         wasAdded = true;
     }
@@ -196,10 +195,12 @@ XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
         , const XMLCh* const    baseName
         , const XMLCh* const    prefixName
         , const XMLCh* const    qName
-        , unsigned int          scope)
+        , unsigned int          scope
+        , const bool            notDeclared)
 {
     SchemaElementDecl* retVal = new SchemaElementDecl(prefixName, baseName, uriId, SchemaElementDecl::Any);
-    const unsigned int elemId = fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
+    const unsigned int elemId = (notDeclared) ? fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal)
+                                              : fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
     retVal->setId(elemId);
     return retVal;
 }
@@ -210,11 +211,26 @@ void SchemaGrammar::reset()
     //  We need to reset all of the pools.
     //
     fElemDeclPool->removeAll();
+    fElemNonDeclPool->removeAll();
     fGroupElemDeclPool->removeAll();
     fNotationDeclPool->removeAll();
-    fUPAChecked = false;
+    fValidated = false;
 }
 
 
-
+void SchemaGrammar::cleanUp()
+{
+    delete fElemDeclPool;
+    delete fElemNonDeclPool;
+    delete fGroupElemDeclPool;
+    delete fNotationDeclPool;
+    delete [] fTargetNamespace;
+    delete fAttributeDeclRegistry;
+    delete fComplexTypeRegistry;
+    delete fGroupInfoRegistry;
+    delete fAttGroupInfoRegistry;
+    delete fNamespaceScope;
+    delete fValidSubstitutionGroups;
+    delete fIDRefList;
+}
 

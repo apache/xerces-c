@@ -71,6 +71,7 @@
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/util/IOException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
@@ -89,6 +90,35 @@ AbstractDOMParser(valToAdopt)
 
 XercesDOMParser::~XercesDOMParser()
 {
+}
+
+
+// ---------------------------------------------------------------------------
+//  XercesDOMParser: Getter methods
+// ---------------------------------------------------------------------------
+bool XercesDOMParser::isCachingGrammarFromParse() const
+{
+    return getScanner()->isCachingGrammarFromParse();
+}
+
+bool XercesDOMParser::isUsingCachedGrammarInParse() const
+{
+    return getScanner()->isUsingCachedGrammarInParse();
+}
+
+Grammar* XercesDOMParser::getGrammar(const XMLCh* const nameSpaceKey)
+{
+    return getScanner()->getGrammar(nameSpaceKey);
+}
+
+Grammar* XercesDOMParser::getRootGrammar()
+{
+    return getScanner()->getRootGrammar();
+}
+
+const XMLCh* XercesDOMParser::getURIText(unsigned int uriId)
+{
+    return getScanner()->getURIText(uriId);
 }
 
 
@@ -118,6 +148,20 @@ void XercesDOMParser::setEntityResolver(EntityResolver* const handler)
     else {
         getScanner()->setEntityHandler(0);
     }
+}
+
+void XercesDOMParser::cacheGrammarFromParse(const bool newState)
+{
+    getScanner()->cacheGrammarFromParse(newState);
+
+    if (newState)
+        getScanner()->useCachedGrammarInParse(newState);
+}
+
+void XercesDOMParser::useCachedGrammarInParse(const bool newState)
+{
+    if (newState || !getScanner()->isCachingGrammarFromParse())
+        getScanner()->useCachedGrammarInParse(newState);
 }
 
 
@@ -192,3 +236,85 @@ XercesDOMParser::resolveEntity(const XMLCh* const publicId,
     return 0;
 }
 
+// ---------------------------------------------------------------------------
+//  XercesDOMParser: Grammar preparsing methods
+// ---------------------------------------------------------------------------
+Grammar* XercesDOMParser::loadGrammar(const char* const systemId,
+                                      const short grammarType,
+                                      const bool toCache)
+{
+    // Avoid multiple entrance
+    if (getParseInProgress())
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        setParseInProgress(true);
+        grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
+        setParseInProgress(false);
+    }
+
+    catch(...)
+    {
+        setParseInProgress(false);
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* XercesDOMParser::loadGrammar(const XMLCh* const systemId,
+                                      const short grammarType,
+                                      const bool toCache)
+{
+    // Avoid multiple entrance
+    if (getParseInProgress())
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    Grammar* grammar = 0;
+    try
+    {
+        setParseInProgress(true);
+        grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
+        setParseInProgress(false);
+    }
+
+    catch(...)
+    {
+        setParseInProgress(false);
+        throw;
+    }
+
+    return grammar;
+}
+
+Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
+                                      const short grammarType,
+                                      const bool toCache)
+{
+    // Avoid multiple entrance
+    if (getParseInProgress())
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+   Grammar* grammar = 0;
+    try
+    {
+        setParseInProgress(true);
+        grammar = getScanner()->loadGrammar(source, grammarType, toCache);
+        setParseInProgress(false);
+    }
+
+    catch(...)
+    {
+        setParseInProgress(false);
+        throw;
+    }
+
+    return grammar;
+}
+
+void XercesDOMParser::resetCachedGrammarPool()
+{
+    getScanner()->resetCachedGrammarPool();
+}

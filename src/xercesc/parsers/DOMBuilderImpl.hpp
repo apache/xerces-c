@@ -517,6 +517,123 @@ public :
       *
       */
     virtual void resetDocumentPool();
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via an input source
+      * object.
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the DOMInputSource parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param source A const reference to the DOMInputSource object which
+      *               points to the schema grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      *
+      * @see DOMInputSource#DOMInputSource
+      */
+    virtual Grammar* loadGrammar(const DOMInputSource& source,
+                             const short grammarType,
+                             const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const XMLCh pointer to the Unicode string which
+      *                 contains the path to the XML grammar file to be
+      *                 preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    virtual Grammar* loadGrammar(const XMLCh* const systemId,
+                             const short grammarType,
+                             const bool toCache = false);
+
+    /**
+      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+      *
+      * This method invokes the preparsing process on a schema grammar XML
+      * file specified by the file path parameter. If the 'toCache' flag
+      * is enabled, the parser will cache the grammars for re-use. If a grammar
+      * key is found in the pool, no caching of any grammar will take place.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * @param systemId A const char pointer to a native string which contains
+      *                 the path to the XML grammar file to be preparsed.
+      * @param grammarType The grammar type (Schema or DTD).
+      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+      *                otherwise, no chaching. Default is <code>false</code>.
+      * @return The preparsed schema grammar object (SchemaGrammar or
+      *         DTDGrammar). That grammar object is owned by the parser.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOMException A DOM exception as per DOM spec.
+      */
+    virtual Grammar* loadGrammar(const char* const systemId,
+                                 const short grammarType,
+                                 const bool toCache = false);
+
+    /**
+     * Retrieve the grammar that is associated with the specified namespace key
+     *
+     * @param  nameSpaceKey Namespace key
+     * @return Grammar associated with the Namespace key.
+     */
+    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey);
+
+    /**
+     * Retrieve the grammar where the root element is declared.
+     *
+     * @return Grammar where root element declared
+     */
+    virtual Grammar* getRootGrammar();
+
+    /**
+     * Returns the string corresponding to a URI id from the URI string pool.
+     *
+     * @param uriId id of the string in the URI string pool.
+     * @return URI string corresponding to the URI id.
+     */    
+    virtual const XMLCh* getURIText(unsigned int uriId);
+
+    /**
+      * Clear the cached grammar pool
+      */
+    virtual void resetCachedGrammarPool();
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -684,9 +801,6 @@ private :
     //  fFilter
     //      The installed application filter, if any. Null if none.
     //
-    //  fReuseGrammmar
-    //      If the parser should reuse the grammar
-    //
     //  fCharsetOverridesXMLEncoding
     //      Indicates if the "charset-overrides-xml-encoding" is set or not
     //-----------------------------------------------------------------------
@@ -695,7 +809,6 @@ private :
     DOMEntityResolver*          fEntityResolver;
     DOMErrorHandler*            fErrorHandler;
     DOMBuilderFilter*           fFilter;
-    bool                        fReuseGrammar;
     bool                        fCharsetOverridesXMLEncoding;
 };
 
