@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:28  twl
- * Initial revision
+ * Revision 1.2  1999/12/18 00:18:39  roddey
+ * Fixed a small reported memory leak in destructor.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:28  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -217,6 +220,7 @@ void XMLAttr::setValue(const XMLCh* const newValue)
 void XMLAttr::cleanUp()
 {
     delete [] fName;
+    delete [] fPrefix;
     delete [] fQName;
     delete [] fValue;
 }
