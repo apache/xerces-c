@@ -4,7 +4,8 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
-        <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>      
+        <li><link anchor="Migrateto230">Migrating from &XercesCName; 2.2.0 to 2.3.0</link></li>
+        <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>
         <li><link anchor="Migrateto210">Migrating from &XercesCName; 2.0.0 to 2.1.0</link></li>
         <li><link anchor="Migrateto200">Migrating from &XercesCName; 1.7.0 to 2.0.0</link></li>
         <li><link anchor="Migrateto170">Migrating from &XercesCName; 1.6.0 to 1.7.0</link></li>
@@ -14,6 +15,73 @@
       </ul>
     </s2>
 
+    <anchor name="Migrateto230"/>
+    <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; &XercesCVersion;">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.2.0 code base and the &XercesCName; &XercesCVersion;.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures230">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="API230">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI230">New Public API</link></li>
+            <li><link anchor="ModifiedAPI230">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI230">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures230"/>
+    <s3 title="New features in &XercesCName; &XercesCVersion;">
+      <ul>
+        <li>Experimental Implementation of Namespaces in XML 1.1 </li>
+        <li>Experimental Implementation of XML 1.1: in DOMWriter</li>
+        <li>More Schema 1.0 Errata Implementation</li>
+        <li>More DOM L3 Core Support</li>        
+        <ul>
+            <li>DOMConfiguration</li>
+            <li>Document Normalization</li>
+        </ul>
+        <li>Plugable Memory Manager</li>      
+        <li>Plugable Security Manager</li>      
+        <li>Plugable Panic Handler</li>
+        <li>Logical Path Resolution</li>        
+      </ul>
+    </s3>
+
+    <anchor name="API230"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.2.0; and the &XercesCName; &XercesCVersion; releases
+           of the parser. </p>
+
+        <anchor name="NewAPI230"/>
+        <s4 title="New Public API">
+            <ul>
+              <li>To support additional DOM L3 functions, the following are added:</li>
+              <li>DOMDocument: getDOMConfiguration</li>
+              <li>DOMConfiguration class for document normalization.</li>
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI230"/>
+        <s4 title="Modified Public API">
+            <ul>
+              <li></li>
+            </ul>
+        </s4>
+
+        <anchor name="DeprecatedAPI230"/>
+        <s4 title="Deprecated/Removed Public API">
+            <ul>
+              <li>DOMDocument canSetNormalizationFeature, setNormalizationFeature, getNormalizationFeature, getErrorHandler, setErrorHandler removed</li>
+            </ul>
+        </s4>
+
+    </s3>
+    </s2>
+        
     <anchor name="Migrateto220"/>
     <s2 title="Migrating from &XercesCName; 2.1.0 to &XercesCName; 2.2.0">
       <p>The following section is a discussion of the technical differences between

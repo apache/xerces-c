@@ -4,71 +4,76 @@
 <s1 title="Migration">
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; 2.2.0 or earlier,
+       <p>For migration information to &XercesCName; 2.3.0 or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
 
-    <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 2.3.0 to &XercesCName; &XercesCVersion;">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; 2.2.0 code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 2.3.0 code base and the &XercesCName; &XercesCVersion;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures230">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="API230">Public API Changes</link></li>
+        <li><link anchor="NewFeatures240">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="API240">Public API Changes</link></li>
         <ul>
-            <li><link anchor="NewAPI230">New Public API</link></li>
-            <li><link anchor="ModifiedAPI230">Modified Public API</link></li>
-            <li><link anchor="DeprecatedAPI230">Deprecated/Removed Public API</link></li>
+            <li><link anchor="NewAPI240">New Public API</link></li>
+            <li><link anchor="ModifiedAPI240">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI240">Deprecated/Removed Public API</link></li>
         </ul>
       </ul>
 
-    <anchor name="NewFeatures230"/>
+    <anchor name="NewFeatures240"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li>Experimental Implementation of Namespaces in XML 1.1 </li>
-        <li>Experimental Implementation of XML 1.1: in DOMWriter</li>
-        <li>More Schema 1.0 Errata Implementation</li>
-        <li>More DOM L3 Core Support</li>        
-        <ul>
-            <li>DOMConfiguration</li>
-            <li>Document Normalization</li>
-        </ul>
-        <li>Plugable Memory Manager</li>      
-        <li>Plugable Security Manager</li>      
-        <li>Plugable Panic Handler</li>
-        <li>Logical Path Resolution</li>        
+        <li>PSVI</li>
+        <li>Performance enhancement</li>        
+        <li>Stateless Grammar </li>
+        <li>Grammar Serialization/Deserialiation</li>
       </ul>
     </s3>
 
-    <anchor name="API230"/>
+    <anchor name="API240"/>
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           2.2.0; and the &XercesCName; &XercesCVersion; releases
+           2.3.0; and the &XercesCName; &XercesCVersion; releases
            of the parser. </p>
 
-        <anchor name="NewAPI230"/>
+        <anchor name="NewAPI240"/>
         <s4 title="New Public API">
             <ul>
-              <li>To support additional DOM L3 functions, the following are added:</li>
-              <li>DOMDocument: getDOMConfiguration</li>
-              <li>DOMConfiguration class for document normalization.</li>
+              <li>PSVI related</li>
+              <li>Grammar serialization/deserialization related</li>              
             </ul>
         </s4>
 
-        <anchor name="ModifiedAPI230"/>
+        <anchor name="ModifiedAPI240"/>
         <s4 title="Modified Public API">
             <ul>
               <li></li>
             </ul>
         </s4>
 
-        <anchor name="DeprecatedAPI230"/>
+        <anchor name="DeprecatedAPI240"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li>DOMDocument canSetNormalizationFeature, setNormalizationFeature, getNormalizationFeature, getErrorHandler, setErrorHandler removed</li>
+              <li>XMLAttDef: getProvided, getDOMTypeInfoUri, getDOMTypeInfoName, setProvided</li>
+              <li>XMLAttDefList: hasMoreElements, nextElement, Reset</li>
+              <li>DTDAttDefList: hasMoreElements, nextElement, Reset</li>
+              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>       
+              <li>XMLElementDecl: LookupOpts</li>
+              <li>XMLNumber family: toString</li>
+              <li>ENTITYDatatypeValidator: setEntityDeclPool</li>
+              <li>IDDatatypeValidator: setIDRefList</li>
+              <li>IDREFDatatypeValidator: setIDRefList</li>
+              <li>GeneralAttributeCheck: setIDRefList</li>
+              <li>SchemaGrammar: getIDRefList</li>
+              <li>SchemaElementDecl: all non thread safe methods </li>
+              <li>SchemaAttDef: getters </li>
+              <li>DTDGrammar: getRootElemId</li>
+              <li></li>              
             </ul>
         </s4>
 

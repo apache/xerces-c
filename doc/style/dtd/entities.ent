@@ -9,8 +9,8 @@
 <!ENTITY XercesCSrcInstallDir "xerces-c-src2_4_0">            <!-- sourcedirectory -->
 <!ENTITY XercesCWindowsLib    "xerces-c_2">                   <!-- windowslibname -->
 <!ENTITY XercesCWindowsDLL    "xerces-c_2_4_0">               <!-- windowsDLLname -->
-<!ENTITY XercesCUnixSoName    "23.0">                         <!-- unixlibname -->
-<!ENTITY XercesCUnixVersion   "23">                           <!-- unixlibname -->
+<!ENTITY XercesCUnixSoName    "24.0">                         <!-- unixlibname -->
+<!ENTITY XercesCUnixVersion   "24">                           <!-- unixlibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
 <!ENTITY XercesCNSVersion     "xercesc_2_4">                  <!-- C++ namespace name with Version -->
