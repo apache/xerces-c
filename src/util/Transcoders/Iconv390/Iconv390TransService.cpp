@@ -453,7 +453,12 @@ XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode)
     {
         const unsigned int len = calcRequiredSize(toTranscode);
         if (len == 0)
-            return 0;
+        {
+            retVal = new XMLCh[1];
+            retVal[0] = 0;
+            return retVal;
+        }
+
 
         wchar_t       tmpWideCharArr[gTempBuffArraySize];
         wchar_t*      allocatedArray = 0;
