@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/07 14:26:36  tng
+ * IDOM: some compiler (solaris cc/hp acc)  requires memory to align, otherwise core dump.
+ *
  * Revision 1.8  2001/06/04 20:44:15  tng
  * IDOM: Comment should say XMLCh instead of DOMString
  *
@@ -120,6 +123,7 @@ static IDStringPoolEntry *createSPE(const XMLCh *str, IDDocumentImpl *doc)
     //       struct, so we don't need to add one again to account for the trailing null.
     //
     size_t sizeToAllocate = sizeof(IDStringPoolEntry) + XMLString::stringLen(str)*sizeof(XMLCh);
+    sizeToAllocate = (sizeToAllocate % 4) + sizeToAllocate;
     IDStringPoolEntry *newSPE = (IDStringPoolEntry *)doc->allocate(sizeToAllocate);
     newSPE->fNext = 0;
     XMLCh * nonConstStr = (XMLCh *)newSPE->fString;
