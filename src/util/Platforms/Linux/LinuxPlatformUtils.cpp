@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/05/11 12:03:40  tng
+ * Need to add header <linux/limits> for definition of PATH_MAX
+ *
  * Revision 1.18  2001/05/10 20:40:44  lehors
  * built-in buffer limit could be smaller than system limit,
  * we now use PATH_MAX instead - patch from Christian Schuhegger - bug #1158
@@ -149,6 +152,7 @@
 #include    <stdlib.h>
 #include    <errno.h>
 #include    <libgen.h>
+#include    <linux/limits.h>           //for PATH_MAX
 #include    <sys/timeb.h>
 #include    <string.h>
 #include    <util/PlatformUtils.hpp>
