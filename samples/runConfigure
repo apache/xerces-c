@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2000/02/19 00:21:04  abagchi
+# Changed AS400 to AS400-OS400
+#
 # Revision 1.8  2000/02/09 22:05:52  abagchi
 # AS/400 change
 #
@@ -267,7 +270,7 @@ rm -f config.cache
 rm -f config.log
 rm -f config.status
 if test $platform = "os400"; then
-./configure --host AS400
+./configure --host AS400-OS400
 else
 ./configure
 fi
