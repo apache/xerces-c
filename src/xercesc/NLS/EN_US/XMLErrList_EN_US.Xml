@@ -699,6 +699,10 @@
             <Message Id="Regex_NotSupported" Text="Not supported"/>
             <Message Id="Regex_InvalidChildIndex" Text="Invalid child index"/>
             <Message Id="Regex_InvalidQuantifier" Text="Invalid quantifier in '{0}'"/>
+            <Message Id="Regex_RepPatMatchesZeroString" Text="Replace
+pattern cannot match zero length string"/>
+            <Message Id="Regex_InvalidRepPattern" Text="Invalid replace
+pattern"/>
             <Message Id="NEL_RepeatedCalls" Text="Enabling the NEL option can only be called once per process."/>
             <Message Id="RethrowError" Text="{0}"/>
             <Message Id="Out_Of_Memory" Text="operator new fails.  Possibly running Of memory"/>
