@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/06 21:46:08  tng
+ * Since 390 uses ICU or Uniconv390 TransService, change Iconv390 to use intrinsic transcoders only so as to bypass Bug 2393.
+ *
  * Revision 1.3  2002/11/04 15:14:33  tng
  * C++ Namespace Support.
  *
@@ -154,50 +157,6 @@ private :
     Iconv390TransService(const Iconv390TransService&);
     void operator=(const Iconv390TransService&);
 };
-
-class XMLUTIL_EXPORT Iconv390Transcoder : public XMLTranscoder
-{
-public :
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    Iconv390Transcoder(const XMLCh* const encodingName, const unsigned int blockSize);
-    Iconv390Transcoder(iconvconverter_t* const toAdopt,
-         const XMLCh* const encodingName, const unsigned int blockSize);
-    ~Iconv390Transcoder();
-
-
-    // -----------------------------------------------------------------------
-    //  Implementation of the virtual transcoder interface
-    // -----------------------------------------------------------------------
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const     srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
-    (
-        const   XMLByte* const          srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
-	,       unsigned char* const    charSizes
-    );
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    Iconv390Transcoder(const Iconv390Transcoder&);
-    void operator=(const Iconv390Transcoder&);
-    iconvconverter_t *converter;
-};
-
-
 
 class XMLUTIL_EXPORT Iconv390LCPTranscoder : public XMLLCPTranscoder
 {

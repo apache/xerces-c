@@ -64,6 +64,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/regx/XMLUniCharacter.hpp>
 #include "Iconv390TransService.hpp"
 
 #include <wchar.h>
@@ -280,7 +281,13 @@ const XMLCh* Iconv390TransService::getId() const
 
 bool Iconv390TransService::isSpace(const XMLCh toCheck) const
 {
-    return (iswspace(toCheck) != 0);
+   unsigned short chartype = XMLUniCharacter::getType(toCheck);
+   if ( (chartype == XMLUniCharacter::SPACE_SEPARATOR) ||
+        (chartype == XMLUniCharacter::LINE_SEPARATOR)   ||
+        (chartype == XMLUniCharacter::PARAGRAPH_SEPARATOR) )
+      return true;
+   else
+      return false;
 }
 
 
@@ -311,20 +318,13 @@ Iconv390TransService::makeNewXMLTranscoder(const   XMLCh* const            encod
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int            )
 {
+    //  This is a minimalist transcoding service, that only supports a local
+    //  default transcoder. All named encodings return zero as a failure,
+    //  which means that only the intrinsic encodings supported by the parser
+    //  itself will work for XML data.
     //
-    //  Translate the input encodingName from Unicode XMLCh format into
-    //  ibm-037 char format via the lookup table.
-    //
-    char charEncodingName[256];
-    const XMLCh*  srcPtr = encodingName;
-    char*         outPtr = charEncodingName;
-    while (*srcPtr != 0)
-        *outPtr++ = toupper(gUnicodeToIBM037XlatTable[*srcPtr++]);
-    *outPtr=0;
-
-    iconvconverter *tconv=addConverter(charEncodingName,resValue);
-
-    return new Iconv390Transcoder(tconv, encodingName, 0);
+    resValue = XMLTransService::UnsupportedEncoding;
+    return 0;
 }
 
 void Iconv390TransService::upperCase(XMLCh* const toUpperCase) const
@@ -570,100 +570,6 @@ Iconv390LCPTranscoder::~Iconv390LCPTranscoder()
 {
     removeConverter(converter);
     converter=0;
-}
-
-// ---------------------------------------------------------------------------
-//  Iconv390Transcoder: Constructors and Destructor
-// ---------------------------------------------------------------------------
-Iconv390Transcoder::Iconv390Transcoder(const  XMLCh* const    encodingName
-                                , const unsigned int    blockSize) :
-    XMLTranscoder(encodingName, blockSize)
-{
-}
-
-Iconv390Transcoder::Iconv390Transcoder(iconvconverter_t* const toAdopt
-				,const XMLCh* const encodingName
-				,const unsigned int blockSize) :
- 	XMLTranscoder(encodingName, blockSize)
-       ,converter (toAdopt)
-{
-}
-
-Iconv390Transcoder::~Iconv390Transcoder()
-{
-    removeConverter(converter);
-    converter=0;
-}
-
-
-// ---------------------------------------------------------------------------
-//  Iconv390Transcoder: Implementation of the virtual transcoder API
-// ---------------------------------------------------------------------------
-XMLCh Iconv390Transcoder::transcodeOne(const   XMLByte* const     srcData
-                                    , const unsigned int    srcBytes
-                                    ,       unsigned int&   bytesEaten)
-{
-    wchar_t  toFill;
-
-    size_t retCode;
-    char *tmpInPtr = (char*) srcData;
-    char *tmpOutPtr = (char*)&toFill;
-    size_t inByteLeft = srcBytes;
-    size_t outByteLeft = 2;
-    {
-     XMLMutexLock lockConverter(&converter->fMutex);
-     retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
-    }
-    if (retCode == -1) {
-        bytesEaten = 0;
-        return 0;
-    }
-    int eaten = srcBytes-inByteLeft;
-    if (eaten == -1)
-    {
-        bytesEaten = 0;
-        return 0;
-    }
-
-    // Return the bytes we ate and the resulting char.
-    bytesEaten = eaten;
-    return toFill;
-}
-
-
-unsigned int
-Iconv390Transcoder::transcodeXML(  const   XMLByte* const             srcData
-                                , const unsigned int            srcCount
-                                ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
-								,       unsigned char* const    charSizes)
-{
-    //
-    //  For this one, because we have to maintain the offset table, we have
-    //  to do them one char at a time until we run out of source data.
-    //
-    unsigned int countIn = 0;
-    unsigned int countOut = 0;
-
-    size_t retCode;
-    char *tmpInPtr = (char *) srcData;
-    char *tmpOutPtr = (char *) toFill;
-    size_t inByteLeft = srcCount;
-    size_t outByteLeft = maxChars*2;
-    {
-     XMLMutexLock lockConverter(&converter->fMutex);
-     retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
-    }
-    if (retCode == -1)
-    {
-	return 0;
-    }
-
-    // Give back the counts of eaten and transcoded
-    bytesEaten = srcCount-inByteLeft;
-    return maxChars-outByteLeft/2;
-
 }
 
 XERCES_CPP_NAMESPACE_END
