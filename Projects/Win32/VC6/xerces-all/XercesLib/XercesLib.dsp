@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x12000000" /version:1.2 /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib /nologo /base:"0x12000000" /version:1.2 /subsystem:windows /dll /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
 # SUBTRACT LINK32 /pdb:none /incremental:yes
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x12000000" /version:1.2 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1.lib" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib /nologo /base:"0x12000000" /version:1.2 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_1.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1.lib" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -138,6 +138,11 @@ SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService2.cpp
+# ADD CPP /Ze
 # End Source File
 # End Group
 # Begin Source File

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/07 23:45:36  roddey
+ * First cut for additions to Win32 xcode. Based very loosely on a
+ * prototype from Eric Ulevik.
+ *
  * Revision 1.7  2000/03/02 19:55:36  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -131,7 +135,7 @@ public :
 
 protected :
     // -----------------------------------------------------------------------
-    //  Protected virtual methods
+    //  Protected virtual methods, implemented in Win32TransService2.cpp
     // -----------------------------------------------------------------------
     virtual XMLTranscoder* makeNewXMLTranscoder
     (
@@ -147,6 +151,12 @@ private :
     // -----------------------------------------------------------------------
     Win32TransService(const Win32TransService&);
     void operator=(const Win32TransService&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods, implemented in Win32TransService2.cpp!
+    // -----------------------------------------------------------------------
+    void initCPMap();
 };
 
 
@@ -157,7 +167,12 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    Win32Transcoder(const XMLCh* const encodingName, const unsigned int blockSize);
+    Win32Transcoder
+    (
+        const   XMLCh* const    encodingName
+        , const unsigned int    winCP
+        , const unsigned int    ieCP
+        , const unsigned int    blockSize);
     ~Win32Transcoder();
 
 
@@ -188,6 +203,19 @@ private :
     // -----------------------------------------------------------------------
     Win32Transcoder(const Win32Transcoder&);
     void operator=(const Win32Transcoder&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fIECP
+    //      This is the internet explorer code page for this encoding.
+    //
+    //  fWinCP
+    //      This is the windows code page for this encoding.
+    // -----------------------------------------------------------------------
+    unsigned int    fIECP;
+    unsigned int    fWinCP;
 };
 
 

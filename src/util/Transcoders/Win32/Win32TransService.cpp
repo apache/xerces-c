@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/07 23:45:36  roddey
+ * First cut for additions to Win32 xcode. Based very loosely on a
+ * prototype from Eric Ulevik.
+ *
  * Revision 1.9  2000/03/02 19:55:36  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -101,8 +105,10 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include "Win32TransService.hpp"
+#include <util/TranscodingException.hpp>
+#include <util/XMLException.hpp>
 #include <util/XMLUni.hpp>
+#include "Win32TransService.hpp"
 #include <windows.h>
 
 
@@ -121,6 +127,8 @@ static const XMLCh gMyServiceId[] =
 // ---------------------------------------------------------------------------
 Win32TransService::Win32TransService()
 {
+    // Call the init method to set up our code page map
+    initCPMap();
 }
 
 Win32TransService::~Win32TransService()
@@ -167,7 +175,12 @@ XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
 
 bool Win32TransService::supportsSrcOfs() const
 {
-    return false;
+    //
+    //  Since the only mechanism we have to translate XML text in this
+    //  transcoder basically require us to do work that allows us to support
+    //  source offsets, we might as well do it.
+    //
+    return true;
 }
 
 
@@ -177,34 +190,17 @@ void Win32TransService::upperCase(XMLCh* const toUpperCase) const
 }
 
 
-
-// ---------------------------------------------------------------------------
-//  Win32TransService: The protected virtual transcoding service API
-// ---------------------------------------------------------------------------
-XMLTranscoder*
-Win32TransService::makeNewXMLTranscoder(const   XMLCh* const
-                                        ,       XMLTransService::Codes& resValue
-                                        , const unsigned int)
-{
-    //
-    //  This is a minimalist transcoding service, that only supports LCP
-    //  type transcoders. No support for arbitrary encodings is supported,
-    //  so only those supported intrinsically in the parser are available
-    //  for internalizing XML source.
-    //
-    resValue = XMLTransService::UnsupportedEncoding;
-    return 0;
-}
-
-
-
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-Win32Transcoder::Win32Transcoder(const  XMLCh* const encodingName
-                                , const unsigned int blockSize) :
+Win32Transcoder::Win32Transcoder(const  XMLCh* const    encodingName
+                                , const unsigned int    winCP
+                                , const unsigned int    ieCP
+                                , const unsigned int    blockSize) :
 
     XMLTranscoder(encodingName, blockSize)
+    , fIECP(ieCP)
+    , fWinCP(winCP)
 {
 }
 
@@ -216,26 +212,102 @@ Win32Transcoder::~Win32Transcoder()
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-
-// This will never get called because objects of this type are never created
-XMLCh Win32Transcoder::transcodeOne(const   XMLByte* const
-                                    , const unsigned int
-                                    ,       unsigned int&)
+XMLCh Win32Transcoder::transcodeOne(const   XMLByte* const  srcData
+                                    , const unsigned int    srcBytes
+                                    ,       unsigned int&   bytesEaten)
 {
-    return 0;
+    // See how many bytes we'll need for one wide char
+    const unsigned int toEat = ::IsDBCSLeadByteEx(fWinCP, *srcData) ? 2 : 1;
+
+    // Make sure we have this many bytes. If not, return a failure
+    if (toEat > srcBytes)
+        return 0;
+
+    // We have enough bytes, so try to do it
+    XMLCh outCh;
+    if (::MultiByteToWideChar
+    (
+        fWinCP
+        , MB_PRECOMPOSED | MB_ERR_INVALID_CHARS
+        , (const char*)srcData
+        , toEat
+        , &outCh
+        , 1) != 1)
+    {
+        ThrowXML(TranscodingException, XMLExcepts::Trans_CouldNotXCodeXMLData);
+    }
+
+    // Indicate the bytes eaten and return the char we got
+    bytesEaten = toEat;
+    return outCh;
 }
 
 
-// This will never get called because objects of this type are never created
 unsigned int
-Win32Transcoder::transcodeXML(  const   XMLByte* const
-                                , const unsigned int
-                                ,       XMLCh* const
-                                , const unsigned int
-                                ,       unsigned int&
-                                ,       unsigned char* const)
+Win32Transcoder::transcodeXML(  const   XMLByte* const      srcData
+                                , const unsigned int        srcCount
+                                ,       XMLCh* const        toFill
+                                , const unsigned int        maxChars
+                                ,       unsigned int&       bytesEaten
+                                ,       unsigned char* const charSizes)
 {
-    return 0;
+    // Get temp pointers to the in and out buffers, and the chars sizes one
+    XMLCh*          outPtr = toFill;
+    const XMLByte*  inPtr  = srcData;
+    unsigned char*  sizesPtr = charSizes;
+
+    // Calc end pointers for each of them
+    XMLCh*          outEnd = toFill + maxChars;
+    const XMLByte*  inEnd  = srcData + srcCount;
+
+    //
+    //  Now loop until we either get our max chars, or cannot get a whole
+    //  character from the input buffer.
+    //
+    bytesEaten = 0;
+    while ((outPtr < outEnd) && (inPtr < inEnd))
+    {
+        //
+        //  If we are looking at a leading byte of a multibyte sequence,
+        //  then we are going to eat 2 bytes, else 1.
+        //
+        const unsigned int toEat = ::IsDBCSLeadByteEx(fWinCP, *inPtr) ?
+                                    2 : 1;
+
+        // Make sure a whol char is in the source
+        if (inPtr + toEat > inEnd)
+            break;
+
+        // Try to translate this next char and check for an error
+        const unsigned int converted = ::MultiByteToWideChar
+        (
+            fWinCP
+            , MB_PRECOMPOSED | MB_ERR_INVALID_CHARS
+            , (const char*)inPtr
+            , toEat
+            , outPtr
+            , 1
+        );
+
+        if (converted != 1)
+        {
+            DWORD err = ::GetLastError();
+            ThrowXML(TranscodingException, XMLExcepts::Trans_CouldNotXCodeXMLData);
+        }
+
+        // Update the char sizes array for this round
+        *sizesPtr++ = toEat;
+
+        // And update the bytes eaten count
+        bytesEaten += toEat;
+
+        // And update our in/out ptrs
+        inPtr += toEat;
+        outPtr++;
+    }
+
+    // Return the chars we output
+    return (outPtr - toFill);
 }
 
 
@@ -285,7 +357,7 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
         return 0;
 
     char* retVal = 0;
-    if (toTranscode)
+    if (*toTranscode)
     {
         // Calc the needed size
         const unsigned int neededLen = ::wcstombs(0, toTranscode, 0);
@@ -314,7 +386,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
         return 0;
 
     XMLCh* retVal = 0;
-    if (toTranscode)
+    if (*toTranscode)
     {
         // Calculate the buffer size required
         const unsigned int neededLen = ::mbstowcs(0, toTranscode, 0);
