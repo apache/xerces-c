@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/09/10 17:36:13  cargilld
+ * Return bool as described in the interface for cacheGrammar instead of throwing an exception.  Fix from Dave Bertoni.
+ *
  * Revision 1.21  2004/09/08 13:56:13  peiyongz
  * Apache License Version 2.0
  *
@@ -170,7 +173,7 @@ bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 
     if (fGrammarRegistry->containsKey(grammarKey)) 
     {
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::GC_ExistingGrammar, getMemoryManager());
+        return false;
     }
 
     fGrammarRegistry->put((void*) grammarKey, gramToCache);
