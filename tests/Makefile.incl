@@ -82,15 +82,15 @@ ifeq (${PLATFORM}, IRIX)
   ifeq (${COMPILER}, g++)
 	CMP= -c ${CXXFLAGS}
 	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
-	LINK = g++ -D${PLATFORM} -fpic
+	LINK = g++ -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-	EXTRA_LINK_OPTIONS=-lc
+	EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
   else
 	CMP= -c ${CXXFLAGS}
 	CC= CC -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -D_REENTRANT -I/usr/local/include
-	LINK =  CC -D${PLATFORM}
+	LINK =  CC -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=
-	EXTRA_LINK_OPTIONS=
+	EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
   endif
   SHLIBSUFFIX=.so
 endif
@@ -102,13 +102,13 @@ ifeq (${PLATFORM}, SOLARIS)
 	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
  LINK = g++ -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-	EXTRA_LINK_OPTIONS=-lc
+	EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
   else
 	CMP= -c ${CXXFLAGS}
 	CC= CC -c -D${PLATFORM} -D_REENTRANT -pic
  LINK =  CC -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
-	EXTRA_LINK_OPTIONS=-lc -lgen
+	EXTRA_LINK_OPTIONS=-lc -lgen ${EXTRA_LIBS}
   endif
   SHLIBSUFFIX=.so
 endif
@@ -117,8 +117,8 @@ endif
 ifeq (${PLATFORM}, UNIXWARE)
   CMP= -O2 -c ${CXXFLAGS} -pthread
   CC= g++ -O2 -c -D${PLATFORM} -D_REENTRANT -fpic -pthread
-  LINK = g++ -D${PLATFORM} -fpic -pthread
-  EXTRA_LINK_OPTIONS=-lc -lsocket
+  LINK = g++ -D${PLATFORM} -fpic -pthread ${LDFLAGS}
+  EXTRA_LINK_OPTIONS=-lc -lsocket ${EXTRA_LIBS}
   PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
   SHLIBSUFFIX=.so
 endif
@@ -128,7 +128,7 @@ ifeq (${PLATFORM}, PTX)
 COMPILESWITCH= -KPIC -Kthread -DPTX -w -O
 CMP = -c ${COMPILESWITCH}
 CC= c++
-LINK =  ${CC} -DPTX -Kthread
+LINK =  ${CC} -DPTX -Kthread ${LDFLAGS}
 PLATFORM_CPP_COMPILER = c++
 PLATFORM_C_COMPILER = cc
 PLATFORM_LIBRARIES =
@@ -136,7 +136,7 @@ PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -DPTX
 MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -DPTX -G
 MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX  -G
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
-EXTRA_LINK_OPTIONS=-lm -lgen
+EXTRA_LINK_OPTIONS=-lm -lgen ${EXTRA_LIBS}
 SHLIBSUFFIX=.so
 endif
 
@@ -144,10 +144,10 @@ endif
 ifeq (${PLATFORM}, AIX)
 CMP= -c ${CXXFLAGS} -qnotempinc
 CC=${COMPILER} -D${PLATFORM}
-LINK =  ${COMPILER}
+LINK =  ${COMPILER} ${LDFLAGS}
 # the compiler knows about this two
 # PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
-# EXTRA_LINK_OPTIONS=-lC
+# EXTRA_LINK_OPTIONS=-lC ${EXTRA_LIBS}
 SHLIBSUFFIX=.a
 endif
 
@@ -158,23 +158,23 @@ MYCC = cross compiler path here
 TO = qwobj
 else
 MYCC = icc
-LINK =  ${CC} -v
+LINK =  ${CC} -v ${LDFLAGS}
 endif
 CMP= -c -DOS400 ${CXXFLAGS}
 CXX = $(MYCC)
 CC = $(MYCC)
 #INCLUDES    += -I${ICUROOT}/include
 SHLIBSUFFIX=.a
-EXTRA_LINK_OPTIONS=-q OPTION='*DUPPROC *DUPVAR'
+EXTRA_LINK_OPTIONS=-q OPTION='*DUPPROC *DUPVAR' ${EXTRA_LIBS}
 endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 CMP= -c ${CXXFLAGS}
 CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
-LINK =  g++ -D${PLATFORM} -fpic
+LINK =  g++ -D${PLATFORM} -fpic ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-EXTRA_LINK_OPTIONS=-lc
+EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
 SHLIBSUFFIX=.so
 endif
 
@@ -182,13 +182,13 @@ endif
 ifeq (${PLATFORM}, FREEBSD)
   CMP= -c ${CXXFLAGS}
   CC= g++ -c -D${PLATFORM} -fPIC
-  LINK = g++ -D${PLATFORM} -fPIC
+  LINK = g++ -D${PLATFORM} -fPIC ${LDFLAGS}
+  PLATFORM_LIB_LINK_OPTIONS=-Wl,-rpath,${XERCESCROOT}/lib
   ifdef ICUROOT
-    PLATFORM_LIB_LINK_OPTIONS=-L$(ICUROOT)
-    EXTRA_LINK_OPTIONS=-licudata -lstdc++ -pthread
+    PLATFORM_LIB_LINK_OPTIONS+=-L${ICUROOT} -Wl,-rpath,${ICUROOT}
+    EXTRA_LINK_OPTIONS=-licudata -lstdc++ ${EXTRA_LIBS}
   else
-    PLATFORM_LIB_LINK_OPTIONS=
-    EXTRA_LINK_OPTIONS=-lstdc++ -pthread
+    EXTRA_LINK_OPTIONS=${EXTRA_LIBS} -lstdc++
   endif
   SHLIBSUFFIX=.so
 endif
@@ -198,7 +198,7 @@ ifeq (${PLATFORM}, HPUX)
   ifeq (${COMPILER}, aCC)
     CMP = -c $(CXXFLAGS) -D_HP_UX -DHPaCC +DAportable -w +z
     CC = aCC
-    LINK =  ${CC} -Wl,+s
+    LINK =  ${CC} -Wl,+s ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib
     SHLIBSUFFIX=.sl
   else
@@ -211,7 +211,7 @@ ifeq (${PLATFORM}, HPUX)
         -ptr$(TEMPLATESDIR)
     CMP = -c $(COMMON_CMP)
     CC = CC
-    LINK =  ${CC} $(COMMON_CMP) -Wl,+s
+    LINK =  ${CC} $(COMMON_CMP) -Wl,+s ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/CC/lib -L/usr/lib
     SHLIBSUFFIX=.sl
   endif
@@ -248,9 +248,9 @@ CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D
 else
 CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
 endif
-LINK =  ${CC}
+LINK =  ${CC} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=
-EXTRA_LINK_OPTIONS =
+EXTRA_LINK_OPTIONS =${EXTRA_LIBS}
 SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
@@ -267,7 +267,7 @@ endif
 ifeq (${PLATFORM}, TRU64)
 CMP= -c ${CXXFLAGS}
 CC = ${COMPILER} -c -D${PLATFORM}
-LINK = ${COMPILER} -D${PLATFORM}
+LINK = ${COMPILER} -D${PLATFORM} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 SHLIBSUFFIX=.so
 endif
@@ -277,7 +277,7 @@ endif
 ifeq (${PLATFORM}, MACOSX)
 	CMP= -c ${CXXFLAGS}
 	CC= c++ -c -D${PLATFORM} -D_REENTRANT
-	LINK = c++ -D${PLATFORM}
+	LINK = c++ -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	SHLIBSUFFIX=.dylib
 endif
