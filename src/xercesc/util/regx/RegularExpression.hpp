@@ -139,19 +139,19 @@ public:
     // -----------------------------------------------------------------------
     //  Matching methods
     // -----------------------------------------------------------------------
-    bool matches(const char* const matchString, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);
+    bool matches(const char* const matchString, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     bool matches(const char* const matchString, const int start,
-                 const int end, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const char* const matchString, Match* const pMatch, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);
+                 const int end, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    bool matches(const char* const matchString, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     bool matches(const char* const matchString, const int start,
-                 const int end, Match* const pMatch, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);
+                 const int end, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    bool matches(const XMLCh* const matchString, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);;
+    bool matches(const XMLCh* const matchString, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);;
     bool matches(const XMLCh* const matchString, const int start,
-                 const int end, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const XMLCh* const matchString, Match* const pMatch, MemoryManager* const manager);// = XMLPlatformUtils::fgMemoryManager);
+                 const int end, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    bool matches(const XMLCh* const matchString, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     bool matches(const XMLCh* const matchString, const int start,
-                 const int end, Match* const pMatch, MemoryManager* const manage); // = XMLPlatformUtils::fgMemoryManager);
+                 const int end, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Tokenize methods

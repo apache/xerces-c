@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/12/17 20:00:49  cargilld
+ * Update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.21  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1474,7 +1478,7 @@ public:
       *        On return , this buffer also holds the converted string
       */
     static void removeWS(XMLCh* const toConvert
-    , MemoryManager*       const manager );//= XMLPlatformUtils::fgMemoryManager);
+    , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
      * Fixes a platform dependent absolute path filename to standard URI form.

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/12/17 20:00:49  cargilld
+ * Update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.12  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -220,8 +224,7 @@ public:
                                 , bool                    );
 
     static int            compareOrder(const XMLDateTime* const
-                                     , const XMLDateTime* const);
-                                    // , MemoryManager* const memMgr);// = XMLPlatformUtils::fgMemoryManager);
+                                     , const XMLDateTime* const);                                    
 
     /***
      * Support for Serialization/De-serialization
