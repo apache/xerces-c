@@ -155,12 +155,12 @@ typedef int             XMLInt32;
 //	(these routines are defined in CW 8 by extras.h, but there is no MachO
 //	library for extras).
 // ---------------------------------------------------------------------------
-#if __MACH__ && __MWERKS__
+#if __MACH__
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
 #endif
 
-#if __MWERKS__ && (defined(_WIN32) || defined(WIN32))
+#if defined(_WIN32) || defined(WIN32)
 /* used in place of calling mbstowcs or wcstombs with a NULL destination */
 int mbswcslen(const char * s, const unsigned int n);
 int wcsmbslen(const wchar_t * pwcs, const unsigned int n);
