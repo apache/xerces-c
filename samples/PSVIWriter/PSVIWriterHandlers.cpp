@@ -829,7 +829,7 @@ void PSVIWriterHandlers::processAnnotation(XSAnnotation* annotation) {
 	if (annotation == NULL) {
 		sendElementEmpty(PSVIUni::fgAnnotation);
 	} else {
-		DOMDocument* document = DOMImplementationRegistry::getDOMImplementation(XMLUni::fgZeroLenString)->
+		XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document = DOMImplementationRegistry::getDOMImplementation(XMLUni::fgZeroLenString)->
                 createDocument();
 		annotation->writeAnnotation((DOMNode*)document, XSAnnotation::W3C_DOM_DOCUMENT);
 		DOMElement* elem = document->getDocumentElement();
