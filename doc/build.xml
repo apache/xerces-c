@@ -3,7 +3,7 @@
 
 <s1 title="Building &XercesCName;">
 
-  <p>This page has sections on the following topics:</p>
+  <p>This page answers the following questions:</p>
   <ul>
     <li><link anchor="BuildWinNT">Building &XercesCName; on Windows</link></li>
     <li><link anchor="BuildUNIX">Building &XercesCName; on UNIX</link></li>
@@ -14,6 +14,8 @@
     <li><link anchor="BuildDocs">Building the User Documentation</link></li>
     <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
     <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
+    <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
+               sample NetAccessor implementation using Libwww?</link></li>
     <li><link anchor="LookForHelp">Where can I look for more help?</link></li>
   </ul>
 
@@ -568,18 +570,19 @@ gmake</source>
     <anchor name="BuildDocs"/>
     <s2 title="How to build the User Documentation">
 
-        <p>The user documentation (this very page that you are reading on the
-        browser right now), was generated using an XML application called
-        StyleBook. The application makes use of Xerces-J and Xalan to create
-        the HTML from the XML source files. The XML source files are part of
-        the &XercesCName; module. These files reside in the <code>doc</code>
+        <p>The user documentation (this very page that you are reading
+        on the browser right now), was generated using an XML
+        application called StyleBook. The application makes use of
+        Xerces-J and Xalan to create the HTML file from the XML source
+        files. The XML source files are part of the &XercesCName;
+        module. These files reside in the <code>doc</code>
         directory.</p>
 
         <s3 title="Pre-requisites for building the user documentation">
 
-        <p>JDK 1.2.2 (or higher).</p>
-        <p>Xerces-J (1.0.0 or better).</p>
-        <p>Xalan-J (0.19.3 or better).</p>
+        <p>JDK 1.2.2 (or later).<br/>
+        Xerces-J (1.0.0 or later).<br/>
+        Xalan-J (0.19.3 or later).</p>
 
         <p>Finally you must install the StyleBook application. This is
         part of the Xerces Project and the module name is
@@ -752,6 +755,29 @@ doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
 
         <p>Hopefully, you will agree that the answer 'it depends' was
         the right one.</p>
+    </s2>
+
+
+    <anchor name="BuildUsingLibWWW"/>
+    <s2 title="How can I generate Xerces-C binaries which includes the
+               sample NetAccessor implementation using Libwww?">
+
+	  <p>This sample implementation has only been minimally tested
+      only under Windows NT using Libwww 5.2.8. We have not stress
+      tested our implementation can cannot guarantee that there are no
+      memory leaks. The error reporting is also not adequate. Further,
+      it only handles HTTP style URL's. As you can see, this
+      implementation is only for illustrative purposes. Much more work
+      is required to have a robust cross-platform implementation. We
+      would welcome any volunteers who would contribute code to make
+      this happen on various platforms.</p>
+
+	  <p>You need the &XercesCName; source archive for Windows for
+	  doing this build.</p>
+
+	  <p>All required changes are restricted to the Project file
+	  settings for the XercesLib. </p>
+
     </s2>
 
 
