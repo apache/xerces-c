@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2004/01/25 23:23:26  jberry
+ * Step around CodeWarrior compiler warning
+ *
  * Revision 1.23  2004/01/13 19:50:56  peiyongz
  * remove parseContent()
  *
@@ -1538,7 +1541,7 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
     //      2+  8       1      8   1
     //
     int additionalLen = 0;
-    if(additionalLen = fillYearString(retPtr, CentYear))
+    if (0 != (additionalLen = fillYearString(retPtr, CentYear)))
     {
         // very bad luck; have to resize the buffer...
         XMLCh *tmpBuf = (XMLCh*) toUse->allocate( (additionalLen+21+miliSecondsLen +2) * sizeof(XMLCh));
