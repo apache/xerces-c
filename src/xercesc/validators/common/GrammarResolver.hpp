@@ -173,11 +173,10 @@ public:
      * Add the Grammar with Namespace Key associated to the Grammar Pool.
      * The Grammar will be owned by the Grammar Pool.
      *
-     * @param  nameSpaceKey    Key to associate with Grammar abstraction
+     * @param  gramDesc        Key to associate with Grammar abstraction
      * @param  grammarToAdopt  Grammar abstraction used by validator.
      */
-    void putGrammar(const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt );
-    void putGrammar(XMLGrammarDescription* const nameSpaceKey
+    void putGrammar(XMLGrammarDescription* const gramDesc
                   , Grammar* const               grammarToAdopt );
 
     /**

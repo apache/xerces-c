@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/06/25 19:32:05  peiyongz
+ * remove old putGrammar()
+ *
  * Revision 1.12  2003/06/25 18:57:56  peiyongz
  * remove old orphanGrammar()
  *
@@ -242,13 +245,6 @@ GrammarResolver::getGrammarEnumerator() const
 bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
 {
    return fGrammarBucket->containsKey( nameSpaceKey );
-}
-
-//Deprecated
-void GrammarResolver::putGrammar( const XMLCh* const nameSpaceKey, Grammar* const grammarToAdopt )
-{
-    XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
-    putGrammar(gramDesc, grammarToAdopt);
 }
 
 void GrammarResolver::putGrammar(XMLGrammarDescription* const gramDesc, Grammar* const grammarToAdopt)
