@@ -129,61 +129,10 @@ if ($platform =~ m/Windows/) {
         chdir ("$XERCESCROOT");
         system ("del /s /f *.dep *.ncb *.plg *.opt");
 
-        # Make the XERCES-C dll
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib");
-        print "Executing: msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /REBUILD";
-	system("msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /REBUILD");
-
-        # Make the SAXCount sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXCount");
-        print "Executing: msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /REBUILD";
-	system("msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /REBUILD");
-
-        # Make the SAXPrint sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXPrint");
-        print "Executing: msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /REBUILD";
-	system("msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /REBUILD");
-
-        # Make the DOMCount sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMCount");
-        print "Executing: msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /REBUILD";
-	system("msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /REBUILD");
-
-        # Make the DOMPrint sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMPrint");
-        print "Executing: msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /REBUILD";
-	system("msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /REBUILD");
-
-        # Make the Redirect sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/Redirect");
-        print "Executing: msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /REBUILD";
-	system("msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /REBUILD");
-
-
-        # Make the MemParse sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/MemParse");
-        print "Executing: msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /REBUILD";
-	system("msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /REBUILD");
-
-        # Make the PParse sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/PParse");
-        print "Executing: msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /REBUILD";
-	system("msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /REBUILD");
-
-        # Make the StdInParse sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/StdInParse");
-        print "Executing: msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /REBUILD";
-	system("msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /REBUILD");
-
-        # Make the EnumVal sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/EnumVal");
-        print "Executing: msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /REBUILD";
-	system("msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /REBUILD");
-
-        # Make the CreateDOMDocument sample
-        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/CreateDOMDocument");
-        print "Executing: msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /REBUILD";
-	system("msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /REBUILD");
+        # Make all files in the Xerces-C system including libraries, samples and tests
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
+        print "Executing: msdev xerces-all.dsp /MAKE \"all - $platformname $buildmode\" /REBUILD";
+	system("msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
 
         # Decide where you want the build copied from
         chdir ($targetdir);
@@ -404,6 +353,12 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
         # Now build the samples
         chdir ("$XERCESCROOT/samples");
+        system ("runConfigure -p$platform -c$opt_c -x$opt_x");
+        system ("gmake clean");	# May want to comment this line out to speed up
+        system ("gmake");
+
+        # Next build the tests
+        chdir ("$XERCESCROOT/tests");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
         system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");

@@ -175,7 +175,6 @@ sub package_sources {
       chdir ("$srctargetdir/samples");
       system("autoconf");
    }
-
    
    # Delete the irrelevant parts before the packaging
    system("$RM -f $srctargetdir/CMVC.GON");
@@ -192,17 +191,15 @@ sub package_sources {
    system("$RM -rf $srctargetdir/doc/*.zip");
 
    system("$RM -rf $srctargetdir/Projects/Win32/Unsupported");
-   system("$RM -rf $srctargetdir/samples/Projects/Win32/VC5");
-   system("$RM -rf $srctargetdir/src/dom/DomTest");
-   system("$RM -rf $srctargetdir/src/dom/DOMMemTest");
-   system("$RM -rf $srctargetdir/src/util/tests");
-   system("$RM -rf $srctargetdir/src/internal/ParserTest");
-   system("$RM -rf $srctargetdir/tests");
-   system("$RM -rf $srctargetdir/Tools");
+   system("$RM -rf $srctargetdir/Projects/Win32/BCB4");
    system("$RM $srctargetdir/scripts/packageSources.pl");
 
    chdir ($srctargetdir);
    system("$RM -rf *.opt");
+   system("$RM -rf *.o");
+   system("$RM -rf *.so");
+   system("$RM -rf *.sl");
+   system("$RM -rf *.a");
    system("$RM -rf *.ncb");
    system("$RM -rf *.plg");
    system("$RM -rf #*");
