@@ -288,11 +288,11 @@ sub change_documentation_entities()
         while ($line = <FIZZLE>) {
                 $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
                 $line =~ s/"Xerces-C\+\+"/"XML4C"/g;
-                $line =~ s/"1\.5\.2"/"3\.5\.1"/g;
+                $line =~ s/"1\.6\.0"/"4\.0\.0"/g;
                 $line =~ s/"1\.4\.0"/"3\.3\.1"/g;
                 $line =~ s/"Xerces"/"XML4C"/g;
-                $line =~ s/"xerces-c1_5_2"/"xml4c-3_5_1"/g;
-                $line =~ s/"xerces-c-src1_5_2"/"xml4c-src-3_5_1"/g;
+                $line =~ s/"xerces-c1_6_0"/"xml4c-4_0_0"/g;
+                $line =~ s/"xerces-c-src1_6_0"/"xml4c-src-4_0_0"/g;
                 $line =~ s/xerces-c-dev\@xml\.apache\.org/xml4c\@us\.ibm\.com/g;
                 $line =~ s/xml\.apache\.org\/dist\/xerces-c/www\.alphaworks\.ibm\.com\/tech\/xml4c/g;
                 print FIZZLEOUT $line;
@@ -313,7 +313,7 @@ sub change_doxygen()
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
                 $line =~ s/Xerces-C\+\+/XML4C/g;
-                $line =~ s/1\.5\.2/3\.5\.1/g;
+                $line =~ s/1\.6\.0/4\.0\.0/g;
                 $line =~ s/header.html/header_ibm.html/g;
                 print FIZZLEOUT $line;
         }

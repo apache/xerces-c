@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/11/23 17:19:33  tng
+ * Change from 1.5.2 to 1.6.0
+ *
  * Revision 1.16  2001/10/15 16:27:35  tng
  * Changes for Xerces-C 1.5.2
  *
@@ -165,12 +168,12 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_5_2"
-const char* const    gXercesVersionStr = "1_5";
-const char* const    gXercesFullVersionStr = "1_5_2";
+#define Xerces_DLLVersionStr "1_6_0"
+const char* const    gXercesVersionStr = "1_6";
+const char* const    gXercesFullVersionStr = "1_6_0";
 const unsigned int   gXercesMajVersion = 1;
-const unsigned int   gXercesMinVersion = 5;
-const unsigned int   gXercesRevision   = 2;
+const unsigned int   gXercesMinVersion = 6;
+const unsigned int   gXercesRevision   = 0;
 
 
 // ---------------------------------------------------------------------------
