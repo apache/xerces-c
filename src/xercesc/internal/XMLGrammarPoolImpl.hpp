@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/10 18:36:41  neilg
+ * update XMLGrammarPool default implementation to reflect recent modifications to the base interface.
+ *
  * Revision 1.6  2003/10/09 13:54:25  neilg
  * modify grammar pool implementation to that, once locked, a thread-safe StringPool is used
  *
@@ -200,6 +203,26 @@ public :
     virtual XMLSchemaDescription*  createSchemaDescription(const XMLCh* const targetNamespace);
     //@}
 	
+    // -----------------------------------------------------------------------
+    /** @name  schema component model support
+    // -----------------------------------------------------------------------                                                        
+    //@{
+
+    /***
+      * If the grammar pool has been locked, this method returns 
+      * an XSModel corresponding to the schema components represented
+      * by the objects stored in the pool.  If the pool has not been 
+      * locked, this must return null.  If the pool is unlocked at
+      * any point, the underlying XSModel will be destroyed;
+      * applications must take care that, if they wish to unlock
+      * a pool, no further access is made to the XSModel
+      * it produced.  The pool's XSModel will not be serialized,
+      * but, if a locked pool is deserialized, its XSModel
+      * will be recreated.
+      */
+    virtual XSModel *getXSModel() const;
+	
+    // @}
     // -----------------------------------------------------------------------
     /** @name  Getter */
     // -----------------------------------------------------------------------                                                        

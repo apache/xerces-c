@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/10 18:36:41  neilg
+ * update XMLGrammarPool default implementation to reflect recent modifications to the base interface.
+ *
  * Revision 1.6  2003/10/09 13:54:25  neilg
  * modify grammar pool implementation to that, once locked, a thread-safe StringPool is used
  *
@@ -200,6 +203,14 @@ XMLDTDDescription*  XMLGrammarPoolImpl::createDTDDescription(const XMLCh* const 
 XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* const targetNamespace)
 {
 	return new (getMemoryManager()) XMLSchemaDescriptionImpl(targetNamespace, getMemoryManager()); 
+}
+
+inline XSModel *XMLGrammarPoolImpl::getXSModel() const
+{
+    if(!fLocked)
+        return 0;
+    // REVISIT:  implement along with XSModel implementation
+    return 0;
 }
 
 inline XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 
