@@ -1749,6 +1749,10 @@ void WFXMLScanner::scanCDSection()
         //  sequence.
         if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
+            //  make sure we were not expecting a trailing surrogate.
+            if (gotLeadingSurrogate)
+                emitError(XMLErrs::Expected2ndSurrogateChar);
+
             // If we have a doc handler, call it
             if (fDocHandler)
             {
