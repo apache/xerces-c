@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2002/07/26 16:49:27  tng
+# [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
+#
 # Revision 1.5  2002/06/19 21:59:26  peiyongz
 # DOM3:DOMSave Interface support: LocalFileFormatTarget
 #
@@ -118,6 +121,8 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

@@ -54,8 +54,11 @@
 # <http://www.apache.org/>.
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:22:24  peiyongz
-# Initial revision
+# Revision 1.2  2002/07/26 16:49:28  tng
+# [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
+#
+# Revision 1.1.1.1  2002/02/01 22:22:24  peiyongz
+# sane_include
 #
 # Revision 1.1  2001/11/29 18:25:18  tng
 # FreeBSD support by Michael Huedepohl.
@@ -65,6 +68,8 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

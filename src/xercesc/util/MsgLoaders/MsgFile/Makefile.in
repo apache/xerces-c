@@ -57,6 +57,8 @@
 
 PLATFORM = @platform@
 COMPILER = @compiler@
+GCC = @GCC@
+GXX = @GXX@
 PREFIX = @prefix@
 THREADS = @threads@
 PREFIX_INCLUDE = @prefix_include@

@@ -55,8 +55,11 @@
 #
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:22:51  peiyongz
-# Initial revision
+# Revision 1.2  2002/07/26 16:49:30  tng
+# [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
+#
+# Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
+# sane_include
 #
 # Revision 1.1  2001/11/02 14:08:40  knoaman
 # Add support for identity constraints.
@@ -66,6 +69,8 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

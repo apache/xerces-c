@@ -60,9 +60,11 @@ AC_SUBST(platform)
 
 cxx=${CXX}
 AC_SUBST(cxx)
+AC_SUBST(GXX)
 
 cc=${CC}
 AC_SUBST(cc)
+AC_SUBST(GCC)
 
 AC_SUBST(prefix)
 prefix_include='${PREFIX}/include/xercesc'

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2002/07/26 16:49:29  tng
+# [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
+#
 # Revision 1.2  2002/02/11 18:19:19  tng
 # [Bug 2715] Build recursion suppresses make failures.
 #
@@ -85,6 +88,8 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

@@ -112,7 +112,7 @@ LD_SONAME =
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)
-  ifeq (${CXX}, g++)
+  ifeq (${GXX}, yes)
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
@@ -141,7 +141,7 @@ endif
 
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
-  ifeq (${CXX}, g++)
+  ifeq (${GXX}, yes)
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
@@ -170,7 +170,7 @@ endif
 
 #=============== OPENSERVER SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, OPENSERVER)
-  ifeq (${CXX}, g++)
+  ifeq (${GXX}, yes)
 	COMMON_COMPILE_OPTIONS = -D${PLATFORM} -fPIC
     ifeq (${THREADS}, none)
       PLATFORM_COMPILE_OPTIONS = ${COMMON_COMPILE_OPTIONS}
@@ -423,7 +423,7 @@ endif
 ifeq (${PLATFORM}, TRU64)
   SHLIBSUFFIX=.so
   MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
-  ifeq (${CXX}, g++)
+  ifeq (${GXX}, yes)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
     ifeq (${TRANSCODER}, ICU)

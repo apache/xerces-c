@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2002/07/26 16:49:29  tng
+# [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
+#
 # Revision 1.4  2002/05/21 19:33:44  tng
 # DOM Reorganization: rename XSDIDOMParser to XSDDOMParser
 #
@@ -127,6 +130,8 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@

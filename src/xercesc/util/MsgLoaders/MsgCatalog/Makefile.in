@@ -55,8 +55,11 @@
 #
 #
 # $Log$
-# Revision 1.1  2002/02/01 22:22:21  peiyongz
-# Initial revision
+# Revision 1.2  2002/07/26 16:49:27  tng
+# [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
+#
+# Revision 1.1.1.1  2002/02/01 22:22:21  peiyongz
+# sane_include
 #
 # Revision 1.7  2001/07/06 17:12:00  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
@@ -94,6 +97,8 @@
 PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
+GCC = @GCC@
+GXX = @GXX@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
