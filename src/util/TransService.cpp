@@ -415,6 +415,75 @@ void XMLTransService::initTransService()
     );
 
     //
+    //  Add in our mappings for UTF-16 and UCS-4 which does not indicate endian
+    //  assumes the same endian encoding as the OS
+    //
+
+    gMappings->put
+    (
+		(void*)XMLUni::fgUTF16EncodingString,
+        new EEndianNameMapFor<XMLUTF16Transcoder>
+        (
+            XMLUni::fgUTF16EncodingString
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUTF16EncodingString2,
+        new EEndianNameMapFor<XMLUTF16Transcoder>
+        (
+            XMLUni::fgUTF16EncodingString2
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUTF16EncodingString3,
+        new EEndianNameMapFor<XMLUTF16Transcoder>
+        (
+            XMLUni::fgUTF16EncodingString3
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUTF16EncodingString4,
+        new EEndianNameMapFor<XMLUTF16Transcoder>
+        (
+            XMLUni::fgUTF16EncodingString4
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUCS4EncodingString,
+        new EEndianNameMapFor<XMLUCS4Transcoder>
+        (
+            XMLUni::fgUCS4EncodingString
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUCS4EncodingString2,
+        new EEndianNameMapFor<XMLUCS4Transcoder>
+        (
+            XMLUni::fgUCS4EncodingString2
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUCS4EncodingString3,
+        new EEndianNameMapFor<XMLUCS4Transcoder>
+        (
+            XMLUni::fgUCS4EncodingString3
+            , false
+        )
+    );
+
+    //
     //  Add in our mappings for IBM037, and the one alias we support for
     //  it, which is EBCDIC-CP-US.
     //
