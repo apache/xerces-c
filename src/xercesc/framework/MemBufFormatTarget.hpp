@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/07/22 23:23:15  tng
+ * DOM L3: MemBufFormatTarget stores fDataBuf as XMLByte directly, consistent design as MemBufInputSource
+ *
  * Revision 1.2  2002/06/05 15:47:13  peiyongz
  * data member changed, reset() added.
  *
@@ -69,14 +72,13 @@
 #define MemBufFormatTarget_HEADER_GUARD_
 
 #include <xercesc/framework/XMLFormatter.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
 
 class XMLPARSER_EXPORT MemBufFormatTarget : public XMLFormatTarget {
 public:
 
     /** @name constructors and destructor */
     //@{
-    MemBufFormatTarget() ;
+    MemBufFormatTarget(int capacity = 1023) ;
     ~MemBufFormatTarget();
     //@}
 
@@ -90,16 +92,30 @@ public:
     // -----------------------------------------------------------------------
     //  Getter
     // -----------------------------------------------------------------------
-    /** @name getString */
+    /** @name getRawBuffer */
     //@{
     /**
-     * Returned the internal string buffer.
+     * Returned the internal raw buffer.
      *
-     * Caller owns the returned string and is accountable
-     * for the memory release
+     * The MemBufFormatTarget object owns the buffer which will be deleted when
+     * MemBufFormatTarget is destructed; or will be reset when the reset() function
+     * is called.  User should make a copy of the returned buffer if intend to keep
+     * it independent on the state of the MemBufFormatTarget.
      */
-    XMLCh* getString() const;
     //@}
+    const XMLByte* getRawBuffer() const;
+
+    /** @name getLen */
+    //@{
+    /**
+     * Returned the length of the raw buffer.
+     *
+     */
+    //@}
+    unsigned int getLen() const
+    {
+        return fIndex;
+    }
 
     /** @name reset */
     //@{
@@ -117,7 +133,30 @@ private:
     MemBufFormatTarget(const MemBufFormatTarget&);
     MemBufFormatTarget& operator=(const MemBufFormatTarget&);
 
-    XMLBuffer     fDataBuf;
+    // -----------------------------------------------------------------------
+    //  Private helpers
+    // -----------------------------------------------------------------------
+    void insureCapacity(const unsigned int extraNeeded);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fDataBuf
+    //      The pointer to the buffer data. Its grown as needed. Its always
+    //      one larger than fCapacity, to leave room for the null terminator.
+    //
+    //  fIndex
+    //      The current index into the buffer, as characters are appended
+    //      to it. If its zero, then the buffer is empty.
+    //
+    //  fCapacity
+    //      The current capacity of the buffer. Its actually always one
+    //      larger, to leave room for the null terminator.
+    //
+    // -----------------------------------------------------------------------
+    XMLByte*        fDataBuf;
+    unsigned int    fIndex;
+    unsigned int    fCapacity;
 
 };
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/07/22 23:23:15  tng
+ * DOM L3: MemBufFormatTarget stores fDataBuf as XMLByte directly, consistent design as MemBufInputSource
+ *
  * Revision 1.2  2002/06/05 15:47:13  peiyongz
  * data member changed, reset() added.
  *
@@ -67,42 +70,83 @@
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <string.h>
 
-MemBufFormatTarget::MemBufFormatTarget()
+MemBufFormatTarget::MemBufFormatTarget(int capacity)
+    : fDataBuf(0)
+    , fIndex(0)
+    , fCapacity(capacity)
 {
+    // Buffer is one larger than capacity, to allow for zero term
+    fDataBuf = new XMLByte[fCapacity+4];
+
+    // Keep it null terminated
+    fDataBuf[0] = XMLByte(0);
 }
 
 MemBufFormatTarget::~MemBufFormatTarget()
 {
+    delete [] fDataBuf;
 }
 
 void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
                                   , const unsigned int   count
                                   , XMLFormatter * const formatter)
 {
-	//
-	// The toWrite may not be null terminated,
-	// so we need to do some extra work here
-	//
-	XMLByte  lastChar = toWrite[count];   // preserve the last char
-	XMLByte* tmpBuf   = (XMLByte *)toWrite;
+    //
+    // The toWrite may not be null terminated,
+    // so we need to do some extra work here
+    //
+    XMLByte  lastChar = toWrite[count];   // preserve the last char
+    XMLByte* tmpBuf   = (XMLByte *)toWrite;
     tmpBuf[count] = 0;
 
-	XMLCh*   transBuf = XMLString::transcode((char *) tmpBuf);
-	fDataBuf.append(transBuf, XMLString::stringLen(transBuf));
-	delete[] transBuf;
+    if (count) {
+        insureCapacity(count);
+        memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
+        fIndex += count;
+    }
 
-	tmpBuf[count] = lastChar;             // restore the last char
+    tmpBuf[count] = lastChar;             // restore the last char
 }
 
-XMLCh* MemBufFormatTarget::getString() const
+const XMLByte* MemBufFormatTarget::getRawBuffer() const
 {
-	return XMLString::replicate(fDataBuf.getRawBuffer());
+    fDataBuf[fIndex] = 0;
+    fDataBuf[fIndex + 1] = 0;
+    fDataBuf[fIndex + 2] = 0;
+    fDataBuf[fIndex + 3] = 0;
+    return fDataBuf;
 }
 
 void MemBufFormatTarget::reset()
 {
-    fDataBuf.reset();
+    fIndex = 0;
+    fDataBuf[0] = 0;
+    fDataBuf[fIndex + 1] = 0;
+    fDataBuf[fIndex + 2] = 0;
+    fDataBuf[fIndex + 3] = 0;
 }
 
+// ---------------------------------------------------------------------------
+//  MemBufFormatTarget: Private helper methods
+// ---------------------------------------------------------------------------
+void MemBufFormatTarget::insureCapacity(const unsigned int extraNeeded)
+{
+    // If we can handle it, do nothing yet
+    if (fIndex + extraNeeded < fCapacity)
+        return;
+
+    // Oops, not enough room. Calc new capacity and allocate new buffer
+    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 1.25);
+    XMLByte* newBuf = new XMLByte[newCap+4];
+
+    // Copy over the old stuff
+    memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
+
+    // Clean up old buffer and store new stuff
+    delete [] fDataBuf;
+    fDataBuf = newBuf;
+    fCapacity = newCap;
+}
 
