@@ -487,11 +487,8 @@ DOMNode *DOMDocumentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
         throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
 
     // if the newChild is a documenttype node created from domimplementation, set the ownerDoc first
-    if ((newChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)) {
-        if (!newChild->getOwnerDocument() ||
-            ((DOMDocumentTypeImpl*)newChild)->isOwnerDocSingleton())
+    if ((newChild->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) && !newChild->getOwnerDocument())
         ((DOMDocumentTypeImpl*)newChild)->setOwnerDocument(this);
-    }
 
     fParent.insertBefore(newChild,refChild);
 

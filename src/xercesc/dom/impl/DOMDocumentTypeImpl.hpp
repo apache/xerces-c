@@ -132,9 +132,6 @@ public:
     virtual const XMLCh *     getPublicId() const;
     virtual const XMLCh *     getSystemId() const;
     virtual const XMLCh *     getInternalSubset() const;
-
-    //
-    bool isOwnerDocSingleton() const;
 };
 
 XERCES_CPP_NAMESPACE_END
