@@ -88,7 +88,6 @@
 // ---------------------------------------------------------------------------
 class GrammarResolver;
 class XMLEntityHandler;
-class XMLValidator;
 class XMLScanner;
 class DatatypeValidator;
 class DatatypeValidatorFactory;
@@ -119,7 +118,6 @@ public:
         , SchemaGrammar* const    schemaGrammar
         , GrammarResolver* const  grammarResolver
         , XMLScanner* const       xmlScanner
-        , XMLValidator* const     xmlValidator
         , const XMLCh* const      schemaURL
         , XMLEntityHandler* const entityHandler
         , XMLErrorReporter* const errorReporter
@@ -736,7 +734,6 @@ private:
     XMLStringPool*                                 fURIStringPool;
     XMLStringPool*                                 fStringPool;
     XMLBuffer                                      fBuffer;
-    XMLValidator*                                  fValidator;
     XMLScanner*                                    fScanner;
     NamespaceScope*                                fNamespaceScope;
     RefHashTableOf<XMLAttDef>*                     fAttributeDeclRegistry;

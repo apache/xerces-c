@@ -182,7 +182,6 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
                               , SchemaGrammar* const   schemaGrammar
                               , GrammarResolver* const grammarResolver
                               , XMLScanner* const      xmlScanner
-                              , XMLValidator* const    xmlValidator
                               , const XMLCh* const     schemaURL
                               , XMLEntityHandler* const  entityHandler
                               , XMLErrorReporter* const errorReporter)
@@ -201,7 +200,6 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fErrorReporter(errorReporter)
     , fURIStringPool(uriStringPool)
     , fStringPool(0)
-    , fValidator(xmlValidator)
     , fScanner(xmlScanner)
     , fNamespaceScope(0)
     , fAttributeDeclRegistry(0)
@@ -1939,7 +1937,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
         if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)  == 0) {
 
-            dv = getDatatypeValidator(SchemaSymbols::fgURI_SCHEMAFORSCHEMA, localPart);
+            dv = fDatatypeRegistry->getDatatypeValidator(localPart);
 
             if (XMLString::compareString(localPart,XMLUni::fgIDString) == 0) {
                 attType = XMLAttDef::ID;
@@ -2033,21 +2031,20 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     if (attType == XMLAttDef::Simple && dv && valueToCheck) {
 
-        if (ofTypeID) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3,
-                             SchemaSymbols::fgATT_NAME, name);
+        try {
+            dv->validate(valueToCheck);
         }
-        else {
-            try {
-                dv->validate(valueToCheck);
-            }
-            catch (const XMLException& excep) {
-                reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
-            }
-            catch(...) {
-                reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueToCheck);
-            }
+        catch (const XMLException& excep) {
+            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
         }
+        catch(...) {
+            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueToCheck);
+        }
+    }
+
+    if (ofTypeID && valueToCheck) {
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3,
+                         SchemaSymbols::fgATT_NAME, name);
     }
 
     // check for multiple attributes with type derived from ID
@@ -2359,7 +2356,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     // Handle the substitutionGroup
     const XMLCh* subsGroupName = getElementAttValue(elem, SchemaSymbols::fgATT_SUBSTITUTIONGROUP);
 
-    if (XMLString::stringLen(subsGroupName) != 0) {
+    if (topLevel && XMLString::stringLen(subsGroupName) != 0) {
 
         SchemaElementDecl* subsElemDecl = getSubstituteGroupElemDecl(elem, subsGroupName, noErrorFound);
 
@@ -2540,7 +2537,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         elemDecl->setDatatypeValidator(validator);
         elemDecl->setComplexTypeInfo(typeInfo);
         elemDecl->setDefaultValue(deflt);
-        elemDecl->setDefinedScope(scopeDefined);
+//        elemDecl->setDefinedScope(scopeDefined);
         elemDecl->setModelType(contentSpecType);
         elemDecl->setContentSpec(contentSpecNode);
 
@@ -4292,7 +4289,18 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
         fBuffer.set(uriStr);
         fBuffer.append(chComma);
         fBuffer.append(localPartStr);
-        dv = fDatatypeRegistry->getDatatypeValidator(fBuffer.getRawBuffer());
+
+        if (XMLString::stringLen(uriStr) && XMLString::compareString(uriStr, fTargetNSURIString)) {
+
+            Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
+
+            if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                dv = ((SchemaGrammar*) grammar)->getDatatypeRegistry()->getDatatypeValidator(fBuffer.getRawBuffer());
+            }
+        }
+        else {
+            dv = fDatatypeRegistry->getDatatypeValidator(fBuffer.getRawBuffer());
+        }
     }
 
     return dv;
@@ -6081,6 +6089,7 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         fTargetNSURI = targetNSURI;
         fCurrentScope = saveScope;
         fScopeCount = toRestore->getScopeCount();
+        fDatatypeRegistry = fSchemaGrammar->getDatatypeRegistry();
         fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
         fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
         fAttGroupRegistry = fSchemaGrammar->getAttGroupInfoRegistry();
@@ -7661,8 +7670,7 @@ void TraverseSchema::init() {
         fXSDErrorReporter.setExitOnFirstFatal(fScanner->getExitOnFirstFatal());
     }
 
-    fDatatypeRegistry = fGrammarResolver->getDatatypeRegistry();
-    fDatatypeRegistry->expandRegistryToFullSchemaSet();
+    fDatatypeRegistry = fSchemaGrammar->getDatatypeRegistry();
     fStringPool = fGrammarResolver->getStringPool();
     fEmptyNamespaceURI = fScanner->getEmptyNamespaceId();
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
