@@ -388,7 +388,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = $(LIBS} -licuuc -licudata
+        ALLLIBS = ${LIBS} -licuuc -licudata
     endif
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
@@ -411,7 +411,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = $(LIBS} -licuuc -licudata
+        ALLLIBS = ${LIBS} -licuuc -licudata
     endif
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
