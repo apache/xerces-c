@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/12/12 20:52:19  peiyongz
+ * memory leak: fRedefineList
+ *
  * Revision 1.5  2001/10/04 15:08:56  knoaman
  * Add support for circular import.
  *
@@ -123,6 +126,9 @@ SchemaInfo::~SchemaInfo()
     delete fImportingList;
 
     fImportList = fIncludeList = fImportingList = 0;
+
+    delete fRedefineList;
+    fRedefineList = 0;
 }
 
 // ---------------------------------------------------------------------------
