@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/09/29 19:27:07  cargilld
+ * Fix for Jira-1217: fixing problems with getXSModel.
+ *
  * Revision 1.22  2004/09/10 17:36:13  cargilld
  * Return bool as described in the interface for cacheGrammar instead of throwing an exception.  Fix from Dave Bertoni.
  *
@@ -111,27 +114,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // private function used to update fXSModel
 void XMLGrammarPoolImpl::createXSModel()
 {
-    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry, false, getMemoryManager());
-    if (fXSModel)
-    {
-        // Need to guarantee that we return a different address...        
-        if (grammarEnum.hasMoreElements())
-        {
-            XSModel* xsModel = new (getMemoryManager()) XSModel(this, getMemoryManager());
-            delete fXSModel;
-            fXSModel = xsModel;
-        }
-        else 
-        {
-            // its empty...
-            delete fXSModel;
-            fXSModel = 0;
-        }
-    }
-    else if (grammarEnum.hasMoreElements())
-    {
-        fXSModel = new (getMemoryManager()) XSModel(this, getMemoryManager());
-    }
+    delete fXSModel;
+    fXSModel = new (getMemoryManager()) XSModel(this, getMemoryManager());
     fXSModelIsValid = true; 
 }
 
@@ -178,8 +162,10 @@ bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 
     fGrammarRegistry->put((void*) grammarKey, gramToCache);
     
-    fXSModelIsValid = false;
-
+    if (fXSModelIsValid && gramToCache->getGrammarType() == Grammar::SchemaGrammarType)
+    {
+        fXSModelIsValid = false;
+    }
     return true;
 }
 
@@ -197,9 +183,13 @@ Grammar* XMLGrammarPoolImpl::retrieveGrammar(XMLGrammarDescription* const gramDe
 Grammar* XMLGrammarPoolImpl::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
     if (!fLocked)
-    {
-        fXSModelIsValid = false;
-        return fGrammarRegistry->orphanKey(nameSpaceKey); 
+    {        
+        Grammar* grammar = fGrammarRegistry->orphanKey(nameSpaceKey); 
+        if (fXSModelIsValid && grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType)
+        {
+            fXSModelIsValid = false;
+        }
+        return grammar;
     }
     return 0;
 }
@@ -296,8 +286,19 @@ XSModel *XMLGrammarPoolImpl::getXSModel()
 
     if (fXSModelIsValid)
         return fXSModel;
-
+        
     createXSModel();    
+    return fXSModel;
+}
+
+XSModel *XMLGrammarPoolImpl::getXSModel(bool& XSModelWasChanged)
+{
+    XSModelWasChanged = false;
+    if (fLocked || fXSModelIsValid)
+        return fXSModel;
+        
+    createXSModel();        
+    XSModelWasChanged = true;
     return fXSModel;
 }
 

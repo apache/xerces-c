@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/09/29 19:27:07  cargilld
+ * Fix for Jira-1217: fixing problems with getXSModel.
+ *
  * Revision 1.16  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -226,9 +229,35 @@ public :
       * operation is called.  The XSModel will not be serialized,
       * but will be recreated if a deserialized pool is in the 
       * locked state.
+      *
+      * @deprecated (shouldn't use address to determine if XSModel changed)
       */
     virtual XSModel *getXSModel();
-	
+
+    /***
+      * Return an XSModel derived from the components of all SchemaGrammars
+      * in the grammar pool.  If the pool is locked, this should
+      * be a thread-safe operation.  
+      *
+      * NOTE: The function should NEVER return NULL.  If there are no grammars in
+      *       the pool it should return an XSModel containing the Schema for Schema.
+      *
+      * Calling getXSModel() on an unlocked grammar pool may result in the
+      * creation of a new XSModel with the old XSModel being deleted.
+      * The bool parameter will indicate if the XSModel was changed.
+      *  
+      * In this implementation, when the pool is not locked a new XSModel will be
+      * computed each this time the pool is called if the pool has changed (and the
+      * previous one will be destroyed at that time).  When the lockPool()
+      * method is called, an XSModel will be generated and returned whenever this method is called
+      * while the pool is in the locked state.  This will be destroyed if the unlockPool()
+      * operation is called.  The XSModel will not be serialized,
+      * but will be recreated if a deserialized pool is in the 
+      * locked state.
+      *      
+      */
+    virtual XSModel *getXSModel(bool& XSModelWasChanged);
+
     // @}
     // -----------------------------------------------------------------------
     /** @name  Getter */

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2004/09/29 19:27:07  cargilld
+ * Fix for Jira-1217: fixing problems with getXSModel.
+ *
  * Revision 1.28  2004/09/08 13:56:51  peiyongz
  * Apache License Version 2.0
  *
@@ -457,21 +460,24 @@ XSModel *GrammarResolver::getXSModel()
         // We know if the grammarpool changed thru caching, orphaning and erasing
         // but NOT by other mechanisms such as lockPool() or unlockPool() so it
         // is safest to always get it.  The grammarPool XSModel will only be 
-        // regenerated if something changed and in that case it will have a new
-        // address.
-        xsModel = fGrammarPool->getXSModel();
-        if (xsModel != fGrammarPoolXSModel)
+        // regenerated if something changed.
+        bool XSModelWasChanged;
+        // The grammarpool will always return an xsmodel, even if it is just
+        // the schema for schema xsmodel...
+        xsModel = fGrammarPool->getXSModel(XSModelWasChanged);
+        if (XSModelWasChanged)
         {
             // we know the grammarpool XSModel has changed or this is the
             // first call to getXSModel
             if (!fGrammarPoolXSModel && (fGrammarsToAddToXSModel->size() == 0) &&
                 !fXSModel)
-            {
+            { 
                 fGrammarPoolXSModel = xsModel;
                 return fGrammarPoolXSModel;
             }
             else
             {
+                fGrammarPoolXSModel = xsModel;
                 // We had previously augmented the grammar pool XSModel
                 // with our our grammars or we would like to upate it now
                 // so we have to regenerate the XSModel
@@ -483,18 +489,15 @@ XSModel *GrammarResolver::getXSModel()
                     if (grammar.getGrammarType() == Grammar::SchemaGrammarType)
                         fGrammarsToAddToXSModel->addElement((SchemaGrammar*)&grammar);
                 }
-                if (fXSModel)
-                {
-                    xsModel = new (fMemoryManager) XSModel(fGrammarPoolXSModel, this, fMemoryManager);
-                    delete fXSModel;
-                    fXSModel = xsModel;
-                }
-                else
-                {
-                    fXSModel = new (fMemoryManager) XSModel(fGrammarPoolXSModel, this, fMemoryManager);   
-                }
-                fGrammarsToAddToXSModel->removeAllElements();
-                return fXSModel;
+                delete fXSModel;
+                if (fGrammarsToAddToXSModel->size())
+                {                    
+                    fXSModel = new (fMemoryManager) XSModel(fGrammarPoolXSModel, this, fMemoryManager);
+                    fGrammarsToAddToXSModel->removeAllElements();
+                    return fXSModel;
+                }       
+                fXSModel = 0; 
+                return fGrammarPoolXSModel;                                                      
             }       
         }
         else {
@@ -523,6 +526,8 @@ XSModel *GrammarResolver::getXSModel()
             {
                 return fGrammarPoolXSModel;
             }
+            fXSModel = new (fMemoryManager) XSModel(0, this, fMemoryManager);    
+            return fXSModel;    
         }
     }
     // Not Caching...

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/09/29 19:27:07  cargilld
+ * Fix for Jira-1217: fixing problems with getXSModel.
+ *
  * Revision 1.13  2004/09/08 13:55:59  peiyongz
  * Apache License Version 2.0
  *
@@ -223,8 +226,31 @@ public :
       * creation of a new XSModel with the old XSModel being deleted.  The
       * function will return a different address for the XSModel if it has
       * changed.
+      * 
+      * @deprecated (shouldn't use address to determine if XSModel changed)
       */
     virtual XSModel *getXSModel() = 0;
+
+    /***
+      * Return an XSModel derived from the components of all SchemaGrammars
+      * in the grammar pool.  If the pool is locked, this should
+      * be a thread-safe operation.
+      *
+      * NOTE: The function should NEVER return NULL.  If there are no grammars in
+      *       the pool it should return an XSModel containing the Schema for Schema.      
+      *
+      * Calling getXSModel() on an unlocked grammar pool may result in the
+      * creation of a new XSModel with the old XSModel being deleted.
+      * The bool parameter will indicate if the XSModel was changed.
+      *     
+      * For source code compatibility, default implementation is to say
+      * XSModelWasChanged.
+      */
+    virtual XSModel *getXSModel(bool& XSModelWasChanged)
+    {
+        XSModelWasChanged = true;
+        return getXSModel();
+    }
 	
     // @}
 
