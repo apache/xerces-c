@@ -27,8 +27,9 @@
     <anchor name="NewFeatures210"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li>64 bit binaries distribution</li>
-        <li>plus many more bug fixes and performance enhancement</li>
+        <li>64 bit binaries distribution on Windows IA64 and Linux IA64</li>
+        <li>DOM Level 3 DOMNode::compareTreePosition</li>
+        <li>plus many more bug fixes</li>
       </ul>
     </s3>
 
