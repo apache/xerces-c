@@ -106,6 +106,8 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fDTDElemNonDeclPool(0)
+    , fSchemaElemNonDeclPool(0)
 {
     try
     {
@@ -143,6 +145,8 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fDTDElemNonDeclPool(0)
+    , fSchemaElemNonDeclPool(0)
 {
     try
     {	
@@ -521,6 +525,9 @@ void IGXMLScanner::commonInit()
 
     // Create schemaLocation pair info
     fLocationPairs = new (fMemoryManager) ValueVectorOf<XMLCh*>(8, fMemoryManager);
+    // create pools for undeclared elements
+    fDTDElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
+    fSchemaElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
 }
 
 void IGXMLScanner::cleanUp()
@@ -533,6 +540,8 @@ void IGXMLScanner::cleanUp()
     delete fMatcherStack;
     delete fValueStoreCache;
     delete fLocationPairs;
+    delete fDTDElemNonDeclPool;
+    delete fSchemaElemNonDeclPool;
 }
 
 // ---------------------------------------------------------------------------
@@ -1187,11 +1196,20 @@ void IGXMLScanner::scanDocTypeDecl()
         , fEmptyNamespaceId
         , DTDElementDecl::Any
         , fGrammarPoolMemoryManager
-    );
-
+    ); 
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
     rootDecl->setExternalElemDeclaration(true);
-    ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+    if(!fUseCachedGrammar) 
+    {
+        // this will break getRootElemId on DTDGrammar when
+        // cached grammars are in use, but 
+        // why would one use this anyway???
+        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+    } else
+    {
+        // attach this to the undeclared element pool so that it gets deleted
+        rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+    }
 
     // Skip any spaces after the name
     fReaderMgr.skipPastSpaces();
@@ -1339,6 +1357,8 @@ void IGXMLScanner::scanDocTypeDecl()
                 fDTDGrammar = (DTDGrammar*) grammar;
                 fGrammar = fDTDGrammar;
                 fValidator->setGrammar(fGrammar);
+                // should not be modifying cached grammars!
+                /********
                 rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
 
                 if (rootDecl)
@@ -1355,6 +1375,7 @@ void IGXMLScanner::scanDocTypeDecl()
                     rootDecl->setExternalElemDeclaration(true);
                     ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
                 }
+                ********/
 
                 return;
             }
@@ -1439,16 +1460,36 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     //  he will only look at the QName.
     //
     //  We tell him to fault in a decl if he does not find one.
+    //  Actually, we *don't* tell him to fault in a decl if he does not find one- NG
     bool wasAdded = false;
-    XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
+    const XMLCh *rawQName = fQNameBuf.getRawBuffer();
+    XMLElementDecl* elemDecl = fGrammar->getElemDecl
     (
         fEmptyNamespaceId
         , 0
-        , 0
-        , fQNameBuf.getRawBuffer()
+        , rawQName
         , Grammar::TOP_LEVEL_SCOPE
-        , wasAdded
     );
+    // look for it in the undeclared pool:
+    if(!elemDecl) 
+    {
+        elemDecl = fDTDElemNonDeclPool->getByKey(rawQName);
+    }
+    if(!elemDecl) 
+    {
+        // we're assuming this must be a DTD element.  DTD's can be
+        // used with or without namespaces, but schemas cannot be used without
+        // namespaces.
+        wasAdded = true;
+        elemDecl = new (fMemoryManager) DTDElementDecl 
+        (
+            rawQName
+            , fEmptyNamespaceId
+            , DTDElementDecl::Any
+            , fMemoryManager
+        );
+        elemDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)elemDecl));
+    }
 
     //  We do something different here according to whether we found the
     //  element or not.
@@ -2047,13 +2088,16 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  this element.
     XMLElementDecl* elemDecl = 0;
     if (fGrammarType == Grammar::DTDGrammarType) {
+        const XMLCh *rawQName = fQNameBuf.getRawBuffer();
         elemDecl = fGrammar->getElemDecl
         (
             fEmptyNamespaceId
             , 0
-            , fQNameBuf.getRawBuffer()
+            , rawQName
             , Grammar::TOP_LEVEL_SCOPE
         );
+        // may have not been declared:
+        elemDecl = fDTDElemNonDeclPool->getByKey(rawQName);
         if (elemDecl) {
             if (elemDecl->hasAttDefs()) {
                 XMLAttDefList& attDefList = elemDecl->getAttDefList();
@@ -2110,16 +2154,31 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
     unsigned orgGrammarUri = fURIStringPool->getId(original_uriStr);
 
+    // REVISIT:  since all this code only really
+    // makes sense for schemas, why can DTD validation theoretically pass 
+    // through it?  - NG
     if (uriId != fEmptyNamespaceId) {
 
         // Check in current grammar before switching if necessary
+        const XMLCh *rawQName = fQNameBuf.getRawBuffer();
         elemDecl = fGrammar->getElemDecl
         (
           uriId
           , nameRawBuf
-          , qnameRawBuf
+          , rawQName
           , currentScope
         );
+        // may have not been declared; must look everywhere:
+        if (!elemDecl)
+            if(fGrammarType == Grammar::DTDGrammarType) 
+            {
+                // should never occur in practice
+                elemDecl = fDTDElemNonDeclPool->getByKey(rawQName);
+            }
+            else if (fGrammarType == Grammar::SchemaGrammarType) 
+            {
+                elemDecl = fSchemaElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
+            }
 
         if (!elemDecl && (orgGrammarUri != uriId)) {
             // not found, switch to the specified grammar
@@ -2156,6 +2215,12 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                            , Grammar::TOP_LEVEL_SCOPE
                        );
 
+            if(!elemDecl) 
+            {
+                // look in the list of undeclared elements, as would have been done
+                // before we made grammars stateless:
+                elemDecl = fSchemaElemNonDeclPool->getByKey(nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+            }
             if(!elemDecl) {
                 // still not found in specified uri
                 // try emptyNamesapce see if element should be un-qualified.
@@ -2185,12 +2250,29 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             // still not found, fault this in and issue error later
             // switch back to original grammar first
             switchGrammar(original_uriStr);
-            elemDecl = fGrammar->putElemDecl(uriId
-                        , nameRawBuf
-                        , fPrefixBuf.getRawBuffer()
-                        , qnameRawBuf
-                        , currentScope
-                        , true);
+            if(fGrammarType == Grammar::DTDGrammarType) 
+            {
+                elemDecl = new (fMemoryManager) DTDElementDecl
+                (
+                    qnameRawBuf
+                    , uriId
+                    , DTDElementDecl::Any
+                    , fMemoryManager
+                );
+                elemDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)elemDecl));
+            } else if (fGrammarType == Grammar::SchemaGrammarType) 
+            {
+                elemDecl = new (fMemoryManager) SchemaElementDecl
+                (
+                    fPrefixBuf.getRawBuffer()
+                    , nameRawBuf
+                    , uriId
+                    , SchemaElementDecl::Any
+                    , Grammar::TOP_LEVEL_SCOPE
+                    , fMemoryManager
+                );
+                elemDecl->setId(fSchemaElemNonDeclPool->put((void*)elemDecl->getBaseName(), uriId, currentScope, (SchemaElementDecl*)elemDecl));
+            }
             wasAdded = true;
         }
     }
@@ -2200,7 +2282,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         //thus it is either a non-qualified element defined in current targetNS
         //or an element that is defined in the globalNS
 
-        //try unqualifed first
+        //try unqualified first
         elemDecl = fGrammar->getElemDecl
                    (
                       uriId
@@ -2209,6 +2291,19 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     , currentScope
                     );
 
+        // may have not been declared; must look everywhere:
+        if(!elemDecl)
+            if (fGrammarType == Grammar::DTDGrammarType) 
+            {
+                // should never happen in practice?
+                elemDecl = fDTDElemNonDeclPool->getByKey(qnameRawBuf);
+            }
+            else if (fGrammarType == Grammar::SchemaGrammarType) 
+            {
+                // look in the list of undeclared elements, as would have been done
+                // before we made grammars stateless:
+                elemDecl = fSchemaElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
+            }
         if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
             bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
@@ -2242,16 +2337,20 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                            , qnameRawBuf
                            , Grammar::TOP_LEVEL_SCOPE
                        );
+            if(!elemDecl)
+            {
+                // look in the list of undeclared elements, as would have been done
+                // before we made grammars stateless:
+                elemDecl = fSchemaElemNonDeclPool->getByKey(nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+            }
 
             if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
                 // still Not found in specified uri
                 // go to original Grammar again to see if element needs to be fully qualified.
-                const XMLCh* uriStr = getURIText(orgGrammarUri);
                 bool errorCondition = !switchGrammar(original_uriStr) && fValidate;
                 if (errorCondition && !laxThisOne)
-
-                if (errorCondition && !laxThisOne)
                 {
+                    const XMLCh* uriStr = getURIText(orgGrammarUri);
                     fValidator->emitError
                     (
                         XMLValid::GrammarNotFound
@@ -2269,7 +2368,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                                , qnameRawBuf
                                , currentScope
                            );
-
                 if (elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
                     fValidator->emitError
                     (
@@ -2285,12 +2383,29 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             // still not found, fault this in and issue error later
             // switch back to original grammar first
             switchGrammar(original_uriStr);
-            elemDecl = fGrammar->putElemDecl(uriId
-                        , nameRawBuf
-                        , fPrefixBuf.getRawBuffer()
-                        , qnameRawBuf
-                        , currentScope
-                        , true);
+            if(fGrammarType == Grammar::DTDGrammarType) 
+            {
+                elemDecl = new (fMemoryManager) DTDElementDecl
+                (
+                    qnameRawBuf
+                    , uriId
+                    , DTDElementDecl::Any
+                    , fMemoryManager
+                );
+                elemDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)elemDecl));
+            } else if (fGrammarType == Grammar::SchemaGrammarType) 
+            {
+                elemDecl = new (fMemoryManager) SchemaElementDecl
+                (
+                    fPrefixBuf.getRawBuffer()
+                    , nameRawBuf
+                    , uriId
+                    , SchemaElementDecl::Any
+                    , Grammar::TOP_LEVEL_SCOPE
+                    , fMemoryManager
+                );
+                elemDecl->setId(fSchemaElemNonDeclPool->put((void*)elemDecl->getBaseName(), uriId, currentScope, (SchemaElementDecl*)elemDecl));
+            }
             wasAdded = true;
         }
     }
@@ -2881,6 +2996,8 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
 
     // Clear out the id reference list
     fIDRefList->removeAll();
+    // and clear out the darned undeclared DTD element pool...
+    fDTDElemNonDeclPool->removeAll();
 
     if (toCache) {
 

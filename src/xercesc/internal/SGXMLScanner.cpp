@@ -106,6 +106,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fElemNonDeclPool(0)
 {
     try
     {
@@ -148,6 +149,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fElemNonDeclPool(0)
 {
     try
     {	
@@ -1205,7 +1207,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
           , qnameRawBuf
           , currentScope
         );
-
+        if(!elemDecl) 
+        {
+            // look in the list of undeclared elements, as would have been done
+            // before we made grammars stateless:
+            elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
+        }
         if (!elemDecl && (orgGrammarUri != uriId)) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
@@ -1240,7 +1247,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                            , qnameRawBuf
                            , Grammar::TOP_LEVEL_SCOPE
                        );
-
+            if(!elemDecl) 
+            {
+                // look in the list of undeclared elements, as would have been done
+                // before we made grammars stateless:
+                elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+            }
             if(!elemDecl) {
                 // still not found in specified uri
                 // try emptyNamesapce see if element should be un-qualified.
@@ -1250,8 +1262,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                                , nameRawBuf
                                , qnameRawBuf
                                , currentScope
-                           );
-
+                           ); 
                 bool errorCondition = elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn;
                 if (errorCondition && fValidate) {
                     fValidator->emitError
@@ -1271,12 +1282,16 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             // still not found, fault this in and issue error later
             // switch back to original grammar first
             switchGrammar(original_uriStr);
-            elemDecl = fGrammar->putElemDecl(uriId
-                        , nameRawBuf
-                        , fPrefixBuf.getRawBuffer()
-                        , qnameRawBuf
-                        , currentScope
-                        , true);
+            elemDecl = new (fMemoryManager) SchemaElementDecl
+            (
+                fPrefixBuf.getRawBuffer()
+                , nameRawBuf
+                , uriId
+                , SchemaElementDecl::Any
+                , Grammar::TOP_LEVEL_SCOPE
+                , fMemoryManager
+            );
+            elemDecl->setId(fElemNonDeclPool->put((void*)elemDecl->getBaseName(), uriId, currentScope, (SchemaElementDecl*)elemDecl));
             wasAdded = true;
         }
     }
@@ -1294,7 +1309,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     , qnameRawBuf
                     , currentScope
                     );
-
+        if(!elemDecl)
+        {
+            // look in the list of undeclared elements, as would have been done
+            // before we made grammars stateless:
+            elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, currentScope);
+        }
         if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
             bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
@@ -1329,7 +1349,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                            , qnameRawBuf
                            , Grammar::TOP_LEVEL_SCOPE
                        );
-
+            if(!elemDecl)
+            {
+                // look in the list of undeclared elements, as would have been done
+                // before we made grammars stateless:
+                elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+            }
             if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
                 // still Not found in specified uri
                 // go to original Grammar again to see if element needs to be fully qualified.
@@ -1354,7 +1379,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                                , qnameRawBuf
                                , currentScope
                            );
-
                 if (elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
                     fValidator->emitError
                     (
@@ -1370,14 +1394,17 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             // still not found, fault this in and issue error later
             // switch back to original grammar first
             switchGrammar(original_uriStr);
-            elemDecl = fGrammar->putElemDecl(uriId
-                        , nameRawBuf
-                        , fPrefixBuf.getRawBuffer()
-                        , qnameRawBuf
-                        , currentScope
-                        , true);
+            elemDecl = new (fMemoryManager) SchemaElementDecl
+            (
+                fPrefixBuf.getRawBuffer()
+                , nameRawBuf
+                , uriId
+                , SchemaElementDecl::Any
+                , Grammar::TOP_LEVEL_SCOPE
+                , fMemoryManager
+            );
+            elemDecl->setId(fElemNonDeclPool->put((void*)elemDecl->getBaseName(), uriId, currentScope, (SchemaElementDecl*)elemDecl));
             wasAdded = true;
-
         }
     }
 
@@ -1578,7 +1605,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             , false
             , isRoot
         );
-    }
+    } // may be where we output something...
 
     //  If empty, validate content right now if we are validating and then
     //  pop the element stack top. Else, we have to update the current stack
@@ -1902,6 +1929,7 @@ void SGXMLScanner::commonInit()
     fEntityTable->put((void*) XMLUni::fgGT, chCloseAngle);
     fEntityTable->put((void*) XMLUni::fgQuot, chDoubleQuote);
     fEntityTable->put((void*) XMLUni::fgApos, chSingleQuote);
+    fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
 }
 
 void SGXMLScanner::cleanUp()
@@ -1914,6 +1942,7 @@ void SGXMLScanner::cleanUp()
     delete fFieldActivator;
     delete fMatcherStack;
     delete fValueStoreCache;
+    delete fElemNonDeclPool;
 }
 
 void SGXMLScanner::resizeElemState() {

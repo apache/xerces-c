@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/09/22 19:51:41  neilg
+ * scanners should maintain their own pools of undeclared elements, rather than requiring grammars to do this.  This makes grammar objects stateless with regard to validation.
+ *
  * Revision 1.9  2003/08/14 02:56:41  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -93,11 +96,14 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/util/KVStringPair.hpp>
+#include <xercesc/util/NameIdPool.hpp>
+#include <xercesc/util/RefHash3KeysIdPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class DTDElementDecl;
 class DTDGrammar;
 class DTDValidator;
 class SchemaValidator;
@@ -316,6 +322,10 @@ private :
     //  fFieldActivator
     //      Activates fields within a certain scope when a selector matches
     //      its xpath.
+    // fDTDElemNonDeclPool
+    //      registry of "faulted-in" DTD element decls
+    // fSchemaElemNonDeclPool
+    //      registry for elements without decls in the grammar
     //
     // -----------------------------------------------------------------------
     bool                        fSeeXsi;
@@ -332,6 +342,8 @@ private :
     ValueStoreCache*            fValueStoreCache;
     FieldActivator*             fFieldActivator;
     ValueVectorOf<XMLCh*>*      fLocationPairs;
+    NameIdPool<DTDElementDecl>* fDTDElemNonDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>* fSchemaElemNonDeclPool;
 };
 
 inline const XMLCh* IGXMLScanner::getName() const

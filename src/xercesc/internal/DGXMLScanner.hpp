@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/22 19:51:41  neilg
+ * scanners should maintain their own pools of undeclared elements, rather than requiring grammars to do this.  This makes grammar objects stateless with regard to validation.
+ *
  * Revision 1.8  2003/07/24 09:19:09  gareth
  * Patch for bug  #20530 - Attributes which have the same expanded name are not considered duplicates. Patch by cargilld.
  *
@@ -90,10 +93,12 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class DTDElementDecl;
 class DTDGrammar;
 class DTDValidator;
 
@@ -230,34 +235,20 @@ private :
     //  fDTDValidator
     //      The DTD validator instance.
     //
-    //  fSchemaValidator
-    //      The Schema validator instance.
-    //
-    //  fSeeXsi
-    //      This flag indicates a schema has been seen.
-    //
     //  fElemState
     //  fElemStateSize
     //      Stores an element next state from DFA content model - used for
     //      wildcard validation
     //
-    //  fMatcherStack
-    //      Stack of active XPath matchers for identity constraints. All
-    //      active XPath matchers are notified of startElement, characters
-    //      and endElement callbacks in order to perform their matches.
-    //
-    //  fValueStoreCache
-    //      Cache of value stores for identity constraint fields.
-    //
-    //  fFieldActivator
-    //      Activates fields within a certain scope when a selector matches
-    //      its xpath.
+    // fDTDElemNonDeclPool
+    //     registry of "faulted-in" DTD element decls
     //
     // -----------------------------------------------------------------------
     ElemStack                   fElemStack;
     ValueVectorOf<XMLAttr*>*    fAttrNSList;
     DTDValidator*               fDTDValidator;
     DTDGrammar*                 fDTDGrammar;
+    NameIdPool<DTDElementDecl>* fDTDElemNonDeclPool;
 };
 
 inline const XMLCh* DGXMLScanner::getName() const

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/09/22 19:51:41  neilg
+ * scanners should maintain their own pools of undeclared elements, rather than requiring grammars to do this.  This makes grammar objects stateless with regard to validation.
+ *
  * Revision 1.8  2003/07/10 19:47:23  peiyongz
  * Stateless Grammar: Initialize scanner with grammarResolver,
  *                                creating grammar through grammarPool
@@ -91,13 +94,14 @@
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
+#include <xercesc/util/RefHash3KeysIdPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class SchemaValidator;
 class SchemaGrammar;
+class SchemaValidator;
 class ValueStoreCache;
 class XPathMatcherStack;
 class FieldActivator;
@@ -306,6 +310,8 @@ private :
     //  fFieldActivator
     //      Activates fields within a certain scope when a selector matches
     //      its xpath.
+    // fElemNonDeclPool
+    //      registry for elements without decls in the grammar
     //
     // -----------------------------------------------------------------------
     bool                        fSeeXsi;
@@ -321,6 +327,7 @@ private :
     XPathMatcherStack*          fMatcherStack;
     ValueStoreCache*            fValueStoreCache;
     FieldActivator*             fFieldActivator;
+    RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
 };
 
 inline const XMLCh* SGXMLScanner::getName() const

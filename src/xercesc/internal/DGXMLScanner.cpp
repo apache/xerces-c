@@ -93,6 +93,7 @@ DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
+    , fDTDElemNonDeclPool(0)
 {
     try
     {
@@ -128,6 +129,7 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
     , fAttrNSList(0)
     , fDTDValidator(0)
     , fDTDGrammar(0)
+    , fDTDElemNonDeclPool(0)
 {
     try
     {	
@@ -778,11 +780,20 @@ void DGXMLScanner::scanDocTypeDecl()
         , fEmptyNamespaceId
         , DTDElementDecl::Any
         , fGrammarPoolMemoryManager
-    );
-
+    ); 
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
     rootDecl->setExternalElemDeclaration(true);
-    ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+    if(!fUseCachedGrammar) 
+    {
+        // this will break getRootElemId on DTDGrammar when
+        // cached grammars are in use, but 
+        // why would one use this anyway???
+        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+    } else 
+    {
+        // put this in the undeclared pool so it gets deleted...
+        rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+    }
 
     // Skip any spaces after the name
     fReaderMgr.skipPastSpaces();
@@ -930,6 +941,10 @@ void DGXMLScanner::scanDocTypeDecl()
                 fDTDGrammar = (DTDGrammar*) grammar;
                 fGrammar = fDTDGrammar;
                 fValidator->setGrammar(fGrammar);
+                // we *cannot* identify the root element on 
+                // cached grammars; else we risk breaking multithreaded
+                // applications.  - NG
+                /*******
                 rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
 
                 if (rootDecl)
@@ -946,6 +961,7 @@ void DGXMLScanner::scanDocTypeDecl()
                     rootDecl->setExternalElemDeclaration(true);
                     ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
                 }
+                *********/
 
                 return;
             }
@@ -1032,18 +1048,34 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
     //  this can only be called if we are doing a DTD style validator and that
     //  he will only look at the QName.
     //
-    //  We tell him to fault in a decl if he does not find one.
+    //  We *do not* tell him to fault in a decl if he does not find one - NG.
     bool wasAdded = false;
-    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
-    XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
+    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer(); 
+
+    XMLElementDecl* elemDecl = fGrammar->getElemDecl
     (
         fEmptyNamespaceId
         , 0
-        , 0
         , qnameRawBuf
         , Grammar::TOP_LEVEL_SCOPE
-        , wasAdded
     );
+    // look in the undeclared pool:
+    if(!elemDecl) 
+    {
+        elemDecl = fDTDElemNonDeclPool->getByKey(qnameRawBuf);
+    }
+    if(!elemDecl) 
+    {
+        wasAdded = true;
+        elemDecl = new (fMemoryManager) DTDElementDecl 
+        (
+            qnameRawBuf
+            , fEmptyNamespaceId
+            , DTDElementDecl::Any
+            , fMemoryManager
+        );
+        elemDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)elemDecl));
+    }
 
     if (fValidate) {
 
@@ -1802,12 +1834,14 @@ void DGXMLScanner::commonInit()
     //  Create the Validator and init them
     fDTDValidator = new (fMemoryManager) DTDValidator();
     initValidator(fDTDValidator);
+    fDTDElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
 }
 
 void DGXMLScanner::cleanUp()
 {
     delete fAttrNSList;
     delete fDTDValidator;
+    delete fDTDElemNonDeclPool;
 }
 
 
