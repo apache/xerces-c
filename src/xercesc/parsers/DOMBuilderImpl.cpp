@@ -204,9 +204,12 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         setValidationSchemaFullChecking(state);
     }
-    else if ((XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) && state)
+    else if (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0)
     {
-        adoptDocument();
+        if(state)
+            adoptDocument();
+        else
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
@@ -313,6 +316,9 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     {
         return getScanner()->getCalculateSrcOfs();
     }
+    else if(XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
+        return isDocumentAdopted();
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     }
@@ -341,7 +347,8 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
             return true;
     }
     else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
-             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
+             XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ||
+             XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) {
         if (state)
             return true;
     }
