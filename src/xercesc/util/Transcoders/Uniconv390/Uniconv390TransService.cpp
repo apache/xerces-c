@@ -164,10 +164,6 @@ DBGPRINTF1("remove converter\n");
 Uniconv390TransService::Uniconv390TransService()
 {
 
-   fCaseConverter = new uniconvcaseconverter;
-   fCaseConverter->ftoupperhand=UNICONV_NOHANDLE;
-   fCaseConverter->ftolowerhand=UNICONV_NOHANDLE;
-
    char * myenviron = getenv("_IXM_FORCE_CONVERSION");
    gForceTranscode = NO_FORCE;
    if ( !strcmp(myenviron,"USE_ICU") )
@@ -175,6 +171,19 @@ Uniconv390TransService::Uniconv390TransService()
    else if ( !strcmp(myenviron,"USE_NATIVE") )
       gForceTranscode = MUST_USE_UNICONV;
   DBGPRINTF3("FORCE PARM=%s %d\n",myenviron,gForceTranscode);
+
+// If we are forcing ICU to be used fro transcoding then we also should
+// force it to be used for case conversions.
+if (gForceTranscode == MUST_USE_ICU) {
+   fCaseConverter = new uniconvcaseconverter;
+   fCaseConverter->ftoupperhand=UNICONV_ERROR;
+   fCaseConverter->ftolowerhand=UNICONV_ERROR;
+}
+else {
+   fCaseConverter = new uniconvcaseconverter;
+   fCaseConverter->ftoupperhand=UNICONV_NOHANDLE;
+   fCaseConverter->ftolowerhand=UNICONV_NOHANDLE;
+}
 
    fICUService = new ICUTransService;
 
