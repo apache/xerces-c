@@ -54,6 +54,15 @@
  * <http://www.apache.org/>.
  */
 
+/*
+ * $Id$
+ * $Log$
+ * Revision 1.3  2001/10/24 18:13:06  peiyongz
+ * CVS tag added
+ *
+ *
+ */
+
 #if !defined(XMLREGISTERCLEANUP_HPP)
 #define XMLREGISTERCLEANUP_HPP
 
