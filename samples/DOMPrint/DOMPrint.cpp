@@ -225,6 +225,9 @@ private:
 //  gDoSchema
 //      Indicates whether schema processing should be done.
 //
+//  gSchemaFullChecking
+//      Indicates whether full schema constraint checking should be done.
+//
 //  gDoCreate
 //      Indicates whether entity reference nodes needs to be created or not
 //      Defaults to false
@@ -241,6 +244,7 @@ private:
 static char*                    gXmlFile               = 0;
 static bool                     gDoNamespaces          = false;
 static bool                     gDoSchema              = false;
+static bool                     gSchemaFullChecking    = false;
 static bool                     gDoCreate              = false;
 static XMLCh*                   gEncodingName          = 0;
 static XMLFormatter::UnRepFlags gUnRepFlags            = XMLFormatter::UnRep_CharRef;
@@ -267,7 +271,7 @@ XMLFormatter& operator<< (XMLFormatter& strm, const DOMString& s);
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage: DOMPrint [options] file\n\n"
+    cout << "\nUsage: DOMPrint [options] <XML file>\n\n"
             "This program invokes the Xerces-C DOM parser and builds the DOM\n"
             "tree. It then traverses the DOM tree and prints the contents\n"
             "of the tree. Options are NOT case sensitive.\n\n"
@@ -277,6 +281,7 @@ void usage()
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Default is off.\n"
             "    -s          Enable schema processing. Default is off.\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n"
             "    -x=XXX      Use a particular encoding for output. Default is\n"
             "                the same encoding as the input XML file. UTF-8 if\n"
             "                input XML file has not XML declaration.\n"
@@ -364,6 +369,11 @@ int main(int argC, char* argV[])
         {
             gDoSchema = true;
         }
+         else if (!strcmp(argV[parmInd], "-f")
+              ||  !strcmp(argV[parmInd], "-F"))
+        {
+            gSchemaFullChecking = true;
+        }
          else if (!strcmp(argV[parmInd], "-e")
               ||  !strcmp(argV[parmInd], "-E"))
         {
@@ -424,6 +434,7 @@ int main(int argC, char* argV[])
     parser->setValidationScheme(gValScheme);
     parser->setDoNamespaces(gDoNamespaces);
     parser->setDoSchema(gDoSchema);
+    parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();
     parser->setErrorHandler(errReporter);
     parser->setCreateEntityReferenceNodes(gDoCreate);

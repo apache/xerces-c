@@ -178,6 +178,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fDoSchema(false)
+    , fSchemaFullChecking(false)
     , fSeeXsi(false)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
@@ -232,6 +233,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fDoSchema(false)
+    , fSchemaFullChecking(false)
     , fSeeXsi(false)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
@@ -2815,7 +2817,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     bool wasAdded = false;
     XMLElementDecl* elemDecl;
     const XMLCh* nameRawBuf = fNameBuf.getRawBuffer();
-    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer(); 
+    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
 
     if (uriId != fEmptyNamespaceId) {
 

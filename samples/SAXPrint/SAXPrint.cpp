@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/08/01 19:11:01  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.14  2001/05/11 13:24:58  tng
  * Copyright update.
  *
@@ -133,6 +136,10 @@
 //      Indicates whether schema processing should be enabled or not.
 //      Defaults to disabled.
 //
+//  schemaFullChecking
+//      Indicates whether full schema constraint checking should be enabled or not.
+//      Defaults to disabled.
+//
 //  encodingName
 //      The encoding we are to output in. If not set on the command line,
 //      then it is defaulted to LATIN1.
@@ -144,8 +151,9 @@
 //      Indicates what validation scheme to use. It defaults to 'auto', but
 //      can be set via the -v= command.
 // ---------------------------------------------------------------------------
-static bool                     doNamespaces    = false;
-static bool                     doSchema        = false;
+static bool                     doNamespaces        = false;
+static bool                     doSchema            = false;
+static bool                     schemaFullChecking  = false;
 static const char*              encodingName    = "LATIN1";
 static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_CharRef;
 static char*                    xmlFile         = 0;
@@ -167,6 +175,7 @@ static void usage()
              "    -v=xxx      Validation scheme [always | never | auto*]\n"
              "    -n          Enable namespace processing.\n"
              "    -s          Enable schema processing.\n"
+             "    -f          Enable full schema constraint checking.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
              "    -?          Show this help\n\n"
              "  * = Default if not provided explicitly\n\n"
@@ -246,6 +255,11 @@ int main(int argC, char* argV[])
         {
             doSchema = true;
         }
+         else if (!strcmp(argV[parmInd], "-f")
+              ||  !strcmp(argV[parmInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
          else if (!strncmp(argV[parmInd], "-x=", 3)
               ||  !strncmp(argV[parmInd], "-X=", 3))
         {
@@ -295,6 +309,7 @@ int main(int argC, char* argV[])
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     parser.setDoSchema(doSchema);
+    parser.setValidationSchemaFullChecking(schemaFullChecking);
 
     //
     //  Create the handler object and install it as the document and error

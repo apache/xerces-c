@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/01 19:11:01  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.9  2001/05/11 13:24:59  tng
  * Copyright update.
  *
@@ -110,12 +113,17 @@
 //      Indicates whether schema processing should be enabled or not.
 //      The default is no, but -s overrides that.
 //
+//  schemaFullChecking
+//      Indicates whether full schema constraint checking should be enabled or not.
+//      The default is no, but -s overrides that.
+//
 //  valScheme
 //      Indicates what validation scheme to use. It defaults to 'auto', but
 //      can be set via the -v= command.
 // ---------------------------------------------------------------------------
-static bool     doNamespaces    = false;
-static bool     doSchema        = false;
+static bool     doNamespaces       = false;
+static bool     doSchema           = false;
+static bool     schemaFullChecking = false;
 static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 
 
@@ -130,6 +138,7 @@ void usage()
          << "    -v=xxx      Validation scheme [always | never | auto] \n"
          << "    -n          Enable namespace processing. [default is off]\n"
          << "    -s          Enable schema processing. [default is off]\n"
+         << "    -f          Enable full schema constraint checking. [defaults is off]\n"
 		   << "    -?          Show this help\n\n"
          << "  * = Default if not provided explicitly\n\n"
          << "This program allows you to redirect a file into the program\n"
@@ -192,6 +201,11 @@ int main(int argC, char* argV[])
         {
             doSchema = true;
         }
+         else if (!strcmp(argV[parmInd], "-f")
+              ||  !strcmp(argV[parmInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
          else
         {
             cerr << "Unknown option '" << argV[parmInd]
@@ -207,6 +221,7 @@ int main(int argC, char* argV[])
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     parser.setDoSchema(doSchema);
+    parser.setValidationSchemaFullChecking(schemaFullChecking);
 
 
     //

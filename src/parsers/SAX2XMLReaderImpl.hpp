@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/08/01 19:11:02  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.12  2001/06/27 17:39:52  knoaman
  * Fix for bug #2353.
  *
@@ -156,6 +159,7 @@ public :
 	static const XMLCh SAX_XERCES_REUSEVALIDATOR[];
 	static const XMLCh SAX_XERCES_REUSEGRAMMAR[];
 	static const XMLCh SAX_XERCES_SCHEMA[];
+	static const XMLCh SAX_XERCES_SCHEMA_FULL_CHECKING[];
 	
 	SAX2XMLReaderImpl() ;
 	~SAX2XMLReaderImpl() ;
@@ -631,6 +635,7 @@ public :
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
     * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
+    * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
     *
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).

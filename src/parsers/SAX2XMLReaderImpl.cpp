@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/08/01 19:11:02  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.15  2001/06/27 17:39:50  knoaman
  * Fix for bug #2353.
  *
@@ -260,6 +263,25 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA[] = {
 		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
 		chLatin_s, chLatin_c, chLatin_h, chLatin_e,
 		chLatin_m, chLatin_a, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/schema-full-checking
+const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_FULL_CHECKING[] = {
+		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
+		chColon, chForwardSlash, chForwardSlash,
+		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
+		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
+		chLatin_f, chLatin_e, chLatin_a,
+		chLatin_t, chLatin_u, chLatin_r,
+		chLatin_e, chLatin_s, chForwardSlash,
+		chLatin_v, chLatin_a, chLatin_l,
+		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
+		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
+		chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
+      chDash, chLatin_f, chLatin_u, chLatin_l, chLatin_l,
+      chDash, chLatin_c, chLatin_h, chLatin_e, chLatin_c, chLatin_k,
+      chLatin_i, chLatin_n, chLatin_g, chNull
 };
 
 //deprecated
@@ -1245,6 +1267,11 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 		setDoSchema(value);
 	}
 
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_FULL_CHECKING) == 0)
+	{
+		fScanner->setValidationSchemaFullChecking(value);
+	}
+
    else
        throw SAXNotRecognizedException("Unknown Feature");
 }
@@ -1265,6 +1292,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fReuseGrammar;
 	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
         return getDoSchema();
+	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_FULL_CHECKING) == 0)
+        return fScanner->getValidationSchemaFullChecking();
    else
        throw SAXNotRecognizedException("Unknown Feature");
 	return false;

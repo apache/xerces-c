@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/08/01 19:11:01  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.2  2000/08/09 22:20:38  jpolast
  * updates for changes to sax2 core functionality.
  *
@@ -98,7 +101,9 @@ static const char*              encodingName    = "LATIN1";
 static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_CharRef;
 static char*                    xmlFile         = 0;
 static SAX2XMLReader::ValSchemes valScheme      = SAX2XMLReader::Val_Auto;
-static bool						expandNamespaces= false ;
+static bool					        expandNamespaces= false ;
+static bool                     doSchema        = true;
+static bool                     schemaFullChecking = false;
 
 
 
@@ -116,6 +121,8 @@ static void usage()
              "    -v=xxx      Validation scheme [always | never | auto*]\n"
              "    -e          Expand Namespace Alias with URI's.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
+             "    -s          Disable schema processing. Defaults to on.\n\n"
+             "    -f          Enable full schema constraint checking processing. Defaults to off.\n\n"
              "    -?          Show this help\n\n"
              "  * = Default if not provided explicitly\n\n"
              "The parser has intrinsic support for the following encodings:\n"
@@ -212,6 +219,16 @@ int main(int argC, char* argV[])
                 return 2;
             }
         }
+         else if (!strcmp(argV[parmInd], "-s")
+              ||  !strcmp(argV[parmInd], "-S"))
+        {
+            doSchema = false;
+        }
+         else if (!strcmp(argV[parmInd], "-f")
+              ||  !strcmp(argV[parmInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
          else
         {
             cerr << "Unknown option '" << argV[parmInd]
@@ -235,20 +252,30 @@ int main(int argC, char* argV[])
     //  the command line, set it to validate or not.
     //
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-	if (valScheme == SAX2XMLReader::Val_Auto)
-	{
-	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
-	  parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), true);
-	}
+
+    //
+    //  Then, according to what we were told on
+    //  the command line, set it to validate or not.
+    //
+    if (valScheme == SAX2XMLReader::Val_Auto)
+    {
+        parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
+        parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), true);
+    }
+
     if (valScheme == SAX2XMLReader::Val_Never)
-	{
-	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), false);
-	}
-	if (valScheme == SAX2XMLReader::Val_Always)
-	{
-	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
-	  parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), false);
-	}
+    {
+        parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), false);
+    }
+
+    if (valScheme == SAX2XMLReader::Val_Always)
+    {
+        parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
+        parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), false);
+    }
+
+    parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), doSchema);
+    parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking"), schemaFullChecking);
 
     //
     //  Create the handler object and install it as the document and error

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/01 19:11:01  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.9  2001/05/11 13:24:55  tng
  * Copyright update.
  *
@@ -108,6 +111,7 @@
 //      [-v=xxx]        - Validation scheme [always | never | auto*]
 //      [-n]            - Enable namespace processing
 //      [-s]            - Enable schema processing
+//      [-f]            - Enable full schema constraint checking
 //      filename        - The path to the XML file to parse
 //
 //  * = Default if not provided explicitly
@@ -136,13 +140,17 @@
 //  doSchema
 //      Indicates whether schema processing should be done.
 //
+//  schemaFullChecking
+//      Indicates whether full schema constraint checking should be done.
+//
 //  valScheme
 //      Indicates what validation scheme to use. It defaults to 'auto', but
 //      can be set via the -v= command.
 // ---------------------------------------------------------------------------
 static char*	 xmlFile         = 0;
-static bool     doNamespaces    = false;
-static bool     doSchema        = false;
+static bool     doNamespaces       = false;
+static bool     doSchema           = false;
+static bool     schemaFullChecking = false;
 static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 
 
@@ -163,6 +171,7 @@ static void usage()
          <<  "      -v=xxx        - Validation scheme [always | never | auto*]\n"
          <<  "      -n            - Enable namespace processing [default is off]\n"
          <<  "      -s            - Enable schema processing [default is off]\n"
+         <<  "      -f            - Enable full schema constraint checking [default is off]\n"
          <<  "      -?            - Show this help (must be the only parameter)\n\n"
          <<  "  * = Default if not provided explicitly\n"
          <<  endl;
@@ -238,6 +247,11 @@ int main(int argC, char* argV[])
         {
             doSchema = true;
         }
+         else if (!strcmp(argV[parmInd], "-f")
+              ||  !strcmp(argV[parmInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
          else
         {
             usage();
@@ -268,6 +282,7 @@ int main(int argC, char* argV[])
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     parser.setDoSchema(doSchema);
+    parser.setValidationSchemaFullChecking(schemaFullChecking);
 
     //
     //  Ok, lets do the progressive parse loop. On each time around the

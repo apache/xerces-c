@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2001/08/01 19:11:01  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.28  2001/07/24 21:23:39  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -305,6 +308,7 @@ public :
     bool getDoNamespaces() const;
     ValSchemes getValidationScheme() const;
     bool getDoSchema() const;
+    bool getValidationSchemaFullChecking() const;
     const XMLEntityHandler* getEntityHandler() const;
     XMLEntityHandler* getEntityHandler();
     const XMLErrorReporter* getErrorReporter() const;
@@ -434,6 +438,7 @@ public :
     void setValidationScheme(const ValSchemes newScheme);
     void setValidator(XMLValidator* const valToAdopt);
     void setDoSchema(const bool doSchema);
+    void setValidationSchemaFullChecking(const bool schemaFullChecking);
     void setHasNoDTD(const bool hasNoDTD);
 
     // -----------------------------------------------------------------------
@@ -744,6 +749,10 @@ private :
     //      This flag indicates whether the client code wants Schema to
     //      be processed or not.
     //
+    //  fSchemaFullChecking
+    //      This flag indicates whether the client code wants full Schema
+    //      constraint checking.
+    //
     //  fSeeXsi
     //      This flag indicates a schema has been seen.
     //
@@ -825,6 +834,7 @@ private :
     ValSchemes                  fValScheme;
     int                         fErrorCount;
     bool                        fDoSchema;
+    bool                        fSchemaFullChecking;
     bool                        fSeeXsi;
 
     XMLBuffer                   fAttNameBuf;
@@ -955,6 +965,11 @@ inline XMLValidator* XMLScanner::getValidator()
 inline bool XMLScanner::getDoSchema() const
 {
     return fDoSchema;
+}
+
+inline bool XMLScanner::getValidationSchemaFullChecking() const
+{
+    return fSchemaFullChecking;
 }
 
 inline int XMLScanner::getErrorCount()
@@ -1109,6 +1124,11 @@ inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
 inline void XMLScanner::setDoSchema(const bool doSchema)
 {
     fDoSchema = doSchema;
+}
+
+inline void XMLScanner::setValidationSchemaFullChecking(const bool schemaFullChecking)
+{
+    fSchemaFullChecking = schemaFullChecking;
 }
 
 inline void XMLScanner::setHasNoDTD(const bool hasNoDTD)

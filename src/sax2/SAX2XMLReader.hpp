@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/08/01 19:11:02  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.10  2001/06/27 17:40:16  knoaman
  * Fix for bug #2353.
  *
@@ -451,6 +454,7 @@ public:
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
     * <br>http://apache.org/xml/features/validation/reuse-validator (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
+    * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
     *
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).

@@ -234,6 +234,18 @@ public :
       */
     bool getDoSchema() const;
 
+    /** Get the 'full schema constraint checking' flag
+      *
+      * This method returns the state of the parser's full schema constraint
+      * checking flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         have full schema constraint checking, false otherwise.
+      *
+      * @see #setValidationSchemaFullChecking
+      */
+    bool getValidationSchemaFullChecking() const;
+
     /** Get error count from the last parse operation.
       *
       * This method returns the error count from the last parse
@@ -526,6 +538,24 @@ public :
       * @see #getDoSchema
       */
     void setDoSchema(const bool newState);
+
+    /**
+      * This method allows the user to turn full Schema constraint checking on/off.
+      * Only takes effect if Schema validation is enabled.
+      * If turned off, partial constraint checking is done.
+      *
+      * Full schema constraint checking includes those checking that may
+      * be time-consuming or memory intensive. Currently, particle unique
+      * attribution constraint checking and particle derivation resriction checking
+      * are controlled by this option.
+      *
+      * The parser's default state is: false.
+      *
+      * @param schemaFullChecking True to turn on full schema constraint checking.
+      *
+      * @see #getValidationSchemaFullChecking
+      */
+    void setValidationSchemaFullChecking(const bool schemaFullChecking);
 
     /**
       * This method allows users to set the toCreateXMLDeclTypeNode flag

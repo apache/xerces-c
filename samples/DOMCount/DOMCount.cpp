@@ -81,14 +81,15 @@
 void usage()
 {
     cout << "\nUsage:\n"
-            "    DOMCount [-v -n] {XML file}\n\n"
+            "    DOMCount [options] <XML file>\n\n"
             "This program invokes the XML4C DOM parser, builds\n"
             "the DOM tree, and then prints the number of elements\n"
             "found in the input XML file.\n\n"
             "Options:\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Defaults to off.\n"
-            "    -s          Enable schema processing. Defaults to off.\n\n"
+            "    -s          Enable schema processing. Defaults to off.\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n\n"
             "  * = Default if not provided explicitly\n\n"
          << endl;
 }
@@ -118,8 +119,9 @@ int main(int argC, char* argV[])
 
     const char*              xmlFile = 0;
     DOMParser::ValSchemes    valScheme = DOMParser::Val_Auto;
-    bool                     doNamespaces    = false;
-    bool                     doSchema        = false;
+    bool                     doNamespaces       = false;
+    bool                     doSchema           = false;
+    bool                     schemaFullChecking = false;
 
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -162,6 +164,11 @@ int main(int argC, char* argV[])
         {
             doSchema = true;
         }
+         else if (!strcmp(argV[argInd], "-f")
+              ||  !strcmp(argV[argInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
          else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -185,6 +192,7 @@ int main(int argC, char* argV[])
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     parser.setDoSchema(doSchema);
+    parser.setValidationSchemaFullChecking(schemaFullChecking);
 
     // And create our error handler and install it
     DOMCountErrorHandler errorHandler;

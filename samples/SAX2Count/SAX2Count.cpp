@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.6  2001/08/01 19:11:01  tng
+* Add full schema constraint checking flag to the samples and the parser.
+*
 * Revision 1.5  2001/05/11 13:24:56  tng
 * Copyright update.
 *
@@ -94,6 +97,7 @@ void usage()
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Disable namespace processing. Defaults to on.\n"
             "    -s          Disable schema processing. Defaults to on.\n\n"
+            "    -f          Enable full schema constraint checking processing. Defaults to off.\n\n"
             "This program prints the number of elements, attributes,\n"
             "white spaces and other non-white space characters in the "
             "input file.\n\n"
@@ -132,6 +136,7 @@ int main(int argC, char* argV[])
     SAX2XMLReader::ValSchemes    valScheme    = SAX2XMLReader::Val_Auto;
     bool                         doNamespaces = true;
     bool                         doSchema = true;
+    bool                         schemaFullChecking = false;
 
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -175,6 +180,11 @@ int main(int argC, char* argV[])
         {
             doSchema = false;
         }
+         else if (!strcmp(argV[argInd], "-f")
+              ||  !strcmp(argV[argInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
         else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -201,6 +211,7 @@ int main(int argC, char* argV[])
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 	parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces"), doNamespaces);
 	parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), doSchema);
+	parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking"), schemaFullChecking);
 	if (valScheme == SAX2XMLReader::Val_Auto)
 	{
 	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);

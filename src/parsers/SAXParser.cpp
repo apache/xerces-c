@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/08/01 19:11:02  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.20  2001/06/03 19:26:20  jberry
  * Add support for querying error count following parse; enables simple parse without requiring error handler.
  *
@@ -319,6 +322,11 @@ bool SAXParser::getDoSchema() const
     return fScanner->getDoSchema();
 }
 
+bool SAXParser::getValidationSchemaFullChecking() const
+{
+    return fScanner->getValidationSchemaFullChecking();
+}
+
 int SAXParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
@@ -359,6 +367,11 @@ void SAXParser::setValidationScheme(const ValSchemes newScheme)
 void SAXParser::setDoSchema(const bool newState)
 {
     fScanner->setDoSchema(newState);
+}
+
+void SAXParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
+{
+    fScanner->setValidationSchemaFullChecking(schemaFullChecking);
 }
 
 

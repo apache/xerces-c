@@ -186,6 +186,11 @@ bool DOMParser::getDoSchema() const
     return fScanner->getDoSchema();
 }
 
+bool DOMParser::getValidationSchemaFullChecking() const
+{
+    return fScanner->getValidationSchemaFullChecking();
+}
+
 int DOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
@@ -249,6 +254,11 @@ void DOMParser::setValidationScheme(const ValSchemes newScheme)
 void DOMParser::setDoSchema(const bool newState)
 {
     fScanner->setDoSchema(newState);
+}
+
+void DOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
+{
+    fScanner->setValidationSchemaFullChecking(schemaFullChecking);
 }
 
 

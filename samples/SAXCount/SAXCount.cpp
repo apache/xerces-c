@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.12  2001/08/01 19:11:01  tng
+* Add full schema constraint checking flag to the samples and the parser.
+*
 * Revision 1.11  2001/05/11 13:24:57  tng
 * Copyright update.
 *
@@ -120,7 +123,8 @@ void usage()
             "Options:\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Defaults to off.\n"
-            "    -s          Enable schema processing. Defaults to off.\n\n"
+            "    -s          Enable schema processing. Defaults to off.\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n\n"
             "This program prints the number of elements, attributes,\n"
             "white spaces and other non-white space characters in the "
             "input file.\n\n"
@@ -157,8 +161,9 @@ int main(int argC, char* argV[])
 
     const char*              xmlFile = 0;
     SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
-    bool                     doNamespaces = false;
-    bool                     doSchema = false;
+    bool                     doNamespaces       = false;
+    bool                     doSchema           = false;
+    bool                     schemaFullChecking = false;
 
 
     int argInd;
@@ -195,6 +200,11 @@ int main(int argC, char* argV[])
         {
             doSchema = true;
         }
+         else if (!strcmp(argV[argInd], "-f")
+              ||  !strcmp(argV[argInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
         else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -227,6 +237,7 @@ int main(int argC, char* argV[])
         parser.setValidationScheme(valScheme);
         parser.setDoNamespaces(doNamespaces);
         parser.setDoSchema(doSchema);
+        parser.setValidationSchemaFullChecking(schemaFullChecking);
 
         //
         //  Create our SAX handler object and install it on the parser, as the

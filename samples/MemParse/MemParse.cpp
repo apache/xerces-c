@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/01 19:11:01  tng
+ * Add full schema constraint checking flag to the samples and the parser.
+ *
  * Revision 1.9  2001/05/11 13:24:55  tng
  * Copyright update.
  *
@@ -185,7 +188,8 @@ void usage()
          << "\nOptions:\n"
          << "    -v=xxx      Validation scheme [always | never | auto*]\n"
          << "    -n          Enable namespace processing. Defaults to off.\n"
-         << "    -s          Enable schema processing. Defaults to off.\n\n"
+         << "    -s          Enable schema processing. Defaults to off.\n"
+         << "    -f          Enable full schema constraint checking. Defaults to off.\n\n"
          << "  * = Default if not provided explicitly\n"
          << endl;
 }
@@ -209,8 +213,9 @@ int main(int argC, char* argV[])
     }
 
     SAXParser::ValSchemes    valScheme = SAXParser::Val_Auto;
-    bool doNamespaces    = false;
-    bool doSchema        = false;
+    bool doNamespaces       = false;
+    bool doSchema           = false;
+    bool schemaFullChecking = false;
     if (argC > 1)
     {
         // See if non validating dom parser configuration is requested.
@@ -250,6 +255,11 @@ int main(int argC, char* argV[])
             {
                 doSchema = true;
             }
+             else if (!strcmp(argV[argInd], "-f")
+                  ||  !strcmp(argV[argInd], "-F"))
+            {
+                schemaFullChecking = true;
+            }
              else
             {
                 cerr << "Unknown option '" << argV[argInd]
@@ -266,6 +276,7 @@ int main(int argC, char* argV[])
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     parser.setDoSchema(doSchema);
+    parser.setValidationSchemaFullChecking(schemaFullChecking);
 
     //
     //  Create our SAX handler object and install it on the parser, as the

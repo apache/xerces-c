@@ -191,6 +191,11 @@ bool IDOMParser::getDoSchema() const
     return fScanner->getDoSchema();
 }
 
+bool IDOMParser::getValidationSchemaFullChecking() const
+{
+    return fScanner->getValidationSchemaFullChecking();
+}
+
 int IDOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
@@ -257,6 +262,10 @@ void IDOMParser::setDoSchema(const bool newState)
     fScanner->setDoSchema(newState);
 }
 
+void IDOMParser::setValidationSchemaFullChecking(const bool schemaFullChecking)
+{
+    fScanner->setValidationSchemaFullChecking(schemaFullChecking);
+}
 
 // ---------------------------------------------------------------------------
 //  IDOMParser: Parsing methods
