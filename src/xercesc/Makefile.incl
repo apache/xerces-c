@@ -358,13 +358,14 @@ ifeq (${PLATFORM}, HPUX)
   ifeq (${CXX}, aCC)
     PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC \
         -D${OSVERDEFINE} +DAportable +Z
-    MAKE_SHARED = ${CXX} -D${PLATFORM} -b -Wl,+s ${LDFLAGS}
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} -b -Wl,+s ${LDFLAGS}
+    MAKE_SHARED = ${CXX} -D${PLATFORM} ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -licuuc -licudata
     else
         ALLLIBS = ${LIBS}
     endif
+    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
     SHLIBSUFFIX=.sl
   else
     TEMPLATESREPOSITORY = ${XML_OBJ_DIR}/ptrepository
@@ -382,7 +383,7 @@ ifeq (${PLATFORM}, HPUX)
     else
         ALLLIBS = ${LIBS}
     endif
-    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
+    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
     SHLIBSUFFIX=.sl
   endif
   ## Compiler switch to embed a library name

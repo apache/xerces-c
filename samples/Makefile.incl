@@ -208,7 +208,7 @@ ifeq (${PLATFORM}, HPUX)
   ifeq (${COMPILER}, aCC)
     CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
     CC = aCC
-    LINK =  ${CC} -Wl,+s ${LDFLAGS}
+    LINK =  ${CC} -Wl,+s -Wl,+b,. ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -lpthread
     SHLIBSUFFIX=.sl
   else
@@ -221,7 +221,7 @@ ifeq (${PLATFORM}, HPUX)
         -ptr$(TEMPLATESDIR)
     CMP = -c $(COMMON_CMP)
     CC = CC
-    LINK =  ${CC} $(COMMON_CMP) -Wl,+s ${LDFLAGS}
+    LINK =  ${CC} $(COMMON_CMP) -Wl,+s -Wl,+b,. ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/CC/lib -L/usr/lib
     SHLIBSUFFIX=.sl
   endif
