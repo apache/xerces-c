@@ -161,7 +161,9 @@ void DOMNotationImpl::release()
 }
 
 void DOMNotationImpl::setBaseURI(const XMLCh* baseURI) {
-    this->fBaseURI = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(baseURI);
+    XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)getOwnerDocument())->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
+    XMLString::fixURI(baseURI, temp);
+    fBaseURI = temp;
 }
 
 const XMLCh* DOMNotationImpl::getBaseURI() const
