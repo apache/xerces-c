@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/08 13:53:37  peiyongz
+ * Bug#8898: SchemaElementDecl doesn't compile with Intel C++ for IA32,
+ *                   patch from Curt Arnold
+ *
  * Revision 1.3  2002/03/21 16:31:43  knoaman
  * Remove data/methods from SchemaElementDecl that are not used.
  *
@@ -264,14 +268,12 @@ XMLAttDefList& SchemaElementDecl::getAttDefList() const
     if (fXsiComplexTypeInfo) {
         return fXsiComplexTypeInfo->getAttDefList();
     }
-    else if (fComplexTypeInfo) {
-        return fComplexTypeInfo->getAttDefList();
-    }
-    else {
+    else if (!fComplexTypeInfo) 
+	{
         ThrowXML(RuntimeException, XMLExcepts::DV_InvalidOperation);
     }
 
-    return *(XMLAttDefList*)0 ;
+	return fComplexTypeInfo->getAttDefList();
 }
 
 
