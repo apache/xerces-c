@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:26:43  tng
  * Copyright update.
@@ -77,7 +80,7 @@
 // ---------------------------------------------------------------------------
 ModifierToken::ModifierToken(Token* const child, const int options,
                              const int mask)
-    : Token(Token::MODIFIERGROUP)
+    : Token(Token::T_MODIFIERGROUP)
     , fOptions(options)
     , fOptionsMask(mask)
     , fChild(child)

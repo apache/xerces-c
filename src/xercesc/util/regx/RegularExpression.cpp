@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:30  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:30  peiyongz
+ * sane_include
  *
  * Revision 1.6  2002/01/02 20:09:11  knoaman
  * Fix for regular expression patterns that begin with ".".
@@ -519,8 +522,8 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 	/*
 	 *	Check whether the expression start with ".*"
 	 */
-	if (fOperations != 0 && fOperations->getOpType() == Op::CLOSURE
-        && fOperations->getChild()->getOpType() == Op::DOT) {
+	if (fOperations != 0 && fOperations->getOpType() == Op::O_CLOSURE
+        && fOperations->getChild()->getOpType() == Op::O_DOT) {
 
 		if (isSet(fOptions, SINGLE_LINE)) {
 			matchStart = context->fStart;
@@ -670,41 +673,41 @@ int RegularExpression::match(Context* const context, const Op* const operations
 			return -1;
 
 		switch(tmpOp->getOpType()) {
-		case Op::CHAR:
+		case Op::O_CHAR:
 			if (!matchChar(context, tmpOp->getData(), offset, direction,
 						   ignoreCase))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::DOT:
+		case Op::O_DOT:
 			if (!matchDot(context, offset, direction))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::RANGE:
-		case Op::NRANGE:
+		case Op::O_RANGE:
+		case Op::O_NRANGE:
 			if (!matchRange(context, tmpOp, offset, direction, ignoreCase))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::ANCHOR:
+		case Op::O_ANCHOR:
 			if (!matchAnchor(context, tmpOp->getData(), offset))
 				return -1;
 			tmpOp->getNextOp();
 			break;
-		case Op::BACKREFERENCE:
+		case Op::O_BACKREFERENCE:
 			if (!matchBackReference(context, tmpOp->getData(), offset,
 									direction, ignoreCase))
 				return -1;
 			tmpOp->getNextOp();
 			break;
-		case Op::STRING:
+		case Op::O_STRING:
 			if (!matchString(context, tmpOp->getLiteral(), offset, direction,
 							 ignoreCase))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::CLOSURE:
+		case Op::O_CLOSURE:
 			{
 				XMLInt32 id = tmpOp->getData();
 				if (id >= 0) {
@@ -731,7 +734,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				tmpOp = tmpOp->getNextOp();
 			}
 			break;
-		case Op::QUESTION:
+		case Op::O_QUESTION:
 			{
 				int ret = match(context, tmpOp->getChild(), offset, direction);
 				if (ret >= 0)
@@ -739,8 +742,8 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				tmpOp = tmpOp->getNextOp();
 			}
 			break;
-		case Op::NONGREEDYCLOSURE:
-		case Op::NONGREEDYQUESTION:
+		case Op::O_NONGREEDYCLOSURE:
+		case Op::O_NONGREEDYQUESTION:
 			{
 				int ret = match(context,tmpOp->getNextOp(),offset,direction);
 				if (ret >= 0)
@@ -748,39 +751,39 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				tmpOp = tmpOp->getChild();
 			}
 			break;
-		case Op::UNION:
+		case Op::O_UNION:
 			{
 				return matchUnion(context, tmpOp, offset, direction);
 			}
-		case Op::CAPTURE:
+		case Op::O_CAPTURE:
 			if (context->fMatch != 0 && tmpOp->getData() != 0)
 				return matchCapture(context, tmpOp, offset, direction);
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::LOOKAHEAD:
+		case Op::O_LOOKAHEAD:
 			if (0 > match(context, tmpOp->getChild(), offset, 1))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::NEGATIVELOOKAHEAD:
+		case Op::O_NEGATIVELOOKAHEAD:
 			if (0 <= match(context, tmpOp->getChild(), offset, 1))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::LOOKBEHIND:
+		case Op::O_LOOKBEHIND:
 			if (0 > match(context, tmpOp->getChild(), offset, -1))
 				return - 1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::NEGATIVELOOKBEHIND:
+		case Op::O_NEGATIVELOOKBEHIND:
 			if (0 <= match(context, tmpOp->getChild(), offset, -1))
 				return -1;
 			tmpOp = tmpOp->getNextOp();
 			break;
-		case Op::INDEPENDENT:
-        case Op::MODIFIER:
+		case Op::O_INDEPENDENT:
+        case Op::O_MODIFIER:
 			{
-				int ret = (tmpOp->getOpType() == Op::INDEPENDENT)
+				int ret = (tmpOp->getOpType() == Op::O_INDEPENDENT)
 					   ? match(context, tmpOp->getChild(), offset, direction)
                        : matchModifier(context, tmpOp, offset, direction);
                 if (ret < 0)
@@ -789,7 +792,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				tmpOp = tmpOp->getNextOp();
 			}
 			break;
-		case Op::CONDITION:
+		case Op::O_CONDITION:
 			if (tmpOp->getRefNo() >= fNoGroups)
 				return -1;
 			if (matchCondition(context, tmpOp, offset, direction))
@@ -1126,42 +1129,42 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 	const unsigned short tokenType = token->getTokenType();
 
 	switch(tokenType) {
-	case Token::DOT:
-	case Token::CHAR:
-	case Token::ANCHOR:
-	case Token::RANGE:
-	case Token::NRANGE:
-	case Token::STRING:
-	case Token::BACKREFERENCE:
-	case Token::EMPTY:
+	case Token::T_DOT:
+	case Token::T_CHAR:
+	case Token::T_ANCHOR:
+	case Token::T_RANGE:
+	case Token::T_NRANGE:
+	case Token::T_STRING:
+	case Token::T_BACKREFERENCE:
+	case Token::T_EMPTY:
 		ret = compileSingle(token, next, tokenType);
 		break;
-	case Token::CONCAT:
+	case Token::T_CONCAT:
 		ret = compileConcat(token, next, reverse);
 		break;
-	case Token::UNION:
+	case Token::T_UNION:
 		ret = compileUnion(token, next, reverse);
 		break;
-	case Token::CLOSURE:
-	case Token::NONGREEDYCLOSURE:
+	case Token::T_CLOSURE:
+	case Token::T_NONGREEDYCLOSURE:
 		ret = compileClosure(token, next, reverse, tokenType);
 		break;
-	case Token::PAREN:
+	case Token::T_PAREN:
 		ret = compileParenthesis(token, next, reverse);
 		break;
-	case Token::LOOKAHEAD:
-	case Token::NEGATIVELOOKAHEAD:
+	case Token::T_LOOKAHEAD:
+	case Token::T_NEGATIVELOOKAHEAD:
 		ret = compileLook(token, next, false, tokenType);
 		break;
-	case Token::LOOKBEHIND:
-	case Token::NEGATIVELOOKBEHIND:
+	case Token::T_LOOKBEHIND:
+	case Token::T_NEGATIVELOOKBEHIND:
 		ret = compileLook(token, next, true, tokenType);
 		break;
-	case Token::INDEPENDENT:
-	case Token::MODIFIERGROUP:
+	case Token::T_INDEPENDENT:
+	case Token::T_MODIFIERGROUP:
 		ret = compileLook(token, next, reverse, tokenType);
 		break;
-	case Token::CONDITION:
+	case Token::T_CONDITION:
 		ret = compileCondition(token, next, reverse);
 		break;
 	default:
@@ -1198,12 +1201,12 @@ void RegularExpression::prepare() {
 	}
 
 	if (fOperations != 0 && fOperations->getNextOp() == 0 &&
-		(fOperations->getOpType() == Op::STRING ||
-		 fOperations->getOpType() == Op::CHAR) )			 {
+		(fOperations->getOpType() == Op::O_STRING ||
+		 fOperations->getOpType() == Op::O_CHAR) )			 {
 
 		fFixedStringOnly = true;
 
-		if (fOperations->getOpType() == Op::STRING) {
+		if (fOperations->getOpType() == Op::O_STRING) {
 			delete [] fFixedString;
 			fFixedString = XMLString::replicate(fOperations->getLiteral());
 		}

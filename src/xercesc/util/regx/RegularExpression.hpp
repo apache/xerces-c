@@ -298,22 +298,22 @@ inline Op* RegularExpression::compileLook(const Token* const token,
     Op*    result = compile(token->getChild(0), 0, reverse);
 
     switch(tokType) {
-    case Token::LOOKAHEAD:
-        ret = fOpFactory.createLookOp(Op::LOOKAHEAD, next, result);
+    case Token::T_LOOKAHEAD:
+        ret = fOpFactory.createLookOp(Op::O_LOOKAHEAD, next, result);
         break;
-    case Token::NEGATIVELOOKAHEAD:
-        ret = fOpFactory.createLookOp(Op::NEGATIVELOOKAHEAD, next, result);
+    case Token::T_NEGATIVELOOKAHEAD:
+        ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKAHEAD, next, result);
         break;
-    case Token::LOOKBEHIND:
-        ret = fOpFactory.createLookOp(Op::LOOKBEHIND, next, result);
+    case Token::T_LOOKBEHIND:
+        ret = fOpFactory.createLookOp(Op::O_LOOKBEHIND, next, result);
         break;
-    case Token::NEGATIVELOOKBEHIND:
-        ret = fOpFactory.createLookOp(Op::NEGATIVELOOKBEHIND, next, result);
+    case Token::T_NEGATIVELOOKBEHIND:
+        ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKBEHIND, next, result);
         break;
-    case Token::INDEPENDENT:
+    case Token::T_INDEPENDENT:
         ret = fOpFactory.createIndependentOp(next, result);
         break;
-    case Token::MODIFIERGROUP:
+    case Token::T_MODIFIERGROUP:
         ret = fOpFactory.createModifierOp(next, result,
                                    ((ModifierToken *) token)->getOptions(),
                                    ((ModifierToken *) token)->getOptionsMask());
@@ -331,31 +331,31 @@ inline Op* RegularExpression::compileSingle(const Token* const token,
     Op* ret = 0;
 
     switch (tokType) {
-    case Token::DOT:
+    case Token::T_DOT:
         ret = fOpFactory.createDotOp();
         break;
-    case Token::CHAR:
+    case Token::T_CHAR:
         ret = fOpFactory.createCharOp(token->getChar());
         break;
-    case Token::ANCHOR:
+    case Token::T_ANCHOR:
         ret = fOpFactory.createAnchorOp(token->getChar());
         break;
-    case Token::RANGE:
-    case Token::NRANGE:
+    case Token::T_RANGE:
+    case Token::T_NRANGE:
         ret = fOpFactory.createRangeOp(token);
         break;
-    case Token::EMPTY:
+    case Token::T_EMPTY:
         ret = next;
         break;
-    case Token::STRING:
+    case Token::T_STRING:
         ret = fOpFactory.createStringOp(token->getString());
         break;
-    case Token::BACKREFERENCE:
+    case Token::T_BACKREFERENCE:
         ret = fOpFactory.createBackReferenceOp(token->getReferenceNo());
         break;
     }
 
-    if (tokType != Token::EMPTY)
+    if (tokType != Token::T_EMPTY)
         ret->setNextOp(next);
 
     return ret;
@@ -469,7 +469,7 @@ inline Op* RegularExpression::compileClosure(const Token* const token,
         for (int i=0; i<max; i++) {
 
             ChildOp* childOp = fOpFactory.createQuestionOp(
-                tokType == Token::NONGREEDYCLOSURE);
+                tokType == Token::T_NONGREEDYCLOSURE);
 
             childOp->setNextOp(next);
             childOp->setChild(compile(childTok, ret, reverse));
@@ -480,7 +480,7 @@ inline Op* RegularExpression::compileClosure(const Token* const token,
 
         ChildOp* childOp = 0;
 
-        if (tokType == Token::NONGREEDYCLOSURE) {
+        if (tokType == Token::T_NONGREEDYCLOSURE) {
             childOp = fOpFactory.createNonGreedyClosureOp();
         }
         else {

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:34  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:34  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/06/05 14:50:32  knoaman
  * Fixes to regular expression.
@@ -126,7 +129,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     if (fChildren == 0)
         fChildren = new RefVectorOf<Token>(INITIALSIZE, false);
 
-    if (getTokenType() == UNION) {
+    if (getTokenType() == T_UNION) {
 
         fChildren->addElement(child);
         return;
@@ -135,7 +138,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     unsigned short childType = child->getTokenType();
     unsigned int   childSize = child->size();
 
-    if (childType == CONCAT) {
+    if (childType == T_CONCAT) {
 
         for (unsigned int i = 0; i < childSize; i++) {
 
@@ -155,8 +158,8 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     Token* previousTok = fChildren->elementAt(childrenSize - 1);
     unsigned short previousType = previousTok->getTokenType();
 
-    if (!((previousType == CHAR || previousType == STRING)
-          && (childType == CHAR || childType == STRING))) {
+    if (!((previousType == T_CHAR || previousType == T_STRING)
+          && (childType == T_CHAR || childType == T_STRING))) {
 
         fChildren->addElement(child);
         return;
@@ -165,7 +168,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     // Continue
     XMLBuffer stringBuf;
 
-    if (previousType == CHAR) {
+    if (previousType == T_CHAR) {
 
         XMLInt32 ch = previousTok->getChar();
 
@@ -186,7 +189,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
         stringBuf.append(previousTok->getString());
     }
 
-    if (childType == CHAR) {
+    if (childType == T_CHAR) {
 
         XMLInt32 ch = child->getChar();
 

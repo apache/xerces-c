@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:31  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:31  peiyongz
+ * sane_include
  *
  * Revision 1.5  2001/06/07 20:55:39  tng
  * Fix no newline at the end warning.  By Pei Yong Zhang.
@@ -136,12 +139,12 @@ TokenFactory::~TokenFactory() {
 // ---------------------------------------------------------------------------
 Token* TokenFactory::createToken(const unsigned short tokType) {
 
-	if (tokType == Token::EMPTY && fEmpty != 0)
+	if (tokType == Token::T_EMPTY && fEmpty != 0)
 		return fEmpty;
 
 	Token* tmpTok = new Token(tokType);
 
-	if (tokType == Token::EMPTY) {
+	if (tokType == Token::T_EMPTY) {
 		fEmpty = tmpTok;
     }
 
@@ -163,7 +166,7 @@ ParenToken* TokenFactory::createLook(const unsigned short tokType,
 ParenToken* TokenFactory::createParenthesis(Token* const token,
 											const int noGroups) {
 
-	ParenToken* tmpTok = new ParenToken(Token::PAREN, token, noGroups);
+	ParenToken* tmpTok = new ParenToken(Token::T_PAREN, token, noGroups);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -172,8 +175,8 @@ ParenToken* TokenFactory::createParenthesis(Token* const token,
 ClosureToken* TokenFactory::createClosure(Token* const token,
 										  bool isNonGreedy) {
 
-	ClosureToken* tmpTok = isNonGreedy ? new ClosureToken(Token::NONGREEDYCLOSURE, token)
-									   : new ClosureToken(Token::CLOSURE, token);
+	ClosureToken* tmpTok = isNonGreedy ? new ClosureToken(Token::T_NONGREEDYCLOSURE, token)
+									   : new ClosureToken(Token::T_CLOSURE, token);
 	
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -190,8 +193,8 @@ ConcatToken* TokenFactory::createConcat(Token* const token1,
 
 UnionToken* TokenFactory::createUnion(const bool isConcat) {
 
-	UnionToken* tmpTok = isConcat ? new UnionToken(Token::CONCAT)
-								  : new UnionToken(Token::UNION);
+	UnionToken* tmpTok = isConcat ? new UnionToken(Token::T_CONCAT)
+								  : new UnionToken(Token::T_UNION);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -200,8 +203,8 @@ UnionToken* TokenFactory::createUnion(const bool isConcat) {
 RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 
-	RangeToken* tmpTok = isNegRange ? new RangeToken(Token::NRANGE)
-								   : new RangeToken(Token::RANGE);
+	RangeToken* tmpTok = isNegRange ? new RangeToken(Token::T_NRANGE)
+								   : new RangeToken(Token::T_RANGE);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -211,8 +214,8 @@ RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 CharToken* TokenFactory::createChar(const XMLUInt32 ch, const bool isAnchor) {
 
-	CharToken* tmpTok = isAnchor ? new CharToken(Token::ANCHOR, ch)
-								: new CharToken(Token::CHAR, ch);
+	CharToken* tmpTok = isAnchor ? new CharToken(Token::T_ANCHOR, ch)
+								: new CharToken(Token::T_CHAR, ch);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -220,7 +223,7 @@ CharToken* TokenFactory::createChar(const XMLUInt32 ch, const bool isAnchor) {
 
 StringToken* TokenFactory::createBackReference(const int noRefs) {
 
-	StringToken* tmpTok = new StringToken(Token::BACKREFERENCE, 0, noRefs);
+	StringToken* tmpTok = new StringToken(Token::T_BACKREFERENCE, 0, noRefs);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -228,7 +231,7 @@ StringToken* TokenFactory::createBackReference(const int noRefs) {
 
 StringToken* TokenFactory::createString(const XMLCh* const literal) {
 
-	StringToken* tmpTok = new StringToken(Token::STRING, literal, 0);
+	StringToken* tmpTok = new StringToken(Token::T_STRING, literal, 0);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -351,7 +354,7 @@ Token* TokenFactory::getWordEnd() {
 Token* TokenFactory::getDot() {
 
 	if (fDot == 0)
-        fDot = createToken(Token::DOT);
+        fDot = createToken(Token::T_DOT);
 
     return fDot;
 }
@@ -402,7 +405,7 @@ Token* TokenFactory::getGraphemePattern() {
 
         Token* left = TokenFactory::createUnion();       // base_char?
         left->addChild(base_char, this);
-        left->addChild(createToken(Token::EMPTY), this);
+        left->addChild(createToken(Token::T_EMPTY), this);
 
         Token* foo = createUnion();
         foo->addChild(TokenFactory::createConcat(virama,getRange(fgUniLetter)), this);

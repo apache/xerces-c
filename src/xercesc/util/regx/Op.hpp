@@ -78,26 +78,26 @@ class XMLUTIL_EXPORT Op {
 public:
 
     enum {
-        DOT                = 0,
-        CHAR               = 1,
-        RANGE              = 3,
-        NRANGE             = 4,
-        ANCHOR             = 5,
-        STRING             = 6,
-        CLOSURE            = 7,
-        NONGREEDYCLOSURE   = 8,
-        QUESTION           = 9,
-        NONGREEDYQUESTION  = 10,
-        UNION              = 11,
-        CAPTURE            = 15,
-        BACKREFERENCE      = 16,
-        LOOKAHEAD          = 20,
-        NEGATIVELOOKAHEAD  = 21,
-        LOOKBEHIND         = 22,
-        NEGATIVELOOKBEHIND = 23,
-        INDEPENDENT        = 24,
-        MODIFIER           = 25,
-        CONDITION          = 26
+        O_DOT                = 0,
+        O_CHAR               = 1,
+        O_RANGE              = 3,
+        O_NRANGE             = 4,
+        O_ANCHOR             = 5,
+        O_STRING             = 6,
+        O_CLOSURE            = 7,
+        O_NONGREEDYCLOSURE   = 8,
+        O_QUESTION           = 9,
+        O_NONGREEDYQUESTION  = 10,
+        O_UNION              = 11,
+        O_CAPTURE            = 15,
+        O_BACKREFERENCE      = 16,
+        O_LOOKAHEAD          = 20,
+        O_NEGATIVELOOKAHEAD  = 21,
+        O_LOOKBEHIND         = 22,
+        O_NEGATIVELOOKBEHIND = 23,
+        O_INDEPENDENT        = 24,
+        O_MODIFIER           = 25,
+        O_CONDITION          = 26
     };
 
     // -----------------------------------------------------------------------

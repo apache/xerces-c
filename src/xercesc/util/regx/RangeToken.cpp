@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:30  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:30  peiyongz
+ * sane_include
  *
  * Revision 1.4  2001/05/29 19:39:33  knoaman
  * Typo fix
@@ -131,7 +134,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
     // For now we will return a copy of ourselves.
     if (fCaseIToken == 0 && tokFactory) {
 
-        bool isNRange = (getTokenType() == NRANGE) ? true : false;
+        bool isNRange = (getTokenType() == T_NRANGE) ? true : false;
         RangeToken* lwrToken = tokFactory->createRange(isNRange);
 
         lwrToken->mergeRanges(this);
@@ -348,7 +351,7 @@ void RangeToken::subtractRanges(RangeToken* const tok) {
     if (fRanges == 0 || tok->fRanges == 0)
         return;
 
-    if (tok->getTokenType() == NRANGE) {
+    if (tok->getTokenType() == T_NRANGE) {
 
         intersectRanges(tok);
         return;
@@ -518,7 +521,7 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
 Token* RangeToken::complementRanges(RangeToken* const tok,
                                     TokenFactory* const tokFactory) {
 
-    if (tok->getTokenType() != RANGE && tok->getTokenType() != NRANGE)
+    if (tok->getTokenType() != T_RANGE && tok->getTokenType() != T_NRANGE)
         ThrowXML(IllegalArgumentException, XMLExcepts::Regex_ComplementRangesInvalidArg);
 
     tok->sortRanges();
@@ -555,7 +558,7 @@ bool RangeToken::match(const XMLInt32 ch) {
 
     bool ret;
 
-    if (getTokenType() == RANGE) {
+    if (getTokenType() == T_RANGE) {
 
         if (ch < MAPSIZE)
             return ((fMap[ch/32] & (1<<(ch&0x1f))) != 0);

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:26:41  tng
  * Copyright update.
@@ -77,7 +80,7 @@
 // ---------------------------------------------------------------------------
 ConditionToken::ConditionToken(const unsigned int refNo, Token* const condTok,
                                Token* const yesTok, Token* const noTok)
-    : Token(Token::CONDITION)
+    : Token(Token::T_CONDITION)
     , fRefNo(refNo)
     , fConditionToken(condTok)
     , fYesToken(yesTok)

@@ -87,26 +87,26 @@ public:
     // -----------------------------------------------------------------------
 	// Token types
 	enum {
-		CHAR = 0,
-		CONCAT = 1,
-		UNION = 2,
-		CLOSURE = 3,
-		RANGE = 4,
-		NRANGE = 5,
-		PAREN = 6,
-		EMPTY = 7,
-		ANCHOR = 8,
-		NONGREEDYCLOSURE = 9,
-		STRING = 10,
-		DOT = 11,
-		BACKREFERENCE = 12,
-		LOOKAHEAD = 20,
-		NEGATIVELOOKAHEAD = 21,
-		LOOKBEHIND = 22,
-		NEGATIVELOOKBEHIND = 23,
-		INDEPENDENT = 24,
-		MODIFIERGROUP = 25,
-		CONDITION = 26
+		T_CHAR = 0,
+		T_CONCAT = 1,
+		T_UNION = 2,
+		T_CLOSURE = 3,
+		T_RANGE = 4,
+		T_NRANGE = 5,
+		T_PAREN = 6,
+		T_EMPTY = 7,
+		T_ANCHOR = 8,
+		T_NONGREEDYCLOSURE = 9,
+		T_STRING = 10,
+		T_DOT = 11,
+		T_BACKREFERENCE = 12,
+		T_LOOKAHEAD = 20,
+		T_NEGATIVELOOKAHEAD = 21,
+		T_LOOKBEHIND = 22,
+		T_NEGATIVELOOKBEHIND = 23,
+		T_INDEPENDENT = 24,
+		T_MODIFIERGROUP = 25,
+		T_CONDITION = 26
 	};
 
 	static const XMLInt32		UTF16_MAX;

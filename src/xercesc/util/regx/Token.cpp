@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:31  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:31  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/05/11 13:26:50  tng
  * Copyright update.
@@ -117,7 +120,7 @@ int Token::getMinLength() const {
 
 	switch (fTokenType) {
 
-	case CONCAT:
+	case T_CONCAT:
         {
             int sum = 0;
             unsigned int childSize = size();
@@ -127,8 +130,8 @@ int Token::getMinLength() const {
             }
             return sum;
         }
-	case CONDITION:
-	case UNION:
+	case T_CONDITION:
+	case T_UNION:
         {
 			unsigned int childSize = size();
 
@@ -145,32 +148,32 @@ int Token::getMinLength() const {
             }
 			return ret;
         }
-	case CLOSURE:
-	case NONGREEDYCLOSURE:
+	case T_CLOSURE:
+	case T_NONGREEDYCLOSURE:
         if (getMin() >= 0)
             return getMin() * getChild(0)->getMinLength();
 
 		return 0;
-	case EMPTY:
-	case ANCHOR:
+	case T_EMPTY:
+	case T_ANCHOR:
 		return 0;
-	case DOT:
-	case CHAR:
-	case RANGE:
-	case NRANGE:
+	case T_DOT:
+	case T_CHAR:
+	case T_RANGE:
+	case T_NRANGE:
 		return 1;
-	case INDEPENDENT:
-	case PAREN:
-	case MODIFIERGROUP:
+	case T_INDEPENDENT:
+	case T_PAREN:
+	case T_MODIFIERGROUP:
 		return getChild(0)->getMinLength();
-	case BACKREFERENCE:
+	case T_BACKREFERENCE:
 		return 0; // *****  - REVISIT
-	case STRING:
+	case T_STRING:
 		return XMLString::stringLen(getString());
-	case LOOKAHEAD:
-	case NEGATIVELOOKAHEAD:
-	case LOOKBEHIND:
-	case NEGATIVELOOKBEHIND:
+	case T_LOOKAHEAD:
+	case T_NEGATIVELOOKAHEAD:
+	case T_LOOKBEHIND:
+	case T_NEGATIVELOOKBEHIND:
 		return 0; // *****  - REVIST
 //	default:
 //		throw;
@@ -185,7 +188,7 @@ int Token::getMaxLength() const {
 
 	switch (fTokenType) {
 
-	case CONCAT:
+	case T_CONCAT:
         {
             int sum = 0;
             unsigned int childSize = size();
@@ -201,8 +204,8 @@ int Token::getMaxLength() const {
             }
             return sum;
         }
-    case CONDITION:
-    case UNION:
+    case T_CONDITION:
+    case T_UNION:
         {
             unsigned int childSize = size();
 
@@ -226,33 +229,33 @@ int Token::getMaxLength() const {
             }
 			return ret;
         }
-    case CLOSURE:
-    case NONGREEDYCLOSURE:
+    case T_CLOSURE:
+    case T_NONGREEDYCLOSURE:
         if (getMax() >= 0) {
             return getMax() * getChild(0)->getMaxLength();
 		}
 		return -1;
-    case EMPTY:
-    case ANCHOR:
+    case T_EMPTY:
+    case T_ANCHOR:
         return 0;
-    case CHAR:
+    case T_CHAR:
         return 1;
-    case DOT:
-    case RANGE:
-    case NRANGE:
+    case T_DOT:
+    case T_RANGE:
+    case T_NRANGE:
         return 2;
-    case INDEPENDENT:
-    case PAREN:
-    case MODIFIERGROUP:
+    case T_INDEPENDENT:
+    case T_PAREN:
+    case T_MODIFIERGROUP:
         return getChild(0)->getMaxLength();
-    case BACKREFERENCE:
+    case T_BACKREFERENCE:
 		return -1; // REVISIT
-    case STRING:
+    case T_STRING:
         return XMLString::stringLen(getString());
-    case LOOKAHEAD:
-    case NEGATIVELOOKAHEAD:
-    case LOOKBEHIND:
-    case NEGATIVELOOKBEHIND:
+    case T_LOOKAHEAD:
+    case T_NEGATIVELOOKAHEAD:
+    case T_LOOKBEHIND:
+    case T_NEGATIVELOOKBEHIND:
 		return 0; // REVISIT
 //    default:
 //		throw; //ThrowXML(RuntimeException, ...)
@@ -269,7 +272,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
                                  TokenFactory* const tokFactory)
 {
 	switch(fTokenType) {
-	case CONCAT:
+	case T_CONCAT:
 		{
 			int ret = FC_CONTINUE;
 			for (int i=0; i<size(); i++) {
@@ -282,7 +285,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			}
 			return ret;
 		}
-	case UNION:
+	case T_UNION:
 		{
 			unsigned int childSize = size();
             if (childSize == 0)
@@ -302,7 +305,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			}
 			return hasEmpty ? FC_CONTINUE : ret;
 		}
-	case CONDITION:
+	case T_CONDITION:
 		{
             int ret1 = getChild(0)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 
@@ -322,19 +325,19 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 
 			return FC_TERMINAL;
 		}
-	case CLOSURE:
-	case NONGREEDYCLOSURE:
+	case T_CLOSURE:
+	case T_NONGREEDYCLOSURE:
 		{
 			Token* tok = getChild(0);
 			if (tok)
 				tok->analyzeFirstCharacter(rangeTok, options, tokFactory);
 			return FC_CONTINUE;
 		}
-	case DOT:
-	case EMPTY:
-	case ANCHOR:
+	case T_DOT:
+	case T_EMPTY:
+	case T_ANCHOR:
 		return FC_CONTINUE;
-	case CHAR:
+	case T_CHAR:
 		{
             XMLInt32 ch = getChar();
 			rangeTok->addRange(ch, ch);
@@ -343,7 +346,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			}
 		}
 		return FC_TERMINAL;
-	case RANGE:
+	case T_RANGE:
 		{
 			if (isSet(options, RegularExpression::IGNORE_CASE)) {
                 rangeTok->mergeRanges(((RangeToken*)
@@ -354,7 +357,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			}
 			return FC_TERMINAL;
 		}
-	case NRANGE:
+	case T_NRANGE:
 		{
 			if (isSet(options, RegularExpression::IGNORE_CASE)) {
 
@@ -367,18 +370,18 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 					RangeToken::complementRanges((RangeToken*) this, tokFactory));
 			}
 		}
-	case INDEPENDENT:
-	case PAREN:
+	case T_INDEPENDENT:
+	case T_PAREN:
 		{
 			Token* tok = getChild(0);
 			if (tok)
 				return tok->analyzeFirstCharacter(rangeTok,options, tokFactory);
 		}
-	case MODIFIERGROUP:
-	case BACKREFERENCE:
+	case T_MODIFIERGROUP:
+	case T_BACKREFERENCE:
 		rangeTok->addRange(0, UTF16_MAX);
 		return FC_ANY;
-	case STRING:
+	case T_STRING:
 		{
 			const XMLCh* str = getString();
             XMLInt32 ch = str[0];
@@ -392,10 +395,10 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
             }
 		}
 		return FC_TERMINAL;
-	case LOOKAHEAD:
-	case NEGATIVELOOKAHEAD:
-	case LOOKBEHIND:
-	case NEGATIVELOOKBEHIND:
+	case T_LOOKAHEAD:
+	case T_NEGATIVELOOKAHEAD:
+	case T_LOOKBEHIND:
+	case T_NEGATIVELOOKBEHIND:
 		FC_CONTINUE;
 //	default:
 //		throw;
@@ -409,30 +412,30 @@ Token* Token::findFixedString(int options, int& outOptions) {
 
     switch(fTokenType) {
 
-    case CHAR:
+    case T_CHAR:
 		return 0;
-    case STRING:
+    case T_STRING:
 		outOptions = options;
 		return this;
-    case UNION:
-    case CLOSURE:
-    case NONGREEDYCLOSURE:
-    case EMPTY:
-    case ANCHOR:
-    case RANGE:
-    case NRANGE:
-    case DOT:
-    case BACKREFERENCE:
-    case LOOKAHEAD:
-    case NEGATIVELOOKAHEAD:
-    case LOOKBEHIND:
-    case NEGATIVELOOKBEHIND:
-    case CONDITION:
+    case T_UNION:
+    case T_CLOSURE:
+    case T_NONGREEDYCLOSURE:
+    case T_EMPTY:
+    case T_ANCHOR:
+    case T_RANGE:
+    case T_NRANGE:
+    case T_DOT:
+    case T_BACKREFERENCE:
+    case T_LOOKAHEAD:
+    case T_NEGATIVELOOKAHEAD:
+    case T_LOOKBEHIND:
+    case T_NEGATIVELOOKBEHIND:
+    case T_CONDITION:
 		return 0;
-    case INDEPENDENT:
-    case PAREN:
+    case T_INDEPENDENT:
+    case T_PAREN:
 		return getChild(0)->findFixedString(options, outOptions);
-    case CONCAT:
+    case T_CONCAT:
         {
             Token* prevTok = 0;
             int prevOptions = 0;
@@ -451,7 +454,7 @@ Token* Token::findFixedString(int options, int& outOptions) {
 			outOptions = prevOptions;
             return prevTok;
         }
-    case MODIFIERGROUP:
+    case T_MODIFIERGROUP:
         {
             options |= ((ModifierToken *) this)->getOptions();
             options &= ~((ModifierToken *) this)->getOptionsMask();
@@ -468,7 +471,7 @@ bool Token::isShorterThan(Token* const tok) {
 	if (tok == 0)
 		return false;
 
-	if (getTokenType() != STRING && tok->getTokenType() != STRING)
+	if (getTokenType() != T_STRING && tok->getTokenType() != T_STRING)
 		return false; //Should we throw an exception?
 
     int length = XMLString::stringLen(getString());

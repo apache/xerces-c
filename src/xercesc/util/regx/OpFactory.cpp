@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/07 20:55:36  tng
  * Fix no newline at the end warning.  By Pei Yong Zhang.
@@ -96,14 +99,14 @@ OpFactory::~OpFactory() {
 // ---------------------------------------------------------------------------
 Op* OpFactory::createDotOp() {
 
-	Op* tmpOp = new Op(Op::DOT);
+	Op* tmpOp = new Op(Op::O_DOT);
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
 }
 
 CharOp* OpFactory::createCharOp(int data) {
 
-	CharOp* tmpOp = new CharOp(Op::CHAR, data);
+	CharOp* tmpOp = new CharOp(Op::O_CHAR, data);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -111,7 +114,7 @@ CharOp* OpFactory::createCharOp(int data) {
 
 CharOp* OpFactory::createAnchorOp(int data) {
 
-	CharOp* tmpOp = new CharOp(Op::ANCHOR, data);
+	CharOp* tmpOp = new CharOp(Op::O_ANCHOR, data);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -119,7 +122,7 @@ CharOp* OpFactory::createAnchorOp(int data) {
 
 CharOp* OpFactory::createCaptureOp(int number, const Op* const next) {
 
-	CharOp* tmpOp = new CharOp(Op::CAPTURE, number);
+	CharOp* tmpOp = new CharOp(Op::O_CAPTURE, number);
 
 	tmpOp->setNextOp(next);
 	fOpVector->addElement(tmpOp);
@@ -128,7 +131,7 @@ CharOp* OpFactory::createCaptureOp(int number, const Op* const next) {
 
 UnionOp* OpFactory::createUnionOp(int size) {
 
-	UnionOp* tmpOp = new UnionOp(Op::UNION, size);
+	UnionOp* tmpOp = new UnionOp(Op::O_UNION, size);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -136,7 +139,7 @@ UnionOp* OpFactory::createUnionOp(int size) {
 
 ChildOp* OpFactory::createClosureOp(int id) {
 
-	ModifierOp* tmpOp = new ModifierOp(Op::CLOSURE, id, -1);
+	ModifierOp* tmpOp = new ModifierOp(Op::O_CLOSURE, id, -1);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -144,7 +147,7 @@ ChildOp* OpFactory::createClosureOp(int id) {
 
 ChildOp* OpFactory::createNonGreedyClosureOp() {
 
-	ChildOp* tmpOp = new ChildOp(Op::NONGREEDYCLOSURE);
+	ChildOp* tmpOp = new ChildOp(Op::O_NONGREEDYCLOSURE);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -152,8 +155,8 @@ ChildOp* OpFactory::createNonGreedyClosureOp() {
 
 ChildOp* OpFactory::createQuestionOp(bool nonGreedy) {
 
-	ChildOp* tmpOp = new ChildOp(nonGreedy ? Op::NONGREEDYQUESTION :
-											 Op::QUESTION);
+	ChildOp* tmpOp = new ChildOp(nonGreedy ? Op::O_NONGREEDYQUESTION :
+											 Op::O_QUESTION);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -161,7 +164,7 @@ ChildOp* OpFactory::createQuestionOp(bool nonGreedy) {
 
 RangeOp* OpFactory::createRangeOp(const Token* const token) {
 
-	RangeOp* tmpOp = new RangeOp(Op::RANGE, token);
+	RangeOp* tmpOp = new RangeOp(Op::O_RANGE, token);
 	
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -180,7 +183,7 @@ ChildOp* OpFactory::createLookOp(const short type, const Op* const next,
 
 CharOp* OpFactory::createBackReferenceOp(int refNo) {
 
-	CharOp* tmpOp = new CharOp(Op::BACKREFERENCE, refNo);
+	CharOp* tmpOp = new CharOp(Op::O_BACKREFERENCE, refNo);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -188,7 +191,7 @@ CharOp* OpFactory::createBackReferenceOp(int refNo) {
 
 StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
 
-	StringOp* tmpOp = new StringOp(Op::STRING, literal);
+	StringOp* tmpOp = new StringOp(Op::O_STRING, literal);
 
 	fOpVector->addElement(tmpOp);
 	return tmpOp;
@@ -197,7 +200,7 @@ StringOp* OpFactory::createStringOp(const XMLCh* const literal) {
 ChildOp* OpFactory::createIndependentOp(const Op* const next,
 							            const Op* const branch) {
 
-	ChildOp* tmpOp = new ChildOp(Op::INDEPENDENT);
+	ChildOp* tmpOp = new ChildOp(Op::O_INDEPENDENT);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -209,7 +212,7 @@ ModifierOp* OpFactory::createModifierOp(const Op* const next,
                                         const Op* const branch,
                                         const int add, const int mask) {
 
-	ModifierOp* tmpOp = new ModifierOp(Op::MODIFIER, add, mask);
+	ModifierOp* tmpOp = new ModifierOp(Op::O_MODIFIER, add, mask);
 
 	tmpOp->setNextOp(next);
 	tmpOp->setChild(branch);
@@ -221,7 +224,7 @@ ConditionOp* OpFactory::createConditionOp(const Op* const next, const int ref,
 								          const Op* const yesFlow,
 								          const Op* const noFlow) {
 
-	ConditionOp* tmpOp = new ConditionOp(Op::CONDITION, ref, conditionFlow,
+	ConditionOp* tmpOp = new ConditionOp(Op::O_CONDITION, ref, conditionFlow,
 										 yesFlow, noFlow);
 
 	tmpOp->setNextOp(next);

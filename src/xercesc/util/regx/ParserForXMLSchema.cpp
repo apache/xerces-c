@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:29  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
+ * sane_include
  *
  * Revision 1.6  2001/09/20 13:11:42  knoaman
  * Regx  + misc. fixes
@@ -151,7 +154,7 @@ Token* ParserForXMLSchema::processQuestion(Token* const tok) {
     TokenFactory* tokFactory = getTokenFactory();
     Token* retTok = tokFactory->createUnion();
     retTok->addChild(tok, tokFactory);
-    retTok->addChild(tokFactory->createToken(Token::EMPTY), tokFactory);
+    retTok->addChild(tokFactory->createToken(Token::T_EMPTY), tokFactory);
     return retTok;
 }
 

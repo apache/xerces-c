@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:30  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/18 19:29:53  knoaman
+ * Change constant names to eliminate possible conflict with user defined ones.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:30  peiyongz
+ * sane_include
  *
  * Revision 1.10  2001/11/20 20:48:10  knoaman
  * Fix for invalid repeating quantifier check.
@@ -433,7 +436,7 @@ Token* RegxParser::parseTerm() {
     unsigned short state = fState;
 
     if (state == T_OR || state == T_RPAREN || state == T_EOF) {
-        return fTokenFactory->createToken(Token::EMPTY);
+        return fTokenFactory->createToken(Token::T_EMPTY);
     }
     else {
 
@@ -574,13 +577,13 @@ Token* RegxParser::processQuestion(Token* const tok) {
     if (fState == T_QUESTION) {
 
         processNext();
-        parentTok->addChild(fTokenFactory->createToken(Token::EMPTY), fTokenFactory);
+        parentTok->addChild(fTokenFactory->createToken(Token::T_EMPTY), fTokenFactory);
         parentTok->addChild(tok, fTokenFactory);
     }
     else {
 
         parentTok->addChild(tok, fTokenFactory);
-        parentTok->addChild(fTokenFactory->createToken(Token::EMPTY), fTokenFactory);
+        parentTok->addChild(fTokenFactory->createToken(Token::T_EMPTY), fTokenFactory);
     }
 
     return parentTok;
@@ -649,12 +652,12 @@ Token* RegxParser::processCondition() {
         processNext();
         conditionTok = parseFactor();
         switch(conditionTok->getTokenType()) {
-        case Token::LOOKAHEAD:
-        case Token::NEGATIVELOOKAHEAD:
-        case Token::LOOKBEHIND:
-        case Token::NEGATIVELOOKBEHIND:
+        case Token::T_LOOKAHEAD:
+        case Token::T_NEGATIVELOOKAHEAD:
+        case Token::T_LOOKBEHIND:
+        case Token::T_NEGATIVELOOKBEHIND:
             break;
-        case Token::ANCHOR:
+        case Token::T_ANCHOR:
             if (fState != T_RPAREN)
 				ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 			break;
@@ -667,7 +670,7 @@ Token* RegxParser::processCondition() {
     Token* yesPattern = parseRegx();
     Token* noPattern = 0;
 
-    if (yesPattern->getTokenType() == Token::UNION) {
+    if (yesPattern->getTokenType() == Token::T_UNION) {
 
         if (yesPattern->size() != 2)
             ThrowXML(ParseException,XMLExcepts::Parser_Factor6);
@@ -757,8 +760,7 @@ Token* RegxParser::processIndependent() {
 
     processNext();
 
-	Token* tok = fTokenFactory->createLook(Token::INDEPENDENT,
-		                                              parseRegx());
+	Token* tok = fTokenFactory->createLook(Token::T_INDEPENDENT, parseRegx());
 
 	if (fState != T_RPAREN)
 		ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
@@ -840,16 +842,16 @@ Token* RegxParser::parseFactor() {
     case T_DOLLAR:
         return processDollar();
     case T_LOOKAHEAD:
-        return processLook(Token::LOOKAHEAD);
+        return processLook(Token::T_LOOKAHEAD);
     case T_NEGATIVELOOKAHEAD:
-        return processLook(Token::NEGATIVELOOKAHEAD);
+        return processLook(Token::T_NEGATIVELOOKAHEAD);
     case T_LOOKBEHIND:
-        return processLook(Token::LOOKBEHIND);
+        return processLook(Token::T_LOOKBEHIND);
     case T_NEGATIVELOOKBEHIND:
-        return processLook(Token::NEGATIVELOOKBEHIND);
+        return processLook(Token::T_NEGATIVELOOKBEHIND);
     case T_COMMENT:
         processNext();
-        return fTokenFactory->createToken(Token::EMPTY);
+        return fTokenFactory->createToken(Token::T_EMPTY);
     case T_BACKSOLIDUS:
         switch(fCharData) {
         case chLatin_A:
