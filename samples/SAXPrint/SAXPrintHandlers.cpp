@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/05/31 23:58:19  rahulj
+ * Needed an explicit char* cast to get it working under Solaris.
+ *
  * Revision 1.8  2000/04/07 23:25:53  roddey
  * A couple more tweaks of the event handler output.
  *
@@ -162,7 +165,12 @@ SAXPrintHandlers::~SAXPrintHandlers()
 void SAXPrintHandlers::writeChars(const XMLByte* const toWrite)
 {
     // For this one, just dump them to the standard output
-    cout << toWrite;
+    // Surprisingly, Solaris was the only platform on which
+    // required the char* cast to print out the string correctly.
+    // Without the cast, it was printing the pointer value in hex.
+    // Quite annoying, considering every other platform printed
+    // the string with the explicit cast to char* below.
+    cout << (char *) toWrite;
 }
 
 
