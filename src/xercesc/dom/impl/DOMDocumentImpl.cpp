@@ -124,7 +124,8 @@ DOMDocumentImpl::DOMDocumentImpl()
       fDocumentURI(0),
       fUserDataTable(0),
       fRecycleNodePtr(0),
-      fRecycleBufferPtr(0)
+      fRecycleBufferPtr(0),
+      errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
 };
@@ -153,7 +154,8 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDocumentURI(0),
       fUserDataTable(0),
       fRecycleNodePtr(0),
-      fRecycleBufferPtr(0)
+      fRecycleBufferPtr(0),
+      errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
     try {
