@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/04/21 20:46:01  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -89,7 +92,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XMLNotationDecl::XMLNotationDecl() :
 
-    fName(0)
+    fId(0)
+    , fName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
@@ -100,7 +104,8 @@ XMLNotationDecl::XMLNotationDecl(   const   XMLCh* const    notName
                                     , const XMLCh* const    pubId
                                     , const XMLCh* const    sysId
                                     , const XMLCh* const    baseURI) :
-    fName(0)
+    fId(0)
+    , fName(XMLString::replicate(notName))
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
@@ -110,9 +115,7 @@ XMLNotationDecl::XMLNotationDecl(   const   XMLCh* const    notName
         fPublicId = XMLString::replicate(pubId);
         fSystemId = XMLString::replicate(sysId);
         fBaseURI  = XMLString::replicate(baseURI);
-        setName(notName);
     }
-
     catch(...)
     {
         cleanUp();
@@ -131,8 +134,9 @@ XMLNotationDecl::~XMLNotationDecl()
 void XMLNotationDecl::setName(const XMLCh* const notName)
 {
     // Clean up the current name stuff and replicate the passed name
-    delete [] fName;
-    fName = 0;
+    if (fName)
+        XMLString::release(&fName);
+
     fName = XMLString::replicate(notName);
 }
 
@@ -143,10 +147,10 @@ void XMLNotationDecl::setName(const XMLCh* const notName)
 // ---------------------------------------------------------------------------
 void XMLNotationDecl::cleanUp()
 {
-    delete [] fName;
-    delete [] fPublicId;
-    delete [] fSystemId;
-    delete [] fBaseURI;
+    XMLString::release(&fName);
+    XMLString::release(&fPublicId);
+    XMLString::release(&fSystemId);
+    XMLString::release(&fBaseURI);
 }
 
 XERCES_CPP_NAMESPACE_END

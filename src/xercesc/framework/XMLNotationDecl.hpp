@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/04/21 20:46:01  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -93,7 +96,6 @@
 #if !defined(XMLNOTATIONDECL_HPP)
 #define XMLNOTATIONDECL_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -241,19 +243,25 @@ inline void XMLNotationDecl::setId(const unsigned int newId)
 
 inline void XMLNotationDecl::setPublicId(const XMLCh* const newId)
 {
-    delete [] fPublicId;
+    if (fPublicId)
+        XMLString::release(&fPublicId);
+
     fPublicId = XMLString::replicate(newId);
 }
 
 inline void XMLNotationDecl::setSystemId(const XMLCh* const newId)
 {
-    delete [] fSystemId;
+    if (fSystemId)
+        XMLString::release(&fSystemId);
+
     fSystemId = XMLString::replicate(newId);
 }
 
 inline void XMLNotationDecl::setBaseURI(const XMLCh* const newId)
 {
-    delete [] fBaseURI;
+    if (fBaseURI)
+        XMLString::release(&fBaseURI);
+
     fBaseURI = XMLString::replicate(newId);
 }
 

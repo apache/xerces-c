@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/04/21 20:46:01  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -173,8 +176,8 @@ private :
     //      a declared ID.
     // -----------------------------------------------------------------------
     bool        fDeclared;
-    XMLCh*      fRefName;
     bool        fUsed;
+    XMLCh*      fRefName;
 };
 
 
@@ -185,14 +188,14 @@ inline XMLRefInfo::XMLRefInfo(  const   XMLCh* const    refName
                                 , const bool            declared
                                 , const bool            used) :
     fDeclared(declared)
-    , fRefName(XMLString::replicate(refName))
     , fUsed(used)
+    , fRefName(XMLString::replicate(refName))
 {
 }
 
 inline XMLRefInfo::~XMLRefInfo()
 {
-    delete [] fRefName;
+    XMLString::release(&fRefName);
 }
 
 

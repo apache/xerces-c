@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,10 +62,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>
+#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -156,13 +155,13 @@ XMLAttDef::XMLAttDef(const  XMLAttDef::AttTypes     type
                     , const XMLAttDef::DefAttTypes  defType) :
 
     fDefaultType(defType)
-    , fEnumeration(0)
-    , fId(XMLAttDef::fgInvalidAttrId)
-    , fProvided(false)
     , fType(type)
-    , fValue(0)
     , fCreateReason(XMLAttDef::NoReason)
+    , fProvided(false)
     , fExternalAttribute(false)
+    , fId(XMLAttDef::fgInvalidAttrId)
+    , fValue(0)
+    , fEnumeration(0)
 {
 }
 
@@ -172,20 +171,18 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
                     , const XMLCh* const            enumValues) :
 
     fDefaultType(defType)
-    , fEnumeration(0)
-    , fId(XMLAttDef::fgInvalidAttrId)
-    , fProvided(false)
     , fType(type)
-    , fValue(0)
     , fCreateReason(XMLAttDef::NoReason)
+    , fProvided(false)
     , fExternalAttribute(false)
+    , fId(XMLAttDef::fgInvalidAttrId)
+    , fValue(XMLString::replicate(attrValue))
+    , fEnumeration(0)
 {
     try
     {
-        fValue = XMLString::replicate(attrValue);
         fEnumeration = XMLString::replicate(enumValues);
     }
-
     catch(...)
     {
         cleanUp();
@@ -198,8 +195,11 @@ XMLAttDef::XMLAttDef(const  XMLCh* const            attrValue
 // ---------------------------------------------------------------------------
 void XMLAttDef::cleanUp()
 {
-    delete [] fEnumeration;
-    delete [] fValue;
+    if (fEnumeration)
+       XMLString::release(&fEnumeration);
+
+    if (fValue)
+        XMLString::release(&fValue);
 }
 
 XERCES_CPP_NAMESPACE_END

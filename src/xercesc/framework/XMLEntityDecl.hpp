@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/04/21 20:46:01  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -413,12 +416,12 @@ private :
     //      is the URI where it is declared (NOT referenced).
     // -----------------------------------------------------------------------
     unsigned int    fId;
-	XMLCh*          fName;
+    unsigned int    fValueLen;
+    XMLCh*          fValue;
+    XMLCh*          fName;
     XMLCh*          fNotationName;
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
-    XMLCh*          fValue;
-    unsigned int    fValueLen;
     XMLCh*          fBaseURI;
 };
 
@@ -489,31 +492,41 @@ inline void XMLEntityDecl::setId(const unsigned int newId)
 
 inline void XMLEntityDecl::setNotationName(const XMLCh* const newName)
 {
-    delete [] fNotationName;
+    if (fNotationName)
+        XMLString::release(&fNotationName);
+
     fNotationName = XMLString::replicate(newName);
 }
 
 inline void XMLEntityDecl::setPublicId(const XMLCh* const newId)
 {
-    delete [] fPublicId;
+    if (fPublicId)
+        XMLString::release(&fPublicId);
+
     fPublicId = XMLString::replicate(newId);
 }
 
 inline void XMLEntityDecl::setSystemId(const XMLCh* const newId)
 {
-    delete [] fSystemId;
+    if (fSystemId)
+        XMLString::release(&fSystemId);
+
     fSystemId = XMLString::replicate(newId);
 }
 
 inline void XMLEntityDecl::setBaseURI(const XMLCh* const newId)
 {
-    delete [] fBaseURI;
+    if (fBaseURI)
+        XMLString::release(&fBaseURI);
+
     fBaseURI = XMLString::replicate(newId);
 }
 
 inline void XMLEntityDecl::setValue(const XMLCh* const newValue)
 {
-    delete [] fValue;
+    if (fValue)
+        XMLString::release(&fValue);
+
     fValue = XMLString::replicate(newValue);
     fValueLen = XMLString::stringLen(newValue);
 }

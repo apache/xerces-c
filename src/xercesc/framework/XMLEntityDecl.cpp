@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,10 +62,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLEntityDecl.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -74,46 +73,45 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XMLEntityDecl::XMLEntityDecl() :
 
-    fName(0)
+    fId(0)
+    , fValueLen(0)
+    , fValue(0)
+    , fName(0)
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fValue(0)
-    , fValueLen(0)
 {
 }
 
 XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName) :
 
-    fName(0)
+    fId(0)
+    , fValueLen(0)
+    , fValue(0)
+    , fName(XMLString::replicate(entName))
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fValue(0)
-    , fValueLen(0)
 {
-    fName = XMLString::replicate(entName);
 }
 
 XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
                             , const XMLCh* const    value) :
-    fName(0)
+    fId(0)
+    , fValueLen(XMLString::stringLen(value))
+    , fValue(XMLString::replicate(value))
+    , fName(0)
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fValue(0)
-    , fValueLen(0)
 {
     try
     {
         fName = XMLString::replicate(entName);
-        fValue = XMLString::replicate(value);
-        fValueLen = XMLString::stringLen(value);
     }
-
     catch(...)
     {
         cleanUp();
@@ -122,23 +120,21 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
 
 XMLEntityDecl::XMLEntityDecl(const  XMLCh* const    entName
                             , const XMLCh           value) :
-    fName(0)
+    fId(0)
+    , fValueLen(1)
+    , fValue(0)
+    , fName(XMLString::replicate(entName))
     , fNotationName(0)
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
-    , fValue(0)
-    , fValueLen(0)
 {
     try
     {
-        fValue = new XMLCh[2];
-        fValue[0] = value;
-        fValue[1] = chNull;
-        fValueLen = 1;
-        fName = XMLString::replicate(entName);
+        XMLCh dummy[2] = { chNull, chNull };
+        dummy[0] = value;
+        fValue = XMLString::replicate(dummy);
     }
-
     catch(...)
     {
         cleanUp();
@@ -157,8 +153,9 @@ XMLEntityDecl::~XMLEntityDecl()
 void XMLEntityDecl::setName(const XMLCh* const entName)
 {
     // Clean up the current name stuff
-    delete [] fName;
-    fName = 0;
+    if (fName)
+       XMLString::release(&fName);
+
     fName = XMLString::replicate(entName);
 }
 
@@ -168,12 +165,12 @@ void XMLEntityDecl::setName(const XMLCh* const entName)
 // ---------------------------------------------------------------------------
 void XMLEntityDecl::cleanUp()
 {
-    delete [] fName;
-    delete [] fNotationName;
-    delete [] fValue;
-    delete [] fPublicId;
-    delete [] fSystemId;
-    delete [] fBaseURI;
+    XMLString::release(&fName);
+    XMLString::release(&fNotationName);
+    XMLString::release(&fValue);
+    XMLString::release(&fPublicId);
+    XMLString::release(&fSystemId);
+    XMLString::release(&fBaseURI);
 }
 
 XERCES_CPP_NAMESPACE_END

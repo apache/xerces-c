@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/04/21 20:46:01  knoaman
+ * Use XMLString::release to prepare for configurable memory manager.
+ *
  * Revision 1.6  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -557,15 +560,14 @@ private :
     //      This flag indicates whether or not the attribute was declared externally.
     // -----------------------------------------------------------------------
     DefAttTypes     fDefaultType;
-    XMLCh*          fEnumeration;
-    unsigned int    fId;
-    bool            fProvided;
     AttTypes        fType;
-    XMLCh*          fValue;
     CreateReasons   fCreateReason;
+    bool            fProvided;
     bool            fExternalAttribute;
+    unsigned int    fId;
+    XMLCh*          fValue;
+    XMLCh*          fEnumeration;
 };
-
 
 
 // ---------------------------------------------------------------------------
@@ -622,14 +624,10 @@ inline void XMLAttDef::setDefaultType(const XMLAttDef::DefAttTypes newValue)
 
 inline void XMLAttDef::setEnumeration(const XMLCh* const newValue)
 {
-    delete [] fEnumeration;
+    if (fEnumeration)
+        XMLString::release(&fEnumeration);
 
-    if (newValue) {
-        fEnumeration = XMLString::replicate(newValue);
-    }
-    else {
-        fEnumeration = 0;
-    }
+    fEnumeration = XMLString::replicate(newValue);
 }
 
 inline void XMLAttDef::setId(const unsigned int newId)
@@ -649,7 +647,9 @@ inline void XMLAttDef::setType(const XMLAttDef::AttTypes newValue)
 
 inline void XMLAttDef::setValue(const XMLCh* const newValue)
 {
-    delete [] fValue;
+    if (fValue)
+       XMLString::release(&fValue);
+
     fValue = XMLString::replicate(newValue);
 }
 
