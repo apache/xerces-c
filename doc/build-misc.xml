@@ -80,7 +80,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 
         <p>If the parser is built with icu message loader (as mentioned above), or message 
          catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-         the directory, $XERCESCROOT/lib, where the message files reside.
+         the directory, $XERCESCROOT/msg, where the message files reside.
         </p>
         
         <p>For a description of options available, you can enter:</p>
@@ -134,7 +134,7 @@ perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCIn
 
         <p>If the parser is built with icu message loader (as mentioned above), or message 
          catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-         the directory, $XERCESCROOT/lib, where the message files reside.
+         the directory, $XERCESCROOT/msg, where the message files reside.
         </p>
                 
         </s3>

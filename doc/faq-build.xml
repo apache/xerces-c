@@ -295,7 +295,7 @@ catch (const XMLException&amp; toCatch) {
     <a>
       <p>If the parser is built with icu message loader (like IBM XML4C binaries), or message 
          catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-         the directory, $XERCESCROOT/lib, where the message files reside.
+         the directory, $XERCESCROOT/msg, where the message files reside.
       </p>
     </a>
   </faq>
