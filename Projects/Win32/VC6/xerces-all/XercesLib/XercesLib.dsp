@@ -236,6 +236,14 @@ SOURCE=..\..\..\..\..\src\util\HashXMLCh.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\HashPtr.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\HashPtr.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\HeaderDummy.cpp
 # End Source File
 # Begin Source File
