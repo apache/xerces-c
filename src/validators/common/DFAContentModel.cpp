@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/06/12 17:30:49  knoaman
+ * Fix Typo
+ *
  * Revision 1.11  2001/06/07 21:08:20  tng
  * Fix unsigned/signed warning from Linux.  By Pei Yong Zhang.
  *
@@ -318,7 +321,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
             if (type == ContentSpecNode::Leaf)
             {
-                if (comparator.isEquivalentTo(inElem, curElem) )
+                if (comparator.isEquivalentTo(curElem, inElem))
                 {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
