@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/10/01 00:27:12  knoaman
+ * Performance: call a static method to check the validity of URI instead of
+ * creating/deleting local objects.
+ *
  * Revision 1.7  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -218,7 +222,10 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
         //
         if (XMLString::stringLen(content))
         {
-            XMLUri  newURI(fTempURI, content, fMemoryManager);
+            if (!XMLUri::isValidURI(fTempURI, content))
+                ThrowXML1(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_URI_Malformed
+                    , content);
         }
     }
     catch (...)
