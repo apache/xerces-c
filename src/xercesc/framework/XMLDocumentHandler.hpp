@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.8  2004/02/25 18:29:16  amassari
+  * Fixed typo in documentation
+  *
   * Revision 1.7  2004/01/29 11:46:29  cargilld
   * Code cleanup changes to get rid of various compiler diagnostic messages.
   *
@@ -352,7 +355,7 @@ public:
       * This event will be fired immediately after the
       * endElement() event that signifies the end of the element
       * to which it applies; no other events will intervene.
-      * This method is <emEXPERIMENTAL</em> and may change, disappear 
+      * This method is <em>EXPERIMENTAL</em> and may change, disappear 
       * or become pure virtual at any time.
       *
       * This corresponds to a part of the information required by DOM Core
