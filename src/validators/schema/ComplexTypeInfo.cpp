@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/08/27 23:04:02  knoaman
+ * Handle deletion of spec node tree created during UPA checking.
+ *
  * Revision 1.14  2001/08/27 20:48:45  knoaman
  * Make the UPA rename before the content model expansion.
  *
@@ -284,14 +287,13 @@ void ComplexTypeInfo::checkUniqueParticleAttribution (GrammarResolver*  const pG
 {
     if (fContentSpec) {
         ContentSpecNode* specNode = new ContentSpecNode(*fContentSpec);
-        XMLContentModel* cm = makeContentModel(true, specNode);
+        Janitor<ContentSpecNode> janSpecNode(0);
+        XMLContentModel* cm = makeContentModel(true, specNode, &janSpecNode);
 
         if (cm) {
             cm->checkUniqueParticleAttribution(pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
             delete cm;
         }
-
-        delete specNode;
     }
 }
 
@@ -336,12 +338,17 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     return newValue;
 }
 
-XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* specNode)
+XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* specNode,
+                                                   Janitor<ContentSpecNode>* const janSpecNode)
 {
     // expand the content spec first
     fContentSpecOrgURI = new unsigned int[fContentSpecOrgURISize];
     if (specNode) {
         specNode = convertContentSpecTree(specNode, true, checkUPA);
+
+        if (janSpecNode) {
+            janSpecNode->reset(specNode);
+        }
     }
     else {
         specNode = convertContentSpecTree(fContentSpec, fAdoptContentSpec, checkUPA);

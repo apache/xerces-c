@@ -74,6 +74,7 @@
 #include <util/XMLString.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
 #include <util/RefVectorOf.hpp>
+#include <util/Janitor.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <framework/XMLContentModel.hpp>
 #include <validators/schema/SchemaAttDef.hpp>
@@ -182,7 +183,8 @@ private:
     // -----------------------------------------------------------------------
     void faultInAttDefList() const;
     XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
-    XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* specNode = 0);
+    XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* specNode = 0,
+                                      Janitor<ContentSpecNode>* const janSpecNode = 0);
     XMLCh* formatContentModel () const ;
     ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs, const bool toAdoptSpecNode = true);
     ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool toAdoptSpecNode = true, const bool checkUPA = false);
