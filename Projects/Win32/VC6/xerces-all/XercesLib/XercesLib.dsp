@@ -1088,6 +1088,14 @@ SOURCE=..\..\..\..\..\src\parsers\DOMParser.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\parsers\IDOMParser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\parsers\IDOMParser.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\parsers\SAX2XMLReaderImpl.cpp
 # End Source File
 # Begin Source File
@@ -1937,6 +1945,338 @@ SOURCE=..\..\..\..\..\src\sax2\SAX2XMLReader.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\sax2\XMLReaderFactory.hpp
+# End Source File
+# End Group
+# Begin Group "idom"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDAttrImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDAttrImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDAttrMapImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDAttrMapImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDAttrNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDAttrNSImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCasts.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCDATASectionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCDATASectionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCharacterDataImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCharacterDataImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDChildNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDChildNode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCommentImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDCommentImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDocumentFragmentImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDocumentFragmentImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDocumentImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDocumentImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDocumentTypeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDocumentTypeImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDOMImplementation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDDOMImplementation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDElementImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDElementImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDElementNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDElementNSImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDEntityImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDEntityImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDEntityReferenceImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDEntityReferenceImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNamedNodeMapImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNamedNodeMapImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNameNodeFilter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeIDMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeIDMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeListImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeVector.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeVector.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNotationImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNotationImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Attr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_CDATASection.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_CharacterData.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Comment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Document.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_DocumentFragment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_DocumentType.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_DOMException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_DOMException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_DOMImplementation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Element.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Entity.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_EntityReference.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_NamedNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Node.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_NodeFilter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_NodeIterator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_NodeList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Notation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_ProcessingInstruction.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Range.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_RangeException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_Text.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_TreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDOM_XMLDecl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDParentNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDParentNode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDProcessingInstructionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDProcessingInstructionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDStringPool.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDStringPool.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDTextImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDTextImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDXMLDeclImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDXMLDeclImpl.hpp
 # End Source File
 # End Group
 # Begin Source File

@@ -135,6 +135,36 @@ Package=<4>
 
 ###############################################################################
 
+Project: "IDOMCount"=".\IDOMCount\IDOMCount.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "IDOMPrint"=".\IDOMPrint\IDOMPrint.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "MemParse"=".\MemParse\MemParse.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -364,6 +394,12 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name RangeTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name IDOMCount
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name IDOMPrint
     End Project Dependency
 }}}
 
