@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/06/06 13:49:27  jberry
+ * Fix two improper NULL tests
+ *
  * Revision 1.4  2001/05/11 21:51:01  knoaman
  * Schema updates and fixes.
  *
@@ -1025,7 +1028,7 @@ Token* RegxParser::parseAtom() {
 			{
 				int start = fOffset;
 				tok = processBacksolidus_pP(fCharData);
-				if (tok = 0) {
+				if (tok == 0) {
 					ThrowXML(ParseException,XMLExcepts::Parser_Atom5);
 				}
 			}
@@ -1211,7 +1214,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 			XMLString::subString(name, fString, fOffset, nameEnd);
             RangeToken* rangeTok = fTokenFactory->getRange(name, !positive);
 
-            if (rangeTok = 0) {
+            if (rangeTok == 0) {
 				ThrowXML(ParseException,XMLExcepts::Parser_CC3);
             }
 
