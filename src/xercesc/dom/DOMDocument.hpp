@@ -873,6 +873,9 @@ public:
      */
     virtual DOMDocumentType *createDocumentType(const XMLCh *name) = 0;
 
+    virtual DOMDocumentType* createDocumentType(const XMLCh *qName,
+                                                const XMLCh *publicId,
+                                                const XMLCh *systemId) = 0;
 
     /**
      * Non-standard extension.
