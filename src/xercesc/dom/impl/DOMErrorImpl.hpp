@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/09/04 14:38:25  gareth
+ * Fix for bug #22008. Removed the ability to adopt the DOMObject.
+ *
  * Revision 1.7  2003/05/15 15:56:24  gareth
  * Removed unnecessary include.
  *
@@ -117,7 +120,6 @@ public:
         , const XMLCh* type
         , const XMLCh* message
         , void* relatedData 
-        , bool adoptRelatedData = false
     );
 
     /** Desctructor */
@@ -217,13 +219,6 @@ public:
 
     virtual void setRelatedData(void* relatedData);
 
-    /**
-     * @param value <code>true</code> if RelatedData is owned and should be
-     *              deleted, <code>false</code> otherwise.
-     */
-    void setAdoptRelatedData(bool adoptRelatedData);
-    //@}
-
 
 private :
     /* Unimplemented constructors and operators */
@@ -255,8 +250,6 @@ private :
     //  fRelatedData
     //      The data related to this error.
     //
-    //  fAdoptRelatedData
-    //      Indicates whether we own the fRelatedData object or not.
     // -----------------------------------------------------------------------
     bool         fAdoptLocation;
     short        fSeverity;
@@ -264,7 +257,6 @@ private :
     DOMLocator*  fLocation;
     const XMLCh* fType;
     void*        fRelatedData;
-    bool         fAdoptRelatedData;
 };
 
 // ---------------------------------------------------------------------------
@@ -328,9 +320,6 @@ inline void DOMErrorImpl::setRelatedData(void* relatedData)
     fRelatedData = relatedData;
 }
 
-inline void DOMErrorImpl::setAdoptRelatedData(bool adoptRelatedData) {
-    fAdoptRelatedData = adoptRelatedData;
-}
 
 XERCES_CPP_NAMESPACE_END
 

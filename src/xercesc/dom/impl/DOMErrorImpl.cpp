@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/09/04 14:38:25  gareth
+ * Fix for bug #22008. Removed the ability to adopt the DOMObject.
+ *
  * Revision 1.5  2003/05/14 18:06:53  gareth
  * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
  *
@@ -90,7 +93,6 @@ fAdoptLocation(false)
 , fLocation(0)
 , fType(0)
 , fRelatedData(0)
-, fAdoptRelatedData(false)
 {
 }
 
@@ -103,22 +105,19 @@ fAdoptLocation(false)
 , fLocation(location)
 , fType(0)
 , fRelatedData(0)
-, fAdoptRelatedData(false)
 {
 }
 
 DOMErrorImpl::DOMErrorImpl(const short severity,
                            const XMLCh* type,
                            const XMLCh* message,
-                           void* relatedData,
-                           bool adoptRelatedData) :
+                           void* relatedData) :
 fAdoptLocation(false)
 , fSeverity(severity)
 , fMessage(message)
 , fLocation(0)
 , fType(type)
 , fRelatedData(relatedData)
-, fAdoptRelatedData(adoptRelatedData)
 {
 
 }
@@ -127,8 +126,6 @@ DOMErrorImpl::~DOMErrorImpl()
 {
     if (fAdoptLocation)
         delete fLocation;
-    if(fAdoptRelatedData)
-        delete fRelatedData;
 }
 
 // ---------------------------------------------------------------------------
