@@ -77,6 +77,7 @@
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMEntity.hpp>
 #include <xercesc/dom/DOMEntityReference.hpp>
@@ -91,5 +92,7 @@
 #include <xercesc/dom/DOMNodeFilter.hpp>
 #include <xercesc/dom/DOMNodeIterator.hpp>
 #include <xercesc/dom/DOMTreeWalker.hpp>
+#include <xercesc/dom/DOMWriter.hpp>
+#include <xercesc/dom/DOMWriterFilter.hpp>
 
 #endif
