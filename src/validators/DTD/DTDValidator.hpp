@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/08/09 22:08:48  jpolast
+ * added const XMLCh* getURIText() as per XMLValidator.
+ * allows parsers to use const URIs instead of appending
+ * to a XMLBuffer.
+ *
  * Revision 1.5  2000/04/06 19:00:07  roddey
  * Added a getter for the doc type handler.
  *
@@ -251,6 +256,12 @@ public:
         const   unsigned int    uriId
         ,       XMLBuffer&      uriBufToFill
     )   const;
+
+	virtual const XMLCh* getURIText
+	(   
+	    const   unsigned int    uriId
+    ) const;
+
 
     virtual void postParseValidation();
 
