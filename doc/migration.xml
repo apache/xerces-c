@@ -86,7 +86,7 @@
               <ul>
                   <li>DOMAttr: isId, getTypeInfo</li>
                   <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode, getTypeInfo</li>
-                  <li>Added DOMTypeInfo class for getTypeInfo calss in DOMElement and DOMAttr</li>
+                  <li>Added DOMTypeInfo class for getTypeInfo class in DOMElement and DOMAttr</li>
                   <li>Added getDOMTypeInfoUri, getDOMTypeInfoName to XMLAttDef and XMLElementDecl for use in building DOMTypeInfo</li>
               </ul>
               <li>Added a non-standard extension DOMImplementation::loadDOMExceptionMsg to load the
