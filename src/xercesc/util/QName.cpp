@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/05 16:06:41  tng
+ * [Bug 12232] Make operator to be constant.
+ *
  * Revision 1.2  2002/04/02 15:31:48  knoaman
  * Modiy QName comparison (operator=).
  *
@@ -415,7 +418,7 @@ void QName::setValues(const QName& qname)
 // -----------------------------------------------------------------------
 //  comparison
 // -----------------------------------------------------------------------
-bool QName::operator==(const QName& qname)
+bool QName::operator==(const QName& qname) const
 {
     if (fURIId == 0) // null URI
         return (XMLString::compareString(getRawName(),qname.getRawName())==0);
