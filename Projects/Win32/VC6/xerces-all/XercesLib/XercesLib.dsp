@@ -2248,10 +2248,6 @@ SOURCE=..\..\..\..\..\src\idom\IDOM_TreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_XMLDecl.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\idom\IDParentNode.cpp
 # End Source File
 # Begin Source File
@@ -2297,14 +2293,6 @@ SOURCE=..\..\..\..\..\src\idom\IDTreeWalkerImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\idom\IDTreeWalkerImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\idom\IDXMLDeclImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\idom\IDXMLDeclImpl.hpp
 # End Source File
 # End Group
 # Begin Source File

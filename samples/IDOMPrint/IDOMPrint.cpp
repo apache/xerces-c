@@ -109,7 +109,8 @@ static const XMLCh  gXMLDecl1[] =
 {
         chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l
     ,   chSpace, chLatin_v, chLatin_e, chLatin_r, chLatin_s, chLatin_i
-    ,   chLatin_o, chLatin_n, chEqual, chDoubleQuote, chNull
+    ,   chLatin_o, chLatin_n, chEqual, chDoubleQuote, chDigit_1
+    ,   chPeriod, chDigit_0, chNull
 };
 static const XMLCh  gXMLDecl2[] =
 {
@@ -118,12 +119,6 @@ static const XMLCh  gXMLDecl2[] =
     ,   chDoubleQuote, chNull
 };
 static const XMLCh  gXMLDecl3[] =
-{
-        chDoubleQuote, chSpace, chLatin_s, chLatin_t, chLatin_a
-    ,   chLatin_n, chLatin_d, chLatin_a, chLatin_l, chLatin_o
-    ,   chLatin_n, chLatin_e, chEqual, chDoubleQuote, chNull
-};
-static const XMLCh  gXMLDecl4[] =
 {
         chDoubleQuote, chQuestion, chCloseAngle
     ,   chLF, chNull
@@ -429,7 +424,6 @@ int main(int argC, char* argV[])
     IDOMTreeErrorReporter *errReporter = new IDOMTreeErrorReporter();
     parser->setErrorHandler(errReporter);
     parser->setCreateEntityReferenceNodes(gDoCreate);
-    parser->setToCreateXMLDeclTypeNode(true);
 
     //
     //  Parse the XML file, catching any XML exceptions that might propogate
@@ -471,25 +465,11 @@ int main(int argC, char* argV[])
 
 
         // Figure out the encoding that we want to use to write the document.
-        //   If command line specified, use that, else
-        //   If the document specified one, use it,
+        //   If command line specified, use that,
         //   otherwise use utf-8.
         //
 
         if (gEncodingName == 0)   // if no encoding specified on command line
-        {
-            IDOM_Node *aNode = doc->getFirstChild();
-            if (aNode->getNodeType() == IDOM_Node::XML_DECL_NODE)
-            {
-                const XMLCh * aStr = ((IDOM_XMLDecl *)aNode)->getEncoding();
-                if (aStr && *aStr != 0)
-                {
-                    gEncodingName = aStr;
-                }
-            }
-        }
-
-        if (gEncodingName == 0)   // if no encoding declared in file and none from command line
         {
             static  const XMLCh utf_8[] = {chLatin_U, chLatin_T, chLatin_F, chDash, chDigit_8, 0};
             gEncodingName = utf_8;
@@ -503,6 +483,15 @@ int main(int argC, char* argV[])
         {
             gFormatter = new XMLFormatter(gEncodingName, formatTarget,
                                           XMLFormatter::NoEscapes, gUnRepFlags);
+
+            //print out the XML Decl node first
+
+            *gFormatter << gXMLDecl1 ;
+
+            *gFormatter << gXMLDecl2 << gEncodingName;
+
+            *gFormatter << gXMLDecl3;
+
             cout << doc << endl;
         }
         catch (XMLException& e)
@@ -755,23 +744,6 @@ ostream& operator<<(ostream& target, IDOM_Node *toWrite)
             break;
         }
 
-
-        case IDOM_Node::XML_DECL_NODE:
-        {
-            const XMLCh *str;
-
-            *gFormatter << gXMLDecl1 << ((IDOM_XMLDecl *)toWrite)->getVersion();
-
-            *gFormatter << gXMLDecl2 << gEncodingName;
-
-            str = ((IDOM_XMLDecl *)toWrite)->getStandalone();
-            if (str != 0)
-                *gFormatter << gXMLDecl3 << str;
-
-            *gFormatter << gXMLDecl4;
-
-            break;
-        }
 
 
         default:

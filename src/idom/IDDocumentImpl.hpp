@@ -208,9 +208,6 @@ public:
                                                     IDOM_NodeFilter* filter,
                                                     bool entityReferenceExpansion);
 
-    virtual IDOM_XMLDecl          *createXMLDecl(const XMLCh * version,
-                                                 const XMLCh * encoding,
-                                                 const XMLCh * standalone);
     virtual void*                  getUserData() const;
     virtual void                   setUserData(void* value);
     virtual IDOM_Range            *createRange();

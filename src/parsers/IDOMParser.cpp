@@ -92,7 +92,6 @@
 #include <idom/IDNotationImpl.hpp>
 #include <idom/IDOM_NamedNodeMap.hpp>
 #include <idom/IDOM_ProcessingInstruction.hpp>
-#include <idom/IDOM_XMLDecl.hpp>
 #include <idom/IDNodeIDMap.hpp>
 
 
@@ -107,7 +106,6 @@ IDOMParser::IDOMParser(XMLValidator* const valToAdopt) :
 fErrorHandler(0)
 , fEntityResolver(0)
 , fCreateEntityReferenceNodes(false)
-, fToCreateXMLDeclTypeNode(false)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
@@ -750,15 +748,7 @@ void IDOMParser::XMLDecl(const   XMLCh* const version
                         , const XMLCh* const standalone
                         , const XMLCh* const actualEncStr)
 {
-    //This is a non-standard extension to creating XMLDecl type nodes and attching to IDOM Tree
-    // currently this flag it set to false unless user explicitly asks for it
-    // Needs to be revisited after W3C specs are laid out on this issue.
-
-    if (fToCreateXMLDeclTypeNode) {
-
-        IDOM_XMLDecl *xmlDecl = fDocument->createXMLDecl(version, encoding, standalone);
-        fCurrentParent->appendChild(xmlDecl);
-    }
+    // placehold for DOM Level 3
 }
 
 

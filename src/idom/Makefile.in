@@ -104,9 +104,8 @@ IDOM_CPP_PUBHEADERS = \
        IDOM_RangeException.hpp \
        IDOM_Text.hpp \
        IDOM_TreeWalker.hpp \
-       IDOM_XMLDecl.hpp \
        IDParentNode.hpp \
-       IDStringPool.hpp \
+       IDStringPool.hpp
 
 IDOM_CPP_PRIVHEADERS =  \
        IDAttrImpl.hpp \
@@ -132,8 +131,7 @@ IDOM_CPP_PRIVHEADERS =  \
        IDProcessingInstructionImpl.hpp \
        IDRangeImpl.hpp \
        IDTextImpl.hpp \
-       IDTreeWalkerImpl.hpp \
-       IDXMLDeclImpl.hpp
+       IDTreeWalkerImpl.hpp
 
 IDOM_C_FILES = \
        IDDeepNodeListPool.c
@@ -170,8 +168,7 @@ IDOM_CPP_OBJECTS = \
        IDRangeImpl.$(TO) \
        IDStringPool.$(TO) \
        IDTextImpl.$(TO) \
-       IDTreeWalkerImpl.$(TO) \
-       IDXMLDeclImpl.$(TO)
+       IDTreeWalkerImpl.$(TO)
 
 
 all::	includes $(IDOM_CPP_OBJECTS)

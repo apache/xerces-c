@@ -75,7 +75,6 @@
 #include <util/XMLUni.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <idom/IDOM_Range.hpp>
-#include <idom/IDOM_XMLDecl.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)

@@ -331,18 +331,6 @@ public :
       */
     bool getIncludeIgnorableWhitespace() const;
 
-    /** Get the 'to create MXLDecl node' flag.
-      *
-      * This method returns the state of the parser's to create XMLDecl
-      * IDOM Node flag.
-      *
-      * @return 'true' if the toCreateXMLDeclTypeNode flag is set on
-      *         the parser, 'false' otherwise.
-      *
-      */
-    bool getToCreateXMLDeclTypeNode() const;
-
-
     //@}
 
 
@@ -529,18 +517,6 @@ public :
       * @see #getDoSchema
       */
     void setDoSchema(const bool newState);
-
-    /**
-      * This method allows users to set the toCreateXMLDeclTypeNode flag
-      * by this parser. By setting it to 'true' user can have XMLDecl type
-      * nodes attached to the DOM tree.
-      *
-      * <p>The parser's default state is: false </p>
-      *
-      * @param newState The new to create XMLDecl type node flag
-      *
-      */
-    void setToCreateXMLDeclTypeNode(const bool create);
 
     //@}
 
@@ -1323,10 +1299,6 @@ private :
     //      Used to store and update the documentType variable information
     //      in fDocument
     //
-    //  fToCreateXMLDecTypeNode
-    //      A flag to create a IDOM_XMLDecl node in the ODM tree if it exists
-    //      This is an extension to xerces implementation
-    //
     // -----------------------------------------------------------------------
     IDOM_Node*               fCurrentParent;
     IDOM_Node*               fCurrentNode;
@@ -1340,7 +1312,6 @@ private :
     XMLScanner*              fScanner;
     bool                     fWithinElement;
     IDDocumentTypeImpl*      fDocumentType;
-    bool                     fToCreateXMLDeclTypeNode;
 };
 
 
@@ -1412,11 +1383,6 @@ inline const XMLScanner& IDOMParser::getScanner() const
     return *fScanner;
 }
 
-inline bool IDOMParser::getToCreateXMLDeclTypeNode() const
-{
-    return fToCreateXMLDeclTypeNode;
-}
-
 
 // ---------------------------------------------------------------------------
 //  IDOMParser: Setter methods
@@ -1434,11 +1400,6 @@ inline void IDOMParser::setCreateEntityReferenceNodes(const bool create)
 inline void IDOMParser::setIncludeIgnorableWhitespace(const bool include)
 {
     fIncludeIgnorableWhitespace = include;
-}
-
-inline void IDOMParser::setToCreateXMLDeclTypeNode(const bool create)
-{
-    fToCreateXMLDeclTypeNode = create;
 }
 
 

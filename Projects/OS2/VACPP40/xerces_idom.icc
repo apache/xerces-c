@@ -29,5 +29,4 @@ group xerces_dom =
     BASE_DIR "\\src\\idom\\IDRangeImpl.cpp",
     BASE_DIR "\\src\\idom\\IDStringPool.cpp",
     BASE_DIR "\\src\\idom\\IDTextImpl.cpp",
-    BASE_DIR "\\src\\idom\\IDTreeWalkerImpl.cpp",
-    BASE_DIR "\\src\\idom\\IDXMLDeclImpl.cpp"
+    BASE_DIR "\\src\\idom\\IDTreeWalkerImpl.cpp"

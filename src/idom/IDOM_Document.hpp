@@ -83,7 +83,6 @@ class IDOM_Text;
 class IDOM_Node;
 class IDOM_NodeIterator;
 class IDOM_TreeWalker;
-class IDOM_XMLDecl;
 class IDOM_Range;
 
 
@@ -337,25 +336,6 @@ public:
                                                unsigned long     whatToShow,
                                                IDOM_NodeFilter  *filter,
                                                bool              entityReferenceExpansion) = 0;
-
-    /**
-     * Creates a XMLDecl type Node .   Non-Standard (an extension to xerces)
-     *
-     * XMLDecl Nodes are created to get  version, encoding and standalone information in a document tree
-     *
-     * This node if created gets attached to a document object or an entity node. There can be no child
-     * to this type of node.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param version The version data of the document. Currently possible value is 1.0
-     * @param encoding The encoding type specified in the document
-     * @param standalone The information whether the document is standalone or not
-     */
-
-    virtual IDOM_XMLDecl *createXMLDecl(const XMLCh * version,
-                                        const XMLCh * encoding,
-                                        const XMLCh * standalone) = 0;
 
     /**
 	  * To create the range  consisting of boundary-points and offset of the

@@ -84,7 +84,6 @@
 #include "IDNotationImpl.hpp"
 #include "IDProcessingInstructionImpl.hpp"
 #include "IDTextImpl.hpp"
-#include "IDXMLDeclImpl.hpp"
 
 #include "IDStringPool.hpp"
 #include "IDTreeWalkerImpl.hpp"
@@ -674,13 +673,6 @@ int IDDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 }
 
 
-
-IDOM_XMLDecl * IDDocumentImpl::createXMLDecl(const XMLCh *version,
-                                           const XMLCh *encoding,
-                                           const XMLCh *standalone)
-{
-    return new (this) IDXMLDeclImpl(this, version, encoding, standalone);
-}
 
 IDOM_Range* IDDocumentImpl::createRange()
 {

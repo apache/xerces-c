@@ -60,6 +60,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/08 21:23:02  tng
+ * IDOM: Remove the non-standard extension where XML Decl as a node
+ *
  * Revision 1.3  2001/06/04 20:11:53  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
  *
@@ -99,6 +102,5 @@
 #include <idom/IDOM_RangeException.hpp>
 #include <idom/IDOM_Text.hpp>
 #include <idom/IDOM_TreeWalker.hpp>
-#include <idom/IDOM_XMLDecl.hpp>
 
 #endif
