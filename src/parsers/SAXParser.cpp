@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/05 18:56:17  roddey
+ * Init the fDTDHandler member. Enable installation of DTDHandler
+ * on SAX parser.
+ *
  * Revision 1.7  2000/03/03 01:29:34  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -111,6 +115,7 @@
 SAXParser::SAXParser(XMLValidator* const valToAdopt) :
 
     fDocHandler(0)
+    , fDTDHandler(0)
     , fElemDepth(0)
     , fEntityResolver(0)
     , fErrorHandler(0)
@@ -369,10 +374,16 @@ void SAXParser::setDocumentHandler(DocumentHandler* const handler)
 void SAXParser::setDTDHandler(DTDHandler* const handler)
 {
     //
-    //  This gets tricky. We can only set this if its a DTD validator, but it
-    //  might not be. We'll have to think about this one.
-    //
     //  <TBD>
+    //  This gets tricky. We can only set this if its a DTD validator, but it
+    //  might not be. We'll have to think about this one once there is more
+    //  than a DTD validator available.
+    //
+    fDTDHandler = handler;
+    if (fDTDHandler)
+        ((DTDValidator*)fValidator)->setDocTypeHandler(this);
+    else
+        ((DTDValidator*)fValidator)->setDocTypeHandler(0);
 }
 
 
