@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/07/07 00:13:29  jpolast
+ * bug fixes for better DOM level 1 spec conformance.
+ *
  * Revision 1.4  2000/06/19 20:05:56  rahulj
  * Changes for increased conformance and stability. Submitted by
  * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
@@ -109,10 +112,16 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_nodeValue(VARIANT *pV
 
 	::VariantInit(pVal);
 
+
 	try
 	{
-		V_VT(pVal)   = VT_BSTR;
-		V_BSTR(pVal) = SysAllocString(get_DOM_Node().getNodeValue().rawBuffer());
+		if (get_DOM_Node().getNodeValue() != 0)
+		{
+			V_VT(pVal)   = VT_BSTR;
+			V_BSTR(pVal) = SysAllocString(get_DOM_Node().getNodeValue().rawBuffer());
+		}
+		else
+			V_VT(pVal) = VT_NULL;
 	}
 	catch(...)
 	{
@@ -362,10 +371,10 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_attributes(IXMLDOMNam
 		return E_FAIL;
 	}
 	
-	if (map == 0 && 
-		NODE_ELEMENT  != get_DOMNodeType() &&
-		NODE_ENTITY   != get_DOMNodeType() &&
-		NODE_NOTATION != get_DOMNodeType()) 
+	if ((map == 0) || (NODE_ELEMENT  != get_DOMNodeType()))
+		//&&
+		//NODE_ENTITY   != get_DOMNodeType() &&
+		//NODE_NOTATION != get_DOMNodeType()) 
 		return S_OK;
 	
 	CXMLDOMNamedNodeMapObj *pObj = NULL;
@@ -613,11 +622,14 @@ IXMLDOMNodeImpl<T,piid,plibid,wMajor,wMinor,tihclass>::get_ownerDocument(IXMLDOM
 
 	if (NULL == pVal)
 		return E_POINTER;
+	*pVal = NULL;
 
-	*pVal = m_pIXMLDOMDocument;
-	if (*pVal != NULL)
-		(*pVal)->AddRef();
-
+	if (get_DOMNodeType() != NODE_DOCUMENT)
+	{
+		*pVal = m_pIXMLDOMDocument;
+		if (*pVal != NULL)
+			(*pVal)->AddRef();
+	}
 	return S_OK;
 }
 
