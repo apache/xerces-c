@@ -1478,7 +1478,7 @@ bool XMLString::isWSCollapsed(const XMLCh* const toCheck)
     const XMLCh* startPtr = toCheck;
     XMLCh theChar;
     bool  inSpace = false;
-    while ( theChar = *startPtr )
+    while ( (theChar = *startPtr) != 0 )
     {
         if ( theChar == chSpace)
         {
