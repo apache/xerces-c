@@ -185,10 +185,9 @@ public:
      * The Key entry is removed from the table (grammar is not deleted if
      * adopted - now owned by caller).
      *
-     * @param  nameSpaceKey    Key to associate with Grammar abstraction
+     * @param  gramDesc    Key to associate with Grammar abstraction
      */
-    Grammar* orphanGrammar(const XMLCh* const nameSpaceKey);
-    Grammar* orphanGrammar(XMLGrammarDescription* const nameSpaceKey);
+    Grammar* orphanGrammar(XMLGrammarDescription* const gramDesc);
 
     /**
      * Cache the grammars in fGrammarBucket to fCachedGrammarRegistry.

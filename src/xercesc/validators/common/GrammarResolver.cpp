@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/06/25 18:57:56  peiyongz
+ * remove old orphanGrammar()
+ *
  * Revision 1.11  2003/06/25 17:44:04  peiyongz
  * cacheGrammar() revised
  *
@@ -333,31 +336,31 @@ void GrammarResolver::cacheGrammarFromParse(const bool aValue)
     fGrammarBucket->setAdoptElements(!fCacheGrammar);
 }
 
-Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
-{
-    XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
-    Janitor<XMLGrammarDescription> janName(gramDesc);
-    return orphanGrammar(gramDesc);
-}
-
 Grammar* GrammarResolver::orphanGrammar(XMLGrammarDescription* const gramDesc)
 {
     if (!gramDesc)
         return 0;
 
     if (fCacheGrammar)
-        return fGrammarPool->orphanGrammar(gramDesc);
-
-    GrammarEntry* theEntry = fGrammarBucket->orphanKey(gramDesc->getGrammarKey());
-    if (theEntry)
     {
-        Grammar* aGrammar = theEntry->getGrammar();
-        theEntry->nullGrammar();
-        delete theEntry;
-        return aGrammar;
+        return fGrammarPool->orphanGrammar(gramDesc);
     }
+    else
+    {
+        GrammarEntry* theEntry = fGrammarBucket->orphanKey(gramDesc->getGrammarKey());
+        if (theEntry)
+        {
+            Grammar* aGrammar = theEntry->getGrammar();
+            theEntry->nullGrammar();
+            delete theEntry;
+            return aGrammar;
+        }
+        else
+        {
+            return 0;
+        }
 
-    return 0;
+    }
 }
 
 XMLGrammarDescription* GrammarResolver::getGrammarDescription(const XMLCh* const nameSpaceKey)
