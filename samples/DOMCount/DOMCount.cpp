@@ -212,6 +212,14 @@ int main(int argC, char* argV[])
         {
             doList = true;
         }
+         else if (!strcmp(argV[argInd], "-special:nel"))
+        {
+            // turning this on will lead to non-standard compliance behaviour
+            // it will recognize the unicode character 0x85 as new line character
+            // instead of regular character as specified in XML 1.0
+            // do not turn this on unless really necessary
+            XMLPlatformUtils::recognizeNEL(true);
+        }
          else
         {
             cerr << "Unknown option '" << argV[argInd]

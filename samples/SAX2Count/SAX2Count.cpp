@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.18  2002/07/17 18:58:35  tng
+* samples update: for testing special encoding purpose.
+*
 * Revision 1.17  2002/06/17 15:33:05  tng
 * Name Xerces features as XMLUni::fgXercesXXXX instead of XMLUni::fgSAX2XercesXXXX so that they can be shared with DOM parser.
 *
@@ -238,6 +241,14 @@ int main(int argC, char* argV[])
               ||  !strcmp(argV[argInd], "-P"))
         {
             namespacePrefixes = true;
+        }
+         else if (!strcmp(argV[argInd], "-special:nel"))
+        {
+            // turning this on will lead to non-standard compliance behaviour
+            // it will recognize the unicode character 0x85 as new line character
+            // instead of regular character as specified in XML 1.0
+            // do not turn this on unless really necessary
+            XMLPlatformUtils::recognizeNEL(true);
         }
         else
         {

@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.21  2002/07/17 18:58:36  tng
+* samples update: for testing special encoding purpose.
+*
 * Revision 1.20  2001/11/13 13:22:35  tng
 * SAXCount fix: restore previous feature to accept multiple input files.
 *
@@ -247,6 +250,14 @@ int main(int argC, char* argV[])
               ||  !strcmp(argV[argInd], "-L"))
         {
             doList = true;
+        }
+         else if (!strcmp(argV[argInd], "-special:nel"))
+        {
+            // turning this on will lead to non-standard compliance behaviour
+            // it will recognize the unicode character 0x85 as new line character
+            // instead of regular character as specified in XML 1.0
+            // do not turn this on unless really necessary
+            XMLPlatformUtils::recognizeNEL(true);
         }
         else
         {
