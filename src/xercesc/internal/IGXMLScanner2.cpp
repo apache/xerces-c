@@ -542,10 +542,14 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , false
                             , elemDecl
                         );
-                        attrValidator = ((SchemaValidator*)fValidator)->getMostRecentAttrValidator();
-                        if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType
+
+                        if(fGrammarType == Grammar::SchemaGrammarType)
+                        {
+                            attrValidator = ((SchemaValidator*)fValidator)->getMostRecentAttrValidator();
+                            if (getPSVIHandler()
                                 && ((SchemaValidator *)fValidator)->getErrorOccurred())
-                            attrValid = PSVIItem::VALIDITY_INVALID;
+                                attrValid = PSVIItem::VALIDITY_INVALID;
+                        }
                     }
                     else if(fGrammarType == Grammar::SchemaGrammarType)
                         attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
