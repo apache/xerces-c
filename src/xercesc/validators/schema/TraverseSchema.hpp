@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -114,15 +114,15 @@ public:
     // -----------------------------------------------------------------------
     TraverseSchema
     (
-          DOMElement* const                schemaRoot
-        , XMLStringPool* const               uriStringPool
-        , SchemaGrammar* const               schemaGrammar
-        , GrammarResolver* const             grammarResolver
-        , XMLScanner* const                  xmlScanner
-        , XMLValidator* const                xmlValidator
-        , const XMLCh* const                 schemaURL
-        , XMLEntityHandler* const            entityHandler
-        , XMLErrorReporter* const            errorReporter
+          DOMElement* const       schemaRoot
+        , XMLStringPool* const    uriStringPool
+        , SchemaGrammar* const    schemaGrammar
+        , GrammarResolver* const  grammarResolver
+        , XMLScanner* const       xmlScanner
+        , XMLValidator* const     xmlValidator
+        , const XMLCh* const      schemaURL
+        , XMLEntityHandler* const entityHandler
+        , XMLErrorReporter* const errorReporter
     );
 
     ~TraverseSchema();
@@ -495,11 +495,8 @@ private:
                                        const XMLCh* const localPart);
 
     /**
-      * Returns true if 'name' is a valid facet for a given 'component',
-      * otherwise false
+      * Returns true if a DOM Element is an attribute or attribute group
       */
-    bool isValidFacet(const XMLCh* const component, const XMLCh* const name);
-
     bool isAttrOrAttrGroup(const DOMElement* const elem);
 
     /**

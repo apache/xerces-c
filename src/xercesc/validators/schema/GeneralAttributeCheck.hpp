@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
+#include <xercesc/util/ValueHashTableOf.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward declaration
@@ -82,49 +83,138 @@ class TraverseSchema;
 class DOMElement;
 
 
-class AttributeInfo {
-public:
-    // -----------------------------------------------------------------------
-    //  Constructor/Destructor
-    // -----------------------------------------------------------------------
-    AttributeInfo(const XMLCh* const name, const short defaultOption,
-                  const XMLCh* const defaultValue, const short dvIndex);
-    ~AttributeInfo();
-
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-    short  getDefaultOption() const;
-    short  getValidatorIndex() const;
-    XMLCh* getName() const;
-    XMLCh* getDefaultValue() const;
-
-
-private:
-    // -----------------------------------------------------------------------
-    //  CleanUp methods
-    // -----------------------------------------------------------------------
-    void cleanUp();
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    // -----------------------------------------------------------------------
-    short  fDefaultOption;
-    short  fValidatorIndex;
-    XMLCh* fName;
-    XMLCh* fDefaultValue;
-};
-
-
-// ---------------------------------------------------------------------------
-//  local type declaration
-// ---------------------------------------------------------------------------
-typedef RefVectorOf<AttributeInfo> RefVectorOfAttributeInfo;
-
-
 class VALIDATORS_EXPORT GeneralAttributeCheck
 {
 public:
+    // -----------------------------------------------------------------------
+    //  Constants
+    // -----------------------------------------------------------------------
+    //Elements
+    enum
+    {
+        E_All,
+        E_Annotation,
+        E_Any,
+        E_AnyAttribute,
+        E_Appinfo,
+        E_AttributeGlobal,
+        E_AttributeLocal,
+        E_AttributeRef,
+        E_AttributeGroupGlobal,
+        E_AttributeGroupRef,
+        E_Choice,
+        E_ComplexContent,
+        E_ComplexTypeGlobal,
+        E_ComplexTypeLocal,
+        E_Documentation,
+        E_ElementGlobal,
+        E_ElementLocal,
+        E_ElementRef,
+        E_Enumeration,
+        E_Extension,
+        E_Field,
+        E_FractionDigits,
+        E_GroupGlobal,
+        E_GroupRef,
+        E_Import,
+        E_Include,
+        E_Key,
+        E_KeyRef,
+        E_Length,
+        E_List,
+        E_MaxExclusive,
+        E_MaxInclusive,
+        E_MaxLength,
+        E_MinExclusive,
+        E_MinInclusive,
+        E_MinLength,
+        E_Notation,
+        E_Pattern,
+        E_Redefine,
+        E_Restriction,
+        E_Schema,
+        E_Selector,
+        E_Sequence,
+        E_SimpleContent,
+        E_SimpleTypeGlobal,
+        E_SimpleTypeLocal,
+        E_TotalDigits,
+        E_Union,
+        E_Unique,
+        E_WhiteSpace,
+
+        E_Count,
+        E_Invalid = -1
+    };
+
+    //Attributes
+    enum
+    {
+        A_Abstract,
+        A_AttributeFormDefault,
+        A_Base,
+        A_Block,
+        A_BlockDefault,
+        A_Default,
+        A_ElementFormDefault,
+        A_Final,
+        A_FinalDefault,
+        A_Fixed,
+        A_Form,
+        A_ID,
+        A_ItemType,
+        A_MaxOccurs,
+        A_MemberTypes,
+        A_MinOccurs,
+        A_Mixed,
+        A_Name,
+        A_Namespace,
+        A_Nillable,
+        A_ProcessContents,
+        A_Public,
+        A_Ref,
+        A_Refer,
+        A_SchemaLocation,
+        A_Source,
+        A_SubstitutionGroup,
+        A_System,
+        A_TargetNamespace,
+        A_Type,
+        A_Use,
+        A_Value,
+        A_Version,
+        A_XPath,
+    
+        A_Count,
+        A_Invalid = -1
+    };
+
+    //Validators
+    enum {
+    
+        DV_String = 0,
+        DV_AnyURI = 4,
+        DV_NonNegInt = 8,
+        DV_Boolean = 16,
+        DV_ID = 32,
+        DV_Form = 64,
+        DV_MaxOccurs = 128,
+        DV_MaxOccurs1 = 256,
+        DV_MinOccurs1 = 512,
+        DV_ProcessContents = 1024,
+        DV_Use = 2048,
+        DV_WhiteSpace = 4096,
+
+        DV_Mask = (DV_AnyURI | DV_NonNegInt | DV_Boolean | DV_ID | DV_Form | 
+                   DV_MaxOccurs | DV_MaxOccurs1 | DV_MinOccurs1 |
+                   DV_ProcessContents | DV_Use | DV_WhiteSpace)
+    };
+
+    // generate element-attributes map table
+#if defined(NEED_TO_GEN_ELEM_ATT_MAP_TABLE)
+    static void initCharFlagTable();
+#endif
+
     // -----------------------------------------------------------------------
     //  Constructor/Destructor
     // -----------------------------------------------------------------------
@@ -132,10 +222,9 @@ public:
     ~GeneralAttributeCheck();
 
     // -----------------------------------------------------------------------
-    //  Public Constants
+    //  Getter methods
     // -----------------------------------------------------------------------
-    static const unsigned short GlobalContext;
-    static const unsigned short LocalContext;
+    unsigned short getFacetId(const XMLCh* const facetName);
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -147,7 +236,8 @@ public:
     // -----------------------------------------------------------------------
     void checkAttributes(const DOMElement* const elem,
                          const unsigned short elemContext,
-                         TraverseSchema* const schema);
+                         TraverseSchema* const schema,
+                         const bool isTopLevel = false);
 
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
@@ -164,9 +254,9 @@ private:
     // -----------------------------------------------------------------------
     //  Setup methods
     // -----------------------------------------------------------------------
-    void setUpAttributes();
     void setUpValidators();
     void mapElements();
+    void mapAttributes();
 
     // -----------------------------------------------------------------------
     //  Validation methods
@@ -177,145 +267,35 @@ private:
     // -----------------------------------------------------------------------
     //  Private Constants
     // -----------------------------------------------------------------------
-    // attributes
-    enum {
-        Att_Abstract_D,                // starts with 0
-        Att_Attribute_FD_D,
-        Att_Base_R,
-        Att_Base_N,
-        Att_Block_N,
-        Att_Block1_N,
-        Att_Block_D_D,
-        Att_Default_N,
-        Att_Element_FD_D,
-        Att_Final_N,
-        Att_Final1_N,
-        Att_Final_D_D,
-        Att_Fixed_N,
-        Att_Fixed_D,
-        Att_Form_N,
-        Att_ID_N,
-        Att_ItemType_N,
-        Att_MaxOccurs_D,
-        Att_MaxOccurs1_D,
-        Att_Member_T_N,
-        Att_MinOccurs_D,
-        Att_MinOccurs1_D,
-        Att_Mixed_D,
-        Att_Mixed_N,
-        Att_Name_R,
-        Att_Namespace_D,
-        Att_Namespace_N,
-        Att_Nillable_D,
-        Att_Process_C_D,
-        Att_Public_R,
-        Att_Ref_R,
-        Att_Refer_R,
-        Att_Schema_L_R,
-        Att_Schema_L_N,
-        Att_Source_N,
-        Att_Substitution_G_N,
-        Att_System_N,
-        Att_Target_N_N,
-        Att_Type_N,
-        Att_Use_D,
-        Att_Value_NNI_N,
-        Att_Value_STR_N,
-        Att_Value_WS_N,
-        Att_Version_N,
-        Att_XPath_R,
-        Att_XPath1_R,
-
-        Att_Count
-    };
-
-    // direct value compare
-    enum {
-        DT_Block = -1,
-        DT_Block1 = -2,
-        DT_Final = -3,
-        DT_Final1 = -4,
-        DT_Form = -5,
-        DT_MaxOccurs = -6,
-        DT_MaxOccurs1 = -7,
-        DT_MemberTypes = -8,
-        DT_MinOccurs1 = -9,
-        DT_Namespace = -10,
-        DT_ProcessContents = -11,
-        DT_Public = -12,
-        DT_Use = -13,
-        DT_WhiteSpace = -14,
-        DT_ID = -15
-    };
-
-    // datatype validators
-    enum {
-        DT_String,
-        DT_Token,
-        DT_AnyURI,
-        DT_NonNegInt,
-        DT_QName,
-        DT_Boolean,
-
-        // add XPath
-        DT_Count
-    };
-
-    // element context prefixes
-    enum {
-        globalPrefix,
-        localNamePrefix,
-        localRefPrefix
-    };
-
     // optional vs. required attribute
     enum {
-        Att_Required,
-        Att_Optional_Default,
-        Att_Optional_NoDefault
+        Att_Required = 1,
+        Att_Optional = 2,
+        Att_Mask = 3
     };
 
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    static AttributeInfo**                                fAttributes;
-    static DatatypeValidator**                            fValidators;
-    static RefHash2KeysTableOf<RefVectorOfAttributeInfo>* fElementMap;
-    IDDatatypeValidator                                   fIDValidator;
-    RefHashTableOf<XMLRefInfo>*                           fIDRefList;
+    static ValueHashTableOf<unsigned short>* fAttMap;
+    static ValueHashTableOf<unsigned short>* fFacetsMap;
+    static DatatypeValidator*                fNonNegIntDV;
+    static DatatypeValidator*                fBooleanDV;
+    static DatatypeValidator*                fAnyURIDV;
+    static unsigned short                    fgElemAttTable[E_Count][A_Count];
+    static const XMLCh*                      fAttNames[A_Count];
+    IDDatatypeValidator                      fIDValidator;
+    RefHashTableOf<XMLRefInfo>*              fIDRefList;
 };
 
 
 // ---------------------------------------------------------------------------
-//  AttributeInfo: Getter methods
+//  GeneralAttributeCheck: Getter methods
 // ---------------------------------------------------------------------------
-inline short AttributeInfo::getDefaultOption() const {
+inline unsigned short
+GeneralAttributeCheck::getFacetId(const XMLCh* const facetName) {
 
-    return fDefaultOption;
-}
-
-inline short AttributeInfo::getValidatorIndex() const {
-
-    return fValidatorIndex;
-}
-
-inline XMLCh* AttributeInfo::getName() const {
-
-    return fName;
-}
-
-inline XMLCh* AttributeInfo::getDefaultValue() const {
-
-    return fDefaultValue;
-}
-
-// ---------------------------------------------------------------------------
-//  AttributeInfo: CleanUp methods
-// ---------------------------------------------------------------------------
-inline void AttributeInfo::cleanUp() {
-
-    delete [] fName;
-    delete [] fDefaultValue;
+    return fFacetsMap->get(facetName);
 }
 
 // ---------------------------------------------------------------------------
@@ -326,6 +306,7 @@ GeneralAttributeCheck::setIDRefList(RefHashTableOf<XMLRefInfo>* const refList) {
 
     fIDRefList = refList;
 }
+
 
 #endif
 

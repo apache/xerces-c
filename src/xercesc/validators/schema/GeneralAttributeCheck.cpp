@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/05/27 19:54:33  knoaman
+ * Performance: use pre-built element-attribute map table.
+ *
  * Revision 1.4  2002/05/21 19:30:10  tng
  * DOM Reorganization: modify to use the new DOM interface.
  *
@@ -168,47 +171,17 @@ const XMLCh fgGlobal[] =
 // ---------------------------------------------------------------------------
 //  Static member data initialization
 // ---------------------------------------------------------------------------
-const unsigned short   GeneralAttributeCheck::GlobalContext = 0;
-const unsigned short   GeneralAttributeCheck::LocalContext = 1;
-AttributeInfo**        GeneralAttributeCheck::fAttributes = 0;
-DatatypeValidator**    GeneralAttributeCheck::fValidators = 0;
-RefHash2KeysTableOf<RefVectorOfAttributeInfo>* GeneralAttributeCheck::fElementMap = 0;
+ValueHashTableOf<unsigned short>* GeneralAttributeCheck::fAttMap = 0;
+ValueHashTableOf<unsigned short>* GeneralAttributeCheck::fFacetsMap = 0;
+DatatypeValidator*                GeneralAttributeCheck::fNonNegIntDV = 0;
+DatatypeValidator*                GeneralAttributeCheck::fBooleanDV = 0;
+DatatypeValidator*                GeneralAttributeCheck::fAnyURIDV = 0;
 
 // ---------------------------------------------------------------------------
 //  Static local data
 // ---------------------------------------------------------------------------
 static XMLMutex* sGeneralAttCheckMutex = 0;
 static XMLRegisterCleanup GeneralAttCheckCleanup;
-
-
-// ---------------------------------------------------------------------------
-//  AttributeInfo: Constructors and Destructor
-// ---------------------------------------------------------------------------
-AttributeInfo::AttributeInfo(const XMLCh* const name,
-                             const short defaultOption,
-                             const XMLCh* const defaultValue,
-                             const short dvIndex)
-    : fDefaultOption(defaultOption)
-    , fValidatorIndex(dvIndex)
-    , fName(XMLString::replicate(name))
-    , fDefaultValue(0)
-{
-    try {
-        if (defaultValue) {
-            fDefaultValue = XMLString::replicate(defaultValue);
-        }
-    }
-    catch(...) {
-        cleanUp();
-    }
-}
-
-
-AttributeInfo::~AttributeInfo()
-{
-    cleanUp();
-}
-
 
 
 // ---------------------------------------------------------------------------
@@ -228,212 +201,14 @@ GeneralAttributeCheck::~GeneralAttributeCheck()
 // ---------------------------------------------------------------------------
 //  GeneralAttributeCheck: Setup methods
 // ---------------------------------------------------------------------------
-void GeneralAttributeCheck::setUpAttributes() {
-
-    fAttributes = new AttributeInfo*[Att_Count];
-
-    fAttributes[Att_Abstract_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_ABSTRACT, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
-
-    fAttributes[Att_Attribute_FD_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_UNQUALIFIED, DT_Form);
-
-    fAttributes[Att_Base_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Required,
-                          0, DT_QName);
-
-    fAttributes[Att_Base_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Optional_NoDefault,
-                          0, DT_QName);
-
-    fAttributes[Att_Block_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_BLOCK, Att_Optional_NoDefault,
-                          0, DT_Block);
-
-    fAttributes[Att_Block1_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_BLOCK, Att_Optional_NoDefault,
-                          0, DT_Block1);
-
-    fAttributes[Att_Block_D_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_BLOCKDEFAULT, Att_Optional_Default,
-                          XMLUni::fgZeroLenString, DT_Block);
-
-    fAttributes[Att_Default_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_DEFAULT, Att_Optional_NoDefault,
-                          0, DT_String);
-
-    fAttributes[Att_Element_FD_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_ELEMENTFORMDEFAULT, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_UNQUALIFIED, DT_Form);
-
-    fAttributes[Att_Final_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_FINAL, Att_Optional_NoDefault,
-                          0, DT_Final);
-
-    fAttributes[Att_Final1_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_FINAL, Att_Optional_NoDefault,
-                          0, DT_Final1);
-
-    fAttributes[Att_Final_D_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_FINALDEFAULT, Att_Optional_Default,
-                          XMLUni::fgZeroLenString, DT_Final);
-
-    fAttributes[Att_Fixed_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_FIXED, Att_Optional_NoDefault,
-                          0, DT_String);
-
-    fAttributes[Att_Fixed_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_FIXED, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
-
-    fAttributes[Att_Form_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_FORM, Att_Optional_NoDefault,
-                          0, DT_Form);
-
-    fAttributes[Att_ID_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_ID, Att_Optional_NoDefault,
-                          0, DT_ID);
-
-    fAttributes[Att_ItemType_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_ITEMTYPE, Att_Optional_NoDefault,
-                          0, DT_QName);
-
-    fAttributes[Att_MaxOccurs_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_MAXOCCURS, Att_Optional_Default,
-                          fgValueOne, DT_MaxOccurs);
-
-    fAttributes[Att_MaxOccurs1_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_MAXOCCURS, Att_Optional_Default,
-                          fgValueOne, DT_MaxOccurs1);
-
-    fAttributes[Att_Member_T_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_MEMBERTYPES, Att_Optional_NoDefault,
-                          0, DT_MemberTypes);
-
-    fAttributes[Att_MinOccurs_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_MINOCCURS, Att_Optional_Default,
-                          fgValueOne, DT_NonNegInt);
-
-    fAttributes[Att_MinOccurs1_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_MINOCCURS, Att_Optional_Default,
-                          fgValueOne, DT_MinOccurs1);
-
-    fAttributes[Att_Mixed_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_MIXED, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
-
-    fAttributes[Att_Mixed_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_MIXED, Att_Optional_NoDefault,
-                          0, DT_Boolean);
-
-    fAttributes[Att_Name_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_NAME, Att_Required,
-                          0, 0);
-
-    fAttributes[Att_Namespace_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_NAMESPACE, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_TWOPOUNDANY, DT_Namespace);
-
-    fAttributes[Att_Namespace_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_NAMESPACE, Att_Optional_NoDefault,
-                          0, 0);
-
-    fAttributes[Att_Nillable_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_NILLABLE, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
-
-    fAttributes[Att_Process_C_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_PROCESSCONTENTS, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_STRICT, DT_ProcessContents);
-
-    fAttributes[Att_Public_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_PUBLIC, Att_Required,
-                          0, DT_Public);
-
-    fAttributes[Att_Ref_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_REF, Att_Required,
-                          0, DT_QName);
-
-    fAttributes[Att_Refer_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_REFER, Att_Required,
-                          0, DT_QName);
-
-    fAttributes[Att_Schema_L_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_SCHEMALOCATION, Att_Required,
-                          0, 0);
-
-    fAttributes[Att_Schema_L_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_SCHEMALOCATION, Att_Optional_NoDefault,
-                          0, 0);
-
-    fAttributes[Att_Source_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_SOURCE, Att_Optional_NoDefault,
-                          0, DT_AnyURI);
-
-    fAttributes[Att_Substitution_G_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_SUBSTITUTIONGROUP, Att_Optional_NoDefault,
-                          0, DT_QName);
-
-    fAttributes[Att_System_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_SYSTEM, Att_Optional_NoDefault,
-                          0, DT_AnyURI);
-
-    fAttributes[Att_Target_N_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_TARGETNAMESPACE, Att_Optional_NoDefault,
-                          0, 0);
-
-    fAttributes[Att_Type_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_TYPE, Att_Optional_NoDefault,
-                          0, DT_QName);
-
-    fAttributes[Att_Use_D] =
-        new AttributeInfo(SchemaSymbols::fgATT_USE, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_OPTIONAL, DT_Use);
-
-    fAttributes[Att_Value_NNI_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_VALUE, Att_Optional_NoDefault,
-                          0, DT_NonNegInt);
-
-    fAttributes[Att_Value_STR_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_VALUE, Att_Optional_NoDefault,
-                          0, 0);
-
-    fAttributes[Att_Value_WS_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_VALUE, Att_Optional_NoDefault,
-                          0, DT_WhiteSpace);
-
-    fAttributes[Att_Version_N] =
-        new AttributeInfo(SchemaSymbols::fgATT_VERSION, Att_Optional_NoDefault,
-                          0, 0);
-
-    fAttributes[Att_XPath_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_XPATH, Att_Required, 0, DT_String);
-
-    fAttributes[Att_XPath1_R] =
-        new AttributeInfo(SchemaSymbols::fgATT_XPATH, Att_Required, 0, DT_String);
-}
-
 void GeneralAttributeCheck::setUpValidators() {
-
-    fValidators = new DatatypeValidator*[DT_Count];
-
-    for (int i=0; i< DT_Count; i++) {
-        fValidators[i] = 0;
-    }
 
     DatatypeValidatorFactory dvFactory;
 
     dvFactory.expandRegistryToFullSchemaSet();
-    fValidators[DT_NonNegInt] =
-        dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
-
-    fValidators[DT_Boolean] =
-        dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_BOOLEAN);
-
-    fValidators[DT_AnyURI] =
-        dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
+    fNonNegIntDV = dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
+    fBooleanDV = dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_BOOLEAN);
+    fAnyURIDV = dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
 
     // TO DO - add remaining valdiators
 }
@@ -454,387 +229,67 @@ void GeneralAttributeCheck::mapElements() {
             // the thread who creates the mutex succesfully, to
             // initialize the followings
             //
-            setUpAttributes();
             setUpValidators();
-
-            RefVectorOf<AttributeInfo>* attList = 0;
-            int prefixContext = globalPrefix;
-
-            fElementMap = new RefHash2KeysTableOf<RefVectorOfAttributeInfo>(25);
-
-            // element "attribute" - global
-            attList = new RefVectorOf<AttributeInfo>(5, false);
-            attList->addElement(fAttributes[Att_Default_N]);
-            attList->addElement(fAttributes[Att_Fixed_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            attList->addElement(fAttributes[Att_Type_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTE, prefixContext, attList);
-
-            // element "element" - global
-            attList = new RefVectorOf<AttributeInfo>(10, false);
-            attList->addElement(fAttributes[Att_Abstract_D]);
-            attList->addElement(fAttributes[Att_Block_N]);
-            attList->addElement(fAttributes[Att_Default_N]);
-            attList->addElement(fAttributes[Att_Final_N]);
-            attList->addElement(fAttributes[Att_Fixed_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            attList->addElement(fAttributes[Att_Nillable_D]);
-            attList->addElement(fAttributes[Att_Substitution_G_N]);
-            attList->addElement(fAttributes[Att_Type_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ELEMENT, prefixContext, attList);
-
-            // element "complexType" - global
-            attList = new RefVectorOf<AttributeInfo>(6, false);
-            attList->addElement(fAttributes[Att_Abstract_D]);
-            attList->addElement(fAttributes[Att_Block1_N]);
-            attList->addElement(fAttributes[Att_Final_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Mixed_D]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_COMPLEXTYPE, prefixContext, attList);
-
-            // element "simpleType" - global
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_Final1_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_SIMPLETYPE, prefixContext, attList);
-
-            // element "schema" - global
-            attList = new RefVectorOf<AttributeInfo>(7, false);
-            attList->addElement(fAttributes[Att_Attribute_FD_D]);
-            attList->addElement(fAttributes[Att_Block_D_D]);
-            attList->addElement(fAttributes[Att_Element_FD_D]);
-            attList->addElement(fAttributes[Att_Final_D_D]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Target_N_N]);
-            attList->addElement(fAttributes[Att_Version_N]);
-            // xml:lang = language ???
-            fElementMap->put((void*) SchemaSymbols::fgELT_SCHEMA, prefixContext, attList);
-
-            // element "include" - global
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Schema_L_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_INCLUDE, prefixContext, attList);
-
-            // element "import" - global
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Namespace_N]);
-            attList->addElement(fAttributes[Att_Schema_L_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_IMPORT, prefixContext, attList);
-
-            // for element "redefine" - global (same as include)
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Schema_L_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_REDEFINE, prefixContext, attList);
-
-
-            // element "attributeGroup" - global
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, prefixContext, attList);
-
-            // element "group" - global
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_GROUP, prefixContext, attList);
-
-            // element "annotation" - global
-            attList = new RefVectorOf<AttributeInfo>(1, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ANNOTATION, prefixContext, attList);
-
-            // element "notation" - global
-            attList = new RefVectorOf<AttributeInfo>(4, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            attList->addElement(fAttributes[Att_Public_R]);
-            attList->addElement(fAttributes[Att_System_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_NOTATION, prefixContext, attList);
-
-            // element "attribute" - local ref
-            prefixContext = localRefPrefix;
-            attList = new RefVectorOf<AttributeInfo>(5, false);
-            attList->addElement(fAttributes[Att_Default_N]);
-            attList->addElement(fAttributes[Att_Fixed_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Ref_R]);
-            attList->addElement(fAttributes[Att_Use_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTE, prefixContext, attList);
-
-            // element "element" - local ref
-            attList = new RefVectorOf<AttributeInfo>(4, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs_D]);
-            attList->addElement(fAttributes[Att_MinOccurs_D]);
-            attList->addElement(fAttributes[Att_Ref_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ELEMENT, prefixContext, attList);
-
-            // element "attributeGroup" - local ref
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Ref_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, prefixContext, attList);
-
-            // element "group" - local ref
-            attList = new RefVectorOf<AttributeInfo>(4, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs_D]);
-            attList->addElement(fAttributes[Att_MinOccurs_D]);
-            attList->addElement(fAttributes[Att_Ref_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_GROUP, prefixContext, attList);
-
-            // element "attribute" - local name
-            prefixContext = localNamePrefix;
-            attList = new RefVectorOf<AttributeInfo>(7, false);
-            attList->addElement(fAttributes[Att_Default_N]);
-            attList->addElement(fAttributes[Att_Fixed_N]);
-            attList->addElement(fAttributes[Att_Form_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            attList->addElement(fAttributes[Att_Type_N]);
-            attList->addElement(fAttributes[Att_Use_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ATTRIBUTE, prefixContext, attList);
-
-            // for element "element" - local name
-            attList = new RefVectorOf<AttributeInfo>(10, false);
-            attList->addElement(fAttributes[Att_Block_N]);
-            attList->addElement(fAttributes[Att_Default_N]);
-            attList->addElement(fAttributes[Att_Fixed_N]);
-            attList->addElement(fAttributes[Att_Form_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs_D]);
-            attList->addElement(fAttributes[Att_MinOccurs_D]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            attList->addElement(fAttributes[Att_Nillable_D]);
-            attList->addElement(fAttributes[Att_Type_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ELEMENT, prefixContext, attList);
-
-            // element "complexType" - local name
-            prefixContext = localNamePrefix;
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Mixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_COMPLEXTYPE, prefixContext, attList);
-
-            // element "simpleContent" - local name
-            attList = new RefVectorOf<AttributeInfo>(1, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_SIMPLECONTENT, prefixContext, attList);
-
-            // element "restriction" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_Base_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_RESTRICTION, prefixContext, attList);
-
-            // element "extension" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_Base_R]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_EXTENSION, prefixContext, attList);
-
-            // element "anyAttribute" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Namespace_D]);
-            attList->addElement(fAttributes[Att_Process_C_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ANYATTRIBUTE, prefixContext, attList);
-
-            // element "complexContent" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Mixed_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_COMPLEXCONTENT, prefixContext, attList);
-
-            // element "choice" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs_D]);
-            attList->addElement(fAttributes[Att_MinOccurs_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_CHOICE, prefixContext, attList);
-
-            // element "sequence" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs_D]);
-            attList->addElement(fAttributes[Att_MinOccurs_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_SEQUENCE, prefixContext, attList);
-
-            // for element "any" - local name
-            attList = new RefVectorOf<AttributeInfo>(5, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs_D]);
-            attList->addElement(fAttributes[Att_MinOccurs_D]);
-            attList->addElement(fAttributes[Att_Namespace_D]);
-            attList->addElement(fAttributes[Att_Process_C_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ANY, prefixContext, attList);
-
-            // element "simpleType" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_Final1_N]);
-            attList->addElement(fAttributes[Att_ID_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_SIMPLETYPE, prefixContext, attList);
-
-            // element "list" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_ItemType_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_LIST, prefixContext, attList);
-
-            // element "union" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Member_T_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_UNION, prefixContext, attList);
-
-            // element "length" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_NNI_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_LENGTH, prefixContext, attList);
-
-            // element "minLength" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_NNI_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_MINLENGTH, prefixContext, attList);
-
-            // element "maxLength" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_NNI_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_MAXLENGTH, prefixContext, attList);
-
-            // element "totalDigits" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_NNI_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_TOTALDIGITS, prefixContext, attList);
-
-            // element "fractionDigits" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_NNI_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_FRACTIONDIGITS, prefixContext, attList);
-
-            // element "pattern" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_STR_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_PATTERN, prefixContext, attList);
-
-            // element "enumeration" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_STR_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ENUMERATION, prefixContext, attList);
-
-            // element "whiteSpace" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_WS_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_WHITESPACE, prefixContext, attList);
-
-            // element "maxInclusive" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_STR_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE, prefixContext, attList);
-
-            // element "maxExclusive" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_STR_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_MAXEXCLUSIVE, prefixContext, attList);
-
-            // for element "minInclusive" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_STR_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_MININCLUSIVE, prefixContext, attList);
-
-            // for element "minExclusive" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Value_STR_N]);
-            attList->addElement(fAttributes[Att_Fixed_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_MINEXCLUSIVE, prefixContext, attList);
-
-            // element "all" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_MaxOccurs1_D]);
-            attList->addElement(fAttributes[Att_MinOccurs1_D]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ALL, prefixContext, attList);
-
-            // element "annotation" - local name
-            attList = new RefVectorOf<AttributeInfo>(1, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_ANNOTATION, prefixContext, attList);
-
-            // element "appinfo" - local name
-            attList = new RefVectorOf<AttributeInfo>(1, false);
-            attList->addElement(fAttributes[Att_Source_N]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_APPINFO, prefixContext, attList);
-
-            // element "documentation" - local name
-            attList = new RefVectorOf<AttributeInfo>(1, false);
-            attList->addElement(fAttributes[Att_Source_N]);
-            // xml:lang = language ???
-            fElementMap->put((void*) SchemaSymbols::fgELT_DOCUMENTATION, prefixContext, attList);
-
-            // element "unique" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_UNIQUE, prefixContext, attList);
-
-            // element "key" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_KEY, prefixContext, attList);
-
-            // element "keyref" - local name
-            attList = new RefVectorOf<AttributeInfo>(3, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_Name_R]);
-            attList->addElement(fAttributes[Att_Refer_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_KEYREF, prefixContext, attList);
-
-            // element "selector" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_XPath_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_SELECTOR, prefixContext, attList);
-
-            // element "field" - local name
-            attList = new RefVectorOf<AttributeInfo>(2, false);
-            attList->addElement(fAttributes[Att_ID_N]);
-            attList->addElement(fAttributes[Att_XPath1_R]);
-            fElementMap->put((void*) SchemaSymbols::fgELT_FIELD, prefixContext, attList);
+            mapAttributes();
 
             // This is the real mutex.  Register it for cleanup at Termination.
             GeneralAttCheckCleanup.registerCleanup(reinitGeneralAttCheck);
         }
     }
+}
+
+void GeneralAttributeCheck::mapAttributes() {
+
+    fAttMap = new ValueHashTableOf<unsigned short>(A_Count);
+
+    fAttMap->put((void*)SchemaSymbols::fgATT_ABSTRACT, A_Abstract);
+    fAttMap->put((void*)SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT, A_AttributeFormDefault);
+    fAttMap->put((void*)SchemaSymbols::fgATT_BASE, A_Base);
+    fAttMap->put((void*)SchemaSymbols::fgATT_BLOCK, A_Block);
+    fAttMap->put((void*)SchemaSymbols::fgATT_BLOCKDEFAULT, A_BlockDefault);
+    fAttMap->put((void*)SchemaSymbols::fgATT_DEFAULT, A_Default);
+    fAttMap->put((void*)SchemaSymbols::fgATT_ELEMENTFORMDEFAULT, A_ElementFormDefault);
+    fAttMap->put((void*)SchemaSymbols::fgATT_FINAL, A_Final);
+    fAttMap->put((void*)SchemaSymbols::fgATT_FINALDEFAULT, A_FinalDefault);
+    fAttMap->put((void*)SchemaSymbols::fgATT_FIXED, A_Fixed);
+    fAttMap->put((void*)SchemaSymbols::fgATT_FORM, A_Form);
+    fAttMap->put((void*)SchemaSymbols::fgATT_ID, A_ID);
+    fAttMap->put((void*)SchemaSymbols::fgATT_ITEMTYPE, A_ItemType);
+    fAttMap->put((void*)SchemaSymbols::fgATT_MAXOCCURS, A_MaxOccurs);
+    fAttMap->put((void*)SchemaSymbols::fgATT_MEMBERTYPES, A_MemberTypes);
+    fAttMap->put((void*)SchemaSymbols::fgATT_MINOCCURS, A_MinOccurs);
+    fAttMap->put((void*)SchemaSymbols::fgATT_MIXED, A_Mixed);
+    fAttMap->put((void*)SchemaSymbols::fgATT_NAME, A_Name);
+    fAttMap->put((void*)SchemaSymbols::fgATT_NAMESPACE, A_Namespace);
+    fAttMap->put((void*)SchemaSymbols::fgATT_NILLABLE, A_Nillable);
+    fAttMap->put((void*)SchemaSymbols::fgATT_PROCESSCONTENTS, A_ProcessContents);
+    fAttMap->put((void*)SchemaSymbols::fgATT_PUBLIC, A_Public);
+    fAttMap->put((void*)SchemaSymbols::fgATT_REF, A_Ref);
+    fAttMap->put((void*)SchemaSymbols::fgATT_REFER, A_Refer);
+    fAttMap->put((void*)SchemaSymbols::fgATT_SCHEMALOCATION, A_SchemaLocation);
+    fAttMap->put((void*)SchemaSymbols::fgATT_SOURCE, A_Source);
+    fAttMap->put((void*)SchemaSymbols::fgATT_SUBSTITUTIONGROUP, A_SubstitutionGroup);
+    fAttMap->put((void*)SchemaSymbols::fgATT_SYSTEM, A_System);
+    fAttMap->put((void*)SchemaSymbols::fgATT_TARGETNAMESPACE, A_TargetNamespace);
+    fAttMap->put((void*)SchemaSymbols::fgATT_TYPE, A_Type);
+    fAttMap->put((void*)SchemaSymbols::fgATT_USE, A_Use);
+    fAttMap->put((void*)SchemaSymbols::fgATT_VALUE, A_Value);
+    fAttMap->put((void*)SchemaSymbols::fgATT_VERSION, A_Version);
+    fAttMap->put((void*)SchemaSymbols::fgATT_XPATH, A_XPath);
+
+    fFacetsMap = new ValueHashTableOf<unsigned short>(13);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_MINEXCLUSIVE, E_MinExclusive);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_MININCLUSIVE, E_MinInclusive);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_MAXEXCLUSIVE, E_MaxExclusive);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE, E_MaxInclusive);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_TOTALDIGITS, E_TotalDigits);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_FRACTIONDIGITS, E_FractionDigits);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_LENGTH, E_Length);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_MINLENGTH, E_MinLength);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_MAXLENGTH, E_MaxLength);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_ENUMERATION, E_Enumeration);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_WHITESPACE, E_WhiteSpace);
+    fFacetsMap->put((void*) SchemaSymbols::fgELT_PATTERN, E_Pattern);
 }
 
 
@@ -847,17 +302,11 @@ GeneralAttributeCheck::reinitGeneralAttCheck() {
     delete sGeneralAttCheckMutex;
     sGeneralAttCheckMutex = 0;
 
-    for (unsigned int index = 0; index < Att_Count; index++) {
-        delete fAttributes[index];
-    }
-
-    delete [] fAttributes;
-    delete [] fValidators;
-    delete fElementMap;
+    delete fAttMap;
+    delete fFacetsMap;
 	
-	fAttributes = 0;
-    fValidators = 0;
-    fElementMap = 0;
+    fAttMap = fFacetsMap = 0;
+    fNonNegIntDV = fBooleanDV = fAnyURIDV = 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -866,94 +315,27 @@ GeneralAttributeCheck::reinitGeneralAttCheck() {
 void
 GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                                        const unsigned short elemContext,
-                                       TraverseSchema* const schema) {
+                                       TraverseSchema* const schema,
+                                       const bool isTopLevel) {
 
-    if (elem == 0 || !fElementMap) {
+    if (elem == 0 || !fAttMap || elemContext<0 || elemContext>=E_Count) {
         return;
     }
 
-    int                         prefixContext = globalPrefix;
-    const XMLCh*                elemName = elem->getLocalName();
-    const XMLCh*                contextStr = fgGlobal;
-    RefVectorOf<AttributeInfo>* elemAttrs = 0;
-
-    if (elemContext == LocalContext) {
-
-        contextStr = fgLocal;
-
-        if (elem->getAttributeNode(SchemaSymbols::fgATT_REF) == 0) {
-            prefixContext = localNamePrefix;
-        }
-        else {
-            prefixContext = localRefPrefix;
-        }
-    }
-
-    elemAttrs = fElementMap->get(elemName, prefixContext);
-
-    if (!elemAttrs) {
-
-        // Try ref, some local declaration can have only a ref
-        if (prefixContext == localNamePrefix) {
-            elemAttrs = fElementMap->get(elemName, localRefPrefix);
-
-            if (!elemAttrs) {
-                return;
-            }
-
-            prefixContext = localRefPrefix;
-        }
-        else {
-            // We should report an error
-            return;
-        }
-    }
-
-    unsigned int           size = elemAttrs->size();
-    RefHashTableOf<XMLCh>  attNameList(5);
-
-    for (unsigned int i=0; i< size; i++) {
-
-        AttributeInfo* attInfo = elemAttrs->elementAt(i);
-
-        if (attInfo) {
-
-            XMLCh* attName = attInfo->getName();
-            const XMLCh* attValue = elem->getAttribute(attName);
-            DOMAttr* attNode = elem->getAttributeNode(attName);
-            unsigned int attValueLen = XMLString::stringLen(attValue);
-
-            attNameList.put((void*) attName, 0);
-
-            if (attValueLen > 0) {
-                validate(elem, attName, attValue, attInfo->getValidatorIndex(), schema);
-            }
-            else if (attNode == 0) {
-                if (attInfo->getDefaultOption() == Att_Required) {
-                    schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
-                        XMLErrs::AttributeRequired, attName, contextStr, elemName);
-                }
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // Check for disallowed attributes
-    // ------------------------------------------------------------------
+    const XMLCh*     contextStr = (isTopLevel) ? fgGlobal : fgLocal;
+    const XMLCh*     elemName = elem->getLocalName();
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
-    int attrCount = eltAttrs->getLength();
+    int              attrCount = eltAttrs->getLength();
+    XMLByte          attList[A_Count];
 
-    for (int j = 0; j < attrCount; j++) {
+    memset(attList, 0, sizeof(attList));
 
-        DOMNode*  attribute = eltAttrs->item(j);
+    for (int i = 0; i < attrCount; i++) {
 
-        if (!attribute) {
-            break;
-        }
-
-        // Bypass attributes that start with xml
+        DOMNode*     attribute = eltAttrs->item(i);
         const XMLCh* attName = attribute->getNodeName();
 
+        // Bypass attributes that start with xml
         if ((*attName == chLatin_X || *attName == chLatin_x)
            && (*(attName+1) == chLatin_M || *(attName+1) == chLatin_m)
            && (*(attName+2) == chLatin_L || *(attName+2) == chLatin_l)) {
@@ -1000,12 +382,43 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
             continue;
         }
 
+        int attNameId = A_Invalid;
         attName = attribute->getLocalName();
 
-        // check whether this attribute is allowed
-        if (!attNameList.containsKey(attName)) {
+        try {
+            attNameId= fAttMap->get(attName);
+        }
+        catch(...) {
+
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                 XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
+            continue;
+        }
+
+        const XMLCh* attrVal = attribute->getNodeValue();
+
+        if (fgElemAttTable[elemContext][attNameId] & Att_Mask) {
+
+            attList[attNameId] = 1;
+
+            if (XMLString::stringLen(attrVal)) {
+                validate(elem, attName, attrVal, fgElemAttTable[elemContext][attNameId] & DV_Mask, schema);
+            }
+        }
+        else {
+            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
+                XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Check for required attributes
+    // ------------------------------------------------------------------
+    for (unsigned int j=0; j < A_Count; j++) {
+
+        if ((fgElemAttTable[elemContext][j] & Att_Required) && attList[j] == 0) {
+            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeRequired,
+                                      fAttNames[j], contextStr, elemName);
         }
     }
 }
@@ -1021,60 +434,60 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
     DatatypeValidator* dv = 0;
 
     switch (dvIndex) {
-    case DT_Form:
+    case DV_Form:
         if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_QUALIFIED) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_UNQUALIFIED) != 0) {
             isInvalid = true;
         }
         break;
-    case DT_MaxOccurs:
+    case DV_MaxOccurs:
             // maxOccurs = (nonNegativeInteger | unbounded)
         if (XMLString::compareString(attValue, fgUnbounded) != 0) {
-            dv = fValidators[DT_NonNegInt];
+            dv = fNonNegIntDV;
         }
         break;
-    case DT_MaxOccurs1:
+    case DV_MaxOccurs1:
         if (XMLString::compareString(attValue, fgValueOne) != 0) {
             isInvalid = true;
         }
         break;
-    case DT_MinOccurs1:
+    case DV_MinOccurs1:
         if (XMLString::compareString(attValue, fgValueZero) != 0
             && XMLString::compareString(attValue, fgValueOne) != 0) {
             isInvalid = true;
         }
         break;
-    case DT_ProcessContents:
+    case DV_ProcessContents:
         if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_SKIP) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_LAX) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_STRICT) != 0) {
             isInvalid = true;
         }
         break;
-    case DT_Use:
+    case DV_Use:
         if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_OPTIONAL) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_PROHIBITED) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_REQUIRED) != 0) {
             isInvalid = true;
         }
         break;
-    case DT_WhiteSpace:
+    case DV_WhiteSpace:
         if (XMLString::compareString(attValue, SchemaSymbols::fgWS_PRESERVE) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgWS_REPLACE) != 0
             && XMLString::compareString(attValue, SchemaSymbols::fgWS_COLLAPSE) != 0) {
             isInvalid = true;
         }
         break;
-    case DT_Boolean:
-        dv = fValidators[DT_Boolean];
+    case DV_Boolean:
+        dv = fBooleanDV;
         break;
-    case DT_NonNegInt:
-        dv = fValidators[DT_NonNegInt];
+    case DV_NonNegInt:
+        dv = fNonNegIntDV;
         break;
-    case DT_AnyURI:
-        dv = fValidators[DT_AnyURI];
+    case DV_AnyURI:
+        dv = fAnyURIDV;
         break;
-    case DT_ID:
+    case DV_ID:
         if (fIDRefList) {
 
             dv = &fIDValidator;
@@ -1100,6 +513,409 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
                                   attValue, attName);
     }
 }
+
+
+// ---------------------------------------------------------------------------
+//  Conditional methods for building the table
+// ---------------------------------------------------------------------------
+
+//
+//  This code will set up the character flags table. Its defined out since
+//  this table is now written out and hard coded (at the bottom of this
+//  file) into the code itself. This code is retained in case there is
+//  any need to recreate it later.
+//
+
+#if defined(NEED_TO_GEN_ELEM_ATT_MAP_TABLE)
+
+#include <stdio.h>
+
+void GeneralAttributeCheck::initCharFlagTable()
+{
+    unsigned short attList[E_Count][A_Count];
+
+    for (unsigned int i=0; i < E_Count; i++) {
+        for (unsigned int j=0; j < A_Count; j++) {
+            attList[i][j] = 0;
+        }
+    }
+
+    //
+    //  Write it out to a temp file to be read back into this source later.
+    //
+    FILE* outFl = fopen("ea_table.out", "wt+");
+    fprintf(outFl, "unsigned short GeneralAttributeCheck::fgElemAttTable[E_Count][A_Count] =\n{\n    {");
+
+    //"all"
+    attList[E_All][A_ID] = Att_Optional | DV_ID;
+    attList[E_All][A_MaxOccurs] = Att_Optional | DV_MaxOccurs1;
+    attList[E_All][A_MinOccurs] = Att_Optional | DV_MinOccurs1;
+    
+    // "annotation"
+    attList[E_Annotation][A_ID] = Att_Optional | DV_ID;
+
+    // "any"
+    attList[E_Any][A_ID] = Att_Optional | DV_ID;
+    attList[E_Any][A_MaxOccurs] = Att_Optional | DV_MaxOccurs;
+    attList[E_Any][A_MinOccurs] = Att_Optional | DV_NonNegInt;
+    attList[E_Any][A_Namespace] = Att_Optional;
+    attList[E_Any][A_ProcessContents] = Att_Optional | DV_ProcessContents;
+
+    // "anyAttribute"
+    attList[E_AnyAttribute][A_ID] = Att_Optional | DV_ID;
+    attList[E_AnyAttribute][A_Namespace] = Att_Optional;
+    attList[E_AnyAttribute][A_ProcessContents] = Att_Optional | DV_ProcessContents;
+
+    // "appinfo"
+    attList[E_Appinfo][A_Source]= Att_Optional | DV_AnyURI;
+
+    // attribute - global"
+    attList[E_AttributeGlobal][A_Default] = Att_Optional;
+    attList[E_AttributeGlobal][A_Fixed] = Att_Optional;
+    attList[E_AttributeGlobal][A_ID] = Att_Optional | DV_ID;
+    attList[E_AttributeGlobal][A_Name] = Att_Required;
+    attList[E_AttributeGlobal][A_Type] = Att_Optional;
+
+    // "attribute - local"
+    attList[E_AttributeLocal][A_Default] = Att_Optional;
+    attList[E_AttributeLocal][A_Fixed] = Att_Optional;
+    attList[E_AttributeLocal][A_Form]= Att_Optional | DV_Form;
+    attList[E_AttributeLocal][A_ID] = Att_Optional | DV_ID;
+    attList[E_AttributeLocal][A_Name] = Att_Required;
+    attList[E_AttributeLocal][A_Type] = Att_Optional;
+    attList[E_AttributeLocal][A_Use] = Att_Optional | DV_Use;
+
+    // "attribute - ref"
+    attList[E_AttributeRef][A_Default] = Att_Optional;
+    attList[E_AttributeRef][A_Fixed] = Att_Optional;
+    attList[E_AttributeRef][A_ID] = Att_Optional | DV_ID;
+    attList[E_AttributeRef][A_Ref]= Att_Required;
+    attList[E_AttributeRef][A_Use] = Att_Optional | DV_Use;
+
+    // "attributeGroup - global"
+    attList[E_AttributeGroupGlobal][A_ID] = Att_Optional | DV_ID;
+    attList[E_AttributeGroupGlobal][A_Name] = Att_Required;
+
+    // "attributeGroup - ref"
+    attList[E_AttributeGroupRef][A_ID] = Att_Optional | DV_ID;
+    attList[E_AttributeGroupRef][A_Ref]= Att_Required;
+
+    // "choice"
+    attList[E_Choice][A_ID] = Att_Optional | DV_ID;
+    attList[E_Choice][A_MaxOccurs] = Att_Optional | DV_MaxOccurs;
+    attList[E_Choice][A_MinOccurs] = Att_Optional | DV_NonNegInt;
+
+    // "complexContent"
+    attList[E_ComplexContent][A_ID] = Att_Optional | DV_ID;
+    attList[E_ComplexContent][A_Mixed] = Att_Optional | DV_Boolean;
+
+    // "complexType - global"
+    attList[E_ComplexTypeGlobal][A_Abstract] = Att_Optional | DV_Boolean;
+    attList[E_ComplexTypeGlobal][A_Block] = Att_Optional;
+    attList[E_ComplexTypeGlobal][A_Final] = Att_Optional;
+    attList[E_ComplexTypeGlobal][A_ID] = Att_Optional | DV_ID;
+    attList[E_ComplexTypeGlobal][A_Mixed] = Att_Optional | DV_Boolean;
+    attList[E_ComplexTypeGlobal][A_Name] = Att_Required;
+
+    // "complexType - local"
+    attList[E_ComplexTypeLocal][A_ID] = Att_Optional | DV_ID;
+    attList[E_ComplexTypeLocal][A_Mixed] = Att_Optional | DV_Boolean;
+
+    // "documentation"
+    attList[E_Documentation][A_Source] = Att_Optional | DV_AnyURI;
+
+    // "element - global"
+    attList[E_ElementGlobal][A_Abstract] = Att_Optional | DV_Boolean;
+    attList[E_ElementGlobal][A_Block] = Att_Optional;
+    attList[E_ElementGlobal][A_Default] = Att_Optional;
+    attList[E_ElementGlobal][A_Final] = Att_Optional;
+    attList[E_ElementGlobal][A_Fixed] = Att_Optional;
+    attList[E_ElementGlobal][A_ID] = Att_Optional | DV_ID;;
+    attList[E_ElementGlobal][A_Name] = Att_Required;
+    attList[E_ElementGlobal][A_Nillable] = Att_Optional | DV_Boolean;
+    attList[E_ElementGlobal][A_SubstitutionGroup] = Att_Optional;
+    attList[E_ElementGlobal][A_Type] = Att_Optional;
+
+    // "element - local"
+    attList[E_ElementLocal][A_Block]= Att_Optional;
+    attList[E_ElementLocal][A_Default] = Att_Optional;
+    attList[E_ElementLocal][A_Fixed] = Att_Optional;
+    attList[E_ElementLocal][A_Form] = Att_Optional | DV_Form;
+    attList[E_ElementLocal][A_ID] = Att_Optional | DV_ID;
+    attList[E_ElementLocal][A_MaxOccurs] = Att_Optional | DV_MaxOccurs;
+    attList[E_ElementLocal][A_MinOccurs] = Att_Optional | DV_NonNegInt;
+    attList[E_ElementLocal][A_Name] = Att_Required;
+    attList[E_ElementLocal][A_Nillable] = Att_Optional | DV_Boolean;
+    attList[E_ElementLocal][A_Type] = Att_Optional;
+
+    //"element - ref"
+    attList[E_ElementRef][A_ID] = Att_Optional | DV_ID;
+    attList[E_ElementRef][A_MaxOccurs] = Att_Optional | DV_MaxOccurs;
+    attList[E_ElementRef][A_MinOccurs] = Att_Optional | DV_NonNegInt;
+    attList[E_ElementRef][A_Ref] = Att_Required;
+
+    // "enumeration"
+    attList[E_Enumeration][A_ID] = Att_Optional | DV_ID;
+    attList[E_Enumeration][A_Value] = Att_Optional;
+
+    // "extension"
+    attList[E_Extension][A_Base] = Att_Required;
+    attList[E_Extension][A_ID] = Att_Optional | DV_ID;
+
+    //"field"
+    attList[E_Field][A_ID] = Att_Optional | DV_ID;
+    attList[E_Field][A_XPath] = Att_Required;
+
+    // "fractionDigits"
+    attList[E_FractionDigits][A_ID] = Att_Optional | DV_ID;
+    attList[E_FractionDigits][A_Value] = Att_Optional | DV_NonNegInt;
+    attList[E_FractionDigits][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "group - global"
+    attList[E_GroupGlobal][A_ID] = Att_Optional | DV_ID;
+    attList[E_GroupGlobal][A_Name] = Att_Required;
+
+    // "group - ref"
+    attList[E_GroupRef][A_ID] = Att_Optional | DV_ID;
+    attList[E_GroupRef][A_MaxOccurs] = Att_Optional | DV_MaxOccurs;
+    attList[E_GroupRef][A_MinOccurs] = Att_Optional | DV_NonNegInt;
+    attList[E_GroupRef][A_Ref] = Att_Required;
+
+    // "import"
+    attList[E_Import][A_ID] = Att_Optional | DV_ID;
+    attList[E_Import][A_Namespace] = Att_Optional;
+    attList[E_Import][A_SchemaLocation] = Att_Optional;
+
+    // "include"
+    attList[E_Include][A_ID] = Att_Optional | DV_ID;
+    attList[E_Include][A_SchemaLocation] = Att_Required;
+
+    // "key"
+    attList[E_Key][A_ID] = Att_Optional | DV_ID;
+    attList[E_Key][A_Name] = Att_Required;
+
+    // "keyref"
+    attList[E_KeyRef][A_ID] = Att_Optional | DV_ID;
+    attList[E_KeyRef][A_Name] = Att_Required;
+    attList[E_KeyRef][A_Refer] = Att_Required;
+
+    // "length"
+    attList[E_Length][A_ID] = Att_Optional | DV_ID;
+    attList[E_Length][A_Value] = Att_Optional | DV_NonNegInt;
+    attList[E_Length][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "list"
+    attList[E_List][A_ID] = Att_Optional | DV_ID;
+    attList[E_List][A_ItemType] = Att_Optional;
+
+    // "maxExclusive"
+    attList[E_MaxExclusive][A_ID] = Att_Optional | DV_ID;
+    attList[E_MaxExclusive][A_Value] = Att_Optional;
+    attList[E_MaxExclusive][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "maxInclusive"
+    attList[E_MaxInclusive][A_ID] = Att_Optional | DV_ID;
+    attList[E_MaxInclusive][A_Value] = Att_Optional;
+    attList[E_MaxInclusive][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "maxLength"
+    attList[E_MaxLength][A_ID] = Att_Optional | DV_ID;
+    attList[E_MaxLength][A_Value] = Att_Optional | DV_NonNegInt;
+    attList[E_MaxLength][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "minExclusive"
+    attList[E_MinExclusive][A_ID] = Att_Optional | DV_ID;
+    attList[E_MinExclusive][A_Value] = Att_Optional;
+    attList[E_MinExclusive][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "minInclusive"
+    attList[E_MinInclusive][A_ID] = Att_Optional | DV_ID;
+    attList[E_MinInclusive][A_Value] = Att_Optional;
+    attList[E_MinInclusive][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "minLength"
+    attList[E_MinLength][A_ID] = Att_Optional | DV_ID;
+    attList[E_MinLength][A_Value] = Att_Optional | DV_NonNegInt;
+    attList[E_MinLength][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "notation"
+    attList[E_Notation][A_ID] = Att_Optional | DV_ID;
+    attList[E_Notation][A_Name] = Att_Required;
+    attList[E_Notation][A_Public] = Att_Required;
+    attList[E_Notation][A_System] = Att_Optional | DV_AnyURI;
+
+    // "pattern"
+    attList[E_Pattern][A_ID] = Att_Optional;
+    attList[E_Pattern][A_Value] = Att_Optional;
+
+    // "redefine"
+    attList[E_Redefine][A_ID] = Att_Optional | DV_ID;
+    attList[E_Redefine][A_SchemaLocation] = Att_Required;
+
+    // "restriction"
+    attList[E_Restriction][A_Base] = Att_Optional;
+    attList[E_Restriction][A_ID] = Att_Optional | DV_ID;
+
+    // "schema"
+    attList[E_Schema][A_AttributeFormDefault] = Att_Optional | DV_Form;
+    attList[E_Schema][A_BlockDefault] = Att_Optional;
+    attList[E_Schema][A_ElementFormDefault] = Att_Optional | DV_Form;
+    attList[E_Schema][A_FinalDefault] = Att_Optional;
+    attList[E_Schema][A_ID] = Att_Optional | DV_ID;
+    attList[E_Schema][A_TargetNamespace] = Att_Optional;
+    attList[E_Schema][A_Version] = Att_Optional;
+
+    // "selector"
+    attList[E_Selector][A_ID] = Att_Optional | DV_ID;
+    attList[E_Selector][A_XPath] = Att_Required;
+
+    // "sequence"
+    attList[E_Sequence][A_ID] = Att_Optional | DV_ID;
+    attList[E_Sequence][A_MaxOccurs] = Att_Optional | DV_MaxOccurs;
+    attList[E_Sequence][A_MinOccurs] = Att_Optional | DV_NonNegInt;
+
+    // "simpleContent"
+    attList[E_SimpleContent][A_ID] = Att_Optional | DV_ID;
+
+    // "simpleType - global"
+    attList[E_SimpleTypeGlobal][A_Final] = Att_Optional;
+    attList[E_SimpleTypeGlobal][A_ID] = Att_Optional | DV_ID;
+    attList[E_SimpleTypeGlobal][A_Name] = Att_Required;
+
+    // "simpleType - local"
+    attList[E_SimpleTypeLocal][A_Final] = Att_Optional;
+    attList[E_SimpleTypeLocal][A_ID] = Att_Optional | DV_ID;
+
+    // "totalDigits"
+    attList[E_TotalDigits][A_ID] = Att_Optional | DV_ID;
+    attList[E_TotalDigits][A_Value] = Att_Optional | DV_NonNegInt;
+    attList[E_TotalDigits][A_Fixed] = Att_Optional | DV_Boolean;
+
+    // "union"
+    attList[E_Union][A_ID] = Att_Optional | DV_ID;
+    attList[E_Union][A_MemberTypes] = Att_Optional;
+
+    // "unique"
+    attList[E_Unique][A_ID] = Att_Optional | DV_ID;
+    attList[E_Unique][A_Name] = Att_Required;
+
+    // "whitespace"
+    attList[E_WhiteSpace][A_ID] = Att_Optional | DV_ID;
+    attList[E_WhiteSpace][A_Value] = Att_Optional | DV_WhiteSpace;
+    attList[E_WhiteSpace][A_Fixed] = Att_Optional | DV_Boolean;
+
+    for (unsigned int j=0; j < E_Count; j++) {
+
+        for (unsigned int index = 0; index < A_Count-1; index++)
+        {
+            fprintf(outFl, " %d,", attList[j][index]);
+        }
+
+        fprintf(outFl, " %d", attList[j][A_Count - 1]);
+
+        if (j + 1 == E_Count)
+            fprintf(outFl, "}\n};");
+        else
+            fprintf(outFl, "},\n    {");
+    }
+
+    fclose(outFl);
+}
+
+#endif
+
+
+unsigned short GeneralAttributeCheck::fgElemAttTable[E_Count][A_Count] =
+{
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 258, 0, 514, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 130, 0, 10, 0, 0, 2, 0, 1026, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 2, 0, 1026, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 66, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2050, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2050, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 130, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 18, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 34, 0, 0, 0, 0, 18, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 18, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 34, 0, 0, 0, 0, 0, 1, 0, 18, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0},
+  { 0, 0, 0, 2, 0, 2, 0, 0, 0, 2, 66, 34, 0, 130, 0, 10, 0, 1, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 130, 0, 10, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0},
+  { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 130, 0, 10, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 66, 0, 0, 2, 0, 66, 0, 2, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 130, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4098, 0, 0}
+};
+
+const XMLCh* GeneralAttributeCheck::fAttNames[A_Count] =
+{
+    SchemaSymbols::fgATT_ABSTRACT,
+    SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT,
+    SchemaSymbols::fgATT_BASE,
+    SchemaSymbols::fgATT_BLOCK,
+    SchemaSymbols::fgATT_BLOCKDEFAULT,
+    SchemaSymbols::fgATT_DEFAULT,
+    SchemaSymbols::fgATT_ELEMENTFORMDEFAULT,
+    SchemaSymbols::fgATT_FINAL,
+    SchemaSymbols::fgATT_FINALDEFAULT,
+    SchemaSymbols::fgATT_FIXED,
+    SchemaSymbols::fgATT_FORM,
+    SchemaSymbols::fgATT_ID,
+    SchemaSymbols::fgATT_ITEMTYPE,
+    SchemaSymbols::fgATT_MAXOCCURS,
+    SchemaSymbols::fgATT_MEMBERTYPES,
+    SchemaSymbols::fgATT_MINOCCURS,
+    SchemaSymbols::fgATT_MIXED,
+    SchemaSymbols::fgATT_NAME,
+    SchemaSymbols::fgATT_NAMESPACE,
+    SchemaSymbols::fgATT_NILLABLE,
+    SchemaSymbols::fgATT_PROCESSCONTENTS,
+    SchemaSymbols::fgATT_PUBLIC,
+    SchemaSymbols::fgATT_REF,
+    SchemaSymbols::fgATT_REFER,
+    SchemaSymbols::fgATT_SCHEMALOCATION,
+    SchemaSymbols::fgATT_SOURCE,
+    SchemaSymbols::fgATT_SUBSTITUTIONGROUP,
+    SchemaSymbols::fgATT_SYSTEM,
+    SchemaSymbols::fgATT_TARGETNAMESPACE,
+    SchemaSymbols::fgATT_TYPE,
+    SchemaSymbols::fgATT_USE,
+    SchemaSymbols::fgATT_VALUE,
+    SchemaSymbols::fgATT_VERSION,
+    SchemaSymbols::fgATT_XPATH,
+};
 
 /**
   * End of file GeneralAttributeCheck.cpp
