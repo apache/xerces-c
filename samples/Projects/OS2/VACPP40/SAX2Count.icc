@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\SAX2Count.exe"
+  {
+    source type("cpp") SAMPLES "\\SAX2Count\\SAX2Count.cpp"
+    source type("cpp") SAMPLES "\\SAX2Count\\SAX2CountHandlers.cpp"
+    source type("lib") xerces_lib
+  }
+}
