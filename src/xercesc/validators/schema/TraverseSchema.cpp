@@ -1038,25 +1038,27 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
                 popCurrentTypeNameStack();
                 return 0;
             }
-
-            return traverseByList(childElem, content, name, fullName, finalSet);
+            
+            DatatypeValidator *tmpDV = traverseByList(childElem, content, name, fullName, finalSet);
+            if(nameEmpty)
+                tmpDV->setAnonymous();
+            return tmpDV;
         }
         else if (XMLString::equals(varietyName, SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
-            return traverseByRestriction(childElem, content, name, fullName, finalSet);
+            DatatypeValidator *tmpDV = traverseByRestriction(childElem, content, name, fullName, finalSet);
+            if(nameEmpty)
+                tmpDV->setAnonymous();
+            return tmpDV;
         }
         else if (XMLString::equals(varietyName, SchemaSymbols::fgELT_UNION)) { //traverse union
-            return traverseByUnion(childElem, content, name, fullName, finalSet, baseRefContext);
+            DatatypeValidator *tmpDV = traverseByUnion(childElem, content, name, fullName, finalSet, baseRefContext);
+            if(nameEmpty)
+                tmpDV->setAnonymous();
+            return tmpDV;
         }
         else {
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::FeatureUnsupported, varietyName);
             popCurrentTypeNameStack();
-        }
-    }
-
-
-    if(dv) {
-        if(nameEmpty) {
-            dv->setAnonymous();
         }
     }
 
