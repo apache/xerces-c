@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/10/31 22:15:31  peiyongz
+ * fix bug in creating ElemVector
+ *
  * Revision 1.2  2003/10/29 16:16:08  peiyongz
  * GrammarPool' serialization/deserialization support
  *
@@ -1543,8 +1546,9 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
             int         key2;
             serEng>>key2;
 
-            ElemVector*  data;
+            ElemVector*  data = 0;
 
+            //don't call destructor
             loadObject(&data, 8, false, serEng);
 
             (*objToLoad)->put((void*)key1, key2, data);        
