@@ -29,53 +29,53 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-const XMLCh fgXMLCategory[] =
+static const XMLCh fgXMLCategory[] =
 {
     chLatin_X, chLatin_M, chLatin_L, chNull
 };
 
-const XMLCh fgASCIICategory[] =
+static const XMLCh fgASCIICategory[] =
 {
     chLatin_A, chLatin_S, chLatin_C, chLatin_I, chLatin_I, chNull
 };
 
-const XMLCh fgUnicodeCategory[] =
+static const XMLCh fgUnicodeCategory[] =
 {
     chLatin_U, chLatin_N, chLatin_I, chLatin_C, chLatin_O, chLatin_D,
     chLatin_E, chNull
 };
 
-const XMLCh fgBlockCategory[] =
+static const XMLCh fgBlockCategory[] =
 {
     chLatin_B, chLatin_L, chLatin_O, chLatin_C, chLatin_K, chNull
 };
 
-const XMLCh fgXMLSpace[] =
+static const XMLCh fgXMLSpace[] =
 {
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_i, chLatin_s, chLatin_S,
     chLatin_p, chLatin_a, chLatin_c, chLatin_e, chNull
 };
 
-const XMLCh fgXMLDigit[] =
+static const XMLCh fgXMLDigit[] =
 {
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_i, chLatin_s, chLatin_D,
     chLatin_i, chLatin_g, chLatin_i, chLatin_t, chNull
 };
 
-const XMLCh fgXMLWord[] =
+static const XMLCh fgXMLWord[] =
 {
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_i, chLatin_s, chLatin_W,
     chLatin_o, chLatin_r, chLatin_d, chNull
 };
 
-const XMLCh fgXMLNameChar[] =
+static const XMLCh fgXMLNameChar[] =
 {
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_i, chLatin_s, chLatin_N,
     chLatin_a, chLatin_m, chLatin_e, chLatin_C, chLatin_h, chLatin_a,
 	chLatin_r, chNull
 };
 
-const XMLCh fgXMLInitialNameChar[] =
+static const XMLCh fgXMLInitialNameChar[] =
 {
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_i, chLatin_s, chLatin_I,
     chLatin_n, chLatin_i, chLatin_t, chLatin_i, chLatin_a, chLatin_l,
@@ -83,31 +83,31 @@ const XMLCh fgXMLInitialNameChar[] =
     chLatin_a, chLatin_r, chNull
 };
 
-const XMLCh fgASCII[] =
+static const XMLCh fgASCII[] =
 {
     chLatin_a, chLatin_s, chLatin_c, chLatin_i, chLatin_i, chColon, chLatin_i,
     chLatin_s, chLatin_A, chLatin_s, chLatin_c, chLatin_i, chLatin_i, chNull
 };
 
-const XMLCh fgASCIIDigit[] =
+static const XMLCh fgASCIIDigit[] =
 {
     chLatin_a, chLatin_s, chLatin_c, chLatin_i, chLatin_i, chColon, chLatin_i,
     chLatin_s, chLatin_D, chLatin_i, chLatin_g, chLatin_i, chLatin_t, chNull
 };
 
-const XMLCh fgASCIIWord[] =
+static const XMLCh fgASCIIWord[] =
 {
     chLatin_a, chLatin_s, chLatin_c, chLatin_i, chLatin_i, chColon, chLatin_i,
     chLatin_s, chLatin_W, chLatin_o, chLatin_r, chLatin_d, chNull
 };
 
-const XMLCh fgASCIISpace[] =
+static const XMLCh fgASCIISpace[] =
 {
     chLatin_a, chLatin_s, chLatin_c, chLatin_i, chLatin_i, chColon, chLatin_i,
     chLatin_s, chLatin_S, chLatin_p, chLatin_a, chLatin_c, chLatin_e, chNull
 };
 
-const XMLCh fgASCIIXDigit[] =
+static const XMLCh fgASCIIXDigit[] =
 {
     chLatin_a, chLatin_s, chLatin_c, chLatin_i, chLatin_i, chColon, chLatin_i,
     chLatin_s, chLatin_X, chLatin_D, chLatin_i, chLatin_g, chLatin_i,
@@ -115,115 +115,115 @@ const XMLCh fgASCIIXDigit[] =
 };
 
 
-const XMLCh fgUniAll[] =
+static const XMLCh fgUniAll[] =
 {
     chLatin_A, chLatin_L, chLatin_L, chNull
 };
 
-const XMLCh fgUniIsAlpha[] =
+static const XMLCh fgUniIsAlpha[] =
 {
     chLatin_I, chLatin_s, chLatin_A, chLatin_l, chLatin_p, chLatin_h,
     chLatin_a, chNull
 };
 
-const XMLCh fgUniIsAlnum[] =
+static const XMLCh fgUniIsAlnum[] =
 {
     chLatin_I, chLatin_s, chLatin_A, chLatin_l, chLatin_n, chLatin_u,
     chLatin_m, chNull
 };
 
-const XMLCh fgUniIsWord[] =
+static const XMLCh fgUniIsWord[] =
 {
     chLatin_I, chLatin_s, chLatin_W, chLatin_o, chLatin_r, chLatin_d,
     chNull
 };
 
 
-const XMLCh fgUniIsDigit[] =
+static const XMLCh fgUniIsDigit[] =
 {
     chLatin_I, chLatin_s, chLatin_D, chLatin_i, chLatin_g, chLatin_i,
     chLatin_t, chNull
 };
 
-const XMLCh fgUniIsUpper[] =
+static const XMLCh fgUniIsUpper[] =
 {
     chLatin_I, chLatin_s, chLatin_U, chLatin_p, chLatin_p, chLatin_e,
     chLatin_r, chNull
 };
 
-const XMLCh fgUniIsLower[] =
+static const XMLCh fgUniIsLower[] =
 {
     chLatin_I, chLatin_s, chLatin_L, chLatin_o, chLatin_w, chLatin_e,
     chLatin_r, chNull
 };
 
-const XMLCh fgUniIsPunct[] =
+static const XMLCh fgUniIsPunct[] =
 {
     chLatin_I, chLatin_s, chLatin_P, chLatin_u, chLatin_n, chLatin_c,
     chLatin_t, chNull
 };
 
-const XMLCh fgUniIsSpace[] =
+static const XMLCh fgUniIsSpace[] =
 {
 	chLatin_I, chLatin_s, chLatin_S, chLatin_p, chLatin_a, chLatin_c,
     chLatin_e, chNull
 };
 
-const XMLCh fgUniAssigned[] =
+static const XMLCh fgUniAssigned[] =
 {
     chLatin_A, chLatin_S, chLatin_S, chLatin_I, chLatin_G, chLatin_N,
     chLatin_E, chLatin_D, chNull
 };
 
 
-const XMLCh fgUniDecimalDigit[] =
+static const XMLCh fgUniDecimalDigit[] =
 {
     chLatin_N, chLatin_d, chNull
 };
 
-const XMLCh fgBlockIsSpecials[] =
+static const XMLCh fgBlockIsSpecials[] =
 {
     chLatin_I, chLatin_s, chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_a,
     chLatin_l, chLatin_s, chNull
 };
 
-const XMLCh fgBlockIsPrivateUse[] =
+static const XMLCh fgBlockIsPrivateUse[] =
 {
     chLatin_I, chLatin_s, chLatin_P, chLatin_r, chLatin_i, chLatin_v, chLatin_a, chLatin_t, chLatin_e,
     chLatin_U, chLatin_s, chLatin_e,  chNull
 };
 
-const XMLCh fgUniLetter[] =
+static const XMLCh fgUniLetter[] =
 {
     chLatin_L, chNull
 };
 
-const XMLCh fgUniNumber[] =
+static const XMLCh fgUniNumber[] =
 {
     chLatin_N, chNull
 };
 
-const XMLCh fgUniMark[] =
+static const XMLCh fgUniMark[] =
 {
     chLatin_M, chNull
 };
 
-const XMLCh fgUniSeparator[] =
+static const XMLCh fgUniSeparator[] =
 {
     chLatin_Z, chNull
 };
 
-const XMLCh fgUniPunctuation[] =
+static const XMLCh fgUniPunctuation[] =
 {
     chLatin_P, chNull
 };
 
-const XMLCh fgUniControl[] =
+static const XMLCh fgUniControl[] =
 {
     chLatin_C, chNull
 };
 
-const XMLCh fgUniSymbol[] =
+static const XMLCh fgUniSymbol[] =
 {
     chLatin_S, chNull
 };

@@ -28,7 +28,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <wchar.h>
 
-#if defined (XML_GCC) || defined (XML_PTX) || defined (XML_IBMVAOS2)
+#if defined (XML_GCC) || defined (XML_PTX) || defined (XML_IBMVAOS2) || defined(XML_LINUX)
     #if defined(XML_BEOS)
         wint_t towlower(wint_t wc) {
           return ((wc>'A')&&(wc<'Z') ? wc+'a'-'A' : wc);

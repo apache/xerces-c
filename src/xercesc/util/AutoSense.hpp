@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/11/18 16:20:04  cargilld
+ * Changes for linker problems with linux build using xlc.
+ *
  * Revision 1.15  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -266,6 +269,17 @@
     #endif
 #elif defined (__QNXNTO__)
     #define XML_QCC
+#elif defined(__IBMC__) || defined(__IBMCPP__)
+    #if defined(XML_WIN32)
+        #define XML_IBMVAW32
+    #elif defined(XML_OS2)
+        #define XML_IBMVAOS2
+        #if (__IBMC__ >= 400 || __IBMCPP__ >= 400)
+            #define XML_IBMVA4_OS2
+        #endif
+    #elif defined(XML_AIX) || defined(__linux__)
+        #define XML_CSET              
+    #endif
 #elif defined (__GNUG__) || defined(__BEOS__) || defined(__linux__) || defined(__CYGWIN__)
     #define XML_GCC
 #elif defined(XML_HPUX)
@@ -286,17 +300,6 @@
     #define XML_MVSCPP
 #elif defined(EXM_OS390) && defined(__cplusplus)
     #define XML_MVSCPP
-#elif defined(__IBMC__) || defined(__IBMCPP__)
-    #if defined(XML_WIN32)
-        #define XML_IBMVAW32
-    #elif defined(XML_OS2)
-        #define XML_IBMVAOS2
-        #if (__IBMC__ >= 400 || __IBMCPP__ >= 400)
-            #define XML_IBMVA4_OS2
-        #endif
-    #elif defined(XML_AIX)
-        #define XML_CSET              
-    #endif
 #elif defined(XML_TRU64) && defined(__DECCXX)
     #define XML_DECCXX
 #elif defined(__MWERKS__)

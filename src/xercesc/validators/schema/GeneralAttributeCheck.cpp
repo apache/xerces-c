@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/11/18 16:20:06  cargilld
+ * Changes for linker problems with linux build using xlc.
+ *
  * Revision 1.25  2004/10/20 15:19:07  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -167,28 +170,28 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Local const data
 // ---------------------------------------------------------------------------
-const XMLCh fgValueZero[] =
+static const XMLCh fgValueZero[] =
 {
     chDigit_0, chNull
 };
 
-const XMLCh fgValueOne[] =
+static const XMLCh fgValueOne[] =
 {
     chDigit_1, chNull
 };
 
-const XMLCh fgUnbounded[] =
+static const XMLCh fgUnbounded[] =
 {
     chLatin_u, chLatin_n, chLatin_b, chLatin_o, chLatin_u, chLatin_n, chLatin_d,
     chLatin_e, chLatin_d, chNull
 };
 
-const XMLCh fgLocal[] =
+static const XMLCh fgLocal[] =
 {
     chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_l, chNull
 };
 
-const XMLCh fgGlobal[] =
+static const XMLCh fgGlobal[] =
 {
     chLatin_g, chLatin_l, chLatin_o, chLatin_b, chLatin_a, chLatin_l, chNull
 };

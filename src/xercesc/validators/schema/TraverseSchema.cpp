@@ -75,70 +75,70 @@ typedef RefVectorOf<DatatypeValidator> DVRefVector;
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local const data
 // ---------------------------------------------------------------------------
-const XMLCh fgAnonSNamePrefix[] =
+static const XMLCh fgAnonSNamePrefix[] =
 {
     chLatin_S, chNull
 };
 
-const XMLCh fgAnonCNamePrefix[] =
+static const XMLCh fgAnonCNamePrefix[] =
 {
     chLatin_C, chNull
 };
 
-const XMLCh fgUnbounded[] =
+static const XMLCh fgUnbounded[] =
 {
     chLatin_u, chLatin_n, chLatin_b, chLatin_o, chLatin_u, chLatin_n, chLatin_d,
     chLatin_e, chLatin_d, chNull
 };
 
-const XMLCh fgSkip[] =
+static const XMLCh fgSkip[] =
 {
     chLatin_s, chLatin_k, chLatin_i, chLatin_p, chNull
 };
 
-const XMLCh fgLax[] =
+static const XMLCh fgLax[] =
 {
     chLatin_l, chLatin_a, chLatin_x, chNull
 };
 
-const XMLCh fgStrict[] =
+static const XMLCh fgStrict[] =
 {
     chLatin_s, chLatin_t, chLatin_r, chLatin_i, chLatin_c, chLatin_t, chNull
 };
 
-const XMLCh fgValueOne[] =
+static const XMLCh fgValueOne[] =
 {
     chDigit_1, chNull
 };
 
-const XMLCh fgValueZero[] =
+static const XMLCh fgValueZero[] =
 {
     chDigit_0, chNull
 };
 
-const XMLCh fgForwardSlash[] =
+static const XMLCh fgForwardSlash[] =
 {
     chForwardSlash, chNull
 };
 
-const XMLCh fgDot[] =
+static const XMLCh fgDot[] =
 {
     chPeriod, chNull
 };
 
-const XMLCh fgDotForwardSlash[] =
+static const XMLCh fgDotForwardSlash[] =
 {
     chPeriod, chForwardSlash, chNull
 };
 
-const XMLCh* fgIdentityConstraints[] =
+static const XMLCh* fgIdentityConstraints[] =
 {
     SchemaSymbols::fgELT_UNIQUE,
     SchemaSymbols::fgELT_KEY,
     SchemaSymbols::fgELT_KEYREF
 };
 
-const XMLCh fgSynthetic_Annotation[] =
+static const XMLCh fgSynthetic_Annotation[] =
 {
     chLatin_S, chLatin_y, chLatin_n, chLatin_t, chLatin_h, chLatin_e, chLatin_t
     ,   chLatin_i, chLatin_c, chUnderscore

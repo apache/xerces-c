@@ -27,7 +27,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-const XMLCh gDefOutOfMemoryErrMsg[] =
+static const XMLCh gDefOutOfMemoryErrMsg[] =
 {
         chLatin_O, chLatin_u, chLatin_t, chLatin_O
     ,   chLatin_f, chLatin_M, chLatin_e, chLatin_m

@@ -324,29 +324,18 @@ ifeq (${PLATFORM}, LINUX)
 
     ifeq (${CXX}, xlC_r)
 
+        PLATFORM_COMPILE_OPTIONS = -qpic -qnotempinc -D${PLATFORM}
+        MAKE_SHARED = ${CXX} -D${PLATFORM} -qpic -qmkshrobj -G ${LDFLAGS}
+        MAKE_SHARED_C = ${CC} -D${PLATFORM} -qpic -qmkshrobj -G ${LDFLAGS}
+
         ifeq (${TRANSCODER}, ICU)
-            ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
-        else
-            ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
+            ALLLIBS = ${LIBS} -licuuc -licudata
         endif
 
         ifeq (${MESSAGELOADER}, ICU)
-            ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata -lXercesMessages
+            ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages
         endif
 
-        PLATFORM_COMPILE_OPTIONS = -w -O -qproto -qroconst -DPIC -qpic=large -D_THREAD_SAFE
-    
-        ifeq (${BITSTOBUILD}, 64)
-            MAKE_SHARED   = xlC_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS} -X64
-            MAKE_SHARED_C = xlc_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS} -X64
-        else
-            MAKE_SHARED   = xlC_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS}
-            MAKE_SHARED_C = xlc_r -w -O -qproto -qroconst -qmkshrobj -G ${LDFLAGS}
-        endif
-
-        #EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
-        #DEPDOM_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBDEPDOM}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
-        
         ## Compiler switch to embed a library name
         LD_SONAME =
         
