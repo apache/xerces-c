@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,17 +76,17 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
-#include <xercesc/parsers/DOMParser.hpp>
-#include <xercesc/dom/ElementImpl.hpp>
-#include <xercesc/dom/AttrImpl.hpp>
-#include <xercesc/dom/AttrNSImpl.hpp>
-#include <xercesc/dom/TextImpl.hpp>
-#include <xercesc/dom/DocumentImpl.hpp>
-#include <xercesc/dom/DocumentTypeImpl.hpp>
-#include <xercesc/dom/EntityImpl.hpp>
-#include <xercesc/dom/NotationImpl.hpp>
-#include <xercesc/dom/NamedNodeMapImpl.hpp>
-#include <xercesc/dom/NodeIDMap.hpp>
+#include "DOMParser.hpp"
+#include "ElementImpl.hpp"
+#include "AttrImpl.hpp"
+#include "AttrNSImpl.hpp"
+#include "TextImpl.hpp"
+#include "DocumentImpl.hpp"
+#include "DocumentTypeImpl.hpp"
+#include "EntityImpl.hpp"
+#include "NotationImpl.hpp"
+#include "NamedNodeMapImpl.hpp"
+#include "NodeIDMap.hpp"
 
 
 #include <xercesc/validators/common/ContentSpecNode.hpp>

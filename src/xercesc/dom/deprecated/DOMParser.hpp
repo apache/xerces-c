@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,15 +63,15 @@
 #define DOMPARSER_HPP
 
 
-#include <xercesc/dom/DOM_Document.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
-#include <xercesc/dom/DOM_DocumentType.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
+#include "DOM_Document.hpp"
+#include "DOM_DocumentType.hpp"
 
 class EntityResolver;
 class ErrorHandler;
