@@ -24,6 +24,14 @@ public :
     // -----------------------------------------------------------------------
     ~RefArrayVectorOf();
 
+    // -----------------------------------------------------------------------
+    //  Element management
+    // -----------------------------------------------------------------------
+    void setElementAt(TElem* const toSet, const unsigned int setAt);
+    void removeAllElements();
+    void removeElementAt(const unsigned int removeAt);
+    void removeLastElement();
+    void cleanup();
 };
 
 XERCES_CPP_NAMESPACE_END

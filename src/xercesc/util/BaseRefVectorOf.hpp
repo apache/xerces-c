@@ -89,14 +89,14 @@ public :
     //  Element management
     // -----------------------------------------------------------------------
     void addElement(TElem* const toAdd);
-    void setElementAt(TElem* const toSet, const unsigned int setAt);
+    virtual void setElementAt(TElem* const toSet, const unsigned int setAt);
     void insertElementAt(TElem* const toInsert, const unsigned int insertAt);
     TElem* orphanElementAt(const unsigned int orphanAt);
-    void removeAllElements();
-    void removeElementAt(const unsigned int removeAt);
-    void removeLastElement();
+    virtual void removeAllElements();
+    virtual void removeElementAt(const unsigned int removeAt);
+    virtual void removeLastElement();
     bool containsElement(const TElem* const toCheck);
-    void cleanup();
+    virtual void cleanup();
     void reinitialize();
 
 
