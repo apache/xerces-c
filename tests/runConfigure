@@ -86,7 +86,7 @@ usage()
                  'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
                  'ptx', 'tru64', 'macosx', 'cygwin')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc or ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, icc or ecc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -r <thread option> can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'"
     echo "       -b <bitsToBuild> (accepts '64', '32')"
