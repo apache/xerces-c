@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------------
 USELIB("..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib");
 USEUNIT("..\..\..\..\..\samples\DOMPrint\DOMTreeErrorReporter.cpp");
+USEUNIT("..\..\..\..\..\samples\DOMPrint\DOMPrintFilter.cpp");
+USEUNIT("..\..\..\..\..\samples\DOMPrint\DOMPrintErrorHandler.cpp");
 
 //---------------------------------------------------------------------------
 
