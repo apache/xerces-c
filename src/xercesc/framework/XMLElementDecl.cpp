@@ -111,7 +111,7 @@ void
 XMLElementDecl::setElementName(const QName* const    elementName)
 {
    delete fElementName;
-   fElementName = new QName(elementName);
+   fElementName = new QName(*elementName);
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/10/30 21:52:00  tng
+ * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
+ *
  * Revision 1.3  2002/04/04 14:42:41  knoaman
  * Change min/maxOccurs from unsigned int to int.
  *
@@ -327,7 +330,7 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
     , fMaxOccurs(1)
 {
     if (element)
-        fElement = new QName(element);
+        fElement = new QName(*element);
 }
 
 inline
@@ -346,7 +349,7 @@ ContentSpecNode::ContentSpecNode(QName* const element
     if (copyQName)
     {
         if (element)
-            fElement = new QName(element);
+            fElement = new QName(*element);
     }
     else
     {
@@ -468,7 +471,7 @@ inline void ContentSpecNode::setElement(QName* const element)
     delete fElement;
     fElement = 0;
     if (element)
-        fElement = new QName(element);
+        fElement = new QName(*element);
 }
 
 inline void ContentSpecNode::setFirst(ContentSpecNode* const toAdopt)

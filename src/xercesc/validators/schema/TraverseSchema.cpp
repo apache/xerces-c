@@ -2607,7 +2607,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         }
     }
 
-    return new QName(elemDecl->getElementName());
+    return new QName(*elemDecl->getElementName());
 }
 
 const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) {

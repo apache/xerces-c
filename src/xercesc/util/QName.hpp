@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/10/30 21:52:00  tng
+ * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
+ *
  * Revision 1.3  2002/09/05 16:06:41  tng
  * [Bug 12232] Make operator to be constant.
  *
@@ -124,7 +127,7 @@ public :
     );
 
     /** Copy constructor. */
-    QName(const QName* const qname);
+    QName(const QName& qname);
 
     ~QName();
 

@@ -83,7 +83,7 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
 {
     const QName* tempElement = toCopy.getElement();
     if (tempElement)
-        fElement = new QName(tempElement);
+        fElement = new QName(*tempElement);
     else
         fElement = 0;
 

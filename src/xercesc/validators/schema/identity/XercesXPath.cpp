@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/10/30 21:52:01  tng
+ * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/11/15 17:10:19  knoaman
  * Particle derivation checking support.
@@ -111,7 +114,7 @@ XercesNodeTest::XercesNodeTest(const short aType)
 
 XercesNodeTest::XercesNodeTest(const QName* const qName)
     : fType(QNAME)
-    , fName(new QName(qName))
+    , fName(new QName(*qName))
 {
 }
 
@@ -126,7 +129,7 @@ XercesNodeTest::XercesNodeTest(const XMLCh* const prefix,
 
 XercesNodeTest::XercesNodeTest(const XercesNodeTest& other)
     : fType(other.fType)
-    , fName(new QName(other.fName))
+    , fName(new QName(*other.fName))
 {
 }
 

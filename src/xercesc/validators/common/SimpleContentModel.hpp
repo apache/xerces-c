@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/10/30 21:52:00  tng
+ * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.12  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
@@ -241,12 +244,12 @@ SimpleContentModel::SimpleContentModel( const bool                        dtd
 	, fDTD(dtd)
 {
     if (firstChild)
-        fFirstChild = new QName(firstChild);
+        fFirstChild = new QName(*firstChild);
     else
         fFirstChild = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 
     if (secondChild)
-        fSecondChild = new QName(secondChild);
+        fSecondChild = new QName(*secondChild);
     else
         fSecondChild = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }

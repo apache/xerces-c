@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/10/30 21:52:00  tng
+ * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
+ *
  * Revision 1.4  2002/09/24 19:51:24  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  *
@@ -175,7 +178,7 @@ QName::~QName()
 // ---------------------------------------------------------------------------
 //  QName: Copy Constructors
 // ---------------------------------------------------------------------------
-QName::QName(const QName* const qname) :
+QName::QName(const QName& qname) :
       fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
@@ -186,17 +189,17 @@ QName::QName(const QName* const qname) :
 {
     unsigned int newLen;
 
-    newLen = XMLString::stringLen(qname->getLocalPart());
+    newLen = XMLString::stringLen(qname.getLocalPart());
     fLocalPartBufSz = newLen + 8;
     fLocalPart = new XMLCh[fLocalPartBufSz + 1];
-    XMLString::moveChars(fLocalPart, qname->getLocalPart(), newLen + 1);
+    XMLString::moveChars(fLocalPart, qname.getLocalPart(), newLen + 1);
 
-    newLen = XMLString::stringLen(qname->getPrefix());
+    newLen = XMLString::stringLen(qname.getPrefix());
     fPrefixBufSz = newLen + 8;
     fPrefix = new XMLCh[fPrefixBufSz + 1];
-    XMLString::moveChars(fPrefix, qname->getPrefix(), newLen + 1);
+    XMLString::moveChars(fPrefix, qname.getPrefix(), newLen + 1);
 
-    fURIId = qname->getURI();
+    fURIId = qname.getURI();
 }
 
 // ---------------------------------------------------------------------------
