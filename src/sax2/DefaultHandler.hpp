@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/14 18:56:14  aruna1
+ * Virtual parameter inconsistency fixed
+ *
  * Revision 1.2  2000/08/07 18:21:27  jpolast
  * change SAX_EXPORT module to SAX2_EXPORT
  *
@@ -268,7 +271,7 @@ public:
         const   XMLCh* const    uri,
         const   XMLCh* const    localname,
         const   XMLCh* const    qname
-        ,       Attributes&		attrs
+        , const Attributes&	attrs
     );
 
   /**
@@ -567,7 +570,7 @@ inline void
 DefaultHandler::startElement(  const     XMLCh* const  uri
 								, const   XMLCh* const  localname
 								, const   XMLCh* const  qname
-								,       Attributes&		attrs
+								, const   Attributes&		attrs
 )
 {
 }
