@@ -1,0 +1,46 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+<s1 title="Schema">
+    <s2 title="Status">
+        <p>
+        Schema is not supported in Xerces-C yet.  However work is in progress to port
+        the Schema Support from Xerces-J to Xerces-C.
+        </p>
+
+        <p>
+        We will first have a Schema Subset release in the summer, and then a full
+        Schema PR (Proposed Recommendation) release in the fall.  The Schema Subset
+        release will have the following minimal Schema support:
+        </p>
+
+        <ul>
+            <li>Partial Simple Type Support (Yes: atomic simple type. No:  union and list)</li>
+            <li>Partial Complex Type Support (Yes: choice, sequence. No:   group, all)</li>
+            <li>Element and Attribute Declaration (No: any/anyAttribute)</li>
+            <li>Substitution groups</li>
+            <li>Subset of pre-defined Datatypes:</li>
+            <ul>
+                <li>Primitive datatypes: string, boolean, decimal, binary</li>
+                <li>Derived datatypes: CDATA, integer</li>
+            </ul>
+        </ul>
+
+        <p>
+        Anything not mentioned above will be available in the Schema PR release later.
+        </p>
+
+        <p>
+        Please note that the dates are tentative and subject to change.  There is a
+        dependency on the Schema PR implementation in Xerces-J which is still under
+        development, and a dependency on the status of Schema PR moving to Recommendation.
+        </p>
+
+        <p>
+        If anyone would like to volunteer to help out with the schema port, that would
+        be great.  Please post to <jump href="mailto:xerces-c-dev@xml.apache.org">
+        Xerces-C-dev mailing list</jump>.
+        </p>
+
+    </s2>
+
+</s1>

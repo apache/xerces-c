@@ -7,6 +7,7 @@
   <separator/>
 
   <document  id="index"       label="Readme"             source="readme.xml"/>
+  <external href="http://&XercesDistDir;/"                        label="Download"/>
   <document  id="install"     label="Installation"       source="install.xml"/>
   <group id="build"           title="Build Instructions" label="Build Instructions">
      <entry id="build-winunix" source="build-winunix.xml"/>
@@ -31,8 +32,8 @@
      <entry id="createdoc"   source="createdoc.xml"/>
   </container>
 
-  <document id="program"     label="Programming"  source="program.xml"/>
-  <document id="migrate"     label="Migration"    source="migration.xml"/>
+  <document id="schema"      label="Schema"       source="schema.xml"/>
+  <separator/>
 
   <group    id="faqs"        title="Frequently Asked Questions" label="FAQs">
      <entry id="faq-distrib" source="faq-distrib.xml"/>
@@ -40,16 +41,21 @@
      <entry id="faq-other"   source="faq-other.xml"/>
   </group>
 
+  <document id="program"     label="Programming"  source="program.xml"/>
+  <document id="migrate"     label="Migration"    source="migration.xml"/>
+
   <separator/>
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
-  <document id="feedback"    label="Feedback"     source="feedback.xml"/>
   <document id="bug-report"    label="Bug-Reporting"     source="bug-report.xml"/>
+  <document id="feedback"    label="Feedback"     source="feedback.xml"/>
+
+  <separator/>
+  <document id="y2k"         label="Y2K Compliance"  source="y2k.xml"/>
   <document id="pdf"         label="PDF Document" source="pdf-c.xml"/>
 
   <separator/>
 
-  <external href="http://&XercesDistDir;/"                        label="Download"/>
   <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"/>
   <external href="http://archive.covalent.net "                   label="Mail Archive"/>
 </book>
