@@ -165,7 +165,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\StdInParse.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\StdInParse.pdb" /debug /machine:I386 /out:"$(OUTDIR)\StdInParse.exe" /pdbtype:sept /libpath:"..\..\..\..\..\lib" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\StdInParse.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\StdInParse.exe" /pdbtype:sept /libpath:"..\..\..\..\..\lib" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\StdInParse.obj" \
 	"$(INTDIR)\StdInParseHandlers.obj"

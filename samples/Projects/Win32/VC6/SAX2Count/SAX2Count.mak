@@ -165,7 +165,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\SAX2Count.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Count.pdb" /debug /machine:I386 /out:"$(OUTDIR)\SAX2Count.exe" /pdbtype:sept /libpath:"..\..\..\..\..\lib" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Count.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\SAX2Count.exe" /pdbtype:sept /libpath:"..\..\..\..\..\lib" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Count.obj" \
 	"$(INTDIR)\SAX2CountHandlers.obj"
