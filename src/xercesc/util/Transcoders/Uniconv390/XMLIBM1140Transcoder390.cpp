@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/06/15 17:26:25  neilg
+ * make sure tables are properly aligned; thanks to Steve Dulin
+ *
  * Revision 1.2  2004/02/06 18:18:09  cargilld
  * Misc 390 changes.
  *
@@ -85,8 +88,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 //      a binary search to find the Unicode point, and that record's other
 //      field is the IBM1140 code point to translate to.
 // ---------------------------------------------------------------------------
-static const XMLCh gFromTable[256] =
-{
+
+//Add a long double in front of the table, the compiler will set the
+//table starting address on a double word boundary
+struct temp{
+   long double pad;
+   XMLCh gFromTable[256];
+};
+
+static struct temp padding_temp={
+ 0,
     0x0000, 0x0001, 0x0002, 0x0003, 0x009C, 0x0009, 0x0086, 0x007F
   , 0x0097, 0x008D, 0x008E, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F
   , 0x0010, 0x0011, 0x0012, 0x0013, 0x009D, 0x0085, 0x0008, 0x0087
@@ -221,7 +232,7 @@ static const unsigned int gToTableSz = 351;
 // ---------------------------------------------------------------------------
 XMLCh XMLIBM1140Transcoder390::xlatThisOne(const XMLByte toXlat)
 {
-    return gFromTable[toXlat];
+    return padding_temp.gFromTable[toXlat];
 }
 
 
@@ -235,7 +246,7 @@ XMLIBM1140Transcoder390::XMLIBM1140Transcoder390( const   XMLCh* const encodingN
     (
         encodingName
         , blockSize
-        , gFromTable
+        , padding_temp.gFromTable
         , gToTable
         , gToTableSz
         , manager
