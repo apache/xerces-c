@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/11/19 17:27:55  peiyongz
+ * Boundary Values updated
+ *
  * Revision 1.11  2001/10/26 16:37:46  peiyongz
  * Add thread safe code
  *
@@ -127,54 +130,65 @@
 // ---------------------------------------------------------------------------
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
-
-// from <FLOAT.h>
+ 
 //
-//FLT_MAX Maximum representable floating-point number
-//3.402823466e+38
-//3.4028 23466 e+38
+// 2^24 x 2^104 = 2^128	= 3.4028236692093846346337460743177e+38
+//                        +
+//                        3.4028 236692 093846 346337 460743 177
+//                        e+38
 //
 static const XMLCh FLT_MAX_POSITIVE[] =
 {
+    chPlus,
     chDigit_3, chPeriod,  chDigit_4, chDigit_0, chDigit_2, chDigit_8,
-    chDigit_2, chDigit_3, chDigit_4, chDigit_6, chDigit_6,
+    chDigit_2, chDigit_3, chDigit_6, chDigit_6, chDigit_9, chDigit_2,
+    chDigit_0, chDigit_9, chDigit_3, chDigit_8, chDigit_4, chDigit_6,
+    chDigit_3, chDigit_4, chDigit_6, chDigit_3, chDigit_3, chDigit_7,
+    chDigit_4, chDigit_6, chDigit_0, chDigit_7, chDigit_4, chDigit_3,
+    chDigit_1, chDigit_7, chDigit_7, 
     chLatin_E, chPlus,    chDigit_3, chDigit_8, chNull
 };
 
 //
-//FLT_MIN Minimum positive value.
-//1.175494351e-38
-//1.1754 94351 e-38
+// 2^0 x 2^-149 = 2^-149 = 1.4012984643248170709237295832899e-45
+//                         +
+//                         1.4012 984643 248170 709237 295832 899
+//                         e-45
 //
 static const XMLCh FLT_MIN_POSITIVE[] =
 {
-    chDigit_1, chPeriod,  chDigit_1, chDigit_7, chDigit_5, chDigit_4,
-    chDigit_9, chDigit_4, chDigit_3, chDigit_5, chDigit_1,
-    chLatin_E, chDash,    chDigit_3, chDigit_8, chNull
+    chPlus,
+    chDigit_1, chPeriod,  chDigit_4, chDigit_0, chDigit_1, chDigit_2,
+    chDigit_9, chDigit_8, chDigit_4, chDigit_6, chDigit_4, chDigit_3,
+    chDigit_2, chDigit_4, chDigit_8, chDigit_1, chDigit_7, chDigit_0,
+    chDigit_7, chDigit_0, chDigit_9, chDigit_2, chDigit_3, chDigit_7,
+    chDigit_2, chDigit_9, chDigit_5, chDigit_8, chDigit_3, chDigit_2,
+    chDigit_8, chDigit_9, chDigit_9, 
+    chLatin_E, chDash,    chDigit_4, chDigit_5, chNull
 };
 
-//
-// Deduced from FLT_MAX_POSITIVE
-//3.402823466e+38
-//
 static const XMLCh FLT_MAX_NEGATIVE[] =
 {
     chDash,
     chDigit_3, chPeriod,  chDigit_4, chDigit_0, chDigit_2, chDigit_8,
-    chDigit_2, chDigit_3, chDigit_4, chDigit_6, chDigit_6,
+    chDigit_2, chDigit_3, chDigit_6, chDigit_6, chDigit_9, chDigit_2,
+    chDigit_0, chDigit_9, chDigit_3, chDigit_8, chDigit_4, chDigit_6,
+    chDigit_3, chDigit_4, chDigit_6, chDigit_3, chDigit_3, chDigit_7,
+    chDigit_4, chDigit_6, chDigit_0, chDigit_7, chDigit_4, chDigit_3,
+    chDigit_1, chDigit_7, chDigit_7, 
     chLatin_E, chPlus,    chDigit_3, chDigit_8, chNull
 };
 
-//
-// Deduced from FLT_MIN_POSITIVE
-//1.175494351e-38
-//
 static const XMLCh FLT_MIN_NEGATIVE[] =
 {
     chDash,
-    chDigit_1, chPeriod,  chDigit_1, chDigit_7, chDigit_5, chDigit_4,
-    chDigit_9, chDigit_4, chDigit_3, chDigit_5, chDigit_1,
-    chLatin_E, chDash,    chDigit_3, chDigit_8, chNull
+    chDigit_1, chPeriod,  chDigit_4, chDigit_0, chDigit_1, chDigit_2,
+    chDigit_9, chDigit_8, chDigit_4, chDigit_6, chDigit_4, chDigit_3,
+    chDigit_2, chDigit_4, chDigit_8, chDigit_1, chDigit_7, chDigit_0,
+    chDigit_7, chDigit_0, chDigit_9, chDigit_2, chDigit_3, chDigit_7,
+    chDigit_2, chDigit_9, chDigit_5, chDigit_8, chDigit_3, chDigit_2,
+    chDigit_8, chDigit_9, chDigit_9, 
+    chLatin_E, chDash,    chDigit_4, chDigit_5, chNull
 };
 
 //

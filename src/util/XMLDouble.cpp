@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2001/11/19 17:27:55  peiyongz
+ * Boundary Values updated
+ *
  * Revision 1.14  2001/10/26 16:37:46  peiyongz
  * Add thread safe code
  *
@@ -140,57 +143,64 @@
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
 
-// from <FLOAT.h>
 //
-//DBL_MAX Maximum representable floating-point number
-//1.7976931348623158e+308
-//1.7976 931348 623158 e+308
+//   2^53 x 2^970 	=   2^1023	=  8.9884656743115795386465259539451e+307
+//                                +
+//                                  8.9884 656743 115795 386465 259539 451
+//                                e+307
 //
 static const XMLCh DBL_MAX_POSITIVE[] =
 {
-    chDigit_1, chPeriod,  chDigit_7, chDigit_9, chDigit_7, chDigit_6,
-    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,
-    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,
-    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull
+    chPlus,
+    chDigit_8, chPeriod,  chDigit_9, chDigit_8, chDigit_8, chDigit_4,
+    chDigit_6, chDigit_5, chDigit_6, chDigit_7, chDigit_4, chDigit_3,
+    chDigit_1, chDigit_1, chDigit_5, chDigit_7, chDigit_9, chDigit_5,
+    chDigit_3, chDigit_8, chDigit_6, chDigit_4, chDigit_6, chDigit_5,
+    chDigit_2, chDigit_5, chDigit_9, chDigit_5, chDigit_3, chDigit_9,
+    chDigit_4, chDigit_5, chDigit_1, 
+    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_7, chNull
 };
 
 //
-//DBL_MIN Minimum positive value.
-//2.2250738585072014e-308
-//2.2250 738585 072014 e-308
+//   2^0  x 2^-1075 =   2^-1075	=  2.4703282292062327208828439643411e-324
+//                                 +
+//                                  2.4703 282292 062327 208828 439643 411
+//                                 e-324
 //
 static const XMLCh DBL_MIN_POSITIVE[] =
 {
-    chDigit_2, chPeriod,  chDigit_2, chDigit_2, chDigit_5, chDigit_0,
-    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,
-    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,
-    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull
+    chPlus,
+    chDigit_2, chPeriod,  chDigit_4, chDigit_7, chDigit_0, chDigit_3,
+    chDigit_2, chDigit_8, chDigit_2, chDigit_2, chDigit_9, chDigit_2,
+    chDigit_0, chDigit_6, chDigit_2, chDigit_3, chDigit_2, chDigit_7,
+    chDigit_2, chDigit_0, chDigit_8, chDigit_8, chDigit_2, chDigit_8,
+    chDigit_4, chDigit_3, chDigit_9, chDigit_6, chDigit_4, chDigit_3,
+    chDigit_4, chDigit_1, chDigit_1, 
+    chLatin_E, chDash,    chDigit_3, chDigit_2, chDigit_4, chNull
 };
 
-//
-// Deduced from DBL_MAX_POSITIVE
-// -1.7976931348623158e+308
-//
 static const XMLCh DBL_MAX_NEGATIVE[] =
 {
     chDash,
-    chDigit_1, chPeriod,  chDigit_7, chDigit_9, chDigit_7, chDigit_6,
-    chDigit_9, chDigit_3, chDigit_1, chDigit_3, chDigit_4, chDigit_8,
-    chDigit_6, chDigit_2, chDigit_3, chDigit_1, chDigit_5, chDigit_8,
-    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_8, chNull
+    chDigit_8, chPeriod,  chDigit_9, chDigit_8, chDigit_8, chDigit_4,
+    chDigit_6, chDigit_5, chDigit_6, chDigit_7, chDigit_4, chDigit_3,
+    chDigit_1, chDigit_1, chDigit_5, chDigit_7, chDigit_9, chDigit_5,
+    chDigit_3, chDigit_8, chDigit_6, chDigit_4, chDigit_6, chDigit_5,
+    chDigit_2, chDigit_5, chDigit_9, chDigit_5, chDigit_3, chDigit_9,
+    chDigit_4, chDigit_5, chDigit_1, 
+    chLatin_E, chPlus,    chDigit_3, chDigit_0, chDigit_7, chNull
 };
 
-//
-// Deduced from DBL_MIN_POSITIVE
-// -2.2250738585072014e-308
-//
 static const XMLCh DBL_MIN_NEGATIVE[] =
 {
     chDash,
-    chDigit_2, chPeriod,  chDigit_2, chDigit_2, chDigit_5, chDigit_0,
-    chDigit_7, chDigit_3, chDigit_8, chDigit_5, chDigit_8, chDigit_5,
-    chDigit_0, chDigit_7, chDigit_2, chDigit_0, chDigit_1, chDigit_4,
-    chLatin_E, chDash,    chDigit_3, chDigit_0, chDigit_8, chNull
+    chDigit_2, chPeriod,  chDigit_4, chDigit_7, chDigit_0, chDigit_3,
+    chDigit_2, chDigit_8, chDigit_2, chDigit_2, chDigit_9, chDigit_2,
+    chDigit_0, chDigit_6, chDigit_2, chDigit_3, chDigit_2, chDigit_7,
+    chDigit_2, chDigit_0, chDigit_8, chDigit_8, chDigit_2, chDigit_8,
+    chDigit_4, chDigit_3, chDigit_9, chDigit_6, chDigit_4, chDigit_3,
+    chDigit_4, chDigit_1, chDigit_1, 
+    chLatin_E, chDash,    chDigit_3, chDigit_2, chDigit_4, chNull
 };
 
 //
