@@ -68,6 +68,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Path390.hpp"
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -97,11 +99,11 @@ Path390::Path390(char * s) {
 //Destructor:
 Path390::~Path390() {
    if (_orgparms)
-      free (_orgparms);
+      XMLPlatformUtils::fgMemoryManager->deallocate(_orgparms);//free (_orgparms);
    if (_resultpath)
-      free(_resultpath);
+      XMLPlatformUtils::fgMemoryManager->deallocate(_resultpath);//free(_resultpath);
    if (_orgpath)
-      free(_orgpath);
+      XMLPlatformUtils::fgMemoryManager->deallocate(_orgpath);//free(_orgpath);
 }
 
 // This path parser is state driven in order to support an incremental parse of the input path.
@@ -240,7 +242,7 @@ void Path390::_determine_parms() {
       char * tr = 0;
       if (_parmStart) {
          _orgparmlen = strlen(_parmStart)+1;
-         _orgparms = (char *) malloc(_orgparmlen);
+         _orgparms = (char*) XMLPlatformUtils::fgMemoryManager->allocate(_orgparmlen * sizeof(char));// (char *) malloc(_orgparmlen);
          char * ts=_parmStart;
          char * td=_orgparms;
          while (*ts)
@@ -267,7 +269,7 @@ void Path390::_parse_rest() {
       char * filename_start;
       char * tmpPos;
       int pathlen = strlen(_curpos);
-      _resultpath = (char *) malloc(pathlen+10);
+      _resultpath = (char*) XMLPlatformUtils::fgMemoryManager->allocate((pathlen+10) * sizeof(char));//(char *) malloc(pathlen+10);
 
       source = _curpos;
       dest = _resultpath;
@@ -465,16 +467,18 @@ void Path390::_parse_rest() {
 // parse.
 void Path390::setPath(char * s) {
    if (_orgparms)
-      free (_orgparms);
+      XMLPlatformUtils::fgMemoryManager->deallocate(_orgparms);//free (_orgparms);
    if (_resultpath)
-      free(_resultpath);
+      XMLPlatformUtils::fgMemoryManager->deallocate(_resultpath);//free(_resultpath);
    if (_orgpath)
-      free(_orgpath);
+      XMLPlatformUtils::fgMemoryManager->deallocate(_orgpath);//free(_orgpath);
    _error = 0;
+   _orgparms = 0;
+   _resultpath = 0;
    _absolute = false;
    _dsnabsolute = false;
    _orglen = strlen(s);
-   _orgpath = (char *) malloc(_orglen+1);
+   _orgpath = (char*) XMLPlatformUtils::fgMemoryManager->allocate((_orglen+1) * sizeof(char));//(char *) malloc(_orglen+1);
    strcpy(_orgpath,s);
    _curpos = _orgpath;
    _parsestate=PARSE_NONE;
