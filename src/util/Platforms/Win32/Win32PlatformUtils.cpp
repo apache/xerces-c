@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/04/11 19:11:55  roddey
+ * Replace Yen signs with backslash in wide char path names
+ * under NT. This avoids ambiguous code point in some asian
+ * encodings.
+ *
  * Revision 1.17  2000/04/05 18:55:36  roddey
  * Delete the critical section handle in closeMutex().
  *
@@ -289,19 +294,75 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
+    // Watch for obvious wierdness
+    if (!fileName)
+        return 0;
+
     FileHandle retVal = 0;
     if (gOnNT)
     {
-        retVal = ::CreateFileW
-        (
-            fileName
-            , GENERIC_READ
-            , FILE_SHARE_READ
-            , 0
-            , OPEN_EXISTING
-            , FILE_FLAG_SEQUENTIAL_SCAN
-            , 0
-        );
+        //
+        //  Ok, this might look stupid but its a semi-expedient way to deal
+        //  with a thorny problem. Shift-JIS and some other asian encodings
+        //  are fundamentally broken and map both the backslash and the Yen
+        //  sign to the same code point. Transcoders have to pick one orthe
+        //  other to map to Unicode and tend to choose the Yen sign. Since we
+        //  never transcode back to the local code page, the Unicode Yen signs
+        //  will still be in the path and will fail.
+        //
+        //  So, we will check this path name for Yen signs and, if they are
+        //  there, we'll replace them with / slashes.
+        //
+        const XMLCh* srcPtr = fileName;
+        while (*srcPtr)
+        {
+            if (*srcPtr == chYenSign)
+                break;
+            srcPtr++;
+        }
+
+        //
+        //  If we found a yen, then we have to create a temp file name. Else
+        //  go with the file name as is and save the overhead.
+        //
+        if (*srcPtr)
+        {
+            XMLCh* tmpName = XMLString::replicate(fileName);
+
+            XMLCh* srcPtr = tmpName;
+            while (*srcPtr)
+            {
+                if (*srcPtr == chYenSign)
+                    *srcPtr = chBackSlash;
+                srcPtr++;
+            }
+
+            retVal = ::CreateFileW
+            (
+                tmpName
+                , GENERIC_READ
+                , FILE_SHARE_READ
+                , 0
+                , OPEN_EXISTING
+                , FILE_FLAG_SEQUENTIAL_SCAN
+                , 0
+            );
+
+            delete [] tmpName;
+        }
+         else
+        {
+            retVal = ::CreateFileW
+            (
+                fileName
+                , GENERIC_READ
+                , FILE_SHARE_READ
+                , 0
+                , OPEN_EXISTING
+                , FILE_FLAG_SEQUENTIAL_SCAN
+                , 0
+            );
+        }
     }
      else
     {
