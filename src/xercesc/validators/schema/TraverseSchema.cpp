@@ -954,8 +954,9 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
   *
   * traverse <list>|<restriction>|<union>
   */
-int TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
-                                           const bool topLevel, int baseRefContext)
+DatatypeValidator*
+TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
+                                       const bool topLevel, int baseRefContext)
 {
     // ------------------------------------------------------------------
     // Process contents
@@ -966,7 +967,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     if (topLevel && nameEmpty) {
         reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
                           SchemaSymbols::fgELT_SIMPLETYPE);
-        return -1;
+        return 0;
     }
 
     if (nameEmpty) { // anonymous simpleType
@@ -976,7 +977,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
 
         reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_SIMPLETYPE, name);
-        return -1;
+        return 0;
     }
 
     fBuffer.set(fTargetNSURIString);
@@ -987,66 +988,69 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     const XMLCh* fullName = fStringPool->getValueForId(fullTypeNameId);
 
     //check if we have already traversed the same simpleType decl
-    if (fDatatypeRegistry->getDatatypeValidator(fullName)!= 0) {
-        return fullTypeNameId;
-    }
+    DatatypeValidator* dv = fDatatypeRegistry->getDatatypeValidator(fullName);
 
-    // ------------------------------------------------------------------
-    // Check attributes
-    // ------------------------------------------------------------------
-    unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_SimpleTypeGlobal
-                                      : GeneralAttributeCheck::E_SimpleTypeLocal;
+    if (!dv) {
 
-    fAttributeCheck.checkAttributes(childElem, scope, this, topLevel);
+        // ------------------------------------------------------------------
+        // Check attributes
+        // ------------------------------------------------------------------
+        unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_SimpleTypeGlobal
+                                          : GeneralAttributeCheck::E_SimpleTypeLocal;
 
-    // Circular constraint checking
-    if (fCurrentTypeNameStack->containsElement(fullTypeNameId)){
+        fAttributeCheck.checkAttributes(childElem, scope, this, topLevel);
 
-        reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);
-        return -1;
-    }
+        // Circular constraint checking
+        if (fCurrentTypeNameStack->containsElement(fullTypeNameId)){
 
-    fCurrentTypeNameStack->addElement(fullTypeNameId);
-
-    // Get 'final' values
-    int finalSet = parseFinalSet(childElem, S_Final);
-
-    // annotation?,(list|restriction|union)
-    DOMElement* content= checkContent(childElem,
-                                      XUtil::getFirstChildElement(childElem),
-                                      false);
-
-    if (content == 0) {
-
-        reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::EmptySimpleTypeContent);
-        return resetCurrentTypeNameStack(-1);
-    }
-
-    const XMLCh* varietyName = content->getLocalName();
-    int newSimpleTypeName = fStringPool->addOrFind(name);
-
-    // Remark: some code will be repeated in list|restriction| union but it
-    //         is cleaner that way
-    if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_LIST)) { //traverse List
-        if ((baseRefContext & SchemaSymbols::LIST) != 0) {
-
-            reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType);
-            return resetCurrentTypeNameStack(-1);
+            reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);
+            return 0;
         }
 
-        return traverseByList(childElem, content, newSimpleTypeName, finalSet);
-    }
-    else if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
-        return traverseByRestriction(childElem, content, newSimpleTypeName, finalSet);
-    }
-    else if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_UNION)) { //traverse union
-        return traverseByUnion(childElem, content, newSimpleTypeName, finalSet, baseRefContext);
-    }
-    else {
-        reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::FeatureUnsupported, varietyName);
+        fCurrentTypeNameStack->addElement(fullTypeNameId);
+
+        // Get 'final' values
+        int finalSet = parseFinalSet(childElem, S_Final);
+
+        // annotation?,(list|restriction|union)
+        DOMElement* content= checkContent(childElem,
+                                          XUtil::getFirstChildElement(childElem),
+                                          false);
+
+        if (content == 0) {
+
+            reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::EmptySimpleTypeContent);
+            popCurrentTypeNameStack();
+            return 0;
+        }
+
+        const XMLCh* varietyName = content->getLocalName();
+
+        // Remark: some code will be repeated in list|restriction| union but it
+        //         is cleaner that way
+        if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_LIST)) { //traverse List
+            if ((baseRefContext & SchemaSymbols::LIST) != 0) {
+
+                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType);
+                popCurrentTypeNameStack();
+                return 0;
+            }
+
+            return traverseByList(childElem, content, name, fullName, finalSet);
+        }
+        else if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
+            return traverseByRestriction(childElem, content, name, fullName, finalSet);
+        }
+        else if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_UNION)) { //traverse union
+            return traverseByUnion(childElem, content, name, fullName, finalSet, baseRefContext);
+        }
+        else {
+            reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::FeatureUnsupported, varietyName);
+            popCurrentTypeNameStack();
+        }
     }
 
-    return resetCurrentTypeNameStack(-1);
+    return dv;
 }
 
 /**
@@ -1185,7 +1189,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
             if (!XMLString::compareString(childName, SchemaSymbols::fgELT_SIMPLECONTENT)) {
 
                 // SIMPLE CONTENT element
-                traverseSimpleContentDecl(name, child, typeInfo);
+                traverseSimpleContentDecl(name, fullName, child, typeInfo);
 
                 if (XUtil::getNextSiblingElement(child) != 0) {
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::InvalidChildFollowingSimpleContent);
@@ -1243,7 +1247,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Before exiting, restore the scope, mainly for nested anonymous types
     // ------------------------------------------------------------------
-    resetCurrentTypeNameStack(0);
+    popCurrentTypeNameStack();
     fCircularCheckIndex = previousCircularCheckIndex;
     fCurrentScope = previousScope;
     fCurrentComplexType = saveTypeInfo;
@@ -1920,12 +1924,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeWithTypeAndSimpleType);
         }
 
-        int datatypeSymbol = traverseSimpleTypeDecl(simpleType, false);
-
-        if (datatypeSymbol != -1) {
-            dv = fDatatypeRegistry->getDatatypeValidator(fStringPool->getValueForId(datatypeSymbol));
-        }
-
+        dv = traverseSimpleTypeDecl(simpleType, false);
     }
     else if (XMLString::stringLen(dvType) == 0) {
         dv = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING);
@@ -1975,10 +1974,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                     DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
                         SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
-                    if (topLevelType != 0) {
-
-                        traverseSimpleTypeDecl(topLevelType);
-                        dv = getDatatypeValidator(typeURI, localPart);
+                    if (topLevelType) {
+                        dv = traverseSimpleTypeDecl(topLevelType);
                     }
                     else {
                         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeSimpleTypeNotFound,
@@ -1997,10 +1994,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                 DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
                     SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
-                if (topLevelType != 0) {
-
-                    traverseSimpleTypeDecl(topLevelType);
-                    dv = getDatatypeValidator(typeURI, localPart);
+                if (topLevelType) {
+                    dv = traverseSimpleTypeDecl(topLevelType);
                 }
                 else {
                     reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeSimpleTypeNotFound,
@@ -2710,13 +2705,14 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
     return notationName;
 }
 
-int TraverseSchema::traverseByList(const DOMElement* const rootElem,
-                                   const DOMElement* const contentElem,
-                                   const int typeNameIndex,
-                                   const int finalSet) {
+DatatypeValidator*
+TraverseSchema::traverseByList(const DOMElement* const rootElem,
+                               const DOMElement* const contentElem,
+                               const XMLCh* const typeName,
+                               const XMLCh* const qualifiedName,
+                               const int finalSet) {
 
     DatatypeValidator* baseValidator = 0;
-    const XMLCh*       typeName = fStringPool->getValueForId(typeNameIndex);
     const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_ITEMTYPE);
 
     fAttributeCheck.checkAttributes(contentElem, GeneralAttributeCheck::E_List, this);
@@ -2734,7 +2730,8 @@ int TraverseSchema::traverseByList(const DOMElement* const rootElem,
         if (!content) {
 
             reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInList, typeName);
-            return resetCurrentTypeNameStack(-1);
+            popCurrentTypeNameStack();
+            return 0;
         }
 
         if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
@@ -2743,7 +2740,8 @@ int TraverseSchema::traverseByList(const DOMElement* const rootElem,
         else {
 
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return resetCurrentTypeNameStack(-1);
+            popCurrentTypeNameStack();
+            return 0;
         }
 
         content = XUtil::getNextSiblingElement(content);
@@ -2754,57 +2752,51 @@ int TraverseSchema::traverseByList(const DOMElement* const rootElem,
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), true);
     }
 
-    if (baseValidator == 0) {
-        return resetCurrentTypeNameStack(-1);
-    }
+    DatatypeValidator* newDV = 0;
+	
+    if (baseValidator) {
 
-    if (!baseValidator->isAtomic()) {
+        if (!baseValidator->isAtomic()) {
+            reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType, baseTypeName);
+        }
+        else {
 
-        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType, baseTypeName);
-        return resetCurrentTypeNameStack(-1);
-    }
+            // 'content' should be empty
+            // If an annotation was encountered we have already traversed it in
+            // checkContent in the case of a base provided (only allowed child is
+            // an annotation).
+            if (content != 0) { // report an error and continue
+                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeDerivationByListError, typeName);
+            }
 
-    // 'content' should be empty
-    // If an annotation was encountered we have already traversed it in
-    // checkContent in the case of a base provided (only allowed child is
-    // an annotation).
-    if (content != 0) { // report an error and continue
-        reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeDerivationByListError, typeName);
-    }
-
-    // create & register validator for "generated" type if it doesn't exist
-    int strId = fStringPool->addOrFind(getQualifiedName(typeNameIndex));
-    const XMLCh* qualifiedName = fStringPool->getValueForId(strId);
-
-    try {
-
-        DatatypeValidator* newValidator =
-               fDatatypeRegistry->getDatatypeValidator(qualifiedName);
-
-        if (newValidator == 0) {
-
-            fDatatypeRegistry->createDatatypeValidator(
-                  qualifiedName, baseValidator, 0, 0, true, finalSet);
+            // create & register validator for "generated" type
+            try {
+                newDV = fDatatypeRegistry->createDatatypeValidator(
+                    qualifiedName, baseValidator, 0, 0, true, finalSet);
+            }
+            catch (const XMLException& excep) {
+                reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+            }
+            catch(...) {
+                reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
+                                  XMLErrs::DatatypeValidatorCreationError, typeName);
+            }
         }
     }
-    catch (const XMLException& excep) {
-        reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
-    }
-    catch(...) {
-        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
-                          XMLErrs::DatatypeValidatorCreationError, typeName);
-    }
 
-    return resetCurrentTypeNameStack(strId);
+    popCurrentTypeNameStack();
+    return newDV;
 }
 
-int TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
-                                          const DOMElement* const contentElem,
-                                          const int typeNameIndex,
-                                          const int finalSet) {
+DatatypeValidator*
+TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
+                                      const DOMElement* const contentElem,
+                                      const XMLCh* const typeName,
+                                      const XMLCh* const qualifiedName,
+                                      const int finalSet) {
 
     DatatypeValidator* baseValidator = 0;
-    const XMLCh*       typeName = fStringPool->getValueForId(typeNameIndex);
+    DatatypeValidator* newDV = 0;
     const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_BASE);
 
     fAttributeCheck.checkAttributes(contentElem, GeneralAttributeCheck::E_Restriction, this);
@@ -2820,16 +2812,20 @@ int TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), false);
 
         if (content == 0) {
+
             reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInRestriction);
-            return resetCurrentTypeNameStack(-1);
+            popCurrentTypeNameStack();
+            return 0;
         }
 
         if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
             baseValidator = checkForSimpleTypeValidator(content);
         }
         else {
+
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return resetCurrentTypeNameStack(-1);
+            popCurrentTypeNameStack();
+            return 0;
         }
 
         // Check for facets
@@ -2841,156 +2837,149 @@ int TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), true);
     }
 
-    if (baseValidator == 0) {
-        return resetCurrentTypeNameStack(-1);
-    }
+    if (baseValidator) {
 
-    // Get facets if any existing
-    RefHashTableOf<KVStringPair>*  facets = 0;
-    RefVectorOf<XMLCh>*            enums = 0;
-    XMLBuffer                      pattern(128);
-    XMLCh                          fixedFlagStr[16];
-    unsigned int                   fixedFlag = 0;
-    unsigned short                 scope = 0;
-    bool                           isFirstPattern = true;
+        // Get facets if any existing
+        RefHashTableOf<KVStringPair>* facets = 0;
+        RefVectorOf<XMLCh>*           enums = 0;
+        XMLBuffer                     pattern(128);
+        XMLCh                         fixedFlagStr[16];
+        unsigned int                  fixedFlag = 0;
+        unsigned short                scope = 0;
+        bool                          isFirstPattern = true;
 
-    while (content != 0) {
+        while (content != 0) {
 
-        if (content->getNodeType() == DOMNode::ELEMENT_NODE) {
+            if (content->getNodeType() == DOMNode::ELEMENT_NODE) {
 
-            const XMLCh* facetName = content->getLocalName();
+                const XMLCh* facetName = content->getLocalName();
 
-            try {
-                scope = fAttributeCheck.getFacetId(facetName);
-            }
-            catch (...) {
+                try {
+                    scope = fAttributeCheck.getFacetId(facetName);
+                }
+                catch (...) {
 
-                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::InvalidFacetName, facetName);
-                content = XUtil::getNextSiblingElement(content);
-                continue;
-            }
-
-            const XMLCh* attValue = content->getAttribute(SchemaSymbols::fgATT_VALUE);
-            fAttributeCheck.checkAttributes(content, scope, this);
-
-            if (facets == 0) {
-                facets = new RefHashTableOf<KVStringPair>(29, true);
-            }
-
-            if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
-
-                // REVISIT
-                // if validator is a notation datatype validator, we need
-                // to get the qualified name first before adding it to the
-                // enum buffer
-                if (!enums) {
-                    enums = new RefVectorOf<XMLCh>(8, true);
+                    reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::InvalidFacetName, facetName);
+                    content = XUtil::getNextSiblingElement(content);
+                    continue;
                 }
 
-                if (baseValidator->getType() == DatatypeValidator::NOTATION) {
+                const XMLCh* attValue = content->getAttribute(SchemaSymbols::fgATT_VALUE);
+                fAttributeCheck.checkAttributes(content, scope, this);
 
-                    const XMLCh* localPart = getLocalPart(attValue);
-                    const XMLCh* prefix = getPrefix(attValue);
-                    const XMLCh* uriStr = (XMLString::stringLen(prefix)) ? resolvePrefixToURI(content, prefix) : fTargetNSURIString;
-                    unsigned int uriId = fURIStringPool->addOrFind(uriStr);
+                if (facets == 0) {
+                    facets = new RefHashTableOf<KVStringPair>(29, true);
+                }
 
-                    if (!fNotationRegistry->containsKey(localPart, uriId)) {
-                        traverseNotationDecl(content, localPart, uriStr);
+                if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
+
+                    // REVISIT
+                    // if validator is a notation datatype validator, we need
+                    // to get the qualified name first before adding it to the
+                    // enum buffer
+                    if (!enums) {
+                        enums = new RefVectorOf<XMLCh>(8, true);
                     }
 
-                    fBuffer.set(uriStr);
-                    fBuffer.append(chColon);
-                    fBuffer.append(localPart);
-                    enums->addElement(XMLString::replicate(fBuffer.getRawBuffer()));
+                    if (baseValidator->getType() == DatatypeValidator::NOTATION) {
+
+                        const XMLCh* localPart = getLocalPart(attValue);
+                        const XMLCh* prefix = getPrefix(attValue);
+                        const XMLCh* uriStr = (XMLString::stringLen(prefix)) ? resolvePrefixToURI(content, prefix) : fTargetNSURIString;
+                        unsigned int uriId = fURIStringPool->addOrFind(uriStr);
+
+                        if (!fNotationRegistry->containsKey(localPart, uriId)) {
+                            traverseNotationDecl(content, localPart, uriStr);
+                        }
+
+                        fBuffer.set(uriStr);
+                        fBuffer.append(chColon);
+                        fBuffer.append(localPart);
+                        enums->addElement(XMLString::replicate(fBuffer.getRawBuffer()));
+                    }
+                    else {
+                        enums->addElement(XMLString::replicate(attValue));
+                    }
+                }
+                else if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_PATTERN)) {
+
+                    if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
+
+                        isFirstPattern = false;
+                        pattern.set(attValue);
+                    }
+                    else { //datatypes: 5.2.4 pattern
+
+                        pattern.append(chPipe);
+                        pattern.append(attValue);
+                    }
                 }
                 else {
-                    enums->addElement(XMLString::replicate(attValue));
-                }
-            }
-            else if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_PATTERN)) {
 
-                if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
-
-                    isFirstPattern = false;
-                    pattern.set(attValue);
-                }
-                else { //datatypes: 5.2.4 pattern
-
-                    pattern.append(chPipe);
-                    pattern.append(attValue);
-                }
-            }
-            else {
-
-                if (facets->containsKey(facetName)) {
-                    reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateFacet, facetName);
-                }
-                else {
-
-                    if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_WHITESPACE)
-                        && baseValidator->getType() != DatatypeValidator::String
-                        && XMLString::compareString(attValue, SchemaSymbols::fgWS_COLLAPSE) != 0) {
-                        reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::WS_CollapseExpected, attValue);
+                    if (facets->containsKey(facetName)) {
+                        reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateFacet, facetName);
                     }
                     else {
 
-                        const XMLCh* facetStr = fStringPool->getValueForId(fStringPool->addOrFind(facetName));
-                        facets->put((void*) facetStr, new KVStringPair(facetStr, attValue));
-                        checkFixedFacet(content, facetStr, baseValidator, fixedFlag);
+                        if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_WHITESPACE)
+                            && baseValidator->getType() != DatatypeValidator::String
+                            && XMLString::compareString(attValue, SchemaSymbols::fgWS_COLLAPSE) != 0) {
+                            reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::WS_CollapseExpected, attValue);
+                        }
+                        else {
+
+                            const XMLCh* facetStr = fStringPool->getValueForId(fStringPool->addOrFind(facetName));
+                            facets->put((void*) facetStr, new KVStringPair(facetStr, attValue));
+                            checkFixedFacet(content, facetStr, baseValidator, fixedFlag);
+                        }
                     }
                 }
+
+                // REVISIT
+                // check for annotation content - we are not checking whether the
+                // return is empty or not. If not empty we should report an error
+                checkContent(rootElem, XUtil::getFirstChildElement(content), true);
             }
 
-            // REVISIT
-            // check for annotation content - we are not checking whether the
-            // return is empty or not. If not empty we should report an error
-            checkContent(rootElem, XUtil::getFirstChildElement(content), true);
+            content = XUtil::getNextSiblingElement(content);
+        } // end while
+
+        if (!pattern.isEmpty()) {
+            facets->put((void*) SchemaSymbols::fgELT_PATTERN,
+                        new KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer()));
         }
 
-        content = XUtil::getNextSiblingElement(content);
-    } // end while
+        if (fixedFlag) {
 
-    if (!pattern.isEmpty()) {
-        facets->put((void*) SchemaSymbols::fgELT_PATTERN,
-                    new KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer()));
-    }
+            XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
+            facets->put((void*) SchemaSymbols::fgATT_FIXED,
+                        new KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr));
+        }
 
-    if (fixedFlag) {
-
-        XMLString::binToText(fixedFlag, fixedFlagStr, 15, 10);
-        facets->put((void*) SchemaSymbols::fgATT_FIXED,
-                    new KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr));
-    }
-
-    int strId = fStringPool->addOrFind(getQualifiedName(typeNameIndex));
-    const XMLCh* qualifiedName = fStringPool->getValueForId(strId);
-
-    try {
-
-        DatatypeValidator* newValidator = fDatatypeRegistry->getDatatypeValidator(qualifiedName);
-
-        if (newValidator == 0) {
-            fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, facets, enums, false, finalSet);
+        try {
+            newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, facets, enums, false, finalSet);
+        }
+        catch (const XMLException& excep) {
+            reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+        }
+        catch(...) {
+            reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
+                              XMLErrs::DatatypeValidatorCreationError, typeName);
         }
     }
-    catch (const XMLException& excep) {
-        reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
-    }
-    catch(...) {
 
-        reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
-                          XMLErrs::DatatypeValidatorCreationError, typeName);
-    }
-
-    return resetCurrentTypeNameStack(strId);
+    popCurrentTypeNameStack();
+    return newDV;
 }
 
 
-int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
-                                    const DOMElement* const contentElem,
-                                    const int typeNameIndex,
-                                    const int finalSet,
-                                    int baseRefContext) {
+DatatypeValidator*
+TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
+                                const DOMElement* const contentElem,
+                                const XMLCh* const typeName,
+                                const XMLCh* const qualifiedName,
+                                const int finalSet,
+                                int baseRefContext) {
 
     fAttributeCheck.checkAttributes(contentElem, GeneralAttributeCheck::E_Union, this);
 
@@ -2999,12 +2988,11 @@ int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     }
 
     int                             size = 1;
-    const XMLCh* const              typeName = fStringPool->getValueForId(typeNameIndex);
     const XMLCh*                    baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_MEMBERTYPES);
     DatatypeValidator*              baseValidator = 0;
     RefVectorOf<DatatypeValidator>* validators = new RefVectorOf<DatatypeValidator>(4, false);
     Janitor<DVRefVector>            janValidators(validators);
-    DOMElement*                   content = 0;
+    DOMElement*                     content = 0;
 
     if (XMLString::stringLen(baseTypeName)) { //base was provided - get proper validator.
 
@@ -3018,7 +3006,9 @@ int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
             baseValidator = findDTValidator(contentElem, typeName, memberTypeName, SchemaSymbols::UNION);
 
             if (baseValidator == 0) {
-                return resetCurrentTypeNameStack(-1);
+
+                popCurrentTypeNameStack();
+                return 0;
             }
 
             validators->addElement(baseValidator);
@@ -3033,13 +3023,15 @@ int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
         if (content == 0) {
 
             reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInUnion, typeName);
-            return resetCurrentTypeNameStack(-1);
+            popCurrentTypeNameStack();
+            return 0;
         }
 
         if (XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
 
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return resetCurrentTypeNameStack(-1);
+            popCurrentTypeNameStack();
+            return 0;
         }
     }
 
@@ -3051,7 +3043,9 @@ int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
             baseValidator = checkForSimpleTypeValidator(content, baseRefContext | SchemaSymbols::UNION);
 
             if (baseValidator == 0) {
-                return resetCurrentTypeNameStack(-1);
+
+                popCurrentTypeNameStack();
+                return 0;
             }
 
             validators->addElement(baseValidator);
@@ -3065,31 +3059,22 @@ int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
         content   = XUtil::getNextSiblingElement(content);
     } // end while
 
-    int strId = fStringPool->addOrFind(getQualifiedName(typeNameIndex));
-    const XMLCh* qualifiedName = fStringPool->getValueForId(strId);
+    DatatypeValidator* newDV = 0;
+    janValidators.orphan();
 
     try {
-
-        DatatypeValidator* newValidator = fDatatypeRegistry->getDatatypeValidator(qualifiedName);
-
-        if (newValidator == 0) {
-
-            if (fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet) != 0) {
-                janValidators.orphan();
-            }
-        }
+        newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet);
     }
     catch (const XMLException& excep) {
-        janValidators.orphan();
         reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
     }
     catch(...) {
-        janValidators.orphan();
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
     }
 
-    return resetCurrentTypeNameStack(strId);
+    popCurrentTypeNameStack();
+    return newDV;
 }
 
 
@@ -3123,6 +3108,7 @@ int TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
   *
   */
 void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
+                                               const XMLCh* const qualifiedName,
                                                const DOMElement* const contentDecl,
                                                ComplexTypeInfo* const typeInfo)
 {
@@ -3251,12 +3237,9 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // ---------------------------------------------------------------
             if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
 
-                int simpleTypeNameIndex = traverseSimpleTypeDecl(content, false);
+                DatatypeValidator* simpleTypeDV = traverseSimpleTypeDecl(content, false);
 
-                if (simpleTypeNameIndex !=-1) {
-
-                    DatatypeValidator* simpleTypeDV =
-                        fDatatypeRegistry->getDatatypeValidator(fStringPool->getValueForId(simpleTypeNameIndex));
+                if (simpleTypeDV) {
 
                     // Check that the simpleType validator is validly derived
                     // from base
@@ -3369,9 +3352,6 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     facets->put((void*) SchemaSymbols::fgATT_FIXED,
                         new KVStringPair(SchemaSymbols::fgATT_FIXED, fixedFlagStr));
                 }
-
-                int nameId = fStringPool->addOrFind(getQualifiedName(fStringPool->addOrFind(typeName)));
-                const XMLCh* qualifiedName = fStringPool->getValueForId(nameId);
 
                 try {
 
@@ -4319,30 +4299,13 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
 }
 
 
-XMLCh* TraverseSchema::getQualifiedName(const int typeNameIndex) {
-
-    const XMLCh* typeName = fStringPool->getValueForId(typeNameIndex);
-
-    fBuffer.set(fTargetNSURIString);
-    fBuffer.append(chComma);
-    fBuffer.append(typeName);
-
-    return fBuffer.getRawBuffer();
-}
-
-
 DatatypeValidator*
 TraverseSchema::checkForSimpleTypeValidator(const DOMElement* const content,
                                             int baseRefContext) {
 
-    int typeNameIndex = traverseSimpleTypeDecl(content, false, baseRefContext);
-    DatatypeValidator* baseValidator = 0;
+    DatatypeValidator* baseValidator = traverseSimpleTypeDecl(content, false, baseRefContext);
 
-    if (typeNameIndex != -1) {
-        baseValidator = fDatatypeRegistry->getDatatypeValidator(fStringPool->getValueForId(typeNameIndex));
-    }
-
-    if (typeNameIndex == -1 || baseValidator == 0) {
+    if (!baseValidator) {
 
         const XMLCh* name = getElementAttValue(content,SchemaSymbols::fgATT_NAME);
         reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::UnknownSimpleType, name);
@@ -4389,8 +4352,7 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
 
         if (baseTypeNode != 0) {
 
-            traverseSimpleTypeDecl(baseTypeNode);
-            baseValidator = getDatatypeValidator(uri, localPart);
+            baseValidator = traverseSimpleTypeDecl(baseTypeNode);
 
             // restore schema information, if necessary
             fSchemaInfo = saveInfo;
@@ -4743,8 +4705,8 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
             DOMElement* typeElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
                 SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
-            if (typeElem != 0 && traverseSimpleTypeDecl(typeElem) != -1) {
-                dv = getDatatypeValidator(typeURI, localPart);
+            if (typeElem) {
+                dv = traverseSimpleTypeDecl(typeElem);
             }
         }
 
@@ -5773,8 +5735,7 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
 
                 if (baseTypeNode != 0) {
 
-                    int baseTypeSymbol = traverseSimpleTypeDecl(baseTypeNode);
-                    baseDTValidator = getDatatypeValidator(uriStr, localPart);
+                    baseDTValidator = traverseSimpleTypeDecl(baseTypeNode);
 
                     if (baseDTValidator == 0)  {
 

@@ -178,29 +178,33 @@ private:
                                               ComplexTypeInfo* const typeInfo,
                                               const bool topLevel = false);
     void                traverseSimpleContentDecl(const XMLCh* const typeName,
+                                                  const XMLCh* const qualifiedName,
                                                   const DOMElement* const contentDecl,
                                                   ComplexTypeInfo* const typeInfo);
     void                traverseComplexContentDecl(const XMLCh* const typeName,
                                                   const DOMElement* const contentDecl,
                                                   ComplexTypeInfo* const typeInfo,
                                                   const bool isMixed);
-    int                 traverseSimpleTypeDecl(const DOMElement* const childElem,
+    DatatypeValidator*  traverseSimpleTypeDecl(const DOMElement* const childElem,
                                                const bool topLevel = true,
                                                int baseRefContext = SchemaSymbols::EMPTY_SET);
     int                 traverseComplexTypeDecl(const DOMElement* const childElem,
                                                 const bool topLevel = true,
                                                 const XMLCh* const recursingTypeName = 0);
-    int                 traverseByList(const DOMElement* const rootElem,
+    DatatypeValidator*  traverseByList(const DOMElement* const rootElem,
                                        const DOMElement* const contentElem,
-                                       const int typeNameIndex,
+                                       const XMLCh* const typeName,
+                                       const XMLCh* const qualifiedName,
                                        const int finalSet);
-    int                 traverseByRestriction(const DOMElement* const rootElem,
+    DatatypeValidator*  traverseByRestriction(const DOMElement* const rootElem,
                                               const DOMElement* const contentElem,
-                                              const int typeNameIndex,
+                                              const XMLCh* const typeName,
+                                              const XMLCh* const qualifiedName,
                                               const int finalSet);
-    int                 traverseByUnion(const DOMElement* const rootElem,
+    DatatypeValidator*  traverseByUnion(const DOMElement* const rootElem,
                                         const DOMElement* const contentElem,
-                                        const int typeNameIndex,
+                                        const XMLCh* const typeName,
+                                        const XMLCh* const qualifiedName,
                                         const int finalSet,
                                         int baseRefContext);
     QName*              traverseElementDecl(const DOMElement* const childElem,
@@ -299,15 +303,6 @@ private:
 
     DatatypeValidator* getDatatypeValidator(const XMLCh* const uriStr,
                                             const XMLCh* const localPartStr);
-
-    /**
-      * Return qualified name of a given type name index from the string pool
-      * If a target name space exist, it is returned as part of the name
-      *
-      * The allocation will be handled internally, and the caller should not
-      * delete the returned pointer.
-      */
-    XMLCh* getQualifiedName(const int typeNameIndex);
 
     /**
       * Process simpleType content of a list|restriction|union
@@ -526,7 +521,7 @@ private:
     void restoreSchemaInfo(SchemaInfo* const toRestore,
                            SchemaInfo::ListType const aListType = SchemaInfo::INCLUDE,
                            const int saveScope = Grammar::TOP_LEVEL_SCOPE);
-    int  resetCurrentTypeNameStack(const int);
+    void  popCurrentTypeNameStack();
 
     /**
       * Check whether a mixed content is emptiable or not.
@@ -903,15 +898,13 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix) {
     return fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
 }
 
-inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
+inline void TraverseSchema::popCurrentTypeNameStack() {
 
     unsigned int stackSize = fCurrentTypeNameStack->size();
 
     if (stackSize != 0) {
         fCurrentTypeNameStack->removeElementAt(stackSize - 1);
     }
-
-    return value;
 }
 
 inline void 
