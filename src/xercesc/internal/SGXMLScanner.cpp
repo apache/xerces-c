@@ -3187,6 +3187,10 @@ void SGXMLScanner::scanReset(const InputSource& src)
     // Clear out the id reference list
     resetValidationContext();
 
+    // Reset the Root Element Name
+    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
+    fRootElemName = 0;
+
     // Reset IdentityConstraints
     if (fICHandler)
         fICHandler->reset();
