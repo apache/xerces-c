@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/13 22:50:29  aruna1
+ * For unix made additional check for relative url path
+ *
  * Revision 1.3  2000/01/12 00:15:03  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -558,6 +561,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         try
         {
             URL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+			if (urlTmp.isRelative())
+				ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
             srcToFill = new URLInputSource(urlTmp);
         }
 
