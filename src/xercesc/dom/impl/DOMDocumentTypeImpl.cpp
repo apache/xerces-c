@@ -439,7 +439,6 @@ void DOMDocumentTypeImpl::release()
            const XMLCh*     DOMDocumentTypeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
            bool             DOMDocumentTypeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMDocumentTypeImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           DOMNode*         DOMDocumentTypeImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
 
 
 bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
@@ -532,6 +531,13 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
     }
 
     return fParent.isEqualNode(arg);
+}
+
+DOMNode * DOMDocumentTypeImpl::getInterface(const XMLCh* feature)
+{
+    if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl))
+        return (DOMNode*)(DOMDocumentTypeImpl*)this;
+    return fNode.getInterface(feature);
 }
 
 XERCES_CPP_NAMESPACE_END

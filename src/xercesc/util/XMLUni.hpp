@@ -262,6 +262,7 @@ public :
 
     // Private interface names
     static const XMLCh fgXercescInterfacePSVITypeInfo[];
+    static const XMLCh fgXercescInterfaceDOMDocumentTypeImpl[];
 
     // Locale
     static const char  fgXercescDefaultLocale[];

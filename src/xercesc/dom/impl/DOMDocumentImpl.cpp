@@ -1016,7 +1016,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
                 for(XMLSize_t i=0;i<srcattr->getLength();++i)
                 {
                     DOMAttr *attr = (DOMAttr *) srcattr->item(i);
-                    if (attr -> getSpecified()) { // not a default attribute
+                    if (attr -> getSpecified() || cloningDoc) { // not a default attribute or we are in the process of cloning the elements from inside a DOMDocumentType
                         DOMAttr *nattr = (DOMAttr *) importNode(attr, true, false);
                         if (attr -> getLocalName() == 0)
                             newelement->setAttributeNode(nattr);
@@ -1111,11 +1111,23 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
                 ((DOMDocumentTypeImpl *)newdoctype)->setInternalSubset(intSubset);
             }
 
-            // NOTE: At this time, the DOM definition of DocumentType
-            // doesn't cover Elements and their Attributes. domimpl's
-            // extentions in that area will not be preserved, even if
-            // copying from domimpl to domimpl. We could special-case
-            // that here. Arguably we should. Consider. ?????
+            // detect if the DTD being copied is our own implementation, and use the provided methods
+            try
+            {
+                DOMDocumentTypeImpl* docTypeImpl=(DOMDocumentTypeImpl*)(srcdoctype->getInterface(XMLUni::fgXercescInterfaceDOMDocumentTypeImpl));
+                if(docTypeImpl)
+                {
+                    smap = docTypeImpl->getElements();
+                    tmap = ((DOMDocumentTypeImpl *)newdoctype)->getElements();
+                    if (smap != 0) {
+                        for(XMLSize_t i = 0; i < smap->getLength(); i++) {
+                            tmap->setNamedItem(importNode(smap->item(i), true, true));
+                        }
+                    }
+                }
+            } catch(DOMException&) {
+            }
+
             newnode = newdoctype;
         }
         break;

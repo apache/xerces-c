@@ -1464,6 +1464,13 @@ const XMLCh XMLUni::fgXercescInterfacePSVITypeInfo[] =
     chLatin_o, chNull
 };
 
+const XMLCh XMLUni::fgXercescInterfaceDOMDocumentTypeImpl[] =
+{
+    chLatin_D, chLatin_O, chLatin_M, chLatin_D, chLatin_o, chLatin_c, chLatin_u,
+    chLatin_m, chLatin_e, chLatin_n, chLatin_t, chLatin_T, chLatin_y, chLatin_p,
+    chLatin_e, chLatin_I, chLatin_m, chLatin_p, chLatin_l, chNull
+};
+
 // en_US
 const char XMLUni::fgXercescDefaultLocale[] = "en_US";
 
