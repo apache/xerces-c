@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/11/19 18:26:31  knoaman
+ * no message
+ *
  * Revision 1.9  2001/10/09 12:18:26  tng
  * Leak fix: should use delete [] to delete fTargetNamespace.
  *
@@ -113,6 +116,7 @@ SchemaGrammar::SchemaGrammar() :
     , fDatatypeRegistry(0)
     , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
+    , fIDRefList(0)
     , fUPAChecked(false)
 {
     //
@@ -124,6 +128,7 @@ SchemaGrammar::SchemaGrammar() :
     fElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109);
     fGroupElemDeclPool = new RefHash3KeysIdPool<SchemaElementDecl>(109, false);
     fNotationDeclPool = new NameIdPool<XMLNotationDecl>(109);
+    fIDRefList = new RefHashTableOf<XMLRefInfo>(29);
 
     //
     //  Call our own reset method. This lets us have the pool setup stuff
@@ -145,6 +150,7 @@ SchemaGrammar::~SchemaGrammar()
     delete fAttGroupInfoRegistry;
     delete fNamespaceScope;
     delete fValidSubstitutionGroups;
+    delete fIDRefList;
 }
 
 

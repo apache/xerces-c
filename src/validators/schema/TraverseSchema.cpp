@@ -347,6 +347,7 @@ void TraverseSchema::doTraverseSchema(const DOM_Element& schemaRoot,
     fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
     fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
     fGrammarResolver->putGrammar(fTargetNSURIString, fSchemaGrammar);
+    fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
 
     traverseSchemaHeader(rootElem);
 
@@ -5879,6 +5880,7 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
         fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
         fNamespaceScope = fSchemaGrammar->getNamespaceScope();
+        fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
     }
 
     fSchemaInfo = toRestore;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/11/19 18:26:31  knoaman
+ * no message
+ *
  * Revision 1.13  2001/10/09 12:18:26  tng
  * Leak fix: should use delete [] to delete fTargetNamespace.
  *
@@ -107,6 +110,7 @@
 #include <validators/common/Grammar.hpp>
 #include <validators/schema/SchemaElementDecl.hpp>
 #include <util/ValueVectorOf.hpp>
+#include <validators/datatype/IDDatatypeValidator.hpp>
 
 //
 // This class stores the Schema information
@@ -233,6 +237,7 @@ public:
     DatatypeValidatorFactory* getDatatypeRegistry() const;
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
+    RefHashTableOf<XMLRefInfo>* getIDRefList() const;
     bool getUPAChecked() const;
 
     // -----------------------------------------------------------------------
@@ -300,6 +305,10 @@ private:
     //  fValidSubstitutionGroups
     //      Valid list of elements that can substitute a given element
     //
+    //  fIDRefList
+    //      List of ids of schema declarations extracted during schema grammar
+    //      traversal
+    //
     //  fUPAChecked
     //      Indicates if this Grammar has already been validated for
     //      schema unique particle attribute constraint checking.
@@ -315,6 +324,7 @@ private:
     DatatypeValidatorFactory*              fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
+    RefHashTableOf<XMLRefInfo>*            fIDRefList;
     bool                                   fUPAChecked;
 };
 
@@ -369,6 +379,11 @@ SchemaGrammar::getValidSubstitutionGroups() const {
 
 inline bool SchemaGrammar::getUPAChecked() const {
     return fUPAChecked;
+}
+
+inline RefHashTableOf<XMLRefInfo>* SchemaGrammar::getIDRefList() const {
+
+    return fIDRefList;
 }
 
 // -----------------------------------------------------------------------

@@ -138,6 +138,11 @@ public:
     static const unsigned short LocalContext;
 
     // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    void setIDRefList(RefHashTableOf<XMLRefInfo>* const refList);
+
+    // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
     void checkAttributes(const DOM_Element& elem,
@@ -311,6 +316,15 @@ inline void AttributeInfo::cleanUp() {
 
     delete [] fName;
     delete [] fDefaultValue;
+}
+
+// ---------------------------------------------------------------------------
+//  GeneralAttributeCheck: Setter methods
+// ---------------------------------------------------------------------------
+inline void
+GeneralAttributeCheck::setIDRefList(RefHashTableOf<XMLRefInfo>* const refList) {
+
+    fIDRefList = refList;
 }
 
 #endif

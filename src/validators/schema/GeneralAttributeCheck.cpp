@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/11/19 18:26:31  knoaman
+ * no message
+ *
  * Revision 1.13  2001/11/19 17:37:55  knoaman
  * Use the instance of ID datatye validator directly.
  *
@@ -201,7 +204,6 @@ GeneralAttributeCheck::GeneralAttributeCheck()
 
 GeneralAttributeCheck::~GeneralAttributeCheck()
 {
-    delete fIDRefList;
 }
 
 
@@ -1030,11 +1032,9 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
         dv = fValidators[DT_AnyURI];
         break;
     case DT_ID:
-        dv = &fIDValidator;
+        if (fIDRefList) {
 
-        if (!fIDRefList) {
-
-            fIDRefList = new RefHashTableOf<XMLRefInfo>(29);
+            dv = &fIDValidator;
             ((IDDatatypeValidator*) dv)->setIDRefList(fIDRefList);
         }
         break;
