@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 21:40:58  andyh
+ * Remove a few remaining dependencies on the (now defunct)
+ * XML StdOut stream.
+ *
  * Revision 1.2  1999/12/03 00:02:25  andyh
  * DOM tests updated to catch DOMException by ref.
  * Added tests of DOMString::transcode() and append()
@@ -80,6 +84,10 @@
  
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 21:40:58  andyh
+ * Remove a few remaining dependencies on the (now defunct)
+ * XML StdOut stream.
+ *
  * Revision 1.2  1999/12/03 00:02:25  andyh
  * DOM tests updated to catch DOMException by ref.
  * Added tests of DOMString::transcode() and append()
@@ -96,7 +104,7 @@
 #include "DTest.h"
 #include <util/PlatformUtils.hpp>
 #include <util/XMLException.hpp>
-#include <util/StdOut.hpp>
+#include <util/XMLString.hpp>
 
 
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \
@@ -457,23 +465,23 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
  */
  void main(int argc, char **argv)
  {
-
+     
      {
          //  Nest entire test in an inner block.
          //     Reference counting should recover all document
          //     storage when this block exits.
          
          DTest test;
-		XMLStdOut errStrm;
-		try {
-			XMLPlatformUtils::Initialize();
-        }
-        catch (const XMLException& toCatch) {
-			errStrm << "Error during initialization! :\n"
-			<< toCatch.getMessage() << EndLn;
-			return ;
-        } 
- 
+         try {
+             XMLPlatformUtils::Initialize();
+         }
+         catch (const XMLException& toCatch) {
+             char *pMessage = XMLString::transcode(toCatch.getMessage());
+             fprintf(stderr, "Error during initialization! \n  %s \n", pMessage);
+             delete pMessage;
+             return;
+         } 
+         
          long avgTime = 0;
          bool OK = true;
          long startTime = 0;//****************Time the whole thing for efficiency of DOM implementation

@@ -278,14 +278,6 @@ SOURCE=..\..\..\..\..\src\util\RuntimeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\StdOut.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\StdOut.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\StringPool.cpp
 # End Source File
 # Begin Source File

@@ -60,7 +60,6 @@
 #include <parsers/SAXParser.hpp>
 #include <parsers/DOMParser.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/StdOut.hpp>
 #include <sax/HandlerBase.hpp>
 #include <framework/MemBufInputSource.hpp>
 
@@ -229,7 +228,6 @@ struct ThreadInfo
 //  Global Data
 //
 //------------------------------------------------------------------------------
-XMLStdErr       errStrm;
 RunInfo         gRunInfo;
 ThreadInfo      *gThreadInfo;
 

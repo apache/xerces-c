@@ -66,6 +66,10 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/19 21:40:58  andyh
+ * Remove a few remaining dependencies on the (now defunct)
+ * XML StdOut stream.
+ *
  * Revision 1.5  2000/01/18 19:57:30  andyh
  * Add some DOM L2 tests
  *
@@ -97,7 +101,7 @@
 #include <dom/DomMemDebug.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLException.hpp>
-#include <util/StdOut.hpp>
+#include <util/XMLString.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
@@ -119,20 +123,39 @@ void tassert(bool c, char *file, int line)
     }
 
 
+#define EXCEPTION_TEST(operation, expected_exception) \
+    try {                                \
+    operation;                           \
+    printf(" Error: no exception thrown at line %d\n", __LINE__);                      \
+}                                        \
+catch (DOM_DOMException &e) {            \
+    if (e.ExceptionCode != expectedException) \
+        printf(" Wrong exception code: %d at line %d\n", e.ExceptionCode, __LINE__); \
+ };   \
+        \
+    catch (...)   {                      \
+        printf(" Wrong exception thrown at line %d\n", __LINE__); \
+}
 
-void main()
+
+
+
+int  main()
 {
     DomMemDebug     entryMemState, exitMemState;
 
-	XMLStdOut errStrm;
 	try {
 		XMLPlatformUtils::Initialize();
 	}
 	catch (const XMLException& toCatch) {
-		errStrm << "Error during initialization! :\n"
-		<< toCatch.getMessage() << EndLn;
-		return ;
-	} 
+        char *pMessage = XMLString::transcode(toCatch.getMessage());
+        fprintf(stderr, "Error during XMLPlatformUtils::Initialize(). \n"
+                        "  Message is: %s\n", pMessage);
+        delete pMessage;
+        return -1;
+    }
+
+
     //
     //  Test 1.  Basic operations on a simple string.
     //
@@ -881,13 +904,192 @@ void main()
         TASSERT(el.getPrefix().equals("foo"));
         TASSERT(el.getTagName().equals(qName));
         TASSERT(el.hasChildNodes() == false);
+
+        //
+        // Creating a second document with the same docType object should fail.
+        //
+        try
+        {
+            DOM_Document doc2 = impl.createDocument(docNSURI, qName, dt);
+            TASSERT(false);  // should not reach here.
+        }
+        catch ( DOM_DOMException &e)
+        {
+            TASSERT(e.code == DOM_DOMException::WRONG_DOCUMENT_ERR);
+        }
+        catch (...)
+        {
+            TASSERT(false);  // Wrong exception thrown.
+        }
     }
     TESTEPILOG;
     
+
+
+
+    //
+    //  CreateElementNS methods
+    //
+    TESTPROLOG;
+    {
+        
+        // Set up an initial (root element only) document.
+        // 
+        DOM_DOMImplementation impl;
+        
+        DOMString qName = "foo:docName";
+        DOMString pubId = "pubId";
+        DOMString sysId = "http://sysId";
+        DOMString intSubSet = "Internal subsets are not parsed by this call!";
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        
+        DOMString docNSURI = "http://document.namespace";
+        DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
+        DOM_Element rootEl = doc.getDocumentElement();
+
+        //
+        // CreateElementNS
+        //
+        DOM_Element ela = doc.createElementNS("http://nsa", "a:ela");  // prefix and URI
+        DOM_Element elb = doc.createElementNS("http://nsb", "elb");    //  URI, no prefix.
+        DOM_Element elc = doc.createElementNS("", "elc");              // No URI, no prefix.
+
+        rootEl.appendChild(ela);
+        rootEl.appendChild(elb);
+        rootEl.appendChild(elc);
+
+        TASSERT(ela.getNodeName().equals("a:ela"));
+        TASSERT(ela.getNamespaceURI().equals("http://nsa"));
+        TASSERT(ela.getPrefix().equals("a"));
+        TASSERT(ela.getLocalName().equals("ela"));
+        TASSERT(ela.getTagName().equals("a:ela"));
+
+        TASSERT(elb.getNodeName().equals("elb"));
+        TASSERT(elb.getNamespaceURI().equals("http://nsb"));
+        TASSERT(elb.getPrefix().equals(""));
+        TASSERT(elb.getLocalName().equals("elb"));
+        TASSERT(elb.getTagName().equals("elb"));
+
+        TASSERT(elc.getNodeName().equals("elc"));
+        TASSERT(elc.getNamespaceURI().equals(""));
+        TASSERT(elc.getPrefix().equals(""));
+        TASSERT(elc.getLocalName().equals("elc"));
+        TASSERT(elc.getTagName().equals("elc"));
+
+        // Badly formed qualified name
+        //EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);     
+
+        // Prefix == xml, namespace != http://www.w3.org/XML/1998/namespace
+        //EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a", DOM_DOMException::NAMESPACE_ERR));     
+
+        // A couple of corner cases that should not fail.
+        TASSERT(doc.createElementNS("http://www.w3.org/XML/1998/namespace", "xml:a") != 0);
+        TASSERT(doc.createElementNS("http://www.w3.org/XML/1998/namespace", "")      != 0);
+        TASSERT(doc.createElementNS("http://www.w3.org/XML/1998/namespace", 0)    != 0);
+
+
+
+
+    }
+    TESTEPILOG;
+
+
+
+    //
+    //  CreateAttributeNS methods
+    //
+    TESTPROLOG;
+    {
+        
+        // Set up an initial (root element only) document.
+        // 
+        DOM_DOMImplementation impl;
+        
+        DOMString qName = "foo:docName";
+        DOMString pubId = "pubId";
+        DOMString sysId = "http://sysId";
+        DOMString intSubSet = "Internal subsets are not parsed by this call!";
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        
+        DOMString docNSURI = "http://document.namespace";
+        DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
+        DOM_Element rootEl = doc.getDocumentElement();
+
+        //
+        // CreateAttributeNS
+        //
+        DOM_Attr attra = doc.createAttributeNS("http://nsa", "a:attra");       // prefix and URI
+        DOM_Attr attrb = doc.createAttributeNS("http://nsb", "attrb");         //  URI, no prefix.
+        DOM_Attr attrc = doc.createAttributeNS("", "attrc");    // No URI, no prefix.
+
+        TASSERT(attra.getNodeName().equals("a:attra"));
+        TASSERT(attra.getNamespaceURI().equals("http://nsa"));
+        TASSERT(attra.getPrefix().equals("a"));
+        TASSERT(attra.getLocalName().equals("attra"));
+        TASSERT(attra.getName().equals("a:attra"));
+
+        TASSERT(attrb.getNodeName().equals("attrb"));
+        TASSERT(attrb.getNamespaceURI().equals("http://nsb"));
+        TASSERT(attrb.getPrefix().equals(""));
+        TASSERT(attrb.getLocalName().equals("attrb"));
+        TASSERT(attrb.getName().equals("attrb"));
+
+        TASSERT(attrc.getNodeName().equals("attrc"));
+        TASSERT(attrc.getNamespaceURI().equals(""));
+        TASSERT(attrc.getPrefix().equals(""));
+        TASSERT(attrc.getLocalName().equals("attrc"));
+        TASSERT(attrc.getName().equals("attrc"));
+
+    }
+    TESTEPILOG;
+
+
+    //
+    //  getElementsByTagNameNS
+    //
+    TESTPROLOG;
+    {
+        
+        // Set up an initial (root element only) document.
+        // 
+        DOM_DOMImplementation impl;
+        
+        DOMString qName = "foo:docName";
+        DOMString pubId = "pubId";
+        DOMString sysId = "http://sysId";
+        DOMString intSubSet = "Internal subsets are not parsed by this call!";
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        
+        DOMString docNSURI = "http://document.namespace";
+        DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
+        DOM_Element rootEl = doc.getDocumentElement();
+
+        //
+        // Populate the document
+        //
+        DOM_Element ela = doc.createElementNS("http://nsa", "a:ela");  
+        rootEl.appendChild(ela);
+        DOM_Element elb = doc.createElementNS("http://nsb", "elb");   
+        rootEl.appendChild(elb);
+        DOM_Element elc = doc.createElementNS("",           "elc");  
+        rootEl.appendChild(elc);
+        DOM_Element eld = doc.createElementNS("http://nsa", "d:ela");
+        rootEl.appendChild(eld);
+        DOM_Element ele = doc.createElementNS("http://nse", "elb");   
+        rootEl.appendChild(ele);
+
+
+    }
+    TESTEPILOG;
+
+
+
+
     //
     //  Print Final allocation stats for full test
     //
     DomMemDebug().print();
     
+    return 0;
     };
     
