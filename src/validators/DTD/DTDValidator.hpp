@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/06 19:00:07  roddey
+ * Added a getter for the doc type handler.
+ *
  * Revision 1.4  2000/02/24 20:16:49  abagchi
  * Swat for removing Log from API docs
  *
@@ -142,6 +145,8 @@ public:
     NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
     NameIdPoolEnumerator<XMLNotationDecl> getNotationEnumerator() const;
     unsigned int getRootElemId() const;
+    DocTypeHandler* getDocTypeHandler();
+    const DocTypeHandler* getDocTypeHandler() const;
 
 
     // -----------------------------------------------------------------------
@@ -462,6 +467,16 @@ DTDValidator::getNotationEnumerator() const
 inline unsigned int DTDValidator::getRootElemId() const
 {
     return fRootElemId;
+}
+
+inline DocTypeHandler* DTDValidator::getDocTypeHandler()
+{
+    return fDocTypeHandler;
+}
+
+inline const DocTypeHandler* DTDValidator::getDocTypeHandler() const
+{
+    return fDocTypeHandler;
 }
 
 
