@@ -47,7 +47,7 @@ if ($openresult == 0) {
 
 while ($fileline = <VERSIONFILE>) {
    if ($fileline =~ /gXML4CFullVersionStr = \"(.*)\"/) {   # "
-     $binarytargetdir = $1;  # We found the version string inside this file 
+     $binarytargetdir = $1;  # We found the version string inside this file
    }
 }
 close(VERSIONFILE);
@@ -97,12 +97,10 @@ sub package_sources {
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
 
    # Select APache style or IBM Alphaworks style docs
-   $styleFile = "style-apachexml.jar";
    if (length($ICUROOT) > 0) {
    	change_documentation_entities("$srctargetdir/doc/dtd/entities.ent");
    	change_doxygen("$srctargetdir/doc/Doxyfile");
    	change_createdocs_bat("$srctargetdir/createdocs.bat");
-   	$styleFile = "style-ibm.zip";
    }
 
    # Now create the API documentation from the XML sources
@@ -117,11 +115,12 @@ sub package_sources {
       system("$RM -rf *.dep");
       system("$RM -rf *.mak");
       system("$RM -rf Makefile");
-      system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan.jar;../tools/jars/xerces.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/$styleFile");
+      chdir ("$srctargetdir");
+      system("createdocs");
 
    }
    else {   # all UNIX flavors
-   
+
 #   Docs are only building on Windows for now...
 
       $RM = "\\rm";
@@ -312,7 +311,7 @@ sub change_doxygen()
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
                 $line =~ s/Xerces-C/XML4C/g;
-                $line =~ s/1\.3\.0/3\.3\.1/g;
+                $line =~ s/1\.4\.0/3\.4\.0/g;
                 $line =~ s/header.html/header_ibm.html/g;
                 print FIZZLEOUT $line;
         }
