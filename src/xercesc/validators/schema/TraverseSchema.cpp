@@ -1084,7 +1084,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const IDOM_Element* const childElem,
     // Remark: some code will be repeated in list|restriction| union but it
     //         is cleaner that way
     if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_LIST)) { //traverse List
-        if (baseRefContext & SchemaSymbols::LIST != 0) {
+        if ((baseRefContext & SchemaSymbols::LIST) != 0) {
 
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType);
             return resetCurrentTypeNameStack(-1);
