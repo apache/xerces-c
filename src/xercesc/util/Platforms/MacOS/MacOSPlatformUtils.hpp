@@ -142,18 +142,20 @@ extern "C" void XMLCustomPanicProc(XMLPlatformUtils::PanicReasons panicReason, c
 
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!
-XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);
-XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec);
+XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);
+XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec);
 
 //	Convert from path to FSRef/FSSpec
 //	You retain ownership of the pathName.
-bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref);
-bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec);
+XMLUTIL_EXPORT bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref);
+XMLUTIL_EXPORT bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec);
 
 //	These routines copy characters between their representation in the Unicode Converter
 //	and the representation used by XMLCh. Until a recent change in Xerces, these were
 //	sometimes different on the Macintosh (with GCC), but XMLCh is now fixed at 16 bits.
 //	Code utilitizing these routines may be phased out in time, as a conversion is no
 //	longer necessary.
-XMLCh*		CopyUniCharsToXMLChs(const UniChar* src, XMLCh* dst, std::size_t charCount, std::size_t maxChars);
-UniChar*	CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std::size_t maxChars);
+XMLUTIL_EXPORT XMLCh*
+CopyUniCharsToXMLChs(const UniChar* src, XMLCh* dst, std::size_t charCount, std::size_t maxChars);
+XMLUTIL_EXPORT UniChar*
+CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std::size_t maxChars);
