@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/03 17:30:19  neilg
+ * uninitialize panic handlers so they will be ready for subsequent initalizations
+ *
  * Revision 1.14  2003/11/24 18:07:41  knoaman
  * Add missing ';'
  *
@@ -410,6 +413,8 @@ void XMLPlatformUtils::Terminate()
     {
         delete fgDefaultPanicHandler;
     }
+    fgDefaultPanicHandler = 0;
+    fgUserPanicHandler = 0;
 
     // de-allocate default memory manager
     if (fgMemMgrAdopted)
