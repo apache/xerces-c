@@ -571,8 +571,14 @@ if ( ($platform =~ m/AIX/i)      ||
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
-        $icu_cxxflags = '"-w -O"';
-        $icu_cflags = '"-w -O"';
+        
+        if ($opt_x eq "icc"){
+            $icu_cxxflags = '"-w -O0"';
+            $icu_cflags = '"-w -O0"';        	
+        } else {
+            $icu_cxxflags = '"-w -O"';
+            $icu_cflags = '"-w -O"';
+        }
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
