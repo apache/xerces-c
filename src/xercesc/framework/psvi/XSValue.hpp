@@ -16,6 +16,11 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/11/14 19:01:22  peiyongz
+ * st_InvalidRange removed
+ * getActVal return double only for dt_decimal
+ * error status re-specified for numeric data types
+ *
  * Revision 1.14  2004/10/20 15:18:20  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -131,7 +136,6 @@ public:
 
     enum Status {
             st_Init,
-            st_InvalidRange,
             st_NoContent,
             st_NoCanRep,
             st_NoActVal,
@@ -253,10 +257,6 @@ public:
                          XMLCh*    f_strVal;
 
                 struct decimal {
-                                int              f_sign;
-                                unsigned int     f_scale;  
-                                unsigned long    f_integral;
-                                unsigned long    f_fraction;
                                 double           f_dvalue;
                 } f_decimal;
 

@@ -16,6 +16,11 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/11/14 19:01:22  peiyongz
+ * st_InvalidRange removed
+ * getActVal return double only for dt_decimal
+ * error status re-specified for numeric data types
+ *
  * Revision 1.16  2004/10/27 21:52:04  peiyongz
  * Set status for invalid data -- patch from David Bertoni
  *
@@ -490,7 +495,7 @@ XSValue::validateNumerics(const XMLCh*         const content
             XMLFloat data(content, manager);
             if (data.isDataConverted())
             {
-                status = st_InvalidRange;
+                status = st_FOCA0002;
                 return false;
             }
         }
@@ -501,7 +506,7 @@ XSValue::validateNumerics(const XMLCh*         const content
             XMLDouble  data(content, manager);
             if (data.isDataConverted())
             {
-                status = st_InvalidRange;
+                status = st_FOCA0002;
                 return false;
             }
         }
@@ -540,7 +545,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                     , manager) 
                                                     == XMLNumber::GREATER_THAN)
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -555,7 +560,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                    , manager) 
                                                    == XMLNumber::GREATER_THAN)
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -570,7 +575,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                    , manager) 
                                                    == XMLNumber::LESS_THAN)
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -585,7 +590,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                    , manager) 
                                                    == XMLNumber::LESS_THAN)
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -606,7 +611,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                     , manager) 
                                                     == XMLNumber::GREATER_THAN))
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -627,7 +632,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                                                     , manager) 
                                                     == XMLNumber::GREATER_THAN))
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -658,7 +663,10 @@ XSValue::validateNumerics(const XMLCh*         const content
                                 , manager
                                  )
                 )
+            {
+                status = st_FOCA0002;
                 return false;
+            }
 
             switch (datatype)
             { 
@@ -669,7 +677,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                     if ((actVal.f_long < INT_MIN) || 
                         (actVal.f_long > INT_MAX)  )
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -680,7 +688,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                     if ((actVal.f_long < SHRT_MIN) || 
                         (actVal.f_long > SHRT_MAX)  )
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -691,7 +699,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                     if ((actVal.f_long < SCHAR_MIN) || 
                         (actVal.f_long > SCHAR_MAX)  )
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return false;
                     }
                 }
@@ -718,7 +726,11 @@ XSValue::validateNumerics(const XMLCh*         const content
                                 , manager
                                  )
                 )
+            {
+                status = st_FOCA0002;
                 return false;
+            }
+
 
             switch (datatype)
             { 
@@ -727,7 +739,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 // strtol() won't overflow for UINT_MAX+1 on 64 box
                 if (actVal.f_long > UINT_MAX) 
                 {
-                    status = st_InvalidRange;
+                    status = st_FOCA0002;
                     return false;
                 }
                 break;
@@ -735,7 +747,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 // error: > USHRT_MAX
                 if (actVal.f_ulong > USHRT_MAX) 
                 {
-                    status = st_InvalidRange;
+                    status = st_FOCA0002;
                     return false;
                 }
                 break;
@@ -743,12 +755,12 @@ XSValue::validateNumerics(const XMLCh*         const content
                 // error: > UCHAR_MAX
                 if (actVal.f_ulong > UCHAR_MAX) 
                 {
-                    status = st_InvalidRange;
+                    status = st_FOCA0002;
                     return false;
                 }
                 break;
             default:
-                status = st_NotSupported;            
+                status = st_NotSupported;
                 return false;
                 break;
             } 
@@ -1407,70 +1419,16 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
         if (datatype == XSValue::dt_decimal)
         {
-            //Prepare for the quadruplet
-            XMLBigDecimal data(content, manager); 
-
-            int      totalDigit = data.getTotalDigit();
-            int      scale      = data.getScale();
-            XMLCh*   intVal     = data.getIntVal();
-
-            // get the fraction
-            t_value  actValFract;
-
-            if ( !getActualValue( 
-                                  &(intVal[totalDigit - scale])
-                                , status
-                                , version
-                                , convert_2_ulong
-                                , actValFract
-                                , base_decimal
-                                , manager
-                                )
-                )
-            {
-                if (status != st_FOCA0002)
-                    status = st_FOCA0001;
-
-                return 0;
-            }
-
-            // get the integer
-            t_value  actValInt;
-            intVal[totalDigit - scale] = 0;
-
-            if ( !getActualValue( 
-                                  intVal
-                                , status
-                                , version
-                                , convert_2_ulong
-                                , actValInt
-                                , base_decimal
-                                , manager
-                                )
-                )
-            {
-                if (status != st_FOCA0002)
-                    status = st_FOCA0001;
-
-                return 0;
-            }
-
             //Prepare the double value
-            XMLDouble  data2(content, manager);
-            if (data2.isDataConverted())
+            XMLDouble  data(content, manager);
+            if (data.isDataConverted())
             {
-                status = data2.isDataOverflowed()? st_FOCA0001 : st_InvalidRange;
+                status = st_FOCA0001;
                 return 0;
             }
 
             XSValue* retVal = new (manager) XSValue(dt_decimal, manager);
-
-            retVal->fData.fValue.f_decimal.f_sign     = data.getSign();
-            retVal->fData.fValue.f_decimal.f_scale    = data.getScale();
-            retVal->fData.fValue.f_decimal.f_fraction = actValFract.f_ulong;
-            retVal->fData.fValue.f_decimal.f_integral = actValInt.f_ulong;
-
-            retVal->fData.fValue.f_decimal.f_dvalue   = data2.getValue();
+            retVal->fData.fValue.f_decimal.f_dvalue = data.getValue();
 
             return retVal;
         }
@@ -1481,7 +1439,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
             XMLFloat data(content, manager);
             if (data.isDataConverted())
             {
-                status = st_InvalidRange;
+                status = st_FOCA0002;
                 return 0;
             }
             else
@@ -1498,7 +1456,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
             XMLDouble  data(content, manager);
             if (data.isDataConverted())
             {
-                status = st_InvalidRange;
+                status = st_FOCA0002;
                 return 0;
             }
             else
@@ -1527,9 +1485,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                 )
                 )
             {
-                if (status != st_FOCA0002)
-                    status = st_FOCA0003;
-
+                //status has been set by getActualValue
                 return 0;
             }
 
@@ -1547,7 +1503,10 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 // error: > -1
                 {
                     if (actVal.f_long > -1)
+                    {
+                        status = st_FOCA0002;
                         return 0;
+                    }
 
                     XSValue* retVal = new (manager) XSValue(dt_negativeInteger, manager);
                     retVal->fData.fValue.f_long = actVal.f_long;
@@ -1558,7 +1517,10 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 // error: > 0
                 {
                     if (actVal.f_long > 0)
+                    {
+                        status = st_FOCA0002;
                         return 0;
+                    }
 
                     XSValue* retVal = new (manager) XSValue(dt_nonPositiveInteger, manager);
                     retVal->fData.fValue.f_long = actVal.f_long;
@@ -1569,7 +1531,10 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 // error: < 0
                 {
                     if (actVal.f_long < 0)
+                    {
+                        status = st_FOCA0002;
                         return 0;
+                    }
 
                     XSValue* retVal = new (manager) XSValue(dt_nonNegativeInteger, manager);
                     retVal->fData.fValue.f_long = actVal.f_long;
@@ -1580,7 +1545,10 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 // error: < 1
                 {
                     if (actVal.f_long < 1)
+                    {
+                        status = st_FOCA0002;
                         return 0;
+                    }
 
                     XSValue* retVal = new (manager) XSValue(dt_positiveInteger, manager);
                     retVal->fData.fValue.f_long = actVal.f_long;
@@ -1609,7 +1577,14 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                 , manager
                                  )
                )
-               return 0;
+            {
+                //for dt_long we return whatever set by getActualValue
+                //for the rest, we need to return st_FOCA0002
+                if (datatype != XSValue::dt_long)
+                    status = st_FOCA0002;
+
+                return 0;
+            }
 
             switch (datatype)
             { 
@@ -1628,7 +1603,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                     if ((actVal.f_long < INT_MIN) || 
                         (actVal.f_long > INT_MAX)  )
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return 0;
                     }
 
@@ -1642,7 +1617,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if ((actVal.f_long < SHRT_MIN) || (actVal.f_long > SHRT_MAX))
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return 0;
                     }
 
@@ -1656,7 +1631,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if ((actVal.f_long < SCHAR_MIN) || (actVal.f_long > SCHAR_MAX))
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return 0;
                     }
 
@@ -1685,7 +1660,14 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                 , manager
                                  )
                )
-               return 0;
+            {
+                //for dt_unsignedLong we return whatever set by getActualValue
+                //for the rest, we need to return st_FOCA0002
+                if (datatype != XSValue::dt_unsignedLong)
+                    status = st_FOCA0002;
+
+                return 0;
+            }
 
             switch (datatype)
             { 
@@ -1704,7 +1686,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
 
                     if (actVal.f_long > UINT_MAX) 
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return 0;
                     }
 
@@ -1718,7 +1700,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if (actVal.f_ulong > USHRT_MAX)
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return 0;
                     }
 
@@ -1732,7 +1714,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 {
                     if (actVal.f_ulong > UCHAR_MAX)
                     {
-                        status = st_InvalidRange;
+                        status = st_FOCA0002;
                         return 0;
                     }
 
@@ -1963,7 +1945,7 @@ bool XSValue::getActualValue(const XMLCh*         const content
     {
         if (-1 != XMLString::indexOf(content, chDash))
         {
-            status = st_InvalidRange;
+            status = st_FOCA0002; //invalid lexcial value
             return false;
         }
 
@@ -1981,7 +1963,7 @@ bool XSValue::getActualValue(const XMLCh*         const content
     // check if overflow/underflow occurs
     if (errno == ERANGE)
     {
-        status = st_InvalidRange;
+        status = st_FOCA0003;
         return false;
     }
 
