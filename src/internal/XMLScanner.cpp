@@ -3251,8 +3251,9 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         }
          else if (curString == EncodingString)
         {
-            if (!XMLString::stringLen(rawValue))
-                emitError(XMLErrs::BadXMLEncoding, rawValue);
+            //if (!XMLString::stringLen(rawValue))
+            if (!XMLString::isValidEncName(rawValue))
+             emitError(XMLErrs::BadXMLEncoding, rawValue);
         }
          else if (curString == StandaloneString)
         {
