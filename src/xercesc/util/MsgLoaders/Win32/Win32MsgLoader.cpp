@@ -181,7 +181,7 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     const unsigned int theOfs   = theMsgId & 0x000F;
 
     // Try to find this resource. If we fail to find it, return false
-    HRSRC hMsgRsc = ::FindResourceExA
+    HRSRC hMsgRsc = ::FindResourceEx
     (
         fModHandle
         , RT_STRING
