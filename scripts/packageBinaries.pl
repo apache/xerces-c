@@ -106,6 +106,7 @@ if ($platform =~ m/Windows/) {
         mkdir ($targetdir . "/samples/PParse", "0644");
         mkdir ($targetdir . "/samples/StdInParse", "0644");
         mkdir ($targetdir . "/samples/EnumVal", "0644");
+        mkdir ($targetdir . "/samples/CreateDOMDocument", "0644");
         mkdir ($targetdir . "/doc", "0644");
         mkdir ($targetdir . "/doc/apiDocs", "0644");
 	if ( length($ICUROOT) > 0 ) {
@@ -237,6 +238,14 @@ if ($platform =~ m/Windows/) {
         #system("nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"");
 	system("msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /REBUILD");
 
+        # Make the CreateDOMDocument sample
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/CreateDOMDocument");
+        #system "nmake -f CreateDOMDocument.mak clean CFG=\"CreateDOMDocument - $platformname $buildmode\"";
+	system("msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /CLEAN");
+        print "Executing: nmake -f CreateDOMDocument.mak all CFG=\"CreateDOMDocument - $platformname $buildmode\"";
+        #system("nmake -f CreateDOMDocument.mak all CFG=\"CreateDOMDocument - $platformname $buildmode\"");
+	system("msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /REBUILD");
+
 	if (length($ICUROOT) > 0) {
 		# run makeconv now
 		chdir ("$ICUROOT/data");
@@ -308,6 +317,8 @@ if ($platform =~ m/Windows/) {
         system("rm -f $targetdir/samples/StdInParse/Makefile");
         system("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
         system("rm -f $targetdir/samples/EnumVal/Makefile");
+        system("cp -Rfv $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
+        system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
 
         system("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
 
@@ -428,6 +439,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system ("mkdir $targetdir/samples/PParse");
         system ("mkdir $targetdir/samples/StdInParse");
         system ("mkdir $targetdir/samples/EnumVal");
+        system ("mkdir $targetdir/samples/CreateDOMDocument");
         system ("mkdir $targetdir/doc");
         system ("mkdir $targetdir/doc/apiDocs");
 
@@ -439,6 +451,11 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 		print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
 		system ("$icuCompileFlags configure --prefix=$ICUROOT");
 		chdir ("$ICUROOT/source/common");
+		system ("gmake clean");	# Clean up the build, may want to comment this line out!
+		system ("gmake");
+		system ("gmake install");
+
+		chdir ("$ICUROOT/source/tools/toolutil");
 		system ("gmake clean");	# Clean up the build, may want to comment this line out!
 		system ("gmake");
 		system ("gmake install");
@@ -554,16 +571,9 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system("rm -f $targetdir/samples/StdInParse/Makefile");
         system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
         system("rm -f $targetdir/samples/EnumVal/Makefile");
+        system("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
+        system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
         system("rm -f $targetdir/samples/Makefile");
-#        system("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
-#        system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
-#        system("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
-#        system("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
-#        system("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
-#        system("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
-#        system("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
-#        system("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
-#        system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
 
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
