@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.5  2000/02/06 07:47:32  rahulj
  * Year 2K copyright swat.
  *
@@ -365,7 +370,7 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
 	oldAttr->setOwnerElement(null);
     
     // This will throw INUSE if necessary
-    attributes->setNamedItem(newAttr);
+    attributes->setNamedItemNS(newAttr);
     
     // Attr node reference counting note:
     // If oldAttr's refcount is zero at this point, here's what happens...

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.6  2000/02/11 18:14:11  abagchi
  * Fixed doc++ bugs
  *
@@ -88,171 +93,145 @@
 class NodeIteratorImpl;
 
 /**
-  *	NodeIterators are used to step through a set of nodes, e.g. the set of nodes in a
-  * NodeList, the document subtree governed by a particular node, the results of a
-  * query, or any other set of nodes. The set of nodes to be iterated is determined by
-  * the implementation of the NodeIterator. DOM Level 2 specifies a single
-  * NodeIterator implementation for document-order traversal of a document subtree.
-  * Instances of these iterators are created by calling
-  * <code>DocumentTraversal.createNodeIterator()</code>.
-  */
+ * NodeIterators are used to step through a set of nodes, e.g. the set of nodes
+ * in a NodeList, the document subtree governed by a particular node, the results
+ * of a query, or any other set of nodes. The set of nodes to be iterated is
+ * determined by the implementation of the NodeIterator. DOM Level 2 specifies a
+ * single NodeIterator implementation for document-order traversal of a document
+ * subtree. Instances of these iterators are created by calling
+ * <code>DocumentTraversal.createNodeIterator()</code>.
+ */
 class CDOM_EXPORT DOM_NodeIterator
 {
-	public:
-    /** @name Constructors */
-    //@{
-
-	/**
-	  * Default constructor
-	  */
-    DOM_NodeIterator ();
-
-	/**
-	  * Copy constructor
-	  * @param other The object to be copied
-	  */
-    DOM_NodeIterator(const DOM_NodeIterator &other);
-    //@}
-
-    /** @name Assignment operators */
-    //@{
-	/**
-	  * Assignment operator
-	  * @param other The object to be copied through assignment
-	  */
-    DOM_NodeIterator & operator = (const DOM_NodeIterator &other);
-
-	/**
-	  * Assignment operator
-	  *
-	  *   This overloaded variant is provided for
-	  *   the sole purpose of setting a DOM_Node reference variable to
-	  *   zero.  Nulling out a reference variable in this way will decrement
-	  *   the reference count on the underlying Node object that the variable
-	  *   formerly referenced.  This effect is normally obtained when reference
-	  *   variable goes out of scope, but zeroing them can be useful for
-	  *   global instances, or for local instances that will remain in scope
-	  *   for an extended time,  when the storage belonging to the underlying
-          *   node needs to be reclaimed.
-	  * @param val Only a value of 0, or null, is allowed.
-	  */
-    DOM_NodeIterator & operator = (const DOM_NullPtr *val);
-    //@}
-
-    /** @name Destructor */
-    //@{
-	/**
-	  * Destructor
-	  */
-    ~DOM_NodeIterator();
-    //@}
-
-    /** @name Equality operators */
-    //@{
-    /**
-     *  Test whether this NodeIterator reference refers to the same underlying
-     *  node iterator as the other reference object.  This does not
-     *  compare the contents of two different objects.
-     *
-     *  @param other The value to be compared
-     *  @return Returns true if the underlying node iterator is same
-     */
-    bool operator == (const DOM_NodeIterator & other)const;
-
-    /**
-     *  Use this comparison operator to test whether a Node Iterator reference
-     *  is null.
-     *
-     *  @param other The value to be compared, which must be 0 or null.
-     *  @return Returns true if the node iterator is null
-     */
-    bool operator == (const DOM_NullPtr *other) const;
-    //@}
-
-    /** @name Inequality operators */
-    //@{
-    /**
-     *  Test whether this NodeIterator reference refers to the same underlying
-     *  node iterator as the other reference object.  This does not
-     *  compare the contents of two different objects.
-     *
-     *  @param other The value to be compared
-     *  @return Returns true if the underlying node iterator is different
-     */
-    bool operator != (const DOM_NodeIterator & other) const;
-    /**
-     *  Use this comparison operator to test whether a Node Iterator reference
-     *  is null.
-     *
-     *  @param other The value to be compared, which must be 0 or null.
-     *  @return Returns true if the node iterator is NOT null
-     */
-    bool operator != (const DOM_NullPtr * other) const;
-    //@}
-
-    /** @name Get Functions */
-    //@{
-	/**
-	  *	 Returns the value of <code>whatToShow</code>
-	  *  This attribute determines which node types are presented via the
-          *  iterator. The available set of constants is defined in the Filters
-          *  interface.
-	  */
-    unsigned long       getWhatToShow();
-
-    /**
-      *  Get the <code>expandEntity</code> reference flag.
-      *  The value of this flag determines whether the children of entity
-      *  reference nodes are visible to the iterator. If false, they will be skipped
-      *  over.
-      *
-      *  To produce a view of the document that has entity references
-      *  expanded and does not expose the entity reference node itself, use
-      *  the <code>whatToShow</code> flags to hide the entity reference node and set
-      *  <code>expandEntityReferences</code> to true when creating the iterator. To
-      *  produce a view of the document that has entity reference nodes but
-      *  no entity expansion, use the <code>whatToShow</code> flags to show the entity
-      *  reference node and set <code>expandEntityReferences</code> to false.
-      */
-    bool getExpandEntityReferences();
-
-	/**
-	  *	Get the filter used to screen nodes.
-	  */
-    DOM_NodeFilter*     getFilter();
-    //@}
-
-    /** @name Iterator Methods */
-    //@{
-	/**
-	  *	 Returns the next node in the set and advances the position of the
-          *  iterator in the set. After a NodeIterator is created, the first call to
-          *  <code>nextNode()</code> returns the first node in the set.
-	  *  @return Returns the next node in the set
-	  */
-    DOM_Node            nextNode();
+    public:
+        /** @name Constructors and assignment operator */
+        //@{
+        /**
+          * Default constructor.
+          */
+        DOM_NodeIterator ();
 
         /**
-	  *  Returns the previous node in the set and moves the position of the
-          *  iterator backwards in the set.
-	  *  @return Returns the previous node in the set
+          * Copy constructor.
+          *
+          * @param other The object to be copied.
+          */
+        DOM_NodeIterator(const DOM_NodeIterator &other);
+
+        /**
+          * Assignment operator.
+          *
+          * @param other The object to be copied.
+          */
+        DOM_NodeIterator & operator = (const DOM_NodeIterator &other);
+
+        /**
+          * Assignment operator.  This overloaded variant is provided for
+          *   the sole purpose of setting a DOM_NodeIterator to null.
+          *
+          * @param val.  Only a value of 0, or null, is allowed.
+          */
+        DOM_NodeIterator & operator = (const DOM_NullPtr *val);
+        //@}
+
+        /** @name Destructor. */
+        //@{
+	/**
+	  * Destructor for DOM_NodeIterator.
 	  */
-    DOM_Node            previousNode();
+        ~DOM_NodeIterator();
+        //@}
 
-    /**
-      *	 Detaches the iterator from the set which it iterated over, releasing any
-      *  computational resources and placing the iterator in the INVALID state.
-      *  After detach has been invoked, calls to nextNode or previousNode
-      *  will raise the exception <code>INVALID_STATE_ERR</code>.
-      */
+        /** @name Equality and Inequality operators. */
+        //@{
+        /**
+         * The equality operator.
+         *
+         * @param other The object reference with which <code>this</code> object is compared
+         * @returns True if both <code>DOM_NodeIterator</code>s refer to the same
+         *  actual node, or are both null; return false otherwise.
+         */
+        bool operator == (const DOM_NodeIterator & other)const;
+
+        /**
+          *  Compare with a pointer.  Intended only to allow a convenient
+          *    comparison with null.
+          */
+        bool operator == (const DOM_NullPtr *other) const;
+
+        /**
+         * The inequality operator.  See operator ==.
+         */
+        bool operator != (const DOM_NodeIterator & other) const;
+
+         /**
+          *  Compare with a pointer.  Intended only to allow a convenient
+          *    comparison with null.
+          *
+          */
+        bool operator != (const DOM_NullPtr * other) const;
+        //@}
+
+        /** @name Get functions. */
+        //@{
+        /**
+          * Return which node types are presented via the iterator.
+          * The available set of constants is defined in the DOM_NodeFilter interface.
+          */
+        unsigned long       getWhatToShow();
+
+        /**
+          * Return The filter used to screen nodes.
+          */
+        DOM_NodeFilter*     getFilter();
+
+        /**
+          * Return the expandEntityReferences flag.
+          * The value of this flag determines whether the children of entity reference
+          * nodes are visible to the DOM_NodeFilter. If false, they will be skipped over.
+          */
+        bool getExpandEntityReferences();
+
+        /**
+          * Returns the next node in the set and advances the position of the iterator
+          * in the set. After a DOM_NodeIterator is created, the first call to nextNode()
+          * returns the first node in the set.
+          *
+          * @exception DOMException
+          *   INVALID_STATE_ERR: Raised if this method is called after the
+          *   <code>detach</code> method was invoked.
+          */
+        DOM_Node            nextNode();
+
+        /**
+          * Returns the previous node in the set and moves the position of the iterator
+          * backwards in the set.
+          *
+          * @exception DOMException
+          *   INVALID_STATE_ERR: Raised if this method is called after the
+          *   <code>detach</code> method was invoked.
+          */
+        DOM_Node            previousNode();
+        //@}
+
+        /** @name Detaching functions. */
+        //@{
+        /**
+          * Detaches the iterator from the set which it iterated over, releasing any
+          * computational resources and placing the iterator in the INVALID state. After
+          * <code>detach</code> has been invoked, calls to <code>nextNode</code> or
+          * <code>previousNode</code> will raise the exception INVALID_STATE_ERR.
+          */
 	void				detach();
-	//@}
+        //@}
 
-      DOM_NodeIterator (NodeIteratorImpl* impl);
+    protected:
+        DOM_NodeIterator (NodeIteratorImpl* impl);
+
+        friend class DOM_Document;
 
     private:
-      NodeIteratorImpl*                 fImpl;
-
+        NodeIteratorImpl*                 fImpl;
 };
 
 #endif

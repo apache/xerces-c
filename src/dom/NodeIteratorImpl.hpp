@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.3  2000/02/06 07:47:33  rahulj
  * Year 2K copyright swat.
  *
@@ -114,7 +119,7 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 
 		void detach ();
 
-        /** Get the expandEntity reference flag. */
+        // Get the expandEntity reference flag.
         bool getExpandEntityReferences();
 
 
@@ -122,16 +127,16 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 		//
 		// Data
 		//
-		/** The root. */
+		// The root.
 		DOM_Node fRoot;
 
-		/** The whatToShow mask. */
+		// The whatToShow mask.
 		unsigned long fWhatToShow;
 
-		/** The NodeFilter reference. */
+		// The NodeFilter reference.
 		DOM_NodeFilter* fNodeFilter;
 
-        /** The expandEntity reference flag. */
+        // The expandEntity reference flag.
         bool  fExpandEntityReferences;
 
 		bool fDetached;
@@ -147,15 +152,14 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 		// (usually akin to whether the node was returned via nextNode())
 		// (eg fForward = true) or previousNode() (eg fForward = false).
 
-		/** The last Node returned. */
+		// The last Node returned.
 		DOM_Node fCurrentNode;
 
-		/** The direction of the iterator on the fCurrentNode.
-		 *  <pre>
-		 *  nextNode()  ==      fForward = true;
-		 *  previousNode() ==   fForward = false;
-		 *  </pre>
-		 */
+		// The direction of the iterator on the fCurrentNode.
+		//  <pre>
+		//  nextNode()  ==      fForward = true;
+		//  previousNode() ==   fForward = false;
+		//  </pre>
 		bool fForward;
 
 

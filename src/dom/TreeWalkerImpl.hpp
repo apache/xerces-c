@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.3  2000/02/06 07:47:34  rahulj
  * Year 2K copyright swat.
  *
@@ -95,124 +100,110 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     TreeWalkerImpl (const TreeWalkerImpl& twi);
     TreeWalkerImpl& operator= (const TreeWalkerImpl& twi);
 
-    /** Return the whatToShow value */
+    // Return the whatToShow value.
     unsigned long  getWhatToShow ();
 
-    /** Return the NodeFilter */
+    // Return the NodeFilter.
     DOM_NodeFilter* getFilter ();
 
 	void detach ();
 
-    /** Return the current DOM_Node. */
+    // Return the current DOM_Node.
     DOM_Node getCurrentNode ();
 
-    /** Return the current Node. */
+    // Return the current Node.
     void setCurrentNode (DOM_Node node);
 
-    /** Return the parent Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
+    // Return the parent Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
     DOM_Node parentNode ();
 
-    /** Return the first child Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
-
+    // Return the first child Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
     DOM_Node firstChild ();
 
-    /** Return the last child Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
-
+    // Return the last child Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
     DOM_Node lastChild ();
 
-    /** Return the previous sibling Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
-
+    // Return the previous sibling Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
     DOM_Node previousSibling ();
 
-    /** Return the next sibling Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
+    // Return the next sibling Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
+
     DOM_Node nextSibling ();
-    /** Return the previous Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
+    // Return the previous Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
     DOM_Node previousNode ();
 
-    /** Return the next Node from the current node,
-     *  after applying filter, whatToshow.
-     *  If result is not null, set the current Node.
-     */
+    // Return the next Node from the current node,
+    //  after applying filter, whatToshow.
+    //  If result is not null, set the current Node.
     DOM_Node nextNode ();
 
     void unreferenced ();
     
-    /** Get the expandEntity reference flag. */
+    // Get the expandEntity reference flag.
     bool getExpandEntityReferences();
 
 protected:
 
-    /** Internal function.
-     *  Return the parent Node, from the input node
-     *  after applying filter, whatToshow.
-     *  The current node is not consulted or set.
-     */
+    // Internal function.
+    //  Return the parent Node, from the input node
+    //  after applying filter, whatToshow.
+    //  The current node is not consulted or set.
     DOM_Node getParentNode (DOM_Node node);
 
-    /** Internal function.
-     *  Return the nextSibling Node, from the input node
-     *  after applying filter, whatToshow.
-     *  The current node is not consulted or set.
-     */
+    // Internal function.
+    //  Return the nextSibling Node, from the input node
+    //  after applying filter, whatToshow.
+    //  The current node is not consulted or set.
     DOM_Node getNextSibling (DOM_Node node);
 
-    /** Internal function.
-     *  Return the previous sibling Node, from the input node
-     *  after applying filter, whatToshow.
-     *  The current node is not consulted or set.
-     */
+    // Internal function.
+    //  Return the previous sibling Node, from the input node
+    //  after applying filter, whatToshow.
+    //  The current node is not consulted or set.
     DOM_Node getPreviousSibling (DOM_Node node);
 
-    /** Internal function.
-     *  Return the first child Node, from the input node
-     *  after applying filter, whatToshow.
-     *  The current node is not consulted or set.
-     */
+    // Internal function.
+    //  Return the first child Node, from the input node
+    //  after applying filter, whatToshow.
+    //  The current node is not consulted or set.
     DOM_Node getFirstChild (DOM_Node node);
 
-    /** Internal function.
-     *  Return the last child Node, from the input node
-     *  after applying filter, whatToshow.
-     *  The current node is not consulted or set.
-     */
+    // Internal function.
+    //  Return the last child Node, from the input node
+    //  after applying filter, whatToshow.
+    //  The current node is not consulted or set.
     DOM_Node getLastChild (DOM_Node node);
 
-    /** The node is accepted if it passes the whatToShow and the filter. */
+    // The node is accepted if it passes the whatToShow and the filter.
     short acceptNode (DOM_Node node);
 
     		
 private:
-    /** The whatToShow mask. */
+    // The whatToShow mask.
     unsigned long fWhatToShow;
 
-    /** The NodeFilter reference. */
+    // The NodeFilter reference.
     DOM_NodeFilter* fNodeFilter;
 
-    /** The current Node. */
+    // The current Node.
     DOM_Node fCurrentNode;
 
-    /** The root Node. */
+    // The root Node.
     DOM_Node fRoot;
 
-    /** The expandEntity reference flag. */
+    // The expandEntity reference flag.
     bool fExpandEntityReferences;
 
 	bool fDetached;

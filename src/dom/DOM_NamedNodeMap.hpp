@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/15 23:17:36  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.7  2000/02/10 20:20:42  abagchi
  * Added docs for assignment operators
  *
@@ -231,6 +236,10 @@ public:
     */
     DOM_Node               setNamedItem(DOM_Node arg);
 
+    //@}
+    /** @name Get functions. */
+    //@{
+
     /**
     * Returns the <code>index</code>th item in the map. 
     *
@@ -243,10 +252,6 @@ public:
     *   index.
     */
     DOM_Node               item(unsigned int index);
-
-    //@}
-    /** @name Get functions. */
-    //@{
 
     /**
     * Retrieves a node specified by name.

@@ -56,9 +56,10 @@
 
 /**
 * $Log$
-* Revision 1.11  2000/02/10 23:35:11  andyh
-* Update DOM_DOMImplementation::CreateDocumentType and
-* DOM_DocumentType to match latest from W3C
+* Revision 1.12  2000/02/15 23:17:37  andyh
+* Update Doc++ API comments
+* NameSpace bugfix and update to track W3C
+* Chih Hsiang Chou
 *
 * Revision 1.10  2000/02/06 07:47:33  rahulj
 * Year 2K copyright swat.
@@ -738,6 +739,7 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
     DOMString xml = DStringPool::getStaticString("xml", &s_xml);
     DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
     DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
+    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
 
     if (readOnly)
 	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -757,7 +759,7 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 	if (*p++ == chColon)	//prefix is malformed
 	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     if (fPrefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-	fPrefix.equals(xmlns) && namespaceURI != null && namespaceURI.length() != 0)
+	fPrefix.equals(xmlns) && !namespaceURI.equals(xmlnsURI))
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     name = this -> prefix = fPrefix;

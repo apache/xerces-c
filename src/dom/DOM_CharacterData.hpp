@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:17:36  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.3  2000/02/06 07:47:28  rahulj
  * Year 2K copyright swat.
  *
@@ -118,16 +123,6 @@ public:
     */
     DOM_CharacterData & operator = (const DOM_CharacterData &other);
 
-    //@}
-    /** @name Destructor. */
-    //@{
-	 /**
-	  * Destructor for DOM_CharacterData.  The object being destroyed
-      * is the reference to the Character Data node, not the character
-      * data itself.
-	  */
-    ~DOM_CharacterData();
-
     /**
       * Assignment operator.  This overloaded variant is provided for
       *   the sole purpose of setting a DOM_Node reference variable to
@@ -142,6 +137,16 @@ public:
       * @param val.  Only a value of 0, or null, is allowed.
       */
     DOM_CharacterData & operator = (const DOM_NullPtr *val);
+
+    //@}
+    /** @name Destructor. */
+    //@{
+	 /**
+	  * Destructor for DOM_CharacterData.  The object being destroyed
+      * is the reference to the Character Data node, not the character
+      * data itself.
+	  */
+    ~DOM_CharacterData();
 
 
     //@}

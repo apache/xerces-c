@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.2  2000/02/06 07:47:33  rahulj
  * Year 2K copyright swat.
  *
@@ -87,20 +92,18 @@ class CDOM_EXPORT NameNodeFilter : public NodeFilterImpl
 		NameNodeFilter();
 		virtual ~NameNodeFilter();
 
-    /** The name to compare with the node name. If null, all node names
-     *  are successfully matched.
-     */
+    // The name to compare with the node name. If null, all node names
+    //  are successfully matched.
     void setName(DOMString name);
 
-    /** Return the name to compare with node name. */
+    // Return the name to compare with node name.
     DOMString getName();
 
-    /** If match is true, the node name is accepted when it matches.
-     *  If match is false, the node name is accepted when does not match.
-     */
+    // If match is true, the node name is accepted when it matches.
+    //  If match is false, the node name is accepted when does not match.
     void setMatch(bool match) ;
 
-    /** Return match value */
+    // Return match value.
     bool getMatch();
 
     virtual DOM_NodeFilter::FilterAction acceptNode(DOM_Node n);

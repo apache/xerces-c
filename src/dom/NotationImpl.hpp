@@ -58,6 +58,11 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.3  2000/02/06 07:47:34  rahulj
  * Year 2K copyright swat.
  *
@@ -104,32 +109,28 @@ public:
     
     virtual NodeImpl *cloneNode(bool deep);
     
-    /**
-    * The Public Identifier for this Notation. If no public identifier
-    * was specified, this will be null.  
-    */
+    //
+    // The Public Identifier for this Notation. If no public identifier
+    // was specified, this will be null.  
     virtual DOMString getPublicId();
     
-    /**
-    * The System Identifier for this Notation. If no system identifier
-    * was specified, this will be null.  
-    */
+    // The System Identifier for this Notation. If no system identifier
+    // was specified, this will be null.  
     virtual DOMString getSystemId();
     
     
-    /** Notations never have a nodeValue.
-    @throws DOMException(NO_MODIFICATION_ALLOWED_ERR)
-    */
+    // Notations never have a nodeValue.
+    // @throws DOMException(NO_MODIFICATION_ALLOWED_ERR)
     virtual void setNodeValue(const DOMString &arg);
     
     
-    /** NON-DOM: The Public Identifier for this Notation. If no public
-    identifier was specified, this will be null.  */
+    // NON-DOM: The Public Identifier for this Notation. If no public
+    // identifier was specified, this will be null.  */
     virtual void setPublicId(const DOMString &arg);
     
     
-    /** NON-DOM: The System Identifier for this Notation. If no system
-    identifier was specified, this will be null.  */
+    // NON-DOM: The System Identifier for this Notation. If no system
+    // identifier was specified, this will be null.  */
     virtual void setSystemId(const DOMString &arg);
     
 };

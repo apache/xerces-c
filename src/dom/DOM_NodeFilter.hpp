@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/15 23:17:37  andyh
+ * Update Doc++ API comments
+ * NameSpace bugfix and update to track W3C
+ * Chih Hsiang Chou
+ *
  * Revision 1.4  2000/02/10 21:47:12  abagchi
  * Added API docs
  *
@@ -86,13 +91,13 @@ class NodeFilterImpl;
 
 
 /**
- *  This class wraps a NodeFilterImpl object, which is reference counted. Users
- *  are expected to subclass NodeFilterImpl to provide the desired filter. An example
- *  of this is in NameNodeFilterImpl.[cpp,hpp]
- *  Filters are objects that know how to "filter out" nodes. If a NodeIterator or
- *  TreeWalker is given a filter, it applies the filter before it returns the next node. If the
- *  filter says to accept the node, the iterator returns it; otherwise, the iterator looks for
- *  the next node and pretends that the node that was rejected was not there.
+ * Filters are objects that know how to "filter out" nodes. If a
+ * <code>DOM_NodeIterator</code> or <code>DOM_TreeWalker</code> is given a
+ * filter, it applies the filter before it returns the next node.
+ * 
+ * If the filter says to accept the node, the iterator returns it; otherwise, the
+ * iterator looks for the next node and pretends that the node that was rejected
+ * was not there.
  *
  *  The DOM does not provide any filters. Filter is just an interface that users can
  *  implement to provide their own filters. 
@@ -103,13 +108,11 @@ class NodeFilterImpl;
  *  One filter may be used with a number of different kinds of iterators, encouraging
  *  code reuse.
  */
-
-
 class CDOM_EXPORT DOM_NodeFilter
 {
-	public:
+    public:
 	/** @name Enumerators for Node Filter */
-    //@{
+        //@{
 	/**
 	  *		<table><tr><td>FILTER_ACCEPT</td>
           *            <td>Accept the node. Navigation methods defined for
@@ -132,7 +135,7 @@ class CDOM_EXPORT DOM_NodeFilter
 	  *		</table>
           *
 	  */
-	enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
+        enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
         enum ShowType {
             SHOW_ALL                       = 0x0000FFFF,
             SHOW_ELEMENT                   = 0x00000001,
@@ -150,46 +153,40 @@ class CDOM_EXPORT DOM_NodeFilter
         };
 	//@}
 
-    /** @name Constructors */
-    //@{
-    /**
-      * Default constructor for DOM_NodeFilter.
-      *
-      */
+        /** @name Constructors */
+        //@{
+        /**
+          * Default constructor for DOM_NodeFilter.
+          */
+        DOM_NodeFilter();
+        //@}
 
-    DOM_NodeFilter();
-	//@}
+        /** @name Destructor. */
+        //@{
+	/**
+	  * Destructor for DOM_NodeFilter.
+	  */
+        virtual ~DOM_NodeFilter();
+        //@}
 
-    /** @name Destructor */
-    //@{
-    /**
-      * Destructor
-      *
-      */
-    virtual ~DOM_NodeFilter();
-	//@}
+        /** @name Test function. */
+        //@{
+	/**
+	  * Test whether a specified node is visible in the logical view of a DOM_TreeWalker
+	  * or DOM_NodeIterator. This function will be called by the implementation of
+	  * DOM_TreeWalker and DOM_NodeIterator; it is not intended to be called directly from user
+	  * code.
+          * @param node The node to check to see if it passes the filter or not.
+          * @return A constant to determine whether the node is accepted, rejected, or skipped.
+	  */
+        virtual short acceptNode (DOM_Node node) =0;
+        //@}
 
-    /** @name Destructor */
-    //@{
-    /**
-      * Test whether a specified node is visible in the logical view of a <code>TreeWalker</code>
-      * or <code>NodeIterator</code>. This function will be called by the implementation of
-      * TreeWalker and NodeIterator; it is not intended to be called directly from
-      * user code.
-      *
-      * @param node The node to check to see if it passes the filter or not.
-      * @return Returns a constant to determine whether the node is accepted, rejected,
-      *          or skipped
-      */
-    virtual short acceptNode (DOM_Node node) =0;
-	//@}
-
-private:
-    DOM_NodeFilter(const DOM_NodeFilter &other);
-    DOM_NodeFilter & operator = (const DOM_NodeFilter &other);
-    bool operator == (const DOM_NodeFilter &other) const;
-    bool operator != (const DOM_NodeFilter &other) const;
-
+    private:
+        DOM_NodeFilter(const DOM_NodeFilter &other);
+        DOM_NodeFilter & operator = (const DOM_NodeFilter &other);
+        bool operator == (const DOM_NodeFilter &other) const;
+        bool operator != (const DOM_NodeFilter &other) const;
 };
 
 #endif
