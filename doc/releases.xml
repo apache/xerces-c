@@ -17,12 +17,151 @@
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: XXX XXX, 2002">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: December 20, 2002">
+<p> Here is the list of <jump href=
+"http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=08%2F28%2F02&amp;chfieldto=Now&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &XercesCVersion;.
+</p>
 <table>
     <tr>
         <td>Date</td>
         <td>Contributor</td>
         <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2002-11-21</td>
+        <td>Jennifer Schachter</td>
+        <td>Implemented copy constructor and operator =.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-21</td>
+        <td>Jennifer Schachter</td>
+        <td>Fixed bug in Token::analyzeFirstCharacter so that . matches new line with
+            head character optimisation enabled.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-21</td>
+        <td>Gareth Reakes and Jennifer Schachter</td>
+        <td>DOM L3: isId, setIdAttribute, setIdAttributeNS and setIdAttributeNode.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-21</td>
+        <td>PeiYong Zhang</td>
+        <td>Schema Fix: validate content as a whole against pattern.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-20</td>
+        <td>PeiYong Zhang</td>
+        <td>Update ThreadTest to use DOMWriter to dump DOM.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-19</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 13487] Linux runs on many non-i386 platforms.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-19</td>
+        <td>Cameron Dorrat</td>
+        <td>[Bug 14661] Caldera implemented openFileToWrite and writeBufferToFile.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-18</td>
+        <td>Steven White</td>
+        <td>Problems using make tarball under linux.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-18</td>
+        <td>Abe Backus</td>
+        <td>[Bug 14612] GCCDefs clashes with cygwin's string.h for stricmp and strnicmp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-15</td>
+        <td>Abe Backus</td>
+        <td>[Bug 13801] cygwin libxerces-c.dll symlinks misleading.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-15</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 13751] Documentation for DOMNamedNodeMap incorrect.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-15</td>
+        <td>Richard Balint</td>
+        <td>[Bug 14598] IRIX 6.5 / g++ 3.0.4 compilation bugs.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-14</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 14265] Access violation with Null systemId/publicId in DTDScanner.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-14</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 14479] XMLString::subString failure when len(source)==0.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-14</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 14389] DOMPrint - gDoCreate - wrong default value.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-13</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 14528] Encounters of the end tag "]]&gt;" are ignored.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-13</td>
+        <td>James Berry</td>
+        <td>[Bug 14260] MacOSUnicodeConverter::upperCase() passes wrong arguments to Carbon function.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-13</td>
+        <td>James Berry</td>
+        <td>Update Mac OS build for compatiblity with namespace additions.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-12</td>
+        <td>Tinny Ng</td>
+        <td>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
+            to load the default error text message for the correspond Exception Code.
+        </td>
     </tr>
 
     <tr>
@@ -40,16 +179,10 @@
     </tr>
 
     <tr>
-        <td>2002-11-05</td>
-        <td>Tinny Ng</td>
-        <td>Miscellaneous Oasis test cases fixes.
-        </td>
-    </tr>
-
-    <tr>
         <td>2002-11-04</td>
         <td>PeiYong Zhang</td>
-        <td>Locale setting for message loader.
+        <td>New feature XMLPlatformUtils::Initialize(const char* const locale) to set the locale
+            for message loader.
         </td>
     </tr>
 
@@ -224,14 +357,14 @@
     <tr>
         <td>2002-09-26</td>
         <td>Gareth Reakes</td>
-        <td>[Bug12849] comparison is always false warning.
+        <td>[Bug 12849] comparison is always false warning.
         </td>
     </tr>
 
     <tr>
         <td>2002-09-26</td>
         <td>Erik Rydgren</td>
-        <td>[Bug12914] Bug in AbstractDOMParser::resetPool().
+        <td>[Bug 12914] Bug in AbstractDOMParser::resetPool().
         </td>
     </tr>
 
@@ -267,7 +400,7 @@
     <tr>
         <td>2002-09-23</td>
         <td>PeiYong Zhang</td>
-        <td>Support MsgCatalog.
+        <td>Support MsgCatalog Message Loader.
         </td>
     </tr>
 
@@ -297,13 +430,6 @@
         <td>2002-09-17</td>
         <td>Thomas Woerner</td>
         <td>RPM for Linux.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-09-16</td>
-        <td>Tinny Ng</td>
-        <td>Miscellaneous DOM Fix.
         </td>
     </tr>
 
