@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/29 16:15:41  knoaman
+ * More PSVI updates
+ *
  * Revision 1.13  2003/12/24 17:42:02  knoaman
  * Misc. PSVI updates
  *
@@ -326,8 +329,7 @@ XSObjectFactory::addOrFind(SchemaAttDef* const attDef,
                            XSModel* const xsModel,
                            XSComplexTypeDefinition* const enclosingTypeDef)
 {
-    XSAttributeDeclaration* xsObj = (XSAttributeDeclaration*) getObjectFromMap(attDef, xsModel);
-
+    XSAttributeDeclaration* xsObj = (XSAttributeDeclaration*) xsModel->getXSObject(attDef);
     if (xsObj)
     {
         if (xsObj->getScope() == XSConstants::SCOPE_LOCAL
@@ -362,7 +364,7 @@ XSObjectFactory::addOrFind(SchemaAttDef* const attDef,
             , enclosingCTDefinition
             , fMemoryManager
         );
-        putObjectInMap(attDef, xsObj, xsModel);
+        putObjectInMap(attDef, xsObj);
     }
 
     return xsObj;
@@ -373,7 +375,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
                            XSModel* const xsModel,
                            bool isAnySimpleType)
 {
-    XSSimpleTypeDefinition* xsObj = (XSSimpleTypeDefinition*) getObjectFromMap(validator, xsModel);
+    XSSimpleTypeDefinition* xsObj = (XSSimpleTypeDefinition*) xsModel->getXSObject(validator);
     if (!xsObj)
     {
         XSSimpleTypeDefinition* baseType = 0;
@@ -459,7 +461,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
             , xsModel
             , fMemoryManager
         );
-        putObjectInMap(validator, xsObj, xsModel);
+        putObjectInMap(validator, xsObj);
 
         if (primitiveTypeSelf)
             xsObj->setPrimitiveType(xsObj);
@@ -477,7 +479,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
                            XSModel* const xsModel,
                            XSComplexTypeDefinition* const enclosingTypeDef)
 {
-    XSElementDeclaration* xsObj = (XSElementDeclaration*) getObjectFromMap(elemDecl, xsModel);
+    XSElementDeclaration* xsObj = (XSElementDeclaration*) xsModel->getXSObject(elemDecl);
     if (xsObj)
     {
         if (!xsObj->getEnclosingCTDefinition() && enclosingTypeDef)
@@ -548,7 +550,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
             , enclosingTypeDef
             , fMemoryManager
         );
-        putObjectInMap(elemDecl, xsObj, xsModel);
+        putObjectInMap(elemDecl, xsObj);
 
         if (elemDecl->getComplexTypeInfo())
         {
@@ -573,7 +575,7 @@ XSComplexTypeDefinition*
 XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
                            XSModel* const xsModel)
 {
-    XSComplexTypeDefinition* xsObj = (XSComplexTypeDefinition*) getObjectFromMap(typeInfo, xsModel);
+    XSComplexTypeDefinition* xsObj = (XSComplexTypeDefinition*) xsModel->getXSObject(typeInfo);
     if (!xsObj)
     {
         XSWildcard*             xsWildcard = 0;
@@ -628,7 +630,7 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
             , xsModel
             , fMemoryManager
         );
-        putObjectInMap(typeInfo, xsObj, xsModel);
+        putObjectInMap(typeInfo, xsObj);
 
         if (isAnyType)
             xsObj->setBaseType(xsObj);
@@ -671,7 +673,7 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
 XSIDCDefinition* XSObjectFactory::addOrFind(IdentityConstraint* const ic,
                                             XSModel* const xsModel)
 {
-    XSIDCDefinition* xsObj = (XSIDCDefinition*) getObjectFromMap(ic, xsModel);
+    XSIDCDefinition* xsObj = (XSIDCDefinition*) xsModel->getXSObject(ic);
     if (!xsObj)
     {
         XSIDCDefinition* keyIC = 0;
@@ -706,7 +708,7 @@ XSIDCDefinition* XSObjectFactory::addOrFind(IdentityConstraint* const ic,
             , xsModel
             , fMemoryManager
         );
-        putObjectInMap(ic, xsObj, xsModel);
+        putObjectInMap(ic, xsObj);
     }
 
     return xsObj;
@@ -715,7 +717,7 @@ XSIDCDefinition* XSObjectFactory::addOrFind(IdentityConstraint* const ic,
 XSNotationDeclaration* XSObjectFactory::addOrFind(XMLNotationDecl* const notDecl,
                                                   XSModel* const xsModel)
 {
-    XSNotationDeclaration* xsObj = (XSNotationDeclaration*) getObjectFromMap(notDecl, xsModel);
+    XSNotationDeclaration* xsObj = (XSNotationDeclaration*) xsModel->getXSObject(notDecl);
     if (!xsObj)
     {
         xsObj = new (fMemoryManager) XSNotationDeclaration
@@ -725,7 +727,7 @@ XSNotationDeclaration* XSObjectFactory::addOrFind(XMLNotationDecl* const notDecl
             , xsModel
             , fMemoryManager
         );
-        putObjectInMap(notDecl, xsObj, xsModel);
+        putObjectInMap(notDecl, xsObj);
     }
 
     return xsObj;
@@ -878,17 +880,7 @@ XSAnnotation* XSObjectFactory::getAnnotationFromModel(XSModel* const xsModel,
 }
 
 
-XSObject* XSObjectFactory::getObjectFromMap(void* key, XSModel* const xsModel)
-{
-    XSObject* xsObj = fXercesToXSMap->get(key);
-    if (xsObj)
-        return xsObj;
-    if (xsModel->fParent)
-        return getObjectFromMap(key, xsModel->fParent);
-    return 0;
-}
-
-void XSObjectFactory::putObjectInMap(void* key, XSObject* const object, XSModel* const xsModel)
+void XSObjectFactory::putObjectInMap(void* key, XSObject* const object)
 {
      fXercesToXSMap->put(key, object);
      fDeleteVector->addElement(object);
@@ -1046,8 +1038,8 @@ void XSObjectFactory::processAttUse(SchemaAttDef* const attDef,
     {
         constraintType = XSConstants::VC_DEFAULT;
     }
-    else if (attDef->getDefaultType() & XMLAttDef::Fixed ||
-             attDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
+    else if ((attDef->getDefaultType() == XMLAttDef::Fixed) ||
+             (attDef->getDefaultType() == XMLAttDef::Required_And_Fixed))
     {
         constraintType = XSConstants::VC_FIXED;
     }

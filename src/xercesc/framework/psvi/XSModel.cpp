@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/29 16:15:42  knoaman
+ * More PSVI updates
+ *
  * Revision 1.15  2003/12/24 17:42:02  knoaman
  * Misc. PSVI updates
  *
@@ -878,7 +881,12 @@ XSNamespaceItem* XSModel::getNamespaceItem(const XMLCh* const key)
 
 XSObject* XSModel::getXSObject(void* key)
 {
-    return fObjFactory->getObjectFromMap(key, this);
+    XSObject* xsObj = fObjFactory->getObjectFromMap(key);
+
+    if (!xsObj && fParent)
+        xsObj = fParent->getXSObject(key);
+
+    return xsObj;
 }
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/29 16:15:41  knoaman
+ * More PSVI updates
+ *
  * Revision 1.6  2003/12/24 17:42:02  knoaman
  * Misc. PSVI updates
  *
@@ -247,13 +250,11 @@ private:
     (
         void* key
         , XSObject* const object
-        , XSModel* const xsModel
     );
 
     XSObject* getObjectFromMap
     (
         void* key
-        , XSModel* const xsModel
     );
 
     void processFacets
@@ -282,6 +283,12 @@ private:
     RefHashTableOf<XSObject>* fXercesToXSMap;
     RefVectorOf<XSObject>*    fDeleteVector;
 };
+
+inline XSObject* XSObjectFactory::getObjectFromMap(void* key)
+{
+    return fXercesToXSMap->get(key);
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

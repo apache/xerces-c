@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/29 16:15:42  knoaman
+ * More PSVI updates
+ *
  * Revision 1.7  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -149,8 +152,8 @@ XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
     if (fAttDef->getDefaultType() & XMLAttDef::Default)
         return XSConstants::VC_DEFAULT;
 
-    if (fAttDef->getDefaultType() & XMLAttDef::Fixed ||
-        fAttDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
+    if ((fAttDef->getDefaultType() == XMLAttDef::Fixed) ||
+        (fAttDef->getDefaultType() == XMLAttDef::Required_And_Fixed))
         return XSConstants::VC_FIXED;
 
     return XSConstants::VC_NONE;

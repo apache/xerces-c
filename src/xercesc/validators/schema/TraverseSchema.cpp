@@ -3591,15 +3591,15 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
                 try {
 
-                    typeInfo->setDatatypeValidator
-                    (
+                    DatatypeValidator* simpleDV =
                         fDatatypeRegistry->createDatatypeValidator
                         (
                             qualifiedName,
                             typeInfo->getBaseDatatypeValidator(),
                             facets, enums, false, 0, true, fMemoryManager
-                        )
-                    );
+                        );
+                    simpleDV->setAnonymous();
+                    typeInfo->setDatatypeValidator(simpleDV);
                 }
                 catch (const XMLException& excep) {
                     reportSchemaError(simpleContent, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
