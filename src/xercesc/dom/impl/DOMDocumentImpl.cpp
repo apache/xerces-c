@@ -1251,11 +1251,10 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
                 const XMLCh* userKey = fUserDataTableKeys.getValueForId(key2);
                 handler->handle(operation, userKey, data, src, dst);
             }
-
-            // if the operation is deleted, we in fact should remove the data from the table
-            if (operation == DOMUserDataHandler::NODE_DELETED)
-                fUserDataTable->removeKey((void*)n,key2);
         }
+        // if the operation is NODE_DELETED, we in fact should remove the data from the table
+        if (operation == DOMUserDataHandler::NODE_DELETED)
+            fUserDataTable->removeKey((void*)n);
     }
 }
 
