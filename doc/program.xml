@@ -664,7 +664,7 @@ if (a.equals(c))      // false.  a is "Hello World";
 
 <source>// This is C++
 DOM_Node       aNode = someFunctionReturningNode();
-DOM_Element    el = (Element &amp;) aNode;</source>
+DOM_Element    el = (DOM_Element &amp;) aNode;</source>
 
 <source>// This is Java
 Node       aNode = someFunctionReturningNode();
@@ -680,7 +680,7 @@ DOM_Node       aNode = someFunctionReturningNode();
 DOM_Element    el;    // by default, el will == null.
 
 if (anode.getNodeType() == DOM_Node::ELEMENT_NODE)
-   el = (Element &amp;) aNode;
+   el = (DOM_Element &amp;) aNode;
 else
    // aNode does not refer to an element.
    // Do something to recover here.</source>
