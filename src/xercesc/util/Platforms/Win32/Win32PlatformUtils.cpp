@@ -427,7 +427,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     {
         retVal = ::CreateFileW
             (
-            nameToOpen
+            (LPCWSTR) nameToOpen
             , GENERIC_WRITE
             , 0              // no shared write
             , 0
@@ -568,7 +568,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
         XMLCh tmpPath[bufSize + 1];
 
         XMLCh* namePart = 0;
-        if (!::GetFullPathNameW((LPCWSTR)srcPath, bufSize, tmpPath, &namePart))
+        if (!::GetFullPathNameW((LPCWSTR)srcPath, bufSize, (LPWSTR)tmpPath, (LPWSTR*)&namePart))
             return 0;
 
         // Return a copy of the path
@@ -805,7 +805,7 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
     //  the system APIs are not C++ aware in all cases.
     //
 
-    return ::InterlockedCompareExchange(toFill, (void*)newValue, (void*)toCompare);
+    return (void*) ::InterlockedCompareExchange((LPLONG)toFill, (LONG)newValue, (LONG)toCompare);
 
     #endif
 
