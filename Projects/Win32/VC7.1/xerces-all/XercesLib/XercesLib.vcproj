@@ -17,7 +17,8 @@
 			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="1"
@@ -26,11 +27,13 @@
 				PreprocessorDefinitions="NDEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/XercesLib.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
 				WarningLevel="3"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -41,10 +44,14 @@
 				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/xerces-c_2_6.pdb"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.fullpdb"
+				StripPrivateSymbols=".\..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.pdb"
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/xerces-c_2_6.map"
 				SubSystem="2"
+				OptimizeReferences="2"
+				SetChecksum="TRUE"
 				BaseAddress="0x12000000"
 				ImportLibrary="..\..\..\..\..\Build\Win32\VC7.1\Release/xerces-c_2.lib"/>
 			<Tool
@@ -106,6 +113,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2_6D.pdb"
 				SubSystem="2"
+				SetChecksum="TRUE"
 				BaseAddress="0x12000000"
 				ImportLibrary="..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2D.lib"/>
 			<Tool
