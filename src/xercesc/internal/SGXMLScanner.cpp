@@ -884,7 +884,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     XMLElementDecl* tempElement = topElem->fThisElement;
     const XMLCh* rawNameBuf = fQNameBuf.getRawBuffer();
 
-    if ((topUri != uriId) || 
+    if ((topUri != uriId) ||
         (!XMLString::equals(tempElement->getBaseName(), &rawNameBuf[prefixColonPos + 1])))
     {
         emitError
@@ -2041,16 +2041,18 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //  Its not valid for this element, so issue an error if we are
                 //  validating.
                 //
-                XMLBufBid bbURI(&fBufMgr);
-                XMLBuffer& bufURI = bbURI.getBuffer();
-
-                getURIText(uriId, bufURI);
-
                 XMLBufBid bbMsg(&fBufMgr);
                 XMLBuffer& bufMsg = bbMsg.getBuffer();
-                bufMsg.append(chOpenCurly);
-                bufMsg.append(bufURI.getRawBuffer());
-                bufMsg.append(chCloseCurly);
+                if (uriId != fEmptyNamespaceId) {
+                    XMLBufBid bbURI(&fBufMgr);
+                    XMLBuffer& bufURI = bbURI.getBuffer();
+
+                    getURIText(uriId, bufURI);
+
+                    bufMsg.append(chOpenCurly);
+                    bufMsg.append(bufURI.getRawBuffer());
+                    bufMsg.append(chCloseCurly);
+                }
                 bufMsg.append(suffPtr);
                 fValidator->emitError
                 (
