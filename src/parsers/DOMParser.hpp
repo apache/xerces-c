@@ -586,9 +586,10 @@ public :
       * This method allows the user to specify a list of schemas to use.
       * If the targetNamespace of a schema specified using this method matches
       * the targetNamespace of a schema occuring in the instance document in
-      * the schemaLocation attribute, the schema specified by the user using
-      * this method will be used (i.e., the instance document's schemaLocation
-      * attribute will be effectively ignored).
+      * the schemaLocation attribute, or if the targetNamespace matches the
+      * namespace attribute of the "import" element, the schema specified by the
+      * user using this method will be used (i.e., the schemaLocation attribute
+      * in the instance document or on the "import" element will be effectively ignored).
       *
       * If this method is called more than once, only the last one takes effect.
       *

@@ -409,12 +409,15 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
                         the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
                         instance document is only a hint; it does not mandate that these attributes
-                        must be used to locate schemas.  This property allows the user to specify a list
+                        must be used to locate schemas.  Similar situation happens to &lt;import&gt;
+                        element in schema documents. This property allows the user to specify a list
                         of schemas to use.  If the targetNamespace of a schema specified using this
-                        method matches the targetNamespace of a schema occuring in the instance document
-                        in the schemaLocation attribute, the schema specified by the user using this
-                        method will be used (i.e., the instance document's schemaLocation attribute
-                        will be effectively ignored).</td></tr>
+                        method matches the targetNamespace of a schema occurring in the instance
+                        document in schemaLocation attribute, or
+                        if the targetNamespace matches the namespace attribute of &lt;import&gt;
+                        element, the schema specified by the user using this property will
+                        be used (i.e., the schemaLocation attribute in the instance document
+                        or on the &lt;import&gt; element will be effectively ignored).</td></tr>
             <tr><td><em>Value</em></td><td> The syntax is the same as for schemaLocation attributes
                              in instance documents: e.g, "http://www.example.com file_name.xsd".
                              The user can specify more than one XML Schema in the list.</td></tr>
