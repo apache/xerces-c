@@ -329,7 +329,7 @@
            of the features below are set using the "setter" methods (e.g. <code>setDoNamespaces</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getDoNamespaces</code>).
            The following only gives you a quick summary of supported features.  Please
-           refer to <jump href="api.html">API Documentataion</jump> for complete detail.
+           refer to <jump href="api.html">API Documentation</jump> for complete detail.
            </p>
 
             <anchor name="createEntityRef"/>
@@ -568,7 +568,7 @@
            of the properties below are set using the "setter" methods (e.g. <code>setExternalSchemaLocation</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getExternalSchemaLocation</code>).
            The following only gives you a quick summary of supported features.  Please
-           refer to <jump href="api.html">API Documentataion</jump> for complete detail.
+           refer to <jump href="api.html">API Documentation</jump> for complete detail.
            </p>
             <table>
                 <tr><th colspan="2"><em>void setExternalSchemaLocation(const XMLCh*)</em></th></tr>
@@ -711,7 +711,7 @@
         return 0;
     }
     </source>
-           <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
+           <p>Please refer to the <jump href="api.html">API Documentation</jump> and the sample
            DOMCount for more detail.
           </p>
         </s3>
@@ -767,7 +767,7 @@
            </source>
            </s4>
 
-        <p>Please refer to the <jump href="api.html">API Documentataion</jump> for more detail.
+        <p>Please refer to the <jump href="api.html">API Documentation</jump> for more detail.
         </p>
         </s3>
 
@@ -1319,7 +1319,7 @@
     }
 
     </source>
-           <p>Please refer to the <jump href="api.html">API Documentataion</jump> and the sample
+           <p>Please refer to the <jump href="api.html">API Documentation</jump> and the sample
            DOMPrint for more detail.
           </p>
         </s3>
