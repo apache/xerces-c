@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/11/14 14:15:59  tng
+ * Update SAX2 feature documentation.
+ *
  * Revision 1.12  2001/09/12 13:03:43  tng
  * [Bug 3155] SAX2 does not offer progressive parse.
  *
@@ -451,14 +454,16 @@ public:
   /**
     * Set the state of any feature in a SAX2 XMLReader.
     * Supported features in SAX2 for xerces-c are:
+    * <br>(See http://xml.apache.org/xerces-c/program.html#SAX2Features for detail description).
     *
     * <br>http://xml.org/sax/features/validation (default: true)
     * <br>http://xml.org/sax/features/namespaces (default: true)
     * <br>http://xml.org/sax/features/namespace-prefixes (default: true)
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
-    * <br>http://apache.org/xml/features/validation/reuse-validator (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
+    * <br>http://apache.org/xml/features/validation/reuse-validator (Deprecated) (default: false)
     *
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).
