@@ -591,12 +591,11 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
         // If the buffer is empty, then try to refresh
         if (fCharIndex == fCharsAvail)
         {
-            if (!refreshCharBuffer())
-            {
-                // If still empty, then return false
-                if (fCharIndex == fCharsAvail)
-                    return false;
-            }
+            refreshCharBuffer();
+
+            // If still empty, then return false
+            if (fCharIndex == fCharsAvail)
+                return false;
         }
 
         chGotten = fCharBuf[fCharIndex++];
