@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/06/20 15:07:04  knoaman
+ * Fix for 'fixed' attribute on facets - wrong string comparison.
+ *
  * Revision 1.23  2001/06/18 19:52:18  knoaman
  * Add support for 'fixed' facet.
  *
@@ -2211,7 +2214,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                     }
                     else {
                         facets->put((void*) facetStr, new KVStringPair(facetStr, attVal));
-                        checkFixedFacet(content, baseValidator, fixedFlag);
+                        checkFixedFacet(content, facetStr, baseValidator, fixedFlag);
                     }
                 }
             }
@@ -2623,7 +2626,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         else {
                             facets->put((void*) facetName,
                                 new KVStringPair(facetName,fBuffer.getRawBuffer()));
-                            checkFixedFacet(content, typeInfo->getBaseDatatypeValidator(), fixedFlag);
+                            checkFixedFacet(content, facetName, typeInfo->getBaseDatatypeValidator(), fixedFlag);
                         }
                     }
                 }
@@ -4743,6 +4746,7 @@ int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
 }
 
 void TraverseSchema::checkFixedFacet(const DOM_Element& elem,
+                                     const XMLCh* const facetName,
                                      const DatatypeValidator* const baseDV,
                                      unsigned int& flags)
 {
@@ -4753,31 +4757,31 @@ void TraverseSchema::checkFixedFacet(const DOM_Element& elem,
         (!XMLString::compareString(fixedFacet, SchemaSymbols::fgATTVAL_TRUE)
          || !XMLString::compareString(fixedFacet, fgValueOne))) {
 
-        if (!XMLString::compareString(SchemaSymbols::fgELT_MINLENGTH, fixedFacet)) {
+        if (!XMLString::compareString(SchemaSymbols::fgELT_MINLENGTH, facetName)) {
             flags |= DatatypeValidator::FACET_MINLENGTH;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXLENGTH, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXLENGTH, facetName)) {
             flags |= DatatypeValidator::FACET_MAXLENGTH;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXEXCLUSIVE, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXEXCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MAXEXCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXINCLUSIVE, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXINCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MAXINCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MINEXCLUSIVE, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MINEXCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MINEXCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MININCLUSIVE, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_MININCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MININCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_TOTALDIGITS, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_TOTALDIGITS, facetName)) {
             flags |= DatatypeValidator::FACET_TOTALDIGITS;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_FRACTIONDIGITS, fixedFacet)) {
+        else if (!XMLString::compareString(SchemaSymbols::fgELT_FRACTIONDIGITS, facetName)) {
             flags |= DatatypeValidator::FACET_FRACTIONDIGITS;
         }
-        else if ((!XMLString::compareString(SchemaSymbols::fgELT_WHITESPACE, fixedFacet)) &&
+        else if ((!XMLString::compareString(SchemaSymbols::fgELT_WHITESPACE, facetName)) &&
                  baseDV->getType() == DatatypeValidator::String) {
             flags |= DatatypeValidator::FACET_WHITESPACE;
         }
