@@ -58,19 +58,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2002/06/07 15:38:41  tng
- * Documentation Fix: Update the API Documentation for DOM headers
- *
- * Revision 1.3  2002/06/06 20:53:06  tng
- * Documentation Fix: Update the API Documentation for DOM headers
- *
- * Revision 1.2  2002/05/30 19:24:48  knoaman
- * documentation update
- *
- * Revision 1.1  2002/05/29 21:28:02  knoaman
- * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
- *
+ * $Id$
  */
 
 
@@ -275,7 +263,6 @@ public:
      * <p><b>"Experimental - subject to change"</b></p>
      *
      * @see BinInputStream
-     * @since DOM Level 3
      */
     virtual BinInputStream* makeStream() const = 0;
 
