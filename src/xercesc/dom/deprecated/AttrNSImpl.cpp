@@ -155,7 +155,7 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
         if (namespaceURI == null || localName.equals(xmlns)) {
             throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
         }
-        if (prefix != null && !DocumentImpl::isXMLName(prefix)) {
+        if (prefix != null && !((DocumentImpl *)this->getOwnerDocument())->isXMLName(prefix)) {
             throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,
                                    null);
         }

@@ -545,7 +545,7 @@ NameIdPool<DTDEntityDecl>* WFXMLScanner::getEntityDeclPool()
 {
     return 0;
 }
-    
+
 const NameIdPool<DTDEntityDecl>* WFXMLScanner::getEntityDeclPool() const
 {
     return 0;
@@ -704,7 +704,7 @@ void WFXMLScanner::scanEndTag(bool& gotData)
     //  that we don't own this. The stack just keeps them and reuses them.
     unsigned int uriId = (fDoNamespaces)
         ? fElemStack.getCurrentURI() : fEmptyNamespaceId;
-    const WFElemStack::StackElem* topElem = fElemStack.popTop();    
+    const WFElemStack::StackElem* topElem = fElemStack.popTop();
 
     // See if it was the root element, to avoid multiple calls below
     const bool isRoot = fElemStack.isEmpty();
@@ -819,7 +819,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     // Ok, skip by them and peek another char
                     fReaderMgr.skipPastSpaces();
@@ -837,7 +837,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
         //  If its not one, then we do the normal case processing, which
         //  assumes that we've hit an attribute value, Otherwise, we do all
         //  the special case checks.
-        if (!XMLReader::isSpecialStartTagChar(nextCh))
+        if (!fReaderMgr.getCurrentReader()->isSpecialStartTagChar(nextCh))
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
@@ -870,7 +870,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
                 }
                 else if ((chFound == chSingleQuote)
                       ||  (chFound == chDoubleQuote)
-                      ||  XMLReader::isWhitespace(chFound))
+                      ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     // Just fall through assuming that the value is to follow
                 }
@@ -888,7 +888,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             }
 
             //  See if this attribute is declared more than one for this element.
-            const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer(); 
+            const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer();
             unsigned int attNameHash = XMLString::hash(attNameRawBuf, 109);
 
             if (attCount) {
@@ -898,7 +898,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
                     if (fAttrNameHashList->elementAt(k) == attNameHash) {
                         if (
                                XMLString::equals
-                               ( 
+                               (
                                    fAttrList->elementAt(k)->getName()
                                    , attNameRawBuf
                                )
@@ -936,7 +936,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
 
                 if ((chFound == chCloseAngle)
                 ||  (chFound == chForwardSlash)
-                ||  XMLReader::isWhitespace(chFound))
+                ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     //  Just fall through and process this attribute, though
                     //  the value will be "".
@@ -968,7 +968,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
                         , XMLUni::fgZeroLenString
                         , fAttValueBuf.getRawBuffer()
                     )
-                );                
+                );
                 fAttrNameHashList->addElement(attNameHash);
             }
             else
@@ -1120,7 +1120,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     // Ok, skip by them and peek another char
                     fReaderMgr.skipPastSpaces();
@@ -1138,7 +1138,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         //  If its not one, then we do the normal case processing, which
         //  assumes that we've hit an attribute value, Otherwise, we do all
         //  the special case checks.
-        if (!XMLReader::isSpecialStartTagChar(nextCh))
+        if (!fReaderMgr.getCurrentReader()->isSpecialStartTagChar(nextCh))
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
@@ -1171,7 +1171,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
                 }
                 else if ((chFound == chSingleQuote)
                       ||  (chFound == chDoubleQuote)
-                      ||  XMLReader::isWhitespace(chFound))
+                      ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     // Just fall through assuming that the value is to follow
                 }
@@ -1189,7 +1189,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             }
 
             //  See if this attribute is declared more than one for this element.
-            const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer(); 
+            const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer();
             unsigned int attNameHash = XMLString::hash(attNameRawBuf, 109);
             if (attCount) {
 
@@ -1232,7 +1232,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
 
                 if ((chFound == chCloseAngle)
                 ||  (chFound == chForwardSlash)
-                ||  XMLReader::isWhitespace(chFound))
+                ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     //  Just fall through and process this attribute, though
                     //  the value will be "".
@@ -1289,7 +1289,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
 
                 if (colonPos != -1) {
 
-                    curAttListSize = fAttrList->size(); 
+                    curAttListSize = fAttrList->size();
                     emitError(XMLErrs::TooManyColonsInName);
                     continue;
                 }
@@ -1323,7 +1323,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
 
             // increment attribute count
             attCount++;
-            
+
             // And jump back to the top of the loop
             continue;
         }
@@ -1397,7 +1397,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             , WFElemStack::Mode_Element
         );
 
-        //  Now we can update the element stack 
+        //  Now we can update the element stack
         fElemStack.setCurrentURI(uriId);
 
         // Tell the document handler about this start tag
@@ -1522,6 +1522,7 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
     bool    firstNonWS = false;
     bool    gotLeadingSurrogate = false;
     bool    escaped;
+    bool    charref_expanded = false;
     while (true)
     {
     try
@@ -1567,58 +1568,61 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
                     gotLeadingSurrogate = false;
                     continue;
                 }
+                charref_expanded = true;
             }
 
-            // Its got to at least be a valid XML character
-            if (!XMLReader::isXMLChar(nextCh)) {
-
-                // Deal with surrogate pairs
-                if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF)) {
-
-                    //  Its a leading surrogate. If we already got one, then
-                    //  issue an error, else set leading flag to make sure that
-                    //  we look for a trailing next time.
-                    if (gotLeadingSurrogate)
-                        emitError(XMLErrs::Expected2ndSurrogateChar);
-                    else
-                        gotLeadingSurrogate = true;
+            // Deal with surrogate pairs
+            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
+            {
+                //  Its a leading surrogate. If we already got one, then
+                //  issue an error, else set leading flag to make sure that
+                //  we look for a trailing next time.
+                if (gotLeadingSurrogate)
+                {
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
+                }
+                else
+                    gotLeadingSurrogate = true;
+            }
+            else
+            {
+                //  If its a trailing surrogate, make sure that we are
+                //  prepared for that. Else, its just a regular char so make
+                //  sure that we were not expected a trailing surrogate.
+                if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+                {
+                    // Its trailing, so make sure we were expecting it
+                    if (!gotLeadingSurrogate)
+                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
                 }
                 else
                 {
-                    //  If its a trailing surrogate, make sure that we are
-                    //  prepared for that.
-                    if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
-                    {
-                        // Its trailing, so make sure we were expecting it
-                        if (!gotLeadingSurrogate)
-                            emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                    //  Its just a char, so make sure we were not expecting a
+                    //  trailing surrogate.
+                    if (gotLeadingSurrogate) {
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
                     }
-                    else
+                    // Its got to at least be a valid XML character
+                    else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                     {
-                        // Its just a char, so make sure we were not
-                        // expecting a trailing surrogate.
-                        if (gotLeadingSurrogate)
-                            emitError(XMLErrs::Expected2ndSurrogateChar);
+                        // if it was a character reference and is control char, then it's ok
+                        if (!(charref_expanded && fReaderMgr.getCurrentReader()->isControlChar(nextCh)))
+                        {
 
-                        // Its not a valid XML character
-                        XMLCh tmpBuf[9];
-                        XMLString::binToText
-                        (
-                            nextCh
-                            , tmpBuf
-                            , 8
-                            , 16
-                        );
-                        emitError
-                        (
-                            XMLErrs::InvalidCharacterInAttrValue
-                            , attrName
-                            , tmpBuf
-                        );
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                            );
+                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                        }
                     }
-
-                    gotLeadingSurrogate = false;
                 }
+                charref_expanded = false;
+                gotLeadingSurrogate = false;
             }
 
             //  If its not escaped, then make sure its not a < character, which
@@ -1626,7 +1630,7 @@ bool WFXMLScanner::scanAttValue(const XMLCh* const attrName
             if (!escaped) {
 				if (nextCh == chOpenAngle)
                     emitError(XMLErrs::BracketInAttrValue, attrName);
-                else if (XMLReader::isWhitespace(nextCh))
+                else if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                     nextCh = chSpace;
             }
 
@@ -1684,6 +1688,7 @@ void WFXMLScanner::scanCDSection()
     //  CDATA is effectively a big escape mechanism so we don't treat markup
     //  characters specially here.
     bool            emittedError = false;
+    bool    gotLeadingSurrogate = false;
     while (true)
     {
         const XMLCh nextCh = fReaderMgr.getNextChar();
@@ -1719,18 +1724,51 @@ void WFXMLScanner::scanCDSection()
         //  them about it.
         if (!emittedError)
         {
-            if (!XMLReader::isXMLChar(nextCh))
+            // Deal with surrogate pairs
+            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
             {
-                XMLCh tmpBuf[9];
-                XMLString::binToText
-                (
-                    nextCh
-                    , tmpBuf
-                    , 8
-                    , 16
-                );
-                emitError(XMLErrs::InvalidCharacter, tmpBuf);
-                emittedError = true;
+                //  Its a leading surrogate. If we already got one, then
+                //  issue an error, else set leading flag to make sure that
+                //  we look for a trailing next time.
+                if (gotLeadingSurrogate)
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
+                else
+                    gotLeadingSurrogate = true;
+            }
+            else
+            {
+                //  If its a trailing surrogate, make sure that we are
+                //  prepared for that. Else, its just a regular char so make
+                //  sure that we were not expected a trailing surrogate.
+                if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+                {
+                    // Its trailing, so make sure we were expecting it
+                    if (!gotLeadingSurrogate)
+                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                }
+                else
+                {
+                    //  Its just a char, so make sure we were not expecting a
+                    //  trailing surrogate.
+                    if (gotLeadingSurrogate)
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
+
+                    // Its got to at least be a valid XML character
+                    else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
+                    {
+                        XMLCh tmpBuf[9];
+                        XMLString::binToText
+                        (
+                            nextCh
+                            , tmpBuf
+                            , 8
+                            , 16
+                        );
+                        emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                        emittedError = true;
+                    }
+                }
+                gotLeadingSurrogate = false;
             }
         }
 
@@ -1769,6 +1807,7 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
     bool    escaped = false;
     bool    gotLeadingSurrogate = false;
     bool    notDone = true;
+    bool    charref_expanded = false;
     while (notDone)
     {
         try
@@ -1818,6 +1857,7 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
                         gotLeadingSurrogate = false;
                         continue;
                     }
+                    charref_expanded = true;
                 }
                 else
                 {
@@ -1850,52 +1890,60 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
                     curState = State_Waiting;
                 }
 
-                // Its got to at least be a valid XML character
-                if (!XMLReader::isXMLChar(nextCh)) {
-
-                    // Deal with surrogate pairs
-                    if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF)) {
-
-                        //  Its a leading surrogate. If we already got one,
-                        //  then issue an error, else set leading flag to make
-                        //  sure that we look for a trailing next time.
-                        if (gotLeadingSurrogate)
-                            emitError(XMLErrs::Expected2ndSurrogateChar);
-                        else
-                            gotLeadingSurrogate = true;
+                // Deal with surrogate pairs
+                if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
+                {
+                    //  Its a leading surrogate. If we already got one, then
+                    //  issue an error, else set leading flag to make sure that
+                    //  we look for a trailing next time.
+                    if (gotLeadingSurrogate)
+                    {
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
+                    }
+                    else
+                        gotLeadingSurrogate = true;
+                }
+                else
+                {
+                    //  If its a trailing surrogate, make sure that we are
+                    //  prepared for that. Else, its just a regular char so make
+                    //  sure that we were not expected a trailing surrogate.
+                    if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+                    {
+                        // Its trailing, so make sure we were expecting it
+                        if (!gotLeadingSurrogate)
+                            emitError(XMLErrs::Unexpected2ndSurrogateChar);
                     }
                     else
                     {
-                        //  If its a trailing surrogate, make sure that we are
-                        //  prepared for that.
-                        if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
-                        {
-                            // Its trailing, so make sure we were expecting it
-                            if (!gotLeadingSurrogate)
-                                emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                        //  Its just a char, so make sure we were not expecting a
+                        //  trailing surrogate.
+                        if (gotLeadingSurrogate) {
+                            emitError(XMLErrs::Expected2ndSurrogateChar);
                         }
-                        else
+                        // Its got to at least be a valid XML character
+                        else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                         {
-                            // Its just a char, so make sure we were not
-                            // expecting a trailing surrogate.
-                            if (gotLeadingSurrogate)
-                                emitError(XMLErrs::Expected2ndSurrogateChar);
+                            // if it was a character reference and is control char, then it's ok
+                            if (!(charref_expanded && fReaderMgr.getCurrentReader()->isControlChar(nextCh)))
+                            {
 
-                            // Its not a valid XML character
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                            );
-                            emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                                XMLCh tmpBuf[9];
+                                XMLString::binToText
+                                (
+                                    nextCh
+                                    , tmpBuf
+                                    , 8
+                                    , 16
+                                );
+                                emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                            }
                         }
-
-                        gotLeadingSurrogate = false;
                     }
+                    charref_expanded = false;
+                    gotLeadingSurrogate = false;
                 }
+
 
                 // Add this char to the buffer
                 toUse.append(nextCh);

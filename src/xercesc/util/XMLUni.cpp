@@ -313,9 +313,14 @@ const XMLCh XMLUni::fgStandaloneString[] =
     chLatin_s, chLatin_t, chLatin_a, chLatin_n, chLatin_d, chLatin_a, chLatin_l, chLatin_o, chLatin_n, chLatin_e, chNull
 };
 
-const XMLCh XMLUni::fgSupportedVersion[] =
+const XMLCh XMLUni::fgVersion1_0[] =
 {
     chDigit_1, chPeriod, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgVersion1_1[] =
+{
+    chDigit_1, chPeriod, chDigit_1, chNull
 };
 
 const XMLCh XMLUni::fgSysIDString[] =
@@ -618,8 +623,8 @@ const XMLCh XMLUni::fgDTDEntityString[] =
         chOpenSquare, chLatin_d, chLatin_t, chLatin_d, chCloseSquare, chNull
 };
 
-const XMLCh XMLUni::fgAmp[] = 
-{ 
+const XMLCh XMLUni::fgAmp[] =
+{
         chLatin_a, chLatin_m, chLatin_p, chNull
 };
 

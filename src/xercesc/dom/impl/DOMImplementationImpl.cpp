@@ -68,6 +68,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
@@ -218,7 +219,8 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
 DOMDocumentType *DOMImplementationImpl::createDocumentType(const XMLCh *qualifiedName,
 	const XMLCh * publicId, const XMLCh *systemId)
 {
-    if(!DOMDocumentImpl::isXMLName(qualifiedName))
+    // assume XML 1.0 since we do not know its version yet.
+    if(!XMLChar1_0::isValidName(qualifiedName, XMLString::stringLen(qualifiedName)))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     DOMDocumentTypeImpl* docType = new DOMDocumentTypeImpl(0, qualifiedName, publicId, systemId, true);
     return docType;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/12/20 22:10:21  tng
+ * XML 1.1
+ *
  * Revision 1.10  2002/12/18 14:17:54  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -1095,14 +1098,18 @@ public:
     static unsigned int stringLen(const XMLCh* const src);
 
     /**
-      * Checks whether an name is a valid NCName.
+      * Deprecated: please use XMLChar1_0::isValidNCName
+      *
+      * Checks whether an name is a valid NCName according to XML 1.0
       * @param name The string to check its NCName validity
       * @return Returns true if name is NCName valid, otherwise false
       */
     static bool isValidNCName(const XMLCh* const name);
 
     /**
-      * Checks whether an name is a valid Name.
+      * Deprecated: please use XMLChar1_0::isValidName
+      *
+      * Checks whether an name is a valid Name according to XML 1.0
       * @param name The string to check its Name validity
       * @return Returns true if name is Name valid, otherwise false
       */
@@ -1116,7 +1123,9 @@ public:
     static bool isValidEncName(const XMLCh* const name);
 
     /**
-      * Checks whether an name is a valid QName.
+      * Deprecated: please use XMLChar1_0::isValidQName
+      *
+      * Checks whether an name is a valid QName according to XML 1.0
       * @param name The string to check its QName validity
       * @return Returns true if name is QName valid, otherwise false
       */
@@ -1152,7 +1161,9 @@ public:
     static bool isHex(XMLCh const theChar);
 
     /**
-      * Checks whether a string contains only whitespace.
+      * Deprecated: please use XMLChar1_0::isAllWhiteSpace
+      *
+      * Checks whether aa string contains only whitespace according to XML 1.0
       * @param toCheck the string to check
       * @return Returns true if it is, otherwise false
       */

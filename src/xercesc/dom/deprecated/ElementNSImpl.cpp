@@ -140,7 +140,7 @@ void ElementNSImpl::setPrefix(const DOMString &prefix)
                                  DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                  null);
         }
-        if (prefix != null && !DocumentImpl::isXMLName(prefix)) {
+        if (prefix != null && !((DocumentImpl *)this->getOwnerDocument())->isXMLName(prefix)) {
             throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,
                                    null);
         }

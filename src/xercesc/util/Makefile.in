@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.25  2002/12/20 22:10:20  tng
+# XML 1.1
+#
 # Revision 1.24  2002/12/17 17:17:58  gareth
 # added abstract base class BaseRefVectorOf from which both RefVectorOf and RefArrayVectorOf inherit
 # the new RefArrayVectorOf has proper destructor for array deletion
@@ -413,8 +416,8 @@ include ../Makefile.incl
 UTIL_CPP_PUBHEADERS = \
     ArrayIndexOutOfBoundsException.hpp \
     AutoSense.hpp \
-    Base64.hpp \
     BaseRefVectorOf.hpp \
+    Base64.hpp \
     BinFileInputStream.hpp \
     BinInputStream.hpp \
     BinMemInputStream.hpp \
@@ -426,16 +429,16 @@ UTIL_CPP_PUBHEADERS = \
     FlagJanitor.hpp \
     HashBase.hpp \
     HashCMStateSet.hpp \
-    HashXMLCh.hpp \
     HashPtr.hpp \
+    HashXMLCh.hpp \
     HexBin.hpp \
-    IOException.hpp \
     IllegalArgumentException.hpp \
     InvalidCastException.hpp \
+    IOException.hpp \
     Janitor.hpp \
-    KVStringPair.hpp \
     KeyRefPair.hpp \
     KeyValuePair.hpp \
+    KVStringPair.hpp \
     Mutexes.hpp \
     NameIdPool.hpp \
     NoDefTranscoderException.hpp \
@@ -447,58 +450,59 @@ UTIL_CPP_PUBHEADERS = \
     QName.hpp \
     RefArrayOf.hpp \
     RefArrayVectorOf.hpp \
+    RefHashTableOf.hpp \
     RefHash2KeysTableOf.hpp \
     RefHash3KeysIdPool.hpp \
-    RefHashTableOf.hpp \
     RefStackOf.hpp \
     RefVectorOf.hpp \
     RuntimeException.hpp \
     SchemaDateTimeException.hpp \
     StringPool.hpp \
-    XMLStringTokenizer.hpp \
+    TranscodingException.hpp \
     TransENameMap.hpp \
     TransService.hpp \
-    TranscodingException.hpp \
-    UTFDataFormatException.hpp \
     UnexpectedEOFException.hpp \
     UnsupportedEncodingException.hpp \
+    UTFDataFormatException.hpp \
     ValueArrayOf.hpp \
     ValueHashTableOf.hpp \
     ValueStackOf.hpp \
     ValueVectorOf.hpp \
     XercesDefs.hpp \
     XercesVersion.hpp \
-    XML256TableTranscoder.hpp \
-    XML88591Transcoder.hpp \
+    XMLAbstractDoubleFloat.hpp \
     XMLASCIITranscoder.hpp \
-    XMLNumber.hpp \
     XMLBigDecimal.hpp \
     XMLBigInteger.hpp \
-    XMLAbstractDoubleFloat.hpp \
+    XMLChar.hpp \
+    XMLChTranscoder.hpp \
+    XMLDateTime.hpp \
+    XMLDeleterFor.hpp \
     XMLDOMMsg.hpp \
     XMLDouble.hpp \
-    XMLDateTime.hpp \
-    XMLChTranscoder.hpp \
-    XMLInteger.hpp \
-    XMLIBM1140Transcoder.hpp \
-    XMLDeleterFor.hpp \
     XMLEBCDICTranscoder.hpp \
     XMLEnumerator.hpp \
-    XMLExceptMsgs.hpp \
     XMLException.hpp \
+    XMLExceptMsgs.hpp \
     XMLFloat.hpp \
+    XMLIBM1140Transcoder.hpp \
+    XMLInteger.hpp \
     XMLMsgLoader.hpp \
     XMLNetAccessor.hpp \
+    XMLNumber.hpp \
     XMLRegisterCleanup.hpp \
     XMLString.hpp \
+    XMLStringTokenizer.hpp \
     XMLUCS4Transcoder.hpp \
+    XMLUni.hpp \
+    XMLUniDefs.hpp \
     XMLUri.hpp \
     XMLURL.hpp \
     XMLUTF16Transcoder.hpp \
     XMLUTF8Transcoder.hpp \
-    XMLUniDefs.hpp \
-    XMLUni.hpp \
-    XMLWin1252Transcoder.hpp
+    XMLWin1252Transcoder.hpp \
+    XML256TableTranscoder.hpp \
+    XML88591Transcoder.hpp
 
 UTIL_CPP_PRIVHEADERS =
 
@@ -512,9 +516,9 @@ C_FILES = \
     NameIdPool.c \
     RefArrayOf.c \
     RefArrayVectorOf.c \
+    RefHashTableOf.c \
     RefHash2KeysTableOf.c \
     RefHash3KeysIdPool.c \
-    RefHashTableOf.c \
     RefStackOf.c \
     RefVectorOf.c \
     TransENameMap.c \
@@ -531,8 +535,8 @@ UTIL_CPP_OBJECTS = \
     BinMemInputStream.$(TO) \
     BitSet.$(TO) \
     EncodingValidator.$(TO) \
-    HashXMLCh.$(TO) \
     HashPtr.$(TO) \
+    HashXMLCh.$(TO) \
     HeaderDummy.$(TO) \
     HexBin.$(TO) \
     KVStringPair.$(TO) \
@@ -540,31 +544,32 @@ UTIL_CPP_OBJECTS = \
     PlatformUtils.$(TO) \
     QName.$(TO) \
     StringPool.$(TO) \
-    XMLStringTokenizer.$(TO) \
-    XMLUri.$(TO) \
-    XMLURL.$(TO) \
     TransService.$(TO) \
-    XML256TableTranscoder.$(TO) \
-    XML88591Transcoder.$(TO) \
+    XMLAbstractDoubleFloat.$(TO) \
     XMLASCIITranscoder.$(TO) \
-    XMLNumber.$(TO) \
     XMLBigDecimal.$(TO) \
     XMLBigInteger.$(TO) \
-    XMLAbstractDoubleFloat.$(TO) \
-    XMLDouble.$(TO) \
-    XMLDateTime.$(TO) \
+    XMLChar.$(TO) \
     XMLChTranscoder.$(TO) \
-    XMLIBM1140Transcoder.$(TO) \
+    XMLDateTime.$(TO) \
+    XMLDouble.$(TO) \
     XMLEBCDICTranscoder.$(TO) \
     XMLException.$(TO) \
     XMLFloat.$(TO) \
+    XMLIBM1140Transcoder.$(TO) \
     XMLMsgLoader.$(TO) \
+    XMLNumber.$(TO) \
     XMLString.$(TO) \
+    XMLStringTokenizer.$(TO) \
     XMLUCSTranscoder.$(TO) \
+    XMLUni.$(TO) \
+    XMLUri.$(TO) \
+    XMLURL.$(TO) \
     XMLUTF16Transcoder.$(TO) \
     XMLUTF8Transcoder.$(TO) \
-    XMLUni.$(TO) \
-    XMLWin1252Transcoder.$(TO)
+    XMLWin1252Transcoder.$(TO) \
+    XML256TableTranscoder.$(TO) \
+    XML88591Transcoder.$(TO)
 
 
 all:: includes $(UTIL_CPP_OBJECTS) platforms transcoders \

@@ -448,24 +448,7 @@ NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
 
 bool DocumentImpl::isXMLName(const DOMString &s)
 {
-    const XMLCh   *nam;
-    int           length;
-    int           i;
-
-    length = s.length();
-    if (length == 0)
-        return false;
-
-    nam = s.rawBuffer();
-    if (!XMLReader::isFirstNameChar(nam[0]))
-        return false;
-
-    for (i=1; i<length; i++)
-    {
-        if (!XMLReader::isNameChar(nam[i]))
-            return false;
-    }
-    return true;
+    return XMLChar1_0::isValidName(s.rawBuffer(),s.length());
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/12/20 22:10:20  tng
+ * XML 1.1
+ *
  * Revision 1.5  2002/11/08 21:06:16  peiyongz
  * move comment to *hpp for API doc generation
  *
@@ -368,13 +371,13 @@ void XMLPlatformUtils::recognizeNEL(bool state) {
 
     if (state) {
 
-        if (!XMLReader::isNELRecognized()) {
-            XMLReader::enableNELWS();
+        if (!XMLChar1_0::isNELRecognized()) {
+            XMLChar1_0::enableNELWS();
         }
     }
     else {
 
-        if (XMLReader::isNELRecognized()) {
+        if (XMLChar1_0::isNELRecognized()) {
             ThrowXML(RuntimeException, XMLExcepts::NEL_RepeatedCalls);
         }
     }
@@ -383,7 +386,7 @@ void XMLPlatformUtils::recognizeNEL(bool state) {
 
 bool XMLPlatformUtils::isNELRecognized() {
 
-    return XMLReader::isNELRecognized();
+    return XMLChar1_0::isNELRecognized();
 }
 
 // ---------------------------------------------------------------------------

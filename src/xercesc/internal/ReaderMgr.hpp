@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/12/20 22:09:56  tng
+ * XML 1.1
+ *
  * Revision 1.5  2002/12/03 15:31:19  knoaman
  * Enable/disable calculation of src offset.
  *
@@ -285,7 +288,7 @@ public :
     // -----------------------------------------------------------------------
     void setEntityHandler(XMLEntityHandler* const newHandler);
     void setThrowEOE(const bool newValue);
-
+    void setXMLVersion(const XMLReader::XMLVersion version);
 
     // -----------------------------------------------------------------------
     //  Implement the SAX Locator interface
@@ -340,6 +343,10 @@ private :
     //      end of entity. The scanner doesn't really need to know about ends
     //      of entities in the int/ext subsets, so it will turn this flag off
     //      until it gets into the content usually.
+    //
+    //  fXMLVersion
+    //      Enum to indicate if each Reader should be created as XML 1.1 or
+    //      XML 1.0 conformant
     // -----------------------------------------------------------------------
     XMLEntityDecl*              fCurEntity;
     XMLReader*                  fCurReader;
@@ -348,6 +355,7 @@ private :
     unsigned int                fNextReaderNum;
     RefStackOf<XMLReader>*      fReaderStack;
     bool                        fThrowEOE;
+    XMLReader::XMLVersion       fXMLVersion;
 };
 
 
@@ -403,7 +411,8 @@ inline bool ReaderMgr::lookingAtChar(const XMLCh chToCheck)
 
 inline bool ReaderMgr::lookingAtSpace()
 {
-    return XMLReader::isWhitespace(peekNextChar());
+    XMLCh c = peekNextChar();
+    return fCurReader->isWhitespace(c);
 }
 
 inline void ReaderMgr::setThrowEOE(const bool newValue)
@@ -451,6 +460,11 @@ inline void ReaderMgr::setEntityHandler(XMLEntityHandler* const newHandler)
     fEntityHandler = newHandler;
 }
 
+inline void ReaderMgr::setXMLVersion(const XMLReader::XMLVersion version)
+{
+    fXMLVersion = version;
+    fCurReader->setXMLVersion(version);
+}
 
 //
 //  This is a simple class to temporarily change the 'throw at end of entity'

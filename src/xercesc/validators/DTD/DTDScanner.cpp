@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2002/12/20 22:10:47  tng
+ * XML 1.1
+ *
  * Revision 1.18  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -803,7 +806,7 @@ void DTDScanner::scanAttListDecl()
             fReaderMgr->getNextChar();
             break;
         }
-         else if (XMLReader::isWhitespace(nextCh))
+         else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
         {
             //
             //  If advanced callbacks are enabled and we have a doc
@@ -915,6 +918,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
     bool    firstNonWS = false;
     bool    gotLeadingSurrogate = false;
     bool    escaped;
+    bool    charref_expanded = false;
     while (true)
     {
     try
@@ -962,6 +966,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                     gotLeadingSurrogate = false;
                     continue;
                 }
+                charref_expanded = true;
             }
 
             // Check for correct surrogate pairs
@@ -980,25 +985,29 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                         fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 // Its got to at least be a valid XML character
-                else if (!XMLReader::isXMLChar(nextCh)) {
-
-                    XMLCh tmpBuf[9];
-                    XMLString::binToText
-                    (
-                        nextCh
-                        , tmpBuf
-                        , 8
-                        , 16
-                    );
-                    fScanner->emitError
-                    (
-                        XMLErrs::InvalidCharacterInAttrValue
-                        , attrName
-                        , tmpBuf
-                    );
+                else if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh)) {
+                    // if it was a character reference and is control char, then it's ok
+                    if (!(charref_expanded && fReaderMgr->getCurrentReader()->isControlChar(nextCh)))
+                    {
+                        XMLCh tmpBuf[9];
+                        XMLString::binToText
+                        (
+                            nextCh
+                            , tmpBuf
+                            , 8
+                            , 16
+                        );
+                        fScanner->emitError
+                        (
+                            XMLErrs::InvalidCharacterInAttrValue
+                            , attrName
+                            , tmpBuf
+                        );
+                    }
                 }
 
                 gotLeadingSurrogate = false;
+                charref_expanded = false;
             }
 
             //
@@ -1029,7 +1038,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
             {
                 if (curState == InWhitespace)
                 {
-                    if (!XMLReader::isWhitespace(nextCh))
+                    if (!fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
                     {
                         if (firstNonWS)
                             toFill.append(chSpace);
@@ -1043,7 +1052,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                 }
                  else if (curState == InContent)
                 {
-                    if (XMLReader::isWhitespace(nextCh))
+                    if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
                     {
                         curState = InWhitespace;
                         continue;
@@ -1509,7 +1518,7 @@ void DTDScanner::scanComment()
                     fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
             }
             // Its got to at least be a valid XML character
-            else if (!XMLReader::isXMLChar(nextCh)) {
+            else if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh)) {
 
                 XMLCh tmpBuf[9];
                 XMLString::binToText
@@ -2147,6 +2156,7 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
     XMLCh   nextCh;
     XMLCh   secondCh = 0;
     bool    gotLeadingSurrogate = false;
+    bool    charref_expanded = false;
     while (true)
     {
         // Get the second char if we have one, else get another
@@ -2216,6 +2226,8 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
                     gotLeadingSurrogate = false;
                     continue;
                 }
+                charref_expanded = true;
+
             }
              else
             {
@@ -2265,20 +2277,25 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
                 if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                     fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
             }
-             else if (!XMLReader::isXMLChar(nextCh))
+             else if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh))
             {
-                XMLCh tmpBuf[9];
-                XMLString::binToText
-                (
-                    nextCh
-                    , tmpBuf
-                    , 8
-                    , 16
-                );
-                fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
-                fReaderMgr->skipPastChar(quoteCh);
-                return false;
+                // if it was a character reference and is control char, then it's ok
+                if (!(charref_expanded && fReaderMgr->getCurrentReader()->isControlChar(nextCh)))
+                {
+                    XMLCh tmpBuf[9];
+                    XMLString::binToText
+                    (
+                        nextCh
+                        , tmpBuf
+                        , 8
+                        , 16
+                    );
+                    fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                    fReaderMgr->skipPastChar(quoteCh);
+                    return false;
+                }
             }
+            charref_expanded = false;
             gotLeadingSurrogate = false;
         }
 
@@ -2570,7 +2587,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                 }
 
             }
-             else if (XMLReader::isWhitespace(nextCh))
+             else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
             {
                 //
                 //  If we have a doc type handler, and advanced callbacks are
@@ -2629,13 +2646,13 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                 return;
             }
              else if (!nextCh)
-			{
-				 return; // nothing left
-			}
-             else
+            {
+                return; // nothing left
+            }
+            else
             {
                 fReaderMgr->getNextChar();
-                if (!XMLReader::isXMLChar(nextCh))
+                if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh))
                 {
                     XMLCh tmpBuf[9];
                     XMLString::binToText
@@ -2647,7 +2664,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                     );
                     fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
                 }
-                 else
+                else
                 {
                     fScanner->emitError(XMLErrs::InvalidDocumentStructure);
                 }
@@ -2851,6 +2868,7 @@ void DTDScanner::scanIgnoredSection()
     //  to parse until we hit its end.
     //
     unsigned long depth = 1;
+    bool gotLeadingSurrogate = false;
     while (true)
     {
         const XMLCh nextCh = fReaderMgr->getNextChar();
@@ -2883,17 +2901,50 @@ void DTDScanner::scanIgnoredSection()
                 }
             }
         }
-         else if (!XMLReader::isXMLChar(nextCh))
+        // Deal with surrogate pairs
+        else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            XMLCh tmpBuf[9];
-            XMLString::binToText
-            (
-                nextCh
-                , tmpBuf
-                , 8
-                , 16
-            );
-            fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+            //  Its a leading surrogate. If we already got one, then
+            //  issue an error, else set leading flag to make sure that
+            //  we look for a trailing next time.
+            if (gotLeadingSurrogate)
+                fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
+            else
+                gotLeadingSurrogate = true;
+        }
+        else
+        {
+            //  If its a trailing surrogate, make sure that we are
+            //  prepared for that. Else, its just a regular char so make
+            //  sure that we were not expected a trailing surrogate.
+            if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+            {
+                // Its trailing, so make sure we were expecting it
+                if (!gotLeadingSurrogate)
+                    fScanner->emitError(XMLErrs::Unexpected2ndSurrogateChar);
+            }
+            else
+            {
+                //  Its just a char, so make sure we were not expecting a
+                //  trailing surrogate.
+                if (gotLeadingSurrogate)
+                    fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
+
+                // Its got to at least be a valid XML character
+                else if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh))
+                {
+                    XMLCh tmpBuf[9];
+                    XMLString::binToText
+                    (
+                        nextCh
+                        , tmpBuf
+                        , 8
+                        , 16
+                    );
+                    fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                }
+            }
+            gotLeadingSurrogate = false;
         }
     }
 }
@@ -2968,7 +3019,7 @@ bool DTDScanner::scanInternalSubset()
                     fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
             }
         }
-         else if (XMLReader::isWhitespace(nextCh))
+         else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
         {
             //
             //  IF we are doing advanced callbacks and have a doc type
@@ -3572,7 +3623,7 @@ void DTDScanner::scanPI()
                         fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 // Its got to at least be a valid XML character
-                else if (!XMLReader::isXMLChar(nextCh)) {
+                else if (!fReaderMgr->getCurrentReader()->isXMLChar(nextCh)) {
 
                     XMLCh tmpBuf[9];
                     XMLString::binToText
@@ -3656,7 +3707,7 @@ bool DTDScanner::scanPublicLiteral(XMLBuffer& toFill)
         //  If its not a valid public id char, then report it but keep going
         //  since that's the best recovery scheme.
         //
-        if (!XMLReader::isPublicIdChar(nextCh))
+        if (!fReaderMgr->getCurrentReader()->isPublicIdChar(nextCh))
         {
             XMLCh tmpBuf[9];
             XMLString::binToText
@@ -3746,7 +3797,8 @@ void DTDScanner::scanTextDecl()
         }
 
         // If its not our supported version, issue an error but continue
-        if (!XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgSupportedVersion))
+        if (!XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgVersion1_0) &&
+            !XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgVersion1_1))
             fScanner->emitError(XMLErrs::UnsupportedXMLVersion, bbVersion.getRawBuffer());
     }
 

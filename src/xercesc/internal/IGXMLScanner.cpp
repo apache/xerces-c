@@ -554,7 +554,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     // Ok, skip by them and get another char
                     fReaderMgr.getNextChar();
@@ -573,7 +573,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         //  If its not one, then we do the normal case processing, which
         //  assumes that we've hit an attribute value, Otherwise, we do all
         //  the special case checks.
-        if (!XMLReader::isSpecialStartTagChar(nextCh))
+        if (!fReaderMgr.getCurrentReader()->isSpecialStartTagChar(nextCh))
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
@@ -606,7 +606,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 }
                 else if ((chFound == chSingleQuote)
                       ||  (chFound == chDoubleQuote)
-                      ||  XMLReader::isWhitespace(chFound))
+                      ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     // Just fall through assuming that the value is to follow
                 }
@@ -642,7 +642,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
 
                 if ((chFound == chCloseAngle)
                 ||  (chFound == chForwardSlash)
-                ||  XMLReader::isWhitespace(chFound))
+                ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     //  Just fall through and process this attribute, though
                     //  the value will be "".
@@ -1503,7 +1503,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     // Ok, skip by them and peek another char
                     fReaderMgr.skipPastSpaces();
@@ -1521,7 +1521,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         //  If its not one, then we do the normal case processing, which
         //  assumes that we've hit an attribute value, Otherwise, we do all
         //  the special case checks.
-        if (!XMLReader::isSpecialStartTagChar(nextCh))
+        if (!fReaderMgr.getCurrentReader()->isSpecialStartTagChar(nextCh))
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
@@ -1554,7 +1554,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                 }
                 else if ((chFound == chSingleQuote)
                       ||  (chFound == chDoubleQuote)
-                      ||  XMLReader::isWhitespace(chFound))
+                      ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     // Just fall through assuming that the value is to follow
                 }
@@ -1656,7 +1656,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
 
                 if ((chFound == chCloseAngle)
                 ||  (chFound == chForwardSlash)
-                ||  XMLReader::isWhitespace(chFound))
+                ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     //  Just fall through and process this attribute, though
                     //  the value will be "".

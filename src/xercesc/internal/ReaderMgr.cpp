@@ -93,6 +93,7 @@ ReaderMgr::ReaderMgr() :
     , fNextReaderNum(1)
     , fReaderStack(0)
     , fThrowEOE(false)
+    , fXMLVersion(XMLReader::XMLV1_0)
 {
 }
 
@@ -353,7 +354,7 @@ XMLCh ReaderMgr::skipUntilInOrWS(const XMLCh* const listToSkip)
         if (!nextCh)
             break;
 
-        if (XMLReader::isWhitespace(nextCh))
+        if (fCurReader->isWhitespace(nextCh))
             break;
 
         if (XMLString::indexOf(listToSkip, nextCh) != -1)
@@ -450,6 +451,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , source
                 , false
                 , calcSrcOfs
+                , fXMLVersion
                 );
         }
         else
@@ -464,6 +466,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , source
                 , false
                 , calcSrcOfs
+                , fXMLVersion
                 );
         }
     }
@@ -728,6 +731,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
         , XMLReader::Source_Internal
         , false
         , calcSrcOfs
+        , fXMLVersion
     );
 
     // If it failed for any reason, then return zero.

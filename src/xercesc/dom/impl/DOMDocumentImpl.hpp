@@ -177,7 +177,7 @@ public:
     virtual DOMElement*          getDocumentElement() const;
     virtual DOMNodeList*         getElementsByTagName(const XMLCh * tagname) const;
     virtual DOMImplementation*   getImplementation() const;
-    static  bool                 isXMLName(const XMLCh * s);
+    bool                         isXMLName(const XMLCh * s);
     virtual DOMNodeIterator*     createNodeIterator(DOMNode *root,
                                                     unsigned long whatToShow,
                                                     DOMNodeFilter* filter,

@@ -465,17 +465,10 @@ DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
 
 bool DOMDocumentImpl::isXMLName(const XMLCh *s)
 {
-    // revist.  This function probably already exists in the scanner.
-    if (!XMLReader::isFirstNameChar(s[0]))
-        return false;
-
-    const XMLCh *p;
-    for (p=s+1; *p!=0; p++)
-    {
-        if (!XMLReader::isNameChar(*p))
-            return false;
-    }
-    return true;
+    if (XMLString::equals(fVersion, XMLUni::fgVersion1_1))
+        return XMLChar1_1::isValidName(s, XMLString::stringLen(s));
+    else
+        return XMLChar1_0::isValidName(s, XMLString::stringLen(s));
 };
 
 
@@ -894,7 +887,8 @@ const XMLCh* DOMDocumentImpl::getVersion() const {
 
 void DOMDocumentImpl::setVersion(const XMLCh* version){
     if ((version && *version) &&
-        !XMLString::equals(version, XMLUni::fgSupportedVersion))
+        !XMLString::equals(version, XMLUni::fgVersion1_0) &&
+        !XMLString::equals(version, XMLUni::fgVersion1_1))
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
     fVersion = cloneString(version);

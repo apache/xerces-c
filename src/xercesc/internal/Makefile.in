@@ -90,8 +90,6 @@ INTERNAL_CPP_PUBHEADERS = \
 	VecAttributesImpl.hpp \
 	IGXMLScanner.hpp \
 	WFXMLScanner.hpp \
-	SGXMLScanner.hpp \
-	DGXMLScanner.hpp \
 	XMLInternalErrorHandler.hpp \
 	XMLReader.hpp \
 	XMLScanner.hpp \

@@ -129,7 +129,7 @@ void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
     if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull || XMLString::equals(fLocalName, xmlns))
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
 
-    if (prefix != 0 && !DOMDocumentImpl::isXMLName(prefix))
+    if (prefix != 0 && !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
 
     if (prefix == 0 || prefix[0] == chNull) {
@@ -241,7 +241,7 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
             delete[] newName;
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
-        if (!DOMDocumentImpl::isXMLName(fPrefix) || !DOMDocumentImpl::isXMLName(fLocalName))
+        if (!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fPrefix) || !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fLocalName))
             throw DOMException(DOMException::NAMESPACE_ERR, 0);
     }
 

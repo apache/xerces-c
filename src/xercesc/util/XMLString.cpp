@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -611,62 +611,21 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
 }
 
 /**
-  * isValidNCName
-  *
-  *    NCName::= (Letter | '_') (NCNameChar)*
-  *    NCNameChar ::= Letter | Digit | '.' | '-' | '_'
-  *                   | CombiningChar | Extender
+  * Deprecated: isValidNCName
+  *    Check first char, and then the rest of the name char.
+  *    But colon should be excluded
   */
 bool XMLString::isValidNCName(const XMLCh* const name) {
-
-    if (XMLString::stringLen(name) == 0
-        || XMLString::indexOf(name, chColon) != -1) {
-        return false;
-    }
-
-    const XMLCh* tempName = name;
-    XMLCh firstChar = *tempName++;
-
-    if (!XMLReader::isXMLLetter(firstChar) && firstChar != chUnderscore) {
-
-        return false;
-    }
-
-    while(*tempName) {
-
-        if (*tempName == chColon || !XMLReader::isNameChar(*tempName++)) {
-            return false;
-        }
-    }
-
-    return true;
+    return XMLChar1_0::isValidNCName(name, XMLString::stringLen(name));
 }
 
 /**
-  * isValidName
+  * Deprecated: isValidName
+  *    Check first char, and then the rest of the name char
   *
-  *    Name::= (Letter | '_' | ':') (NameChar)*
-  *    NameChar ::= Letter | Digit | '.' | '-' | '_' | ':'
-  *                 | CombiningChar | Extender
   */
 bool XMLString::isValidName(const XMLCh* const name) {
-
-    if (XMLString::stringLen(name) == 0)
-        return false;
-
-    const XMLCh* tempName = name;
-    XMLCh firstChar = *tempName++;
-
-    if (!XMLReader::isXMLLetter(firstChar) &&
-        (firstChar != chUnderscore)        &&
-        (firstChar != chColon)              )
-        return false;
-
-    while(*tempName)
-        if (!XMLReader::isNameChar(*tempName++))
-            return false;
-
-    return true;
+    return XMLChar1_0::isValidName(name, XMLString::stringLen(name));
 }
 
 /**
@@ -703,40 +662,12 @@ bool XMLString::isValidEncName(const XMLCh* const name)
 }
 
 /**
-  * isValidQName
-  *
-  * [6]  QName ::=  (Prefix ':')? LocalPart
-  * [7]  Prefix ::=  NCName
-  * [8]  LocalPart ::=  NCName
+  * Deprecated: isValidQName
   *
   */
 bool XMLString::isValidQName(const XMLCh* const name)
 {
-    int strLen = XMLString::stringLen(name);
-    if (strLen == 0)
-        return false;
-
-    int colonPos = XMLString::indexOf(name, chColon);
-    if ((colonPos == 0) ||         // ":abcd"
-        (colonPos == strLen-1))    // "abcd:"
-        return false;
-
-    //
-    // prefix
-    //
-    if (colonPos != -1)
-    {
-        XMLCh *prefix = new XMLCh[colonPos+1];
-        XMLString::subString(prefix, name, 0, colonPos);
-        ArrayJanitor<XMLCh> janName(prefix);
-        if (XMLString::isValidNCName(prefix)==false)
-            return false;
-    }
-
-    //
-    // LocalPart
-    //
-    return XMLString::isValidNCName(name+colonPos+1);
+    return XMLChar1_0::isValidQName(name, XMLString::stringLen(name));
 }
 
 bool XMLString::isAlpha(XMLCh const theChar)
@@ -768,22 +699,10 @@ bool XMLString::isHex(XMLCh const theChar)
 			(theChar >= chLatin_A && theChar <= chLatin_F));
 }
 
+// Deprecated
 bool XMLString::isAllWhiteSpace(const XMLCh* const toCheck)
 {
-    if ( !toCheck )
-        return true;
-
-    const XMLCh* startPtr = toCheck;
-
-    while (*startPtr)
-    {
-        if (!XMLPlatformUtils::fgTransService->isSpace(*startPtr))
-            return false;
-
-        startPtr++;
-    }
-
-    return true;
+    return XMLChar1_0::isAllSpaces(toCheck, XMLString::stringLen(toCheck));
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/20 22:10:48  tng
+ * XML 1.1
+ *
  * Revision 1.4  2002/12/04 18:21:23  knoaman
  * Identity constraint fix.
  *
@@ -687,7 +690,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
 
         ch = data[currentOffset];
 
-        while (XMLReader::isWhitespace(ch)) {
+        while (XMLChar1_0::isWhitespace(ch)) {
 
             if (++currentOffset == endOffset) {
                 break;
@@ -757,13 +760,13 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
                 addToken(tokens, XercesXPath::EXPRTOKEN_PERIOD);
                 starIsMultiplyOperator = true;
                 currentOffset++;
-            } else if (XMLReader::isWhitespace(ch)) {
+            } else if (XMLChar1_0::isWhitespace(ch)) {
                 do {
                     if (++currentOffset == endOffset)
                         break;
 
                     ch = data[currentOffset];
-                } while (XMLReader::isWhitespace(ch));
+                } while (XMLChar1_0::isWhitespace(ch));
 
                 if (currentOffset == endOffset || ch == chPipe) {
 				    addToken(tokens, XercesXPath::EXPRTOKEN_PERIOD);
@@ -1088,7 +1091,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
             //
             // [39] ExprWhitespace ::= S
             //
-            while (XMLReader::isWhitespace(ch)) {
+            while (XMLChar1_0::isWhitespace(ch)) {
                 if (++currentOffset == endOffset) {
                     break;
                 }
@@ -1224,7 +1227,7 @@ int XPathScanner::scanNCName(const XMLCh* const data,
 
     XMLCh ch = data[currentOffset];
 
-    if (!XMLReader::isXMLLetter(ch) && ch != chUnderscore) {
+    if (!XMLChar1_0::isXMLLetter(ch) && ch != chUnderscore) {
         return currentOffset;
     }
 
@@ -1232,7 +1235,7 @@ int XPathScanner::scanNCName(const XMLCh* const data,
 
         ch = data[currentOffset];
 
-        if (ch == chColon || !XMLReader::isNameChar(ch)) {
+        if (ch == chColon || !XMLChar1_0::isNameChar(ch)) {
             break;
         }
     }

@@ -201,7 +201,7 @@ public:
     virtual ElementImpl         *getDocumentElement();
     virtual DeepNodeListImpl    *getElementsByTagName(const DOMString & tagname);
     virtual NodeImpl            *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
-    static  bool                isXMLName(const DOMString & s);
+    bool                        isXMLName(const DOMString & s);
     virtual void                referenced();
     virtual NodeImpl            *removeChild(NodeImpl *oldChild);
     virtual void                unreferenced();

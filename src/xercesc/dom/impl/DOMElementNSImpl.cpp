@@ -151,7 +151,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
     if (fNode.isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                0);
-    if(prefix != 0 && !DOMDocumentImpl::isXMLName(prefix))
+    if(prefix != 0 && !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
 
     if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull)
@@ -250,7 +250,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
             delete[] newName;
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
-        if (!DOMDocumentImpl::isXMLName(fPrefix) || !DOMDocumentImpl::isXMLName(fLocalName))
+        if (!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fPrefix) || !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fLocalName))
             throw DOMException(DOMException::NAMESPACE_ERR, 0);
     }
 

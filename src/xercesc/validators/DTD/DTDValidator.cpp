@@ -318,7 +318,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
         if (firstNameChar)
         {
             // If its not, emit and error but try to keep going
-            if (!XMLReader::isFirstNameChar(*valPtr))
+            if (!getReaderMgr()->getCurrentReader()->isFirstNameChar(*valPtr))
                 emitError(XMLValid::AttrValNotName, fullName);
             valPtr++;
         }
@@ -330,7 +330,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             //  If we hit a whitespace, its either a break between two
             //  or more values, or an error if we have a single value.
             //
-            if (XMLReader::isWhitespace(*valPtr))
+            if (getReaderMgr()->getCurrentReader()->isWhitespace(*valPtr))
             {
                 if (!multipleValues)
                 {
@@ -348,7 +348,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             if (doNamespace && *valPtr == chColon && firstNameChar)
                 getScanner()->emitError(XMLErrs::ColonNotLegalWithNS);
 
-            if (!XMLReader::isNameChar(*valPtr))
+            if (!getReaderMgr()->getCurrentReader()->isNameChar(*valPtr))
             {
                 emitError(XMLValid::AttrValNotName, fullName);
                 return;

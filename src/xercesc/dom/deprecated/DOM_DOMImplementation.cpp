@@ -65,6 +65,7 @@
 #include "DocumentImpl.hpp"
 #include "DocumentTypeImpl.hpp"
 #include "DStringPool.hpp"
+#include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
@@ -209,8 +210,8 @@ bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMStri
 
 DOM_DocumentType DOM_DOMImplementation::createDocumentType(const DOMString &qualifiedName,
 	const DOMString &publicId, const DOMString &systemId)
-{
-    if(!DocumentImpl::isXMLName(qualifiedName))
+{    
+    if(!XMLChar1_0::isValidName(qualifiedName.rawBuffer(), XMLString::stringLen(qualifiedName.rawBuffer())))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     return DOM_DocumentType(new DocumentTypeImpl(null, qualifiedName, publicId, systemId));
 }

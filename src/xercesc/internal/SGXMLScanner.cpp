@@ -520,7 +520,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     // Ok, skip by them and get another char
                     fReaderMgr.getNextChar();
@@ -539,7 +539,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         //  If its not one, then we do the normal case processing, which
         //  assumes that we've hit an attribute value, Otherwise, we do all
         //  the special case checks.
-        if (!XMLReader::isSpecialStartTagChar(nextCh))
+        if (!fReaderMgr.getCurrentReader()->isSpecialStartTagChar(nextCh))
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
@@ -572,7 +572,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 }
                 else if ((chFound == chSingleQuote)
                       ||  (chFound == chDoubleQuote)
-                      ||  XMLReader::isWhitespace(chFound))
+                      ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     // Just fall through assuming that the value is to follow
                 }
@@ -608,7 +608,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
 
                 if ((chFound == chCloseAngle)
                 ||  (chFound == chForwardSlash)
-                ||  XMLReader::isWhitespace(chFound))
+                ||  fReaderMgr.getCurrentReader()->isWhitespace(chFound))
                 {
                     //  Just fall through and process this attribute, though
                     //  the value will be "".
@@ -2372,7 +2372,7 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
         {
             if (curState == InWhitespace)
             {
-                if (!XMLReader::isWhitespace(nextCh))
+                if (!fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     if (firstNonWS)
                         toFill.append(chSpace);
@@ -2387,7 +2387,7 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
             }
             else if (curState == InContent)
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 {
                     curState = InWhitespace;
                     srcPtr++;
@@ -2396,7 +2396,7 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                     // XML 1.0, Section 2.9
                     if (fStandalone && fValidate && isAttExternal)
                     {
-                        if (!firstNonWS || (nextCh != chSpace) || (!*srcPtr) || XMLReader::isWhitespace(*srcPtr))
+                        if (!firstNonWS || (nextCh != chSpace) || (!*srcPtr) || fReaderMgr.getCurrentReader()->isWhitespace(*srcPtr))
                         {
                              // Can't have a standalone document declaration of "yes" if  attribute
                              // values are subject to normalisation
@@ -2456,7 +2456,7 @@ bool SGXMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
             //  NOTE: Yes this is a little redundant in that a 0x20 is
             //  replaced with an 0x20. But its faster to do this (I think)
             //  than checking for 9, A, and D separately.
-            if (XMLReader::isWhitespace(nextCh))
+            if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
                 nextCh = chSpace;
         }
 
@@ -2659,7 +2659,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
         }
-        else if (XMLReader::isAllSpaces(rawBuf, len))
+        else if (fReaderMgr.getCurrentReader()->isAllSpaces(rawBuf, len))
         {
             //  Its all spaces. So, if they can take spaces, then send it
             //  as ignorable whitespace. If they can handle any char data
@@ -3224,6 +3224,7 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
     XMLCh   secondCh = 0;
     bool    gotLeadingSurrogate = false;
     bool    escaped;
+    bool    charref_expanded = false;
     while (true)
     {
         try
@@ -3270,6 +3271,7 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                         gotLeadingSurrogate = false;
                         continue;
                     }
+                    charref_expanded = true;
                 }
 
                 // Deal with surrogate pairs
@@ -3304,19 +3306,24 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                             emitError(XMLErrs::Expected2ndSurrogateChar);
                         }
                         // Its got to at least be a valid XML character
-                        else if (!XMLReader::isXMLChar(nextCh))
+                        else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                         {
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                            );
-                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                            // if it was a character reference and is control char, then it's ok
+                            if (!(charref_expanded && fReaderMgr.getCurrentReader()->isControlChar(nextCh)))
+                            {
+                                XMLCh tmpBuf[9];
+                                XMLString::binToText
+                                (
+                                    nextCh
+                                    , tmpBuf
+                                    , 8
+                                    , 16
+                                );
+                                emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                            }
                         }
                     }
+                    charref_expanded = false;
                     gotLeadingSurrogate = false;
                 }
 
@@ -3381,6 +3388,7 @@ void SGXMLScanner::scanCDSection()
     //  CDATA is effectively a big escape mechanism so we don't treat markup
     //  characters specially here.
     bool            emittedError = false;
+    bool    gotLeadingSurrogate = false;
     while (true)
     {
         const XMLCh nextCh = fReaderMgr.getNextChar();
@@ -3392,7 +3400,7 @@ void SGXMLScanner::scanCDSection()
             ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
-        if (fValidate && fStandalone && (XMLReader::isWhitespace(nextCh)))
+        if (fValidate && fStandalone && (fReaderMgr.getCurrentReader()->isWhitespace(nextCh)))
         {
             // This document is standalone; this ignorable CDATA whitespace is forbidden.
             // XML 1.0, Section 2.9
@@ -3417,6 +3425,10 @@ void SGXMLScanner::scanCDSection()
         //  sequence.
         if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
+            //  make sure we were not expecting a trailing surrogate.
+            if (gotLeadingSurrogate)
+                emitError(XMLErrs::Expected2ndSurrogateChar);
+
             // call all active identity constraints
             unsigned int count = fMatcherStack->getMatcherCount();
 
@@ -3444,18 +3456,51 @@ void SGXMLScanner::scanCDSection()
         //  them about it.
         if (!emittedError)
         {
-            if (!XMLReader::isXMLChar(nextCh))
+            // Deal with surrogate pairs
+            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
             {
-                XMLCh tmpBuf[9];
-                XMLString::binToText
-                (
-                    nextCh
-                    , tmpBuf
-                    , 8
-                    , 16
-                );
-                emitError(XMLErrs::InvalidCharacter, tmpBuf);
-                emittedError = true;
+                //  Its a leading surrogate. If we already got one, then
+                //  issue an error, else set leading flag to make sure that
+                //  we look for a trailing next time.
+                if (gotLeadingSurrogate)
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
+                else
+                    gotLeadingSurrogate = true;
+            }
+            else
+            {
+                //  If its a trailing surrogate, make sure that we are
+                //  prepared for that. Else, its just a regular char so make
+                //  sure that we were not expected a trailing surrogate.
+                if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+                {
+                    // Its trailing, so make sure we were expecting it
+                    if (!gotLeadingSurrogate)
+                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                }
+                else
+                {
+                    //  Its just a char, so make sure we were not expecting a
+                    //  trailing surrogate.
+                    if (gotLeadingSurrogate)
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
+
+                    // Its got to at least be a valid XML character
+                    else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
+                    {
+                        XMLCh tmpBuf[9];
+                        XMLString::binToText
+                        (
+                            nextCh
+                            , tmpBuf
+                            , 8
+                            , 16
+                        );
+                        emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                        emittedError = true;
+                    }
+                }
+                gotLeadingSurrogate = false;
             }
         }
 
@@ -3508,6 +3553,7 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
     bool    escaped = false;
     bool    gotLeadingSurrogate = false;
     bool    notDone = true;
+    bool    charref_expanded = false;
     while (notDone)
     {
         try
@@ -3557,6 +3603,7 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                         gotLeadingSurrogate = false;
                         continue;
                     }
+                    charref_expanded = true;
                 }
                 else
                 {
@@ -3619,19 +3666,24 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                             emitError(XMLErrs::Expected2ndSurrogateChar);
 
                         // Make sure the returned char is a valid XML char
-                        if (!XMLReader::isXMLChar(nextCh))
+                        if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                         {
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                            );
-                            emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                            // if it was a character reference and is control char, then it's ok
+                            if (!(charref_expanded && fReaderMgr.getCurrentReader()->isControlChar(nextCh)))
+                            {
+                                XMLCh tmpBuf[9];
+                                XMLString::binToText
+                                (
+                                    nextCh
+                                    , tmpBuf
+                                    , 8
+                                    , 16
+                                );
+                                emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                            }
                         }
                     }
+                    charref_expanded = false;
                     gotLeadingSurrogate = false;
                 }
 
@@ -3658,7 +3710,7 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
         // Get the raw data we need for the callback
         const XMLCh* rawBuf = toUse.getRawBuffer();
         const unsigned int len = toUse.getLen();
-        const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
+        const bool isSpaces = fReaderMgr.getCurrentReader()->containsWhiteSpace(rawBuf, len);
 
         if (isSpaces)
         {

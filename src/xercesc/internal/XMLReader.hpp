@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/12/20 22:09:56  tng
+ * XML 1.1
+ *
  * Revision 1.10  2002/12/11 22:09:08  knoaman
  * Performance: reduce instructions count.
  *
@@ -160,6 +163,7 @@
 #define XMLREADER_HPP
 
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
@@ -171,17 +175,6 @@ class ReaderMgr;
 class XMLBuffer;
 class XMLScanner;
 class XMLTranscoder;
-
-
-// Masks for the fgCharCharsTable array
-const XMLByte   gBaseCharMask               = 0x1;
-const XMLByte   gSpecialCharDataMask        = 0x2;
-const XMLByte   gNameCharMask               = 0x4;
-const XMLByte   gPlainContentCharMask       = 0x8;
-const XMLByte   gSpecialStartTagCharMask    = 0x10;
-const XMLByte   gLetterCharMask             = 0x20;
-const XMLByte   gXMLCharMask                = 0x40;
-const XMLByte   gWhitespaceCharMask         = 0x80;
 
 
 // ---------------------------------------------------------------------------
@@ -222,39 +215,39 @@ public:
         , RefFrom_NonLiteral
     };
 
+    enum XMLVersion
+    {
+        XMLV1_0
+        , XMLV1_1
+        , XMLV_Unknown
+    };
+
 
     // -----------------------------------------------------------------------
-    //  Public, static methods
+    //  Public, query methods
     // -----------------------------------------------------------------------
-    static bool isAllSpaces
+    bool isAllSpaces
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
     );
 
-    static bool containsWhiteSpace
+    bool containsWhiteSpace
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
     );
 
 
-    static bool isBaseChar(const XMLCh toCheck);
-    static bool isFirstNameChar(const XMLCh toCheck);
-    static bool isNameChar(const XMLCh toCheck);
-    static bool isPlainContentChar(const XMLCh toCheck);
-    static bool isPublicIdChar(const XMLCh toCheck);
-    static bool isSpecialCharDataChar(const XMLCh toCheck);
-    static bool isSpecialStartTagChar(const XMLCh toCheck);
-    static bool isXMLLetter(const XMLCh toCheck);
-    static bool isXMLChar(const XMLCh toCheck);
-    static bool isWhitespace(const XMLCh toCheck);
-
-    /**
-      * Return the value of fgNEL flag.
-      */
-    static bool isNELRecognized();
-
+    bool isXMLLetter(const XMLCh toCheck);
+    bool isFirstNameChar(const XMLCh toCheck);
+    bool isNameChar(const XMLCh toCheck);
+    bool isPlainContentChar(const XMLCh toCheck);
+    bool isSpecialStartTagChar(const XMLCh toCheck);
+    bool isXMLChar(const XMLCh toCheck);
+    bool isWhitespace(const XMLCh toCheck);
+    bool isControlChar(const XMLCh toCheck);
+    bool isPublicIdChar(const XMLCh toCheck);
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
@@ -269,6 +262,7 @@ public:
         , const Sources                     source
         , const bool                        throwAtEnd = false
         , const bool                        calculateSrcOfs = true
+        , const XMLVersion                  xmlVersion = XMLV1_0
     );
 
     XMLReader
@@ -282,6 +276,7 @@ public:
         , const Sources                     source
         , const bool                        throwAtEnd = false
         , const bool                        calculateSrcOfs = true
+        , const XMLVersion                  xmlVersion = XMLV1_0
     );
 
     XMLReader
@@ -295,6 +290,7 @@ public:
         , const Sources                     source
         , const bool                        throwAtEnd = false
         , const bool                        calculateSrcOfs = true
+        , const XMLVersion                  xmlVersion = XMLV1_0
     );
 
     ~XMLReader();
@@ -351,6 +347,7 @@ public:
     );
     void setReaderNum(const unsigned int newNum);
     void setThrowAtEnd(const bool newValue);
+    void setXMLVersion(const XMLVersion version);
 
 
 private:
@@ -376,21 +373,6 @@ private:
         , kRawBufSize       = 48 * 1024
     };
 
-
-    // -----------------------------------------------------------------------
-    //  Private static methods
-    // -----------------------------------------------------------------------
-    static bool checkTable
-    (
-        const   XMLCh* const    theTable
-        , const XMLCh           toCheck
-    );
-
-
-    /**
-      * Method to enable NEL char to be treated as white space char.
-      */
-    static void enableNELWS();
 
     // -----------------------------------------------------------------------
     //  Private helper methods
@@ -552,6 +534,15 @@ private:
     //      Indicates whether this reader represents a PE or not. If this
     //      flag is true and the fInLiteral flag is false, then we will put
     //      out an extra space at the end.
+    //
+    //  fgCharCharsTable;
+    //      Pointer to XMLChar table, depends on XML version
+    //
+    //  fNEL
+    //      Boolean indicates if NEL and LSEP should be recognized as NEL
+    //
+    //  fXMLVersion
+    //      Enum to indicate if this Reader is conforming to XML 1.0 or XML 1.1
     // -----------------------------------------------------------------------
     unsigned int                fCharIndex;
     XMLCh                       fCharBuf[kCharBufSize];
@@ -580,35 +571,15 @@ private:
     bool                        fThrowAtEnd;
     XMLTranscoder*              fTranscoder;
     Types                       fType;
-
-
-    // -----------------------------------------------------------------------
-    //  Static data members
-    //
-    //  fgCharCharsTable
-    //      The character characteristics table. Bits in each byte, represent
-    //      the characteristics of each character. It is generated via some
-    //      code and then hard coded into the cpp file for speed.
-    //
-    //  fNEL
-    //      Flag to respresents whether NEL whitespace recognition is enabled
-    //      or disabled
-    // -----------------------------------------------------------------------
-    static XMLByte  fgCharCharsTable[0x10000];
-    static bool     fNEL;
-
-    friend class XMLPlatformUtils;
+    XMLByte*                    fgCharCharsTable;
+    bool                        fNEL;
+    XMLVersion                  fXMLVersion;
 };
 
 
 // ---------------------------------------------------------------------------
-//  XMLReader: Public, static methods
+//  XMLReader: Public, query methods
 // ---------------------------------------------------------------------------
-inline bool XMLReader::isBaseChar(const XMLCh toCheck)
-{
-    return ((fgCharCharsTable[toCheck] & gBaseCharMask) != 0);
-}
-
 inline bool XMLReader::isNameChar(const XMLCh toCheck)
 {
     return ((fgCharCharsTable[toCheck] & gNameCharMask) != 0);
@@ -620,9 +591,9 @@ inline bool XMLReader::isPlainContentChar(const XMLCh toCheck)
 }
 
 
-inline bool XMLReader::isSpecialCharDataChar(const XMLCh toCheck)
+inline bool XMLReader::isFirstNameChar(const XMLCh toCheck)
 {
-    return ((fgCharCharsTable[toCheck] & gSpecialCharDataMask) != 0);
+    return ((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0);
 }
 
 inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck)
@@ -637,13 +608,17 @@ inline bool XMLReader::isXMLChar(const XMLCh toCheck)
 
 inline bool XMLReader::isXMLLetter(const XMLCh toCheck)
 {
-    const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
-    return ((fgCharCharsTable[toCheck] & ourMask) != 0);
+    return ((fgCharCharsTable[toCheck] & gLetterCharMask) != 0);
 }
 
 inline bool XMLReader::isWhitespace(const XMLCh toCheck)
 {
     return ((fgCharCharsTable[toCheck] & gWhitespaceCharMask) != 0);
+}
+
+inline bool XMLReader::isControlChar(const XMLCh toCheck)
+{
+    return ((fgCharCharsTable[toCheck] & gControlCharMask) != 0);
 }
 
 // ---------------------------------------------------------------------------
@@ -713,11 +688,6 @@ inline XMLReader::Types XMLReader::getType() const
     return fType;
 }
 
-inline bool XMLReader::isNELRecognized() {
-
-    return fNEL;
-}
-
 // ---------------------------------------------------------------------------
 //  XMLReader: Setter methods
 // ---------------------------------------------------------------------------
@@ -729,6 +699,20 @@ inline void XMLReader::setReaderNum(const unsigned int newNum)
 inline void XMLReader::setThrowAtEnd(const bool newValue)
 {
     fThrowAtEnd = newValue;
+}
+
+inline void XMLReader::setXMLVersion(const XMLVersion version)
+{
+    fXMLVersion = version;
+    if (version == XMLV1_1) {
+        fNEL = true;
+        fgCharCharsTable = XMLChar1_1::fgCharCharsTable1_1;
+    }
+    else {
+        fNEL = XMLChar1_0::enableNEL;
+        fgCharCharsTable = XMLChar1_0::fgCharCharsTable1_0;
+    }
+
 }
 
 
@@ -749,7 +733,7 @@ inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 
     while (fCharIndex < fCharsAvail)
     {
-        if (!XMLReader::isPlainContentChar(fCharBuf[fCharIndex]))
+        if (!isPlainContentChar(fCharBuf[fCharIndex]))
             break;
         fCharIndex++;
     }
@@ -840,7 +824,7 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
         fCurLine++;
     }
      else if (chGotten == chLF
-              || ((chGotten == chNEL) && fNEL))
+              || ((chGotten == chNEL || chGotten == chLineSeparator) && fNEL))
     {
         chGotten = chLF;
         fCurLine++;
@@ -913,7 +897,7 @@ inline bool XMLReader::getNextChar(XMLCh& chGotten)
         fCurLine++;
     }
      else if (chGotten == chLF
-              || ((chGotten == chNEL) && fNEL))
+              || ((chGotten == chNEL || chGotten == chLineSeparator) && fNEL))
     {
         chGotten = chLF;
         fCurLine++;
@@ -958,7 +942,7 @@ inline bool XMLReader::peekNextChar(XMLCh& chGotten)
     //  normal char get method in regards to newline normalization, though
     //  its not as complicated as the actual character getting method's.
     //
-    if ((chGotten == chCR || ((chGotten == chNEL) && fNEL))
+    if ((chGotten == chCR || ((chGotten == chNEL || chGotten == chLineSeparator) && fNEL))
         && (fSource == Source_External))
         chGotten = chLF;
 

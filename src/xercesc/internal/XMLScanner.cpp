@@ -828,7 +828,7 @@ void XMLScanner::scanMiscellaneous()
                     fReaderMgr.skipPastChar(chCloseAngle);
                 }
             }
-            else if (XMLReader::isWhitespace(nextCh))
+            else if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
             {
                 //  If we have a doc handler, then gather up the spaces and
                 //  call back. Otherwise, just skip over whitespace.
@@ -948,7 +948,7 @@ void XMLScanner::scanPI()
                         emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 // Its got to at least be a valid XML character
-                else if (!XMLReader::isXMLChar(nextCh)) {
+                else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh)) {
 
                     XMLCh tmpBuf[9];
                     XMLString::binToText
@@ -1063,7 +1063,7 @@ void XMLScanner::scanProlog()
                     return;
                 }
             }
-            else if (XMLReader::isWhitespace(nextCh))
+            else if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
             {
                 //  If we have a document handler then gather up the
                 //  whitespace and call back. Otherwise just skip over spaces.
@@ -1212,7 +1212,12 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         const XMLCh* rawValue = buffers[curString]->getRawBuffer();
         if (curString == VersionString)
         {
-            if (!XMLString::equals(rawValue, XMLUni::fgSupportedVersion))
+            if (XMLString::equals(rawValue, XMLUni::fgVersion1_1)) {
+                if (type == Decl_XML) {
+                    fReaderMgr.setXMLVersion(XMLReader::XMLV1_1);
+                }
+            }
+            else if (!XMLString::equals(rawValue, XMLUni::fgVersion1_0))
                 emitError(XMLErrs::UnsupportedXMLVersion, rawValue);
         }
          else if (curString == EncodingString)
@@ -1793,7 +1798,7 @@ void XMLScanner::scanComment()
                     emitError(XMLErrs::Expected2ndSurrogateChar);
             }
             // Its got to at least be a valid XML character
-            else if (!XMLReader::isXMLChar(nextCh)) {
+            else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh)) {
 
                 XMLCh tmpBuf[9];
                 XMLString::binToText

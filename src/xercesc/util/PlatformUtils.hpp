@@ -157,18 +157,18 @@ public :
     /** Perform per-process parser initialization
       *
       * Initialization <b>must</b> be called first in any client code.
-      * 
-      * The locale is set iff the Initialize() is invoked for the very first time, 
-      * to ensure that each and every message loaders, in the process space, share 
+      *
+      * The locale is set iff the Initialize() is invoked for the very first time,
+      * to ensure that each and every message loaders, in the process space, share
       * the same locale.
       *
-      * All subsequent invocations of Initialize(), with a different locale, have 
+      * All subsequent invocations of Initialize(), with a different locale, have
       * no effect on the message loaders, either instantiated, or to be instantiated.
       *
-      * To set to a different locale, client application needs to Terminate() (or 
-      * multiple Terminate() in the case where multiple Initialize() have been invoked 
+      * To set to a different locale, client application needs to Terminate() (or
+      * multiple Terminate() in the case where multiple Initialize() have been invoked
       * before), followed by Initialize(new_locale).
-      * 
+      *
       * The default locale is "en_US".
       *
       */
@@ -579,12 +579,15 @@ public :
     /** @name NEL Character Handling  */
     //@{
 	/**
-      * This function enables the recognition of NEL char as whitespace chars
+      * This function enables the recognition of NEL(0x85) char and LSEP (0x2028) as newline chars
       * which is disabled by default.
       * It is only called once per process. Once it is set, any subsequent calls
       * will result in exception being thrown.
       *
-      * Note: Turning this option on will make the parser non complicant.
+      * Note: 1. Turning this option on will make the parser non compliant to XML 1.0.
+      *       2. This option has no effect to document conforming to XML 1.1 compliant,
+      *          which always recognize these two chars (0x85 and 0x2028) as newline characters.
+      *
       */
     static void recognizeNEL(bool state);
 

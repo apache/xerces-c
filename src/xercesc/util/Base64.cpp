@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/12/20 22:10:20  tng
+ * XML 1.1
+ *
  * Revision 1.6  2002/11/25 18:14:35  peiyongz
  * Schema Errata: E2-9 Base64
  *
@@ -139,7 +142,7 @@ bool Base64::isInitialized = false;
 
 /**
  *     E2-9
- *    
+ *
  *     Canonical-base64Binary ::= (B64line* B64lastline)?
  *
  *      B64line ::= B64x15 B64x15 B64x15 B64x15 B64x15 B64 #xA
@@ -332,7 +335,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
     int rawInputLength = 0;
     while ( inputIndex < inputLength )
     {
-        if (!XMLReader::isWhitespace(inputData[inputIndex]))
+        if (!XMLChar1_0::isWhitespace(inputData[inputIndex]))
             rawInputData[ rawInputLength++ ] = inputData[ inputIndex ];
 
         inputIndex++;

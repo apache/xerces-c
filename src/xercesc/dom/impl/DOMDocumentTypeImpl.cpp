@@ -62,6 +62,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 #include "DOMNamedNodeMapImpl.hpp"
 #include "DOMDocumentImpl.hpp"
@@ -136,8 +137,15 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         newName[index] = chNull;
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
-        if (!DOMDocumentImpl::isXMLName(newName) || !DOMDocumentImpl::isXMLName(qualifiedName+index+1))
-            throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        if (ownerDoc) {
+            if (!((DOMDocumentImpl*)ownerDoc)->isXMLName(newName) || !((DOMDocumentImpl*)ownerDoc)->isXMLName(qualifiedName+index+1))
+                throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        }
+        else {
+            // document is not there yet, so assume XML 1.0
+            if (!XMLChar1_0::isValidName(newName, index) || !XMLChar1_0::isValidName(qualifiedName+index+1, XMLString::stringLen(qualifiedName)-index-1))
+                throw DOMException(DOMException::NAMESPACE_ERR, 0);
+        }
 
         if (index >= 3999)
             delete[] newName;

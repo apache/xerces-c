@@ -72,7 +72,7 @@ static XMLRegisterCleanup gNamCleanup;
 
 XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc)
     : ChildNode(ownerDoc),
-    version(DOMString(XMLUni::fgSupportedVersion)),
+    version(DOMString(XMLUni::fgVersion1_0)),
     encoding (DOMString(XMLUni::fgUTF8EncodingString)),
     standalone (DOMString(XMLUni::fgNoString))
 {

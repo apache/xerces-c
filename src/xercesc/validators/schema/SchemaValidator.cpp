@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2002/12/20 22:10:47  tng
+ * XML 1.1
+ *
  * Revision 1.23  2002/12/12 20:53:28  knoaman
  * Schema Errata E1-15.
  *
@@ -480,7 +483,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             fCurrentDV->validate(value);
                     }
                 }
-            } 
+            }
             catch (XMLException& idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
@@ -676,9 +679,9 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 attDefDV->validate(attrValue);
             }
 
-        } 
+        }
         catch (XMLException& idve) {
-                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());       
+                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
         }
         catch (...) {
             emitError(XMLValid::GenericError);
@@ -1124,14 +1127,14 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         }
         else if (fWhiteSpace == DatatypeValidator::REPLACE)
         {
-            if (XMLReader::isWhitespace(nextCh))
+            if (getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
                 nextCh = chSpace;
         }
         else // COLLAPSE case
         {
             if (curState == InWhitespace)
             {
-                if (!XMLReader::isWhitespace(nextCh))
+                if (!getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
                 {
                     if (firstNonWS)
                         toFill.append(chSpace);
@@ -1146,7 +1149,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
             }
              else if (curState == InContent)
             {
-                if (XMLReader::isWhitespace(nextCh))
+                if (getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
                 {
                     curState = InWhitespace;
                     srcPtr++;
@@ -1163,7 +1166,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     }
     srcPtr--;
     nextCh = *srcPtr;
-    if (XMLReader::isWhitespace(nextCh))
+    if (getReaderMgr()->getCurrentReader()->isWhitespace(nextCh))
         fTrailing = true;
 
 }
