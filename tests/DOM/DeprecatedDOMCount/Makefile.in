@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 2001 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
 #
 # This software consists of voluntary contributions made by many
 # individuals on behalf of the Apache Software Foundation, and was
-# originally based on software copyright (c) 2001, International
+# originally based on software copyright (c) 1999, International
 # Business Machines, Inc., http://www.ibm.com .  For more information
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
@@ -72,27 +72,27 @@ PLATFORM = @platform@
 COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
-PREFIX = @prefix@
 LDFLAGS = @ldflags@
+PREFIX = @prefix@
 THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 
 include ../../../version.incl
 include ../../Makefile.incl
 
-APP_NAME=IRangeTest
-APP_DIR=IDom/IRangeTest
+APP_NAME=DeprecatedDOMCount
+APP_DIR=DOM/DeprecatedDOMCount
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
 EXEC=	${XERCESCROOT}/bin
-OBJS=	${OUTDIR}/IRangeTest.o
+OBJS=	${OUTDIR}/DeprecatedDOMCount.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
-HEADER_FILES=
+HEADER_FILES=${SRC}/DeprecatedDOMCount.hpp
 INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(IRANGTST)'"
+BATCH_TARGET= "//'${LOADMOD}(DEPRECAT)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}
@@ -103,12 +103,11 @@ makedir::
 
 ${EXEC}/${APP_NAME}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
-
 ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
-$(OUTDIR)/IRangeTest.o:: ${SRC}/IRangeTest.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/IRangeTest.o ${SRC}/IRangeTest.cpp
+$(OUTDIR)/DeprecatedDOMCount.o:: ${SRC}/DeprecatedDOMCount.cpp ${HEADER_FILES}
+	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/DeprecatedDOMCount.o ${SRC}/DeprecatedDOMCount.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

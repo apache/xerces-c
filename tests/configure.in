@@ -80,16 +80,12 @@ AC_SUBST(extra_libs)
 
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
+DOM/DeprecatedDOMCount/Makefile \
 DOM/DOMTest/Makefile \
-IDom/IDOMTest/Makefile \
-DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
-IDom/IDOMMemTest/Makefile \
 DOM/Traversal/Makefile \
-IDom/ITraversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
-IDom/IRangeTest/Makefile \
 InitTermTest/Makefile \
 ThreadTest/Makefile])
 

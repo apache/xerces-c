@@ -57,17 +57,13 @@
 # $Id$
 #
 
-DOMIDTest_DIR=DOM/DOMIDTest
 DOMMemTest_DIR=DOM/DOMMemTest
-IDOMMemTest_DIR=IDom/IDOMMemTest
+DeprecatedDOMCount_DIR=DOM/DeprecatedDOMCount
 DOMTest_DIR=DOM/DOMTest
-IDOMTest_DIR=IDom/IDOMTest
 Traversal_DIR=DOM/Traversal
-ITraversal_DIR=IDom/ITraversal
 ThreadTest_DIR=ThreadTest
 EncodingTest_DIR=EncodingTest
 DOMRange_DIR=DOM/RangeTest
-IDOMRange_DIR=IDom/IRangeTest
 InitTermTest_DIR=InitTermTest
 
 LIB_DIR=${XERCESCROOT}/lib
@@ -83,12 +79,12 @@ BITSTOBUILD = @bitstobuild@
 
 ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
-      all::	bindir threadtest encodingtest traversal itraversal
+      all::	bindir threadtest encodingtest traversal
   else
-      all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+      all::	bindir dommemtest deprecateddomcount domtest threadtest encodingtest traversal rangetest inittermtest
   endif
 else
-    all::	bindir domidtest dommemtest idommemtest domtest idomtest encodingtest traversal itraversal rangetest irangetest inittermtest
+    all::	bindir dommemtest deprecateddomcount domtest encodingtest traversal rangetest inittermtest
   ifneq (${THREADS},none)
     all::	threadtest
   endif
@@ -97,25 +93,17 @@ endif
 bindir::
 	test -d ${XERCESCROOT}/bin || mkdir ${XERCESCROOT}/bin
 
-domidtest::
-	@echo Building "DOMIDTest"
-	${MAKE} -C $(DOMIDTest_DIR) $(MAKE_FLAGS)
-
 dommemtest::
 	@echo Building "DOMMemTest"
 	${MAKE} -C $(DOMMemTest_DIR) $(MAKE_FLAGS)
 
-idommemtest::
-	@echo Building "IDOMMemTest"
-	${MAKE} -C $(IDOMMemTest_DIR) $(MAKE_FLAGS)
+deprecateddomcount::
+	@echo Building "DeprecatedDOMConut"
+	${MAKE} -C $(DeprecatedDOMCount_DIR) $(MAKE_FLAGS)
 
 domtest::
 	@echo Building "DOMTest"
 	${MAKE} -C $(DOMTest_DIR) $(MAKE_FLAGS)
-
-idomtest::
-	@echo Building "IDOMTest"
-	${MAKE} -C $(IDOMTest_DIR) $(MAKE_FLAGS)
 
 threadtest::
 	@echo Building "ThreadTest"
@@ -129,48 +117,32 @@ traversal::
 	@echo Building "Traversal"
 	${MAKE} -C $(Traversal_DIR) $(MAKE_FLAGS)
 
-itraversal::
-	@echo Building "ITraversal"
-	${MAKE} -C $(ITraversal_DIR) $(MAKE_FLAGS)
-
 rangetest::
 	@echo Building "Range"
 	${MAKE} -C $(DOMRange_DIR) $(MAKE_FLAGS)
-
-irangetest::
-	@echo Building "Range"
-	${MAKE} -C $(IDOMRange_DIR) $(MAKE_FLAGS)
 
 inittermtest::
 	@echo Building "InitTermTest"
 	${MAKE} -C $(InitTermTest_DIR) $(MAKE_FLAGS)
 
 clean::
-	${MAKE} -C $(DOMIDTest_DIR) $@
 	${MAKE} -C $(DOMMemTest_DIR) $@
-	${MAKE} -C $(IDOMMemTest_DIR) $@
+	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
 	${MAKE} -C $(DOMTest_DIR) $@
-	${MAKE} -C $(IDOMTest_DIR) $@
 	${MAKE} -C $(ThreadTest_DIR) $@
 	${MAKE} -C $(EncodingTest_DIR) $@
 	${MAKE} -C $(Traversal_DIR) $@
-	${MAKE} -C $(ITraversal_DIR) $@
 	${MAKE} -C $(DOMRange_DIR) $@
-	${MAKE} -C $(IDOMRange_DIR) $@
 	${MAKE} -C $(InitTermTest_DIR) $@
 
 distclean::
-	${MAKE} -C $(DOMIDTest_DIR) $@
 	${MAKE} -C $(DOMMemTest_DIR) $@
-	${MAKE} -C $(IDOMMemTest_DIR) $@
+	${MAKE} -C $(DeprecatedDOMCount_DIR) $@
 	${MAKE} -C $(DOMTest_DIR) $@
-	${MAKE} -C $(IDOMTest_DIR) $@
 	${MAKE} -C $(ThreadTest_DIR) $@
 	${MAKE} -C $(EncodingTest_DIR) $@
 	${MAKE} -C $(Traversal_DIR) $@
-	${MAKE} -C $(ITraversal_DIR) $@
 	${MAKE} -C $(DOMRange_DIR) $@
-	${MAKE} -C $(IDOMRange_DIR) $@
 	${MAKE} -C $(InitTermTest_DIR) $@
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
