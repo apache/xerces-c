@@ -122,7 +122,7 @@ static const XMLCh gMyServiceId[] =
     chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chNull
 };
 
-//Detect a mismatch in unicode character size.
+//	Detect a mismatch in unicode character size.
 const bool kUniSizeMismatch = sizeof(XMLCh) != sizeof(UniChar);
 
 
@@ -147,8 +147,8 @@ MacOSUnicodeConverter::~MacOSUnicodeConverter()
 int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
                                           , const XMLCh* const    comp2)
 {
-        //	If unicode collation routines are available, use them.
-        //	This should be the case on Mac OS 8.6 and later,
+	//	If unicode collation routines are available, use them.
+	//	This should be the case on Mac OS 8.6 and later,
 	//	with Carbon 1.0.2 or later, and under Mac OS X.
 	//
 	//	Otherwise, but only for Metrowerks, since only Metrowerks
@@ -631,14 +631,11 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
     if (status != noErr)
     {
         ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
-
-    	bytesConsumed = 0;
-    	bytesProduced = 0;
     }
 	
 	std::size_t charsProduced = bytesProduced / sizeof(UniChar);
 	
-	//	If XMLCh is not same length as UniChar (under GCC)
+	//	If XMLCh is not same length as UniChar (previously the case under GCC)
 	//	then we need to convert the UniChar characters up to
 	//	XMLCh. We lied about the max buffer length above in
 	//	order to leave room in our output buffer. So we know
@@ -741,8 +738,13 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
             );
     	}
     	
-    	totalCharsConsumed = 0;
-    	totalCharsProduced = 0;
+    	// These were removed because we actually have succeeded in transcoding part of
+    	// the string; this logic should probably be changed to deal with non-transcodable
+    	// text somehow; if options != UnRep_Throw, and we zero these values, we get in
+    	// to an infinite loop and hang the machine
+    	
+    	//totalCharsConsumed = 0;
+    	//totalCharsProduced = 0;
     }
     	
     charsEaten = totalCharsConsumed;
@@ -753,16 +755,52 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
 bool
 MacOSTranscoder::canTranscodeTo(const unsigned int toCheck) const
 {
-    // We'll try just about anything...once!
+	//
+    //  If the passed value is really a surrogate embedded together, then
+    //  we need to break it out into its two chars. Else just one.
     //
-    // Actually, this is pretty heavilly cheating. If I knew
-    // better what I was supposed to do...
+    unsigned int    srcCnt = 0;
+    UniChar         srcBuf[2];
+
+    if (toCheck & 0xFFFF0000)
+    {
+        srcBuf[srcCnt++] = XMLCh(toCheck >> 10)   + 0xD800;
+        srcBuf[srcCnt++] = XMLCh(toCheck & 0x3FF) + 0xDC00;
+    }
+    else
+    {
+        srcBuf[srcCnt++] = XMLCh(toCheck);
+    }
+
     //
-    // The windows code essentially tries to convert the character
-    // with no surragates being used.
+    //  Use a local temp buffer that would hold any sane multi-byte char
+    //  sequence and try to transcode this guy into it.
     //
-    // TODO: clean this up.
-    return true;
+    char tmpBuf[64];
+
+    OSStatus status;
+	OptionBits controlFlags = kUnicodeLooseMappingsMask;
+	ByteCount bytesConsumed;
+	ByteCount bytesProduced;
+
+    status = ConvertFromUnicodeToText(
+		mUnicodeToTextInfo,
+		srcCnt * sizeof(UniChar),
+		srcBuf,
+		controlFlags,		// control flags
+		0,					// ioffset count
+		NULL,				// ioffset array
+		0,					// ooffset count
+		NULL,				// ooffset array
+		sizeof(tmpBuf),
+		&bytesConsumed,
+		&bytesProduced,
+		tmpBuf
+	);
+	
+	//	Return true if we transcoded the character(s)
+	//	successfully
+	return status == noErr && bytesProduced > 0;
 }
 
 
