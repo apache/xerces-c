@@ -1981,6 +1981,12 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
         else
         {
             value = (value * radix) + nextVal;
+            // Guard against overflow.
+            if (value > 0x10FFFF) {
+                // Character reference was not in the valid range
+                emitError(XMLErrs::InvalidCharacterRef);
+                return false;
+            }
         }
 
         // Indicate that we got at least one good digit
