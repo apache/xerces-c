@@ -9,7 +9,7 @@ Name:		xerces-c
 Version:	2.3.0
 Release:	3
 URL:		http://xml.apache.org/xerces-c/
-Source0:	%{name}-src%{tarversion}.tar.gz
+Source0:    %{name}-src_%{tarversion}.tar.gz
 Copyright:	Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root
@@ -52,10 +52,10 @@ write XML data. A shared library is provided for parsing, generating,
 manipulating, and validating XML documents.
 
 %prep
-%setup -q -n %{name}-src%{tarversion}
+%setup -q -n %{name}-src_%{tarversion}
 
 %build
-export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
+export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT/src/xercesc
 ./runConfigure -plinux -cgcc -xg++ -minmem -nsocket -tnative -r%{threads} -P%{prefix}
 make
@@ -64,7 +64,7 @@ cd $XERCESCROOT/samples
 make
 
 %install
-export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
+export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT/src/xercesc
 make PREFIX=$RPM_BUILD_ROOT%{prefix} install
 ln -sf %{prefix}/lib/libxerces-c.so.23 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
@@ -96,7 +96,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE.txt STATUS credits.txt Readme.html doc/
 
 %changelog
-* Fri March 14 2003 Tinny Ng <tng@ca.ibm.com>
+* Fri Jun  6 2003 Tuan Hoang <tqhoang@bigfoot.com>
+- updated for new Xerces-C filename and directory format
+- fixed date format in changelog section
+
+* Fri Mar 14 2003 Tinny Ng <tng@ca.ibm.com>
 - changed to 2.3
 
 * Wed Dec 18 2002 Albert Strasheim <albert@stonethree.com>
