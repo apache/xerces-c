@@ -126,9 +126,7 @@ public:
     static const unsigned short IGNORABLEWS;
     static const unsigned short SETVALUE;
     static const unsigned short ID_ATTR;
-	static const unsigned short USERDATA;
-
-    void *userData;
+    static const unsigned short USERDATA;
 
     static int              gLiveNodeImpls; // Counters for debug & tuning.
     static int              gTotalNodeImpls;

@@ -93,7 +93,6 @@ const unsigned short NodeImpl::USERDATA     = 0x1<<9;
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 {
-    this->userData = null;
     this->flags = 0;
     // as long as we do not have any owner, ownerNode is our ownerDocument
     this->ownerNode  = ownerDoc;
@@ -107,7 +106,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 // deep clone
 NodeImpl::NodeImpl(const NodeImpl &other) {
     this->flags = other.flags;
-    this->userData = other.userData;
     this->isReadOnly(false);
     
     this->nodeRefCount = 0;
