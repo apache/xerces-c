@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.6  2004/08/31 20:53:43  peiyongz
+* Testing time zone
+*
 * Revision 1.5  2004/08/31 15:15:16  peiyongz
 * remove XSValueContext
 *
@@ -3916,17 +3919,17 @@ void test_dt_dateTime()
     const XSValue::DataType dt = XSValue::dt_dateTime; 
     bool  toValidate = true;
 
-    const char v_1[]="2000-12-31T23:59:59.38900";
-    const char v_2[]="2000-10-01T24:00:00";
-    const char v_3[]="2000-02-28T23:59:59";
+    const char v_1[]="2000-12-31T23:59:59.00389";
+    const char v_2[]="2000-10-01T11:10:20+06:00";
+    const char v_3[]="2000-10-01T11:10:20-06:00";
 
     const char iv_1[]="0000-12-31T23:59:59";
     const char iv_2[]="+2000-11-30T23:59:59Z";
     const char iv_3[]="2000-02-28T23:59.1:59Z";
 
-    const char v_1_canrep[]="2000-12-31T23:59:59.389Z";
-    const char v_2_canrep[]="2000-10-01T00:00:00Z";
-    const char v_3_canrep[]="2000-02-28T23:59:59Z";
+    const char v_1_canrep[]="2000-12-31T23:59:59.00389Z";
+    const char v_2_canrep[]="2000-10-01T05:10:20Z";
+    const char v_3_canrep[]="2000-10-01T17:10:20Z";
 
  /***
  * E2-41
