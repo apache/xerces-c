@@ -171,7 +171,7 @@ XMLASCIITranscoder::transcodeTo(const   XMLCh* const    srcData
 
     const XMLCh*    srcPtr = srcData;
     XMLByte*        outPtr = toFill;
-    for (unsigned int index; index < countToDo; index++)
+    for (unsigned int index = 0; index < countToDo; index++)
     {
         // If its legal, do it and jump back to the top
         if (*srcPtr < 0x80)
