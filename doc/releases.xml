@@ -3,7 +3,7 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.5.0: June 12, 2001">
+<s2 title="Xerces-C Version 1.5.0: June 15, 2001">
 
 <table>
     <tr>
@@ -13,7 +13,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>Tinny Ng</td>
         <td>Schema:<br/>
             Add Schema support in XMLParsers (DOM/SAX/SAX2), XMLScanner. <br/>
@@ -26,14 +26,14 @@
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>Tinny Ng</td>
         <td>Break DTDValidator into DTDGrammar, DTDScanner, and DTDValidator.
         </td>
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>Tinny Ng</td>
         <td>IDOM:<br/>
             Complete the Range, TreeWalker, NodeIterator, and other memory fixes.<br/>
@@ -44,7 +44,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>Khaled Noaman</td>
         <td> Schema:<br/>
              Add Regular Expression. <br/>
@@ -61,7 +61,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>Khaled Noaman</td>
         <td>DatatypeValidator:<br/>
             Add DatatypeValidator and DatatypeValidatorFactory.
@@ -69,7 +69,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>PeiYong Zhang</td>
         <td>Schema:<br/>
             Add Schema support in Content Model. <br/>
@@ -81,7 +81,7 @@
     </tr>
 
     <tr>
-        <td>2001-06-12</td>
+        <td>2001-06-15</td>
         <td>PeiYong Zhang</td>
         <td>DatatypeValidator:<br/>
              Support Base64DatatypeValidator, <br/>
@@ -91,6 +91,13 @@
              StringDatatypeValidator, <br/>
              InvalidDatatypeFacetException, <br/>
              InvalidDatatypeValueException.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-13</td>
+        <td>Erik Rydgren</td>
+        <td>[Bug 812] Memory leak with multiple !ATTLIST on single !ELEMENT.
         </td>
     </tr>
 

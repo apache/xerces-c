@@ -1038,7 +1038,16 @@ void DOMParser::endAttList
                 insertAttr->setSpecified(false);
             }
         }
-        fDocumentType->getElements()->setNamedItem(elem);
+        ElementImpl *previousElem = (ElementImpl *)
+                fDocumentType->getElements()->setNamedItem( elem );
+
+        //
+        //  If this new element is replacing an element node that was already
+        //    in the element named node map, we need to delete the original
+        //    element node, assuming no-one else was referencing it.
+        //
+        if (previousElem != 0 && previousElem->nodeRefCount == 0)
+            NodeImpl::deleteIf(previousElem);
     }
 }
 
@@ -1144,7 +1153,16 @@ void DOMParser::notationDecl
 	notation->setPublicId(notDecl.getPublicId());
 	notation->setSystemId(notDecl.getSystemId());
 
-	fDocumentType->notations->setNamedItem( notation );
+    NotationImpl *previousNot = (NotationImpl *)
+       fDocumentType->notations->setNamedItem( notation );
+
+    //
+    //  If this new notation is replacing a notation node that was already
+    //    in the notation named node map, we need to delete the original
+    //    notation node, assuming no-one else was referencing it.
+    //
+    if (previousNot != 0 && previousNot->nodeRefCount == 0)
+        NodeImpl::deleteIf(previousNot);
 
 }
 
