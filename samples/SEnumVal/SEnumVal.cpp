@@ -1,3 +1,67 @@
+/*
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xerces" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written
+ *    permission, please contact apache\@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation, and was
+ * originally based on software copyright (c) 1999, International
+ * Business Machines, Inc., http://www.ibm.com .  For more information
+ * on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ */
+
+/*
+ * $Id$
+ * $Log$
+ * Revision 1.3  2001/11/21 19:05:23  peiyongz
+ * SEnumVal: GrammarType checked
+ *
+ *
+ */
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -77,7 +141,7 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
 static void usage()
 {
     cout << "\nUsage:\n"
-            "    EnumVal <XML file>\n\n"
+            "    SEnumVal <XML file>\n\n"
             "This program parses a file, then shows how to enumerate the\n"
             "contents of the validator pools. Essentially, shows how one can\n"
             "access the Schema information stored in internal data structures.\n\n"
@@ -159,15 +223,20 @@ void process(char* const xmlFile)
 		return;
 	}
 
+    if ( parser.getValidator().getGrammar()->getGrammarType() != Grammar::SchemaGrammarType)
+    {
+		cout << "\n Non schema grammar, no output available\n" << endl;
+		return;
+    }
+
 	//
 	//  Now we will get an enumerator for the element pool from the validator
 	//  and enumerate the elements, printing them as we go. For each element
 	//  we get an enumerator for its attributes and print them also.
 	//
-	SchemaGrammar* grammar = (SchemaGrammar*) 
-parser.getValidator().getGrammar();
-	RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = 
-grammar->getElemEnumerator();
+
+    SchemaGrammar* grammar = (SchemaGrammar*) parser.getValidator().getGrammar();
+	RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = grammar->getElemEnumerator();
 
 	if (!elemEnum.hasMoreElements())
 	{
@@ -343,8 +412,7 @@ void processAttributes( XMLAttDefList& attList, bool margin )
     }
 }
 
-void processDatatypeValidator( const DatatypeValidator* dtValidator, bool 
-margin )
+void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin )
 {
     if( !dtValidator )
     {
@@ -426,39 +494,23 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
     cout << "ContentType:\t";
     switch( cSpecNode->getType() )
     {
-        case ContentSpecNode::Leaf:             cout << "Leaf";           
-break;
-        case ContentSpecNode::ZeroOrOne:        cout << "ZeroOrOne";      
-break;
-        case ContentSpecNode::ZeroOrMore:       cout << "ZeroOrMore";     
-break;
-        case ContentSpecNode::OneOrMore:        cout << "OneOrMore";      
-break;
-        case ContentSpecNode::Choice:           cout << "Choice";         
-break;
-        case ContentSpecNode::Sequence:         cout << "Sequence";       
-break;
+        case ContentSpecNode::Leaf:             cout << "Leaf";           break;
+        case ContentSpecNode::ZeroOrOne:        cout << "ZeroOrOne";      break;
+        case ContentSpecNode::ZeroOrMore:       cout << "ZeroOrMore";     break;
+        case ContentSpecNode::OneOrMore:        cout << "OneOrMore";      break;
+        case ContentSpecNode::Choice:           cout << "Choice";         break;
+        case ContentSpecNode::Sequence:         cout << "Sequence";       break;
 		case ContentSpecNode::All:              cout << "All";            break;
-        case ContentSpecNode::Any:              cout << "Any";            
-break;
-        case ContentSpecNode::Any_Other:        cout << "Any_Other";      
-break;
-        case ContentSpecNode::Any_NS:           cout << "Any_NS";         
-break;
-        case ContentSpecNode::Any_Lax:          cout << "Any_Lax";        
-break;
-        case ContentSpecNode::Any_Other_Lax:    cout << "Any_Other_Lax";  
-break;
-        case ContentSpecNode::Any_NS_Lax:       cout << "Any_NS_Lax";     
-break;
-        case ContentSpecNode::Any_Skip:         cout << "Any_Skip";       
-break;
-        case ContentSpecNode::Any_Other_Skip:   cout << "Any_Other_Skip"; 
-break;
-        case ContentSpecNode::Any_NS_Skip:      cout << "Any_NS_Skip";    
-break;
-        case ContentSpecNode::UnknownType:      cout << "UnknownType";    
-break;
+        case ContentSpecNode::Any:              cout << "Any";            break;
+        case ContentSpecNode::Any_Other:        cout << "Any_Other";      break;
+        case ContentSpecNode::Any_NS:           cout << "Any_NS";         break;
+        case ContentSpecNode::Any_Lax:          cout << "Any_Lax";        break;
+        case ContentSpecNode::Any_Other_Lax:    cout << "Any_Other_Lax";  break;
+        case ContentSpecNode::Any_NS_Lax:       cout << "Any_NS_Lax";     break;
+        case ContentSpecNode::Any_Skip:         cout << "Any_Skip";       break;
+        case ContentSpecNode::Any_Other_Skip:   cout << "Any_Other_Skip"; break;
+        case ContentSpecNode::Any_NS_Skip:      cout << "Any_NS_Skip";    break;
+        case ContentSpecNode::UnknownType:      cout << "UnknownType";    break;
     }
     cout << "\n";
 }

@@ -54,6 +54,10 @@
 # <http://www.apache.org/>.
 # 
 # $Id$
+# $Log$
+# Revision 1.2  2001/11/21 19:05:23  peiyongz
+# SEnumVal: GrammarType checked
+#
 #
 
 ###################################################################
