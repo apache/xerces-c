@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/03 22:33:21  peiyongz
+ * DOMWriter: constants moved to XMLUni
+ *
  * Revision 1.1  2002/05/28 22:38:55  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -65,72 +68,5 @@
 #include <xercesc/dom/DOMWriter.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-//canonical-form
-const XMLCh    DOMWriter::CanonicalForm[] =
-{
-	chLatin_c, chLatin_a, chLatin_n, chLatin_o, chLatin_n, chLatin_i,
-    chLatin_c, chLatin_a, chLatin_l, chDash,    chLatin_f, chLatin_o,
-	chLatin_r, chLatin_m, chNull
-};
 
-//discard-default-content
-const XMLCh    DOMWriter::DiscardDefaultContent[] =
-{
-	chLatin_d, chLatin_i, chLatin_s, chLatin_c, chLatin_a, chLatin_r,
-    chLatin_d, chDash,    chLatin_d, chLatin_e, chLatin_f, chLatin_a,
-	chLatin_u, chLatin_l, chLatin_l, chLatin_t, chDash,    chLatin_c,
-	chLatin_o, chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t,
-	chNull
-};
-
-//entities
-const XMLCh    DOMWriter::Entities[] =
-{
-	chLatin_e, chLatin_n, chLatin_t, chLatin_i, chLatin_t, chLatin_i,
-	chLatin_e, chLatin_s, chNull
-};
-
-//format-pretty-print
-const XMLCh    DOMWriter::FormatPrettyPrint[] =
-{
-	chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t,
-    chDash,    chLatin_p, chLatin_r, chLatin_e, chLatin_t, chLatin_t,
-	chLatin_y, chDash,    chLatin_p, chLatin_r, chLatin_i, chLatin_n,
-	chLatin_t, chNull
-};
-
-//normalize-characters
-const XMLCh    DOMWriter::NormalizeCharacters[] =
-{
-	chLatin_n, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_l,
-    chLatin_i, chLatin_z, chLatin_e, chDash,    chLatin_c, chLatin_h,
-	chLatin_a, chLatin_r, chLatin_a, chLatin_c, chLatin_t, chLatin_e, 
-	chLatin_r, chLatin_s, chNull
-};
-
-//split-cdata-sections
-const XMLCh    DOMWriter::SplitCdataSections[] =
-{
-	chLatin_s, chLatin_p, chLatin_l, chLatin_i, chLatin_t, chDash,
-    chLatin_c, chLatin_d, chLatin_a, chLatin_t, chLatin_a, chDash,
-	chLatin_s, chLatin_e, chLatin_c, chLatin_t, chLatin_i, chLatin_o, 
-	chLatin_n, chLatin_s, chNull
-};
-
-//validation
-const XMLCh    DOMWriter::Validation[] =
-{
-	chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d, chLatin_a, 
-	chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
-};
-
-//whitespace-in-element-content
-const XMLCh    DOMWriter::WhitespaceInElementContent[] =
-{
-	chLatin_w, chLatin_h, chLatin_i, chLatin_t, chLatin_e, chLatin_s,
-    chLatin_p, chLatin_a, chLatin_c, chLatin_e, chDash,    chLatin_i,
-	chLatin_n, chDash,    chLatin_e, chLatin_l, chLatin_e, chLatin_m, 
-	chLatin_e, chLatin_n, chLatin_t, chDash,    chLatin_c, chLatin_o, 
-	chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t, chNull
-};
 

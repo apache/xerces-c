@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/06/03 22:33:21  peiyongz
+ * DOMWriter: constants moved to XMLUni
+ *
  * Revision 1.3  2002/05/31 20:59:40  peiyongz
  * Add "introduced in DOM3"
  *
@@ -475,15 +478,6 @@ public:
     virtual XMLCh*     writeToString(const DOMNode &nodeToWrite) = 0;
 
     //@}
-
-	static const XMLCh    CanonicalForm[];
-	static const XMLCh    DiscardDefaultContent[];
-	static const XMLCh    Entities[];
-	static const XMLCh    FormatPrettyPrint[];
-	static const XMLCh    NormalizeCharacters[];
-	static const XMLCh    SplitCdataSections[];
-	static const XMLCh    Validation[];
-	static const XMLCh    WhitespaceInElementContent[];
 
 protected:
 
