@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/05/27 20:23:48  knoaman
+ * Performance: lazily store top-level components to eliminate unnecessary traversal
+ * of DOM tree when looking up for a top level component.
+ *
  * Revision 1.5  2002/05/21 19:30:47  tng
  * DOM Reorganization: modify to use the new DOM interface.
  *
@@ -113,6 +117,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        XMLStringPool* const stringPool,
                        const DOMElement* const root)
     : fAdoptInclude(false)
+    , fProcessed(false)
     , fElemAttrDefaultQualified(elemAttrDefaultQualified)
     , fBlockDefault(blockDefault)
     , fFinalDefault(finalDefault)
@@ -132,6 +137,8 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fRecursingTypeNames(0)
 {
     fImportingInfoList = new RefVectorOf<SchemaInfo>(4, false);
+    for (unsigned int i = 0; i < C_Count; i++)
+        fTopLevelComponents[i] = 0;
 }
 
 
@@ -158,18 +165,25 @@ SchemaInfo::~SchemaInfo()
 
     delete fRecursingTypeNames;
     fRecursingTypeNames = 0;
+
+    for (unsigned int i = 0; i < C_Count; i++) {
+
+        delete fTopLevelComponents[i];
+        fTopLevelComponents[i] = 0;
+    }
 }
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo:
 // ---------------------------------------------------------------------------
 DOMElement*
-SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
+SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
+                                 const XMLCh* const compName,
                                  const XMLCh* const name,
                                  SchemaInfo** enclosingSchema) {
 
     SchemaInfo* currentInfo = this;
-    DOMElement* child = getTopLevelComponent(compCategory, name);
+    DOMElement* child = getTopLevelComponent(compCategory, compName, name);
 
     if (child == 0) {
 
@@ -182,7 +196,7 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
             if (currentInfo == this)
                 continue;
 
-            child = currentInfo->getTopLevelComponent(compCategory, name);
+            child = currentInfo->getTopLevelComponent(compCategory, compName, name);
 
             if (child != 0) {
 
@@ -197,17 +211,50 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
 
 
 DOMElement*
-SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
-                                  const XMLCh* const name) {
+SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
+                                 const XMLCh* const compName,
+                                 const XMLCh* const name) {
+
+    if (compCategory >= C_Count)
+        return 0;
 
     DOMElement* child = XUtil::getFirstChildElement(fSchemaRootElement);
 
+    if (!child)
+        return 0;
+
+    ValueVectorOf<DOMElement*>* compList = fTopLevelComponents[compCategory];
+
+    if (fTopLevelComponents[compCategory] == 0) {
+
+        compList= new ValueVectorOf<DOMElement*>(16);
+        fTopLevelComponents[compCategory] = compList;
+    }
+    else {
+        unsigned int listLen = compList->size();
+
+        for (unsigned int i= 0; i < listLen; i++) {
+
+            child = compList->elementAt(i);
+            if (!XMLString::compareString(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
+                return child;
+        }
+    }
+
+    DOMElement* redefParent = (DOMElement*) child->getParentNode();
+
+    // Parent is not "redefine"
+    if (XMLString::compareString(redefParent->getLocalName(),SchemaSymbols::fgELT_REDEFINE))
+        redefParent = 0;
+
     while (child != 0) {
 
-        if (!XMLString::compareString(child->getLocalName(), compCategory)) {
+        if (!XMLString::compareString(child->getLocalName(), compName)) {
+
+            compList->addElement(child);
 
             if (!XMLString::compareString(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
-                break;
+                return child;
         }
         else if (!XMLString::compareString(child->getLocalName(),SchemaSymbols::fgELT_REDEFINE)
                  && (!fFailedRedefineList || !fFailedRedefineList->containsElement(child))) { // if redefine
@@ -217,22 +264,25 @@ SchemaInfo::getTopLevelComponent(const XMLCh* const compCategory,
             while (redefineChild != 0) {
 
                 if ((!fFailedRedefineList || !fFailedRedefineList->containsElement(redefineChild))
-                    && !XMLString::compareString(redefineChild->getLocalName(), compCategory)
-                    && !XMLString::compareString(redefineChild->getAttribute(SchemaSymbols::fgATT_NAME), name)) {
-                        break;
+                    && !XMLString::compareString(redefineChild->getLocalName(), compName)) {
+
+                    compList->addElement(redefineChild);
+
+                    if (!XMLString::compareString(redefineChild->getAttribute(SchemaSymbols::fgATT_NAME), name))
+                        return redefineChild;
                 }
 
                 redefineChild = XUtil::getNextSiblingElement(redefineChild);
             }
-
-            if (redefineChild != 0) {
-
-                child = redefineChild;
-                break;
-            }
         }
 
         child = XUtil::getNextSiblingElement(child);
+
+        if (child == 0 && redefParent) {
+
+            child = XUtil::getNextSiblingElement(redefParent);
+            redefParent = 0;
+        }
     }
 
     return child;

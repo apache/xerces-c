@@ -282,6 +282,8 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
             }
         }
     }
+
+    fSchemaInfo->setProcessed();
 }
 
 void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
@@ -436,7 +438,7 @@ void TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationEl
             fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Documentation, this);
         }
         else {
-//            reportSchemaError(XMLUni::fgXMLErrDomain, 0, 0); //"an <annotation> can only contain <appinfo> and <documentation> elements"
+            reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAnnotationContent);
         }
     }
 }
@@ -1970,7 +1972,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
                 if (dv == 0 && XMLString::stringLen(typeURI) == 0) {
 
-                    DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+                    DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
+                        SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
                     if (topLevelType != 0) {
 
@@ -1991,7 +1994,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
             if (dv == 0 && !XMLString::compareString(typeURI, fTargetNSURIString)) {
 
-                DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+                DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
+                    SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
                 if (topLevelType != 0) {
 
@@ -2679,7 +2683,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
 
         SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
 
-        if (!impInfo) {
+        if (!impInfo || impInfo->getProcessed()) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, uriStr, name);
             return 0;
@@ -2689,7 +2693,8 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
         fTargetNSURI = fSchemaInfo->getTargetNSURI();
     }
 
-    DOMElement* notationElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_NOTATION, name, &fSchemaInfo);
+    DOMElement* notationElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Notation,
+        SchemaSymbols::fgELT_NOTATION, name, &fSchemaInfo);
 
     if (notationElem == 0) {
 
@@ -2860,7 +2865,7 @@ int TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
             }
             catch (...) {
 
-                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
+                reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::InvalidFacetName, facetName);
                 content = XUtil::getNextSiblingElement(content);
                 continue;
             }
@@ -4379,8 +4384,8 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
     if (baseValidator == 0) {
 
         SchemaInfo* saveInfo = fSchemaInfo;
-        DOMElement* baseTypeNode =
-            fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+        DOMElement* baseTypeNode = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
+            SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
         if (baseTypeNode != 0) {
 
@@ -4469,7 +4474,8 @@ QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
     if (!refElemDecl) {
 
         SchemaInfo* saveInfo = fSchemaInfo;
-        DOMElement* targetElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ELEMENT, localPart, &fSchemaInfo);
+        DOMElement* targetElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Element,
+            SchemaSymbols::fgELT_ELEMENT, localPart, &fSchemaInfo);
 
         if (targetElem == 0)  {
 
@@ -4712,7 +4718,7 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
 
         SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
 
-        if (!impInfo) {
+        if (!impInfo || impInfo->getProcessed()) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, typeURI, localPart);
             return 0;
@@ -4734,7 +4740,8 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
             || XMLString::compareString(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
 
             SchemaInfo* saveInfo = fSchemaInfo;
-            DOMElement* typeElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+            DOMElement* typeElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
+                SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
             if (typeElem != 0 && traverseSimpleTypeDecl(typeElem) != -1) {
                 dv = getDatatypeValidator(typeURI, localPart);
@@ -4799,7 +4806,7 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
 
         SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
 
-        if (!impInfo) {
+        if (!impInfo || impInfo->getProcessed()) {
             return 0;
         }
 
@@ -4815,7 +4822,8 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
         if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0 ||
             XMLString::compareString(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
 
-            DOMElement* typeNode = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
+            DOMElement* typeNode = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_ComplexType,
+                SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
 
             if (typeNode) {
 
@@ -4873,7 +4881,7 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
             SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
 
-            if (!impInfo) {
+            if (!impInfo || impInfo->getProcessed()) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
                 return 0;
@@ -4890,7 +4898,8 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
 
     if (!elemDecl) {
 
-        DOMElement* subsGroupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ELEMENT,localPart, &fSchemaInfo);
+        DOMElement* subsGroupElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Element,
+            SchemaSymbols::fgELT_ELEMENT,localPart, &fSchemaInfo);
 
         if (subsGroupElem != 0) {
 
@@ -5150,7 +5159,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
 
             SchemaInfo* impInfo = fSchemaInfo->getImportInfo(attURI);
 
-            if (!impInfo) {
+            if (!impInfo || impInfo->getProcessed()) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TopLevelAttributeNotFound, refName);
                 return;
@@ -5167,8 +5176,8 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
 		
         if (fAttributeDeclRegistry->containsKey(localPart) == false) {
 
-            DOMElement* referredAttribute =
-                fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTE, localPart, &fSchemaInfo);
+            DOMElement* referredAttribute = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Attribute,
+                SchemaSymbols::fgELT_ATTRIBUTE, localPart, &fSchemaInfo);
 
             if (referredAttribute != 0) {
                 traverseAttributeDecl(referredAttribute, 0, true);
@@ -5702,7 +5711,7 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
 
             SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
 
-            if (!impInfo) {
+            if (!impInfo || impInfo->getProcessed()) {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
                 throw TraverseSchema::InvalidComplexTypeInfo;
             }
@@ -5749,8 +5758,8 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
 
         if (baseDTValidator == 0) {
 
-            DOMElement* baseTypeNode =
-                fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
+            DOMElement* baseTypeNode = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_ComplexType,
+                SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
 
             if (baseTypeNode != 0) {
 
@@ -5759,7 +5768,8 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
             }
             else {
 
-                baseTypeNode = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
+                baseTypeNode = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
+                    SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
                 if (baseTypeNode != 0) {
 
@@ -6368,7 +6378,7 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
 
             SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
 
-            if (!impInfo) {
+            if (!impInfo || impInfo->getProcessed()) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DeclarationNotFound,
                                   SchemaSymbols::fgELT_GROUP, uriStr, localPart);
@@ -6385,7 +6395,8 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
 
     if (!groupInfo) {
 
-        DOMElement* groupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_GROUP, localPart, &fSchemaInfo);
+        DOMElement* groupElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Group,
+            SchemaSymbols::fgELT_GROUP, localPart, &fSchemaInfo);
 
         if (groupElem != 0) {
 
@@ -6454,7 +6465,7 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
         if (!attGroupInfo) {
             SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
 
-            if (!impInfo) {
+            if (!impInfo || impInfo->getProcessed()) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DeclarationNotFound,
                                   SchemaSymbols::fgELT_ATTRIBUTEGROUP, uriStr, localPart);
@@ -6484,7 +6495,8 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
     if (!attGroupInfo) {
 
         // traverse top level attributeGroup - if found
-        DOMElement* attGroupElem = fSchemaInfo->getTopLevelComponent(SchemaSymbols::fgELT_ATTRIBUTEGROUP, localPart, &fSchemaInfo);
+        DOMElement* attGroupElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_AttributeGroup,
+            SchemaSymbols::fgELT_ATTRIBUTEGROUP, localPart, &fSchemaInfo);
 
         if (attGroupElem != 0) {
 

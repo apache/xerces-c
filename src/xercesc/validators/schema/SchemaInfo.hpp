@@ -92,6 +92,18 @@ public:
         INCLUDE = 2
     };
 
+    enum {
+        C_ComplexType,
+        C_SimpleType,
+        C_Group,
+        C_Attribute,
+        C_AttributeGroup,
+        C_Element,
+        C_Notation,
+
+        C_Count
+    };
+
     // -----------------------------------------------------------------------
     //  Constructor/Destructor
     // -----------------------------------------------------------------------
@@ -111,22 +123,24 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XMLCh*                   getCurrentSchemaURL() const;
-    const XMLCh* const       getTargetNSURIString() const;
-    const DOMElement*      getRoot() const;
-    int                      getBlockDefault() const;
-    int                      getFinalDefault() const;
-    int                      getTargetNSURI() const;
-    int                      getScopeCount() const;
-    unsigned int             getNamespaceScopeLevel() const;
-    unsigned short           getElemAttrDefaultQualified() const;
-    RefVectorEnumerator<SchemaInfo> getImportingListEnumerator() const;
+    XMLCh*                            getCurrentSchemaURL() const;
+    const XMLCh* const                getTargetNSURIString() const;
+    const DOMElement*                 getRoot() const;
+    bool                              getProcessed() const;
+    int                               getBlockDefault() const;
+    int                               getFinalDefault() const;
+    int                               getTargetNSURI() const;
+    int                               getScopeCount() const;
+    unsigned int                      getNamespaceScopeLevel() const;
+    unsigned short                    getElemAttrDefaultQualified() const;
+    RefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
     ValueVectorOf<const DOMElement*>* getRecursingAnonTypes() const;
-    ValueVectorOf<const XMLCh*>*        getRecursingTypeNames() const;
+    ValueVectorOf<const XMLCh*>*      getRecursingTypeNames() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    void setProcessed(const bool aValue = true);
     void setScopeCount(const int aValue);
     void setBlockDefault(const int aValue);
     void setFinalDefault(const int aValue);
@@ -138,11 +152,13 @@ public:
     void addSchemaInfo(SchemaInfo* const toAdd, const ListType aListType);
     bool containsInfo(const SchemaInfo* const toCheck, const ListType aListType) const;
     SchemaInfo* getImportInfo(const unsigned int namespaceURI) const;
-    DOMElement* getTopLevelComponent(const XMLCh* const compCategory,
-                                       const XMLCh* const name);
-    DOMElement* getTopLevelComponent(const XMLCh* const compCategory,
-                                       const XMLCh* const name,
-                                       SchemaInfo** enclosingSchema);
+    DOMElement* getTopLevelComponent(const unsigned short compCategory,
+                                     const XMLCh* const compName,
+                                     const XMLCh* const name);
+    DOMElement* getTopLevelComponent(const unsigned short compCategory,
+                                     const XMLCh* const compName,
+                                     const XMLCh* const name,
+                                     SchemaInfo** enclosingSchema);
     void updateImportingInfo(SchemaInfo* const importingInfo);
     bool circularImportExist(const unsigned int nameSpaceURI);
     bool isFailedRedefine(const DOMElement* const anElem);
@@ -153,26 +169,33 @@ public:
 
 private:
     // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void clearTopLevelComponents();
+
+    // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool                                fAdoptInclude;
-    unsigned short                      fElemAttrDefaultQualified;
-    int                                 fBlockDefault;
-    int                                 fFinalDefault;
-    int                                 fTargetNSURI;
-    int                                 fScopeCount;
-    unsigned int                        fNamespaceScopeLevel;
-    XMLCh*                              fCurrentSchemaURL;
-    const XMLCh*                        fTargetNSURIString;
-    XMLStringPool*                      fStringPool;
+    bool                              fAdoptInclude;
+    bool                              fProcessed;
+    unsigned short                    fElemAttrDefaultQualified;
+    int                               fBlockDefault;
+    int                               fFinalDefault;
+    int                               fTargetNSURI;
+    int                               fScopeCount;
+    unsigned int                      fNamespaceScopeLevel;
+    XMLCh*                            fCurrentSchemaURL;
+    const XMLCh*                      fTargetNSURIString;
+    XMLStringPool*                    fStringPool;
     const DOMElement*                 fSchemaRootElement;
-    RefVectorOf<SchemaInfo>*            fIncludeInfoList;
-    RefVectorOf<SchemaInfo>*            fImportedInfoList;
-    RefVectorOf<SchemaInfo>*            fImportingInfoList;
+    RefVectorOf<SchemaInfo>*          fIncludeInfoList;
+    RefVectorOf<SchemaInfo>*          fImportedInfoList;
+    RefVectorOf<SchemaInfo>*          fImportingInfoList;
     ValueVectorOf<const DOMElement*>* fFailedRedefineList;
-    ValueVectorOf<int>*                 fImportedNSList;
+    ValueVectorOf<int>*               fImportedNSList;
     ValueVectorOf<const DOMElement*>* fRecursingAnonTypes;
-    ValueVectorOf<const XMLCh*>*        fRecursingTypeNames;
+    ValueVectorOf<const XMLCh*>*      fRecursingTypeNames;
+    ValueVectorOf<DOMElement*>*       fTopLevelComponents[C_Count];
 };
 
 // ---------------------------------------------------------------------------
@@ -181,6 +204,11 @@ private:
 inline unsigned short SchemaInfo::getElemAttrDefaultQualified() const {
 
     return fElemAttrDefaultQualified;
+}
+
+inline bool SchemaInfo::getProcessed() const {
+
+    return fProcessed;
 }
 
 inline int SchemaInfo::getBlockDefault() const {
@@ -264,6 +292,18 @@ inline void SchemaInfo::setElemAttrDefaultQualified(const unsigned short aValue)
     fElemAttrDefaultQualified = aValue;
 }
 
+inline void SchemaInfo::setProcessed(const bool aValue) {
+
+    fProcessed = aValue;
+
+/*    if (fProcessed && fIncludeInfoList) {
+
+        unsigned int includeListLen = fIncludeInfoList->size());
+        for (unsigned int i = 0; i < includeListLen; i++) {
+            fIncludeInfoList->elementAt(i)->clearTopLevelComponents();
+        }
+    }*/
+}
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Access methods
@@ -386,6 +426,15 @@ inline void SchemaInfo::addRecursingType(const DOMElement* const elem,
 
     fRecursingAnonTypes->addElement(elem);
     fRecursingTypeNames->addElement(name);
+}
+
+inline void SchemaInfo::clearTopLevelComponents() {
+
+    for (unsigned int i = 0; i < C_Count; i++) {
+
+        delete fTopLevelComponents[i];
+        fTopLevelComponents[i] = 0;
+    }
 }
 
 #endif
