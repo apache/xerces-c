@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/08/19 21:24:12  peiyongz
+ * Jira[1255], patch from Neil Sharman
+ *
  * Revision 1.2  2003/11/17 16:18:01  peiyongz
  * Fix to  #4556
  *
@@ -81,13 +84,19 @@
  *
  */
 
+ // --------------------------------------------------------------------------- 
+ // Detect endian mode 
+ // --------------------------------------------------------------------------- 
+#include <sys/isa_defs.h> 
 
-// ---------------------------------------------------------------------------
-//  SPARC runs in big endian mode
-// ---------------------------------------------------------------------------
-#define ENDIANMODE_BIG
-typedef int FileHandle;
-
+#ifdef _LITTLE_ENDIAN 
+  #define ENDIANMODE_LITTLE 
+#elif defined(_BIG_ENDIAN) 
+  #define ENDIANMODE_BIG 
+#else 
+  #error : unknown byte order! 
+#endif 
+ 
 #ifndef SOLARIS
 #define SOLARIS
 #endif
