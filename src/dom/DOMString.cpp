@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/08/03 20:39:53  jberry
+ * Add prototype for getDomConverter(), eliminating compiler warning
+ *
  * Revision 1.17  2000/06/02 00:45:42  andyh
  * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
  * Two plain deletes changed to array deletes.
@@ -158,6 +161,8 @@
 //
 //----------------------------------------------
 static void DOMStringTerminate();
+XMLLCPTranscoder*  getDomConverter();
+
 
 //----------------------------------------------
 //
