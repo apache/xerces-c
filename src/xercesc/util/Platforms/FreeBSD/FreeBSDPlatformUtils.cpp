@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/01/06 17:31:20  neilg
+ * fix static initialization problems, bug 28517; thanks to Reid Spencer
+ *
  * Revision 1.19  2003/12/24 15:24:14  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -526,7 +529,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
-static XMLMutex atomicOpsMutex;
+static XMLMutex *atomicOpsMutex = 0;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -535,8 +538,12 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-    if (atomicOpsMutex.fHandle == 0)
-        atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    if(!atomicOpsMutex)
+    {
+        atomicOpsMutex = new (fgMemoryManager) atomicOpsMutex();
+        if (atomicOpsMutex->fHandle == 0)
+            atomicOpsMutex->fHandle = XMLPlatformUtils::makeMutex();
+    }
 }
 
 void* XMLPlatformUtils::makeMutex()
@@ -604,7 +611,7 @@ void* XMLPlatformUtils::compareAndSwap(void**            toFill
                                      , const void* const newValue
                                      , const void* const toCompare)
 {
-    XMLMutexLock lockMutex(&atomicOpsMutex);
+    XMLMutexLock lockMutex(atomicOpsMutex);
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
@@ -615,14 +622,14 @@ void* XMLPlatformUtils::compareAndSwap(void**            toFill
 
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
-    XMLMutexLock localLock(&atomicOpsMutex);
+    XMLMutexLock localLock(atomicOpsMutex);
 
     return ++location;
 }
 
 int XMLPlatformUtils::atomicDecrement(int &location)
 {
-    XMLMutexLock localLock(&atomicOpsMutex);
+    XMLMutexLock localLock(atomicOpsMutex);
 
     return --location;
 }
@@ -676,8 +683,10 @@ void XMLPlatformUtils::platformTerm()
 {
 #if !defined(APP_NO_THREADS)
     // delete the mutex we created
-	closeMutex(atomicOpsMutex.fHandle);
-	atomicOpsMutex.fHandle = 0;
+	closeMutex(atomicOpsMutex->fHandle);
+	atomicOpsMutex->fHandle = 0;
+    delete atomicOpsMutex;
+    atomicOpsMutex = 0;
 #endif
 }
 
