@@ -194,7 +194,10 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     const unsigned int bufSize = 2048;
     XMLCh upBuf[bufSize + 1];
     if (!XMLString::copyNString(upBuf, encodingName, bufSize))
+    {
+        resValue = XMLTransService::InternalFailure;
         return 0;
+    }
     XMLString::upperCase(upBuf);
     ENameMap* ourMapping = gMappings->get(upBuf);
 
@@ -229,7 +232,15 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     //  It wasn't an intrinsic and it wasn't disallowed, so pass it on
     //  to the trans service to see if he can make anything of it.
     //
-    return makeNewXMLTranscoder(encodingName, resValue, blockSize);
+
+    XMLTranscoder* temp =  makeNewXMLTranscoder(encodingName, resValue, blockSize);
+
+    // if successful, set resValue to OK  
+    // if failed, the makeNewXMLTranscoder has already set the proper failing resValue
+    if (temp) resValue =  XMLTransService::Ok;    
+
+    return temp;
+
 }
 
 
