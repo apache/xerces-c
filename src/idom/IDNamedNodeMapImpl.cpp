@@ -88,12 +88,12 @@ bool IDNamedNodeMapImpl::readOnly() {
 
 IDNamedNodeMapImpl *IDNamedNodeMapImpl::cloneMap(IDOM_Node *ownerNod)
 {
-    IDNamedNodeMapImpl *newmap = new ((ownerNod->getOwnerDocument())) IDNamedNodeMapImpl(ownerNod);
+    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNodeImpl(ownerNod)->getOwnerDocument());
+    IDNamedNodeMapImpl *newmap = new (doc) IDNamedNodeMapImpl(ownerNod);
 	
     if (fNodes != 0)
     {
-        IDDocumentImpl *doc = (IDDocumentImpl *)ownerNod->getOwnerDocument();
-        newmap->fNodes = new ((ownerNod->getOwnerDocument())) IDNodeVector(doc, fNodes->size());
+        newmap->fNodes = new (doc) IDNodeVector(doc, fNodes->size());
         for (unsigned int i = 0; i < fNodes->size(); ++i)
         {
             IDOM_Node *n = fNodes->elementAt(i)->cloneNode(true);
@@ -243,7 +243,7 @@ IDOM_Node * IDNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
 IDOM_Node * IDNamedNodeMapImpl::setNamedItem(IDOM_Node * arg)
 {
     IDOM_Document *doc = fOwnerNode->getOwnerDocument();
-    if(arg->getOwnerDocument() != doc)
+    if(castToNodeImpl(arg)->getOwnerDocument() != doc)
         throw IDOM_DOMException(IDOM_DOMException::WRONG_DOCUMENT_ERR,0);
     if (this->readOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
@@ -353,7 +353,7 @@ IDOM_Node *IDNamedNodeMapImpl::getNamedItemNS(const XMLCh *namespaceURI,
 IDOM_Node * IDNamedNodeMapImpl::setNamedItemNS(IDOM_Node *arg)
 {
     IDOM_Document *doc = fOwnerNode->getOwnerDocument();
-    if (arg->getOwnerDocument() != doc)
+    if (castToNodeImpl(arg)->getOwnerDocument() != doc)
         throw IDOM_DOMException(IDOM_DOMException::WRONG_DOCUMENT_ERR,0);
     if (this->readOnly())
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);

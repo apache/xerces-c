@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/08/09 16:52:59  tng
+ * [Bug 2947]  IDOM segfault calling getElementsByTagName() using a DOM_Document().
+ *
  * Revision 1.5  2001/08/07 17:01:09  tng
  * [Bug 2676] IDOM: pure virtual called in IDDeepNodeListImpl::item() .
  *
@@ -94,7 +97,7 @@ IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNode,
     , fMatchAllURI(false)
     , fMatchURIandTagname(false)
 {
-    fTagName = ((IDDocumentImpl*)rootNode->getOwnerDocument())->getPooledString(tagName);
+    fTagName = ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(tagName);
     fMatchAll = (XMLString::compareString(fTagName, kAstr) == 0);
 }
 
@@ -110,10 +113,10 @@ IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNode,
     , fMatchAllURI(false)
     , fMatchURIandTagname(true)
 {
-    fTagName = ((IDDocumentImpl*)rootNode->getOwnerDocument())->getPooledString(localName);
+    fTagName = ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(localName);
     fMatchAll = (XMLString::compareString(fTagName, kAstr) == 0);
     fMatchAllURI = (XMLString::compareString(namespaceURI, kAstr) == 0);
-    fNamespaceURI = ((IDDocumentImpl*)rootNode->getOwnerDocument())->getPooledString(namespaceURI);
+    fNamespaceURI = ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(namespaceURI);
 }
 
 
@@ -125,7 +128,7 @@ IDDeepNodeListImpl::~IDDeepNodeListImpl()
 IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName)
 {
     if(!fNodeListPool) {
-        fNodeListPool = new ((IDDocumentImpl*)rootNode->getOwnerDocument()) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
+        fNodeListPool = new ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument())) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
     }
 
     IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, tagName, 0);
@@ -144,7 +147,7 @@ IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode,   
                                                    const XMLCh *localName)
 {
     if(!fNodeListPool) {
-        fNodeListPool = new ((IDDocumentImpl*)rootNode->getOwnerDocument()) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
+        fNodeListPool = new ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument())) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
     }
 
     IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, localName, namespaceURI);

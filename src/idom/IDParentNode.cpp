@@ -95,7 +95,7 @@ void IDParentNode::changed()
 
 int IDParentNode::changes() const
 {
-    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNode(this)->getOwnerDocument());
+    IDDocumentImpl *doc = (IDDocumentImpl *)(castToNodeImpl(this)->getOwnerDocument());
     return doc->changes();
 };
 
