@@ -142,6 +142,32 @@ public :
       */
     void reset();
 
+    /** Reset the documents vector pool and release all the associated memory
+      * back to the heap.
+      *
+      * When parsing a document using an IDOMParser, all memory allocated
+      * for a DOM tree is associated to the DOM document which will be
+      * deleted when the parser instance is deleted.
+      *
+      * If you do multiple parse using the same IDOMParser instance, then
+      * multiple DOM documents will be generated and saved in a vector pool.
+      * All these documents (and thus all the allocated memory)
+      * won't be deleted until the parser instance is destroyed.
+      *
+      * If you don't need these DOM documents anymore and don't want to
+      * destroy the IDOMParser instance at this moment, then you can call this method
+      * to reset the document vector pool and release all the allocated memory
+      * back to the heap.
+      *
+      * It is an error to call this method if you are in the middle of a
+      * parse (e.g. in the mid of a progressive parse).
+      *
+      * @exception IOException An exception from the parser if this function
+      *            is called when a parse is in progress.
+      *
+      */
+    void resetDocumentPool();
+
 
     // -----------------------------------------------------------------------
     //  Getter methods

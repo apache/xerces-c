@@ -404,6 +404,22 @@ void IDOMParser::parseReset(XMLPScanToken& token)
     reset();
 }
 
+// ---------------------------------------------------------------------------
+//  IDOMParser: Utilities
+// ---------------------------------------------------------------------------
+void IDOMParser::resetDocumentPool()
+{
+    //  We cannot enter here while a regular parse is in progress.
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    if (fDocumentVector)
+        fDocumentVector->removeAllElements();
+
+    delete fDocument;
+    fDocument = 0;
+}
+
 
 // ---------------------------------------------------------------------------
 //  IDOMParser: Implementation of the XMLErrorReporter interface
