@@ -1,0 +1,128 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="SAX1 Programming Guide">
+
+    <anchor name="SAX1ProgGuide"/>
+    <anchor name="ConstructParser"/>
+    <s2 title="Constructing a parser">
+      <p>In order to use &XercesCName; to parse XML files, you will
+        need to create an instance of the SAXParser class. The example
+        below shows the code you need in order to create an instance
+        of SAXParser. The DocumentHandler and ErrorHandler instances
+        required by the SAX API are provided using the HandlerBase
+        class supplied with &XercesCName;.</p>
+
+<source>int main (int argc, char* args[]) {
+
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException&amp; toCatch) {
+        cout &lt;&lt; "Error during initialization! :\n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n";
+        return 1;
+    }
+
+    char* xmlFile = "x1.xml";
+    SAXParser* parser = new SAXParser();
+    parser->setDoValidation(true);    // optional.
+	parser->setDoNamespaces(true);    // optional
+
+    DocumentHandler* docHandler = new HandlerBase();
+    ErrorHandler* errHandler = (ErrorHandler*) docHandler;
+    parser->setDocumentHandler(docHandler);
+    parser->setErrorHandler(errHandler);
+
+    try {
+        parser->parse(xmlFile);
+    }
+    catch (const XMLException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+}</source>
+    </s2>
+
+    <anchor name="UsingSAX1API"/>
+    <s2 title="Using the SAX API">
+      <p>The SAX API for XML parsers was originally developed for
+        Java.  Please be aware that there is no standard SAX API for
+        C++, and that use of the &XercesCName; SAX API does not
+        guarantee client code compatibility with other C++ XML
+        parsers.</p>
+
+      <p>The SAX API presents a callback based API to the parser. An
+        application that uses SAX provides an instance of a handler
+        class to the parser. When the parser detects XML constructs,
+        it calls the methods of the handler class, passing them
+        information about the construct that was detected. The most
+        commonly used handler classes are DocumentHandler which is
+        called when XML constructs are recognized, and ErrorHandler
+        which is called when an error occurs. The header files for the
+        various SAX handler classes are in
+        '&lt;&XercesCInstallDir;>/include/sax'</p>
+
+      <p>As a convenience, &XercesCName; provides the class
+        HandlerBase, which is a single class which is publicly derived
+        from all the Handler classes. HandlerBase's default
+        implementation of the handler callback methods is to do
+        nothing. A convenient way to get started with &XercesCName; is
+        to derive your own handler class from HandlerBase and override
+        just those methods in HandlerBase which you are interested in
+        customizing. This simple example shows how to create a handler
+        which will print element names, and print fatal error
+        messages. The source code for the sample applications show
+        additional examples of how to write handler classes.</p>
+
+      <p>This is the header file MySAXHandler.hpp:</p>
+<source>#include &lt;sax/HandlerBase.hpp>
+
+class MySAXHandler : public HandlerBase {
+public:
+    void startElement(const XMLCh* const, AttributeList&amp;);
+    void fatalError(const SAXParseException&amp;);
+};</source>
+
+      <p>This is the implementation file MySAXHandler.cpp:</p>
+
+<source>#include "MySAXHandler.hpp"
+#include &lt;iostream.h>
+
+MySAXHandler::MySAXHandler()
+{
+}
+
+MySAXHandler::startElement(const XMLCh* const name,
+                           AttributeList&amp; attributes)
+{
+    // transcode() is an user application defined function which
+    // converts unicode strings to usual 'char *'. Look at
+    // the sample program SAXCount for an example implementation.
+    cout &lt;&lt; "I saw element: " &lt;&lt; transcode(name) &lt;&lt; endl;
+}
+
+MySAXHandler::fatalError(const SAXParseException&amp; exception)
+{
+    cout &lt;&lt; "Fatal Error: " &lt;&lt; transcode(exception.getMessage())
+         &lt;&lt; " at line: " &lt;&lt; exception.getLineNumber()
+         &lt;&lt; endl;
+}</source>
+
+      <p>The XMLCh and AttributeList types are supplied by
+        &XercesCName; and are documented in the include
+        files. Examples of their usage appear in the source code to
+        the sample applications.</p>
+    </s2>
+
+</s1>

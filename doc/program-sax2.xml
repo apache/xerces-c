@@ -1,0 +1,269 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="SAX2 Programming Guide">
+
+    <anchor name="SAX2ProgGuide"/>
+    <anchor name="ConstructParser2"/>
+    <s2 title="Constructing an XML Reader">
+      <p>In order to use &XercesCName; to parse XML files, you will
+        need to create an instance of the SAX2XMLReader class. The example
+        below shows the code you need in order to create an instance
+        of SAX2XMLReader. The ContentHandler and ErrorHandler instances
+        required by the SAX API are provided using the DefaultHandler
+        class supplied with &XercesCName;.</p>
+
+<source>int main (int argc, char* args[]) {
+
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException&amp; toCatch) {
+        cout &lt;&lt; "Error during initialization! :\n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n";
+        return 1;
+    }
+
+    char* xmlFile = "x1.xml";
+    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation", true)   // optional
+    parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces", true)   // optional
+
+    ContentHandler* contentHandler = new DefaultHandler();
+    ErrorHandler* errHandler = (ErrorHandler*) contentHandler;
+    parser->setContentHandler(contentHandler);
+    parser->setErrorHandler(errHandler);
+
+    try {
+        parser->parse(xmlFile);
+    }
+    catch (const XMLException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (const SAXParseException&amp; toCatch) {
+        cout &lt;&lt; "Exception message is: \n"
+             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+        return -1;
+    }
+    catch (...) {
+        cout &lt;&lt; "Unexpected Exception \n" ;
+        return -1;
+    }
+}</source>
+    </s2>
+
+    <anchor name="UsingSAX2API"/>
+    <s2 title="Using the SAX2 API">
+      <p>The SAX2 API for XML parsers was originally developed for
+        Java.  Please be aware that there is no standard SAX2 API for
+        C++, and that use of the &XercesCName; SAX2 API does not
+        guarantee client code compatibility with other C++ XML
+        parsers.</p>
+
+      <p>The SAX2 API presents a callback based API to the parser. An
+        application that uses SAX2 provides an instance of a handler
+        class to the parser. When the parser detects XML constructs,
+        it calls the methods of the handler class, passing them
+        information about the construct that was detected. The most
+        commonly used handler classes are ContentHandler which is
+        called when XML constructs are recognized, and ErrorHandler
+        which is called when an error occurs. The header files for the
+        various SAX2 handler classes are in
+        '&lt;&XercesCInstallDir;>/include/sax2'</p>
+
+      <p>As a convenience, &XercesCName; provides the class
+        DefaultHandler, which is a single class which is publicly derived
+        from all the Handler classes. DefaultHandler's default
+        implementation of the handler callback methods is to do
+        nothing. A convenient way to get started with &XercesCName; is
+        to derive your own handler class from DefaultHandler and override
+        just those methods in HandlerBase which you are interested in
+        customizing. This simple example shows how to create a handler
+        which will print element names, and print fatal error
+        messages. The source code for the sample applications show
+        additional examples of how to write handler classes.</p>
+
+      <p>This is the header file MySAX2Handler.hpp:</p>
+<source>#include &lt;sax2/DefaultHandler.hpp>
+
+class MySAX2Handler : public DefaultHandler {
+public:
+    void startElement(
+        const   XMLCh* const    uri,
+        const   XMLCh* const    localname,
+        const   XMLCh* const    qname,
+        const   Attributes&amp;     attrs
+    );
+    void fatalError(const SAXParseException&amp;);
+};</source>
+
+      <p>This is the implementation file MySAX2Handler.cpp:</p>
+
+<source>#include "MySAX2Handler.hpp"
+#include &lt;iostream.h>
+
+MySAX2Handler::MySAX2Handler()
+{
+}
+
+MySAX2Handler::startElement(const   XMLCh* const    uri,
+                            const   XMLCh* const    localname,
+                            const   XMLCh* const    qname,
+                            const   Attributes&amp;     attrs)
+{
+    // transcode() is an user application defined function which
+    // converts unicode strings to usual 'char *'. Look at
+    // the sample program SAX2Count for an example implementation.
+    cout &lt;&lt; "I saw element: " &lt;&lt; transcode(qname) &lt;&lt; endl;
+}
+
+MySAX2Handler::fatalError(const SAXParseException&amp; exception)
+{
+    cout &lt;&lt; "Fatal Error: " &lt;&lt; transcode(exception.getMessage())
+         &lt;&lt; " at line: " &lt;&lt; exception.getLineNumber()
+         &lt;&lt; endl;
+}</source>
+
+      <p>The XMLCh and Attributes types are supplied by
+        &XercesCName; and are documented in the include
+        files. Examples of their usage appear in the source code to
+        the sample applications.</p>
+    </s2>
+
+    <anchor name="SAX2Features"/>
+    <s2 title="Xerces SAX2 Supported Features">
+
+       <p>The behavior of the SAX2XMLReader is dependant on the values of the following features.
+       All of the features below can be set using the function <code>SAX2XMLReader::setFeature(cons XMLCh* const, const bool)</code>.
+       And can be queried using the function <code>bool SAX2XMLReader::getFeature(const XMLCh* const)</code>.
+       </p>
+       <p>None of these features can be modified in the middle of a parse, or an exception will be thrown.</p>
+
+        <table>
+            <tr><td colspan="2"><em>http://xml.org/sax/features/namespaces</em></td></tr>
+            <tr><td><em>true:</em></td><td> Perform Namespace processing (default)</td></tr>
+            <tr><td><em>false:</em></td><td> Optionally do not perform Namespace processing</td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://xml.org/sax/features/namespace-prefixes</em></td></tr>
+            <tr><td><em>true:</em></td><td> Report the orignal prefixed names and attributes used for Namespace declarations (default)</td></tr>
+            <tr><td><em>false:</em></td><td> Do not report attributes used for Namespace declarations, and optionally do not report original prefixed names. </td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://xml.org/sax/features/validation</em></td></tr>
+            <tr><td><em>true:</em></td><td> Report all validation errors. (default)</td></tr>
+            <tr><td><em>false:</em></td><td> Do not report validation errors. </td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/dynamic</em></td></tr>
+            <tr><td><em>true:</em></td><td> The parser will validate the document only if a grammar is specified.  (http://xml.org/sax/features/validation must be true)</td></tr>
+            <tr><td><em>false:</em></td><td> Validation is determined by the state of the http://xml.org/sax/features/validation feature (default)</td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema</em></td></tr>
+            <tr><td><em>true:</em></td><td> Enable the parser's schema support. (default) </td></tr>
+            <tr><td><em>false:</em></td><td> Disable the parser's schema support. </td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/schema-full-checking</em></td></tr>
+            <tr><td><em>true:</em></td><td> Enable full schema constraint checking, including checking
+                         which may be time-consuming or memory intensive. Currently, particle unique
+                         attribution constraint checking and particle derivation resriction checking
+                         are controlled by this option. </td></tr>
+            <tr><td><em>false:</em></td><td> Disable full schema constraint checking (default). </td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-grammar</em></td></tr>
+            <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
+            <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. (default)</td></tr>
+        </table>
+
+        <p/>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-validator</em> (deprecated) <br/>
+             Please use <em>http://apache.org/xml/features/validation/reuse-grammar</em>
+            </td></tr>
+            <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
+            <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. (default)</td></tr>
+        </table>
+
+    </s2>
+
+    <anchor name="SAX2Properties"/>
+    <s2 title="Xerces SAX2 Supported Properties">
+
+       <p>The behavior of the SAX2XMLReader is dependant on the values of the following properties.
+       All of the properties below can be set using the function <code>SAX2XMLReader::setProperty(const XMLCh* const, void*)</code>.
+       It takes a void pointer as the property value.  Application is required to initialize this void
+       pointer to a correct type.  Please check the column "Value Type" below
+       to learn exactly what type of property value each property expects for processing.
+       Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+       If the same property is set more than once, the last one takes effect.</p>
+
+       <p>Property values can be queried using the function <code>void* SAX2XMLReader::getFeature(const XMLCh* const)</code>.
+        The parser owns the returned pointer, and the memory allocated for the returned pointer will
+        be destroyed when the parser is deleted.  To ensure assessiblity of the returned information after
+        the parser is deleted, callers need to copy and store the returned information somewhere else.
+        Since the returned pointer is a generic void pointer, check the column "Value Type" below to learn
+        exactly what type of object each property returns for replication.</p>
+
+       <p>None of these properties can be modified in the middle of a parse, or an exception will be thrown.</p>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/properties/schema/external-schemaLocation</em></td></tr>
+            <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                        the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                        instance document is only a hint; it does not mandate that these attributes
+                        must be used to locate schemas.  Similar situation happens to &lt;import&gt;
+                        element in schema documents. This property allows the user to specify a list
+                        of schemas to use.  If the targetNamespace of a schema specified using this
+                        method matches the targetNamespace of a schema occurring in the instance
+                        document in schemaLocation attribute, or
+                        if the targetNamespace matches the namespace attribute of &lt;import&gt;
+                        element, the schema specified by the user using this property will
+                        be used (i.e., the schemaLocation attribute in the instance document
+                        or on the &lt;import&gt; element will be effectively ignored).</td></tr>
+            <tr><td><em>Value</em></td><td> The syntax is the same as for schemaLocation attributes
+                             in instance documents: e.g, "http://www.example.com file_name.xsd".
+                             The user can specify more than one XML Schema in the list.</td></tr>
+            <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+        </table>
+
+        <p/>
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</em></td></tr>
+            <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                        the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                        instance document is only a hint; it does not mandate that these attributes
+                        must be used to locate schemas.  This property allows the user to specify the
+                        no target namespace XML Schema Location externally.  If specified, the instance
+                        document's noNamespaceSchemaLocation attribute will be effectively ignored.</td></tr>
+            <tr><td><em>Value</em></td><td> The syntax is the same as for the noNamespaceSchemaLocation
+                        attribute that may occur in an instance document: e.g."file_name.xsd".</td></tr>
+            <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+        </table>
+
+    </s2>
+
+</s1>

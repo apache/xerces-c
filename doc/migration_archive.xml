@@ -121,7 +121,7 @@
         <s3 title="Experiemental IDOM">
            <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
               to migrate from DOM to the experimental IDOM, please refer to
-              <jump href="program.html#IDOMProgGuide">
+              <jump href="program-idom.html">
               IDOM programming guide.</jump> Please note that this experimental IDOM API is only
               a prototype and is subject to change.
            </p>

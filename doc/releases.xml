@@ -12,6 +12,114 @@
     </tr>
 
     <tr>
+        <td>2002-01-18</td>
+        <td>Tinny Ng</td>
+        <td>Break program.xml which takes too long to load, into program-sax.xml, program-sax2.xml
+            program-dom.xml, program-idom.xml.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-18</td>
+        <td>Tinny Ng</td>
+        <td>Break faq-parse.xml which becomes longer and longer into faq-parse.xml and faq-build.xml
+            to better categorize the FAQ.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-18</td>
+        <td>Tinny Ng</td>
+        <td>Create symbolic link to those duplicate ICU libraries, instead of physical duplicate copies.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-15</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 5807] Parser produces unexpected errors from 'Good' document.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-14</td>
+        <td>PeiYong Zhang</td>
+        <td>XMLURi bug fix: related to Authority and wellformedAddress
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-14</td>
+        <td>Max Gotlib</td>
+        <td>[Bug 5570] DOM_Range lacks the copy constructor.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-14</td>
+        <td>Max Gotlib</td>
+        <td>Support IconvFBSD in multi-threading environment with all the possible
+            combinations of threading and transcoding options.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-10</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 5786] Unexpected Schema errors.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-03</td>
+        <td>Khaled Noaman</td>
+        <td>Fix for identity constraints - union operation.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-03</td>
+        <td>Khaled Noaman</td>
+        <td>Resolve namespace first before resolving the schema location in &lt;import&gt;.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-03</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 5675] Use of setExternalSchemaLocation() yields inconsistent behavior.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-02</td>
+        <td>Khaled Noaman</td>
+        <td>Fix for validity constraint check for standalone documents.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-02</td>
+        <td>Khaled Noaman</td>
+        <td>Fix for regular expression patterns that begin with ".".
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-02</td>
+        <td>Khaled Noaman</td>
+        <td>Fix for error message when checking for attributes with a namespace prefix.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-01-02</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 5569] &lt;extension&gt; does not work -- ancestor elements not recognized.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-01-02</td>
         <td>Tinny Ng</td>
         <td>Schema Fix: should not store a temp value as the key in the element
