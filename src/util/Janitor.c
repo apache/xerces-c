@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/10/13 22:45:11  andyh
+ * Complete removal of ArrayJanitory::operator->().  Was just commented out earlier.
+ *
  * Revision 1.5  2000/10/10 23:52:10  andyh
  * From Janitor, remove the addition that is having compile problems in MSVC.
  *
@@ -184,14 +187,6 @@ ArrayJanitor<T>::operator[](int index) const
 	return fData[index];
 }
 
-
-#if (0)
-template <class T> T*
-ArrayJanitor<T>::operator->() const
-{
-	return fData;
-}
-#endif
 
 template <class T> T*
 ArrayJanitor<T>::get() const

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/10/13 22:45:12  andyh
+ * Complete removal of ArrayJanitory::operator->().  Was just commented out earlier.
+ *
  * Revision 1.6  2000/10/10 23:52:11  andyh
  * From Janitor, remove the addition that is having compile problems in MSVC.
  *
@@ -146,7 +149,6 @@ public  :
 
 	//	small amount of auto_ptr compatibility
 	T&	operator[](int index) const;
-	// T*	operator->() const;
 	T*	get() const;
 	T*	release();
 	void reset(T* p = 0);
