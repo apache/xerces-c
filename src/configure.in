@@ -115,6 +115,7 @@ dom/Makefile \
 parsers/Makefile \
 internal/Makefile \
 sax/Makefile \
+sax2/Makefile \
 ../obj/Makefile])
 
 echo
