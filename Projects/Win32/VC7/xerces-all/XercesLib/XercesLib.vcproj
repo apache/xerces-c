@@ -441,6 +441,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLFloat.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.cpp">
 			</File>
 			<File
@@ -1268,10 +1274,10 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp">
