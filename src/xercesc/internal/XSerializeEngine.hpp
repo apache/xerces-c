@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/11/13 19:04:04  cargilld
+ * Remove extra const.
+ *
  * Revision 1.21  2004/11/08 03:56:47  peiyongz
  * setting/getting Storer level
  *
@@ -625,16 +628,16 @@ public:
       *
       ***/
     inline 
-    const unsigned long   getBufSize()    const; 
+    unsigned long   getBufSize()    const; 
 
     inline 
-    const unsigned long   getBufCur()     const; 
+    unsigned long   getBufCur()     const; 
 
     inline 
-    const unsigned long   getBufCurAccumulated()     const; 
+    unsigned long   getBufCurAccumulated()     const; 
 
     inline 
-    const unsigned long   getBufCount()    const; 
+    unsigned long   getBufCount()    const; 
 
     void                  trace(char*)     const;
 
@@ -874,25 +877,25 @@ inline void XSerializeEngine::readString(XMLByte*&      toRead)
 }
 
 inline 
-const unsigned long XSerializeEngine::getBufSize() const
+unsigned long XSerializeEngine::getBufSize() const
 {
     return fBufSize;
 }
 
 inline 
-const unsigned long XSerializeEngine::getBufCur() const
+unsigned long XSerializeEngine::getBufCur() const
 {
     return (fBufCur-fBufStart);
 }
 
 inline 
-const unsigned long XSerializeEngine::getBufCurAccumulated() const
+unsigned long XSerializeEngine::getBufCurAccumulated() const
 {
     return (fBufCount - (isStoring() ? 0: 1)) * fBufSize + (fBufCur-fBufStart);
 }
 
 inline 
-const unsigned long XSerializeEngine::getBufCount() const
+unsigned long XSerializeEngine::getBufCount() const
 {
     return fBufCount;
 }
