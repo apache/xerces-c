@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/07/13 14:10:33  peiyongz
+ * UnionDTV
+ *
  * Revision 1.15  2001/07/11 21:37:18  peiyongz
  * ListDatatypeDTV
  *
@@ -125,6 +128,7 @@
 #include <validators/datatype/ENTITYDatatypeValidator.hpp>
 #include <validators/datatype/QNameDatatypeValidator.hpp>
 #include <validators/datatype/ListDatatypeValidator.hpp>
+#include <validators/datatype/UnionDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -693,7 +697,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 
     DatatypeValidator* datatypeValidator = 0;
 
-    //datatypeValidator = new UnionDatatypeValidator(validators, finalSet);
+    datatypeValidator = new UnionDatatypeValidator(validators, finalSet);
 
     if (datatypeValidator != 0) {
 

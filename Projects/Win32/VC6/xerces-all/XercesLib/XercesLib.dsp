@@ -1797,6 +1797,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\StringDatatypeValidator.cpp
 
 SOURCE=..\..\..\..\..\src\validators\datatype\StringDatatypeValidator.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.hpp
+# End Source File
 # End Group
 # Begin Group "DTD"
 
