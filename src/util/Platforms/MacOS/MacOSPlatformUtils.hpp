@@ -118,6 +118,21 @@ class XMLMacFile : public XMLMacAbstractFile
 //
 extern "C" void XMLCustomPanicProc(XMLPlatformUtils::PanicReasons panicReason, const char* reasonStr);
 
+//	Notes on our Xerces/Mac paths:
+//
+//	Wherever paths are used in Xerces, this Macintosh port assumes that they'll
+//	be in "unix" format, or at least as close as you can get to that on the particular
+//	OS. On classic, this means that a path will be a unix style path, separated by '/' and
+//	starting with the Mac OS volume name. Since slash is used as the segment separator,
+//	any slashes that actually exist in the segment name will be converted to colons
+//	(since colon is the Mac OS path separator and would be illegal in a segment name).
+//	For Mac OS X, paths are created and parsed using the FSRefMakePath, etc, routines:
+//	the major difference will be location of the volume name within the path.
+//
+//	The routines below help to create and interpret these pathnames for these cases.
+//	While the port itself never creates such paths, it does use these same routines to
+//	parse them.
+
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!
 XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);

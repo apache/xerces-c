@@ -124,6 +124,10 @@ const std::size_t kMaxStaticPathChars = 512;		// Size of our statically allocate
 //----------------------------------------------------------------------------
 // Function Prototypes
 //----------------------------------------------------------------------------
+XMLCh*	ConvertColonToSlash(XMLCh* p, std::size_t charCount);
+XMLCh*	ConvertSlashToColon(XMLCh* p, std::size_t charCount);
+char*	ConvertSlashToColon(char* p, std::size_t charCount);
+
 XMLCh*	XMLCreateFullPathFromFSRef_X(const FSRef& startingRef);
 XMLCh*	XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef);
 XMLCh*	XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec);
@@ -899,6 +903,54 @@ CopyXMLChsToUniChars(const XMLCh* src, UniChar* dst, std::size_t charCount, std:
 }
 
 
+XMLCh*
+ConvertColonToSlash(XMLCh* p, std::size_t charCount)
+{
+	XMLCh* start = p;
+	for (; charCount > 0; --charCount)
+	{
+		XMLCh c = *p;
+		if (c == ':')
+			*p++ = '/';
+		else
+			p++;
+	}
+	return start;
+}
+
+
+XMLCh*
+ConvertSlashToColon(XMLCh* p, std::size_t charCount)
+{
+	XMLCh* start = p;
+	for (; charCount > 0; --charCount)
+	{
+		XMLCh c = *p;
+		if (c == '/')
+			*p++ = ':';
+		else
+			p++;
+	}
+	return start;
+}
+
+
+char*
+ConvertSlashToColon(char* p, std::size_t charCount)
+{
+	char* start = p;
+	for (; charCount > 0; --charCount)
+	{
+		char c = *p;
+		if (c == '/')
+			*p++ = ':';
+		else
+			p++;
+	}
+	return start;
+}
+
+
 bool
 XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 {
@@ -1000,6 +1052,7 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
 	
     const XMLCh* p = pathName;
     const XMLCh* pEnd;
+    std::size_t segLen;
 	
 	const std::size_t kXMLBufCount = 256;
 	XMLCh xmlBuf[kXMLBufCount];
@@ -1012,7 +1065,7 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
         
         // Find the end of the path segment
         for (pEnd = ++p; *pEnd && *pEnd != L'/'; ++pEnd) ;
-        std::size_t segLen = pEnd - p;
+        segLen = pEnd - p;
         
         // Try to find a volume that matches this name
         for (ItemCount volIndex = 1; err == noErr; ++volIndex)
@@ -1036,7 +1089,9 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
             {
             	//	Case-insensitive compare
             	if (XMLString::compareNIString(
-									CopyUniCharsToXMLChs(hfsStr.unicode, xmlBuf, segLen, kXMLBufCount),
+									ConvertColonToSlash(
+										CopyUniCharsToXMLChs(hfsStr.unicode, xmlBuf, segLen, kXMLBufCount),
+										segLen),
 									p, segLen) == 0)
                     break;  // we found our volume
             }
@@ -1094,13 +1149,16 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
         default:
             // Find the end of the path segment
             for (pEnd = p; *pEnd && *pEnd != L'/'; ++pEnd) ;
+            segLen = pEnd - p;
 			
             // pEnd now points either to '/' or NUL
             // Create a new ref using this path segment
             err = FSMakeFSRefUnicode(
                 &ref,
-                pEnd - p,
-                CopyXMLChsToUniChars(p, reinterpret_cast<UniChar*>(xmlBuf), pEnd - p, kXMLBufCount),
+                segLen,
+                ConvertColonToSlash(
+                	CopyXMLChsToUniChars(p, reinterpret_cast<UniChar*>(xmlBuf), segLen, kXMLBufCount),
+                	segLen),
                 kTextEncodingUnknown,
                 &ref
                 );
@@ -1158,6 +1216,7 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
     const char* p = XMLString::transcode(pathName);
     ArrayJanitor<const char> janPath(p);
     const char* pEnd;
+    std::size_t segLen;
     
     OSStatus err = noErr;
     Str255 name;  // Must be long enough for a partial pathname consisting of two segments (64 bytes)
@@ -1168,7 +1227,7 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
         
         // Find the end of the path segment
         for (pEnd = ++p; *pEnd && *pEnd != '/'; ++pEnd) ;
-        std::size_t segLen = pEnd - p;
+        segLen = pEnd - p;
         
         // Try to find a volume that matches this name
         for (ItemCount volIndex = 1; err == noErr; ++volIndex)
@@ -1205,7 +1264,9 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
             if (err == noErr && segLen == StrLength(name))
             {
             	//	Case-insensitive compare
-            	if (XMLString::compareNIString(reinterpret_cast<char*>(&name[1]), p, segLen) == 0)
+            	if (XMLString::compareNIString(
+	            		ConvertSlashToColon(reinterpret_cast<char*>(&name[1]), segLen),
+	            		p, segLen) == 0)
                 {
                     // we found our volume: fill in the spec
                     err = FSMakeFSSpec(volRefNum, fsRtDirID, NULL, &spec);
@@ -1227,11 +1288,11 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
     {
         switch (*p)
         {
-        case '/':   // Just skip any number of path separators
+        case '/': 	// Just skip any number of path separators
             ++p;
             break;
             
-        case L'.':   // Potentially "current directory" or "parent directory"
+        case L'.': 	// Potentially "current directory" or "parent directory"
             if (p[1] == '/' || p[1] == 0)      // "current directory"
             {
                 ++p;
@@ -1265,9 +1326,10 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
             {
                 // Find the end of the path segment
                 for (pEnd = p; *pEnd && *pEnd != '/'; ++pEnd) ;
+                segLen = pEnd - p;
                 
                 // Check for name length overflow
-                if (pEnd - p > 31)
+                if (segLen > 31)
                     return false;
                 
                 // Make a partial pathname from our current spec to the new object
@@ -1280,9 +1342,17 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
                 
                 *partial++ = ':';       // Separator
                 while (p != pEnd)       // Copy in new element
-                    *partial++ = *p++;
-                
-                name[0] = partial - &name[1];    // Set the name length
+               	{
+                	if (*p == ':')				// Convert : to /
+                	{
+                		*partial++ = '/';
+                		p++;
+                	}
+                	else
+                		*partial++ = *p++;
+				}
+				                
+                name[0] = partial - &name[1];   // Set the name length
                 
                 // Update the spec
                 err = FSMakeFSSpec(spec.vRefNum, spec.parID, name, &spec);
@@ -1408,7 +1478,7 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 			
 			// Prepend our new name and a '/'
 			bufPos -= name.length;
-			CopyUniCharsToXMLChs(name.unicode, &buf[bufPos], name.length, name.length);
+			ConvertSlashToColon(CopyUniCharsToXMLChs(name.unicode, &buf[bufPos], name.length, name.length), name.length);
 			buf[--bufPos] = L'/';
 			bufCnt += (name.length + 1);
 		}
@@ -1513,7 +1583,7 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec)
 			
 			// Prepend our new name and a '/'
 			bufPos -= nameLen;
-			std::memcpy(&buf[bufPos], &spec.name[1], nameLen);
+			ConvertSlashToColon((char*)std::memcpy(&buf[bufPos], &spec.name[1], nameLen), nameLen);
 			buf[--bufPos] = '/';
 			bufCnt += (nameLen + 1);
 			
