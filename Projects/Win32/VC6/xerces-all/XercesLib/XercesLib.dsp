@@ -999,6 +999,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufInputSource.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\MemoryManager.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\StdInInputSource.cpp
 # End Source File
 # Begin Source File
@@ -1200,6 +1204,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -2923,15 +2935,15 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMCDATASection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMConfiguration.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMCharacterData.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMComment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMConfiguration.hpp
 # End Source File
 # Begin Source File
 

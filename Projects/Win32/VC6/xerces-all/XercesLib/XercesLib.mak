@@ -199,6 +199,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
@@ -488,6 +489,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
@@ -863,6 +865,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
@@ -1154,6 +1157,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
@@ -1529,6 +1533,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
@@ -1820,6 +1825,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
@@ -2195,6 +2201,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
@@ -2485,6 +2492,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
@@ -3476,6 +3484,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
 
 "$(INTDIR)\IGXMLScanner2.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp
+
+"$(INTDIR)\MemoryManagerImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
