@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/10/05 02:08:05  neilg
+ * Because it makes grammars un-sharable between parsers running on multiple threads, xsi:type should not be handled by modifying element declarations.  Modifying implementation so it no longer relies on this kind of behaviour; marking methods as deprecated which imply that xsi:type will be handled in this way.  Once their behaviour is handled elsewhere, these methods should eventually be removed
+ *
  * Revision 1.12  2003/08/29 11:44:18  gareth
  * If a type was explicitly declared as anyType that now gets set in DOMTypeInfo. Added test cases.
  *
@@ -228,6 +231,7 @@ public :
     virtual XMLAttDefList& getAttDefList() const;
     virtual CharDataOpts getCharDataOpts() const;
     virtual bool hasAttDefs() const;
+    // @deprecated; not thread-safe
     virtual bool resetDefs();
     virtual const ContentSpecNode* getContentSpec() const;
     virtual ContentSpecNode* getContentSpec();
@@ -280,6 +284,7 @@ public :
     *    1.2 otherwise invalid.
     *    2 otherwise notKnown.
     */
+    // @deprecated; not thread-safe
     PSVIDefs::Validity getValidity() const;
 
 
@@ -289,27 +294,32 @@ public :
      * 2 If it was not strictly assessed and neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validation attempted] is not none, then none;
      *3 otherwise partial.
      */
+    // @deprecated; not thread-safe
     PSVIDefs::Validation getValidationAttempted() const;
 
 
     /**
      * @return the complexity. simple or complex, depending on the type definition.
      */
+    // @deprecated; not thread-safe
     PSVIDefs::Complexity getTypeType() const;
 
     /**
      * The target namespace of the type definition.
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getTypeUri() const;
 
     /**
      * The {name} of the type definition, if it is not absent. 
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getTypeName() const;
 
     /**
      * true if the {name} of the type definition is absent, otherwise false.
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     bool getTypeAnonymous() const;
 
     /**
@@ -317,25 +327,31 @@ public :
      * produce accurate results
      * @return true if the element is validated using a union type
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     bool isTypeDefinitionUnion() const;
 
     /**
      * The {target namespace} of the actual member type definition.
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getMemberTypeUri() const;
 
     /**
      * @return true if the {name} of the actual member type definition is absent, otherwise false.
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     bool getMemberTypeAnonymous() const;
 
     /**
      * @return the {name} of the actual member type definition, if it is not absent. 
      */
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     const XMLCh* getMemberTypeName() const;
 
 
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     virtual const XMLCh* getDOMTypeInfoUri() const;
+    // @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
     virtual const XMLCh* getDOMTypeInfoName() const;
 
 
@@ -350,20 +366,26 @@ public :
     void setMiscFlags(const int flags);
     void setDefaultValue(const XMLCh* const value);
     void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
+    // @deprecated; should not be needed in a thread-safe implementation
     void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
+    // @deprecated; should not be needed in a thread-safe implementation
     void setXsiSimpleTypeInfo(const DatatypeValidator* const dtv);
     void setAttWildCard(SchemaAttDef* const attWildCard);
     void setSubstitutionGroupElem(SchemaElementDecl* const elemDecl);
+    // @deprecated; should not be needed in a thread-safe implementation
     void setValidity(PSVIDefs::Validity valid);
+    // @deprecated; should not be needed in a thread-safe implementation
     void setValidationAttempted(PSVIDefs::Validation validation);
     
     //called when element content of this element was validated
+    // @deprecated; should not be needed in a thread-safe implementation
     void updateValidityFromElement(const XMLElementDecl *decl, Grammar::GrammarType eleGrammar);
     
     //called when attribute content of this element was validated    
     void updateValidityFromAttribute(const SchemaAttDef *def);
 
     //cleans up inbetween uses of the SchemaElementDecl. Resets xsiType, Validity etc.
+    // @deprecated; should not be needed in a thread-safe implementation
     void reset();
 
     // -----------------------------------------------------------------------
@@ -470,10 +492,7 @@ private :
 // ---------------------------------------------------------------------------
 inline ContentSpecNode* SchemaElementDecl::getContentSpec()
 {
-    if (fXsiComplexTypeInfo != 0) {
-        return fXsiComplexTypeInfo->getContentSpec();
-    }
-    else if (fComplexTypeInfo != 0) {
+    if (fComplexTypeInfo != 0) {
         return fComplexTypeInfo->getContentSpec();
     }
 
@@ -482,10 +501,7 @@ inline ContentSpecNode* SchemaElementDecl::getContentSpec()
 
 inline const ContentSpecNode* SchemaElementDecl::getContentSpec() const
 {
-    if (fXsiComplexTypeInfo != 0) {
-        return fXsiComplexTypeInfo->getContentSpec();
-    }
-    else if (fComplexTypeInfo != 0) {
+    if (fComplexTypeInfo != 0) {
         return fComplexTypeInfo->getContentSpec();
     }
 
@@ -500,10 +516,7 @@ SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
 
 inline XMLContentModel* SchemaElementDecl::getContentModel()
 {
-    if (fXsiComplexTypeInfo != 0) {
-        return fXsiComplexTypeInfo->getContentModel();
-    }
-    else if (fComplexTypeInfo != 0) {
+    if (fComplexTypeInfo != 0) {
         return fComplexTypeInfo->getContentModel();
     }
     return 0;
@@ -521,10 +534,7 @@ SchemaElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
 // ---------------------------------------------------------------------------
 inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
 {
-    if (fXsiComplexTypeInfo) {
-        return (SchemaElementDecl::ModelTypes) fXsiComplexTypeInfo->getContentType();
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return (SchemaElementDecl::ModelTypes) fComplexTypeInfo->getContentType();
     }
 
@@ -533,9 +543,6 @@ inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
 
 inline DatatypeValidator* SchemaElementDecl::getDatatypeValidator() const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getDatatypeValidator();
-    }
 
     return fDatatypeValidator;
 }
@@ -567,33 +574,16 @@ inline XMLCh* SchemaElementDecl::getDefaultValue() const
 
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo;
-    }
 
     return fComplexTypeInfo;
 }
 
 inline const SchemaAttDef* SchemaElementDecl::getAttWildCard() const {
 
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getAttWildCard();
-    }
-    else if (fComplexTypeInfo) {
-        return fComplexTypeInfo->getAttWildCard();
-    }
-
     return fAttWildCard;
 }
 
 inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
-
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getAttWildCard();
-    }
-    else if (fComplexTypeInfo) {
-        return fComplexTypeInfo->getAttWildCard();
-    }
 
     return fAttWildCard;
 }
@@ -610,6 +600,8 @@ SchemaElementDecl::getSubstitutionGroupElem() const {
 }
 
 inline const XMLCh* SchemaElementDecl::getTypeName() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if (fXsiComplexTypeInfo)
         return fXsiComplexTypeInfo->getTypeLocalName();
     else if (fComplexTypeInfo) 
@@ -634,6 +626,8 @@ inline PSVIDefs::Complexity SchemaElementDecl::getTypeType() const {
 
 
 inline const XMLCh* SchemaElementDecl::getTypeUri() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if (fXsiComplexTypeInfo)
         return fXsiComplexTypeInfo->getTypeUri();
     else if (fComplexTypeInfo)
@@ -648,6 +642,8 @@ inline const XMLCh* SchemaElementDecl::getTypeUri() const {
 }
 
 inline const XMLCh* SchemaElementDecl::getMemberTypeName() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
         return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeName();
     else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
@@ -656,6 +652,8 @@ inline const XMLCh* SchemaElementDecl::getMemberTypeName() const {
 }
 
 inline const XMLCh* SchemaElementDecl::getMemberTypeUri() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
         return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeUri();
     if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
@@ -665,6 +663,8 @@ inline const XMLCh* SchemaElementDecl::getMemberTypeUri() const {
 }
 
 inline bool SchemaElementDecl::getMemberTypeAnonymous() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
         return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeAnonymous();
     else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
@@ -673,6 +673,8 @@ inline bool SchemaElementDecl::getMemberTypeAnonymous() const {
 }
 
 inline bool SchemaElementDecl::isTypeDefinitionUnion() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union ||
       fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
        return true;
@@ -717,6 +719,8 @@ inline bool SchemaElementDecl::getTypeAnonymous() const {
 }
 
 inline const XMLCh* SchemaElementDecl::getDOMTypeInfoName() const {
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if(fValidity != PSVIDefs::VALID) {
         if(getTypeType() == PSVIDefs::SIMPLE)
             return SchemaSymbols::fgDT_ANYSIMPLETYPE;
@@ -735,6 +739,8 @@ inline const XMLCh* SchemaElementDecl::getDOMTypeInfoName() const {
 
 inline const XMLCh* SchemaElementDecl::getDOMTypeInfoUri() const {
 
+    // removing fXsi* references would break DOMTypeInfo implementation completely;
+    // will have to wait for now
     if(fValidity != PSVIDefs::VALID)
         return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
 

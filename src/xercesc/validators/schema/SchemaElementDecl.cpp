@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/05 02:08:05  neilg
+ * Because it makes grammars un-sharable between parsers running on multiple threads, xsi:type should not be handled by modifying element declarations.  Modifying implementation so it no longer relies on this kind of behaviour; marking methods as deprecated which imply that xsi:type will be handled in this way.  Once their behaviour is handled elsewhere, these methods should eventually be removed
+ *
  * Revision 1.10  2003/05/18 14:02:08  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -261,10 +264,7 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
                                      , const LookupOpts      options
                                      , bool&           wasAdded) const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return fComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
     }
     else {
@@ -314,10 +314,7 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
 
 XMLAttDefList& SchemaElementDecl::getAttDefList() const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getAttDefList();
-    }
-    else if (!fComplexTypeInfo)
+    if (!fComplexTypeInfo)
 	{
         ThrowXML(RuntimeException, XMLExcepts::DV_InvalidOperation);
     }
@@ -330,10 +327,7 @@ XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
 {
     SchemaElementDecl::ModelTypes modelType = fModelType;
 
-    if (fXsiComplexTypeInfo) {
-        modelType = (SchemaElementDecl::ModelTypes) fXsiComplexTypeInfo->getContentType();
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         modelType = (SchemaElementDecl::ModelTypes) fComplexTypeInfo->getContentType();
     }
 
@@ -358,10 +352,7 @@ XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
 
 bool SchemaElementDecl::hasAttDefs() const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->hasAttDefs();
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return fComplexTypeInfo->hasAttDefs();
     }
 
@@ -373,10 +364,7 @@ bool SchemaElementDecl::hasAttDefs() const
 
 bool SchemaElementDecl::resetDefs()
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->resetDefs();
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return fComplexTypeInfo->resetDefs();
     }
     else if (fAttDefs) {
@@ -392,10 +380,7 @@ bool SchemaElementDecl::resetDefs()
 const XMLCh*
 SchemaElementDecl::getFormattedContentModel() const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getFormattedContentModel();
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return fComplexTypeInfo->getFormattedContentModel();
     }
     return 0;
@@ -406,10 +391,7 @@ SchemaElementDecl::getFormattedContentModel() const
 // ---------------------------------------------------------------------------
 const SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const int uriId) const
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getAttDef(baseName, uriId);
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return fComplexTypeInfo->getAttDef(baseName, uriId);
     }
 
@@ -420,10 +402,7 @@ const SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, co
 
 SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const int uriId)
 {
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getAttDef(baseName, uriId);
-    }
-    else if (fComplexTypeInfo) {
+    if (fComplexTypeInfo) {
         return fComplexTypeInfo->getAttDef(baseName, uriId);
     }
 
