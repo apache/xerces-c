@@ -162,9 +162,27 @@ catch (const XMLException&amp; toCatch) {
   </faq>
 
 
+<faq title="I am seeing memory leaks for Xerces-C.  Are they real?">
+<q>I am seeing memory leaks for Xerces-C.  Are they real?</q>
+        <a>
+        <p>The Xerces library allocates and caches some commonly reused
+        items.  The storage for these may be reported as memory leaks by some heap analysis
+        tools; to avoid the problem, call the function
+        <code>XMLPlatformUtils::Terminate()</code> before your application exits.
+        This will free all memory that was being held by the library.</p>
+
+        <p>For most applications, the use of <code>Terminate()</code> is optional.
+        The system will recover all memory when the application process shuts down.
+        The exception to this is the use of Xerces-C from DLLs that will be
+        repeatedly loaded and unloaded from within the same process.  To avoid
+        memory leaks with this kind of use, <code>Terminate()</code> must be called before
+        unloading the xerces-c library</p>
+        </a>
+</faq>
+
 <faq title="Can I validate the data contained in a DOM tree?">
      <q>Can I validate the data contained in a DOM tree?</q>
-     <a><p>Given that I have built a DOM tree, is there a fiacility
+     <a><p>Given that I have built a DOM tree, is there a facility
      in xerces-c that wil then validate the document contained in that
      DOM tree?  That is, without having to re-parse the source document,
      walk the tree and perform validation?</p>
@@ -176,6 +194,23 @@ catch (const XMLException&amp; toCatch) {
      </a>
 </faq>
 
+<faq title="Can I use Xerces to perform write validation">
+    <q>
+        Can I use Xerces to perform "write validation" (which is having an
+        appropriate DTD and being able to add elements to the DOM whilst validating
+        against the DTD)?  Is there a function that I have totally
+        misssed that creates an XML file from a DTD,
+        (obviously with the values missing, a skeleton, as it were.)
+    </q>
+
+    <a>
+        <p>The answers are No and No.  Write Validation is a commonly requested
+        feature, but xerces doesn't have it yet.</p>
+
+        <p>The best you can do for now is to create the DOM document, write it
+        back as XML and re-parse it. </p>
+    </a>
+</faq>
 
     <faq title="Why does my multi-threaded application crash on Solaris?">
         <q>Why does my multi-threaded application crash on Solaris?</q>

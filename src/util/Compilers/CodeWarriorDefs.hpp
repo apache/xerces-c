@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/07/18 18:26:04  andyh
+ * Mac OS update.
+ * Contributed by James Berry <jberry@criticalpath.com>
+ *
  * Revision 1.5  2000/03/02 19:55:07  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -104,18 +108,33 @@
 
 
 // ---------------------------------------------------------------------------
-//  Define our version of the XMLCh.
+//  Define our version of the XMLCh. XMLCh should be mapped to the native
+//  wide char type (whatever wchar_t is.) On Mac, wchar_t is not an
+//  intrinsic type and is just mapped to unsigned short.
 // ---------------------------------------------------------------------------
-typedef unsigned short XMLCh;
+typedef unsigned short  XMLCh;
+typedef unsigned short  UTF16Ch;
+
+
+// ---------------------------------------------------------------------------
+//  Define unsigned 16 and 32 bits integers
+// ---------------------------------------------------------------------------
+typedef unsigned short  XMLUInt16;
+typedef unsigned int    XMLUInt32;
 
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
-//#ifdef _DEBUG
-//#define XERCES_DEBUG
-//#endif
+#ifdef _DEBUG
+#define XERCES_DEBUG
+#endif
 
+// ---------------------------------------------------------------------------
+//  Provide some common string ops that are different/notavail for CodeWarrior.
+// ---------------------------------------------------------------------------
+int stricmp(const char* const str1, const char* const  str2);
+int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
 
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the Codewarrior version of the

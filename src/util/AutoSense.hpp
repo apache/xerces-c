@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/07/18 18:25:58  andyh
+ * Mac OS update.
+ * Contributed by James Berry <jberry@criticalpath.com>
+ *
  * Revision 1.12  2000/04/04 20:11:29  abagchi
  * Added PTX support
  *
@@ -165,6 +169,8 @@
 
 #elif defined(macintosh)
     #define XML_MACOS
+#elif defined(MACOSX)
+    #define XML_MACOSX
 #else
     #error Code requires port to host OS!
 #endif

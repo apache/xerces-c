@@ -15,6 +15,17 @@
     </faq>
 
 
+
+    <faq title="What are the differences between Xerces-C and IBM XML4C?">
+        <q>"What are the differences between Xerces-C and IBM XML4C?"</q>
+        <a>
+            <p>XML4C from IBM is based on the Xerces-C code.  The
+               only difference is that XML4C is bundled together
+               with IBM's ICU classes for Unicode support, which
+               allow it to support a wider range of character
+               set encodings.</p>
+        </a>
+    </faq>
     <faq title="Is there any kind of support available for Xerces-C/XML4C?">
         <q>Is there any kind of support available for Xerces-C/XML4C?</q>
         <a>
@@ -37,6 +48,17 @@
             news server is "news.alphaworks.ibm.com", and the group is
             "XML-for-C++".</p>
         </a>
+    </faq>
+
+    <faq title="Where can I find additional information on XML?">
+    <q>Where can I find additional information on XML?</q>
+    <a>
+        <p>The Web.  <jump href="http://www.oasis-open.org/cover/xml.html">
+        http://www.oasis-open.org/cover/xml.html</jump> is an excellent
+        place to start, with links to overviews, FAQs, specifications,
+        industry news, applications and other software, related standards,
+        etc.</p>
+    </a>
     </faq>
 
     <faq title="I found a defect - how do I report it?">
@@ -80,6 +102,37 @@
                change is.  (Working with the current sources is important)</p>
 
         </a>
+    </faq>
+
+
+    <faq title="How do I port Xerces-C to a new platform?">
+    <q>How do I port Xerces-C to a new platform?</q>
+    <a>
+        <p>(from Dean Roddey) The primary work of a port involved creating:</p>
+
+        <ol>
+        <li>A new compiler header for the compiler</li>
+        <li>A new platform utilities file that implements the little bit of system
+        access we need, and an associated header.</li>
+        <li>Updating XercesDefs.hpp and AutoSense.hpp to get your new headers
+        included when compiled under your OS and compiler.</li>
+        </ol>
+
+        <p>Other concerns are:</p>
+
+        <ol>
+        <li>Does ICU compile on your platform? If not, then you'll need to do a
+        transcoder implementation that uses your local transcoding services. I
+        assume that the Iconv transcoder would work for you, though perhaps with
+        some modifications.</li>
+
+        <li>What message loader will you use. For starting off, you can use the 'in
+        memory' one which is very simple and easy. Then, once you get going, you'll
+        want to possibly adapt the message catalog message loader or write one of
+        your own that uses local services of some sort.</li>
+        </ol>
+
+    </a>
     </faq>
 
 </faqs>
