@@ -80,8 +80,6 @@ protected:
 public:
     virtual ~DOMDocumentRange() {};
 
-
-  //@}
   /** @name Factory methods to create new nodes for the Document */
   //@{
 

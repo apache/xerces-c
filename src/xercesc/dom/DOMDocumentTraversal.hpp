@@ -90,7 +90,6 @@ protected:
 public:
     virtual ~DOMDocumentTraversal() {};
 
-  //@}
   /** @name Factory methods to create new nodes for the Document */
   //@{
 

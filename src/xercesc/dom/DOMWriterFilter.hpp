@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/05/30 16:25:33  tng
+ * Fix doxygen warning message.
+ *
  * Revision 1.1  2002/05/28 22:38:55  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -65,12 +68,12 @@
 //////////////////////////////////////////////////////////////////////
 // DOMWriterFilter.hpp: interface for the DOMWriterFilter class.
 //
-// DOMWriterFilters provide applications the ability to examine nodes 
-// as they are being serialized. 
-// DOMWriterFilter lets the application decide what nodes should be 
+// DOMWriterFilters provide applications the ability to examine nodes
+// as they are being serialized.
+// DOMWriterFilter lets the application decide what nodes should be
 // serialized or not.
 //
-// The Document, DocumentType, Notation, and Entity nodes are not passed 
+// The Document, DocumentType, Notation, and Entity nodes are not passed
 // to the filter.
 //
 //////////////////////////////////////////////////////////////////////
@@ -84,23 +87,27 @@ class CDOM_EXPORT DOMWriterFilter : public DOMNodeFilter {
 public:
 
     /** @name Destructors */
+    //@{
 	virtual ~DOMWriterFilter(){};
-    //@{
+    //@}
 
-	/** @ interface from DOMNodeFilter, 
+	/** @ interface from DOMNodeFilter,
 	      to be implemented by implementation (derived class) */
-	virtual short acceptNode(const DOMNode*) const = 0;
     //@{
+	virtual short acceptNode(const DOMNode* node) const = 0;
+    //@}
 
 	/** @Query */
-	bool   showNode(const DOMNode* const) const;
     //@{
+	bool   showNode(const DOMNode* const) const;
+    //@}
 
 protected:
 
     /** @name Constructors */
-	DOMWriterFilter(unsigned long toShowMask = DOMNodeFilter::SHOW_ALL);
     //@{
+	DOMWriterFilter(unsigned long toShowMask = DOMNodeFilter::SHOW_ALL);
+    //@}
 
 private:
 	// unimplemented copy ctor and assignement operator
@@ -110,15 +117,15 @@ private:
 	//
 	// The whatToShow mask.
 	//
-    // Tells the DOMWriter what types of nodes to show to the filter. 
-	// See NodeFilter for definition of the constants. 
-	// The constants 
-	// SHOW_ATTRIBUTE, 
-	// SHOW_DOCUMENT, 
-	// SHOW_DOCUMENT_TYPE, 
-	// SHOW_NOTATION, and 
-	// SHOW_DOCUMENT_FRAGMENT are meaningless here, 
-	// those nodes will never be passed to a DOMWriterFilter. 
+    // Tells the DOMWriter what types of nodes to show to the filter.
+	// See NodeFilter for definition of the constants.
+	// The constants
+	// SHOW_ATTRIBUTE,
+	// SHOW_DOCUMENT,
+	// SHOW_DOCUMENT_TYPE,
+	// SHOW_NOTATION, and
+	// SHOW_DOCUMENT_FRAGMENT are meaningless here,
+	// those nodes will never be passed to a DOMWriterFilter.
 	//
 	// Entity nodes are not passed to the filter.
 
