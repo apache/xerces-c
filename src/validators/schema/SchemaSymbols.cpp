@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/09/18 14:41:56  knoaman
+ * Add support for <annotation>.
+ *
  * Revision 1.12  2001/08/24 20:36:37  knoaman
  * Add support for <redefine>.
  *
@@ -177,6 +180,11 @@ const XMLCh SchemaSymbols::fgELT_ANYATTRIBUTE[] =
     chLatin_r, chLatin_i, chLatin_b, chLatin_u, chLatin_t, chLatin_e, chNull
 };
 
+const XMLCh SchemaSymbols::fgELT_APPINFO[] =
+{
+    chLatin_a, chLatin_p, chLatin_p, chLatin_i, chLatin_n, chLatin_f, chLatin_o, chNull
+};
+
 const XMLCh SchemaSymbols::fgELT_ATTRIBUTE[] =
 {
     chLatin_a, chLatin_t, chLatin_t, chLatin_r, chLatin_i, chLatin_b,
@@ -205,6 +213,12 @@ const XMLCh SchemaSymbols::fgELT_CONTENT[] =
 {
     chLatin_c, chLatin_o, chLatin_n, chLatin_t, chLatin_e, chLatin_n,
     chLatin_t, chNull
+};
+
+const XMLCh SchemaSymbols::fgELT_DOCUMENTATION[] =
+{
+    chLatin_d, chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n,
+    chLatin_t, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
 const XMLCh SchemaSymbols::fgELT_DURATION[] =

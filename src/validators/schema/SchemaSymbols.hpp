@@ -83,11 +83,13 @@ public :
     static const XMLCh fgELT_ANY[];
     static const XMLCh fgELT_WILDCARD[];
     static const XMLCh fgELT_ANYATTRIBUTE[];
+    static const XMLCh fgELT_APPINFO[];
     static const XMLCh fgELT_ATTRIBUTE[];
     static const XMLCh fgELT_ATTRIBUTEGROUP[];
     static const XMLCh fgELT_CHOICE[];
     static const XMLCh fgELT_COMPLEXTYPE[];
     static const XMLCh fgELT_CONTENT[];
+    static const XMLCh fgELT_DOCUMENTATION[];
     static const XMLCh fgELT_DURATION[];
     static const XMLCh fgELT_ELEMENT[];
     static const XMLCh fgELT_ENCODING[];

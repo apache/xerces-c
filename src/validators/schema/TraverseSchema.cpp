@@ -418,9 +418,31 @@ void TraverseSchema::traverseSchemaHeader() {
 }
 
 
-void TraverseSchema::traverseAnnotationDecl(const DOM_Element& childElem) {
+void TraverseSchema::traverseAnnotationDecl(const DOM_Element& annotationElem) {
 
-    //TO DO
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    bool topLevel = isTopLevelComponent(annotationElem);
+    int scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
+                           : GeneralAttributeCheck::LocalContext;
+        
+    fAttributeCheck->checkAttributes(annotationElem, scope, this);
+
+    for (DOM_Element child = XUtil::getFirstChildElement(annotationElem);
+         child != 0;
+         child = XUtil::getNextSiblingElement(child)) {
+
+        DOMString name = child.getLocalName();
+
+        if (!name.equals(SchemaSymbols::fgELT_APPINFO) &&
+            !name.equals(SchemaSymbols::fgELT_DOCUMENTATION)) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, 0, 0); //"an <annotation> can only contain <appinfo> and <documentation> elements"
+        }
+
+        // General Attribute Checking
+        fAttributeCheck->checkAttributes(child, GeneralAttributeCheck::LocalContext, this);
+    }
 }
 
 
@@ -792,21 +814,23 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
 
             XercesGroupInfo* grpInfo = traverseGroupDecl(child);
 
-            if (grpInfo) {
-
-                contentSpecNode = grpInfo->getContentSpec();
-
-                if (contentSpecNode == 0)
-                    continue;
-
-                if (hasAllContent(contentSpecNode)) {
-
-                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AllContentLimited);
-                    continue;
-                }
+            if (!grpInfo) {
+                continue;
             }
 
-            adoptSpecNode = false;
+            contentSpecNode = grpInfo->getContentSpec();
+
+            if (!contentSpecNode) {
+                continue;
+            }
+
+            if (hasAllContent(contentSpecNode)) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AllContentLimited);
+                continue;
+            }
+
+            contentSpecNode = new ContentSpecNode(*contentSpecNode);
             seeParticle = true;
         }
         else if (childName.equals(SchemaSymbols::fgELT_CHOICE)) {
@@ -4745,10 +4769,15 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
             if (grpInfo) {
 
-                adoptSpecNode = false;
                 specNode = grpInfo->getContentSpec();
-                int contentContext = hasAllContent(specNode) ? Group_Ref_With_All : Not_All_Context;
-                checkMinMax(specNode, childElem, contentContext);
+
+                if (specNode) {
+
+                    int contentContext = hasAllContent(specNode) ? Group_Ref_With_All : Not_All_Context;
+
+                    specNode = new ContentSpecNode(*specNode);
+                    checkMinMax(specNode, childElem, contentContext);
+                }
             }
 
             attrNode = XUtil::getNextSiblingElement(childElem);

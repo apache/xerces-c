@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/09/18 14:41:56  knoaman
+ * Add support for <annotation>.
+ *
  * Revision 1.5  2001/08/27 20:14:42  knoaman
  * Validate attributes in <all>, <redefine>, <group> and <attributeGroup> declarations.
  * Misc. fixes.
@@ -485,7 +488,9 @@ void GeneralAttributeCheck::mapElements() {
     fElementMap->put((void*) SchemaSymbols::fgELT_GROUP, prefixContext, attList);
 
     // element "annotation" - global
-
+    attList = new RefVectorOf<AttributeInfo>(1, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_ANNOTATION, prefixContext, attList);
 
     // element "attribute" - local ref
     prefixContext = localRefPrefix;
@@ -711,6 +716,22 @@ void GeneralAttributeCheck::mapElements() {
     attList->addElement(fAttributes[Att_MaxOccurs1_D]);
     attList->addElement(fAttributes[Att_MinOccurs1_D]);
     fElementMap->put((void*) SchemaSymbols::fgELT_ALL, prefixContext, attList);
+
+    // element "annotation" - local name
+    attList = new RefVectorOf<AttributeInfo>(1, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_ANNOTATION, prefixContext, attList);
+
+    // element "appinfo" - local name
+    attList = new RefVectorOf<AttributeInfo>(1, false);
+    attList->addElement(fAttributes[Att_Source_N]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_APPINFO, prefixContext, attList);
+
+    // element "documentation" - local name
+    attList = new RefVectorOf<AttributeInfo>(1, false);
+    attList->addElement(fAttributes[Att_Source_N]);
+    // xml:lang = language ???
+    fElementMap->put((void*) SchemaSymbols::fgELT_DOCUMENTATION, prefixContext, attList);
 
     // element "unique" - local name
 
