@@ -319,6 +319,11 @@ public:
                                                       DOMUserDataHandler::DOMOperationType operation,
                                                       const DOMNode* src,
                                                       const DOMNode* dst) const;
+    void                         transferUserData(DOMNodeImpl* n1, DOMNodeImpl* n2);
+
+    DOMNode*                     renameNode(DOMNode* n,
+                                            const XMLCh* namespaceURI,
+                                            const XMLCh* name);
 
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".

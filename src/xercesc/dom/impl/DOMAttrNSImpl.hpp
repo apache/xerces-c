@@ -95,6 +95,10 @@ public:
     virtual const XMLCh *   getLocalName() const;
     virtual void            setPrefix(const XMLCh *prefix);
     virtual void            release();
+
+   // helper function for DOM Level 3 renameNode
+   virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+   void setName(const XMLCh* namespaceURI, const XMLCh* name);
 };
 
 #endif

@@ -652,6 +652,54 @@ public:
      * @since DOM Level 3
      */
     virtual void                   setDocumentURI(const XMLCh* documentURI) = 0;
+
+    /**
+     * Rename an existing node. When possible this simply changes the name of
+     * the given node, otherwise this creates a new node with the specified
+     * name and replaces the existing node with the new node as described
+     * below. This only applies to nodes of type <code>ELEMENT_NODE</code>
+     * and <code>ATTRIBUTE_NODE</code>.
+     * <br>When a new node is created, the following operations are performed:
+     * the new node is created, any registered event listener is registered
+     * on the new node, any user data attached to the old node is removed
+     * from that node, the old node is removed from its parent if it has
+     * one, the children are moved to the new node, if the renamed node is
+     * an <code>DOMElement</code> its attributes are moved to the new node, the
+     * new node is inserted at the position the old node used to have in its
+     * parent's child nodes list if it has one, the user data that was
+     * attached to the old node is attach to the new node, the user data
+     * event <code>NODE_RENAMED</code> is fired.
+     * <br>When the node being renamed is an <code>DOMAttr</code> that is
+     * attached to an <code>DOMElement</code>, the node is first removed from
+     * the <code>DOMElement</code> attributes map. Then, once renamed, either
+     * by modifying the existing node or creating a new one as described
+     * above, it is put back.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param n The node to rename.
+     * @param namespaceURI The new namespaceURI.
+     * @param name The new qualified name.
+     * @return The renamed node. This is either the specified node or the new
+     *   node that was created to replace the specified node.
+     * @exception DOMException
+     *   NOT_SUPPORTED_ERR: Raised when the type of the specified node is
+     *   neither <code>ELEMENT_NODE</code> nor <code>ATTRIBUTE_NODE</code>.
+     *   <br>WRONG_DOCUMENT_ERR: Raised when the specified node was created
+     *   from a different document than this document.
+     *   <br>NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is
+     *   malformed per the Namespaces in XML specification, if the
+     *   <code>qualifiedName</code> has a prefix and the
+     *   <code>namespaceURI</code> is <code>null</code>, or if the
+     *   <code>qualifiedName</code> has a prefix that is "xml" and the
+     *   <code>namespaceURI</code> is different from "
+     *   http://www.w3.org/XML/1998/namespace" . Also raised, when the node
+     *   being renamed is an attribute, if the <code>qualifiedName</code>,
+     *   or its prefix, is "xmlns" and the <code>namespaceURI</code> is
+     *   different from "http://www.w3.org/2000/xmlns/".
+     * @since DOM Level 3
+     */
+    virtual DOMNode* renameNode(DOMNode* n, const XMLCh* namespaceURI, const XMLCh* name) = 0;
     //@}
 
     // -----------------------------------------------------------------------

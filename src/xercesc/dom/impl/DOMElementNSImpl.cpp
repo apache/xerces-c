@@ -77,35 +77,8 @@ DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc,
                              const XMLCh *qualifiedName) :
     DOMElementImpl(ownerDoc, qualifiedName)
 {
-    this->fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
-
-    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
-    if (index < 0)
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
-
-    if (index == 0) {	//qualifiedName contains no ':'
-        this -> fPrefix = 0;
-        this -> fLocalName = this -> fName;
-    } else {	//0 < index < this->name.length()-1
-        XMLCh* newName;
-        XMLCh temp[4000];
-        if (index >= 3999)
-            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
-        else
-            newName = temp;
-
-        XMLString::copyNString(newName, fName, index);
-        newName[index] = chNull;
-        this-> fPrefix = ((DOMDocumentImpl *)ownerDoc)->getPooledString(newName);
-        this -> fLocalName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(fName+index+1);
-
-        if (index >= 3999)
-            delete[] newName;
-    }
-
-    const XMLCh * URI = DOMNodeImpl::mapPrefix(fPrefix, namespaceURI, DOMNode::ELEMENT_NODE);
-    this -> fNamespaceURI = (URI == 0) ? 0 : ((DOMDocumentImpl *)ownerDoc)->getPooledString(URI);
-};
+    setName(namespaceURI, qualifiedName);
+}
 
 DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
     DOMElementImpl(other, deep)
@@ -205,4 +178,45 @@ void DOMElementNSImpl::release()
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
     }
 }
+
+DOMNode* DOMElementNSImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
+{
+    setName(namespaceURI, name);
+    fAttributes->reconcileDefaultAttributes(getDefaultAttributes());
+    return this;
+}
+
+void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
+                               const XMLCh *qualifiedName)
+{
+    DOMDocumentImpl* ownerDoc = (DOMDocumentImpl *) getOwnerDocument();
+    this->fName = ownerDoc->getPooledString(qualifiedName);
+
+    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
+        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+
+    if (index == 0) {	//qualifiedName contains no ':'
+        this -> fPrefix = 0;
+        this -> fLocalName = this -> fName;
+    } else {	//0 < index < this->name.length()-1
+        XMLCh* newName;
+        XMLCh temp[4000];
+        if (index >= 3999)
+            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+        else
+            newName = temp;
+
+        XMLString::copyNString(newName, fName, index);
+        newName[index] = chNull;
+        this-> fPrefix = ownerDoc->getPooledString(newName);
+        this -> fLocalName = ownerDoc->getPooledString(fName+index+1);
+
+        if (index >= 3999)
+            delete[] newName;
+    }
+
+    const XMLCh * URI = DOMNodeImpl::mapPrefix(fPrefix, namespaceURI, DOMNode::ELEMENT_NODE);
+    this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
+};
 

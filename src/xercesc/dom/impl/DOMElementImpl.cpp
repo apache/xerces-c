@@ -68,6 +68,8 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMStringPool.hpp"
+#include "DOMCasts.hpp"
+#include "DOMElementNSImpl.hpp"
 
 
 #include "DOMDeepNodeListImpl.hpp"
@@ -185,10 +187,10 @@ void DOMElementImpl::removeAttribute(const XMLCh *nam)
         throw DOMException(
              DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    DOMNode *att = fAttributes->getNamedItem(nam);
-    if (att != 0)
+    XMLSize_t i = fAttributes->findNamePoint(nam);
+    if (i >= 0)
     {
-        fAttributes->removeNamedItem(nam);
+        DOMNode *att = fAttributes->removeNamedItemAt(i);
         att->release();
     }
 };
@@ -201,17 +203,29 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    DOMNode *found = fAttributes->getNamedItem(oldAttr->getName());
+    DOMNode* found = 0;
 
-    // If it is in fact the right object, remove it.
+    // Since there is no removeAttributeNodeNS, check if this oldAttr has NS or not
+    const XMLCh* localName = oldAttr->getLocalName();
+    XMLSize_t i = 0;
+    if (localName)
+        i = fAttributes->findNamePoint(oldAttr->getNamespaceURI(), localName);
+    else
+        i = fAttributes->findNamePoint(oldAttr->getName());
 
-    if (found == oldAttr)
-        fAttributes->removeNamedItem(oldAttr->getName());
+    if (i >= 0) {
+        // If it is in fact the right object, remove it.
+        found = fAttributes->item(i);
+        if (found == oldAttr)
+            fAttributes->removeNamedItemAt(i);
+        else
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+
+    }
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 
-    return (DOMAttr *)found;
-
+   return (DOMAttr *)found;
 };
 
 
@@ -300,11 +314,10 @@ void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-    DOMAttr *att =
-        (DOMAttr *)fAttributes->getNamedItemNS(fNamespaceURI, fLocalName);
-    // Remove it
-    if (att != 0) {
-        fAttributes->removeNamedItemNS(fNamespaceURI, fLocalName);
+    XMLSize_t i = fAttributes->findNamePoint(fNamespaceURI, fLocalName);
+    if (i >= 0)
+    {
+        DOMNode *att = fAttributes->removeNamedItemAt(i);
         att->release();
     }
 }
@@ -476,3 +489,52 @@ bool DOMElementImpl::isEqualNode(const DOMNode* arg)
 
     return fParent.isEqualNode(arg);
 };
+
+DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
+{
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+
+    if (!namespaceURI || !*namespaceURI) {
+        fName = doc->fNamePool->getPooledString(name);
+        fAttributes->reconcileDefaultAttributes(getDefaultAttributes());
+
+        return this;
+    }
+    else {
+
+        // create a new ElementNS
+        DOMElementNSImpl* newElem = (DOMElementNSImpl*)doc->createElementNS(namespaceURI, name);
+
+        // transfer the userData
+        doc->transferUserData(castToNodeImpl(this), castToNodeImpl(newElem));
+
+        // remove old node from parent if any
+        DOMNode* parent = getParentNode();
+        DOMNode* nextSib = getNextSibling();
+        if (parent) {
+            parent->removeChild(this);
+        }
+
+        // move children to new node
+        DOMNode* child = getFirstChild();
+        while (child) {
+            removeChild(child);
+            newElem->appendChild(child);
+            child = getFirstChild();
+        }
+
+        // insert new node where old one was
+        if (parent) {
+            parent->insertBefore(newElem, nextSib);
+        }
+
+        // move specified attributes to new node
+        newElem->fAttributes->moveSpecifiedAttributes(fAttributes);
+
+        // and fire user data NODE_RENAMED event
+        castToNodeImpl(newElem)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, newElem);
+
+        return newElem;
+    }
+}
+

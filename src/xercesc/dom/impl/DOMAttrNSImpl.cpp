@@ -62,6 +62,7 @@
 #include "DOMAttrNSImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMException.hpp>
 
 #include "assert.h"
@@ -80,44 +81,8 @@ DOMAttrNSImpl::DOMAttrNSImpl(DOMDocument *ownerDoc,
                            const XMLCh *qualifiedName) :
 DOMAttrImpl(ownerDoc, qualifiedName)
 {
-    const XMLCh * xmlns = DOMNodeImpl::getXmlnsString();
-    const XMLCh * xmlnsURI = DOMNodeImpl::getXmlnsURIString();
-    this->fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
-
-    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
-    if (index < 0)
-        throw DOMException(DOMException::NAMESPACE_ERR, 0);
-
-    bool xmlnsAlone = false;	//true if attribute name is "xmlns"
-    if (index == 0) {	//qualifiedName contains no ':'
-        if (XMLString::compareString(this->fName, xmlns) == 0) {
-            if (XMLString::compareString(namespaceURI, xmlnsURI) != 0)
-                throw DOMException(DOMException::NAMESPACE_ERR, 0);
-            xmlnsAlone = true;
-        }
-        this -> fPrefix = 0;
-        this -> fLocalName = this -> fName;
-    } else {	//0 < index < this->name.length()-1
-        XMLCh* newName;
-        XMLCh temp[4000];
-        if (index >= 3999)
-            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
-        else
-            newName = temp;
-
-        XMLString::copyNString(newName, fName, index);
-        newName[index] = chNull;
-        this-> fPrefix = ((DOMDocumentImpl *)ownerDoc)->getPooledString(newName);
-        this -> fLocalName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(fName+index+1);
-
-        if (index >= 3999)
-            delete[] newName;
-    }
-
-    const XMLCh * URI = xmlnsAlone ?
-                xmlnsURI : DOMNodeImpl::mapPrefix(fPrefix, namespaceURI, DOMNode::ATTRIBUTE_NODE);
-    this -> fNamespaceURI = (URI == 0) ? 0 : ((DOMDocumentImpl *)ownerDoc)->getPooledString(URI);
-};
+    setName(namespaceURI, qualifiedName);
+}
 
 DOMAttrNSImpl::DOMAttrNSImpl(const DOMAttrNSImpl &other, bool deep) :
 DOMAttrImpl(other, deep)
@@ -220,4 +185,61 @@ void DOMAttrNSImpl::release()
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
     }
 }
+
+
+DOMNode* DOMAttrNSImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
+{
+    DOMElement* el = getOwnerElement();
+    if (el)
+        el->removeAttributeNode(this);
+
+    setName(namespaceURI, name);
+
+    if (el)
+        el->setAttributeNodeNS(this);
+
+    return this;
+}
+
+void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedName)
+{
+    DOMDocumentImpl* ownerDoc = (DOMDocumentImpl *) getOwnerDocument();
+    const XMLCh * xmlns = DOMNodeImpl::getXmlnsString();
+    const XMLCh * xmlnsURI = DOMNodeImpl::getXmlnsURIString();
+    this->fName = ownerDoc->getPooledString(qualifiedName);
+
+    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
+        throw DOMException(DOMException::NAMESPACE_ERR, 0);
+
+    bool xmlnsAlone = false;	//true if attribute name is "xmlns"
+    if (index == 0) {	//qualifiedName contains no ':'
+        if (XMLString::compareString(this->fName, xmlns) == 0) {
+            if (XMLString::compareString(namespaceURI, xmlnsURI) != 0)
+                throw DOMException(DOMException::NAMESPACE_ERR, 0);
+            xmlnsAlone = true;
+        }
+        this -> fPrefix = 0;
+        this -> fLocalName = this -> fName;
+    } else {	//0 < index < this->name.length()-1
+        XMLCh* newName;
+        XMLCh temp[4000];
+        if (index >= 3999)
+            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+        else
+            newName = temp;
+
+        XMLString::copyNString(newName, fName, index);
+        newName[index] = chNull;
+        this-> fPrefix = ownerDoc->getPooledString(newName);
+        this -> fLocalName = ownerDoc->getPooledString(fName+index+1);
+
+        if (index >= 3999)
+            delete[] newName;
+    }
+
+    const XMLCh * URI = xmlnsAlone ?
+                xmlnsURI : DOMNodeImpl::mapPrefix(fPrefix, namespaceURI, DOMNode::ATTRIBUTE_NODE);
+    this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
+};
 

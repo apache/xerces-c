@@ -241,6 +241,9 @@ void DOMAttrImpl::setOwnerElement(DOMElement *ownerElem)
     fNode.isOwned(false);
 }
 
+
+//For DOM Level 3
+
 void DOMAttrImpl::release()
 {
     if (fNode.isOwned() && !fNode.isToBeReleased())
@@ -254,6 +257,50 @@ void DOMAttrImpl::release()
     else {
         // shouldn't reach here
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
+
+
+DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
+{
+    DOMElement* el = getOwnerElement();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+
+    if (el)
+        el->removeAttributeNode(this);
+
+    if (!namespaceURI || !*namespaceURI) {
+        fName = doc->getPooledString(name);
+
+        if (el)
+            el->setAttributeNode(this);
+
+        return this;
+    }
+    else {
+
+        // create a new AttrNS
+        DOMAttr* newAttr = doc->createAttributeNS(namespaceURI, name);
+
+        // transfer the userData
+        doc->transferUserData(castToNodeImpl(this), castToNodeImpl(newAttr));
+
+        // move children to new node
+        DOMNode* child = getFirstChild();
+        while (child) {
+            removeChild(child);
+            newAttr->appendChild(child);
+            child = getFirstChild();
+        }
+
+        // and fire user data NODE_RENAMED event
+        castToNodeImpl(newAttr)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, newAttr);
+
+        // reattach attr to element
+        if (el)
+            el->setAttributeNodeNS(newAttr);
+
+        return newAttr;
     }
 }
 

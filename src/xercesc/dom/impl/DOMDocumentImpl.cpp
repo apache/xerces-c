@@ -1109,6 +1109,33 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
 }
 
 
+void DOMDocumentImpl::transferUserData(DOMNodeImpl* n1, DOMNodeImpl* n2)
+{
+    if (fUserDataTable) {
+        fUserDataTable->transferElement((void*)n1, (void*)n2);
+        n1->hasUserData(false);
+        n2->hasUserData(true);
+    }
+}
+
+
+DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, const XMLCh* name)
+{
+    if (n->getOwnerDocument() != this)
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+
+    switch (n->getNodeType()) {
+        case ELEMENT_NODE:
+            return ((DOMElementImpl*)n)->rename(namespaceURI, name);
+        case ATTRIBUTE_NODE:
+            return ((DOMAttrImpl*)n)->rename(namespaceURI, name);
+        default:
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    }
+
+    return 0;
+}
+
 void DOMDocumentImpl::release()
 {
     DOMDocument* doc = (DOMDocument*) this;

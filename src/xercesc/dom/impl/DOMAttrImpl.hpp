@@ -103,6 +103,9 @@ public:
     //Introduced in DOM Level 2
     DOMElement *getOwnerElement() const;
     void setOwnerElement(DOMElement *ownerElem);    //internal use only
+
+   // helper function for DOM Level 3 renameNode
+   virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
 };
 
 #endif

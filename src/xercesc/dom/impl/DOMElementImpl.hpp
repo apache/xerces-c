@@ -138,7 +138,8 @@ public:
 	virtual DOMAttrMapImpl *getDefaultAttributes();
 	virtual void setupDefaultAttributes();
 
-
+   // helper function for DOM Level 3 renameNode
+   virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
 };
 
 #endif
