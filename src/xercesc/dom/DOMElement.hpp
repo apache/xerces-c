@@ -69,6 +69,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMAttr;
 class DOMNodeList;
+class DOMTypeInfo;
 
 
 /**
@@ -413,8 +414,6 @@ public:
      */
     virtual bool         hasAttributeNS(const XMLCh *namespaceURI,
                                         const XMLCh *localName) const = 0;
-    //@}
-
 
     /** @name Functions introduced in DOM Level 3 */
     //@{
@@ -477,6 +476,19 @@ public:
      * @since DOM Level 3     
      */
     virtual void setIdAttributeNode(const DOMAttr *idAttr) = 0;
+
+
+
+    /**
+     * Returns the type information associated with this element.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return the <code>DOMTypeInfo</code> associated with this element
+     * @since DOM level 3
+     */
+    virtual const DOMTypeInfo* getTypeInfo() const = 0; 
+
     //@}
 
 };
@@ -486,3 +498,4 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 
+    

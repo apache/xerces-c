@@ -84,7 +84,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
+class DOMTypeInfo;
 class DOMNodeList;
 class DOMAttrMapImpl;
 class DOMDocument;
@@ -100,6 +100,9 @@ public:
     DOMAttrMapImpl    *fAttributes;
     DOMAttrMapImpl    *fDefaultAttributes;
     const XMLCh      *fName;
+
+private:
+    const DOMTypeInfo *fSchemaType;
 
 public:
     DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *name);
@@ -150,6 +153,11 @@ public:
 
     // helper function for DOM Level 3 renameNode
     virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+
+    virtual const DOMTypeInfo * getTypeInfo() const;
+
+    //helper function for DOM Level 3 TypeInfo
+    virtual void setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI);
 
 protected:
     // default attribute helper functions

@@ -76,6 +76,7 @@
 #include "DOMNodeImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include "DOMNodeIDMap.hpp"
 
@@ -89,6 +90,9 @@ public:
     DOMNodeImpl        fNode;
     DOMParentNode      fParent;
     const XMLCh       *fName;
+
+private:
+    const DOMTypeInfo *fSchemaType;
 
 public:
     DOMAttrImpl(DOMDocument *ownerDocument, const XMLCh *aName);
@@ -109,8 +113,13 @@ public:
     DOMElement *getOwnerElement() const;
     void setOwnerElement(DOMElement *ownerElem);    //internal use only
 
-   // helper function for DOM Level 3 renameNode
-   virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+    // helper function for DOM Level 3 renameNode
+    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+
+    virtual const DOMTypeInfo* getTypeInfo() const;
+
+    //helper function for DOM Level 3 TypeInfo
+    virtual void setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI);
 
    // helper method that sets this attr to an idnode and places it into the document map
    virtual void addAttrToIDNodeMap();

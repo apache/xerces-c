@@ -73,6 +73,7 @@
 #include "DOMStringPool.hpp"
 #include "DOMCasts.hpp"
 #include "DOMElementNSImpl.hpp"
+#include "DOMTypeInfoImpl.hpp"
 
 #include "DOMDeepNodeListImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
@@ -84,7 +85,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMAttr;
 
 DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
-    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0), fDefaultAttributes(0)
+    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0), fDefaultAttributes(0), fSchemaType(0)
 {
     DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
     fName = docImpl->getPooledString(eName);
@@ -102,6 +103,7 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
     : fNode(other.getOwnerDocument()),
       fParent(other.getOwnerDocument()),
+      fSchemaType(other.fSchemaType),
       fAttributes(0),
       fDefaultAttributes(0)
 {
@@ -681,6 +683,19 @@ DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 
         return newElem;
     }
+}
+
+const DOMTypeInfo *DOMElementImpl::getTypeInfo() const
+{
+    if(!fSchemaType) 
+        ((DOMElementImpl *)(this))->fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(0, 0, (DOMDocumentImpl *)getOwnerDocument());
+    return fSchemaType;
+}
+
+
+void DOMElementImpl::setTypeInfo(const XMLCh* typeName, const XMLCh* typeURI) 
+{
+    fSchemaType = new (getOwnerDocument()) DOMTypeInfoImpl(typeName, typeURI, (DOMDocumentImpl *)getOwnerDocument());
 }
 
 XERCES_CPP_NAMESPACE_END

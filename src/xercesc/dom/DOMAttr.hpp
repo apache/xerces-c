@@ -68,7 +68,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMElement;
-
+class DOMTypeInfo;
 
 /**
  * The <code>DOMAttr</code> class refers to an attribute of an XML element.
@@ -189,6 +189,18 @@ public:
      * @since DOM level 3
      */
     virtual bool            isId() const = 0;
+
+
+    /**
+     * Returns the type information associated with this attribute.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return the <code>DOMTypeInfo</code> associated with this attribute
+     * @since DOM level 3
+     */
+    virtual const DOMTypeInfo * getTypeInfo() const = 0;
+
     //@}
 
 };
