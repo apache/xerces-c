@@ -55,8 +55,10 @@
  */
 
 /*
-/*
  * $Log$
+ * Revision 1.3  2003/12/19 23:02:43  cargilld
+ * Fix compiler messages on OS390.
+ *
  * Revision 1.2  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/12/19 23:02:43  cargilld
+ * Fix compiler messages on OS390.
+ *
  * Revision 1.13  2003/11/21 22:38:50  neilg
  * Enable grammar pools and grammar resolvers to manufacture
  * XSModels.  This also cleans up handling in the
@@ -234,7 +237,7 @@ public :
     //@}
 	
     // -----------------------------------------------------------------------
-    /** @name  schema component model support
+    /** @name  schema component model support */
     // -----------------------------------------------------------------------                                                        
     //@{
 

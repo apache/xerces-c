@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/19 23:02:43  cargilld
+ * Fix compiler messages on OS390.
+ *
  * Revision 1.6  2003/12/17 20:50:34  knoaman
  * PSVI: fix for annotation of attributes in attributeGroup/derived types
  *
@@ -125,7 +128,7 @@ public:
     //@}
 
     //---------------------
-    /** @name XSAttributeUse methods /
+    /** @name XSAttributeUse methods */
 
     //@{
 
