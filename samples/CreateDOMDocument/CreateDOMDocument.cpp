@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 00:17:50  rahulj
+ * Added makefile for unix builds. Fixed the comments and usage
+ * string.
+ *
  * Revision 1.2  2000/01/18 23:57:35  rahulj
  * Now exploting C++ features to compact the sample code.
  *
@@ -82,10 +86,9 @@
 
 
 // ---------------------------------------------------------------------------
-//
 //  main
-//
 // ---------------------------------------------------------------------------
+
 int main(int argC, char* argV[])
 {
     // Initialize the XML4C2 system.
@@ -107,10 +110,9 @@ int main(int argC, char* argV[])
     // Watch for special case help request
     if (argC > 1)
     {
-        cout << "\nUsage: NewDOMInMem\n"
+        cout << "\nUsage: CreateDOMDocument\n"
             "   This program creates a new DOM document from scratch in memory.\n"
             "   It then prints the count of elements in the tree.\n"
-            "     -?          Show this help (must be the only parameter)\n"
             <<  endl;
         return 0;
     }
@@ -152,15 +154,17 @@ int main(int argC, char* argV[])
     DOM_Text    devByDataVal = doc.createTextNode("Apache Software Foundation");
     devByElem.appendChild(devByDataVal);
 
-    unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+    //
+    // Now count the number of elements in the above DOM tree.
+    //
 
-    // Print out the stats that we collected and time taken.
+    unsigned int elementCount = doc.getElementsByTagName("*").getLength();
     cout << "The tree just created contains: " << elementCount
          << " elements." << endl;
 
     //
-	//  The DOM document and its contents are reference counted, and need
-	//	no explicit deletion.
+    //  The DOM document and its contents are reference counted, and need
+    //  no explicit deletion.
     //
     return 0;
 }
