@@ -1,0 +1,204 @@
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  1999/11/09 01:09:25  twl
+# Initial revision
+#
+# Revision 1.3  1999/11/08 20:43:34  rahul
+# Swat for adding in Product name and CVS comment log variable.
+#
+#
+
+################## LIBRARY NAMES AND DIRECTORIES ##################
+
+INCLUDES= -I. -I${XML4CROOT}/include
+LIB_DIR=${XML4CROOT}/lib
+LIBNAME=IXXML4C
+THISLIB=${LIB_DIR}/${LIBNAME}
+VER=3_0
+ifdef ICUROOT
+   ICU_LIB_DIR=${ICUROOT}/lib
+   ICU_LIBNAME=icu-uc
+   LIBRARY_NAMES=-l${ICU_LIBNAME} -l${LIBNAME}${VER}
+   LIBRARY_SEARCH_PATHS=-L${ICU_LIB_DIR} -L${LIB_DIR}
+else
+   LIBRARY_NAMES=-l${LIBNAME}${VER}
+   LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
+endif
+
+####################### PLATFORM DEPENDENCIES #####################
+
+#=============== SOLARIS SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, SOLARIS)
+  ifeq (${COMPILER}, g++)
+	CMP= -c ${CXXFLAGS}
+	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
+	LINK = g++ -D${PLATFORM} -fpic
+	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+	EXTRA_LINK_OPTIONS=-lc
+  else
+	CMP= -c ${CXXFLAGS}
+	CC= CC -c -D${PLATFORM}
+	LINK =  CC -D${PLATFORM}
+	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
+	EXTRA_LINK_OPTIONS=-lC -lc -lgen
+  endif
+  SHLIBSUFFIX=.so
+endif
+
+#================= AIX SPECIFIC OPTIONS ===========================
+ifeq (${PLATFORM}, AIX)
+CMP= -c ${CXXFLAGS}
+CC=xlC_r -D${PLATFORM}
+LINK =  ${CC}
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
+EXTRA_LINK_OPTIONS=-lC
+SHLIBSUFFIX=.a
+endif
+
+#=============== LINUX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, LINUX)
+CMP= -c ${CXXFLAGS}
+CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
+LINK =  g++ -D${PLATFORM} -fpic
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+EXTRA_LINK_OPTIONS=-lc
+SHLIBSUFFIX=.so
+endif
+
+#================= HP SPECIFIC OPTIONS ===========================
+ifeq (${PLATFORM}, HPUX)
+  ifeq (${COMPILER}, aCC)
+    CMP = -c $(CXXFLAGS) -D_HP_UX -DHPaCC +DAportable -w +z
+    CC = aCC
+    LINK =  ${CC} -Wl,+s
+    PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib
+    SHLIBSUFFIX=.sl
+  else
+    ifneq (${DEBUG}, 1)
+      CXXFLAGS = -w +O1
+    endif
+    APPL_NAME = $(notdir $(shell pwd))
+    TEMPLATESDIR = $(XML4CROOT)/bin/obj/$(APPL_NAME)/ptrepository
+    COMMON_CMP = $(CXXFLAGS) -D_HP_UX -DHPCC +DAportable -w +eh +z -z \
+        -ptr$(TEMPLATESDIR)
+    CMP = -c $(COMMON_CMP)
+    CC = CC
+    LINK =  ${CC} $(COMMON_CMP) -Wl,+s
+    PLATFORM_LIB_LINK_OPTIONS=-L/opt/CC/lib -L/usr/lib
+    SHLIBSUFFIX=.sl
+  endif
+endif
+
+#================= OS390 SPECIFIC OPTIONS ===========================
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# Before you try to run the Makefile, make sure you have two      #
+# environment variables set.                                      #
+#                                                                 #
+#   export XML4CROOT=<the directory where you installed XML4C>    #
+# XML4C can be built in two ways (1) using ICU and                #
+#                                (2) using Iconv (not ICU)        #
+#                                                                 #
+# To use ICU, you must:                                           #
+#   export ICUROOT=<the directory where you installed ICU>        #
+# To disable ICU and use Iconv instead:                           #
+#   unset ICUROOT                                                 #
+#                                                                 #
+# Also, to enable debugging, you must type:                       #
+#   export DEBUG=1                                                #
+# To disable debugging, you must type:                            #
+#   unset DEBUG                                                   #
+#                                                                 #
+# If you are going to do the OS390BATCH build, make sure you have #
+# the OS390BATCH environment variable set.                        #
+#                                                                 #
+#   export OS390BATCH=1                                           #
+#                                                                 #
+# Also, search for the LOADMOD variable and set it to your        #
+# LOADMOD dataset. Make sure you have at least UPDATE access to   #
+# the dataset.                                                    #
+###################################################################
+
+ifeq (${PLATFORM}, OS390)
+CMP= -c -DOS390 ${CXXFLAGS}
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
+else
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
+endif
+LINK =  ${CC}
+PLATFORM_LIB_LINK_OPTIONS=
+EXTRA_LINK_OPTIONS =
+SHLIBSUFFIX=.dll
+OS390SIDEDECK=.x
+ifneq (${DEBUG}, 1)
+  CXXFLAGS = -2
+endif
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+LOADMOD = USERID.LOAD
+LOADEXP = USERID.EXP
+LIBRARY_NAMES="//'${LOADEXP}(XML4C30)'"
+else
+LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
+endif
+LIBRARY_SEARCH_PATHS=
+endif
+

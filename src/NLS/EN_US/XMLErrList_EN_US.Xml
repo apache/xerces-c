@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE MsgFile SYSTEM "../XMLErrList.Dtd">
+
+<!--  ===================================================== 
+ A Message file is designed for a particular locale, which is 
+ indicated in the locale attribute. 
+ =======================================================  -->
+<MsgFile Locale="EN_US">
+    <MsgDomain Domain="http://apache.org/xml/messages/XMLErrors">
+        <Warning>
+            <Message Id="NotationAlreadyExists" Text="Notation '{0}' has already been declared"/>
+            <Message Id="AttListAlreadyExists" Text="Attribute '{0}' has already been declared"/>
+            <Message Id="ContradictoryEncoding" Text="Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it"/>
+            <Message Id="UndeclaredElemInCM" Text="Element '{0}' was referenced in a content model but never declared"/>
+            <Message Id="UndeclaredElemInAttList" Text="Element '{0}' was referenced in an attlist but never declared"/>
+        </Warning>
+        <Error>
+            <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
+            <Message Id="ExpectedAttrName" Text="Expected an attribute name"/>
+            <Message Id="ExpectedNotationName" Text="Expected a notation name"/>
+            <Message Id="NoRepInMixed" Text="Repetition of individual elements is not legal for mixed content models"/>
+            <Message Id="BadDefAttrDecl" Text="Bad default attribute declaration"/>
+            <Message Id="ExpectedDefAttrDecl" Text="Expected default attribute declaration, assuming #IMPLIED  "/>
+            <Message Id="AttListSyntaxError" Text="Attribute list syntax error"/>
+            <Message Id="ExpectedEqSign" Text="Expected equal sign"/>
+            <Message Id="DupAttrName" Text="Duplication attribute name"/>
+            <Message Id="BadIdForXMLLangAttr" Text="Bad ID for xml:lang attribute"/>
+            <Message Id="ExpectedElementName" Text="Expected an element name"/>
+            <Message Id="MustStartWithXMLDecl" Text="Must start with an XMLDecl"/>
+            <Message Id="CommentsMustStartWith" Text="Comments must start with &lt;!--"/>
+            <Message Id="InvalidDocumentStructure" Text="Invalid document structure"/>
+            <Message Id="ExpectedDeclString" Text="Expected a 'version=', 'encoding=', or 'standalone='"/>
+            <Message Id="BadXMLVersion" Text="Bad XML version string"/>
+            <Message Id="UnsupportedXMLVersion" Text="Unsupported XML version"/>
+            <Message Id="UnterminatedXMLDecl" Text="Unterminated XML decl"/>
+            <Message Id="BadXMLEncoding" Text="Bad XML encoding declaration"/>
+            <Message Id="BadStandalone" Text="Bad standalone declaration"/>
+            <Message Id="UnterminatedComment" Text="Unterminated comment"/>
+            <Message Id="PINameExpected" Text="Processing instruction name expected"/>
+            <Message Id="UnterminatedPI" Text="Unterminated processing instruction"/>
+            <Message Id="InvalidCharacter" Text="Invalid character"/>
+            <Message Id="UnexpectedTextBeforeRoot" Text="Unexpected text before root element"/>
+            <Message Id="UnterminatedStartTag" Text="Unterminated start tag"/>
+            <Message Id="ExpectedAttrValue" Text="Expected an attribute value"/>
+            <Message Id="UnterminatedEndTag" Text="Unterminated end tag"/>
+            <Message Id="ExpectedAttributeType" Text="Expected attribute type (CDATA, ID, NMTOKEN, ..),"/>
+            <Message Id="ExpectedEndOfTagX" Text="Expected end of tag '{0}'"/>
+            <Message Id="ExpectedMarkup" Text="Expected tag name, comment, PI, or other markup"/>
+            <Message Id="NotValidAfterContent" Text="Not valid after content"/>
+            <Message Id="ExpectedComment" Text="Expected comment"/>
+            <Message Id="ExpectedCommentOrPI" Text="Expected comment or processing instruction"/>
+            <Message Id="ExpectedWhitespace" Text="Expected whitespace"/>
+            <Message Id="NoRootElemInDOCTYPE" Text="No root element in DOCTYPE"/>
+            <Message Id="ExpectedQuotedString" Text="Expected quoted string"/>
+            <Message Id="ExpectedPublicId" Text="Expected public id"/>
+            <Message Id="InvalidPublicIdChar" Text="Invalid character in public id"/>
+            <Message Id="UnterminatedDOCTYPE" Text="Unterminated DOCTYPE declaration"/>
+            <Message Id="InvalidCharacterInIntSubset" Text="Invalid character in internal subset"/>
+            <Message Id="ExpectedCDATA" Text="Expected CDATA section"/>
+            <Message Id="InvalidInitialNameChar" Text="Invalid initial name character"/>
+            <Message Id="InvalidNameChar" Text="Invalid name character"/>
+            <Message Id="UnexpectedWhitespace" Text="Unexpected whitespace"/>
+            <Message Id="InvalidCharacterInAttrValue" Text="Invalid character in attribute value"/>
+            <Message Id="ExpectedMarkupDecl" Text="Expected a markup declaration"/>
+            <Message Id="TextDeclNotLegalHere" Text="Text declaration not legal here"/>
+            <Message Id="ConditionalSectInIntSubset" Text="Conditional section in internal subset"/>
+            <Message Id="ExpectedPEName" Text="Expected parameter entity name"/>
+            <Message Id="UnterminatedEntityDecl" Text="Unterminated entity declaration"/>
+            <Message Id="InvalidCharacterRef" Text="Invalid character reference"/>
+            <Message Id="UnterminatedCharRef" Text="Unterminated character reference"/>
+            <Message Id="ExpectedEntityRefName" Text="Expected entity name for reference"/>
+            <Message Id="EntityNotFound" Text="Entity '{0}' was not found"/>
+            <Message Id="NoUnparsedEntityRefs" Text="Unparsed entitty references not valid here"/>
+            <Message Id="UnterminatedEntityRef" Text="Unterminated entity reference"/>
+            <Message Id="RecursiveEntity" Text="Recursive entity expansion"/>
+            <Message Id="PartialMarkupInEntity" Text="Partial markup in entity value"/>
+            <Message Id="UnterminatedElementDecl" Text="Unterminated element declaration"/>
+            <Message Id="ExpectedContentSpecExpr" Text="Expected content specification expression"/>
+            <Message Id="ExpectedAsterisk" Text="Expected asterisk"/>
+            <Message Id="UnterminatedContentModel" Text="Unterminated Content model"/>
+            <Message Id="ExpectedSystemId" Text="Expected system id"/>
+            <Message Id="ExpectedSystemOrPublicId" Text="Expected system or public id"/>
+            <Message Id="UnterminatedNotationDecl" Text="Unterminated notation declaration"/>
+            <Message Id="ExpectedSeqChoiceLeaf" Text="Expected ',', '|', or ')' characters"/>
+            <Message Id="ExpectedChoiceOrCloseParen" Text="Expected '|' or ')' characters"/>
+            <Message Id="ExpectedSeqOrCloseParen" Text="Expected ',' or ')' characters or close parenthesis"/>
+            <Message Id="ExpectedEnumValue" Text="Expected enumeration value"/>
+            <Message Id="ExpectedEnumSepOrParen" Text="Expected | enumeration separator, or closing paren"/>
+            <Message Id="UnterminatedEntityLiteral" Text="Unterminated entity literal"/>
+            <Message Id="MoreEndThanStartTags" Text="There are more end tags than start tags"/>
+            <Message Id="IllegalRefInStandalone" Text="Reference to external declaration in standalone document. Entity={0}"/>
+            <Message Id="ExpectedOpenParen" Text="Expected an open parenthesis"/>
+            <Message Id="AttrAlreadyUsedInSTag" Text="The attribute '{0}' is already used in element '{1}'"/>
+            <Message Id="BracketInAttrValue" Text="A '&lt;' character cannot be used in an attribute value, except through &lt;"/>
+            <Message Id="Expected2ndSurrogateChar" Text="A leading surrogate character was not followed by a legal second character"/>
+            <Message Id="ExpectedEndOfConditional" Text="Expected ']]>' to end a conditional section"/>
+            <Message Id="ExpectedIncOrIgn" Text="Expected INCLUDE or IGNORE here"/>
+            <Message Id="ExpectedINCLUDEBracket" Text="Expected [ to follow INCLUDE or IGNORE"/>
+            <Message Id="ExpectedTextDecl" Text="Expected a TextDecl here: &lt;?xml ...."/>
+            <Message Id="ExpectedXMLDecl" Text="Expected a XMLDecl here: &lt;?xml ...."/>
+            <Message Id="UnexpectedEOE" Text="Unexpected end of entity {0}"/>
+            <Message Id="PEPropogated" Text="A PE propogated out of the int/ext subset, discarding extra text"/>
+            <Message Id="ExtraCloseSquare" Text="An extra ] character was found an ignored"/>
+            <Message Id="PERefInMarkupInIntSubset" Text="PE refs are not allowed inside markup in the internal subset"/>
+            <Message Id="EntityPropogated" Text="An entity propogated out of the content section into Miscellaneous"/>
+            <Message Id="ExpectedNumericalCharRef" Text="Expected &amp;# to be followed by a numeric character value"/>
+            <Message Id="ExpectedOpenSquareBracket" Text="Expected an open bracket ('[') here"/>
+            <Message Id="BadSequenceInCharData" Text="The sequence ']]>' is not allowed in character data"/>
+            <Message Id="IllegalSequenceInComment" Text="Illegal sequence '--' in comment"/>
+            <Message Id="UnterminatedCDATASection" Text="Unterminated CDATA section"/>
+            <Message Id="ExpectedNDATA" Text="Expected NDATA"/>
+            <Message Id="NDATANotValidForPE" Text="NDATA is not legal for parameter entities"/>
+            <Message Id="HexRadixMustBeLowerCase" Text="Hex radix character refs must use 'x', not 'X'"/>
+            <Message Id="DeclStringRep" Text="'{0}' has already been set. Ignoring redundant setting"/>
+            <Message Id="DeclStringsInWrongOrder" Text="The XMLDecl strings must be in the order: version, encoding, standalone"/>
+            <Message Id="NoExtRefsInAttValue" Text="External entities cannot be referred to from attribute values"/>
+            <Message Id="XMLDeclMustBeLowerCase" Text="The XML or Text decl must start with '&lt;?xml ', not '&lt;?XML '"/>
+            <Message Id="ExpectedEntityValue" Text="Expected a literal entity value or PUBLIC/SYSTEM id"/>
+            <Message Id="BadDigitForRadix" Text="'{0}' is not a valid digit for the indicated radix"/>
+            <Message Id="EndedWithTagsOnStack" Text="The input ended before all started tags were ended. Last tag started was '{0}'"/>
+            <Message Id="AmbiguousContentModel" Text="The content model for element '{0}' is ambiguous"/>
+            <Message Id="NestedCDATA" Text="Nested CDATA sections are not allowed"/>
+            <Message Id="UnknownPrefix" Text="The prefix '{0}' has not been mapped to any URI"/>
+            <Message Id="PartialTagMarkupError" Text="The start and the end tag were in the different entities"/>
+            <Message Id="EmptyMainEntity" Text="The main XML document cannot be empty"/>
+            <Message Id="CDATAOutsideOfContent" Text="CDATA is not allowed outside the root element"/>
+            <Message Id="OnlyCharRefsAllowedHere" Text="Only numeric character entities or special character entities are legal here"/>
+            <Message Id="Unexpected2ndSurrogateChar" Text="Got an unexpected trailing surrogate character"/>
+            <Message Id="NoPIStartsWithXML" Text="No processing instruction starts with 'xml'"/>
+            <Message Id="XMLDeclMustBeFirst" Text="The XML or Text declaration must start at line/column 1/1"/>
+            <Message Id="XMLVersionRequired" Text="The 'version=' string is required in an XMLDecl"/>
+            <Message Id="StandaloneNotLegal" Text="The 'standalone=' string is only allowed in the main XML entity"/>
+            <Message Id="TooManyColonsInName" Text="When namespaces are enabled, a name can have only one colon character"/>
+            <Message Id="InvalidColonPos" Text="When namespaces are enabled, the colon cannot be the first or last character"/>
+            <Message Id="ColonNotLegalWithNS" Text="Colons are not allowed in this name when namespaces are enabled"/>
+            <Message Id="SysException" Text="A system exception occured during processing"/>
+            <Message Id="XMLException" Text="An exception occured! Type:{0}, Message:{1}"/>
+            <Message Id="UnexpectedEOF" Text="Unexpected end of file exception. Message: {0}"/>
+        </Error>
+    </MsgDomain>
+    <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
+        <Error>
+            <Message Id="ElementNotDefined" Text="Unknown element '{0}'"/>
+            <Message Id="AttNotDefined" Text="Attribute '{0}' not defined"/>
+            <Message Id="NotationNotDeclared" Text="Notation '{0}' was referenced but never declared"/>
+            <Message Id="RootElemNotLikeDocType" Text="Root element different from DOCTYPE"/>
+            <Message Id="RequiredAttrNotProvided" Text="Required attribute '{0}' was not provided"/>
+            <Message Id="ElementNotValidForContent" Text="Element '{0}' is not valid for content model: '{1}'"/>
+            <Message Id="BadIDAttrDefType" Text="ID attributes must be #IMPLIED or #REQUIRED"/>
+            <Message Id="InvalidEmptyAttValue" Text="This type of attribute cannot have an empty value"/>
+            <Message Id="ElementAlreadyExists" Text="Element '{0}' has already been declared"/>
+            <Message Id="MultipleIdAttrs" Text="Element '{0}' has more than one ID attribute"/>
+            <Message Id="ReusedIDValue" Text="ID '{0}' has already been used"/>
+            <Message Id="IDNotDeclared" Text="ID attribute '{0}' was referenced but never declared"/>
+            <Message Id="UnknownNotRefAttr" Text="Attribute '{0}' refers to an unknown notation '{1}'"/>
+            <Message Id="UndeclaredElemInDocType" Text="Element '{0}' was used in the DOCTYPE but never declared"/>
+            <Message Id="EmptyNotValidForContent" Text="Empty content not valid for content model: '{0}'"/>
+            <Message Id="AttNotDefinedForElement" Text="Attribute '{{0}}{1}' is not declared for element '{2}'"/>
+            <Message Id="BadEntityRefAttr" Text="Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity"/>
+            <Message Id="UnknownEntityRefAttr" Text="Attribute '{0}' refers to an unknown entity '{1}'"/>
+            <Message Id="NotEnoughElemsForCM" Text="Not enough elements to match content model : '{0}'"/>
+            <Message Id="NoCharDataInCM" Text="No character data is allowed by content model"/>
+            <Message Id="DoesNotMatchEnumList" Text="Attribute '{0}' does not match its defined enumeration or notation list"/>
+            <Message Id="AttrValNotName" Text="The values for attribute '{0}' must be names or name tokens"/>
+            <Message Id="NoMultipleValues" Text="Attribute '{0}' does not support multiple values"/>
+            <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value that does not match its #FIXED value"/>
+            <Message Id="RepElemInMixed" Text="Element types cannot be duplicated in Mixed content models"/>
+        </Error>
+    </MsgDomain>
+    <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
+        <Error>
+            <Message Id="Array_BadIndex" Text="The index is beyond the array bounds  "/>
+            <Message Id="Array_BadNewSize" Text="The new size is less than the old one"/>
+            <Message Id="Bitset_BadIndex" Text="The bit index was beyond the set size"/>
+            <Message Id="CPtr_PointerIsZero" Text="The pointer has not been set"/>
+            <Message Id="Enum_NoMoreElements" Text="The enumerator contains no more elements"/>
+            <Message Id="File_CouldNotOpenFile" Text="Could not open file: {0}"/>
+            <Message Id="File_CouldNotGetCurPos" Text="Could not query the current file position"/>
+            <Message Id="File_CouldNotCloseFile" Text="Could not close the file"/>
+            <Message Id="File_CouldNotSeekToEnd" Text="Could not seek to end of file"/>
+            <Message Id="File_CouldNotSeekToPos" Text="Could not seek to required position in file"/>
+            <Message Id="File_CouldNotDupHandle" Text="Could not duplicate the handle"/>
+            <Message Id="File_CouldNotReadFromFile" Text="Could not read data from file"/>
+            <Message Id="File_CouldNotResetFile" Text="Could not reset file to beginning"/>
+            <Message Id="File_CouldNotGetSize" Text="Could not acertain the file size"/>
+            <Message Id="File_CouldNotGetBasePathName" Text="Could not determine base pathname of the file"/>
+            <Message Id="HshTbl_ZeroModulus" Text="The hash modulus cannot be zero"/>
+            <Message Id="HshTbl_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
+            <Message Id="HshTbl_NoSuchKeyExists" Text="The key '{0}' could not be found in the hash table"/>
+            <Message Id="Mutex_CouldNotCreate" Text="Could not create mutex"/>
+            <Message Id="Mutex_CouldNotClose" Text="Could not close mutex"/>
+            <Message Id="Mutex_CouldNotLock" Text="Could not lock mutex"/>
+            <Message Id="Mutex_CouldNotUnlock" Text="Could not unlock mutex"/>
+            <Message Id="Mutex_CouldNotDestroy" Text="Could not destroy mutex"/>
+            <Message Id="Pool_ElemAlreadyExists" Text="The element {0} already exists"/>
+            <Message Id="Pool_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
+            <Message Id="Pool_InvalidId" Text="The passed id is not valid for this pool"/>
+            <Message Id="Pool_ZeroModulus" Text="The modulus value cannot be zero"/>
+            <Message Id="Stack_BadIndex" Text="The index is past the top of stack"/>
+            <Message Id="Stack_EmptyStack" Text="The stack is empty, cannot access members"/>
+            <Message Id="Str_ZeroSizedTargetBuf" Text="The target buffer cannot have a max size of zero"/>
+            <Message Id="Str_UnknownRadix" Text="The given radix is not supported. Use 2, 8, 10, or 16"/>
+            <Message Id="Str_TargetBufTooSmall" Text="The target buffer is too small to accept the results"/>
+            <Message Id="Str_StartIndexPastEnd" Text="The start index is past the end of the string"/>
+            <Message Id="Strm_StdErrWriteFailure" Text="Could not write to standard err"/>
+            <Message Id="Strm_StdOutWriteFailure" Text="Could not write to standard out"/>
+            <Message Id="Strm_ConWriteFailure" Text="Could not write to console"/>
+            <Message Id="StrPool_IllegalId" Text="String pool id was not legal"/>
+            <Message Id="URL_MalformedURL" Text="The URL was not correctly formed"/>
+            <Message Id="URL_UnsupportedProto" Text="The URL used an unsupported protocol"/>
+            <Message Id="URL_UnsupportedProto1" Text="Unsupported URL protocol: '{0}'"/>
+            <Message Id="URL_OnlyLocalHost" Text="Only localhost is supported at this time"/>
+            <Message Id="URL_NoProtocolPresent" Text="No protocol prefix present"/>
+            <Message Id="URL_ExpectingTwoSlashes" Text="Expected // after protocol"/>
+            <Message Id="URL_IncorrectEscapedCharRef" Text="% must be followed by two hex digits"/>
+            <Message Id="URL_UnterminatedHostComponent" Text="Unterminated host component"/>
+            <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
+            <Message Id="Gen_ParseInProgress" Text="Parse may not be called while parsing"/>
+            <Message Id="Gen_NoDTDValidator" Text="A DOCTYPE was seen but the installed validator does not understand DTDs"/>
+            <Message Id="Gen_CouldNotOpenDTD" Text="Could not open DTD file '{0}'"/>
+            <Message Id="Gen_CouldNotOpenExtEntity" Text="Could not open external entity '{0}'"/>
+            <Message Id="Gen_UnexpectedEOF" Text="The end of input was not expected"/>
+            <Message Id="AttrList_BadIndex" Text="The index given was beyond the max attribute index"/>
+            <Message Id="ElemStack_EmptyStack" Text="The element stack is empty"/>
+            <Message Id="ElemStack_BadIndex" Text="The element stack index given was beyond the stack top"/>
+            <Message Id="ElemStack_StackUnderflow" Text="The element stack was already empty when a pop request occured"/>
+            <Message Id="ElemStack_NoParentPushed" Text="A parent operation was requested, but only one element is on the stack"/>
+            <Message Id="RdrMgr_ReaderIdNotFound" Text="The indicated reader id was never found"/>
+            <Message Id="Reader_BadAutoEncoding" Text="The auto encoding enum has an unknown value"/>
+            <Message Id="Reader_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
+            <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
+            <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
+            <Message Id="Reader_EncodingNeedsCvtr" Text="This encoding ({0})should have had a transcoder"/>
+            <Message Id="Reader_BadUTF8Seq" Text="Invalid second byte of a UTF-8 character sequence"/>
+            <Message Id="Reader_BadSurrogateInUTF8" Text="Invalid surrogate character found in UTF-8 data"/>
+            <Message Id="Scan_CouldNotOpenSource" Text="The primary document entity could not be opened. Id={0}"/>
+            <Message Id="Scan_UnbalancedStartEnd" Text="Unbalanced start/end tags found, cannot continue"/>
+            <Message Id="AttDef_BadAttType" Text="The passed AttTypes value is not known"/>
+            <Message Id="AttDef_BadDefAttType" Text="The passed DefAttTypes value is not known"/>
+            <Message Id="BufMgr_NoMoreBuffers" Text="The buffer manager cannot provide any more buffers"/>
+            <Message Id="BufMgr_BufferNotInPool" Text="The passed buffer was not found in this manager's pool"/>
+            <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
+            <Message Id="Trans_CouldNotXCodeXMLData" Text="The block of XML data could not be transcoded"/>
+            <Message Id="Trans_CouldNotCreateDefCvtr" Text="Could not create a default transcoder"/>
+            <Message Id="CM_BinOpHadUnaryType" Text="The binary operation node had a unary node type"/>
+            <Message Id="CM_MustBeMixedOrChildren" Text="The content type must be mixed or children"/>
+            <Message Id="CM_NoPCDATAHere" Text="PCDATA nodes are not valid here"/>
+            <Message Id="CM_NotValidForSpecType" Text="The {0} operation is invalid for the spec type"/>
+            <Message Id="CM_UnaryOpHadBinType" Text="The unary operation node had a binary node type"/>
+            <Message Id="CM_UnknownCMType" Text="Unknown content model type"/>
+            <Message Id="CM_UnknownCMSpecType" Text="Unknown content spec type"/>
+            <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
+            <Message Id="Val_CantHaveIntSS" Text="When reusing the validator, no internal subset is allowed"/>
+            <Message Id="Scan_BadPScanToken" Text="The call to scanNext() is illegal at this time"/>
+        </Error>
+    </MsgDomain>
+    <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">
+        <Error>
+            <Message Id="BadMajorCode" Text="The majorCode parameter to createMessage was out of bounds"/>
+            <Message Id="MessageFormatFailure" Text="An internal error occurred while formatting the following message: "/>
+            <Message Id="UnterminatedPEReference" Text="The parameter entity reference must end with the ';' delimiter. "/>
+            <Message Id="ExternalIDRequired" Text="The external entity declaration must begin with either SYSTEM or PUBLIC "/>
+            <Message Id="RecursiveReference" Text="Recursive reference {0} (Reference path: '{1}') "/>
+            <Message Id="ImproperDeclarationNesting" Text="The replacement text of parameter entity `(0)'' must be properly nested"/>
+            <Message Id="ErrorMessageAvailable" Text="There is a message available for this error. "/>
+            <Message Id="IncompleteContent" Text="The content is not complete. "/>
+            <Message Id="UnterminatedSystemID" Text="Expected a termination character for the system id. "/>
+            <Message Id="UnterminatedPublicID" Text="Expected a termination character for the public id. "/>
+            <Message Id="UnterminatedEnumeration" Text="Expected a termination character for the enumeration. "/>
+            <Message Id="CDEndInContent" Text="Expected a CD end in the content section. "/>
+            <Message Id="TwoColonsInQName" Text="Expected two colons, '::', in the Q Name. "/>
+            <Message Id="MarkupNotRecognized" Text="Markup tags are not recognised. "/>
+            <Message Id="URIFragmentInSystemId" Text="URI Fragment found in System Id "/>
+            <Message Id="ElementTypeReqInElementDecl" Text="Expected a element type in the element declaration. "/>
+            <Message Id="UnterminatedAttributeValue" Text="Expected a termination character for the attribute value. "/>
+            <Message Id="MaximumCodeReached" Text="The maximum size for code has been reached. "/>
+        </Error>
+    </MsgDomain>
+</MsgFile>
