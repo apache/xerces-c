@@ -354,7 +354,7 @@
             <Message Id="OrderIsAll" Text="{0} not allowed if the order is all."/>
             <Message Id="DatatypeWithType" Text="Datatype qualifiers can only be used if you specify a type attribute."/>
             <Message Id="DatatypeQualUnsupported" Text="The datatype qualifier {0} is not supported."/>
-            <Message Id="GroupContentRestricted" Text="Error: {0} content must be one of element, group, modelGroupRef. Saw {1}"/>
+            <Message Id="GroupContentRestricted" Text="'{0}' is not allowed for the content of a 'choice' model group.  Only 'element', 'group', 'choice', 'sequence' and 'any' are allowed."/>
             <Message Id="UnknownBaseDatatype" Text="Unknown base type {0} for type {1}."/>
             <Message Id="OneOfTypeRefArchRef" Text="Can only have one of type and ref attributes."/>
             <Message Id="NoContentForRef" Text="A &lt;{0}&gt; declaration that has a ref attribute, cannot have child content."/>
@@ -364,7 +364,7 @@
             <Message Id="DatatypeError" Text="Datatype error: Type:{0}, Message:{1}."/>
             <Message Id="SchemaError" Text="Schema error: Type:{0}, Message:{1}"/>
             <Message Id="TypeAlreadySet" Text="The type of the element has already been declared."/>
-            <Message Id="ProhibitedAttributePresent" Text="Prohibited Attribute is found."/>
+            <Message Id="ProhibitedAttributePresent" Text="Prohibited Attribute {0} is found."/>
             <Message Id="IllegalXMLSpace" Text="Illegal xml:space declaration."/>
             <Message Id="NotBoolean" Text="{0} is not a boolean."/>
             <Message Id="NotDecimal" Text="{0} is not a decimal."/>
