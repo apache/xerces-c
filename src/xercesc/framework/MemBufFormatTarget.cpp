@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/08/12 21:38:22  peiyongz
+ * Bug#11462: MemBufFormatTarget issue(2) .., proposed patch from
+ *                      Esmond Pitt (pitte@anz.com)
+ *
  * Revision 1.3  2002/07/22 23:23:15  tng
  * DOM L3: MemBufFormatTarget stores fDataBuf as XMLByte directly, consistent design as MemBufInputSource
  *
@@ -72,10 +76,10 @@
 #include <xercesc/util/XMLString.hpp>
 #include <string.h>
 
-MemBufFormatTarget::MemBufFormatTarget(int capacity)
+MemBufFormatTarget::MemBufFormatTarget(int initCapacity)
     : fDataBuf(0)
     , fIndex(0)
-    , fCapacity(capacity)
+    , fCapacity(initCapacity)
 {
     // Buffer is one larger than capacity, to allow for zero term
     fDataBuf = new XMLByte[fCapacity+4];
@@ -93,13 +97,6 @@ void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
                                   , const unsigned int   count
                                   , XMLFormatter * const formatter)
 {
-    //
-    // The toWrite may not be null terminated,
-    // so we need to do some extra work here
-    //
-    XMLByte  lastChar = toWrite[count];   // preserve the last char
-    XMLByte* tmpBuf   = (XMLByte *)toWrite;
-    tmpBuf[count] = 0;
 
     if (count) {
         insureCapacity(count);
@@ -107,7 +104,6 @@ void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
         fIndex += count;
     }
 
-    tmpBuf[count] = lastChar;             // restore the last char
 }
 
 const XMLByte* MemBufFormatTarget::getRawBuffer() const
@@ -138,7 +134,7 @@ void MemBufFormatTarget::insureCapacity(const unsigned int extraNeeded)
         return;
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
-    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 1.25);
+    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
     XMLByte* newBuf = new XMLByte[newCap+4];
 
     // Copy over the old stuff

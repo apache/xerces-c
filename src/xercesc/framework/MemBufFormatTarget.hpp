@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/08/12 21:38:22  peiyongz
+ * Bug#11462: MemBufFormatTarget issue(2) .., proposed patch from
+ *                      Esmond Pitt (pitte@anz.com)
+ *
  * Revision 1.3  2002/07/22 23:23:15  tng
  * DOM L3: MemBufFormatTarget stores fDataBuf as XMLByte directly, consistent design as MemBufInputSource
  *
@@ -73,12 +77,29 @@
 
 #include <xercesc/framework/XMLFormatter.hpp>
 
+     
+/*
+ * The MemBufFormatTarget is a derivative from XMLFormatTarget, which user code
+ * may plug into DOMWriter to retrieve the serialized XML stream (from DOM Tree)
+ * in a memory buffer.
+ *
+ * The MemBufFormatTarget is initalized to have a memory buffer of 1023 upon
+ * construction, which grows as needed. The buffer will be deleted when
+ * MemBufFormatTarget is destructed; or will be reset when the reset() function
+ * is called. 
+ *
+ * The MemBufFormatTarget returns a NULL terminated XMLByte stream upon request,
+ * through the method getRawBuffer(), and user should make its own copy of the 
+ * returned buffer if it intends to keep it independent on the state of the 
+ * MemBufFormatTarget.
+ */
+
 class XMLPARSER_EXPORT MemBufFormatTarget : public XMLFormatTarget {
 public:
 
     /** @name constructors and destructor */
     //@{
-    MemBufFormatTarget(int capacity = 1023) ;
+    MemBufFormatTarget(int initCapacity = 1023) ;
     ~MemBufFormatTarget();
     //@}
 
@@ -97,10 +118,6 @@ public:
     /**
      * Returned the internal raw buffer.
      *
-     * The MemBufFormatTarget object owns the buffer which will be deleted when
-     * MemBufFormatTarget is destructed; or will be reset when the reset() function
-     * is called.  User should make a copy of the returned buffer if intend to keep
-     * it independent on the state of the MemBufFormatTarget.
      */
     //@}
     const XMLByte* getRawBuffer() const;
