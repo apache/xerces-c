@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2001/11/28 19:11:33  knoaman
+ * Bug 2237: fix by Artur Klauser
+ *
  * Revision 1.4  2001/03/02 14:39:21  tng
  * Enabling libWWW NetAccessor support under UNIX. Tested with latest tarball of libWWW
  * (w3c-libwww-5.3.2) under RedHat Linux 6.1.  Added by Martin Kalen.
@@ -156,10 +159,18 @@ BinURLInputStream::BinURLInputStream(const XMLURL& urlSource)
     BOOL  status = HTLoadToStream(uriAsCharStar, counterStrm, request);
     if (status == YES)
     {
-        // I am not happy at all with the error handling. So that needs to
-        // happen.
-        HTParentAnchor*  parentAnchor = HTAnchor_parent(fAnchor);
-        fRemoteFileSize = HTAnchor_length(parentAnchor);
+        // Patch by Artur Klauser
+        // When a redirection is processed in libWWW, it seems that
+        // HTAnchor_length(anchor) == -1 on the original anchor, whereas
+        // HTResponse_length(response) gives the correct content length of
+        // the redirection target. This has confusedfRemoteFileSize and it was
+        // not checked for a -1 response at all.
+        HTResponse * response = HTRequest_response (request);
+        fRemoteFileSize = HTResponse_length(response);
+        if (fRemoteFileSize < 0) {
+            ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_InternalError,
+                "Cannot determine length of remote file.");
+        }
     }
 
     // Cleanup, before you throw any errors.
