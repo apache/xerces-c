@@ -23,7 +23,7 @@ PROJECT_NAME         = Xerces-C
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER       = 1.2.0
+PROJECT_NUMBER       = v1.2.0
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -203,7 +203,7 @@ ENABLED_SECTIONS     =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                = ../src/dom ../src/framework ../src/sax ../src/parsers
+INPUT                = ../src/dom ../src/framework ../src/sax ../src/parsers ../src/util
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -228,7 +228,7 @@ EXCLUDE              =
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude
 # certain files from those directories.
 
-EXCLUDE_PATTERNS     = 
+EXCLUDE_PATTERNS     =
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
