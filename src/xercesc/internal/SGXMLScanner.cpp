@@ -1025,7 +1025,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     if (!isRoot)
     {
         // update error information
-        fErrorStack->push(fErrorStack->pop() || fPSVIElemContext.fErrorOccurred);
+        fErrorStack->push((fErrorStack->size() && fErrorStack->pop()) || fPSVIElemContext.fErrorOccurred);
     }
 
     // If this was the root, then done with content

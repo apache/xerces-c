@@ -1169,8 +1169,10 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     if (fGrammarType == Grammar::SchemaGrammarType) {        
         if (!isRoot)
         {
-            // update error information
-            fErrorStack->push(fErrorStack->pop() || fPSVIElemContext.fErrorOccurred);
+            // update error information            
+            fErrorStack->push((fErrorStack->size() && fErrorStack->pop()) || fPSVIElemContext.fErrorOccurred);
+  
+
         }
     }
 
