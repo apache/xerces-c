@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/10/25 15:36:35  tng
+ * [Bug 4318] Single threaded build fails due to obsolete #define .
+ *
  * Revision 1.21  2001/10/25 15:20:31  tng
  * Need to guard with NO_APP_THREADS when destroying the mutex.
  *
@@ -149,8 +152,8 @@
 #include    <pthread.h>
 #endif
 
-#ifndef __USE_UNIX98
-    #error __USE_UNIX98 is not defined in your compile settings
+#ifndef _GNU_SOURCE
+    #error _GNU_SOURCE is not defined in your compile settings
 #endif
 
 #include    <unistd.h>
