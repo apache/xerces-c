@@ -170,10 +170,16 @@ ICUTransService::ICUTransService()
 
 ICUTransService::~ICUTransService()
 {
+    /*
+     * commented out the following clean up code
+     * in case users use ICU outside of the parser
+     * if we clean up here, users' code may crash
+     *
     #if (U_ICU_VERSION_MAJOR_NUM >= 2)
         // release all lasily allocated data
         u_cleanup();
     #endif
+    */
 }
 
 
