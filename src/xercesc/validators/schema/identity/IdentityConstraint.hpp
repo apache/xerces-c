@@ -113,11 +113,13 @@ public:
     XMLCh*        getIdentityConstraintName() const;
     XMLCh*        getElementName() const;
     IC_Selector*  getSelector() const;
+    int           getNamespaceURI() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setSelector(IC_Selector* const selector);
+    void setNamespaceURI(int uri);
 
 	// -----------------------------------------------------------------------
     //  Access methods
@@ -176,6 +178,7 @@ private:
     IC_Selector*           fSelector;
     RefVectorOf<IC_Field>* fFields;
     MemoryManager*         fMemoryManager;
+    int                    fNamespaceURI;
 };
 
 
@@ -204,6 +207,19 @@ inline XMLCh* IdentityConstraint::getElementName() const {
 inline IC_Selector* IdentityConstraint::getSelector() const {
 
     return fSelector;
+}
+
+inline int IdentityConstraint::getNamespaceURI() const
+{
+    return fNamespaceURI;
+}
+
+// ---------------------------------------------------------------------------
+//  IdentityConstraint: Setter methods
+// ---------------------------------------------------------------------------
+inline void IdentityConstraint::setNamespaceURI(int uri)
+{
+    fNamespaceURI = uri;
 }
 
 // ---------------------------------------------------------------------------

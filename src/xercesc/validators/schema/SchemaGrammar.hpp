@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/14 22:35:09  neilg
+ * changes in support of second phase of XSModel implementation; thanks to David Cargill
+ *
  * Revision 1.12  2003/11/12 20:35:31  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -280,6 +283,7 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     RefHash3KeysIdPoolEnumerator<SchemaElementDecl> getElemEnumerator() const;
+    NameIdPoolEnumerator<XMLNotationDecl> getNotationEnumerator() const;
     RefHashTableOf<XMLAttDef>* getAttributeDeclRegistry() const;
     RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
     RefHashTableOf<XercesGroupInfo>* getGroupInfoRegistry() const;
@@ -448,6 +452,12 @@ inline RefHash3KeysIdPoolEnumerator<SchemaElementDecl>
 SchemaGrammar::getElemEnumerator() const
 {
     return RefHash3KeysIdPoolEnumerator<SchemaElementDecl>(fElemDeclPool);
+}
+
+inline NameIdPoolEnumerator<XMLNotationDecl>
+SchemaGrammar::getNotationEnumerator() const
+{
+    return NameIdPoolEnumerator<XMLNotationDecl>(fNotationDeclPool);
 }
 
 inline RefHashTableOf<XMLAttDef>* SchemaGrammar::getAttributeDeclRegistry() const {

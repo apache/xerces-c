@@ -4095,9 +4095,7 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
     if (!fIdentityConstraintNames) {
         fIdentityConstraintNames = new (fMemoryManager) RefHash2KeysTableOf<IdentityConstraint>(29, (bool) false, fMemoryManager);
     }
-
-    if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
-
+    else if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::IC_DuplicateDecl, name);
         return;
     }
@@ -4120,6 +4118,7 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
     // Add key to element declaration
     // -----------------------------------------------------------------------
     elemDecl->addIdentityConstraint(icKey);
+    icKey->setNamespaceURI(fTargetNSURI);
     janKey.orphan();
 }
 
@@ -4156,8 +4155,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     if (!fIdentityConstraintNames) {
         fIdentityConstraintNames = new (fGrammarPoolMemoryManager) RefHash2KeysTableOf<IdentityConstraint>(29, (bool) false, fGrammarPoolMemoryManager);
     }
-
-    if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
+    else if (fIdentityConstraintNames->containsKey(name, fTargetNSURI)) {
 
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::IC_DuplicateDecl, name);
         return;
@@ -4181,6 +4179,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     // Add identity cosntraints to element declaration
     // -----------------------------------------------------------------------
     elemDecl->addIdentityConstraint(icUnique);
+    icUnique->setNamespaceURI(fTargetNSURI);
     janUnique.orphan();
 }
 
@@ -4263,6 +4262,7 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
     else {
 
         elemDecl->addIdentityConstraint(icKeyRef);
+        icKeyRef->setNamespaceURI(fTargetNSURI);
         janKeyRef.orphan();
     }
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/14 22:35:09  neilg
+ * changes in support of second phase of XSModel implementation; thanks to David Cargill
+ *
  * Revision 1.8  2003/11/13 23:21:41  peiyongz
  * initSize
  *
@@ -212,7 +215,7 @@ void IdentityConstraint::serialize(XSerializeEngine& serEng)
         serEng.writeString(fElemName);
 
         serEng<<fSelector;
-
+        serEng<<fNamespaceURI;
         /***
          *
          * Serialize RefVectorOf<IC_Field>* fFields;
@@ -228,7 +231,7 @@ void IdentityConstraint::serialize(XSerializeEngine& serEng)
         serEng.readString(fElemName);
 
         serEng>>fSelector;
-
+        serEng>>fNamespaceURI;
         /***
          *
          * Deserialize RefVectorOf<IC_Field>* fFields;
