@@ -55,18 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2000/07/25 22:28:47  aruna1
- * Char definitions in XMLUni moved to XMLUniDefs
- *
- * Revision 1.3  2000/03/02 19:55:17  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:23  rahulj
- * Year 2K copyright swat.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -156,7 +145,7 @@ char* PackingRepText(const char * const repText1,
 
 bool localMsg(char * msgId
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int            maxChars
 			    ,		char*		    repTexts
 			    ,		int		    size)
 {
@@ -209,7 +198,7 @@ bool localMsg(char * msgId
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars)
+                            , const unsigned int            maxChars)
 {
     char * msgId;
     char * repTexts = NULL;
@@ -235,7 +224,7 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int            maxChars
                             , const char* const            repText1
                             , const char* const            repText2
                             , const char* const            repText3
@@ -267,7 +256,7 @@ bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool MsgCatalogLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int           maxChars
                             , const XMLCh* const             repText1
                             , const XMLCh* const             repText2
                             , const XMLCh* const             repText3

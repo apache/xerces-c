@@ -55,15 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/03/02 19:55:09  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:18  rahulj
- * Year 2K copyright swat.
- *
+ * $Id$
  */
 
 
@@ -112,6 +104,6 @@ typedef unsigned int   XMLUInt32;
 //  versioning string. This is defined in XercesDefs.hpp which is what this
 //  file is included into.
 // ---------------------------------------------------------------------------
-const char* const Xerces_DLLName = "QXML4C";
+const char* const Xerces_DLLName = "libxercesc";
 
 #endif

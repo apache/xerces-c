@@ -55,19 +55,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.4  2000/07/25 22:30:33  aruna1
- * Char definitions in XMLUni moved to XMLUniDefs
- *
- * Revision 1.3  2000/03/18 00:00:01  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.2  2000/03/02 21:10:38  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.1  2000/02/10 17:58:07  abagchi
- * Initial checkin
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -121,7 +109,7 @@ static void WriteCharStr( FILE* stream, const char* const toWrite)
 {
     if (fputs(toWrite, stream) == EOF)
     {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdErrWriteFailure);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -132,7 +120,7 @@ static void WriteUStrStdErr( const XMLCh* const toWrite)
     ArrayJanitor<char> janText(tmpVal);
     if (fputs(tmpVal, stderr) == EOF)
     {
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdErrWriteFailure);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -143,7 +131,7 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
     ArrayJanitor<char> janText(tmpVal);
     if (fputs(tmpVal, stdout) == EOF)
     {
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdOutWriteFailure);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdOutWriteFailure);
     }
 }
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
@@ -254,7 +242,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     // Get the current position
     int curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetSize);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
 
     return (unsigned int)curPos;
 }
@@ -262,7 +250,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
     if (fclose((FILE*)theFile))
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotCloseFile);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
 
 
@@ -271,19 +259,19 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     // Get the current position
     long  int curPos = ftell((FILE*)theFile);
     if (curPos == -1)
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetCurPos);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
      if (fseek( (FILE*)theFile, 0, SEEK_END) )
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToEnd);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     long int retVal = ftell( (FILE*)theFile);
     if (retVal == -1)
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToEnd);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     // And put the pointer back
     if (fseek( (FILE*)theFile, curPos, SEEK_SET) )
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToPos);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
 
     return (unsigned int)retVal;
 }
@@ -332,7 +320,7 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 
     if(ferror((FILE*)theFile))
     {
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotReadFromFile);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
     }
     return (unsigned int)noOfItemsRead;
 }
@@ -342,7 +330,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET) )
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotResetFile);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
 
 
@@ -408,7 +396,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 	
     if (!retPath)
     {
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetBasePathName);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
     }
     return XMLString::transcode(absPath);
 
@@ -526,7 +514,7 @@ XMLCh* XMLPlatformUtils::weavePaths
 
             // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
+                ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_BasePathUnderflow);
         }
     }
 
@@ -644,7 +632,7 @@ public:
 
     RecursiveMutex() { 
 		       if (pthread_mutex_init(&mutex, NULL))
-			    ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
+			    ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
                        recursionCount = 0;
                        tid.reservedHiId = 0;
 		       tid.reservedLoId = 0;
@@ -653,7 +641,7 @@ public:
 
     ~RecursiveMutex() {
 			if (pthread_mutex_destroy(&mutex))
-			    ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotDestroy);
+			    ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
                       };
 
      void lock()      {
@@ -663,7 +651,7 @@ public:
 			      return;
 			  }
 			  if (pthread_mutex_lock(&mutex) != 0)
-			      ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotLock);
+			      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
 			  tid = pthread_self();
 			  recursionCount = 1;
 		      };
@@ -674,7 +662,7 @@ public:
                               return;
 
 			  if (pthread_mutex_unlock(&mutex) != 0)
-			      ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotUnlock);
+			      ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
                           tid.reservedHandle= 0;
 			  tid.reservedHiId = 0;
 			  tid.reservedLoId = 0;

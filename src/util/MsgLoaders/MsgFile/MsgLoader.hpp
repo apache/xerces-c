@@ -55,15 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/03/02 19:55:18  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:23  rahulj
- * Year 2K copyright swat.
- *
+ * $Id$
  */
 
 #if !defined(ICONVMSGLOADER_HPP)
@@ -94,14 +86,14 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
     );
 
     virtual bool loadMsg
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
         , const XMLCh* const            repText1
         , const XMLCh* const            repText2 = 0
         , const XMLCh* const            repText3 = 0
@@ -112,7 +104,7 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
         , const char* const             repText1
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0

@@ -55,10 +55,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.1  2000/02/10 18:08:28  abagchi
- * Initial checkin
- *
+ * $Id$
  */
 
 #ifndef ICONV400TRANSSERVICE_HPP
@@ -152,6 +149,30 @@ public :
     );
     ~Iconv400Transcoder();
 
+    virtual unsigned int transcodeFrom
+    (
+        const   XMLByte* const          srcData
+        , const unsigned int            srcCount
+        ,       XMLCh* const            toFill
+        , const unsigned int            maxChars
+        ,       unsigned int&           bytesEaten
+        ,       unsigned char* const    charSizes
+    );
+
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const    srcData
+        , const unsigned int    srcCount
+        ,       XMLByte* const  toFill
+        , const unsigned int    maxBytes
+        ,       unsigned int&   charsEaten
+        , const UnRepOpts       options
+    );
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int    toCheck
+    )   const;
 
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
@@ -173,6 +194,7 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     );
+
 
 
 private :

@@ -55,16 +55,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.3  2000/09/12 17:06:48  aruna1
- * Replaced INDEX_OUTOFBOUNDS error to BUFFER_OVERFLOW error for toUnicode and from_Unicode functions for compatibility with icu 1.6
- *
- * Revision 1.2  2000/02/11 03:06:58  rahulj
- * Cosmetic changes. Replaced tabs with appropriate number of spaces.
- *
- * Revision 1.1  2000/02/10 18:08:28  abagchi
- * Initial checkin
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -77,7 +68,33 @@
 #include "iconv_cnv.h"
 #include "iconv_util.h"
 #include <qusec.h>
+#include <util/XMLUniDefs.hpp>
+#include <util/XMLString.hpp>
+#include <util/Janitor.hpp>
 
+// ---------------------------------------------------------------------------
+//  Local functions
+// ---------------------------------------------------------------------------
+
+//
+//  When XMLCh and ICU's UChar are not the same size, we have to do a temp
+//  conversion of all strings. These local helper methods make that easier.
+//
+static UChar* convertToUChar(   const   XMLCh* const    toConvert
+                                , const unsigned int    srcLen = 0)
+{
+    const unsigned int actualLen = srcLen
+                                   ? srcLen : XMLString::stringLen(toConvert);
+
+    UChar* tmpBuf = new UChar[srcLen + 1];
+    const XMLCh* srcPtr = toConvert;
+    UChar* outPtr = tmpBuf;
+    while (*srcPtr)
+        *outPtr++ = UChar(*srcPtr++);
+    *outPtr = 0;
+
+    return tmpBuf;
+}
 
 int32_t u_strlen(const XMLCh *s)
 {
@@ -379,7 +396,7 @@ Iconv400Transcoder::transcodeXML(const   XMLByte* const          srcData
     );
 
     if ((err != U_ZERO_ERROR) && (err != U_BUFFER_OVERFLOW_ERROR))
-        ThrowXML(TranscodingException, XML4CExcepts::Trans_CouldNotXCodeXMLData);
+        ThrowXML(TranscodingException, XMLExcepts::Trans_Unrepresentable);
 
     // Calculate the bytes eaten and store in caller's param
     bytesEaten = startSrc - srcData;
@@ -426,6 +443,253 @@ Iconv400Transcoder::transcodeXML(const   XMLByte* const          srcData
     return charsDecoded;
 }
 
+// ---------------------------------------------------------------------------
+//  Iconv400Transcoder: The virtual transcoder API
+// ---------------------------------------------------------------------------
+unsigned int
+Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
+                            , const unsigned int            srcCount
+                            ,       XMLCh* const            toFill
+                            , const unsigned int            maxChars
+                            ,       unsigned int&           bytesEaten
+                            ,       unsigned char* const    charSizes)
+{
+    // If debugging, insure the block size is legal
+
+
+    // Set up pointers to the start and end of the source buffer
+    const XMLByte*  startSrc = srcData;
+    const XMLByte*  endSrc = srcData + srcCount;
+
+    //
+    //  And now do the target buffer. This works differently according to
+    //  whether XMLCh and UChar are the same size or not.
+    //
+    UChar* startTarget;
+    if (sizeof(XMLCh) == sizeof(UChar))
+        startTarget = (UChar*)toFill;
+     else
+        startTarget = new UChar[maxChars];
+    UChar* orgTarget = startTarget;
+
+    //
+    //  Transoode the buffer.  Buffer overflow errors are normal, occuring
+    //  when the raw input buffer holds more characters than will fit in
+    //  the Unicode output buffer.
+    //
+    UErrorCode  err = U_ZERO_ERROR;
+    ucnv_toUnicode
+    (
+        fConverter
+        , &startTarget
+        , startTarget + maxChars
+        , (const char**)&startSrc
+        , (const char*)endSrc
+        , (fFixed ? 0 : (int32_t*)fSrcOffsets)
+        , false
+        , &err
+    );
+
+    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
+    {
+        if (orgTarget != (UChar*)toFill)
+            delete [] orgTarget;
+
+        if (fFixed)
+        {
+            XMLCh tmpBuf[16];
+            XMLString::binToText((unsigned int)(*startTarget), tmpBuf, 16, 16);
+            ThrowXML2
+            (
+                TranscodingException
+                , XMLExcepts::Trans_BadSrcCP
+                , tmpBuf
+                , getEncodingName()
+            );
+        }
+         else
+        {
+            ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+        }
+    }
+
+    // Calculate the bytes eaten and store in caller's param
+    bytesEaten = startSrc - srcData;
+
+    // And the characters decoded
+    const unsigned int charsDecoded = startTarget - orgTarget;
+
+    //
+    //  Translate the array of char offsets into an array of character
+    //  sizes, which is what the transcoder interface semantics requires.
+    //  If its fixed, then we can optimize it.
+    //
+    if (fFixed)
+    {
+        const unsigned char fillSize = (unsigned char)ucnv_getMaxCharSize(fConverter);;
+        memset(charSizes, fillSize, maxChars);
+    }
+     else
+    {
+        //
+        //  We have to convert the series of offsets into a series of
+        //  sizes. If just one char was decoded, then its the total bytes
+        //  eaten. Otherwise, do a loop and subtract out each element from
+        //  its previous element.
+        //
+        if (charsDecoded == 1)
+        {
+            charSizes[0] = (unsigned char)bytesEaten;
+        }
+         else
+        {
+            // <TBD> Does ICU return an extra element to allow us to figure
+            //  out the last char size? It better!!
+            unsigned int index;
+            for (index = 0; index < charsDecoded; index++)
+            {
+                charSizes[index] = (unsigned char)(fSrcOffsets[index + 1]
+                                                    - fSrcOffsets[index]);
+            }
+        }
+    }
+
+    //
+    //  If XMLCh and UChar are not the same size, then we need to copy over
+    //  the temp buffer to the new one.
+    //
+    if (sizeof(UChar) != sizeof(XMLCh))
+    {
+        XMLCh* outPtr = toFill;
+        startTarget = orgTarget;
+        for (unsigned int index = 0; index < charsDecoded; index++)
+            *outPtr++ = XMLCh(*startTarget++);
+
+        // And delete the temp buffer
+        delete [] orgTarget;
+    }
+
+    // Return the chars we put into the target buffer
+    return charsDecoded;
+}
+
+
+unsigned int
+Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
+                            , const unsigned int    srcCount
+                            ,       XMLByte* const  toFill
+                            , const unsigned int    maxBytes
+                            ,       unsigned int&   charsEaten
+                            , const UnRepOpts       options)
+{
+    //
+    //  Get a pointer to the buffer to transcode. If UChar and XMLCh are
+    //  the same size here, then use the original. Else, create a temp
+    //  one and put a janitor on it.
+    //
+    const UChar* srcPtr;
+    UChar* tmpBufPtr = 0;
+    if (sizeof(XMLCh) == sizeof(UChar))
+    {
+        srcPtr = (const UChar*)srcData;
+    }
+     else
+    {
+        tmpBufPtr = convertToUChar(srcData, srcCount);
+        srcPtr = tmpBufPtr;
+    }
+    ArrayJanitor<UChar> janTmpBuf(tmpBufPtr);
+
+    //
+    //  Set the appropriate callback so that it will either fail or use
+    //  the rep char. Remember the old one so we can put it back.
+    //
+    UErrorCode  err = U_ZERO_ERROR;
+
+
+    //
+    //  Ok, lets transcode as many chars as we we can in one shot. The
+    //  ICU API gives enough info not to have to do this one char by char.
+    //
+    XMLByte*        startTarget = toFill;
+    const UChar*    startSrc = srcPtr;
+    err = U_ZERO_ERROR;
+    ucnv_fromUnicode
+    (
+        fConverter
+        , (char**)&startTarget
+        , (char*)(startTarget + maxBytes)
+        , &startSrc
+        , srcPtr + srcCount
+        , 0
+        , false
+        , &err
+    );
+
+
+    if (!err)
+    {
+        XMLCh tmpBuf[16];
+        XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16);
+        ThrowXML2
+        (
+            TranscodingException
+            , XMLExcepts::Trans_Unrepresentable
+            , tmpBuf
+            , getEncodingName()
+        );
+    }
+
+    // Fill in the chars we ate from the input
+    charsEaten = startSrc - srcPtr;
+
+    // Return the chars we stored
+    return startTarget - toFill;
+}
+
+
+bool Iconv400Transcoder::canTranscodeTo(const unsigned int toCheck) const
+{
+    //
+    //  If the passed value is really a surrogate embedded together, then
+    //  we need to break it out into its two chars. Else just one. While
+    //  we are ate it, convert them to UChar format if required.
+    //
+    UChar           srcBuf[2];
+    unsigned int    srcCount = 1;
+    if (toCheck & 0xFFFF0000)
+    {
+        srcBuf[0] = UChar((toCheck >> 10) + 0xD800);
+        srcBuf[1] = UChar(toCheck & 0x3FF) + 0xDC00;
+        srcCount++;
+    }
+     else
+    {
+        srcBuf[0] = UChar(toCheck);
+    }
+
+
+    // Set upa temp buffer to format into. Make it more than big enough
+    char            tmpBuf[64];
+    char*           startTarget = tmpBuf;
+    const UChar*    startSrc = srcBuf;
+    UErrorCode  err = U_ZERO_ERROR;
+   
+    ucnv_fromUnicode
+    (
+        fConverter
+        , &startTarget
+        , startTarget + 64
+        , &startSrc
+        , srcBuf + srcCount
+        , 0
+        , false
+        , &err
+    );
+
+ 
+    return err;
+}
 
 
 
