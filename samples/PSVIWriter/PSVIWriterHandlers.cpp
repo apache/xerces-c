@@ -290,6 +290,10 @@ InputSource* PSVIWriterHandlers::resolveEntity(XMLResourceIdentifier* resourceId
 	return 0;
 }
 
+InputSource* PSVIWriterHandlers::resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId) {
+    return 0;
+}
+
 // ---------------------------------------------------------------------------
 //  PSVIWriterHandlers: Overrides of the SAX ErrorHandler interface
 // ---------------------------------------------------------------------------

@@ -127,6 +127,7 @@ public:
     void startPrefixMapping(const XMLCh* const prefix, const XMLCh* const uri);
     void endPrefixMapping(const XMLCh* const prefix);
     InputSource* resolveEntity(XMLResourceIdentifier* resourceIdentifier);
+    InputSource* resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId);
 
     // -----------------------------------------------------------------------
     //  Handlers for the SAX ErrorHandler interface
