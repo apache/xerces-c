@@ -45,16 +45,7 @@ if ($openresult == 0) {
    exit(-1);
 }
 
-while ($fileline = <VERSIONFILE>) {
-   if ($fileline =~ /gXML4CFullVersionStr = \"(.*)\"/) {   # "
-     $binarytargetdir = $1;  # We found the version string inside this file
-   }
-}
 close(VERSIONFILE);
-
-$binarytargetdir =~ s/\./_/g;    # Substitute the dots
-$binarytargetdir =~ s/\s/_/g;    # Substitute the blanks
-$binarytargetdir =~ s/\\/\//g;   # Fix the backslashes, if they exist, probably doesn't
 
 # Now check if the target directory exists, exit if it does
 if (-e $OUTPUTDIR) {
@@ -333,7 +324,7 @@ sub change_createdocs_bat()
         open (FIZZLE, $thefiledotbak);
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
-                $line =~ s/style-apachexml.jar/style-ibm.zip/g;
+                $line =~ s/doc\/style/tools\/jars\/style-ibm.zip/g;
                 print FIZZLEOUT $line;
         }
         close (FIZZLEOUT);
