@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/07/23 15:29:09  amassari
+ * transcode was badly terminating the converted string (jira#1206)
+ *
  * Revision 1.13  2004/07/23 14:35:03  amassari
  * A global mutex was not cleaned up
  *
@@ -1002,8 +1005,8 @@ bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
     if (wBufPtr)
         manager->deallocate(wBufPtr);//delete [] wBufPtr;
 
-    // Cap it off just in case
-    toFill[rc] = 0;
+    // Cap it off
+    *ptr = 0;
     return true;
 }
 
