@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.13  2000/02/11 03:10:19  rahulj
+ * Fixed defect in compare[N]IString function. Defect and fix reported
+ * by Bill Schindler from developer@bitranch.com.
+ * Replaced tabs with appropriate number of spaces.
+ *
  * Revision 1.12  2000/02/06 07:48:33  rahulj
  * Year 2K copyright swat.
  *
@@ -174,19 +179,17 @@ int IconvTransService::compareIString(  const   XMLCh* const    comp1
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    while ((*cptr1 != 0) && (*cptr2 != 0))
+    while ( (*cptr1 != 0) && (*cptr2 != 0) )
     {
-        wint_t  wch1 = towupper(*cptr1);
-        wint_t  wch2 = towupper(*cptr2);
-        if (wch1 < wch2)
-            return -1;
-        if (wch1 > wch2)
-            return 1;
-
+        wint_t wch1 = towupper(*cptr1);
+        wint_t wch2 = towupper(*cptr2);
+        if (wch1 != wch2)
+            break;
+        
         cptr1++;
         cptr2++;
     }
-    return 0;
+    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
 }
 
 
@@ -194,24 +197,22 @@ int IconvTransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
                                         , const unsigned int    maxChars)
 {
+    unsigned int  n = 0;
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    unsigned int  n = 0;
-    while ((*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars))
+    while ( (*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars) )
     {
-        wint_t  wch1 = towupper(*cptr1);
-        wint_t  wch2 = towupper(*cptr2);
-        if (wch1 < wch2)
-            return -1;
-        if (wch1 > wch2)
-            return 1;
-
+        wint_t wch1 = towupper(*cptr1);
+        wint_t wch2 = towupper(*cptr2);
+        if (wch1 != wch2)
+            break;
+        
         cptr1++;
         cptr2++;
         n++;
     }
-    return 0;
+    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
 }
 
 
@@ -538,7 +539,7 @@ IconvTranscoder::transcodeXML(  const   XMLByte* const          srcData
                                 ,       XMLCh* const            toFill
                                 , const unsigned int            maxChars
                                 ,       unsigned int&           bytesEaten
-								,       unsigned char* const    charSizes)
+                                ,       unsigned char* const    charSizes)
 {
     //
     //  For this one, because we have to maintain the offset table, we have
