@@ -410,7 +410,7 @@ private:
                                      SchemaElementDecl* const subsElemDecl);
 
     void processSubstitutionGroup(const DOMElement* const elem,
-                                  SchemaElementDecl* elemDecl,
+                                  SchemaElementDecl* const elemDecl,
                                   ComplexTypeInfo*& typeInfo,
                                   DatatypeValidator*& validator,
                                   const XMLCh* const subsElemQName);
