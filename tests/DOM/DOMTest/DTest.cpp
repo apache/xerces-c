@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2002/09/23 21:00:14  tng
+ * DOM L3: fix to isDefaultNamespace.  Patch from Gareth Reakes.
+ *
  * Revision 1.32  2002/09/23 20:09:23  tng
  * DOM L3: Test baseURI with different parser's setting.
  *
@@ -695,21 +698,21 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
 
     XMLString::transcode("default", tempStr3, 3999);
 
-    LOOKUPDEFAULTNSTEST(docProcessingInstruction, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docBodyLevel24, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docBodyLevel23, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docBodyLevel21, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docBodyLevel31, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docBodyLevel32, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docCDATASection, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docFirstElement, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docReferenceEntity, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docFirstElementAttr, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(doc, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docProcessingInstruction, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel24, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel23, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel21, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel31, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel32, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docCDATASection, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElement, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docReferenceEntity, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElementAttr, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(doc, tempStr3, false, __LINE__);
     LOOKUPDEFAULTNSTEST(docNotation, tempStr3, false, __LINE__);
-    LOOKUPDEFAULTNSTEST(docComment, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docTextNode2, tempStr3, true, __LINE__);
-    LOOKUPDEFAULTNSTEST(docTextNode4, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docComment, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode2, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode4, tempStr3, false, __LINE__);
 
     //remove the xmlns attr
     docFirstElement->removeAttributeNode(attr3);
@@ -730,10 +733,17 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     LOOKUPDEFAULTNSTEST(docTextNode2, 0, true, __LINE__);
     LOOKUPDEFAULTNSTEST(docTextNode4, 0, true, __LINE__);
 
+    XMLString::transcode("someSpecialURI", tempStr3, 3999);
+    XMLString::transcode("newNameForEle", tempStr4, 3999);
+    DOMElement *ele = doc->createElementNS(tempStr3, tempStr4);
+    docFirstElement->insertBefore(ele, docFirstElement->getFirstChild());
+
+    //a test for lookup when xmlns is not set so we take the fact that there is no prefix to be confimation
+    LOOKUPDEFAULTNSTEST(ele, tempStr3, true, __LINE__);
 
     docFirstElement->removeAttributeNode(attr1);
     docBodyLevel21->removeAttributeNode(attr2);
-
+    docFirstElement->removeChild(ele);
 
 //***********Following are for errorTests
     DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
@@ -4392,7 +4402,7 @@ bool DOMTest::testText(DOMDocument* document)
 
 bool DOMTest::testBaseURI(XercesDOMParser* parser) {
 
-    bool OK;
+    bool OK = true;
 
     try {
         // this one assumes executing in samples/data where personal-schema.xml resides
@@ -4595,9 +4605,9 @@ bool DOMTest::testBaseURI(XercesDOMParser* parser) {
             OK = false;
             fprintf(stderr, "checking baseURI failed at line %i\n",  __LINE__);
         }
-        else {
-            printf("baseURI test was not carried out\n");
-        }
+    }
+    else {
+        printf("baseURI test was not carried out\n");
     }
 
     return OK;

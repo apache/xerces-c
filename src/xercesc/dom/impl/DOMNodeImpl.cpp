@@ -921,6 +921,16 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
             }
         }
 
+        const XMLCh *prefix = thisNode->getPrefix();
+        // REVISIT: is it possible that prefix is empty string?
+        if (prefix == 0 || XMLString::stringLen(prefix) == 0) {
+            const XMLCh* ns = thisNode->getNamespaceURI();
+            if (namespaceURI == 0) {
+                return (ns == namespaceURI);
+            }
+             return (XMLString::compareString(namespaceURI, ns) == 0);
+        }
+
         if (thisNode->hasAttributes()) {
             DOMElement *elem = (DOMElement *)thisNode;
             DOMNode *attr = elem->getAttributeNodeNS(s_xmlnsURI, s_xmlns);
