@@ -26,14 +26,14 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
     print ("    -r <thread option> can be 'pthread' \(default\)or 'dce' (only used on HP-11)\n");
     print ("    -b <bitsToBuild> (accepts '64', '32')\n");
-    print ("    -j suppress building of ICU (speeds up builds when debugging)\n");   
+    print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_7_0");
-    print (" -o \$HOME/xerces-c_1_7_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_2_0_0");
+    print (" -o \$HOME/xerces-c_2_0_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src_1_7_0");
-    print (" -o\\xerces-c_1_7_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src_2_0_0");
+    print (" -o\\xerces-c_2_0_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -117,8 +117,6 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/samples/SAX2Print");
     psystem ("mkdir $targetdir/samples/DOMCount");
     psystem ("mkdir $targetdir/samples/DOMPrint");
-    psystem ("mkdir $targetdir/samples/IDOMCount");
-    psystem ("mkdir $targetdir/samples/IDOMPrint");
     psystem ("mkdir $targetdir/samples/Redirect");
     psystem ("mkdir $targetdir/samples/MemParse");
     psystem ("mkdir $targetdir/samples/PParse");
@@ -191,7 +189,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 		sax2
         framework
         dom
-        idom
+        dom/deprecated
         internal
         parsers
         util
@@ -248,12 +246,9 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     #
     #  Remove internal implementation headers from the DOM include directory.
     #
-    psystem ("rm  $targetdir/include/xercesc/dom/*Impl.hpp");
-    psystem ("rm  $targetdir/include/xercesc/dom/DS*.hpp");
-
-    psystem ("rm  $targetdir/include/xercesc/idom/*Impl.hpp");
-    psystem ("rm  $targetdir/include/xercesc/idom/IDS*.hpp");
-
+    psystem ("rm -rf $targetdir/include/xercesc/dom/impl");
+    psystem ("rm  $targetdir/include/xercesc/dom/deprecated/*Impl.hpp");
+    psystem ("rm  $targetdir/include/xercesc/dom/deprecated/DS*.hpp");
 
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         psystem("cp -Rfv $ICUROOT/include/* $targetdir/include");
@@ -311,10 +306,6 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem("rm -f $targetdir/samples/DOMCount/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
     psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/IDOMCount/* $targetdir/samples/IDOMCount");
-    psystem("rm -f $targetdir/samples/IDOMCount/Makefile");
-    psystem("cp -Rfv $XERCESCROOT/samples/IDOMPrint/* $targetdir/samples/IDOMPrint");
-    psystem("rm -f $targetdir/samples/IDOMPrint/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
     psystem("rm -f $targetdir/samples/Redirect/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
@@ -511,7 +502,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/include/xercesc/util/Transcoders/Iconv");
     psystem ("mkdir $targetdir/include/xercesc/util/Transcoders/Win32");
     psystem ("mkdir $targetdir/include/xercesc/dom");
-    psystem ("mkdir $targetdir/include/xercesc/idom");
+    psystem ("mkdir $targetdir/include/xercesc/dom/impl");
+    psystem ("mkdir $targetdir/include/xercesc/dom/deprecated");
     psystem ("mkdir $targetdir/include/xercesc/validators");
     psystem ("mkdir $targetdir/include/xercesc/validators/common");
     psystem ("mkdir $targetdir/include/xercesc/validators/datatype");
@@ -526,8 +518,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/samples/SAX2Print");
     psystem ("mkdir $targetdir/samples/DOMCount");
     psystem ("mkdir $targetdir/samples/DOMPrint");
-    psystem ("mkdir $targetdir/samples/IDOMCount");
-    psystem ("mkdir $targetdir/samples/IDOMPrint");
     psystem ("mkdir $targetdir/samples/Redirect");
     psystem ("mkdir $targetdir/samples/MemParse");
     psystem ("mkdir $targetdir/samples/PParse");
@@ -659,15 +649,15 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("cp -Rf $XERCESCROOT/src/xercesc/sax/*.hpp $targetdir/include/xercesc/sax");
 	psystem("cp -Rf $XERCESCROOT/src/xercesc/sax2/*.hpp $targetdir/include/xercesc/sax2");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/*.hpp $targetdir/include/xercesc/framework");
-    psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/D*.hpp $targetdir/include/xercesc/dom");
-    psystem("cp -Rf $XERCESCROOT/src/xercesc/idom/ID*.hpp $targetdir/include/xercesc/idom");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/*.hpp $targetdir/include/xercesc/dom");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/deprecated/*.hpp $targetdir/include/xercesc/dom/deprecated");
 
     psystem("cp -Rf $XERCESCROOT/version.incl $targetdir");
 
-    psystem("rm -f $targetdir/include/xercesc/dom/*Impl.hpp");
-    psystem("rm -f $targetdir/include/xercesc/dom/DS*.hpp");
-    psystem("rm -f $targetdir/include/xercesc/idom/*Impl.hpp");
-    psystem("rm -f $targetdir/include/xercesc/idom/IDS*.hpp");
+    psystem("rm -rf $targetdir/include/xercesc/dom/impl");
+    psystem("rm  $targetdir/include/xercesc/dom/deprecated/*Impl.hpp");
+    psystem("rm  $targetdir/include/xercesc/dom/deprecated/DS*.hpp");
+
     psystem("cp -Rf $XERCESCROOT/src/xercesc/internal/*.hpp $targetdir/include/xercesc/internal");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/internal/*.c $targetdir/include/xercesc/internal");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/parsers/*.hpp $targetdir/include/xercesc/parsers");
@@ -716,25 +706,25 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     print ("\n\nCopying library outputs ...\n");
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces* ");
-       
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.17.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.17.0 .");           
-        psystem("ln -s libxerces-c.so.17.0 libxerces-c.so.17 ");
-        psystem("ln -s libxerces-c.so.17   libxerces-c.so    ");
+
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.20.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.20.0 .");
+        psystem("ln -s libxerces-c.so.20.0 libxerces-c.so.20 ");
+        psystem("ln -s libxerces-c.so.20   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.17.0" )) {        
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.17.0 .");   
-        psystem("ln -s libxerces-c.sl.17.0 libxerces-c.sl.17 ");
-        psystem("ln -s libxerces-c.sl.17   libxerces-c.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.20.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.20.0 .");
+        psystem("ln -s libxerces-c.sl.20.0 libxerces-c.sl.20 ");
+        psystem("ln -s libxerces-c.sl.20   libxerces-c.sl    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c17.0.so" )) {        
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c17.0.so .");      
-        psystem("ln -s libxerces-c17.0.so libxerces-c17.so  ");
-        psystem("ln -s libxerces-c17.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c20.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c20.0.so .");
+        psystem("ln -s libxerces-c20.0.so libxerces-c20.so  ");
+        psystem("ln -s libxerces-c20.so   libxerces-c.so    ");
     }
-                
+
     #
     # Create symbolic link for those ICU libraries
     #
@@ -799,10 +789,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("rm -f $targetdir/samples/DOMCount/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
     psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/IDOMCount/* $targetdir/samples/IDOMCount");
-    psystem("rm -f $targetdir/samples/IDOMCount/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/IDOMPrint/* $targetdir/samples/IDOMPrint");
-    psystem("rm -f $targetdir/samples/IDOMPrint/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
     psystem("rm -f $targetdir/samples/Redirect/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
