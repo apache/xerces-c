@@ -29,17 +29,18 @@
 
 <!ELEMENT changes EMPTY>
 <!ATTLIST changes id     ID    #REQUIRED
-                  source CDATA #REQUIRED
-                  label  CDATA #REQUIRED>
+                  source CDATA #REQUIRED                  
+		  label  CDATA #REQUIRED>
 
 <!ELEMENT group (entry)+>
 <!ATTLIST group id    ID    #IMPLIED
-		label CDATA #REQUIRED                
+                label CDATA #REQUIRED
 		title CDATA #REQUIRED>
 
 <!ELEMENT container (entry)+>
 <!ATTLIST container id    ID    #IMPLIED
-               	    label CDATA #REQUIRED>
+		source CDATA #REQUIRED
+                label CDATA #REQUIRED>
 
 <!ELEMENT entry EMPTY>
 <!ATTLIST entry id     ID    #REQUIRED
